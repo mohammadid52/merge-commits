@@ -822,6 +822,20 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 
+export const getRoomLessonImpactLogs = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
+    }
+  }
+`;
+
 export const getRoomSetup = /* GraphQL */ `
   query GetRoom($id: ID!) {
     getRoom(id: $id) {

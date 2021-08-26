@@ -1,10 +1,15 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+
 import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import Selector from '../../../../../Atoms/Form/Selector';
 import Buttons from '../../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+
+import * as mutation from '../../../../../../graphql/mutations';
+import {awsFormatDate, dateString} from '../../../../../../utilities/time';
 
 const durationOptions = [
   {id: 1, name: '1'},
@@ -18,21 +23,54 @@ const adjustmentOptions = [
   {id: 2, name: 'Compact'},
 ];
 
-const HolidayFormComponent = () => {
+interface IImpactLog {
+  impactDate: Date | null;
+  reasonComment: string;
+  lessonImpact: string;
+  adjustment: string;
+}
+
+const HolidayFormComponent = ({
+  roomId,
+  lessonImpactLogs = [],
+  activeIndex,
+  postMutation,
+}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS} = useDictionary(clientKey);
 
-  const [formValues, setFormValues] = useState({
-    date: null,
-    reason: '',
-    duration: '1',
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formValues, setFormValues] = useState<IImpactLog>({
+    impactDate: null,
+    reasonComment: '',
+    lessonImpact: '1',
     adjustment: '',
   });
+  const [serverSideLog, setServerSideLog] = useState({
+    message:"",
+    isError:false
+  })
+
+  useEffect(() => {
+    if (activeIndex !== null) {
+      if (lessonImpactLogs[activeIndex]) {
+        const {impactDate, reasonComment, lessonImpact, adjustment} = lessonImpactLogs[
+          activeIndex
+        ];
+        setFormValues({
+          impactDate: impactDate ? new Date(impactDate) : null,
+          reasonComment,
+          lessonImpact: lessonImpact?.toString(),
+          adjustment,
+        });
+      }
+    }
+  }, [activeIndex, lessonImpactLogs]);
 
   const handleDateChange = (date: Date | null) => {
     setFormValues((prevData) => ({
       ...prevData,
-      date,
+      impactDate: date,
     }));
   };
   const handleSelection = (value: string, fieldName: string) => {
@@ -51,6 +89,37 @@ const HolidayFormComponent = () => {
     }));
   };
 
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        impactDate: awsFormatDate(dateString('-', 'WORLD', formValues.impactDate)),
+        reasonComment: formValues.reasonComment,
+        lessonImpact: Number(formValues.lessonImpact),
+        adjustment: formValues.adjustment,
+      };
+      const input = {
+        id: roomId,
+        lessonImpactLog:
+          activeIndex !== null
+            ? lessonImpactLogs.map((log: any, index: number) =>
+                activeIndex === index ? payload : log
+              )
+            : [...lessonImpactLogs, payload],
+      };
+      const result: any = await API.graphql(
+        graphqlOperation(mutation.updateRoom, {input: input})
+      );
+      setLoading(false);
+      postMutation(result?.data?.updateRoom.lessonImpactLog);
+    } catch (error) {
+      setServerSideLog({
+        message:"Error while updating logs",
+        isError: true
+      });
+    }
+  };
+
   return (
     <div className="min-w-172">
       <div className="w-full m-auto">
@@ -61,16 +130,16 @@ const HolidayFormComponent = () => {
                 Date
               </label>
               <DatePickerInput
-                date={formValues.date}
+                date={formValues.impactDate}
                 placeholder={'Date'}
                 onChange={(date: Date | null) => handleDateChange(date)}
               />
             </div>
             <div className="px-3 py-4">
               <FormInput
-                value={formValues.reason}
+                value={formValues.reasonComment}
                 onChange={handleInputChange}
-                name="reason"
+                name="reasonComment"
                 label={'Reason'}
                 isRequired
               />
@@ -79,8 +148,10 @@ const HolidayFormComponent = () => {
           <div className="grid grid-cols-2">
             <div className="px-3 py-4">
               <Selector
-                onChange={(_: string, name: string) => handleSelection(name, 'duration')}
-                selectedItem={formValues.duration}
+                onChange={(_: string, name: string) =>
+                  handleSelection(name, 'lessonImpact')
+                }
+                selectedItem={formValues.lessonImpact}
                 list={durationOptions}
                 label={'Duration'}
                 placeholder={'Select duration'}
@@ -100,6 +171,11 @@ const HolidayFormComponent = () => {
           </div>
         </div>
       </div>
+      <div className="py-2 m-auto text-center">
+        <p className={`${serverSideLog.isError ? 'text-red-600' : 'text-green-600'}`}>
+          {serverSideLog.message}
+        </p>
+      </div>
       <div className="flex my-8 justify-center">
         <Buttons
           btnClass="py-3 px-10 mr-4"
@@ -110,8 +186,8 @@ const HolidayFormComponent = () => {
         <Buttons
           btnClass="py-3 px-10 ml-4"
           label={BUTTONS[userLanguage]['SAVE']}
-          onClick={() => console.log()}
-          // disabled={loading}
+          onClick={handleSubmit}
+          disabled={loading}
         />
       </div>
     </div>

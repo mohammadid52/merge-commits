@@ -6,10 +6,6 @@ import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {FaCalendarDay} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-
-import * as queries from '../../../../../../graphql/queries';
 import * as mutation from '../../../../../../graphql/mutations';
 
 import {frequencyOptions, weekdaysOption} from '../../../../../../utilities/staticData';
