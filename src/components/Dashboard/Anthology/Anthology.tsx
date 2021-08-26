@@ -9,10 +9,6 @@ import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
-
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
@@ -24,6 +20,7 @@ import {
 import {nanoid} from 'nanoid';
 import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
+
 import TabView from './TabView';
 import RoomView from './RoomView';
 import EmptyViewWrapper from './EmptyViewWrapper';
@@ -523,7 +520,7 @@ const Anthology = () => {
       </div>
       <div className="px-10">
         <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-50 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
           <h2 className={`text-base text-center font-semibold`}>
             All your work in place
           </h2>
