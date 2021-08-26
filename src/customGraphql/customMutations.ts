@@ -1174,6 +1174,7 @@ export const updatePersonSentiments = /* GraphQL */ `
       time
       responseText
       createdAt
+      backstory
       updatedAt
     }
   }
@@ -1189,6 +1190,7 @@ export const createPersonSentiments = /* GraphQL */ `
       personEmail
       date
       time
+      backstory
       responseText
       createdAt
       updatedAt

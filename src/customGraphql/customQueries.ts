@@ -3711,6 +3711,7 @@ export const listPersonSentimentss = /* GraphQL */ `
         personEmail
         date
         time
+        backstory
         responseText
         createdAt
         updatedAt

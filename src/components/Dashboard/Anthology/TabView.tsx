@@ -11,6 +11,7 @@ import Buttons from '../../Atoms/Buttons';
 import AnthologyContent, {ContentCardProps} from './AnthologyContent';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
+import SentimentTab from './SentimentTab';
 
 const TabView = ({
   viewEditMode,
@@ -108,6 +109,12 @@ const TabView = ({
   const JOURNAL_TABS = [
     {
       index: 0,
+      title: 'Check-In',
+      id: 'checkIn',
+      content: <SentimentTab />,
+    },
+    {
+      index: 1,
       title: anthologyDict[userLanguage].TABS.A,
       id: 'Journal',
       content: Content,

@@ -90,6 +90,8 @@ const MainRouter: React.FC = () => {
             role: userInfo.role,
             image: userInfo.image,
             location: userInfo?.location?.items,
+            lastLoggedIn: userInfo.lastLoggedIn,
+            lastLoggedOut: userInfo.lastLoggedOut,
           },
         });
       } else {

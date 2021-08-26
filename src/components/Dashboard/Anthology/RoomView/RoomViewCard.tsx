@@ -35,7 +35,7 @@ const RoomViewCard = ({
         } flex-col rounded-lg overflow-hidden cursor-pointer`}>
         <div className="flex-shrink-0 relative">
           {/* OVERLAY */}
-          <div className="absolute flex flex-col h-2/3 justify-between bg-white bg-opacity-90 p-6 bottom-0 z-50">
+          <div className="absolute flex flex-col h-2/3 justify-between bg-white bg-opacity-90 p-6 bottom-0 z-10">
             <div className="flex-1">
               <p className="text-sm font-medium text-indigo-600">
                 <a className="hover:underline">{type}</a>

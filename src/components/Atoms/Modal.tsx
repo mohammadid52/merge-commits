@@ -131,7 +131,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
                 showBorder={showHeaderBorder}
               />
             )}
-            <ModalBody closeOnBackdrop={closeOnBackdrop}>{children}</ModalBody>
+            <ModalBody hidePadding={hidePadding} closeOnBackdrop={closeOnBackdrop}>
+              {children}
+            </ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
           </div>
         </div>

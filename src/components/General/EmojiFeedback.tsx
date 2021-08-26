@@ -4,19 +4,33 @@ import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import Modal from '../Atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../graphql/mutations';
+import * as customMutations from '../../customGraphql/customMutations';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {awsFormatDate, dateString} from '../../utilities/time';
 import {wait} from '../../utilities/functions';
+import moment from 'moment';
 
 const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
   const $ = (s: any, o = document) => o?.querySelector(s);
   const $$ = (s: any, o = document) => o?.querySelectorAll(s);
-  const [showSentimentModal, setShowSentimentModal] = useState(true);
+  const [showSentimentModal, setShowSentimentModal] = useState(false);
 
   const {state} = useContext(GlobalContext);
   const {authId, email} = state.user;
+
+  useEffect(() => {
+    const lastLoggedOut = moment(state.user.lastLoggedOut);
+    const lastLoggedIn = moment(state.user.lastLoggedIn);
+
+    const hoursDiff = lastLoggedOut.diff(lastLoggedIn, 'hours');
+
+    if (hoursDiff > 24 || !lastLoggedOut) {
+      setShowSentimentModal(true);
+    } else {
+      setShowSentimentModal(false);
+    }
+  }, []);
 
   // useEffect(() => {
   let emoji = $('.emoji-slider-feedback'),
@@ -127,12 +141,14 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
         time: new Date().toTimeString().split(' ')[0],
         date: awsFormatDate(dateString('-', 'WORLD')),
         responseText: response,
+        backstory: '',
       };
       await API.graphql(
-        graphqlOperation(mutations.createPersonSentiments, {
+        graphqlOperation(customMutations.createPersonSentiments, {
           input: payload,
         })
       );
+      localStorage.setItem('sentiment', 'alreadySubmittedOnce');
     } catch (error) {
       console.error(error);
     }
@@ -143,7 +159,7 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
       <Modal
         intenseOpacity
         closeAction={() => setShowSentimentModal(false)}
-        closeOnBackdrop
+        closeOnBackdrop={false}
         hidePadding
         showHeader={false}
         showHeaderBorder={false}
