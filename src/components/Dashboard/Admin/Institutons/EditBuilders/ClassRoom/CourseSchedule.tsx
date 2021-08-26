@@ -179,14 +179,16 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
   return (
     <div className="p-4">
-      <div className="pb-3">
+      {/* <div className="pb-3">
         <span className="font-bold text-lg">
           {classRoomName} {CourseScheduleDict[userLanguage].HEADING}
         </span>
-      </div>
-      <hr />
+      </div> */}
       <div className="grid grid-cols-2">
-        <div className="">
+        <div className="mt-3">
+          <div className="text-lg font-medium mb-4">
+            {CourseScheduleDict[userLanguage].HEADING}
+          </div>
           <div className="mt-12">
             <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
@@ -200,9 +202,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 />
                 <div className="text-red-500">{errors.startDate}</div>
               </div>
-              <span className="w-auto inline-flex items-center">
-                <IoIosCalendar className="w-6 h-6 mr-2" />
-              </span>
+              <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64 relative">
                 <DatePickerInput
                   date={scheduleData.endDate}
@@ -228,9 +228,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 />
                 <div className="text-red-500">{errors.startTime}</div>
               </div>
-              <span className="w-auto inline-flex items-center">
-                <FiClock className="w-6 h-6 mr-2" />
-              </span>
+              <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64">
                 <Selector
                   onChange={(_: string, name: string) => handleSelection(name, 'endTime')}
@@ -259,7 +257,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
               <div className="flex mt-4">
                 <span className="w-auto inline-flex items-center">
-                  <FiRefreshCw className="w-6 h-6 mr-2" />
+                  <FiRefreshCw className="w-6 h-6 ml-1 mr-3" />
                 </span>
                 <div className="w-64">
                   <Selector
@@ -277,7 +275,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center">
                 <IoGlobeOutline className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-136">
+              <div className="w-140">
                 <FormInput
                   name="conferenceCallLink"
                   value={scheduleData.conferenceCallLink}
@@ -292,7 +290,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center">
                 <IoLocation className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-136">
+              <div className="w-140">
                 <FormInput
                   name="location"
                   value={scheduleData.location}
@@ -305,7 +303,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex">
                 <CgNotes className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-136">
+              <div className="w-140">
                 <FormInput
                   name="notes"
                   value={scheduleData.notes}
@@ -319,7 +317,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
             </div>
           </div>
-          <div className="flex my-8 justify-center">
+          <div className="flex my-8 justify-end w-148">
             <Buttons
               btnClass="py-3 px-12 text-sm mr-4"
               label={BUTTONS[userLanguage]['CANCEL']}

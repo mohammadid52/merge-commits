@@ -47,7 +47,7 @@ const ClassRoomHolidays = () => {
           <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Lesson Adjustment
           </div>
-          <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div className="w-2/10 flex justify-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Action
           </div>
         </div>

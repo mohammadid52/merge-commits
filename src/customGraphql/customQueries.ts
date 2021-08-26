@@ -794,6 +794,8 @@ export const getRoom = /* GraphQL */ `
       startTime
       endTime
       frequency
+      weekDay
+      conferenceCallLink
       length
       repeat
       notes

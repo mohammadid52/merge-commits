@@ -728,7 +728,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
             {RoomEDITdict[userLanguage]['HEADING']}
           </h3> */}
           <div className="">
-            {/* <Tabs /> */}
+            <div className="text-lg font-medium mb-4">
+              {RoomEDITdict[userLanguage].HEADING}
+            </div>
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
                 <FormInput
@@ -739,6 +741,17 @@ const ClassRoomForm = (props: EditRoomProps) => {
                   label={RoomEDITdict[userLanguage]['NAME_LABEL']}
                   placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']}
                   isRequired
+                />
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                </label>
+                <Selector
+                  selectedItem={curricular.value}
+                  placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
+                  list={curricularList}
+                  onChange={selectCurriculum}
                 />
               </div>
             </div>
@@ -794,19 +807,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
                     onChange={selectClass}
                   />
                 </div>
-                <div className="px-3 py-4">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                    {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                  </label>
-                  <Selector
-                    selectedItem={curricular.value}
-                    placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
-                    list={curricularList}
-                    onChange={selectCurriculum}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
                   <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                     {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']}{' '}

@@ -596,7 +596,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   }, []);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?step=${step}`;
+    const redirectionUrl = `${match.url}?id=${params.get('id')}step=${step}`;
     history.push(redirectionUrl);
   };
 
