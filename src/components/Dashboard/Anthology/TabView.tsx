@@ -14,6 +14,8 @@ import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {stringToHslColor} from '../../../utilities/strings';
 import {IoKeyOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib';
+import {IoIosJournal} from 'react-icons/io';
 
 const TabView = ({
   viewEditMode,
@@ -139,15 +141,20 @@ const TabView = ({
       <div
         className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
         <div
-          className={`shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row items-center`}>
-          <IoKeyOutline
-            style={{color: stringToHslColor(sectionRoomID)}}
-            className="absolute w-auto h-auto top-1 right-1 fill-current text-white text-opacity-80"
-            size={16}
-          />
+          className={`shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+          <IconContext.Provider
+            value={{
+              className: `relative`,
+            }}>
+            <IoIosJournal
+              style={{color: stringToHslColor(sectionRoomID)}}
+              className="absolute my-auto mr-2 w-auto h-auto fill-current"
+              size={24}
+            />
+          </IconContext.Provider>
 
           <h2
-            className={`my-auto text-lg 2xl:text-xl font-semibold leading-6 text-gray-900"`}>
+            className={`w-auto my-auto text-lg 2xl:text-xl font-semibold leading-6 text-gray-900"`}>
             {getTitle()}
           </h2>
         </div>

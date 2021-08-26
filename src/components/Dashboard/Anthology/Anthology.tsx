@@ -510,7 +510,7 @@ const Anthology = () => {
     } else {
       setMainSection('Private');
       setSectionRoomID(roomIdString);
-      setSectionTitle('Private Journal');
+      setSectionTitle(`Private Notebook : ${roomName}`);
       setSubSection('Journal');
       setTab(0);
     }
@@ -554,7 +554,9 @@ const Anthology = () => {
               }>
               <RoomView
                 roomIdList={roomCardIds}
+                mainSection={mainSection}
                 sectionRoomID={sectionRoomID}
+                sectionTitle={sectionTitle}
                 handleSectionSelect={handleSectionSelect}
               />
             </EmptyViewWrapper>
