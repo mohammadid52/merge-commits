@@ -507,11 +507,22 @@ const Anthology = () => {
         </div>
 
         <div className="mx-auto max-w-256">
-          <RoomView
-            roomIdList={roomCardIds}
-            sectionRoomID={sectionRoomID}
-            handleSectionSelect={handleSectionSelect}
-          />
+          <div className="my-8">
+            <SectionTitleV3
+              title={anthologyDict[userLanguage]['CONTAINER_TITLE']}
+              fontSize="xl"
+              fontStyle="semibold"
+              extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
+              borderBottom
+              extraClass="leading-6 text-gray-900"
+            />
+            <RoomView
+              roomIdList={roomCardIds}
+              sectionRoomID={sectionRoomID}
+              handleSectionSelect={handleSectionSelect}
+            />
+          </div>
+
           <TabView
             viewEditMode={viewEditMode}
             handleEditToggle={handleEditToggle}
