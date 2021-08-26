@@ -6131,6 +6131,7 @@ export const getPersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -6186,6 +6187,7 @@ export const listPersonSentimentss = /* GraphQL */ `
         date
         time
         responseText
+        backstory
         createdAt
         updatedAt
       }

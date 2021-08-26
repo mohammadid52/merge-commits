@@ -1178,6 +1178,7 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   date: AWSDate!
   time: AWSTime!
   responseText: String
+  backstory: String
 }
 
 type Subscription {
