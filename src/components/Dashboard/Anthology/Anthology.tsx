@@ -486,7 +486,7 @@ const Anthology = () => {
       setTab(0);
     } else {
       setMainSection('Private');
-      setSectionRoomID('');
+      setSectionRoomID(roomIdString);
       setSectionTitle('Private Journal');
       setSubSection('Journal');
       setTab(0);
@@ -496,7 +496,7 @@ const Anthology = () => {
   return (
     <React.Fragment>
       <div>
-        <HeroBanner imgUrl={notebookBanner} title={'Notebook'} />
+        <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
       </div>
       <div className="px-10">
         <div
@@ -509,10 +509,10 @@ const Anthology = () => {
         <div className="mx-auto max-w-256">
           <div className="my-8">
             <SectionTitleV3
-              title={anthologyDict[userLanguage]['CONTAINER_TITLE']}
+              title={anthologyDict[userLanguage]['TITLE_CONTAINER']}
               fontSize="xl"
               fontStyle="semibold"
-              extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
+              extraContainerClass="px-6"
               borderBottom
               extraClass="leading-6 text-gray-900"
             />

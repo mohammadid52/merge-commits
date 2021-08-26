@@ -98,11 +98,11 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
               mappedNotebookRoomCards.length > 0 &&
               mappedNotebookRoomCards}
             <RoomViewCard
-              roomID={''}
-              sectionRoomID={''}
-              roomName={'Journal Entries & Sentiment'}
+              roomID={'private'}
+              sectionRoomID={sectionRoomID}
+              roomName={'Journal & Emotions'}
               handleSectionSelect={handleSectionSelect}
-              type={'Private Journal'}
+              type={'Private Notebook'}
             />
           </div>
         </div>

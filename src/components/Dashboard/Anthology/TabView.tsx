@@ -11,6 +11,7 @@ import Buttons from '../../Atoms/Buttons';
 import AnthologyContent, {ContentCardProps} from './AnthologyContent';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
+import EmptyViewWrapper from './EmptyViewWrapper';
 
 const TabView = ({
   viewEditMode,
@@ -122,25 +123,21 @@ const TabView = ({
   const getTitle = () => {
     if (sectionTitle !== '') {
       if (mainSection === 'Class') {
-        return anthologyDict[userLanguage].TITLE + ' : ' + sectionTitle;
+        return sectionTitle + ' ' + anthologyDict[userLanguage].TITLE;
       } else {
         return sectionTitle;
       }
     } else {
-      return (
-        anthologyDict[userLanguage].TITLE +
-        ' : ' +
-        anthologyDict[userLanguage].NO_SELECTED
-      );
+      return anthologyDict[userLanguage].NO_SELECTED;
     }
   };
 
   return (
-    <>
+    <EmptyViewWrapper revealContents={mainSection !== ''}>
       <SectionTitleV3
         fontSize="2xl"
         fontStyle="bold"
-        extraContainerClass="px-10"
+        extraContainerClass="h-16 px-10"
         extraClass="leading-6 text-gray-900"
         withButton={
           subSection === 'Journal' && (
@@ -164,7 +161,7 @@ const TabView = ({
           handleTabSelect={handleTabSelect}
         />
       </div>
-    </>
+    </EmptyViewWrapper>
   );
 };
 

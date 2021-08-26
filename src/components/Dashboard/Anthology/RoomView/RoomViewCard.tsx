@@ -1,5 +1,5 @@
 import React from 'react';
-import {IoImage} from 'react-icons/io5';
+import {IoImage, IoKeyOutline} from 'react-icons/io5';
 
 interface IRoomViewCardProps {
   handleSectionSelect?: (
@@ -35,8 +35,8 @@ const RoomViewCard = ({
         } flex-col rounded-lg overflow-hidden cursor-pointer`}>
         <div className="flex-shrink-0 relative">
           {/* OVERLAY */}
-          <div className="absolute flex flex-col h-2/3 justify-between bg-white bg-opacity-90 p-6 bottom-0 z-50">
-            <div className="flex-1">
+          <div className="absolute flex items-center  h-full w-full p-2 z-50">
+            <div className="flex flex-col h-1/3 justify-between bg-white bg-opacity-90 flex-1">
               <p className="text-sm font-medium text-indigo-600">
                 <a className="hover:underline">{type}</a>
               </p>
@@ -60,8 +60,11 @@ const RoomViewCard = ({
             />
           ) : (
             <div
-              className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400 z-40`}>
-              <IoImage className="fill-current text-gray-80" size={32} />
+              className={`relative profile justify-center items-center content-center h-48 w-full bg-gray-800 flex border-gray-400 z-40`}>
+              <IoKeyOutline
+                className="absolute w-auto h-auto top-1 right-1 fill-current text-white text-opacity-80"
+                size={32}
+              />
             </div>
           )}
         </div>

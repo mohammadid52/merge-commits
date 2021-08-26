@@ -307,7 +307,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Sessions',
     CLASSROOM: 'Cohort',
     LESSON_BUILDER: 'Session Builder',
-    ANTHOLOGY: 'Journal',
+    ANTHOLOGY: 'Journals',
     NOTICEBOARD: 'Dashboard',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',

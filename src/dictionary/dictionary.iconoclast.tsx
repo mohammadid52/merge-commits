@@ -315,7 +315,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
     UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
-    ANTHOLOGY: 'Notebook',
+    ANTHOLOGY: 'Notebooks',
     NOTICEBOARD: 'Noticeboard',
     NOTEBOOK: 'Notebook',
     DASHBOARD: 'Dashboard',

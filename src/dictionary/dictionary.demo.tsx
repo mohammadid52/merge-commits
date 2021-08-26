@@ -291,7 +291,7 @@ const dashboardProfileDict: any = {
 
 const anthologyDict: any = {
   EN: {
-    TITLE: 'Notebook',
+    TITLE: 'Notebooks',
     TITLE_CONTAINER: 'Your Notebooks',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
@@ -368,7 +368,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
     UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
-    ANTHOLOGY: 'Notebook',
+    ANTHOLOGY: 'Notebooks',
     NOTICEBOARD: 'Noticeboard',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
