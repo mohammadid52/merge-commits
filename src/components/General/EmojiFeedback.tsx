@@ -4,11 +4,10 @@ import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import Modal from '../Atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '../../customGraphql/customQueries';
 import * as mutations from '../../graphql/mutations';
-import * as customMutations from '../../customGraphql/customMutations';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {awsFormatDate, dateString} from '../../utilities/time';
+import {wait} from '../../utilities/functions';
 
 const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
@@ -62,15 +61,6 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
           'M9,22 C13.418278,22 17,16.418278 17,11 C17,5.581722 13.418278,0 9,0 C4.581722,0 1,5.581722 1,11 C1,16.418278 4.581722,22 9,22 Z',
       },
     };
-
-  button?.addEventListener('click', (e: any) => {
-    let x = Draggable.get(drag).x,
-      value = Object.keys(points).reduce((p: any, c: any) => {
-        return Math.abs(c - x) < Math.abs(p - x) ? c : p;
-      });
-    setSelectedResponse(points[value].name);
-    onSave();
-  });
 
   const setEmoji = (value: any, duration = 0.4) => {
     let index = value == 0 ? value : Object.keys(points).indexOf(value),
@@ -129,40 +119,18 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
 
   setEmoji(0, 0);
 
-  // // if true, use create new sentiments table
-  // // if false, use update sentiments table
-  // const [createNewSentiments, setCreateNewSentiments] = useState(true);
-
-  const fetchSentiments = async () => {
+  const onSave = async (response: string) => {
     try {
-      const res: any = await API.graphql(
-        graphqlOperation(customQueries.listPersonSentimentss, {
-          personAuthID: authId,
-        })
-      );
-      const savedData = res.data.items;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchSentiments();
-  // }, []);
-
-  const [selectedResponse, setSelectedResponse] = useState(null);
-
-  const onSave = async () => {
-    try {
+      const payload = {
+        personAuthID: authId,
+        personEmail: email,
+        time: new Date().toTimeString().split(' ')[0],
+        date: awsFormatDate(dateString('-', 'WORLD')),
+        responseText: response,
+      };
       await API.graphql(
         graphqlOperation(mutations.createPersonSentiments, {
-          input: {
-            personAuthID: authId,
-            personEmail: email,
-            time: new Date().toTimeString().split(' ')[0],
-            date: awsFormatDate(dateString('-', 'WORLD')),
-            responseText: 'happy',
-          },
+          input: payload,
         })
       );
     } catch (error) {
@@ -216,7 +184,19 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
                 <li>great</li>
               </ul>
               <button
-                onClick={() => setSelectedResponse('')}
+                onClick={() => {
+                  let x = Draggable.get(drag).x,
+                    value = Object.keys(points).reduce((p: any, c: any) => {
+                      return Math.abs(c - x) < Math.abs(p - x) ? c : p;
+                    });
+
+                  let response = points[value].name;
+
+                  setShowSentimentModal(false);
+                  wait(1000).then(async () => {
+                    await onSave(response);
+                  });
+                }}
                 className="emoji-response-save w-auto">
                 Save
               </button>

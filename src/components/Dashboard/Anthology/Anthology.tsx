@@ -24,6 +24,11 @@ import {
 import {nanoid} from 'nanoid';
 import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
+import {MenuIcon} from '@heroicons/react/outline';
+import {Transition} from '@headlessui/react';
+import Loader from '../../Atoms/Loader';
+import Modal from '../../Atoms/Modal';
+import FormInput from '../../Atoms/Form/FormInput';
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -43,6 +48,7 @@ const Anthology = () => {
     clientKey,
   } = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
+  const {authId} = state.user;
   const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
@@ -426,6 +432,8 @@ const Anthology = () => {
         )
       : [];
 
+  const {EditQuestionModalDict} = useDictionary(clientKey);
+
   const Content = (
     <AnthologyContent
       // loadingContent={loadingContent}
@@ -439,6 +447,251 @@ const Anthology = () => {
       content={subSection !== 'Work' ? filteredJournalContent : allExerciseData}
     />
   );
+
+  const [studentSentiments, setStudentSentiments] = useState([]);
+
+  const EditComment = ({show, setShow}: any) => {
+    const [backstory, setBackstory] = useState(show.comment);
+    return (
+      show.show && (
+        <Modal
+          title="Edit Backstory"
+          closeAction={() => setShow({show: false, comment: '', emotion: ''})}
+          showHeader={true}
+          showFooter={false}>
+          <div className="min-w-96 min-h-32">
+            <FormInput
+              rows={5}
+              showCharacterUsage
+              className={'mb-2'}
+              maxLength={144}
+              textarea
+              value={backstory}
+              onChange={(e) => setBackstory(e.target.value)}
+              placeHolder={`Tell us why were/are you ${show.emotion}`}
+            />
+            <div className="flex items-center justify-end mt-4">
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                onClick={() => {}}
+              />
+            </div>
+          </div>
+        </Modal>
+      )
+    );
+  };
+
+  const SentimentView = () => {
+    const [nextToken, setNextToken] = useState<string>('');
+    const [loadingSentiments, setLoadingSentiments] = useState(false);
+
+    const fetchSentiments = async () => {
+      try {
+        setLoadingSentiments(true);
+        let payload: any = {personAuthID: authId, limit: 6};
+        if (nextToken) {
+          payload.nextToken = nextToken;
+        }
+        const res: any = await API.graphql(
+          graphqlOperation(customQueries.listPersonSentimentss, payload)
+        );
+        if (res && res.data && res.data.listPersonSentimentss) {
+          setNextToken(res.data.listPersonSentimentss.nextToken);
+          setStudentSentiments(res.data.listPersonSentimentss.items);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingSentiments(false);
+      }
+    };
+    const onLoadMore = () => {
+      fetchSentiments();
+    };
+
+    useEffect(() => {
+      if (studentSentiments.length === 0) {
+        fetchSentiments();
+      }
+    }, []);
+
+    const getGIFlinkByName = (name: string) => {
+      switch (name) {
+        case 'awful':
+          return 'angry';
+        case 'bad':
+          return 'sad';
+        case 'okay':
+          return 'neutral';
+        case 'good':
+          return 'happy';
+        case 'great':
+          return 'excited';
+        default:
+          return 'happy';
+      }
+    };
+
+    const [view, setView] = useState('emoji');
+    // Modal state for comment edit
+    const [showEditModal, setShowEditModal] = useState({
+      show: false,
+      emotion: '',
+      comment: '',
+    });
+    return (
+      <div className="mt-8 transition-all min-h-96">
+        <EditComment show={showEditModal} setShow={setShowEditModal} />
+        <div className="text-lg flex items-center justify-between my-4 px-8">
+          <div className="w-auto" />
+          <span className="mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+            {/* Add this to dict */}
+            How are you doing today?
+          </span>
+          <span
+            className="w-auto"
+            title={`Show ${view === 'table' ? 'emoji' : 'table'} view`}>
+            <MenuIcon
+              onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
+              className="block h-6 w-6 cursor-pointer"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+        <div className="h-full">
+          <Transition
+            enter="transition-opacity duration-75"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            appear
+            show={loadingSentiments}>
+            <div className="flex h-96 items-center justify-center text-center">
+              <Loader className="text-gray-500 text-lg" />
+            </div>
+          </Transition>
+
+          <Transition
+            enter="transform transition ease-in-out duration-500"
+            enterFrom="-translate-x-full opacity-0"
+            enterTo="translate-x-0 opacity-100"
+            leave="transform transition ease-in-out duration-700"
+            leaveFrom="translate-x-0 opacity-100"
+            leaveTo="-translate-x-full opacity-0"
+            show={view === 'table'}
+            className=""
+            role="table">
+            <div className="flex flex-col">
+              <div className="">
+                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                  <div className="overflow-hidden border-2 border-gray-200 sm:rounded-lg">
+                    <table className=" min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Check-in
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Backstory
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                          </th>
+
+                          <th scope="col" className="relative px-6 py-3">
+                            <span className="sr-only">Edit</span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {studentSentiments.map((sentiment, sentimentIdx) => (
+                          <tr
+                            key={sentiment.email}
+                            className={
+                              sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                            }>
+                            <td className="px-6 py-4 whitespace-nowrap capitalize text-sm font-medium text-gray-900">
+                              {sentiment.responseText || 'happy'}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {sentiment.comment || '-'}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {sentiment.date}
+                            </td>
+
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              <a
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowEditModal({
+                                    show: true,
+                                    emotion: sentiment.responseText || 'happy',
+                                    comment: sentiment.comment,
+                                  });
+                                }}
+                                className={`cursor-pointer iconoclast:curate-600 hover:curate:text-900 iconoclast:text-600 hover:iconoclast:text-900 `}>
+                                Edit
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Transition>
+          <Transition
+            enter="transform transition ease-in-out duration-500 sm:duration-700"
+            enterFrom="translate-x-full opacity-0"
+            enterTo="translate-x-0 opacity-100"
+            leave="transform transition ease-in-out duration-500 sm:duration-700"
+            leaveFrom="translate-x-0 opacity-100"
+            leaveTo="translate-x-full opacity-0"
+            show={view === 'emoji'}
+            as="ul"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            role="list">
+            {studentSentiments.map((s) => (
+              <li
+                key={s.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowEditModal({
+                    show: true,
+                    emotion: s.responseText || 'happy',
+                    comment: s.comment,
+                  });
+                }}
+                className="col-span-1 flex flex-col text-center items-center justify-center">
+                <img
+                  src={`${window.location.origin}/emojis/${getGIFlinkByName(
+                    s.responseText
+                  )}.gif`}
+                  alt={s.name}
+                  title={s.name}
+                  className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
+                />
+                <span className="w-auto text-gray-500 text-sm">Aug 25, 2021</span>
+              </li>
+            ))}
+          </Transition>
+        </div>
+      </div>
+    );
+  };
 
   const tabs = [
     {
@@ -461,7 +714,7 @@ const Anthology = () => {
     },
   ];
 
-  const handleTabClick = (tab: number, e: React.MouseEvent) => {
+  const handleTabClick = async (tab: number, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
 
     setViewEditMode({...viewEditMode, mode: ''});
@@ -505,7 +758,7 @@ const Anthology = () => {
       </div>
       <div className="px-10">
         <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-50 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
           <h2 className={`text-base text-center font-semibold`}>
             All your work in place
           </h2>

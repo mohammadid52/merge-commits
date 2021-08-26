@@ -92,50 +92,6 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
   // ##################################################################### //
-  // ########################### EMOJI GREETING ########################## //
-  // ##################################################################### //
-  const [greetQuestion, setGreetQuestion] = useState({question: ''});
-  const DEFAULT_CHECKPOINT_ID: string = '5372952f-ad80-4677-985a-e798c89d6bb7';
-  const DEFAULT_QUESTION_ID: string = '6867fd8e-2457-409c-ba34-f2ffabdf7385'; // THIS IS STATIC -- @key5: Change this
-
-  const getGreetQuestion = async () => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(queries.getQuestion, {
-          id: DEFAULT_QUESTION_ID,
-        })
-      );
-      console.log(result.data.getQuestion);
-
-      setGreetQuestion(result.data.getQuestion);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateGreetQuestion = async (response: any) => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.updateQuestionData, {
-          input: {
-            id: DEFAULT_CHECKPOINT_ID,
-            responseObject: [{qid: DEFAULT_QUESTION_ID, response}],
-          },
-        })
-      );
-      setGreetQuestion(result.data.getQuestion);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (justLoggedIn) {
-      // getGreetQuestion();
-    }
-  }, [justLoggedIn]);
-
-  // ##################################################################### //
   // ############################ USER LOADING ########################### //
   // ##################################################################### //
   const [userData, setUserData] = useState({
