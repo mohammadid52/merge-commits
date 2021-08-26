@@ -2118,6 +2118,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         syllabusLessonID
         lessonID
         lessonPageID
+        roomID
         studentID
         studentAuthID
         studentEmail

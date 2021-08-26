@@ -232,6 +232,7 @@ const dashboardProfileDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE: 'Journal',
+    NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Session Work',
@@ -249,6 +250,7 @@ const anthologyDict: any = {
   },
   ES: {
     TITLE: 'Cuaderno',
+    NO_SELECTED: 'T.B.D',
     TABS: {
       A: 'Diario',
       B: 'Cohort Work',
@@ -3002,7 +3004,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
-      NODESIGNEROPTION: 'TBD'
+      NODESIGNEROPTION: 'TBD',
     },
     SAVE: 'TBD',
     SAVING: 'TBD',

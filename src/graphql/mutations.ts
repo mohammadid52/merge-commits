@@ -1517,6 +1517,12 @@ export const createRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1691,6 +1697,12 @@ export const updateRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1865,6 +1877,12 @@ export const deleteRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1983,6 +2001,12 @@ export const createRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2134,6 +2158,12 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2285,6 +2315,12 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10960,6 +10996,12 @@ export const createPersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11181,6 +11223,12 @@ export const updatePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11402,6 +11450,12 @@ export const deletePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11837,6 +11891,12 @@ export const createAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12086,6 +12146,12 @@ export const updateAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12335,6 +12401,12 @@ export const deleteAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }

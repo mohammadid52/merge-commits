@@ -239,6 +239,7 @@ const dashboardProfileDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE: 'Notebook',
+    NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Class Work',
@@ -256,6 +257,7 @@ const anthologyDict: any = {
   },
   ES: {
     TITLE: 'Cuaderno',
+    NO_SELECTED: 'T.B.D',
     TABS: {
       A: 'Diario',
       B: 'trabajo en clase',
@@ -3044,7 +3046,7 @@ const AddNewLessonFormDict: any = {
       MEASUREMENTALREADYADDED: 'This measurment is already added.',
       MEASUREMENTADDSUCCESS: 'Lesson measurment list updated successfully.',
       NODESIGNEROPTION: 'Select Institution first',
-      LOADING: 'Loading...'
+      LOADING: 'Loading...',
     },
     NEXT: 'Next',
     SAVE: 'Save',

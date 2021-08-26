@@ -27,6 +27,7 @@ export interface ContentCardProps {
   updateJournalContent?: (html: string, targetType: string) => void;
   mainSection?: string;
   sectionRoomID?: string;
+  sectionTitle?: string;
   subSection?: string;
   setSubSection?: any;
   tab?: any;
