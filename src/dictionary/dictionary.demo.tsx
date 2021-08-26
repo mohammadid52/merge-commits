@@ -292,6 +292,7 @@ const dashboardProfileDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE: 'Notebook',
+    NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Class Work',
@@ -309,6 +310,7 @@ const anthologyDict: any = {
   },
   ES: {
     TITLE: 'Cuaderno',
+    NO_SELECTED: 'T.B.D',
     TABS: {
       A: 'Diario',
       B: 'Class Work',

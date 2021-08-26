@@ -634,6 +634,8 @@ export const createInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -758,6 +760,8 @@ export const updateInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -882,6 +886,8 @@ export const deleteInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1509,6 +1515,14 @@ export const createRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1680,6 +1694,14 @@ export const updateRoom = /* GraphQL */ `
       proficiencyGroups {
         groupName
         groupIDs
+      }
+      weekDay
+      conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
       }
       createdAt
       updatedAt
@@ -1853,6 +1875,14 @@ export const deleteRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1968,6 +1998,14 @@ export const createRoomCoTeachers = /* GraphQL */ `
         proficiencyGroups {
           groupName
           groupIDs
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
         }
         createdAt
         updatedAt
@@ -2118,6 +2156,14 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2267,6 +2313,14 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2381,6 +2435,8 @@ export const createClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -2481,6 +2537,8 @@ export const updateClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -2581,6 +2639,8 @@ export const deleteClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -10934,6 +10994,14 @@ export const createPersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11153,6 +11221,14 @@ export const updatePersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11371,6 +11447,14 @@ export const deletePersonLocation = /* GraphQL */ `
         proficiencyGroups {
           groupName
           groupIDs
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
         }
         createdAt
         updatedAt
@@ -11805,6 +11889,14 @@ export const createAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12052,6 +12144,14 @@ export const updateAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12298,6 +12398,14 @@ export const deleteAttendance = /* GraphQL */ `
         proficiencyGroups {
           groupName
           groupIDs
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
         }
         createdAt
         updatedAt
@@ -12623,6 +12731,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12661,6 +12770,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12699,6 +12809,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12742,7 +12853,9 @@ export const createUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12766,7 +12879,9 @@ export const updateUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12790,7 +12905,9 @@ export const deleteUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
