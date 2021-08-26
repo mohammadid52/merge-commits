@@ -150,7 +150,7 @@ type Room
 type ImpactLogEntry {
   impactDate: AWSDate
   reasonComment: String
-  lessonImpact: Int
+  lessonImpact: Float
   adjustment: String
 }
 
