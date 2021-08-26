@@ -1,5 +1,39 @@
 import {v4 as uuidv4} from 'uuid';
 
+export const emojiList = [
+  {
+    emoji: '😠',
+    link: 'angry',
+    id: uuidv4(),
+    name: 'Awful',
+  },
+  {
+    emoji: '😞',
+    link: 'sad',
+    id: uuidv4(),
+    name: 'Bad',
+  },
+  {
+    emoji: '😐',
+    link: 'neutral',
+    id: uuidv4(),
+    name: 'Okay',
+  },
+
+  {
+    emoji: '🙂',
+    link: 'happy',
+    id: uuidv4(),
+    name: 'Good',
+  },
+  {
+    emoji: '🤩',
+    link: 'excited',
+    id: uuidv4(),
+    name: 'Great',
+  },
+];
+
 export const languageList = [
   {id: '1', name: 'English', value: 'EN'},
   {id: '2', name: 'Spanish', value: 'ES'},

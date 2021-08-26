@@ -1,9 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {getImageFromS3} from '../../../utilities/services';
-import ContentCard from '../../Atoms/ContentCard';
-import ImageAlternate from '../../Atoms/ImageAlternative';
 import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
