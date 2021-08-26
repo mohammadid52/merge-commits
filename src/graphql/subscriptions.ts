@@ -220,6 +220,12 @@ export const onChangePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -646,6 +652,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -837,6 +844,12 @@ export const onChangeRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1902,6 +1915,12 @@ export const onCreateRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2073,6 +2092,12 @@ export const onUpdateRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2244,6 +2269,12 @@ export const onDeleteRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2359,6 +2390,12 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2507,6 +2544,12 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2655,6 +2698,12 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10424,6 +10473,12 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10642,6 +10697,12 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10860,6 +10921,12 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11283,6 +11350,12 @@ export const onCreateAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11529,6 +11602,12 @@ export const onUpdateAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11775,6 +11854,12 @@ export const onDeleteAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12078,6 +12163,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12113,6 +12199,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12148,6 +12235,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12188,7 +12276,9 @@ export const onCreateUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12209,7 +12299,9 @@ export const onUpdateUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12230,7 +12322,9 @@ export const onDeleteUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -13195,6 +13289,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -13238,6 +13333,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -13281,6 +13377,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }

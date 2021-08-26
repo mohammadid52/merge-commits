@@ -591,6 +591,12 @@ export const getRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -705,6 +711,12 @@ export const listRooms = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -822,6 +834,12 @@ export const getRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -4577,6 +4595,12 @@ export const getPersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -5057,6 +5081,12 @@ export const getAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -5395,6 +5425,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -5443,6 +5474,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         studentID
         studentAuthID
         studentEmail
+        roomID
         currentLocation
         lessonProgress
         pageData {
@@ -5476,7 +5508,9 @@ export const getUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -5510,7 +5544,9 @@ export const listUniversalJournalDatas = /* GraphQL */ `
         }
         feedbacks
         lessonID
+        syllabusLessonID
         lessonType
+        roomID
         createdAt
         updatedAt
       }
@@ -6095,6 +6131,7 @@ export const getPersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -6150,6 +6187,7 @@ export const listPersonSentimentss = /* GraphQL */ `
         date
         time
         responseText
+        backstory
         createdAt
         updatedAt
       }
