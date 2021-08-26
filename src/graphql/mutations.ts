@@ -13911,6 +13911,7 @@ export const createPersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -13957,6 +13958,7 @@ export const updatePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -14003,6 +14005,7 @@ export const deletePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
