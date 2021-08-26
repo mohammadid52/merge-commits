@@ -623,9 +623,9 @@ const EditClass = (props: EditClassProps) => {
             {!loading ? (
               classStudents.length ? (
                 <Fragment>
-                  <div className="mt-8 w-9/10 m-auto px-2">
-                    <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
-                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                  <div className="mt-8 w-full lg:w-9/10 m-auto px-2">
+                    <div className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
+                      <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                         {dictionary.TABLE.SNO}
                       </div>
                       <div className="flex w-5/10 items-center px-4 py-2">
@@ -639,12 +639,12 @@ const EditClass = (props: EditClassProps) => {
                     </div>
                   </div>
 
-                  <div className="mb-4 w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
+                  <div className="mb-4 w-full lg:w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => (
                       <div
                         key={item.id}
-                        className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                        <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                        className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                        <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                           {index + 1}.
                         </div>
                         <div
@@ -714,7 +714,9 @@ const EditClass = (props: EditClassProps) => {
                           <DeleteActionBtn handleClick={() => onDelete(item.id)} />
                           {studentIdToEdit === item.id ? (
                             <span
-                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]} ${updating ? 'animate-spin' : ''}`}
+                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
+                                theme.textColor[themeColor]
+                              } ${updating ? 'animate-spin' : ''}`}
                               onClick={() => setStudentIdToEdit('')}>
                               {updating ? <FaSpinner /> : <FaTimes />}
                             </span>

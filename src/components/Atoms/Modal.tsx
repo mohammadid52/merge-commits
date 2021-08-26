@@ -48,7 +48,9 @@ const ModalHeader = (headerProps: {
 const ModalBody = (bodyProps: {children: React.ReactNode; closeOnBackdrop?: boolean}) => {
   const {children, closeOnBackdrop} = bodyProps;
   return (
-    <div className={`relative ${closeOnBackdrop ? 'p-2' : 'p-4'} flex-auto`}>
+    <div
+      className={`relative ${closeOnBackdrop ? 'p-2' : 'p-4'} flex-auto overflow-y-scroll`}
+      style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
   );

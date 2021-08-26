@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {HiPencil} from 'react-icons/hi';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+// import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as mutation from '../../../../../../graphql/mutations';
@@ -16,7 +16,7 @@ import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
 interface IImpactLog {
-  impactDate: Date | null;
+  impactDate: Date;
   reasonComment: string;
   lessonImpact: number;
   adjustment: string;
@@ -43,12 +43,18 @@ const ClassRoomHolidays = () => {
     }
   }, []);
 
+  const sortRecords = (data:any) => {
+    return data ? data.sort(
+      (a: IImpactLog, b: IImpactLog) => +new Date(a.impactDate) - +new Date(b.impactDate)
+    ) : []; 
+  }
+
   const getImpactLogs = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getRoomLessonImpactLogs, {id: roomId})
       );
-      setLessonImpactLogs(result?.data?.getRoom.lessonImpactLog || []);
+      setLessonImpactLogs(sortRecords(result?.data?.getRoom.lessonImpactLog));
       setLoading(false);
     } catch (error) {
       setLessonImpactLogs([]);
@@ -62,7 +68,7 @@ const ClassRoomHolidays = () => {
   const handleOnDragEnd = () => {};
 
   const postMutation = (data: any) => {
-    setLessonImpactLogs(data);
+    setLessonImpactLogs(sortRecords(data));
     setActiveIndex(null);
     setFormOpen(false);
   };
@@ -83,7 +89,7 @@ const ClassRoomHolidays = () => {
           },
         })
       );
-      setLessonImpactLogs(result?.data?.updateRoom.lessonImpactLog);
+      setLessonImpactLogs(sortRecords(result?.data?.updateRoom.lessonImpactLog));
       setDeleting(false);
       closeDeleteModal();
     };
@@ -94,10 +100,17 @@ const ClassRoomHolidays = () => {
     });
   };
 
+  const handleCancel = () => {
+    setFormOpen(false);
+    if(activeIndex){
+      setActiveIndex(null);
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between">
-        <div className="text-lg font-medium mb-4">Lesson Impact Logs</div>
+        <div className="text-lg font-medium mb-4">Schedule Impact Log</div>
         <AddButton
           className="ml-4 py-1 mb-2"
           label={'Add'}
@@ -132,57 +145,60 @@ const ClassRoomHolidays = () => {
         ) : (
           <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
             {lessonImpactLogs.length ? (
-              <DragDropContext onDragEnd={handleOnDragEnd}>
-                <Droppable droppableId="partContent">
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {lessonImpactLogs.map((item: IImpactLog, idx: number) => {
-                        return (
-                          <Draggable draggableId={`${idx}`} index={idx} key={`${idx}`}>
-                            {(provided) => (
-                              <div
-                                key={`${idx}`}
-                                className={`flex justify-between bg-white w-full border-b-0 border-gray-200 ${
-                                  idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-                                }`}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
-                                <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                                  {new Date(item.impactDate).toLocaleDateString()}
-                                </div>
-                                <div className="w-4/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                                  {item.reasonComment}
-                                </div>
-                                <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                                  {item.lessonImpact * 100}%
-                                </div>
-                                <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                                  {item.adjustment}
-                                </div>
-                                <div className="w-2/10 flex px-4 py-3 flex justify-center">
-                                  <span
-                                    className="w-auto cursor-pointer"
-                                    onClick={() => handleEdit(idx)}>
-                                    <HiPencil className="w-4 h-4" />
-                                  </span>
-                                  <span
-                                    className="w-auto cursor-pointer"
-                                    onClick={() => onDelete(idx)}>
-                                    <DeleteActionBtn handleClick={() => console.log()} />
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
+              // <DragDropContext onDragEnd={handleOnDragEnd}>
+              //   <Droppable droppableId="partContent">
+              //     {(provided) => (
+              //       <div {...provided.droppableProps} ref={provided.innerRef}>
+              lessonImpactLogs.map(
+                (item: IImpactLog, idx: number) => {
+                  return (
+                    // <Draggable draggableId={`${idx}`} index={idx} key={`${idx}`}>
+                    // {(provided) => (
+                    <div
+                      key={`${idx}`}
+                      className={`flex justify-between bg-white w-full border-b-0 border-gray-200 ${
+                        idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'
+                      }`}
+                      // ref={provided.innerRef}
+                      // {...provided.draggableProps}
+                      // {...provided.dragHandleProps}
+                    >
+                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                        {new Date(item.impactDate).toLocaleDateString()}
+                      </div>
+                      <div className="w-4/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                        {item.reasonComment || '-'}
+                      </div>
+                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                        {item.lessonImpact * 100}%
+                      </div>
+                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                        {item.adjustment || '-'}
+                      </div>
+                      <div className="w-2/10 flex px-4 py-3 flex justify-center">
+                        <span
+                          className="w-auto cursor-pointer"
+                          onClick={() => handleEdit(idx)}>
+                          <HiPencil className="w-4 h-4" />
+                        </span>
+                        <span
+                          className="w-auto cursor-pointer"
+                          onClick={() => onDelete(idx)}>
+                          <DeleteActionBtn handleClick={() => console.log()} />
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+                  );
+                }
+                // </Draggable>
+              )
             ) : (
+              // })}
+              // {provided.placeholder}
+              // </div>
+              // )}
+              //   </Droppable>
+              // </DragDropContext>
               <div className="text-center p-5">No records found</div>
             )}
           </div>
@@ -203,12 +219,13 @@ const ClassRoomHolidays = () => {
           title={'Add holiday'}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={() => setFormOpen(false)}>
+          closeAction={handleCancel}>
           <HolidayFormComponent
             activeIndex={activeIndex}
             roomId={roomId}
             lessonImpactLogs={lessonImpactLogs}
             postMutation={postMutation}
+            handleCancel={handleCancel}
           />
         </Modal>
       )}

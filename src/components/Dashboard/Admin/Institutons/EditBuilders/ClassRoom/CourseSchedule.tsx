@@ -235,12 +235,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 <div className="text-red-500">{errors.endTime}</div>
               </div>
             </div>
-            <div className="grid grid-cols-2 w-148">
+            <div className="grid grid-cols-1 2xl:grid-cols-2 w-full 2xl:w-148">
               <div className="flex mt-4">
                 <span className="w-auto inline-flex items-center">
                   <FaCalendarDay className="w-6 h-6 mr-2" />
                 </span>
-                <div className="w-64">
+                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
                     onChange={(_: string, name: string) =>
                       handleSelection(name, 'weekDay')
@@ -255,7 +255,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 <span className="w-auto inline-flex items-center">
                   <FiRefreshCw className="w-6 h-6 ml-1 mr-3" />
                 </span>
-                <div className="w-64">
+                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
                     onChange={(_: string, name: string) =>
                       handleSelection(name, 'frequency')
@@ -271,7 +271,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center">
                 <IoGlobeOutline className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-140">
+              <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
                 <FormInput
                   name="conferenceCallLink"
                   value={scheduleData.conferenceCallLink}
@@ -286,7 +286,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center">
                 <IoLocation className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-140">
+              <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
                 <FormInput
                   name="location"
                   value={scheduleData.location}
@@ -299,7 +299,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex">
                 <CgNotes className="w-6 h-6 mr-2" />
               </span>
-              <div className="w-140">
+              <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
                 <FormInput
                   name="notes"
                   value={scheduleData.notes}
@@ -313,7 +313,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
             </div>
           </div>
-          <div className="flex my-8 justify-end w-148">
+          <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
             <Buttons
               btnClass="py-3 px-12 text-sm mr-4"
               label={BUTTONS[userLanguage]['CANCEL']}

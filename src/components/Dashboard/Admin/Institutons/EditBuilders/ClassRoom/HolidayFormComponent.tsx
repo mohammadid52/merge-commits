@@ -12,10 +12,10 @@ import * as mutation from '../../../../../../graphql/mutations';
 import {awsFormatDate, dateString} from '../../../../../../utilities/time';
 
 const durationOptions = [
-  {id: 1, name: '1'},
-  {id: 2, name: '2'},
-  {id: 3, name: '3'},
-  {id: 4, name: '4'},
+  {id: 1, name: '.25'},
+  {id: 2, name: '.5'},
+  {id: 3, name: '.75'},
+  {id: 4, name: '1'},
 ];
 
 const adjustmentOptions = [
@@ -44,12 +44,15 @@ const HolidayFormComponent = ({
     impactDate: null,
     reasonComment: '',
     lessonImpact: '1',
-    adjustment: '',
+    adjustment: 'Push',
   });
   const [serverSideLog, setServerSideLog] = useState({
-    message:"",
-    isError:false
-  })
+    message: '',
+    isError: false,
+  });
+  const [errors, setErrors] = useState({
+    impactDate: '',
+  });
 
   useEffect(() => {
     if (activeIndex !== null) {
@@ -64,6 +67,13 @@ const HolidayFormComponent = ({
           adjustment,
         });
       }
+    }else{
+      setFormValues({
+        impactDate: null,
+        reasonComment: '',
+        lessonImpact: '1',
+        adjustment: 'Push',
+      });
     }
   }, [activeIndex, lessonImpactLogs]);
 
@@ -89,34 +99,48 @@ const HolidayFormComponent = ({
     }));
   };
 
+  const validateForm = async () => {
+    const errorMessages: any = {};
+    let isValid: boolean = true;
+    if (!formValues.impactDate) {
+      errorMessages.impactDate = 'Date is required';
+      isValid = false;
+    }
+    setErrors(errorMessages);
+    return isValid;
+  };
+
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const payload = {
-        impactDate: awsFormatDate(dateString('-', 'WORLD', formValues.impactDate)),
-        reasonComment: formValues.reasonComment,
-        lessonImpact: Number(formValues.lessonImpact),
-        adjustment: formValues.adjustment,
-      };
-      const input = {
-        id: roomId,
-        lessonImpactLog:
-          activeIndex !== null
-            ? lessonImpactLogs.map((log: any, index: number) =>
-                activeIndex === index ? payload : log
-              )
-            : [...lessonImpactLogs, payload],
-      };
-      const result: any = await API.graphql(
-        graphqlOperation(mutation.updateRoom, {input: input})
-      );
-      setLoading(false);
-      postMutation(result?.data?.updateRoom.lessonImpactLog);
-    } catch (error) {
-      setServerSideLog({
-        message:"Error while updating logs",
-        isError: true
-      });
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        setLoading(true);
+        const payload = {
+          impactDate: awsFormatDate(dateString('-', 'WORLD', formValues.impactDate)),
+          reasonComment: formValues.reasonComment,
+          lessonImpact: Number(formValues.lessonImpact),
+          adjustment: formValues.adjustment,
+        };
+        const input = {
+          id: roomId,
+          lessonImpactLog:
+            activeIndex !== null
+              ? lessonImpactLogs.map((log: any, index: number) =>
+                  activeIndex === index ? payload : log
+                )
+              : [...lessonImpactLogs, payload],
+        };
+        const result: any = await API.graphql(
+          graphqlOperation(mutation.updateRoom, {input: input})
+        );
+        setLoading(false);
+        postMutation(result?.data?.updateRoom.lessonImpactLog);
+      } catch (error) {
+        setServerSideLog({
+          message: 'Error while updating logs',
+          isError: true,
+        });
+      }
     }
   };
 
@@ -127,13 +151,14 @@ const HolidayFormComponent = ({
           <div className="grid grid-cols-2">
             <div className="px-3 py-4">
               <label className={'text-gray-700 block text-xs font-semibold leading-5'}>
-                Date
+                Date<span className="text-red-500">*</span>
               </label>
               <DatePickerInput
                 date={formValues.impactDate}
                 placeholder={'Date'}
                 onChange={(date: Date | null) => handleDateChange(date)}
               />
+              <div className="text-red-500">{errors.impactDate}</div>
             </div>
             <div className="px-3 py-4">
               <FormInput
@@ -141,7 +166,6 @@ const HolidayFormComponent = ({
                 onChange={handleInputChange}
                 name="reasonComment"
                 label={'Reason'}
-                isRequired
               />
             </div>
           </div>
@@ -153,8 +177,8 @@ const HolidayFormComponent = ({
                 }
                 selectedItem={formValues.lessonImpact}
                 list={durationOptions}
-                label={'Duration'}
-                placeholder={'Select duration'}
+                label={'Time Impact'}
+                placeholder={'Select time impact'}
               />
             </div>
             <div className="px-3 py-4">
