@@ -3446,6 +3446,14 @@ export const listUnits = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
     }
   }
 `;
