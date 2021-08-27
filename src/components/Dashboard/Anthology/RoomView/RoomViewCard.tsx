@@ -34,7 +34,7 @@ const RoomViewCard = ({
   const noneSelected = mainSection === '' && sectionRoomID === '' && sectionTitle === '';
   return (
     <div
-      className={`relative ${
+      className={`relative animate-fadeIn ${
         noneSelected
           ? 'z-50'
           : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID

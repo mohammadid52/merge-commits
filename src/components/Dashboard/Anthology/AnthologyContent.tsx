@@ -15,6 +15,10 @@ import {
 } from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
 import Toggle from './AnthologyContentNote/Toggle';
+import {IconContext} from 'react-icons';
+import {FaSpinner} from 'react-icons/fa';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {getAsset} from '../../../assets';
 
 export interface ContentCardProps {
   viewEditMode?: ViewEditMode;
@@ -63,6 +67,7 @@ const AnthologyContent = (props: ContentCardProps) => {
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const handleInputFieldUpdate = (e: any) => {
     const {value} = e.target;
@@ -260,26 +265,42 @@ const AnthologyContent = (props: ContentCardProps) => {
         </ContentCard>
       )}
       {content.length > 0 ? (
-        content.map((contentObj: UniversalJournalData, idx: number) => (
-          <SingleNote
-            idx={idx}
-            mainSection={mainSection}
-            subSection={subSection}
-            onCancel={onCancel}
-            viewModeView={viewModeView}
-            editModeView={editModeView}
-            viewEditMode={viewEditMode}
-            handleEditToggle={handleEditToggle}
-            contentLen={content.length}
-            contentObj={
-              currentContentObj.id === contentObj.id ? currentContentObj : contentObj
-            }
-            allUniversalJournalData={allUniversalJournalData}
-            setAllUniversalJournalData={setAllUniversalJournalData}
-            allStudentData={allStudentData}
-            setAllStudentData={setAllStudentData}
-          />
-        ))
+        content.map((contentObj: UniversalJournalData, idx: number) => {
+          return (
+            <EmptyViewWrapper
+              wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+              timedRevealInt={idx + 1}
+              fallbackContents={
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
+                    style: {},
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              }>
+              <SingleNote
+                idx={idx}
+                mainSection={mainSection}
+                subSection={subSection}
+                onCancel={onCancel}
+                viewModeView={viewModeView}
+                editModeView={editModeView}
+                viewEditMode={viewEditMode}
+                handleEditToggle={handleEditToggle}
+                contentLen={content.length}
+                contentObj={
+                  currentContentObj.id === contentObj.id ? currentContentObj : contentObj
+                }
+                allUniversalJournalData={allUniversalJournalData}
+                setAllUniversalJournalData={setAllUniversalJournalData}
+                allStudentData={allStudentData}
+                setAllStudentData={setAllStudentData}
+              />
+            </EmptyViewWrapper>
+          );
+        })
       ) : (
         <div className="p-12 flex flex-center items-center">
           <p className="text-center text-lg text-gray-500">
