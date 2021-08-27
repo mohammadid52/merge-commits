@@ -53,6 +53,8 @@ type globalActions =
         onBoardSurvey: boolean;
         role: string;
         image: string;
+        lastLoggedOut?: string;
+        lastLoggedIn?: string;
       };
     }
   | {
@@ -140,6 +142,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
           location: action.payload.location,
+          lastLoggedIn: action.payload.lastLoggedIn,
+          lastLoggedOut: action.payload.lastLoggedOut,
         },
       };
     case 'LOG_IN':

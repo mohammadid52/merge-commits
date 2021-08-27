@@ -3,9 +3,11 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
+import {getLocalStorageData} from '../utilities/localStorage';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ###################### TEACHER VIEWING TRIGGER ###################### //
@@ -41,7 +43,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 8000;
+  const STANDARD_INTERVAL = 6000;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -131,6 +133,9 @@ const useStudentTimer = () => {
           let data = {
             id: currentIdObj.id,
             pageData: lessonState.studentData[currentIdObj.pageIdx],
+            hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
+            exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
+            roomID: getRoomData.id,
           };
 
           try {

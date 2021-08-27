@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEdit} from 'react-icons/fa';
+import {FaEdit, FaSpinner} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -7,71 +7,188 @@ import useDictionary from '../../../customHooks/dictionary';
 
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
+import * as customQueries from '../../../customGraphql/customQueries';
 
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  StudentExerciseData,
+  UniversalJournalData,
+  UniversalLessonStudentData,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import {nanoid} from 'nanoid';
 import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
 
+import TabView from './TabView';
+import RoomView from './RoomView';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {IconContext} from 'react-icons/lib';
+import usePrevious from '../../../customHooks/previousProps';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
-  option: number;
+  option?: number;
+  recordID?: string;
 };
 
 const Anthology = () => {
-  const {
-    state,
-    lessonState,
-    lessonDispatch,
-    dispatch,
-    userLanguage,
-    theme,
-    clientKey,
-  } = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
+  // ##################################################################### //
+  // ########################### INITIALIZATION ########################## //
+  // ##################################################################### //
+
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
 
+  useEffect(() => {
+    const initialDataFetch = async () => {
+      await listUniversalJournalData();
+      await getStudentData();
+    };
+    initialDataFetch();
+  }, []);
+
   // ##################################################################### //
-  // ######################## LOADED STUDENT DATA ######################## //
+  // ############################ MAIN STORAGE ########################### //
   // ##################################################################### //
 
-  /**
-   * This section is currently emptied out because
-   * the data-structure for student data is different
-   * Now it follows the UniversalLessonStudentData structure
-   */
+  const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
+  const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
 
-  const [loadingContent, setLoadingContent] = useState(false);
+  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
+    UniversalJournalData[]
+  >([]);
+
+  // ##################################################################### //
+  // ##################### CRUD STUDENT EXERCISE DATA #################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~ //
+  const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
+
+  const getStudentData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
+          hasExerciseData: {eq: true},
+        },
+      };
+
+      const studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+      );
+      // existing student rows
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      if (studentDataRows?.length > 0) {
+        setAllStudentData(studentDataRows);
+      }
+      setStudentDataLoaded(true);
+    } catch (e) {
+      //
+      setStudentDataLoaded(true);
+    } finally {
+    }
+  };
+
+  const reduceRoomExerciseData = (roomID: string) => {
+    const allExerciseEntryData = allStudentData.reduce(
+      (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
+        if (val.roomID === roomID) {
+          const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
+            return {
+              id: exercise.id,
+              studentID: val.studentID,
+              studentAuthID: val.studentAuthID,
+              studentEmail: val.studentEmail,
+              feedbacks: exercise.feedbacks || [],
+              shared: exercise?.shared || false,
+              entryData: exercise.entryData.map((entry: any) => {
+                return {
+                  ...entry,
+                  type: entry.domID.includes('title') ? 'header' : 'content',
+                };
+              }),
+              recordID: val.id,
+              updatedAt: val?.updatedAt,
+            };
+          });
+          return [...acc, ...adaptedExerciseEntries];
+        } else {
+          return acc;
+        }
+      },
+      []
+    );
+    setAllExerciseData(allExerciseEntryData);
+  };
+
+  const updateStudentData = async () => {
+    const selectStudentDataRecord = allStudentData.find(
+      (record: any) => record.id === journalEntryData.recordID
+    );
+
+    const newExerciseData = {
+      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+        if (exercise.id === journalEntryData.id) {
+          return {...exercise, entryData: journalEntryData.entryData};
+        } else {
+          return exercise;
+        }
+      }),
+    };
+
+    const mergedStudentData = allStudentData.map((dataRecord: any) => {
+      if (dataRecord.id === selectStudentDataRecord.id) {
+        return {...dataRecord, exerciseData: newExerciseData.exerciseData};
+      } else {
+        return dataRecord;
+      }
+    });
+
+    try {
+      let updatedStudentData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+          input: {
+            id: selectStudentDataRecord.id,
+            exerciseData: newExerciseData.exerciseData,
+          },
+        })
+      );
+      setAllStudentData(mergedStudentData);
+    } catch (e) {
+      console.error('error updating writing exercise - ', e);
+    } finally {
+      //
+    }
+  };
 
   // ##################################################################### //
   // ##################### CRUD JOURNAL & CLASS NOTES #################### //
   // ##################################################################### //
 
-  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
-  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
-    UniversalJournalData[]
-  >([]);
+  // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
   const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
     id: '',
-    studentID: '',
-    studentAuthID: '',
-    studentEmail: '',
+    studentID: state.user.authId,
+    studentAuthID: state.user.authId,
+    studentEmail: state.user.studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
+    shared: false,
     entryData: [
       {
         domID: `title_${nanoid(4)}`,
@@ -90,11 +207,8 @@ const Anthology = () => {
   const [universalJournalDataLoaded, setUniversalJournalDataLoaded] = useState<boolean>(
     false
   );
-  const [notesChanged, setNotesChanged] = useState<boolean>(false);
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const listUniversalJournalData = async () => {
-    const {lessonID} = urlParams;
     const user = await Auth.currentAuthenticatedUser();
     const studentAuthId = user.username;
 
@@ -117,27 +231,24 @@ const Anthology = () => {
       } else {
         console.log('anthology - NO universalJournalDatas');
       }
+      setUniversalJournalDataLoaded(true);
     } catch (e) {
       console.error('error listing journal data - ', e);
-    } finally {
       setUniversalJournalDataLoaded(true);
+    } finally {
     }
   };
 
   const createJournalData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
-
+    const input = {
+      studentID: journalEntryData.studentID,
+      studentAuthID: journalEntryData.studentAuthID,
+      studentEmail: journalEntryData.studentEmail,
+      type: journalEntryData.type,
+      entryData: journalEntryData.entryData,
+    };
+    // console.log('create input - ', input);
     try {
-      const input = {
-        studentID: studentAuthId,
-        studentAuthID: studentAuthId,
-        studentEmail: email,
-        type: journalEntryData.type,
-        entryData: journalEntryData.entryData,
-      };
-
       const newJournalData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalJournalData, {input})
       );
@@ -150,9 +261,13 @@ const Anthology = () => {
   };
 
   const updateJournalData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
+    const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
+      if (dataRecord.id === journalEntryData.id) {
+        return {...dataRecord, entryData: journalEntryData.entryData};
+      } else {
+        return dataRecord;
+      }
+    });
 
     try {
       const input = {
@@ -165,22 +280,33 @@ const Anthology = () => {
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
+      setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
       console.error('error updating journal data - ', e);
     } finally {
-      // console.log('updated journal data...');
-      if (notesChanged) setNotesChanged(false);
-      if (saveInProgress) setSaveInProgress(false);
+      //
     }
   };
 
   const deleteJournalData = async () => {
+    const deletedJournalData = allUniversalJournalData.reduce(
+      (acc: any[], dataRecord: any) => {
+        if (dataRecord.id === viewEditMode.dataID) {
+          return acc;
+        } else {
+          return [...acc, dataRecord];
+        }
+      },
+      []
+    );
+
     try {
       const deleteJournalData: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalJournalData, {
           input: {id: viewEditMode.dataID},
         })
       );
+      setAllUniversalJournalData(deletedJournalData);
     } catch (e) {
       console.error('error deleting journal data - ', e);
     }
@@ -188,7 +314,9 @@ const Anthology = () => {
 
   // ~~~~~~~~~~~~~ UPDATE NOTES ~~~~~~~~~~~~ //
   const selectJournalData = async () => {
-    const selectExisting = allUniversalJournalData.find(
+    const selectSource =
+      subSection !== 'Work' ? allUniversalJournalData : allExerciseData;
+    const selectExisting = selectSource.find(
       (journalObj: any) => journalObj.id === viewEditMode.dataID
     );
     setJournalEntryData({
@@ -196,8 +324,11 @@ const Anthology = () => {
       studentID: selectExisting.studentID,
       studentAuthID: selectExisting.studentAuthID,
       studentEmail: selectExisting.studentEmail,
+      shared: selectExisting?.shared,
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
+      recordID: selectExisting?.recordID,
+      updatedAt: selectExisting?.updatedAt,
     });
   };
 
@@ -214,7 +345,6 @@ const Anthology = () => {
     };
     // console.log('input - ', html);
     setJournalEntryData(updatedNotesData);
-    if (!notesChanged) setNotesChanged(true);
   };
 
   // ##################################################################### //
@@ -224,23 +354,31 @@ const Anthology = () => {
     mode: '',
     dataID: '',
     option: 0,
+    recordID: '',
   });
 
   const handleEditToggle = (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | 'delete' | '',
     dataID: string,
-    option?: number
+    option?: number,
+    recordID?: string
   ) => {
-    setViewEditMode({mode: editMode, dataID: dataID, option: option | 0});
+    setViewEditMode({
+      mode: editMode,
+      dataID: dataID,
+      option: option || 0,
+      recordID: recordID || '',
+    });
   };
 
   const handleResetJournalEntry = async () => {
     setJournalEntryData({
       id: '',
-      studentID: '',
-      studentAuthID: '',
-      studentEmail: '',
+      studentID: state.user.authId,
+      studentAuthID: state.user.authId,
+      studentEmail: state.user.email,
       type: 'journal-entry',
+      shared: false,
       feedbacks: [''],
       entryData: [
         {
@@ -258,152 +396,204 @@ const Anthology = () => {
   };
 
   // UseEffect for monitoring save/create new changes and calling functions
+
+  // TODO: functions need renaming so that
   useEffect(() => {
     const manageSaveAndCreate = async () => {
-      if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
-        await selectJournalData();
-      } else if (viewEditMode.mode === 'save') {
-        await handleResetJournalEntry();
-        await updateJournalData();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === 'savenew') {
-        await createJournalData();
-        await handleResetJournalEntry();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
-        await deleteJournalData();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === '') {
-        await handleResetJournalEntry();
+      if (subSection !== 'Work') {
+        if (viewEditMode.mode === 'create') {
+          await handleResetJournalEntry();
+        } else if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+          await selectJournalData();
+        } else if (viewEditMode.mode === 'save') {
+          await handleResetJournalEntry();
+          await updateJournalData();
+        } else if (viewEditMode.mode === 'savenew') {
+          await createJournalData();
+          await handleResetJournalEntry();
+          await listUniversalJournalData();
+        } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
+          await deleteJournalData();
+        } else if (viewEditMode.mode === '') {
+          await handleResetJournalEntry();
+        }
+      } else {
+        if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+          await selectJournalData();
+        } else if (viewEditMode.mode === 'save') {
+          await handleResetJournalEntry();
+          await updateStudentData();
+        } else if (viewEditMode.mode === '') {
+          await handleResetJournalEntry();
+        }
       }
     };
+
     manageSaveAndCreate();
   }, [viewEditMode]);
 
   // ##################################################################### //
-  // #################### DISPLAY CONTENT BASED ON TAB ################### //
+  // ####################### DISPLAY CONTENT LOGIC ####################### //
   // ##################################################################### //
-  const [tab, setTab] = useState(0);
-  const [subSection, setSubSection] = useState<string>('Journal');
 
-  const filteredContent =
-    allUniversalJournalData?.length > 0
-      ? allUniversalJournalData.reduce(
-          (acc: UniversalJournalData[], data: UniversalJournalData) => {
-            if (subSection === 'Journal' && data.type === 'journal-entry') {
-              return [...acc, data];
-            } else if (subSection === 'Notes' && data.type === 'class-note') {
-              return [...acc, data];
-            } else {
-              return acc;
-            }
-          },
-          []
-        )
-      : [];
+  const [switchReady, setSwitchReady] = useState<boolean>(true);
+  const [mainSection, setMainSection] = useState<string>('');
+  const [sectionRoomID, setSectionRoomID] = useState<string>('');
+  const [sectionTitle, setSectionTitle] = useState<string>('');
+  const [subSection, setSubSection] = useState<string>('checkIn');
+  const [tab, setTab] = useState<number>(0);
 
-  const Content = (
-    <AnthologyContent
-      // loadingContent={loadingContent}
-      onCancel={() => {}}
-      viewEditMode={viewEditMode}
-      handleEditToggle={handleEditToggle}
-      updateJournalContent={updateJournalDataContent}
-      subSection={subSection}
-      createTemplate={journalEntryData}
-      currentContentObj={journalEntryData}
-      content={subSection !== 'Work' ? filteredContent : []}
-      getContentObjIndex={() => 0}
-    />
-  );
-
-  const tabs = [
-    {
-      index: 0,
-      title: anthologyDict[userLanguage].TABS.A,
-      id: 'Journal',
-      content: Content,
-    },
-    {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.B,
-      id: 'Work',
-      content: Content,
-    },
-    {
-      index: 2,
-      title: anthologyDict[userLanguage].TABS.C,
-      id: 'Notes',
-      content: Content,
-    },
-  ];
-
-  const handleTabClick = (tab: number, e: React.MouseEvent) => {
-    const {id} = e.target as HTMLElement;
-
-    setViewEditMode({...viewEditMode, mode: ''});
-    setTab(tab);
-
-    if (id !== subSection) {
-      if (id !== 'subSectionTabs') {
-        setSubSection(id);
-      }
-    }
-  };
-
-  // ##################################################################### //
-  // ###################### LOGIC FOR DATA FETCHING ###################### //
-  // ##################################################################### //
+  const previousRoom = usePrevious(sectionRoomID);
 
   useEffect(() => {
-    if (subSection === 'Journal' || subSection === 'Notes') {
-      if (!universalJournalDataLoaded) {
-        listUniversalJournalData();
+    const notebookSwitchProcess = async () => {
+      if (switchReady) {
+        await setSwitchReady(false);
+        setTimeout(() => {
+          setSwitchReady(true);
+        }, 250);
       }
+    };
+
+    if (sectionRoomID !== previousRoom) {
+      notebookSwitchProcess();
     }
-  }, []);
+  }, [sectionRoomID]);
+
+  // ~~~~~~ FILTER ROOM EXERCISE DATA ~~~~~~ //
+
+  useEffect(() => {
+    // TODO: adding entrydata type with an additional map is bad coding...
+    if (allStudentData.length > 0 && sectionRoomID !== '') {
+      reduceRoomExerciseData(sectionRoomID);
+    }
+  }, [allStudentData, sectionRoomID]);
+
+  // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
+
+  const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (studentDataLoaded && universalJournalDataLoaded) {
+      setNotebookLoaded(true);
+    }
+  }, [studentDataLoaded, universalJournalDataLoaded]);
+
+  const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
+  useEffect(() => {
+    const mergeAll = [...allStudentData, ...allUniversalJournalData];
+    if (mergeAll.length > 0) {
+      const uniqueIds = mergeAll.reduce((acc: string[], mixedObj: any) => {
+        if (mixedObj.hasOwnProperty('roomID')) {
+          if (acc.indexOf(mixedObj.roomID) === -1) {
+            return [...acc, mixedObj.roomID];
+          } else {
+            return acc;
+          }
+        } else {
+          return acc;
+        }
+      }, []);
+      if (uniqueIds.length > 0) {
+        setRoomCardIds(uniqueIds);
+      }
+    } else {
+    }
+  }, [allStudentData, allUniversalJournalData]);
+
+  const handleSectionSelect = (
+    section: string,
+    roomIdString: string,
+    roomName?: string
+  ) => {
+    if (section === 'Class Notebook') {
+      setMainSection('Class');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(roomName);
+      setSubSection('Work');
+      setTab(0);
+    } else {
+      setMainSection('Private');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+    }
+  };
 
   return (
     <React.Fragment>
       <div>
-        <HeroBanner imgUrl={notebookBanner} title={'Notebook'} />
+        <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
       </div>
       <div className="px-10">
         <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-50 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
           <h2 className={`text-base text-center font-semibold`}>
             All your work in place
           </h2>
         </div>
 
         <div className="mx-auto max-w-256">
-          <SectionTitleV3
-            fontSize="2xl"
-            fontStyle="bold"
-            extraContainerClass="px-10"
-            extraClass="leading-6 text-gray-900"
-            withButton={
-              tab === 0 && (
-                <Buttons
-                  Icon={FaEdit}
-                  customStyles={{width: '14rem'}}
-                  label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                  onClick={() => handleEditToggle('create', '')}
-                  type="button"
-                />
-              )
-            }
-            title={anthologyDict[userLanguage].TITLE}
-          />
-          <div
-            className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-            <UnderlinedTabs
-              hideTooltip
-              activeTab={tab}
-              tabs={tabs}
-              updateTab={handleTabClick}
+          <div className="my-8">
+            <SectionTitleV3
+              title={anthologyDict[userLanguage]['TITLE_CONTAINER']}
+              fontSize="xl"
+              fontStyle="semibold"
+              extraContainerClass="px-6"
+              borderBottom
+              extraClass="leading-6 text-gray-900"
             />
+            <EmptyViewWrapper
+              wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+              revealContents={notebookLoaded}
+              fallbackContents={
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
+                    style: {},
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              }>
+              <RoomView
+                roomIdList={roomCardIds}
+                mainSection={mainSection}
+                sectionRoomID={sectionRoomID}
+                sectionTitle={sectionTitle}
+                handleSectionSelect={handleSectionSelect}
+              />
+            </EmptyViewWrapper>
           </div>
+
+          <EmptyViewWrapper
+            wrapperClass={`min-h-24 py-4 overflow-hidden mb-4`}
+            revealContents={sectionRoomID !== ''}
+            fallbackContents={
+              <p className="text-center text-lg text-gray-500">
+                Please select a notebook above to view your data
+              </p>
+            }>
+            <TabView
+              viewEditMode={viewEditMode}
+              handleEditToggle={handleEditToggle}
+              updateJournalContent={updateJournalDataContent}
+              mainSection={mainSection}
+              sectionRoomID={sectionRoomID}
+              sectionTitle={sectionTitle}
+              subSection={subSection}
+              setSubSection={setSubSection}
+              tab={tab}
+              setTab={setTab}
+              createTemplate={journalEntryData}
+              currentContentObj={journalEntryData}
+              allStudentData={allStudentData}
+              setAllStudentData={setAllStudentData}
+              allExerciseData={allExerciseData}
+              allUniversalJournalData={allUniversalJournalData}
+              setAllUniversalJournalData={setAllUniversalJournalData}
+            />
+          </EmptyViewWrapper>
         </div>
       </div>
     </React.Fragment>

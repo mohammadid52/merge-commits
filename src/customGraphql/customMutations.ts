@@ -1161,3 +1161,39 @@ export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
     }
   }
 `;
+
+export const updatePersonSentiments = /* GraphQL */ `
+  mutation UpdatePersonSentiments(
+    $input: UpdatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    updatePersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      backstory
+      updatedAt
+    }
+  }
+`;
+
+export const createPersonSentiments = /* GraphQL */ `
+  mutation CreatePersonSentiments(
+    $input: CreatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    createPersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      backstory
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;

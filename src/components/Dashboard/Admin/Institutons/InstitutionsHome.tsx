@@ -30,6 +30,7 @@ import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/Ed
 import { DashboardProps } from '../../Dashboard';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const { setCurrentPage } = props;
@@ -48,7 +49,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   }, [state.user.role]);
 
   return (
-    <div className={`w-full h-full p-8 flex justify-center`}>
+    <div className={`w-full h-full px-2 py-8 md:p-8 flex justify-center`}>
       <Switch>
         <Route
           exact
@@ -81,7 +82,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         <Route
           path={`${match.url}/room-edit`}
-          render={() => <EditRoom />} // Edit current room.
+          render={() => <ClassRoomBuilder />} // Edit current room.
         />
         {/* <Route
           path={`${match.url}/:institutionId/curricular/edit`}

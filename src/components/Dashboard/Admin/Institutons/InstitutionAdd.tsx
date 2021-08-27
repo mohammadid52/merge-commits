@@ -342,6 +342,9 @@ const InstitutionAdd = () => {
                     <div className="w-3/10">
                       <Selector
                         selectedItem={type}
+                        label={
+                          InstitutionAddDict[userLanguage]['FORM']['INSTITUTION_TYPE']
+                        }
                         placeholder={
                           InstitutionAddDict[userLanguage]['FORM']['INSTITUTION_TYPE']
                         }
