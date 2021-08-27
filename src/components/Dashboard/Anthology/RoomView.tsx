@@ -1,5 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useMemo, useCallback, memo} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import usePrevious from '../../../customHooks/previousProps';
 import {getImageFromS3} from '../../../utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
@@ -24,7 +25,12 @@ const RoomView = ({
 }: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
+  // ##################################################################### //
+  // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
+  // ##################################################################### //
+
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
+
   useEffect(() => {
     if (roomIdList.length > 0) {
       if (state.roomData.rooms.length > 0) {
@@ -52,28 +58,32 @@ const RoomView = ({
     }
   };
 
+  // ##################################################################### //
+  // ################### MAP ROOM OBJECTS TO NOTEBOOKS ################### //
+  // ##################################################################### //
+
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
-  const mapNotebookRoomCards = async () => {
+  const mapNotebookRoomCards = useCallback(async () => {
     const mapped =
       filteredRooms && filteredRooms.length > 0
         ? Promise.all(
             filteredRooms.map(async (item, idx: number) => {
-              const {teacher, curricula} = item;
+              const {curricula} = item;
               const bannerImage = await (curricula?.items[0]?.curriculum.image
                 ? getImageURL(curricula?.items[0]?.curriculum.image)
                 : null);
-              const roomName = item?.name;
+              const curriculumName = curricula?.items[0]?.curriculum.name;
 
               return (
                 <RoomViewCard
                   key={`notebook-${idx}`}
                   roomID={item.id}
+                  roomName={item.name}
                   mainSection={mainSection}
                   sectionRoomID={sectionRoomID}
-                  sectionTitle={sectionTitle}
+                  curriculumName={curriculumName}
                   handleSectionSelect={handleSectionSelect}
-                  roomName={roomName}
                   bannerImage={bannerImage}
                   type={`Class Notebook`}
                 />
@@ -83,11 +93,19 @@ const RoomView = ({
         : null;
 
     return await mapped;
-  };
+  }, [filteredRooms, sectionRoomID]);
+
+  const roomsRef = usePrevious(filteredRooms);
+  const sectionIDRef = usePrevious(sectionRoomID);
 
   useEffect(() => {
-    const mappedCardsOutput = mapNotebookRoomCards();
-    mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
+    if (sectionRoomID !== sectionIDRef || filteredRooms !== roomsRef) {
+      console.log('section id state change');
+      const mappedCardsOutput = mapNotebookRoomCards();
+      mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
+    } else {
+      console.log('avoided resetting statea to same');
+    }
   }, [filteredRooms, sectionRoomID]);
 
   return (
@@ -104,12 +122,13 @@ const RoomView = ({
             {mappedNotebookRoomCards &&
               mappedNotebookRoomCards.length > 0 &&
               mappedNotebookRoomCards}
+            {/* {mapNotebookRoomCards()} */}
+
             <RoomViewCard
               roomID={'private'}
               mainSection={mainSection}
               sectionRoomID={sectionRoomID}
               sectionTitle={sectionTitle}
-              roomName={'Journal & Emotions'}
               handleSectionSelect={handleSectionSelect}
               type={'Private Notebook'}
             />
@@ -120,4 +139,4 @@ const RoomView = ({
   );
 };
 
-export default RoomView;
+export default React.memo(RoomView);

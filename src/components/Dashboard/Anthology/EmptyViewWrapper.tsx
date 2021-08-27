@@ -1,9 +1,11 @@
 import React, {useContext, useState} from 'react';
+import {useEffect} from 'react';
 
 interface IEmptyViewWrapper {
   children?: React.ReactNode;
   fallbackContents?: any;
   revealContents?: boolean;
+  timedRevealInt?: number;
   wrapperClass?: string;
 }
 
@@ -11,14 +13,25 @@ const EmptyViewWrapper = ({
   children,
   fallbackContents,
   revealContents,
+  timedRevealInt,
   wrapperClass,
 }: IEmptyViewWrapper) => {
+  const [timeToReveal, setTimeToReveal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (timedRevealInt) {
+      setTimeout(() => {
+        setTimeToReveal(true);
+      }, timedRevealInt * 50);
+    }
+  }, [timedRevealInt]);
+
   return (
     <div
       className={`
       transition transform duration-500 ease-in-out
       ${
-        !revealContents
+        !revealContents && timedRevealInt === undefined
           ? `${
               wrapperClass
                 ? wrapperClass
@@ -28,7 +41,9 @@ const EmptyViewWrapper = ({
       }`}>
       <div
         className={`flex flex-center items-center transition duration-500 ease-in-out overflow-hidden ${
-          !revealContents ? 'p-12 h-full w-full opacity-100' : 'h-0 opacity-0'
+          !revealContents && timedRevealInt === undefined
+            ? 'p-12 h-full w-full opacity-100'
+            : 'h-0 opacity-0'
         }`}>
         {fallbackContents ? (
           fallbackContents
@@ -41,7 +56,7 @@ const EmptyViewWrapper = ({
 
       <div
         className={`transition duration-500 ease-in-out overflow-hidden ${
-          revealContents ? 'h-auto w-full opacity-100' : 'h-0 opacity-0'
+          revealContents || timeToReveal ? 'h-auto w-full opacity-100' : 'h-0 opacity-0'
         }`}>
         {children}
       </div>
@@ -49,4 +64,4 @@ const EmptyViewWrapper = ({
   );
 };
 
-export default EmptyViewWrapper;
+export default React.memo(EmptyViewWrapper);

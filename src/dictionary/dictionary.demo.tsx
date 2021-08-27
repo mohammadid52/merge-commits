@@ -9,6 +9,34 @@ const AuthDict: any = {
     LOGIN: 'TBD',
   },
 };
+const General: any = {
+  EN: {
+    SENTIMENT: {
+      TITLE: "How you've been?",
+      MODAL_TITLE: 'The Backstory',
+      EMOJIS: {
+        AWFUL: 'awful',
+        BAD: 'bad',
+        OKAY: 'okay',
+        GOOD: 'good',
+        GREAT: 'great',
+      },
+    },
+  },
+  ES: {
+    SENTIMENT: {
+      MODAL_TITLE: 'TBD',
+      TITLE: 'TBD',
+      EMOJIS: {
+        AWFUL: 'TBD',
+        BAD: 'TBD',
+        OKAY: 'TBD',
+        GOOD: 'TBD',
+        GREAT: 'TBD',
+      },
+    },
+  },
+};
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
@@ -3582,4 +3610,5 @@ export {
   LessonsListDict,
   EditQuestionModalDict,
   LearningEvidenceDict,
+  General,
 };

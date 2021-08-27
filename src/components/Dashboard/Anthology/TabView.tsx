@@ -83,6 +83,7 @@ const TabView = ({
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       updateJournalContent={updateJournalContent}
+      mainSection={mainSection}
       subSection={subSection}
       createTemplate={createTemplate}
       currentContentObj={currentContentObj}
@@ -116,7 +117,7 @@ const TabView = ({
       index: 0,
       title: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab subSection={subSection} />,
+      content: <SentimentTab />,
     },
     {
       index: 1,
@@ -165,7 +166,7 @@ const TabView = ({
             {getTitle()}
           </h2>
         </div>
-        {subSection === 'Journal' && (
+        {subSection === 'Journal' && tab === 1 && (
           <Buttons
             Icon={FaEdit}
             customStyles={{width: '14rem'}}

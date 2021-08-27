@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {IoImage, IoKeyOutline} from 'react-icons/io5';
 import {stringToHslColor} from '../../../../utilities/strings';
 
@@ -13,6 +13,7 @@ interface IRoomViewCardProps {
   sectionRoomID?: string;
   sectionTitle?: string;
   roomName?: string;
+  curriculumName?: string;
   bannerImage?: string;
   type?: string;
   name?: string;
@@ -25,15 +26,15 @@ const RoomViewCard = ({
   sectionRoomID,
   sectionTitle,
   roomName,
+  curriculumName,
   bannerImage,
   type,
   name,
 }: IRoomViewCardProps) => {
   const noneSelected = mainSection === '' && sectionRoomID === '' && sectionTitle === '';
-
   return (
     <div
-      className={`relative ${
+      className={`relative animate-fadeIn ${
         noneSelected
           ? 'z-50'
           : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
@@ -58,22 +59,27 @@ const RoomViewCard = ({
         />
         {/* BOOK COVER */}
         <div
-          onClick={() => handleSectionSelect(type, roomID, roomName)}
+          onClick={() => handleSectionSelect(type, roomID, curriculumName)}
           className={`flex flex-col rounded-r-lg cursor-pointer md:h-50 lg:h-60 md:w-32 lg:w-40 overflow-hidden`}>
           {/* START - IMAGE AND LABEL */}
+
           <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
-            {/* OVERLAY */}
-            <div className="absolute flex items-center  h-full w-full max-w-48 px-4 z-50">
-              <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-90 flex-1">
-                <p className="text-sm font-medium text-indigo-600">
-                  <a className="hover:underline">{type}</a>
-                </p>
-                <p className="text-base text-gray-900">
-                  <span className="font-semibold">{name}</span>{' '}
-                  <span className="text-base text-semibold text-gray-900">
-                    {roomName}
-                  </span>
-                </p>
+            {/* START- LABEL WRAPPER */}
+            <div className="absolute flex items-center  h-full w-full max-w-48 px-2 z-50 ">
+              {/* OVERLAY LABEL */}
+              <div className="border-2 border-white">
+                <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-90 flex-1 border-0 border-gray-900 p-2">
+                  <p className="text-sm font-medium text-indigo-600">
+                    <a className="hover:underline">{type}</a>
+                  </p>
+                  {name ||
+                    (curriculumName && (
+                      <p className="text-sm font-medium text-gray-900">
+                        {name && <span className="">{name} </span>}
+                        {curriculumName && <span className="">{curriculumName}</span>}
+                      </p>
+                    ))}
+                </div>
               </div>
             </div>
 
@@ -113,4 +119,4 @@ const RoomViewCard = ({
   );
 };
 
-export default RoomViewCard;
+export default React.memo(RoomViewCard);

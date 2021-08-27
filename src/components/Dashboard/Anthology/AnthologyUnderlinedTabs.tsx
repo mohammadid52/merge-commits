@@ -113,4 +113,4 @@ const UnderlinedTabs = (props: TabsProps) => {
   );
 };
 
-export default UnderlinedTabs;
+export default React.memo(UnderlinedTabs);

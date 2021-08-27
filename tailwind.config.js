@@ -364,7 +364,7 @@ module.exports = {
         bounce: 'bounce 1s ease-in-out 1',
         jiggle: 'jiggle 0.2s linear infinite',
         ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-        fadeIn: 'fadeIn 1s ease-in-out',
+        fadeIn: 'fadeIn 0.5s ease-in-out',
         spin: 'spin 1s linear infinite',
         activation: 'activation 1s ease-in-out infinite',
         slideUp: 'slideUp 0.2s linear',

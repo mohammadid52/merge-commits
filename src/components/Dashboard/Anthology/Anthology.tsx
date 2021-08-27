@@ -107,6 +107,7 @@ const Anthology = () => {
       setStudentDataLoaded(true);
     } catch (e) {
       //
+      setStudentDataLoaded(true);
     } finally {
     }
   };
@@ -122,6 +123,7 @@ const Anthology = () => {
               studentAuthID: val.studentAuthID,
               studentEmail: val.studentEmail,
               feedbacks: exercise.feedbacks || [],
+              shared: exercise?.shared || false,
               entryData: exercise.entryData.map((entry: any) => {
                 return {
                   ...entry,
@@ -194,6 +196,7 @@ const Anthology = () => {
     studentEmail: state.user.studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
+    shared: false,
     entryData: [
       {
         domID: `title_${nanoid(4)}`,
@@ -236,10 +239,11 @@ const Anthology = () => {
       } else {
         console.log('anthology - NO universalJournalDatas');
       }
+      setUniversalJournalDataLoaded(true);
     } catch (e) {
       console.error('error listing journal data - ', e);
-    } finally {
       setUniversalJournalDataLoaded(true);
+    } finally {
     }
   };
 
@@ -328,6 +332,7 @@ const Anthology = () => {
       studentID: selectExisting.studentID,
       studentAuthID: selectExisting.studentAuthID,
       studentEmail: selectExisting.studentEmail,
+      shared: selectExisting?.shared,
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
       recordID: selectExisting?.recordID,
@@ -381,6 +386,7 @@ const Anthology = () => {
       studentAuthID: state.user.authId,
       studentEmail: state.user.email,
       type: 'journal-entry',
+      shared: false,
       feedbacks: [''],
       entryData: [
         {
@@ -442,7 +448,7 @@ const Anthology = () => {
   const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
   const [sectionTitle, setSectionTitle] = useState<string>('');
-  const [subSection, setSubSection] = useState<string>('');
+  const [subSection, setSubSection] = useState<string>('checkIn');
   const [tab, setTab] = useState<number>(0);
 
   const previousRoom = usePrevious(sectionRoomID);
@@ -474,6 +480,12 @@ const Anthology = () => {
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
   const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (studentDataLoaded && universalJournalDataLoaded) {
+      setNotebookLoaded(true);
+    }
+  }, [studentDataLoaded, universalJournalDataLoaded]);
+
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
     const mergeAll = [...allStudentData, ...allUniversalJournalData];
@@ -492,7 +504,7 @@ const Anthology = () => {
       if (uniqueIds.length > 0) {
         setRoomCardIds(uniqueIds);
       }
-      setNotebookLoaded(true);
+    } else {
     }
   }, [allStudentData, allUniversalJournalData]);
 
@@ -510,7 +522,7 @@ const Anthology = () => {
     } else {
       setMainSection('Private');
       setSectionRoomID(roomIdString);
-      setSectionTitle(`Private Notebook : ${roomName}`);
+      setSectionTitle(`Private Notebook`);
       setSubSection('Journal');
       setTab(0);
     }
