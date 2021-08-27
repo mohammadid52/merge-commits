@@ -11,7 +11,8 @@ import * as customMutations from '../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import moment from 'moment';
-import {update} from 'lodash';
+import {findIndex, update} from 'lodash';
+import {getAsset} from '../../../assets';
 
 interface ISentiment {
   personAuthID: string;
@@ -82,7 +83,7 @@ const EditBackstory = ({
         closeAction={() => setShow(false)}
         showHeader={true}
         showFooter={false}>
-        <div className="min-w-96 min-h-32">
+        <div className="min-w-96 max-w-132 min-h-32">
           <FormInput
             rows={3}
             showCharacterUsage
@@ -113,33 +114,72 @@ const EditBackstory = ({
   );
 };
 
-const SentimentTab = () => {
+const SentimentTab = ({subSection}: {subSection: string}) => {
+  console.log(
+    '🚀 ~ file: SentimentTab.tsx ~ line 118 ~ SentimentTab ~ subSection',
+    subSection
+  );
   const [studentSentiments, setStudentSentiments] = useState([]);
 
   const {state} = useContext(GlobalContext);
   const {authId} = state.user;
 
   const [nextToken, setNextToken] = useState<string>('');
-  const [loadingSentiments, setLoadingSentiments] = useState(false);
 
-  const fetchSentiments = async () => {
+  const [disableLoad, setDisableLoad] = useState(false);
+
+  const [loadingSentiments, setLoadingSentiments] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const fetchSentiments = async (fetchNewRecords: boolean = false) => {
     try {
-      setLoadingSentiments(true);
-      let payload: any = {personAuthID: authId, limit: 6};
-      if (nextToken) {
-        payload.nextToken = nextToken;
+      if (fetchNewRecords) {
+        setLoadingSentiments(true);
+      } else {
+        setLoadingMore(true);
       }
+
+      let payload: any = {
+        personAuthID: authId,
+        limit: 8,
+        sortDirection: 'DESC',
+        nextToken: nextToken || null,
+      };
+
       const res: any = await API.graphql(
         graphqlOperation(customQueries.listPersonSentimentss, payload)
       );
-      if (res && res.data && res.data.listPersonSentimentss) {
-        setNextToken(res.data.listPersonSentimentss.nextToken);
-        setStudentSentiments(res.data.listPersonSentimentss.items);
+
+      const temp = res.data.listPersonSentimentss?.items.map((record: any) => ({
+        ...record,
+        personAuthID: record.personAuthID,
+        personEmail: record.personEmail,
+        backstory: record.backstory,
+        date: record.date,
+        time: record.time,
+        responseText: record.responseText,
+      }));
+      if (fetchNewRecords) {
+        setStudentSentiments(temp);
+      } else {
+        const idx = findIndex(studentSentiments, (s: any) => {
+          return s.date === temp[0].date && s.time === temp[0].time;
+        });
+
+        if (idx === 0) {
+          setDisableLoad(true);
+        } else {
+          setDisableLoad(false);
+          setStudentSentiments((prevAttendance: any) => [...prevAttendance, ...temp]);
+        }
       }
+
+      setNextToken(res.data.listPersonSentimentss.nextToken);
     } catch (error) {
       console.error(error);
     } finally {
       setLoadingSentiments(false);
+      setLoadingMore(false);
     }
   };
   const onLoadMore = () => {
@@ -147,30 +187,17 @@ const SentimentTab = () => {
   };
 
   useEffect(() => {
-    if (studentSentiments.length === 0) {
-      fetchSentiments();
+    if (subSection === 'Journal') {
+      if (studentSentiments.length === 0) {
+        fetchSentiments(true);
+      }
     }
     return () => {
-      fetchSentiments();
+      fetchSentiments(true);
     };
-  }, []);
+  }, [subSection]);
 
-  const getGIFlinkByName = (name: string) => {
-    switch (name) {
-      case 'awful':
-        return 'angry';
-      case 'bad':
-        return 'sad';
-      case 'okay':
-        return 'neutral';
-      case 'good':
-        return 'happy';
-      case 'great':
-        return 'excited';
-      default:
-        return 'happy';
-    }
-  };
+  const emojiGifs = getAsset('general');
 
   const [view, setView] = useState('emoji');
 
@@ -178,7 +205,7 @@ const SentimentTab = () => {
   // Modal state for backstory edit
   const [showEditModal, setShowEditModal] = useState(false);
   return (
-    <div className="mt-8 transition-all min-h-96">
+    <div className="mt-8 relative transition-all min-h-96">
       {showEditModal && (
         <EditBackstory
           studentSentiments={studentSentiments}
@@ -204,7 +231,7 @@ const SentimentTab = () => {
           />
         </span>
       </div>
-      <div className="h-full">
+      <div className="h-full pb-12">
         <Transition
           enter="transition-opacity duration-75"
           enterFrom="opacity-0"
@@ -260,7 +287,7 @@ const SentimentTab = () => {
                     <tbody>
                       {studentSentiments.map((sentiment, sentimentIdx) => (
                         <tr
-                          key={sentiment.id}
+                          key={sentimentIdx}
                           className={sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                           <td className="px-6 py-4 whitespace-nowrap capitalize text-sm font-medium text-gray-900">
                             {sentiment.responseText || 'happy'}
@@ -313,8 +340,8 @@ const SentimentTab = () => {
           role="list">
           {studentSentiments.map((sentiment, sentimentIdx) => (
             <li
-              title={sentiment.backstory || sentiment.name}
-              key={sentiment.id}
+              title={sentiment.responseText || 'happy'}
+              key={sentimentIdx}
               onClick={(e) => {
                 e.stopPropagation();
                 setShowEditModal(true);
@@ -331,9 +358,7 @@ const SentimentTab = () => {
               }}
               className="col-span-1 flex flex-col text-center items-center justify-center">
               <img
-                src={`${window.location.origin}/emojis/${getGIFlinkByName(
-                  sentiment.responseText
-                )}.gif`}
+                src={emojiGifs[sentiment.responseText || 'good']}
                 alt={sentiment.name}
                 className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
               />
@@ -343,6 +368,21 @@ const SentimentTab = () => {
             </li>
           ))}
         </Transition>
+      </div>
+
+      <div className="pr-4 w-auto absolute bottom-0 right-0 ">
+        <Buttons
+          disabled={disableLoad}
+          label={
+            !loadingMore ? (
+              'Load more'
+            ) : (
+              <Loader withText="Loading" className="text-white" />
+            )
+          }
+          onClick={onLoadMore}
+          type="button"
+        />
       </div>
     </div>
   );

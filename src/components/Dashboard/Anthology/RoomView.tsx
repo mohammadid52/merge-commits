@@ -5,7 +5,9 @@ import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
   roomIdList: string[];
+  mainSection?: string;
   sectionRoomID?: string;
+  sectionTitle?: string;
   handleSectionSelect?: (
     section: string,
     roomIdString: string,
@@ -13,7 +15,13 @@ interface IRoomViewProps {
   ) => void;
 }
 
-const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewProps) => {
+const RoomView = ({
+  roomIdList,
+  mainSection,
+  sectionRoomID,
+  sectionTitle,
+  handleSectionSelect,
+}: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
@@ -61,7 +69,9 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
                 <RoomViewCard
                   key={`notebook-${idx}`}
                   roomID={item.id}
+                  mainSection={mainSection}
                   sectionRoomID={sectionRoomID}
+                  sectionTitle={sectionTitle}
                   handleSectionSelect={handleSectionSelect}
                   roomName={roomName}
                   bannerImage={bannerImage}
@@ -82,7 +92,7 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
 
   return (
     <>
-      <div className="relative">
+      <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
         <div className="relative mx-auto">
           <div
             // #ts-ignores
@@ -90,16 +100,18 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
             }}
-            className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-5 md:grid-cols-4 lg:max-w-none">
+            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:grid-cols-5 md:grid-cols-3 lg:max-w-none">
             {mappedNotebookRoomCards &&
               mappedNotebookRoomCards.length > 0 &&
               mappedNotebookRoomCards}
             <RoomViewCard
-              roomID={''}
-              sectionRoomID={''}
-              roomName={'Journal Entries & Sentiment'}
+              roomID={'private'}
+              mainSection={mainSection}
+              sectionRoomID={sectionRoomID}
+              sectionTitle={sectionTitle}
+              roomName={'Journal & Emotions'}
               handleSectionSelect={handleSectionSelect}
-              type={'Private Journal'}
+              type={'Private Notebook'}
             />
           </div>
         </div>

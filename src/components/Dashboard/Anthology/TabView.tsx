@@ -11,7 +11,12 @@ import Buttons from '../../Atoms/Buttons';
 import AnthologyContent, {ContentCardProps} from './AnthologyContent';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {stringToHslColor} from '../../../utilities/strings';
+import {IoKeyOutline} from 'react-icons/io5';
 import SentimentTab from './SentimentTab';
+import {IconContext} from 'react-icons/lib';
+import {IoIosJournal} from 'react-icons/io';
 
 const TabView = ({
   viewEditMode,
@@ -111,7 +116,7 @@ const TabView = ({
       index: 0,
       title: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab />,
+      content: <SentimentTab subSection={subSection} />,
     },
     {
       index: 1,
@@ -129,40 +134,50 @@ const TabView = ({
   const getTitle = () => {
     if (sectionTitle !== '') {
       if (mainSection === 'Class') {
-        return anthologyDict[userLanguage].TITLE + ' : ' + sectionTitle;
+        return sectionTitle + ' ' + anthologyDict[userLanguage].TITLE;
       } else {
         return sectionTitle;
       }
     } else {
-      return (
-        anthologyDict[userLanguage].TITLE +
-        ' : ' +
-        anthologyDict[userLanguage].NO_SELECTED
-      );
+      return anthologyDict[userLanguage].NO_SELECTED;
     }
   };
 
   return (
     <>
-      <SectionTitleV3
-        fontSize="2xl"
-        fontStyle="bold"
-        extraContainerClass="px-10"
-        extraClass="leading-6 text-gray-900"
-        withButton={
-          subSection === 'Journal' && (
-            <Buttons
-              Icon={FaEdit}
-              customStyles={{width: '14rem'}}
-              label={anthologyDict[userLanguage].ACTIONS.CREATE}
-              onClick={() => handleEditToggle('create', '')}
-              type="button"
+      <div
+        className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
+        <div
+          className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+          <IconContext.Provider
+            value={{
+              className: `relative`,
+            }}>
+            <IoIosJournal
+              style={{color: stringToHslColor(sectionRoomID)}}
+              className="absolute my-auto mr-2 w-auto h-auto fill-current"
+              size={24}
             />
-          )
-        }
-        title={getTitle()}
-      />
-      <div className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+          </IconContext.Provider>
+
+          <h2
+            className={`w-auto my-auto text-lg 2xl:text-xl font-semibold leading-6 text-gray-900"`}>
+            {getTitle()}
+          </h2>
+        </div>
+        {subSection === 'Journal' && (
+          <Buttons
+            Icon={FaEdit}
+            customStyles={{width: '14rem'}}
+            label={anthologyDict[userLanguage].ACTIONS.CREATE}
+            onClick={() => handleEditToggle('create', '')}
+            type="button"
+          />
+        )}
+      </div>
+
+      <div
+        className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
         <AnthologyUnderlinedTabs
           hideTooltip
           activeTab={tab}

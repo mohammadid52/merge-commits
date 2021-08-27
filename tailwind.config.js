@@ -16,6 +16,20 @@ module.exports = {
   },
 
   theme: {
+    scale: {
+      0: '0',
+      25: '.25',
+      50: '.5',
+      75: '.75',
+      90: '.9',
+      95: '.95',
+      100: '1',
+      105: '1.05',
+      110: '1.1',
+      125: '1.25',
+      150: '1.5',
+      200: '2',
+    },
     placeholderColor: {
       gray: {
         100: '#f7fafc',
@@ -711,7 +725,7 @@ module.exports = {
         'elem-dark': '0 2px 4px black',
         'elem-semi-dark': '0 2px 4px #2f2f2f',
         'elem-light': '3px 3px 5px darkgray',
-        map: '5px -1px 8px #1A202C',
+        strong: '0px 12px 8px -4px rgba(0, 0, 0, 0.6)',
         'inner-dark': 'inset 0 2px 4px black',
         gray: '0px 0px 10px 4px #e2e8f0',
         grayscale: '0px 0px 10px 4px #fdfdfd',

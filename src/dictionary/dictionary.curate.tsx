@@ -231,6 +231,7 @@ const dashboardProfileDict: any = {
 
 const anthologyDict: any = {
   EN: {
+    TITLE_CONTAINER: 'Your Notebooks',
     TITLE: 'Journal',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
@@ -249,6 +250,7 @@ const anthologyDict: any = {
     },
   },
   ES: {
+    TITLE_CONTAINER: 'T.B.D',
     TITLE: 'Cuaderno',
     NO_SELECTED: 'T.B.D',
     TABS: {
@@ -305,7 +307,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Sessions',
     CLASSROOM: 'Cohort',
     LESSON_BUILDER: 'Session Builder',
-    ANTHOLOGY: 'Journal',
+    ANTHOLOGY: 'Journals',
     NOTICEBOARD: 'Dashboard',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
