@@ -497,6 +497,8 @@ const Anthology = () => {
         setRoomCardIds(uniqueIds);
       }
       setNotebookLoaded(true);
+    } else {
+      setNotebookLoaded(true);
     }
   }, [allStudentData, allUniversalJournalData]);
 

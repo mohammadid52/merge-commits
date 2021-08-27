@@ -9,8 +9,10 @@ import ContentCard from '../../Atoms/ContentCard';
 import Loader from '../../Atoms/Loader';
 import {getAsset} from '../../../assets';
 import Feedbacks from './Feedbacks';
+import Toggle from './AnthologyContentNote/Toggle';
 
 const SingleNote = ({
+  mainSection,
   subSection,
   idx,
   contentLen,
@@ -144,6 +146,16 @@ const SingleNote = ({
                     </div>
                   )
                 ) : null}
+                {/* SHOW SHARE TOGGLE ONLY IN JOURNAL */}
+                {mainSection === 'Private' && (
+                  <Toggle
+                    toggled={contentObj?.shared}
+                    label={`Share With Teacher`}
+                    allUniversalJournalData={allUniversalJournalData}
+                    currentContentObj={contentObj}
+                    setAllUniversalJournalData={setAllUniversalJournalData}
+                  />
+                )}
               </div>
 
               {/**

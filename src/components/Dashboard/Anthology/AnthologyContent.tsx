@@ -51,6 +51,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     handleEditUpdate,
     updateJournalContent,
     onCancel,
+    mainSection,
     subSection,
     createTemplate,
     currentContentObj,
@@ -91,13 +92,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     return (
       <>
         <div className={`flex justify-end px-4`}>
-          <Toggle
-            toggled={contentObj?.shared}
-            label={`Share With Teacher`}
-            allUniversalJournalData={allUniversalJournalData}
-            currentContentObj={contentObj}
-            setAllUniversalJournalData={setAllUniversalJournalData}
-          />
           <p className={`w-auto text-right italic ${theme.lessonCard.subtitle}`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>
@@ -269,6 +263,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         content.map((contentObj: UniversalJournalData, idx: number) => (
           <SingleNote
             idx={idx}
+            mainSection={mainSection}
             subSection={subSection}
             onCancel={onCancel}
             viewModeView={viewModeView}

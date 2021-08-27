@@ -83,6 +83,7 @@ const TabView = ({
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       updateJournalContent={updateJournalContent}
+      mainSection={mainSection}
       subSection={subSection}
       createTemplate={createTemplate}
       currentContentObj={currentContentObj}

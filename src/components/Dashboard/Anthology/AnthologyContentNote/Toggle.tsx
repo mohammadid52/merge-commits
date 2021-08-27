@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {useState} from 'react';
 import {ContentCardProps} from '../AnthologyContent';
 import * as mutations from '../../../../graphql/mutations';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -15,6 +15,7 @@ const Toggle = ({
   currentContentObj,
   setAllUniversalJournalData,
 }: IToggleProps) => {
+  const [updating, setUpdating] = useState<boolean>(false);
   const updateJournalShare = async () => {
     const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
       if (dataRecord.id === currentContentObj.id) {
@@ -24,6 +25,7 @@ const Toggle = ({
       }
     });
 
+    setUpdating(true);
     try {
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {
@@ -37,30 +39,39 @@ const Toggle = ({
       );
       setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
-      console.error('error updating journal feedbacks - ', e);
+      console.error('error updating sharing - ', e);
     } finally {
       //
     }
   };
 
+  const handleToggler = () => {
+    updateJournalShare().then((_: void) => setUpdating(false));
+  };
+
   return (
-    <div className="w-auto flex items-center">
+    <div className="mt-4 mb-2 ml-2 w-auto flex items-center">
       {/* <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" --> */}
       <button
+        onClick={!updating ? () => handleToggler() : () => {}}
         type="button"
-        className="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className={`${
+          toggled ? 'bg-green-600' : 'bg-gray-200'
+        } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         role="switch"
         aria-checked="false"
         aria-labelledby="annual-billing-label">
         {/* <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" --> */}
         <span
           aria-hidden="true"
-          className="translate-x-0 pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
+          className={`${
+            toggled ? 'translate-x-5' : 'translate-x-0'
+          } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}></span>
       </button>
 
       {label && (
-        <span className="mr-3" id="annual-billing-label">
-          <span className="text-sm font-medium text-gray-900">Annual billing </span>
+        <span className="mx-2" id="shared-label">
+          <span className="text-sm font-medium text-gray-900"> Shared</span>
         </span>
       )}
     </div>
