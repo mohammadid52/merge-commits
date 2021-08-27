@@ -6,11 +6,26 @@ interface LoadingProps {
   size?: string;
   color?: string;
   className?: string;
+  withText?: string;
 }
 
 const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
-  const {className = '', color = '#000000', size = '1.5rem'} = loadingProps;
-  return (
+  const {
+    className = '',
+    color = '#000000',
+    size = '1.5rem',
+    withText = false,
+  } = loadingProps;
+  return withText ? (
+    <div className="flex items-center mr-2">
+      <div className={`animate-spin ${className}`}>
+        <IconContext.Provider value={{size, color: className || color}}>
+          <VscLoading />
+        </IconContext.Provider>
+      </div>
+      {withText}
+    </div>
+  ) : (
     <div className={`animate-spin ${className}`}>
       <IconContext.Provider value={{size, color: className || color}}>
         <VscLoading />

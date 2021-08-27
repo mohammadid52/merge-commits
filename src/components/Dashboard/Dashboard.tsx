@@ -68,7 +68,6 @@ export interface DashboardProps {
   syllabusLoading?: boolean;
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRoomSelection?: Function;
-  justLoggedIn?: boolean;
   completedLessons?: ICompletedLessons[];
   curriculumName?: string;
   institutionId?: string;
@@ -80,7 +79,7 @@ export interface ClassroomControlProps extends DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
-  const {updateAuthState, justLoggedIn} = props;
+  const {updateAuthState} = props;
   const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
@@ -605,15 +604,8 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
-      <EmojiFeedback justLoggedIn={justLoggedIn} />
+      {state.user.role === 'ST' && <EmojiFeedback />}
 
-      {/* {state.user.role === 'ST' && (
-        <EmojiFeedback
-          greetQuestion={greetQuestion}
-          justLoggedIn={justLoggedIn}
-          onSave={(response: string) => updateGreetQuestion(response)}
-        />
-      )} */}
       {/* <ResizablePanels> */}
       <SideMenu
         // setActiveRoomSyllabus={setActiveRoomSyllabus}

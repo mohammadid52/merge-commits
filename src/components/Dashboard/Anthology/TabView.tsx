@@ -116,7 +116,7 @@ const TabView = ({
       index: 0,
       title: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab />,
+      content: <SentimentTab subSection={subSection} />,
     },
     {
       index: 1,
@@ -177,7 +177,7 @@ const TabView = ({
       </div>
 
       <div
-        className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}>
+        className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
         <AnthologyUnderlinedTabs
           hideTooltip
           activeTab={tab}

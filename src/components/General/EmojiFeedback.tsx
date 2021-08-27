@@ -4,13 +4,15 @@ import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import Modal from '../Atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {awsFormatDate, dateString} from '../../utilities/time';
 import {wait} from '../../utilities/functions';
 import moment from 'moment';
+import {isEmpty} from 'lodash';
 
-const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
+const EmojiFeedback = () => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
   const $ = (s: any, o = document) => o?.querySelector(s);
   const $$ = (s: any, o = document) => o?.querySelectorAll(s);
@@ -19,18 +21,54 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
   const {state} = useContext(GlobalContext);
   const {authId, email} = state.user;
 
+  const [lastMoodSubmission, setLastMoodSubmission] = useState<any>({});
+
+  const [fetching, setFetching] = useState(false);
+
   useEffect(() => {
-    const lastLoggedOut = moment(state.user.lastLoggedOut);
-    const lastLoggedIn = moment(state.user.lastLoggedIn);
-
-    const hoursDiff = lastLoggedOut.diff(lastLoggedIn, 'hours');
-
-    if (hoursDiff > 24 || !lastLoggedOut) {
-      setShowSentimentModal(true);
-    } else {
-      setShowSentimentModal(false);
+    if (isEmpty(lastMoodSubmission)) {
+      fetchLastSubmission();
     }
-  }, []);
+  }, [lastMoodSubmission]);
+
+  const fetchLastSubmission = async () => {
+    try {
+      setFetching(true);
+      let payload: any = {
+        personAuthID: authId,
+        limit: 1,
+        sortDirection: 'DESC',
+      };
+
+      const res: any = await API.graphql(
+        graphqlOperation(customQueries.listPersonSentimentss, payload)
+      );
+      setLastMoodSubmission(res.data.listPersonSentimentss?.items[0]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    // Use lastLoggedOut as primary. if it is null then show modal
+    // Otherwise see the hours difference. if it is greater than 24h show modal else not
+
+    if (!fetching && !isEmpty(lastMoodSubmission)) {
+      const lastSubmissionDate = moment(
+        `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
+      );
+      const currentTime = moment();
+
+      const hoursDifference = currentTime.diff(lastSubmissionDate, 'hours');
+      if (hoursDifference > 24) {
+        setShowSentimentModal(true);
+      } else {
+        setShowSentimentModal(false);
+      }
+    }
+  }, [fetching, lastMoodSubmission]);
 
   // useEffect(() => {
   let emoji = $('.emoji-slider-feedback'),
@@ -148,7 +186,6 @@ const EmojiFeedback = ({justLoggedIn}: {justLoggedIn: boolean}) => {
           input: payload,
         })
       );
-      localStorage.setItem('sentiment', 'alreadySubmittedOnce');
     } catch (error) {
       console.error(error);
     }
