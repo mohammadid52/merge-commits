@@ -49,4 +49,4 @@ const EmptyViewWrapper = ({
   );
 };
 
-export default EmptyViewWrapper;
+export default React.memo(EmptyViewWrapper);

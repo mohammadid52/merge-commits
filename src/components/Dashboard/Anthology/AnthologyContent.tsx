@@ -14,6 +14,7 @@ import {
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
+import Toggle from './AnthologyContentNote/Toggle';
 
 export interface ContentCardProps {
   viewEditMode?: ViewEditMode;
@@ -89,8 +90,15 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     return (
       <>
-        <div className={`flex px-4`}>
-          <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+        <div className={`flex justify-end px-4`}>
+          <Toggle
+            toggled={contentObj?.shared}
+            label={`Share With Teacher`}
+            allUniversalJournalData={allUniversalJournalData}
+            currentContentObj={contentObj}
+            setAllUniversalJournalData={setAllUniversalJournalData}
+          />
+          <p className={`w-auto text-right italic ${theme.lessonCard.subtitle}`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>
         </div>
@@ -288,4 +296,4 @@ const AnthologyContent = (props: ContentCardProps) => {
   );
 };
 
-export default AnthologyContent;
+export default React.memo(AnthologyContent);

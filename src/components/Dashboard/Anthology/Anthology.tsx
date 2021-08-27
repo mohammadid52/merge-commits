@@ -122,6 +122,7 @@ const Anthology = () => {
               studentAuthID: val.studentAuthID,
               studentEmail: val.studentEmail,
               feedbacks: exercise.feedbacks || [],
+              shared: exercise?.shared || false,
               entryData: exercise.entryData.map((entry: any) => {
                 return {
                   ...entry,
@@ -194,6 +195,7 @@ const Anthology = () => {
     studentEmail: state.user.studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
+    shared: false,
     entryData: [
       {
         domID: `title_${nanoid(4)}`,
@@ -328,6 +330,7 @@ const Anthology = () => {
       studentID: selectExisting.studentID,
       studentAuthID: selectExisting.studentAuthID,
       studentEmail: selectExisting.studentEmail,
+      shared: selectExisting?.shared,
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
       recordID: selectExisting?.recordID,
@@ -381,6 +384,7 @@ const Anthology = () => {
       studentAuthID: state.user.authId,
       studentEmail: state.user.email,
       type: 'journal-entry',
+      shared: false,
       feedbacks: [''],
       entryData: [
         {
@@ -510,7 +514,7 @@ const Anthology = () => {
     } else {
       setMainSection('Private');
       setSectionRoomID(roomIdString);
-      setSectionTitle(`Private Notebook : ${roomName}`);
+      setSectionTitle(`Private Notebook`);
       setSubSection('Journal');
       setTab(0);
     }

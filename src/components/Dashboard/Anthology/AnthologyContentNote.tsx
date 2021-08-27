@@ -110,38 +110,41 @@ const SingleNote = ({
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <div
-                className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                onClick={() =>
-                  handleEditToggle('edit', contentObj.id, 0, contentObj?.recordID)
-                }>
-                {anthologyDict[userLanguage].ACTIONS.EDIT}
-              </div>
-
-              {viewEditMode.mode === 'delete' &&
-              viewEditMode.option === 0 &&
-              viewEditMode.dataID === contentObj.id ? (
-                <div className="w-auto flex items-center justify-between">
-                  <div
-                    className={`${theme.btn.confirm}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                    onClick={() => handleEditToggle('delete', contentObj.id, 1)}>
-                    {anthologyDict[userLanguage].ACTIONS.CONFIRM}
-                  </div>
-                  <div
-                    className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                    onClick={() => handleEditToggle('', '', 0, '')}>
-                    {anthologyDict[userLanguage].ACTIONS.CANCEL}
-                  </div>
+              <div className="w-auto flex items-center justify-start">
+                <div
+                  className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                  onClick={() =>
+                    handleEditToggle('edit', contentObj.id, 0, contentObj?.recordID)
+                  }>
+                  {anthologyDict[userLanguage].ACTIONS.EDIT}
                 </div>
-              ) : (
-                subSection !== 'Work' && (
-                  <div
-                    className={`${theme.btn.delete}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                    onClick={() => handleEditToggle('delete', contentObj.id, 0)}>
-                    {anthologyDict[userLanguage].ACTIONS.DELETE}
-                  </div>
-                )
-              )}
+
+                {/* CONDITIONAL SHOW OF DELETE AND DELETE CONFIRM BTNS */}
+                {subSection !== 'Work' && subSection !== 'Notes' ? (
+                  viewEditMode.mode === 'delete' &&
+                  viewEditMode.option === 0 &&
+                  viewEditMode.dataID === contentObj.id ? (
+                    <>
+                      <div
+                        className={`${theme.btn.confirm}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                        onClick={() => handleEditToggle('delete', contentObj.id, 1)}>
+                        {anthologyDict[userLanguage].ACTIONS.CONFIRM}
+                      </div>
+                      <div
+                        className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
+                        onClick={() => handleEditToggle('', '', 0, '')}>
+                        {anthologyDict[userLanguage].ACTIONS.CANCEL}
+                      </div>
+                    </>
+                  ) : (
+                    <div
+                      className={`${theme.btn.delete}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
+                      onClick={() => handleEditToggle('delete', contentObj.id, 0)}>
+                      {anthologyDict[userLanguage].ACTIONS.DELETE}
+                    </div>
+                  )
+                ) : null}
+              </div>
 
               {/**
                *  section:  FEEDBACK
