@@ -29,6 +29,7 @@ interface ILessonCourseProps {
   lessonPlans: any[];
   loading: boolean;
   selectedCurriculums: any[];
+  institutionCollection: any[];
 }
 
 const LessonCourse = ({
@@ -40,6 +41,7 @@ const LessonCourse = ({
   lessonPlans,
   loading,
   selectedCurriculums,
+  institutionCollection,
 }: ILessonCourseProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {UnitLookupDict} = useDictionary(clientKey);
@@ -157,9 +159,10 @@ const LessonCourse = ({
               <Loader />
             </div>
           ) : titleList.length ? (
-            <div className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none mt-8">
+            <div className="grid gap-5 md:grid-cols-2 grid-cols-2 xl:grid-cols-2 lg:max-w-none mt-8">
               {selectedCurriculumList.map((curriculum) => (
                 <CourseCard
+                  institutionCollection={institutionCollection}
                   curriculum={curriculum}
                   lessonId={lessonId}
                   loading={roomLoading}
