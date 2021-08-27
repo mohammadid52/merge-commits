@@ -14,7 +14,7 @@ const CourseDynamics = ({roomData}: any) => {
   const currentTabComp = (currentTab: string) => {
     switch (currentTab) {
       case 'subject-proficiency':
-        return <SubjectProficiency />;
+        return <SubjectProficiency roomData={roomData} />;
       case 'course-frequency':
         return <CoursePartner />;
     }

@@ -521,7 +521,19 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             };
           })
         );
-        setRoomData(savedData);
+        setRoomData({
+          ...savedData,
+          advisorOptions: [
+            ...coTeachers.map((teacher: any) => ({
+              id: teacher.teacherID,
+              name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
+            })),
+            savedData.teacher ? {
+              id: savedData.teacher.id,
+              name: `${savedData.teacher.firstName } ${savedData.teacher.lastName}`,
+            } : null,
+          ].filter(Boolean),
+        });
         // setRoomData({
         //   ...roomData,
         //   id: savedData.id,
@@ -551,7 +563,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         // });
         setPrevName(savedData.name);
         setSelectedCurrID(curricularId);
-      } catch {
+      } catch(error) {
+        console.log(error,'erere');
+        
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errfetch'],
@@ -620,7 +634,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       case 'overview':
         return <ClassRoomDetails roomData={roomData} />;
       case 'other':
-        return <CourseDynamics />;
+        return <CourseDynamics roomData={roomData} />;
     }
   };
 
