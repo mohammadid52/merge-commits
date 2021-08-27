@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext, useRef} from 'react';
 import {useLocation} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {FaEdit} from 'react-icons/fa';
-import {IoSendSharp} from 'react-icons/io5';
+import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
@@ -40,6 +40,7 @@ import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
 import Attendance from './Attendance';
 import {IoIosTime} from 'react-icons/io';
+import {useQuery} from '../../../../customHooks/urlParam';
 
 export interface UserInfo {
   authId: string;
@@ -89,6 +90,9 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 const User = () => {
   const history = useHistory();
   const match = useRouteMatch();
+  const location = useLocation();
+  const params = useQuery(location.search);
+
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -138,7 +142,6 @@ const User = () => {
   });
 
   const [imageUrl, setImageUrl] = useState('');
-  const location = useLocation();
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
 
@@ -1369,19 +1372,22 @@ const User = () => {
       <>
         <div className={`mx-auto max-w-256`}>
           <BreadCrums items={breadCrumsList} />
+          {params.get('from') && (
+            <div className="flex justify-end mb-4">
+              <Buttons
+                label="Go Back"
+                btnClass="mr-4"
+                onClick={history.goBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            </div>
+          )}
           <div className="flex justify-between items-center mb-4 py-4 w-auto">
             {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
 
             <Tabs />
 
             <div className="flex justify-end w-auto">
-              {/* @Mohammad TODO: Move this goback button upwards */}
-              {/* <Buttons
-                label="Go Back"
-                btnClass="mr-4"
-                onClick={history.goBack}
-                Icon={IoArrowUndoCircleOutline}
-              /> */}
               {currentPath !== 'edit' && curTab === 'User Information' && (
                 <Buttons
                   btnClass="mr-4 px-6"

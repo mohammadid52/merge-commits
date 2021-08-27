@@ -60,13 +60,15 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      <label
-        htmlFor={id}
-        className={`${
-          dark ? 'text-white' : 'text-gray-700'
-        } block text-xs font-semibold leading-5 `}>
-        {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className={`${
+            dark ? 'text-white' : 'text-gray-700'
+          } block text-xs font-semibold leading-5 `}>
+          {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
+        </label>
+      )}
 
       {textarea ? (
         <textarea

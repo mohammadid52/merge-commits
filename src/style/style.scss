@@ -1138,10 +1138,10 @@ $indigo-100: #e0e7ff;
   color: rgb(50, 50, 62);
 }
 
-.react-datepicker__input-container input {
-  border-radius: 1rem;
-  background-color: rgb(39, 39, 48);
-}
+// .react-datepicker__input-container input {
+//   border-radius: 1rem;
+//   background-color: rgb(39, 39, 48);
+// }
 
 .react-datepicker__triangle {
   display: none;
@@ -1152,7 +1152,6 @@ $indigo-100: #e0e7ff;
 .react-datepicker__month-read-view--down-arrow,
 .react-datepicker__month-year-read-view--down-arrow {
   height: 13px !important;
-
   top: 10px !important;
   width: 13px !important;
 }

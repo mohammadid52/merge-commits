@@ -56,7 +56,8 @@ const ModalBody = (bodyProps: {
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      }  flex-auto`}>
+      } flex-auto overflow-y-scroll`}
+      style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
   );
