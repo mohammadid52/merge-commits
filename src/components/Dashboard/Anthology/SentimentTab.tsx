@@ -45,7 +45,7 @@ const EditBackstory = ({
 
   const [saving, setSaving] = useState(false);
 
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {EditQuestionModalDict, General} = useDictionary(clientKey);
 
   const updateBackstory = async () => {
     setSaving(true);
@@ -79,7 +79,7 @@ const EditBackstory = ({
   return (
     show && (
       <Modal
-        title="Edit Backstory"
+        title={General[userLanguage]['SENTIMENT']['MODAL_TITLE']}
         closeAction={() => setShow(false)}
         showHeader={true}
         showFooter={false}>
@@ -114,14 +114,10 @@ const EditBackstory = ({
   );
 };
 
-const SentimentTab = ({subSection}: {subSection: string}) => {
-  console.log(
-    '🚀 ~ file: SentimentTab.tsx ~ line 118 ~ SentimentTab ~ subSection',
-    subSection
-  );
+const SentimentTab = () => {
   const [studentSentiments, setStudentSentiments] = useState([]);
 
-  const {state} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {authId} = state.user;
 
   const [nextToken, setNextToken] = useState<string>('');
@@ -130,6 +126,8 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
 
   const [loadingSentiments, setLoadingSentiments] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+
+  const {General} = useDictionary(clientKey);
 
   const fetchSentiments = async (fetchNewRecords: boolean = false) => {
     try {
@@ -187,15 +185,13 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
   };
 
   useEffect(() => {
-    if (subSection === 'Journal') {
-      if (studentSentiments.length === 0) {
-        fetchSentiments(true);
-      }
+    if (studentSentiments.length === 0) {
+      fetchSentiments(true);
     }
     return () => {
       fetchSentiments(true);
     };
-  }, [subSection]);
+  }, []);
 
   const emojiGifs = getAsset('general');
 
@@ -204,6 +200,10 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
   const [selectedSentiment, setSelectedSentiment] = useState<ISentiment | null>(null);
   // Modal state for backstory edit
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const getEmojiName = (eName: string = 'OKAY') =>
+    General[userLanguage]['SENTIMENT']['EMOJIS'][eName?.toUpperCase()];
+
   return (
     <div className="mt-8 relative transition-all min-h-96">
       {showEditModal && (
@@ -218,8 +218,7 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
       <div className="text-lg flex items-center justify-between my-4 px-8">
         <div className="w-auto" />
         <span className="mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-          {/* Add this to dict */}
-          How are you doing today?
+          {General[userLanguage]['SENTIMENT']['TITLE']}
         </span>
         <span
           className="w-auto"
@@ -260,7 +259,7 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
             <div className="">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="overflow-hidden border-2 border-gray-200 sm:rounded-lg">
-                  <table className=" min-w-full divide-y divide-gray-200">
+                  <table className="sentiment-table-view min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th
@@ -289,8 +288,15 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
                         <tr
                           key={sentimentIdx}
                           className={sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-6 py-4 whitespace-nowrap capitalize text-sm font-medium text-gray-900">
-                            {sentiment.responseText || 'happy'}
+                          <td className="px-6 py-4 whitespace-nowrap capitalize flex items-center text-sm font-medium text-gray-900">
+                            <p className="w-auto">
+                              {getEmojiName(sentiment?.responseText || 'okay')}
+                            </p>
+                            <img
+                              src={emojiGifs[sentiment.responseText || 'okay']}
+                              alt={getEmojiName(sentiment?.responseText)}
+                              className="ml-2 h-7 w-7 transform hover:scale-110 transition-all duration-100 cursor-pointer"
+                            />
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {sentiment.backstory || '-'}
@@ -306,7 +312,7 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
                                 setShowEditModal(true);
                                 setSelectedSentiment({
                                   idx: sentimentIdx,
-                                  responseText: sentiment.responseText || 'happy',
+                                  responseText: sentiment.responseText || 'okay',
                                   backstory: sentiment.backstory || '',
                                   personAuthID: sentiment.personAuthID,
                                   personEmail: sentiment.personEmail,
@@ -340,7 +346,7 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
           role="list">
           {studentSentiments.map((sentiment, sentimentIdx) => (
             <li
-              title={sentiment.responseText || 'happy'}
+              title={getEmojiName(sentiment?.responseText)}
               key={sentimentIdx}
               onClick={(e) => {
                 e.stopPropagation();
@@ -348,7 +354,7 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
 
                 setSelectedSentiment({
                   idx: sentimentIdx,
-                  responseText: sentiment.responseText || 'happy',
+                  responseText: sentiment.responseText || 'okay',
                   backstory: sentiment.backstory || '',
                   personAuthID: sentiment.personAuthID,
                   personEmail: sentiment.personEmail,
@@ -358,8 +364,8 @@ const SentimentTab = ({subSection}: {subSection: string}) => {
               }}
               className="col-span-1 flex flex-col text-center items-center justify-center">
               <img
-                src={emojiGifs[sentiment.responseText || 'good']}
-                alt={sentiment.name}
+                src={emojiGifs[sentiment.responseText || 'okay']}
+                alt={getEmojiName(sentiment?.responseText)}
                 className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
               />
               <span className="w-auto text-gray-500 text-sm">

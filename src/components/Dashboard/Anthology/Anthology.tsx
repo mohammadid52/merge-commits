@@ -442,7 +442,7 @@ const Anthology = () => {
   const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
   const [sectionTitle, setSectionTitle] = useState<string>('');
-  const [subSection, setSubSection] = useState<string>('');
+  const [subSection, setSubSection] = useState<string>('checkIn');
   const [tab, setTab] = useState<number>(0);
 
   const previousRoom = usePrevious(sectionRoomID);

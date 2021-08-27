@@ -22,6 +22,16 @@ $gray-900: #111827;
 $indigo-50: #eef2ff;
 $indigo-100: #e0e7ff;
 
+.sentiment-table-view {
+  & thead tr th:first-child,
+  & tbody tr td:first-child {
+    width: 12rem;
+    min-width: 12rem;
+    max-width: 12rem;
+    word-break: break-all;
+  }
+}
+
 /*
   NOTE: This file should be converted into simple css file and
   should integrate tailwind specific styling methods.
