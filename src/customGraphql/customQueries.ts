@@ -2367,6 +2367,37 @@ export const getClassDetails = /* GraphQL */ `
   }
 `;
 
+export const getClassStudents = /* GraphQL */ `
+  query GetClassDetails($id: ID!) {
+    getClass(id: $id) {
+      id
+      students {
+        items {
+          id
+          classID
+          group
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+          student {
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const listTopics = /* GraphQL */ `
   query ListTopics($filter: ModelTopicFilterInput, $sortDirection: ModelSortDirection) {
     listTopics(filter: $filter, sortDirection: $sortDirection) {

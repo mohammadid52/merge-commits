@@ -63,12 +63,15 @@ const GroupCard = ({group}: IGroupCardProps) => {
                   }>
                   <div className="w-full">
                     <div className="flex items-center justify-center">
-                      <div className="flex-shrink-0 h-10 w-10">
+                      <div className="flex-shrink-0 h-10 w-10 lg:w-14 lg:h-14">
                         {student.image ? (
-                          <img src={''} className="h-8 w-8 rounded-full" />
+                          <img
+                            src={''}
+                            className="transform hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-10 w-10 rounded-full lg:w-14 lg:h-14"
+                          />
                         ) : (
                           <div
-                            className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
+                            className="transform hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-10 w-10 rounded-full lg:w-14 lg:h-14 flex justify-center items-center text-white text-sm text-bold"
                             style={{
                               background: `${stringToHslColor(
                                 student.firstName + ' ' + student.lastName
@@ -86,16 +89,13 @@ const GroupCard = ({group}: IGroupCardProps) => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div
-                      id={student.id}
-                      className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
-                      {`${student.lastName}, ${
-                        student.preferredName ? student.preferredName : student.firstName
-                      }`}
-                    </div>
-                    <div id={student.id} className="text-sm leading-5 text-gray-500">
-                      {student.email}
+                  <div className="space-y-2 text-center">
+                    <div className="text-xs font-medium lg:text-sm">
+                      <h3 className="font-medium">
+                        {`${student.lastName}, ${
+                          student.preferredName ? student.preferredName : student.firstName
+                        }`}
+                      </h3>
                     </div>
                   </div>
                 </div>

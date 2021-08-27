@@ -1510,6 +1510,23 @@ const RoomDetailsDict: any = {
   },
 };
 
+const GroupFormDict: any = {
+  EN: {
+    GROUP_NAME: 'Group name',
+    MESSAGES: {
+      GROUP_NAME: 'Group name is required',
+      GROUP_ADVISOR: 'Group advisor is required',
+    },
+  },
+  ES: {
+    GROUP_NAME: 'TBD',
+    MESSAGES: {
+      GROUP_NAME: 'TBD',
+      GROUP_ADVISOR: 'TBD',
+    },
+  },
+};
+
 const CourseScheduleDict: any = {
   EN: {
     HEADING: 'Schedule Details',
@@ -3627,6 +3644,7 @@ export {
   EditCurriculardict,
   RoomEDITdict,
   RoomDetailsDict,
+  GroupFormDict,
   CourseScheduleDict,
   curricularviewdict,
   CHECKPOINTSDICT,

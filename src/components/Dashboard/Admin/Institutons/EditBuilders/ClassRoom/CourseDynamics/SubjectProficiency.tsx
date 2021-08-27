@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+
 import AddButton from '../../../../../../Atoms/Buttons/AddButton';
 
 import GroupCard from './GroupCards';
@@ -13,7 +14,7 @@ const SubjectProficiency = ({roomData}: any) => {
 
   return (
     <div>
-      <div className="flex justify-end my-4">
+      <div className="flex justify-end my-8">
         <AddButton
           className="ml-4 py-1 cursor-pointer"
           label={'Group'}

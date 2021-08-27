@@ -527,11 +527,17 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             ...coTeachers.map((teacher: any) => ({
               id: teacher.teacherID,
               name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
+              authId: teacher.teacherAuthID,
+              email: teacher.teacherEmail,
             })),
-            savedData.teacher ? {
-              id: savedData.teacher.id,
-              name: `${savedData.teacher.firstName } ${savedData.teacher.lastName}`,
-            } : null,
+            savedData.teacher
+              ? {
+                  id: savedData.teacher.id,
+                  name: `${savedData.teacher.firstName} ${savedData.teacher.lastName}`,
+                  authId: savedData.teacher.authId,
+                  email: savedData.teacher.email,
+                }
+              : null,
           ].filter(Boolean),
         });
         // setRoomData({
@@ -563,9 +569,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         // });
         setPrevName(savedData.name);
         setSelectedCurrID(curricularId);
-      } catch(error) {
-        console.log(error,'erere');
-        
+      } catch {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errfetch'],
