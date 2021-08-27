@@ -91,6 +91,7 @@ export interface UniversalLessonStudentData {
   id: string;
   universalLessonID: string;
   universalLessonPageID: string;
+  roomID?: string;
   studentAuthID: string;
   studentID: string;
   studentEmail?: string;
@@ -111,6 +112,7 @@ export interface StudentExerciseData {
   id: string;
   entryData?: {domID: string; input: string}[];
   feedbacks?: string[];
+  shared?: boolean;
 }
 
 export interface TeacherStudentComments {
@@ -128,7 +130,10 @@ export interface UniversalJournalData {
   studentEmail: string;
   type?: string;
   feedbacks?: string[];
+  shared?: boolean;
   entryData?: {domID: string; type: string; input: string}[];
+  roomID?: string;
+  syllabusLessonID?: string;
   updatedAt?: any;
   createdAt?: any;
   recordID?: string;

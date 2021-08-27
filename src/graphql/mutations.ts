@@ -632,8 +632,6 @@ export const createInstitution = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -758,8 +756,6 @@ export const updateInstitution = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -884,8 +880,6 @@ export const deleteInstitution = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -1505,18 +1499,28 @@ export const createRoom = /* GraphQL */ `
         time
       }
       activeLessons
-      partnerSize
-      partnerOption
-      partnerGroups {
-        partners
-        advisors
-      }
-      proficiencyGroups {
-        groupName
-        groupIDs
+      classroomGroups {
+        items {
+          id
+          classRoomID
+          groupName
+          groupType
+          advisorEmail
+          advisorAuthId
+          groupLocation
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1679,18 +1683,28 @@ export const updateRoom = /* GraphQL */ `
         time
       }
       activeLessons
-      partnerSize
-      partnerOption
-      partnerGroups {
-        partners
-        advisors
-      }
-      proficiencyGroups {
-        groupName
-        groupIDs
+      classroomGroups {
+        items {
+          id
+          classRoomID
+          groupName
+          groupType
+          advisorEmail
+          advisorAuthId
+          groupLocation
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1853,18 +1867,880 @@ export const deleteRoom = /* GraphQL */ `
         time
       }
       activeLessons
-      partnerSize
-      partnerOption
-      partnerGroups {
-        partners
-        advisors
-      }
-      proficiencyGroups {
-        groupName
-        groupIDs
+      classroomGroups {
+        items {
+          id
+          classRoomID
+          groupName
+          groupType
+          advisorEmail
+          advisorAuthId
+          groupLocation
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClassroomGroupStudents = /* GraphQL */ `
+  mutation CreateClassroomGroupStudents(
+    $input: CreateClassroomGroupStudentsInput!
+    $condition: ModelClassroomGroupStudentsConditionInput
+  ) {
+    createClassroomGroupStudents(input: $input, condition: $condition) {
+      id
+      classRoomGroupID
+      classRoomGroup {
+        id
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
+        }
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        groupLocation
+        classroomGroupsStudents {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentEmail
+      studentAuthId
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentType
+      studentNote
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassroomGroupStudents = /* GraphQL */ `
+  mutation UpdateClassroomGroupStudents(
+    $input: UpdateClassroomGroupStudentsInput!
+    $condition: ModelClassroomGroupStudentsConditionInput
+  ) {
+    updateClassroomGroupStudents(input: $input, condition: $condition) {
+      id
+      classRoomGroupID
+      classRoomGroup {
+        id
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
+        }
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        groupLocation
+        classroomGroupsStudents {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentEmail
+      studentAuthId
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentType
+      studentNote
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassroomGroupStudents = /* GraphQL */ `
+  mutation DeleteClassroomGroupStudents(
+    $input: DeleteClassroomGroupStudentsInput!
+    $condition: ModelClassroomGroupStudentsConditionInput
+  ) {
+    deleteClassroomGroupStudents(input: $input, condition: $condition) {
+      id
+      classRoomGroupID
+      classRoomGroup {
+        id
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
+        }
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        groupLocation
+        classroomGroupsStudents {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentEmail
+      studentAuthId
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentType
+      studentNote
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClassroomGroups = /* GraphQL */ `
+  mutation CreateClassroomGroups(
+    $input: CreateClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    createClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
+      }
+      groupName
+      groupType
+      advisorEmail
+      advisorAuthId
+      groupAdvisor {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      groupLocation
+      classroomGroupsStudents {
+        items {
+          id
+          classRoomGroupID
+          studentEmail
+          studentAuthId
+          studentType
+          studentNote
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassroomGroups = /* GraphQL */ `
+  mutation UpdateClassroomGroups(
+    $input: UpdateClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    updateClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
+      }
+      groupName
+      groupType
+      advisorEmail
+      advisorAuthId
+      groupAdvisor {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      groupLocation
+      classroomGroupsStudents {
+        items {
+          id
+          classRoomGroupID
+          studentEmail
+          studentAuthId
+          studentType
+          studentNote
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassroomGroups = /* GraphQL */ `
+  mutation DeleteClassroomGroups(
+    $input: DeleteClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    deleteClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
+      }
+      groupName
+      groupType
+      advisorEmail
+      advisorAuthId
+      groupAdvisor {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      groupLocation
+      classroomGroupsStudents {
+        items {
+          id
+          classRoomGroupID
+          studentEmail
+          studentAuthId
+          studentType
+          studentNote
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1971,18 +2847,17 @@ export const createRoomCoTeachers = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2122,18 +2997,17 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2273,18 +3147,17 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2397,8 +3270,6 @@ export const createClass = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -2499,8 +3370,6 @@ export const updateClass = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -2601,8 +3470,6 @@ export const deleteClass = /* GraphQL */ `
           displayData
           currentPage
           activeLessons
-          partnerSize
-          partnerOption
           weekDay
           conferenceCallLink
           createdAt
@@ -10948,18 +11815,17 @@ export const createPersonLocation = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11169,18 +12035,17 @@ export const updatePersonLocation = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11390,18 +12255,17 @@ export const deletePersonLocation = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11825,18 +12689,17 @@ export const createAttendance = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12074,18 +12937,17 @@ export const updateAttendance = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12323,18 +13185,17 @@ export const deleteAttendance = /* GraphQL */ `
           time
         }
         activeLessons
-        partnerSize
-        partnerOption
-        partnerGroups {
-          partners
-          advisors
-        }
-        proficiencyGroups {
-          groupName
-          groupIDs
+        classroomGroups {
+          nextToken
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -12679,6 +13540,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -12718,6 +13580,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -12757,6 +13620,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -12780,6 +13644,7 @@ export const createUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -12806,6 +13671,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -12832,6 +13698,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -13839,6 +14706,7 @@ export const createPersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -13885,6 +14753,7 @@ export const updatePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }
@@ -13931,6 +14800,7 @@ export const deletePersonSentiments = /* GraphQL */ `
       date
       time
       responseText
+      backstory
       createdAt
       updatedAt
     }

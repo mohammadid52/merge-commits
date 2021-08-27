@@ -21,6 +21,105 @@ $blue-700: #1d4ed8;
 $blue-800: #1e40af;
 $blue-900: #1e3a8a;
 
+$iconoclastColors: (
+  '100': #e0e7ff,
+  '200': #c7d2fe,
+  '300': #a5b4fc,
+  '400': #818cf8,
+  '500': #6366f1,
+  '600': #4f46e5,
+  '700': #4338ca,
+  '800': #3730a3,
+  '900': #312e81,
+);
+$curateColors: (
+  '100': #dbeafe,
+  '200': #bfdbfe,
+  '300': #93c5fd,
+  '400': #60a5fa,
+  '500': #3b82f6,
+  '600': #2563eb,
+  '700': #1d4ed8,
+  '800': #1e40af,
+  '900': #1e3a8a,
+);
+
+/* stylelint-disable at-rule-no-unknown */
+
+@mixin iconoclast($util: 'bg') {
+  @each $themeName, $themeValue in $iconoclastColors {
+    .iconoclast .iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        background-color: $themeValue;
+      }
+
+      @if $util == 'border' {
+        border-color: $themeValue;
+      }
+
+      @if $util == 'text' {
+        color: $themeValue;
+      }
+    }
+    .iconoclast .hover\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:hover {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        &:hover {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        &:hover {
+          color: $themeValue;
+        }
+      }
+    }
+  }
+}
+
+@mixin curate($util: 'bg') {
+  @each $themeName, $themeValue in $curateColors {
+    .curate .curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        background-color: $themeValue;
+      }
+
+      @if $util == 'border' {
+        border-color: $themeValue;
+      }
+
+      @if $util == 'text' {
+        color: $themeValue;
+      }
+    }
+    .curate .hover\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:hover {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        &:hover {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        &:hover {
+          color: $themeValue;
+        }
+      }
+    }
+  }
+}
+
 .iconoclast .iconoclast\:bg-main {
   background-color: $iconoclast;
 }
@@ -37,146 +136,9 @@ $blue-900: #1e3a8a;
   border-color: $curate;
 }
 
-.iconoclast .iconoclast\:bg-100 {
-  background-color: $indigo-100;
-}
-
-.iconoclast .iconoclast\:bg-200 {
-  background-color: $indigo-200;
-}
-
-.iconoclast .iconoclast\:bg-300 {
-  background-color: $indigo-300;
-}
-
-.iconoclast .iconoclast\:bg-400 {
-  background-color: $indigo-400;
-}
-
-.iconoclast .iconoclast\:bg-500 {
-  background-color: $indigo-500;
-}
-
-.iconoclast .iconoclast\:bg-600 {
-  background-color: $indigo-600;
-}
-
-.iconoclast .iconoclast\:bg-700 {
-  background-color: $indigo-700;
-}
-
-.iconoclast .iconoclast\:bg-800 {
-  background-color: $indigo-800;
-}
-
-.iconoclast .iconoclast\:bg-900 {
-  background-color: $indigo-900;
-}
-
-.iconoclast .iconoclast\:border-100 {
-  border-color: $indigo-100;
-}
-
-.iconoclast .iconoclast\:border-200 {
-  border-color: $indigo-200;
-}
-
-.iconoclast .iconoclast\:border-300 {
-  border-color: $indigo-300;
-}
-
-.iconoclast .iconoclast\:border-400 {
-  border-color: $indigo-400;
-}
-
-.iconoclast .iconoclast\:border-500 {
-  border-color: $indigo-500;
-}
-
-.iconoclast .iconoclast\:border-600 {
-  border-color: $indigo-600;
-}
-
-.iconoclast .iconoclast\:border-700 {
-  border-color: $indigo-700;
-}
-
-.iconoclast .iconoclast\:border-800 {
-  border-color: $indigo-800;
-}
-
-.iconoclast .iconoclast\:border-900 {
-  border-color: $indigo-900;
-}
-
-.curate .curate\:bg-100 {
-  background-color: $blue-100;
-}
-
-.curate .curate\:bg-200 {
-  background-color: $blue-200;
-}
-
-.curate .curate\:bg-300 {
-  background-color: $blue-300;
-}
-
-.curate .curate\:bg-400 {
-  background-color: $blue-400;
-}
-
-.curate .curate\:bg-500 {
-  background-color: $blue-500;
-}
-
-.curate .curate\:bg-600 {
-  background-color: $blue-600;
-}
-
-.curate .curate\:bg-700 {
-  background-color: $blue-700;
-}
-
-.curate .curate\:bg-800 {
-  background-color: $blue-800;
-}
-
-.curate .curate\:bg-900 {
-  background-color: $blue-900;
-}
-
-.curate .curate\:border-100 {
-  border-color: $blue-100;
-}
-
-.curate .curate\:border-200 {
-  border-color: $blue-200;
-}
-
-.curate .curate\:border-300 {
-  border-color: $blue-300;
-}
-
-.curate .curate\:border-400 {
-  border-color: $blue-400;
-}
-
-.curate .curate\:border-500 {
-  border-color: $blue-500;
-}
-
-.curate .curate\:border-600 {
-  border-color: $blue-600;
-}
-
-.curate .curate\:border-700 {
-  border-color: $blue-700;
-}
-
-.curate .curate\:border-800 {
-  border-color: $blue-800;
-}
-
-.curate .curate\:border-900 {
-  border-color: $blue-900;
-}
+@include iconoclast('bg');
+@include iconoclast('border');
+@include iconoclast('text');
+@include curate('bg');
+@include curate('border');
+@include curate('text');

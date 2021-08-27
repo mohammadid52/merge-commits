@@ -790,7 +790,12 @@ export const getRoom = /* GraphQL */ `
       filters
       location
       startDate
+      endDate
       startTime
+      endTime
+      frequency
+      weekDay
+      conferenceCallLink
       length
       repeat
       notes
@@ -813,6 +818,20 @@ export const getRoom = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getRoomLessonImpactLogs = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
     }
   }
 `;
@@ -2165,6 +2184,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         syllabusLessonID
         lessonID
         lessonPageID
+        roomID
         studentID
         studentAuthID
         studentEmail
@@ -2372,6 +2392,37 @@ export const getClassDetails = /* GraphQL */ `
         }
         nextToken
       }
+      students {
+        items {
+          id
+          classID
+          group
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+          student {
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getClassStudents = /* GraphQL */ `
+  query GetClassDetails($id: ID!) {
+    getClass(id: $id) {
+      id
       students {
         items {
           id
@@ -3447,6 +3498,14 @@ export const listUnits = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -3723,6 +3782,51 @@ export const getCurriculumBasicInfo = /* GraphQL */ `
         id
         name
       }
+    }
+  }
+`;
+
+export const getPersonSentiments = /* GraphQL */ `
+  query GetPersonSentiments($personAuthID: String!, $date: AWSDate!) {
+    getPersonSentiments(personAuthID: $personAuthID, date: $date) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonSentimentss = /* GraphQL */ `
+  query ListPersonSentimentss(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelPersonSentimentsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonSentimentss(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        personAuthID
+        personEmail
+        date
+        time
+        backstory
+        responseText
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

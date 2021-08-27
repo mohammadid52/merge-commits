@@ -138,12 +138,45 @@ type Room
   currentPage: String
   completedLessons: [CompleteLesson]
   activeLessons: [String]
-  partnerSize: Int
-  partnerOption: String
-  partnerGroups: [partnerGroups]
-  proficiencyGroups: [proficiencyGroups]
+  classroomGroups: [ClassroomGroups]
+    @connection(keyName: "groupsByClassroom", fields: ["id"])
   weekDay: String
   conferenceCallLink: String
+  lessonImpactLog: [ImpactLogEntry]
+}
+
+type ClassroomGroupStudents
+  @model
+  @key(name: "studentsByCRgroup", fields: ["classRoomGroupID"]) {
+  id: ID!
+  classRoomGroupID: ID!
+  classRoomGroup: ClassroomGroups @connection(fields: ["classRoomGroupID"])
+  studentEmail: String!
+  studentAuthId: String!
+  student: Person @connection(fields: ["studentEmail", "studentAuthId"])
+  studentType: String
+  studentNote: String
+}
+
+type ClassroomGroups @model @key(name: "groupsByClassroom", fields: ["classRoomID"]) {
+  id: ID!
+  classRoomID: ID!
+  classRoom: Room @connection(fields: ["classRoomID"])
+  groupName: String
+  groupType: String
+  advisorEmail: String!
+  advisorAuthId: String!
+  groupAdvisor: Person @connection(fields: ["advisorEmail", "advisorAuthId"])
+  groupLocation: String
+  classroomGroupsStudents: [ClassroomGroupStudents]
+    @connection(keyName: "studentsByCRgroup", fields: ["id"])
+}
+
+type ImpactLogEntry {
+  impactDate: AWSDate
+  reasonComment: String
+  lessonImpact: Float
+  adjustment: String
 }
 
 type partnerGroups {
@@ -1065,6 +1098,7 @@ type ExerciseData {
   id: String!
   entryData: [JournalEntryData]
   feedbacks: [String]
+  shared: Boolean
 }
 
 type UniversalJournalData @model @key(fields: ["id"]) {
@@ -1075,6 +1109,7 @@ type UniversalJournalData @model @key(fields: ["id"]) {
   type: String!
   entryData: [JournalEntryData]
   feedbacks: [String]
+  shared: Boolean
   lessonID: ID
   syllabusLessonID: String
   lessonType: String
@@ -1170,6 +1205,7 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   date: AWSDate!
   time: AWSTime!
   responseText: String
+  backstory: String
 }
 
 type Subscription {

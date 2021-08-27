@@ -14,6 +14,7 @@ interface ModalProps {
   closeAction?: () => void;
   isImage?: boolean;
   closeOnBackdrop?: boolean;
+  hidePadding?: boolean;
   intenseOpacity?: boolean;
   titleButton?: React.ReactElement;
 }
@@ -45,10 +46,18 @@ const ModalHeader = (headerProps: {
   );
 };
 
-const ModalBody = (bodyProps: {children: React.ReactNode; closeOnBackdrop?: boolean}) => {
-  const {children, closeOnBackdrop} = bodyProps;
+const ModalBody = (bodyProps: {
+  children: React.ReactNode;
+  hidePadding?: boolean;
+  closeOnBackdrop?: boolean;
+}) => {
+  const {children, closeOnBackdrop, hidePadding} = bodyProps;
   return (
-    <div className={`relative ${closeOnBackdrop ? 'p-2' : 'p-4'} flex-auto`}>
+    <div
+      className={`relative ${
+        hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
+      } flex-auto overflow-y-scroll`}
+      style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
   );
@@ -85,6 +94,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     saveAction,
     closeOnBackdrop = false,
     titleButton,
+    hidePadding = false,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -113,7 +123,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             }
           }}
           className="relative w-auto my-4 mx-auto max-w-lg">
-          <div className={`${theme.modals.content}`}>
+          <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}
@@ -122,7 +132,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
                 showBorder={showHeaderBorder}
               />
             )}
-            <ModalBody closeOnBackdrop={closeOnBackdrop}>{children}</ModalBody>
+            <ModalBody hidePadding={hidePadding} closeOnBackdrop={closeOnBackdrop}>
+              {children}
+            </ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
           </div>
         </div>

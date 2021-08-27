@@ -90,6 +90,8 @@ const MainRouter: React.FC = () => {
             role: userInfo.role,
             image: userInfo.image,
             location: userInfo?.location?.items,
+            lastLoggedIn: userInfo.lastLoggedIn,
+            lastLoggedOut: userInfo.lastLoggedOut,
           },
         });
       } else {
@@ -142,8 +144,6 @@ const MainRouter: React.FC = () => {
     }
   };
 
-  const [justLoggedIn, setJustLoggedIn] = useState(false);
-
   {
     return (
       <div
@@ -157,14 +157,9 @@ const MainRouter: React.FC = () => {
                 <ComponentLoading />
               </div>
             }>
-            {authState === 'loggedIn' && (
-              <AuthRoutes justLoggedIn={justLoggedIn} updateAuthState={updateAuthState} />
-            )}
+            {authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />}
             {authState === 'notLoggedIn' && (
-              <UnauthRoutes
-                setJustLoggedIn={setJustLoggedIn}
-                updateAuthState={updateAuthState}
-              />
+              <UnauthRoutes updateAuthState={updateAuthState} />
             )}
           </Suspense>
         )}
