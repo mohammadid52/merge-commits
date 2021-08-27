@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx",
-    "build": "webpack --config webpack.prod.js",
+    "build": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.prod.js",
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
     "watch": "npm run build:dev && webpack --watch  --inline --hot --progress --config webpack.dev.js",
