@@ -107,6 +107,7 @@ const Anthology = () => {
       setStudentDataLoaded(true);
     } catch (e) {
       //
+      setStudentDataLoaded(true);
     } finally {
     }
   };
@@ -238,10 +239,11 @@ const Anthology = () => {
       } else {
         console.log('anthology - NO universalJournalDatas');
       }
+      setUniversalJournalDataLoaded(true);
     } catch (e) {
       console.error('error listing journal data - ', e);
-    } finally {
       setUniversalJournalDataLoaded(true);
+    } finally {
     }
   };
 
@@ -478,6 +480,12 @@ const Anthology = () => {
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
   const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (studentDataLoaded && universalJournalDataLoaded) {
+      setNotebookLoaded(true);
+    }
+  }, [studentDataLoaded, universalJournalDataLoaded]);
+
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
     const mergeAll = [...allStudentData, ...allUniversalJournalData];
@@ -496,9 +504,7 @@ const Anthology = () => {
       if (uniqueIds.length > 0) {
         setRoomCardIds(uniqueIds);
       }
-      setNotebookLoaded(true);
     } else {
-      setNotebookLoaded(true);
     }
   }, [allStudentData, allUniversalJournalData]);
 
