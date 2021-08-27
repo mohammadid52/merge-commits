@@ -5839,6 +5839,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -5879,6 +5880,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         exerciseData {
           id
           feedbacks
+          shared
         }
         createdAt
         updatedAt
@@ -5901,6 +5903,7 @@ export const getUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -5937,6 +5940,7 @@ export const listUniversalJournalDatas = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
         lessonID
         syllabusLessonID
         lessonType
