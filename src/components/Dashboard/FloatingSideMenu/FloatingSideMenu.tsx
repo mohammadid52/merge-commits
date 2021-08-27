@@ -11,6 +11,7 @@ import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import {getLocalStorageData} from '../../../utilities/localStorage';
 
 export interface FloatingSideMenuProps {
   menuState?: number;
@@ -55,6 +56,7 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
 
 const FloatingSideMenu = () => {
   const {lessonState, clientKey} = useContext(GlobalContext);
+  const getRoomData = getLocalStorageData('room_info');
   const {browser} = useDeviceDetect();
   const urlParams: any = useParams();
   const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
@@ -164,6 +166,8 @@ const FloatingSideMenu = () => {
           studentEmail: newJournalEntry.studentEmail,
           feedbacks: newJournalEntry.feedbacks,
           entryData: newJournalEntry.entryData,
+          roomID: getRoomData.id,
+          syllabusLessonID: getRoomData.activeSyllabus,
         });
       } else {
         const existJournalEntry = notesDataRows[0];
@@ -175,6 +179,8 @@ const FloatingSideMenu = () => {
           studentEmail: existJournalEntry.studentEmail,
           feedbacks: existJournalEntry.feedbacks,
           entryData: existJournalEntry.entryData,
+          roomID: getRoomData.id,
+          syllabusLessonID: getRoomData.activeSyllabus,
         });
       }
     } catch (e) {
@@ -204,6 +210,8 @@ const FloatingSideMenu = () => {
             return entryObj;
           }
         }),
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
       };
 
       const newJournalData: any = await API.graphql(
@@ -230,6 +238,8 @@ const FloatingSideMenu = () => {
         studentAuthID: notesData.studentAuthID,
         studentEmail: notesData.studentEmail,
         entryData: notesData.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
       };
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})

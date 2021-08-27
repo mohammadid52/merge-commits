@@ -1,4 +1,5 @@
 import {
+  StudentExerciseData,
   StudentPageInput,
   UniversalLesson,
   UniversalLessonPage,
@@ -49,7 +50,8 @@ export type LessonActions =
       type: 'SET_INITIAL_STUDENT_DATA';
       payload: {
         requiredInputs: [string[]];
-        studentData: UniversalLessonStudentData[];
+        studentData: [StudentPageInput[]];
+        exerciseData: [StudentExerciseData[]];
       };
     }
   | {
@@ -61,7 +63,8 @@ export type LessonActions =
           lessonPageID: string;
           update: boolean;
         }[];
-        filteredStudentData?: StudentPageInput[];
+        filteredStudentData?: [StudentPageInput[]];
+        filteredExerciseData?: [StudentExerciseData[]];
       };
     }
   | {
@@ -177,10 +180,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_INITIAL_STUDENT_DATA':
       const requiredInputs = action.payload.requiredInputs;
       const studentData = action.payload.studentData;
+      const exerciseData = action.payload.exerciseData;
       return {
         ...state,
         requiredInputs: requiredInputs,
         studentData: studentData,
+        exerciseData: exerciseData,
       };
     case 'LOAD_STUDENT_DATA':
       return {
@@ -190,6 +195,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: action.payload.filteredStudentData
           ? action.payload.filteredStudentData
           : state.studentData,
+        exerciseData: action.payload.filteredExerciseData
+          ? action.payload.filteredExerciseData
+          : state.exerciseData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
@@ -232,8 +240,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
 
+      // ~~~~~ TOGGLE DB DATA-ID TO UPDATED ~~~~ //
       const updatedStudentDataIdArray = state?.universalStudentDataID.map(
-        (dataIdObj: any, idObjIdx: number) => {
+        (dataIdObj: any) => {
           if (dataIdObj.pageIdx == pageIdx) {
             return {
               ...dataIdObj,
@@ -245,7 +254,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
 
-      // update single object
+      // ~~~~~~ UPDATE STUDENT DATA ARRAY ~~~~~~ //
       const updatedTargetStudentData =
         state?.studentData[pageIdx].map((studentPageInput: StudentPageInput) => {
           return {
@@ -264,11 +273,41 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
 
+      // ~~~~~~ UPDATE EXERCISE DATA ARRAY ~~~~~ //
+      const updatedExerciseData =
+        state?.exerciseData[pageIdx].map((exercise: any) => {
+          return {
+            ...exercise,
+            entryData: exercise.entryData.map((entry: any) => {
+              if (entry.domID === domID) {
+                return {
+                  ...entry,
+                  input: newInput[0],
+                };
+              } else {
+                return entry;
+              }
+            }),
+          };
+        }) || [];
+      const mappedExerciseData = state?.exerciseData.map(
+        (pageExerciseArray: any[], exerciseIdx: number) => {
+          if (exerciseIdx === pageIdx) {
+            return updatedExerciseData;
+          } else {
+            return pageExerciseArray;
+          }
+        }
+      );
+
+      // console.log('this page exercise data - ', state?.exerciseData[pageIdx]);?
+
       return {
         ...state,
         updated: true,
         universalStudentDataID: [...updatedStudentDataIdArray],
         studentData: mappedStudentData,
+        exerciseData: mappedExerciseData,
       };
     case 'COMPLETE_STUDENT_UPDATE':
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {

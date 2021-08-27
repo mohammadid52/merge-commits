@@ -13,6 +13,7 @@ interface SelectorProps {
   placeholder: string;
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
+  isRequired?: boolean;
   loading?: boolean;
   label?: string;
   labelTextClass?: string;
@@ -31,6 +32,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     placeholder,
     error = '',
     onChange,
+    isRequired = false,
     loading = false,
     noOptionMessage = '',
     labelTextClass = 'text-xs',
@@ -80,8 +82,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   return (
     <div className="relative" ref={currentRef}>
       {label && (
-        <label className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
+        <label
+          className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
           {label}
+          <span className="text-red-500"> {isRequired ? '*' : null}</span>
         </label>
       )}
       <span className="inline-block w-full h-full rounded-md shadow-sm">

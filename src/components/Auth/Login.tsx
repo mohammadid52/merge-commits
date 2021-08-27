@@ -13,16 +13,22 @@ import axios from 'axios';
 import * as queries from '../../graphql/queries';
 import * as customMutations from '../../customGraphql/customMutations';
 import useDictionary from '../../customHooks/dictionary';
+import useDeviceDetect from '../../customHooks/deviceDetect';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
 import {createUserUrl} from '../../utilities/urls';
 
+import BrowserAlert from '../General/BrowserAlert';
+
 interface LoginProps {
-  setJustLoggedIn?: any;
   updateAuthState: Function;
 }
 
-const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
+const Login = ({updateAuthState}: LoginProps) => {
+  const {browser: detectedBrowser} = useDeviceDetect();
+  const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
+    detectedBrowser === 'Safari'
+  );
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
@@ -93,7 +99,7 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
         const update: any = await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
-        setJustLoggedIn(true);
+
         updateAuthState(true);
       } catch (error) {
         console.log('error', error);
@@ -545,6 +551,16 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
             'authBackground'
           )} bg-cover bg-center`}></div>
       </div>
+      {openAlertBrowser && (
+        <BrowserAlert
+          alert={openAlertBrowser}
+          closeTab={() => {
+            window.open('', '_parent', '');
+            window.close();
+          }}
+          onContinue={() => setOpenAlertBrowser(false)}
+        />
+      )}
     </div>
   );
 };

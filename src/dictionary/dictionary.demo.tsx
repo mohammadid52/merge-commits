@@ -9,6 +9,34 @@ const AuthDict: any = {
     LOGIN: 'TBD',
   },
 };
+const General: any = {
+  EN: {
+    SENTIMENT: {
+      TITLE: "How you've been?",
+      MODAL_TITLE: 'The Backstory',
+      EMOJIS: {
+        AWFUL: 'awful',
+        BAD: 'bad',
+        OKAY: 'okay',
+        GOOD: 'good',
+        GREAT: 'great',
+      },
+    },
+  },
+  ES: {
+    SENTIMENT: {
+      MODAL_TITLE: 'TBD',
+      TITLE: 'TBD',
+      EMOJIS: {
+        AWFUL: 'TBD',
+        BAD: 'TBD',
+        OKAY: 'TBD',
+        GOOD: 'TBD',
+        GREAT: 'TBD',
+      },
+    },
+  },
+};
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
@@ -106,6 +134,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
     INSTITUTION_INFO: 'Institute Info',
+    INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
@@ -144,6 +173,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'TBD',
     ADD_INSTITUTION: 'TBD',
     INSTITUTION_INFO: 'TBD',
+    INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
@@ -289,7 +319,9 @@ const dashboardProfileDict: any = {
 
 const anthologyDict: any = {
   EN: {
-    TITLE: 'Notebook',
+    TITLE: 'Notebooks',
+    TITLE_CONTAINER: 'Your Notebooks',
+    NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Class Work',
@@ -307,6 +339,8 @@ const anthologyDict: any = {
   },
   ES: {
     TITLE: 'Cuaderno',
+    TITLE_CONTAINER: 'T.B.D',
+    NO_SELECTED: 'T.B.D',
     TABS: {
       A: 'Diario',
       B: 'Class Work',
@@ -362,7 +396,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
     UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
-    ANTHOLOGY: 'Notebook',
+    ANTHOLOGY: 'Notebooks',
     NOTICEBOARD: 'Noticeboard',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
@@ -916,6 +950,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update institute details. Please try again later.',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
@@ -952,6 +987,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'TBD',
+      typerequired: 'TBD',
       unabletoupdate: 'TBD',
       uploaderr: 'TBD',
       deleterr: 'TBD',
@@ -1419,7 +1455,7 @@ const RoomEDITdict: any = {
   EN: {
     TITLE: 'Edit Classroom',
     SUBTITLE: 'Edit Classroom information',
-    HEADING: 'CLASSROOM INFORMATION',
+    HEADING: 'Classroom information',
     NAME_LABEL: 'Classroom Name',
     NAME_PLACEHOLDER: 'Add Classroom name',
     TEACHER_LABEL: 'Teacher',
@@ -1430,6 +1466,10 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
+    CLASS_DYNAMICS_TAB_DESCRIPTION:
+      'Manage subject proficiency & create course partners and student groups',
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
       unabletofetch: 'Unable to fetch institution list. Please try again later.',
@@ -1474,6 +1514,10 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'TBD',
     MAXSTUDENT_LABEL: 'TBD',
     MAXSTUDENT_PLACHOLDER: 'TBD',
+    CLASS_DETAILS_TAB_HEADING: 'TBD',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
+    CLASS_DYNAMICS_TAB_HEADING: 'TBD',
+    CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -1503,6 +1547,82 @@ const RoomEDITdict: any = {
     },
   },
 };
+
+const RoomDetailsDict: any = {
+  EN: {
+    COURSE_DETAILS: 'Course Details',
+    COURSE_FREQUENCY: 'Course Frequency',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency',
+    COURSE_PARTNERS: 'Course Partners',
+  },
+  ES: {
+    COURSE_DETAILS: 'TBD',
+    COURSE_FREQUENCY: 'TBD',
+    SUBJECT_PROFICIENCY: 'TBD',
+    COURSE_PARTNERS: 'TBD',
+  },
+};
+
+const GroupFormDict: any = {
+  EN: {
+    GROUP_NAME: 'Group name',
+    MESSAGES: {
+      GROUP_NAME: 'Group name is required',
+      GROUP_ADVISOR: 'Group advisor is required',
+    },
+  },
+  ES: {
+    GROUP_NAME: 'TBD',
+    MESSAGES: {
+      GROUP_NAME: 'TBD',
+      GROUP_ADVISOR: 'TBD',
+    },
+  },
+};
+
+const CourseScheduleDict: any = {
+  EN: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'Start date',
+      END_DATE: 'End date',
+      START_TIME: 'Start Time',
+      END_TIME: 'End Time',
+      WEEK_DAY: 'Week Day',
+      FREQUENCY: 'Frequency',
+      CONFERENCE_CALL_LINK: 'Conference call link',
+      LOCATION: 'Location',
+      ADDITIONAL_NOTES: 'Additional Notes',
+    },
+    MESSAGES: {
+      START_DATE: 'Start date is required',
+      END_DATE: 'End date is required',
+      START_TIME: 'Start time is required',
+      END_TIME: 'End time is required',
+    },
+  },
+  ES: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      WEEK_DAY: 'TBD',
+      FREQUENCY: 'TBD',
+      CONFERENCE_CALL_LINK: 'TBD',
+      LOCATION: 'TBD',
+      ADDITIONAL_NOTES: 'TBD',
+    },
+    MESSAGES: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      startTime: 'TBD',
+      endTime: 'TBD',
+    },
+  },
+};
+
 const curricularviewdict: any = {
   EN: {
     TITLE: 'Curriculum Builder',
@@ -3441,6 +3561,9 @@ export {
   RoomBuilderdict,
   EditCurriculardict,
   RoomEDITdict,
+  RoomDetailsDict,
+  GroupFormDict,
+  CourseScheduleDict,
   curricularviewdict,
   CHECKPOINTSDICT,
   LEARINGOBJECTIVEDICT,
@@ -3487,4 +3610,5 @@ export {
   LessonsListDict,
   EditQuestionModalDict,
   LearningEvidenceDict,
+  General,
 };

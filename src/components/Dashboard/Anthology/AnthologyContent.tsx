@@ -9,23 +9,43 @@ import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
 
 import SingleNote from './AnthologyContentNote';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  UniversalJournalData,
+  UniversalLessonStudentData,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
+import Toggle from './AnthologyContentNote/Toggle';
+import {IconContext} from 'react-icons';
+import {FaSpinner} from 'react-icons/fa';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {getAsset} from '../../../assets';
 
-interface ContentCardProps {
+export interface ContentCardProps {
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    dataID: string
+    dataID: string,
+    option?: number | 0,
+    recordID?: string
   ) => void;
   handleEditUpdate?: (e: any) => void;
   updateJournalContent?: (html: string, targetType: string) => void;
+  mainSection?: string;
+  sectionRoomID?: string;
+  sectionTitle?: string;
   subSection?: string;
+  setSubSection?: any;
+  tab?: any;
+  setTab?: any;
   createTemplate?: any;
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];
+  allStudentData?: UniversalLessonStudentData[];
+  setAllStudentData?: any;
+  allExerciseData?: any[];
+  allUniversalJournalData?: UniversalJournalData[];
+  setAllUniversalJournalData?: any;
   onCancel?: any;
-  getContentObjIndex?: (contentObj: any) => number;
 }
 
 const AnthologyContent = (props: ContentCardProps) => {
@@ -35,14 +55,19 @@ const AnthologyContent = (props: ContentCardProps) => {
     handleEditUpdate,
     updateJournalContent,
     onCancel,
+    mainSection,
     subSection,
     createTemplate,
     currentContentObj,
     content,
-    getContentObjIndex,
+    allStudentData,
+    setAllStudentData,
+    allUniversalJournalData,
+    setAllUniversalJournalData,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const handleInputFieldUpdate = (e: any) => {
     const {value} = e.target;
@@ -71,8 +96,8 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     return (
       <>
-        <div className={`flex px-4`}>
-          <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+        <div className={`flex justify-end px-4`}>
+          <p className={`w-auto text-right italic ${theme.lessonCard.subtitle}`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>
         </div>
@@ -222,7 +247,7 @@ const AnthologyContent = (props: ContentCardProps) => {
               {viewEditMode.mode === 'create' &&
               viewEditMode.dataID === createTemplate.id ? (
                 <Buttons
-                  onClick={() => handleEditToggle('', '')}
+                  onClick={() => handleEditToggle('', '', 0, '')}
                   label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                   transparent
                   btnClass="mr-2"
@@ -240,22 +265,42 @@ const AnthologyContent = (props: ContentCardProps) => {
         </ContentCard>
       )}
       {content.length > 0 ? (
-        content.map((contentObj: UniversalJournalData, idx: number) => (
-          <SingleNote
-            onCancel={onCancel}
-            viewModeView={viewModeView}
-            editModeView={editModeView}
-            viewEditMode={viewEditMode}
-            handleEditToggle={handleEditToggle}
-            getContentObjIndex={getContentObjIndex}
-            contentLen={content.length}
-            idx={idx}
-            contentObj={
-              currentContentObj.id === contentObj.id ? currentContentObj : contentObj
-            }
-            subSection={subSection}
-          />
-        ))
+        content.map((contentObj: UniversalJournalData, idx: number) => {
+          return (
+            <EmptyViewWrapper
+              wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+              timedRevealInt={idx + 1}
+              fallbackContents={
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
+                    style: {},
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              }>
+              <SingleNote
+                idx={idx}
+                mainSection={mainSection}
+                subSection={subSection}
+                onCancel={onCancel}
+                viewModeView={viewModeView}
+                editModeView={editModeView}
+                viewEditMode={viewEditMode}
+                handleEditToggle={handleEditToggle}
+                contentLen={content.length}
+                contentObj={
+                  currentContentObj.id === contentObj.id ? currentContentObj : contentObj
+                }
+                allUniversalJournalData={allUniversalJournalData}
+                setAllUniversalJournalData={setAllUniversalJournalData}
+                allStudentData={allStudentData}
+                setAllStudentData={setAllStudentData}
+              />
+            </EmptyViewWrapper>
+          );
+        })
       ) : (
         <div className="p-12 flex flex-center items-center">
           <p className="text-center text-lg text-gray-500">
@@ -267,4 +312,4 @@ const AnthologyContent = (props: ContentCardProps) => {
   );
 };
 
-export default AnthologyContent;
+export default React.memo(AnthologyContent);
