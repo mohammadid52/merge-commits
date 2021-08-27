@@ -13540,6 +13540,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -13579,6 +13580,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -13618,6 +13620,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           input
         }
         feedbacks
+        shared
       }
       createdAt
       updatedAt
@@ -13641,6 +13644,7 @@ export const createUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -13667,6 +13671,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
@@ -13693,6 +13698,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      shared
       lessonID
       syllabusLessonID
       lessonType
