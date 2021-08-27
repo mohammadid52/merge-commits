@@ -522,7 +522,6 @@ const Anthology = () => {
 
   return (
     <React.Fragment>
-      {console.log('rerendering anthology')}
       <div>
         <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
       </div>
