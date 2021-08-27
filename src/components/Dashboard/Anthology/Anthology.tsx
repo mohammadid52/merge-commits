@@ -36,15 +36,7 @@ export type ViewEditMode = {
 };
 
 const Anthology = () => {
-  const {
-    state,
-    lessonState,
-    lessonDispatch,
-    dispatch,
-    userLanguage,
-    theme,
-    clientKey,
-  } = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -530,6 +522,7 @@ const Anthology = () => {
 
   return (
     <React.Fragment>
+      {console.log('rerendering anthology')}
       <div>
         <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
       </div>
