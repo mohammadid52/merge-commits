@@ -2093,6 +2093,58 @@ export const listInstitutions = /* GraphQL */ `
   }
 `;
 
+export const listInstitutionsForCurricula = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        rooms {
+          items {
+            id
+            name
+            teacher {
+              firstName
+              preferredName
+              lastName
+              image
+              id
+            }
+            curricula {
+              items {
+                id
+                curriculum {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+        curricula {
+          items {
+            id
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listUniversalLessonStudentDatas = /* GraphQL */ `
   query ListUniversalLessonStudentDatas(
     $id: ID
