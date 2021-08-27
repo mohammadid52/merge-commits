@@ -351,7 +351,6 @@ const SentimentTab = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setShowEditModal(true);
-
                 setSelectedSentiment({
                   idx: sentimentIdx,
                   responseText: sentiment.responseText || 'okay',
@@ -364,7 +363,7 @@ const SentimentTab = () => {
               }}
               className="col-span-1 flex flex-col text-center items-center justify-center">
               <img
-                src={emojiGifs[sentiment.responseText || 'okay']}
+                src={emojiGifs[sentiment.responseText || 'okay'] || emojiGifs['okay']}
                 alt={getEmojiName(sentiment?.responseText)}
                 className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
               />
