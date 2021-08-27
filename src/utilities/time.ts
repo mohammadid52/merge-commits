@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 interface PatternObject {
   [key: string]: string;
 }
@@ -46,8 +48,8 @@ export const awsFormatDate = (date: string) => {
     .join('-');
 };
 
-export const dateString = (separator: string, locale: 'US' | 'WORLD'): string => {
-  const d = new Date();
+export const dateString = (separator: string, locale: 'US' | 'WORLD', date?: Date): string => {
+  const d = date ? new Date(date) : new Date();
   const dayNumber = d.getDate();
   const monthNumber = d.getMonth();
   const year = d.getFullYear();
@@ -71,5 +73,35 @@ export const dateFromServer = (date: string) => {
 export const MinutesToHHMM = (minutes: number, separator?: string) => {
   let m = minutes % 60;
   let h = (minutes - m) / 60;
-  return separator === ":" ? `${h.toString()}:${m < 10 ? '0' : ''} ${m.toString()}` : `${h ? `${h.toString()} hrs` : ''} ${m.toString()} minutes`
+  return separator === ':'
+    ? `${h.toString()}:${m < 10 ? '0' : ''} ${m.toString()}`
+    : `${h ? `${h.toString()} hrs` : ''} ${m.toString()} minutes`;
 };
+
+/**
+ * Function to generate time array
+ * In 24 hour format
+ * with 30 min interval
+ * using moment
+ */
+export function timeIntervals(): any[] {
+	let items: any[] = [];
+	new Array(24).fill(undefined).forEach((acc: any, index: number) => {
+		items = [
+			...items,
+			{
+				name: moment({ hour: index }).format('h:mm A'),
+				value: moment({ hour: index }).format('h:mm A'),
+			},
+		];
+		items = [
+			...items,
+			{
+				name: moment({ hour: index, minute: 30 }).format('h:mm A'),
+				value: moment({ hour: index, minute: 30 }).format('h:mm A'),
+			},
+		];
+	});
+
+	return items;
+}

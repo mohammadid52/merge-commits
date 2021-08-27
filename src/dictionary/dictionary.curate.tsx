@@ -9,7 +9,34 @@ const AuthDict: any = {
     LOGIN: 'TBD',
   },
 };
-
+const General: any = {
+  EN: {
+    SENTIMENT: {
+      TITLE: "How you've been?",
+      MODAL_TITLE: 'The Backstory',
+      EMOJIS: {
+        AWFUL: 'awful',
+        BAD: 'bad',
+        OKAY: 'okay',
+        GOOD: 'good',
+        GREAT: 'great',
+      },
+    },
+  },
+  ES: {
+    SENTIMENT: {
+      MODAL_TITLE: 'TBD',
+      TITLE: 'TBD',
+      EMOJIS: {
+        AWFUL: 'TBD',
+        BAD: 'TBD',
+        OKAY: 'TBD',
+        GOOD: 'TBD',
+        GREAT: 'TBD',
+      },
+    },
+  },
+};
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
@@ -231,6 +258,7 @@ const dashboardProfileDict: any = {
 
 const anthologyDict: any = {
   EN: {
+    TITLE_CONTAINER: 'Your Notebooks',
     TITLE: 'Journal',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
@@ -249,6 +277,7 @@ const anthologyDict: any = {
     },
   },
   ES: {
+    TITLE_CONTAINER: 'T.B.D',
     TITLE: 'Cuaderno',
     NO_SELECTED: 'T.B.D',
     TABS: {
@@ -305,7 +334,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Sessions',
     CLASSROOM: 'Cohort',
     LESSON_BUILDER: 'Session Builder',
-    ANTHOLOGY: 'Journal',
+    ANTHOLOGY: 'Journals',
     NOTICEBOARD: 'Dashboard',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
@@ -1395,7 +1424,7 @@ const RoomEDITdict: any = {
   EN: {
     TITLE: 'Edit Class',
     SUBTITLE: 'Edit Class information',
-    HEADING: 'COHORT INFORMATION',
+    HEADING: 'Classroom information',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
@@ -1406,6 +1435,10 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max participants',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
+    CLASS_DYNAMICS_TAB_DESCRIPTION:
+      'Manage subject proficiency & create course partners and student groups',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
       unabletofetch: 'Unable to fetch organization list. Please try again later.',
@@ -1450,6 +1483,10 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'TBD',
     MAXSTUDENT_LABEL: 'TBD',
     MAXSTUDENT_PLACHOLDER: 'TBD',
+    CLASS_DETAILS_TAB_HEADING: 'TBD',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
+    CLASS_DYNAMICS_TAB_HEADING: 'TBD',
+    CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -1476,6 +1513,81 @@ const RoomEDITdict: any = {
       SAVE: 'TBD',
       SAVING: 'TBD',
       CANCEL: 'TBD',
+    },
+  },
+};
+
+const RoomDetailsDict: any = {
+  EN: {
+    COURSE_DETAILS: 'Course Details',
+    COURSE_FREQUENCY: 'Course Frequency',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency',
+    COURSE_PARTNERS: 'Course Partners',
+  },
+  ES: {
+    COURSE_DETAILS: 'TBD',
+    COURSE_FREQUENCY: 'TBD',
+    SUBJECT_PROFICIENCY: 'TBD',
+    COURSE_PARTNERS: 'TBD',
+  },
+};
+
+const GroupFormDict: any = {
+  EN: {
+    GROUP_NAME: 'Group name',
+    MESSAGES: {
+      GROUP_NAME: 'Group name is required',
+      GROUP_ADVISOR: 'Group advisor is required',
+    },
+  },
+  ES: {
+    GROUP_NAME: 'TBD',
+    MESSAGES: {
+      GROUP_NAME: 'TBD',
+      GROUP_ADVISOR: 'TBD',
+    },
+  },
+};
+
+const CourseScheduleDict: any = {
+  EN: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'Start date',
+      END_DATE: 'End date',
+      START_TIME: 'Start Time',
+      END_TIME: 'End Time',
+      WEEK_DAY: 'Week Day',
+      FREQUENCY: 'Frequency',
+      CONFERENCE_CALL_LINK: 'Conference call link',
+      LOCATION: 'Location',
+      ADDITIONAL_NOTES: 'Additional Notes',
+    },
+    MESSAGES: {
+      START_DATE: 'Start date is required',
+      END_DATE: 'End date is required',
+      START_TIME: 'Start time is required',
+      END_TIME: 'End time is required',
+    },
+  },
+  ES: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      WEEK_DAY: 'TBD',
+      FREQUENCY: 'TBD',
+      CONFERENCE_CALL_LINK: 'TBD',
+      LOCATION: 'TBD',
+      ADDITIONAL_NOTES: 'TBD',
+    },
+    MESSAGES: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      startTime: 'TBD',
+      endTime: 'TBD',
     },
   },
 };
@@ -3447,6 +3559,7 @@ function paginationPage(lang: string, page: number, total: number) {
 
 export {
   AuthDict,
+  General,
   CsvDict,
   DashboardDict,
   paginationPage,
@@ -3473,6 +3586,9 @@ export {
   RoomBuilderdict,
   EditCurriculardict,
   RoomEDITdict,
+  RoomDetailsDict,
+  GroupFormDict,
+  CourseScheduleDict,
   curricularviewdict,
   CHECKPOINTSDICT,
   LEARINGOBJECTIVEDICT,

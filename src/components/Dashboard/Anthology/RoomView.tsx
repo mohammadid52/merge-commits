@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
+import React, {useContext, useEffect, useState, useMemo, useCallback, memo} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import usePrevious from '../../../customHooks/previousProps';
 import {getImageFromS3} from '../../../utilities/services';
-import ContentCard from '../../Atoms/ContentCard';
-import ImageAlternate from '../../Atoms/ImageAlternative';
 import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
   roomIdList: string[];
+  mainSection?: string;
   sectionRoomID?: string;
+  sectionTitle?: string;
   handleSectionSelect?: (
     section: string,
     roomIdString: string,
@@ -16,10 +16,21 @@ interface IRoomViewProps {
   ) => void;
 }
 
-const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewProps) => {
+const RoomView = ({
+  roomIdList,
+  mainSection,
+  sectionRoomID,
+  sectionTitle,
+  handleSectionSelect,
+}: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
+  // ##################################################################### //
+  // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
+  // ##################################################################### //
+
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
+
   useEffect(() => {
     if (roomIdList.length > 0) {
       if (state.roomData.rooms.length > 0) {
@@ -47,26 +58,32 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
     }
   };
 
+  // ##################################################################### //
+  // ################### MAP ROOM OBJECTS TO NOTEBOOKS ################### //
+  // ##################################################################### //
+
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
-  const mapNotebookRoomCards = async () => {
+  const mapNotebookRoomCards = useCallback(async () => {
     const mapped =
       filteredRooms && filteredRooms.length > 0
         ? Promise.all(
             filteredRooms.map(async (item, idx: number) => {
-              const {teacher, curricula} = item;
+              const {curricula} = item;
               const bannerImage = await (curricula?.items[0]?.curriculum.image
                 ? getImageURL(curricula?.items[0]?.curriculum.image)
                 : null);
-              const roomName = item?.name;
+              const curriculumName = curricula?.items[0]?.curriculum.name;
 
               return (
                 <RoomViewCard
                   key={`notebook-${idx}`}
                   roomID={item.id}
+                  roomName={item.name}
+                  mainSection={mainSection}
                   sectionRoomID={sectionRoomID}
+                  curriculumName={curriculumName}
                   handleSectionSelect={handleSectionSelect}
-                  roomName={roomName}
                   bannerImage={bannerImage}
                   type={`Class Notebook`}
                 />
@@ -76,16 +93,23 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
         : null;
 
     return await mapped;
-  };
+  }, [filteredRooms, sectionRoomID]);
+
+  const roomsRef = usePrevious(filteredRooms);
+  const sectionIDRef = usePrevious(sectionRoomID);
 
   useEffect(() => {
-    const mappedCardsOutput = mapNotebookRoomCards();
-    mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
+    if (sectionRoomID !== sectionIDRef || filteredRooms !== roomsRef) {
+      const mappedCardsOutput = mapNotebookRoomCards();
+      mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
+    } else {
+      console.log('avoided resetting statea to same');
+    }
   }, [filteredRooms, sectionRoomID]);
 
   return (
     <>
-      <div className="relative">
+      <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
         <div className="relative mx-auto">
           <div
             // #ts-ignores
@@ -93,16 +117,19 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
             }}
-            className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-5 md:grid-cols-4 lg:max-w-none">
+            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:grid-cols-5 md:grid-cols-3 lg:max-w-none">
             {mappedNotebookRoomCards &&
               mappedNotebookRoomCards.length > 0 &&
               mappedNotebookRoomCards}
+            {/* {mapNotebookRoomCards()} */}
+
             <RoomViewCard
-              roomID={''}
-              sectionRoomID={''}
-              roomName={'Journal Entries & Sentiment'}
+              roomID={'private'}
+              mainSection={mainSection}
+              sectionRoomID={sectionRoomID}
+              sectionTitle={sectionTitle}
               handleSectionSelect={handleSectionSelect}
-              type={'Private Journal'}
+              type={'Private Notebook'}
             />
           </div>
         </div>
@@ -111,4 +138,4 @@ const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewPro
   );
 };
 
-export default RoomView;
+export default React.memo(RoomView);

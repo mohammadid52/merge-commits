@@ -21,11 +21,10 @@ import {createUserUrl} from '../../utilities/urls';
 import BrowserAlert from '../General/BrowserAlert';
 
 interface LoginProps {
-  setJustLoggedIn?: any;
   updateAuthState: Function;
 }
 
-const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
+const Login = ({updateAuthState}: LoginProps) => {
   const {browser: detectedBrowser} = useDeviceDetect();
   const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
     detectedBrowser === 'Safari'
@@ -100,7 +99,7 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
         const update: any = await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
-        setJustLoggedIn(true);
+
         updateAuthState(true);
       } catch (error) {
         console.log('error', error);

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEdit} from 'react-icons/fa';
+import {FaEdit, FaSpinner} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -8,10 +8,6 @@ import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
-
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
 
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
@@ -24,8 +20,13 @@ import {
 import {nanoid} from 'nanoid';
 import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
+
 import TabView from './TabView';
 import RoomView from './RoomView';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {IconContext} from 'react-icons/lib';
+import usePrevious from '../../../customHooks/previousProps';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -35,15 +36,7 @@ export type ViewEditMode = {
 };
 
 const Anthology = () => {
-  const {
-    state,
-    lessonState,
-    lessonDispatch,
-    dispatch,
-    userLanguage,
-    theme,
-    clientKey,
-  } = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -106,6 +99,7 @@ const Anthology = () => {
       setStudentDataLoaded(true);
     } catch (e) {
       //
+      setStudentDataLoaded(true);
     } finally {
     }
   };
@@ -121,6 +115,7 @@ const Anthology = () => {
               studentAuthID: val.studentAuthID,
               studentEmail: val.studentEmail,
               feedbacks: exercise.feedbacks || [],
+              shared: exercise?.shared || false,
               entryData: exercise.entryData.map((entry: any) => {
                 return {
                   ...entry,
@@ -193,6 +188,7 @@ const Anthology = () => {
     studentEmail: state.user.studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
+    shared: false,
     entryData: [
       {
         domID: `title_${nanoid(4)}`,
@@ -235,23 +231,24 @@ const Anthology = () => {
       } else {
         console.log('anthology - NO universalJournalDatas');
       }
+      setUniversalJournalDataLoaded(true);
     } catch (e) {
       console.error('error listing journal data - ', e);
-    } finally {
       setUniversalJournalDataLoaded(true);
+    } finally {
     }
   };
 
   const createJournalData = async () => {
+    const input = {
+      studentID: journalEntryData.studentID,
+      studentAuthID: journalEntryData.studentAuthID,
+      studentEmail: journalEntryData.studentEmail,
+      type: journalEntryData.type,
+      entryData: journalEntryData.entryData,
+    };
+    // console.log('create input - ', input);
     try {
-      const input = {
-        studentID: journalEntryData.studentID,
-        studentAuthID: journalEntryData.studentAuthID,
-        studentEmail: journalEntryData.studentEmail,
-        type: journalEntryData.type,
-        entryData: journalEntryData.entryData,
-      };
-
       const newJournalData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalJournalData, {input})
       );
@@ -327,6 +324,7 @@ const Anthology = () => {
       studentID: selectExisting.studentID,
       studentAuthID: selectExisting.studentAuthID,
       studentEmail: selectExisting.studentEmail,
+      shared: selectExisting?.shared,
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
       recordID: selectExisting?.recordID,
@@ -378,8 +376,9 @@ const Anthology = () => {
       id: '',
       studentID: state.user.authId,
       studentAuthID: state.user.authId,
-      studentEmail: state.user.studentEmail,
+      studentEmail: state.user.email,
       type: 'journal-entry',
+      shared: false,
       feedbacks: [''],
       entryData: [
         {
@@ -402,7 +401,9 @@ const Anthology = () => {
   useEffect(() => {
     const manageSaveAndCreate = async () => {
       if (subSection !== 'Work') {
-        if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+        if (viewEditMode.mode === 'create') {
+          await handleResetJournalEntry();
+        } else if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
           await selectJournalData();
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();
@@ -435,11 +436,29 @@ const Anthology = () => {
   // ####################### DISPLAY CONTENT LOGIC ####################### //
   // ##################################################################### //
 
+  const [switchReady, setSwitchReady] = useState<boolean>(true);
   const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
   const [sectionTitle, setSectionTitle] = useState<string>('');
-  const [subSection, setSubSection] = useState<string>('');
+  const [subSection, setSubSection] = useState<string>('checkIn');
   const [tab, setTab] = useState<number>(0);
+
+  const previousRoom = usePrevious(sectionRoomID);
+
+  useEffect(() => {
+    const notebookSwitchProcess = async () => {
+      if (switchReady) {
+        await setSwitchReady(false);
+        setTimeout(() => {
+          setSwitchReady(true);
+        }, 250);
+      }
+    };
+
+    if (sectionRoomID !== previousRoom) {
+      notebookSwitchProcess();
+    }
+  }, [sectionRoomID]);
 
   // ~~~~~~ FILTER ROOM EXERCISE DATA ~~~~~~ //
 
@@ -451,6 +470,13 @@ const Anthology = () => {
   }, [allStudentData, sectionRoomID]);
 
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
+
+  const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (studentDataLoaded && universalJournalDataLoaded) {
+      setNotebookLoaded(true);
+    }
+  }, [studentDataLoaded, universalJournalDataLoaded]);
 
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
@@ -470,6 +496,7 @@ const Anthology = () => {
       if (uniqueIds.length > 0) {
         setRoomCardIds(uniqueIds);
       }
+    } else {
     }
   }, [allStudentData, allUniversalJournalData]);
 
@@ -486,8 +513,8 @@ const Anthology = () => {
       setTab(0);
     } else {
       setMainSection('Private');
-      setSectionRoomID('');
-      setSectionTitle('Private Journal');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(`Private Notebook`);
       setSubSection('Journal');
       setTab(0);
     }
@@ -496,41 +523,77 @@ const Anthology = () => {
   return (
     <React.Fragment>
       <div>
-        <HeroBanner imgUrl={notebookBanner} title={'Notebook'} />
+        <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
       </div>
       <div className="px-10">
         <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-50 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
           <h2 className={`text-base text-center font-semibold`}>
             All your work in place
           </h2>
         </div>
 
         <div className="mx-auto max-w-256">
-          <RoomView
-            roomIdList={roomCardIds}
-            sectionRoomID={sectionRoomID}
-            handleSectionSelect={handleSectionSelect}
-          />
-          <TabView
-            viewEditMode={viewEditMode}
-            handleEditToggle={handleEditToggle}
-            updateJournalContent={updateJournalDataContent}
-            mainSection={mainSection}
-            sectionRoomID={sectionRoomID}
-            sectionTitle={sectionTitle}
-            subSection={subSection}
-            setSubSection={setSubSection}
-            tab={tab}
-            setTab={setTab}
-            createTemplate={journalEntryData}
-            currentContentObj={journalEntryData}
-            allStudentData={allStudentData}
-            setAllStudentData={setAllStudentData}
-            allExerciseData={allExerciseData}
-            allUniversalJournalData={allUniversalJournalData}
-            setAllUniversalJournalData={setAllUniversalJournalData}
-          />
+          <div className="my-8">
+            <SectionTitleV3
+              title={anthologyDict[userLanguage]['TITLE_CONTAINER']}
+              fontSize="xl"
+              fontStyle="semibold"
+              extraContainerClass="px-6"
+              borderBottom
+              extraClass="leading-6 text-gray-900"
+            />
+            <EmptyViewWrapper
+              wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+              revealContents={notebookLoaded}
+              fallbackContents={
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
+                    style: {},
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              }>
+              <RoomView
+                roomIdList={roomCardIds}
+                mainSection={mainSection}
+                sectionRoomID={sectionRoomID}
+                sectionTitle={sectionTitle}
+                handleSectionSelect={handleSectionSelect}
+              />
+            </EmptyViewWrapper>
+          </div>
+
+          <EmptyViewWrapper
+            wrapperClass={`min-h-24 py-4 overflow-hidden mb-4`}
+            revealContents={sectionRoomID !== ''}
+            fallbackContents={
+              <p className="text-center text-lg text-gray-500">
+                Please select a notebook above to view your data
+              </p>
+            }>
+            <TabView
+              viewEditMode={viewEditMode}
+              handleEditToggle={handleEditToggle}
+              updateJournalContent={updateJournalDataContent}
+              mainSection={mainSection}
+              sectionRoomID={sectionRoomID}
+              sectionTitle={sectionTitle}
+              subSection={subSection}
+              setSubSection={setSubSection}
+              tab={tab}
+              setTab={setTab}
+              createTemplate={journalEntryData}
+              currentContentObj={journalEntryData}
+              allStudentData={allStudentData}
+              setAllStudentData={setAllStudentData}
+              allExerciseData={allExerciseData}
+              allUniversalJournalData={allUniversalJournalData}
+              setAllUniversalJournalData={setAllUniversalJournalData}
+            />
+          </EmptyViewWrapper>
         </div>
       </div>
     </React.Fragment>

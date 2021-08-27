@@ -32,6 +32,8 @@ export interface globalStateType {
     role: string;
     onBoardSurvey?: boolean;
     location: any[];
+    lastLoggedOut?: string;
+    lastLoggedIn?: string;
   };
 }
 
@@ -68,5 +70,7 @@ export const globalState: globalStateType = {
     language: '',
     role: '',
     location: [],
+    lastLoggedIn: '',
+    lastLoggedOut: '',
   },
 };

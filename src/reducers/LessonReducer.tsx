@@ -282,7 +282,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
               if (entry.domID === domID) {
                 return {
                   ...entry,
-                  input: newInput,
+                  input: newInput[0],
                 };
               } else {
                 return entry;

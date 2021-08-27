@@ -10,14 +10,13 @@ const ConfirmCode = lazy(() => import('../Auth/ConfirmCode'));
 
 interface UnauthRoutesProps {
   updateAuthState: Function;
-  setJustLoggedIn?: any;
 }
 
-const UnauthRoutes = ({updateAuthState, setJustLoggedIn}: UnauthRoutesProps) => {
+const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
   return (
     <Switch>
       <PublicRoute path="/login" restricted={true}>
-        <Login setJustLoggedIn={setJustLoggedIn} updateAuthState={updateAuthState} />
+        <Login updateAuthState={updateAuthState} />
       </PublicRoute>
       <PublicRoute path="/register" restricted={true}>
         <Registration />

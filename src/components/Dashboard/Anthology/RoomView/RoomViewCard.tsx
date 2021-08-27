@@ -1,5 +1,6 @@
-import React from 'react';
-import {IoImage} from 'react-icons/io5';
+import React, {memo} from 'react';
+import {IoImage, IoKeyOutline} from 'react-icons/io5';
+import {stringToHslColor} from '../../../../utilities/strings';
 
 interface IRoomViewCardProps {
   handleSectionSelect?: (
@@ -8,8 +9,11 @@ interface IRoomViewCardProps {
     roomName?: string
   ) => void;
   roomID?: string;
+  mainSection?: string;
   sectionRoomID?: string;
+  sectionTitle?: string;
   roomName?: string;
+  curriculumName?: string;
   bannerImage?: string;
   type?: string;
   name?: string;
@@ -18,58 +22,109 @@ interface IRoomViewCardProps {
 const RoomViewCard = ({
   handleSectionSelect,
   roomID,
+  mainSection,
   sectionRoomID,
+  sectionTitle,
   roomName,
+  curriculumName,
   bannerImage,
   type,
   name,
 }: IRoomViewCardProps) => {
+  const noneSelected = mainSection === '' && sectionRoomID === '' && sectionTitle === '';
   return (
-    <>
+    <div
+      className={`relative animate-fadeIn ${
+        noneSelected
+          ? 'z-50'
+          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
+          ? 'z-50'
+          : 'z-40'
+      }`}>
+      {/* FRONT PAGE */}
       <div
-        onClick={() => handleSectionSelect(type, roomID, roomName)}
-        className={`flex ${
-          roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-            ? 'border-0 border-indigo-600 shadow-lg'
-            : 'shadow'
-        } flex-col rounded-lg overflow-hidden cursor-pointer`}>
-        <div className="flex-shrink-0 relative">
-          {/* OVERLAY */}
-          <div className="absolute flex flex-col h-2/3 justify-between bg-white bg-opacity-90 p-6 bottom-0 z-50">
-            <div className="flex-1">
-              <p className="text-sm font-medium text-indigo-600">
-                <a className="hover:underline">{type}</a>
-              </p>
-              <a href="#" className="block mt-2">
-                <p className="text-base 2xl:text-lg text-gray-900">
-                  <span className="font-semibold">{name}</span>{' '}
-                  <span className="text-base 2xl:text-lg text-semibold text-gray-900">
-                    {roomName}
-                  </span>
-                </p>
-              </a>
-            </div>
-          </div>
+        className={`relative z-50 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 
+      ${
+        noneSelected
+          ? 'shadow-lg scale-90'
+          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
+          ? 'scale-90 -skew-y-6 shadow-xl'
+          : 'shadow-lg  scale-90'
+      }
+      `}>
+        {/* SIDE BORDER */}
+        <div
+          style={{backgroundColor: stringToHslColor(roomID)}}
+          className={`h-full w-3`}
+        />
+        {/* BOOK COVER */}
+        <div
+          onClick={() => handleSectionSelect(type, roomID, curriculumName)}
+          className={`flex flex-col rounded-r-lg cursor-pointer md:h-50 lg:h-60 md:w-32 lg:w-40 overflow-hidden`}>
+          {/* START - IMAGE AND LABEL */}
 
-          {/* BANNER IMAGE */}
-          {bannerImage ? (
-            <img
-              className="h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-              src={bannerImage}
-              alt=""
-            />
-          ) : (
-            <div
-              className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400 z-40`}>
-              <IoImage className="fill-current text-gray-80" size={32} />
+          <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
+            {/* START- LABEL WRAPPER */}
+            <div className="absolute flex items-center  h-full w-full max-w-48 px-2 z-50 ">
+              {/* OVERLAY LABEL */}
+              <div className="border-2 border-white">
+                <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-90 flex-1 border-0 border-gray-900 p-2">
+                  <p className="text-sm font-medium text-indigo-600">
+                    <a className="hover:underline">{type}</a>
+                  </p>
+                  {name ||
+                    (curriculumName && (
+                      <p className="text-sm font-medium text-gray-900">
+                        {name && <span className="">{name} </span>}
+                        {curriculumName && <span className="">{curriculumName}</span>}
+                      </p>
+                    ))}
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* BANNER IMAGE */}
+            {roomID !== 'private' && bannerImage ? (
+              <img
+                className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
+                src={bannerImage}
+                alt="banner_notebook_cover"
+              />
+            ) : roomID !== 'private' && !bannerImage ? (
+              <img
+                className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
+                src={`https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg`}
+                alt="default_notebook_cover"
+              />
+            ) : (
+              roomID === 'private' && (
+                <div
+                  className={`h-full w-full relative profile justify-center items-center content-center  bg-gray-800 flex border-gray-400 z-40`}>
+                  <IoKeyOutline
+                    className="absolute w-auto h-auto top-1 right-1 fill-current text-blue-500"
+                    size={32}
+                  />
+                </div>
+              )
+            )}
+          </div>
+          {/* END - IMAGE AND LABEL */}
         </div>
       </div>
 
-      <div className={`absolute bottom-0 flex-1 h-1 bg-white`}></div>
-    </>
+      {/* BACK PAGE */}
+      <div
+        className={`absolute z-40 top-0 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
+      ${
+        noneSelected
+          ? 'shadow-lg scale-90'
+          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
+          ? ' scale-90 skew-y-6 shadow-xl'
+          : 'shadow-lg scale-90'
+      }
+      `}></div>
+    </div>
   );
 };
 
-export default RoomViewCard;
+export default React.memo(RoomViewCard);
