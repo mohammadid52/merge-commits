@@ -5,13 +5,15 @@ import {IoLocationOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router';
 import {getImageFromS3Static} from '../../../../../../../utilities/services';
 import {initials} from '../../../../../../../utilities/strings';
+import { DeleteActionBtn } from '../../../../../../Atoms/Buttons/DeleteActionBtn';
 
 interface IGroupCardProps {
   group: any;
+  handleDelete: () => void;
   handleEditClick: (data: any) => void;
 }
 
-const GroupCard = ({group, handleEditClick}: IGroupCardProps) => {
+const GroupCard = ({group, handleDelete,handleEditClick}: IGroupCardProps) => {
   const history = useHistory();
 
   const stringToHslColor = (str: string) => {
@@ -26,15 +28,18 @@ const GroupCard = ({group, handleEditClick}: IGroupCardProps) => {
   };
 
   return (
-    <div className="flex shadow flex-col white_back overflow-hidden mx-2">
+    <div className="flex shadow flex-col white_back overflow-hidden">
       <div className="flex-shrink-0">
         <div className="p-4 bg-gray-200">
           <div className="flex">
             <div className="text-xl font-bold flex items-center justify-center">
               {group.groupName}
-              <span className="w-auto cursor-pointer" onClick={() => handleEditClick(group)}>
+              <span
+                className="w-auto cursor-pointer"
+                onClick={() => handleEditClick(group)}>
                 <HiPencil className="w-6 h-6 pl-2" />
               </span>
+              <DeleteActionBtn handleClick={handleDelete} />
             </div>
           </div>
           <div className="flex mt-2">
@@ -47,16 +52,20 @@ const GroupCard = ({group, handleEditClick}: IGroupCardProps) => {
                   ? group.groupAdvisor?.preferredName
                   : group.groupAdvisor?.firstName
               }`}</div>
-              <div className="w-auto">
-                <IoLocationOutline className="w-6 h-6" />
-              </div>
-              <div className="ml-2 w-auto">{group.groupLocation}</div>
+              {group.groupLocation ? (
+                <>
+                  <div className="w-auto">
+                    <IoLocationOutline className="w-6 h-6" />
+                  </div>
+                  <div className="ml-2 w-auto">{group.groupLocation}</div>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
         <div className="mt-5 h-48 overflow-y-auto p-4 pt-0">
           {group.classroomGroupsStudents?.items?.length ? (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 2xl:grid-cols-3 gap-2">
               {group.classroomGroupsStudents.items.map((student: any) => (
                 <div
                   key={student.id}

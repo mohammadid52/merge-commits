@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 
 import AddButton from '../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../Atoms/Loader';
@@ -9,16 +10,25 @@ import Loader from '../../../../../../Atoms/Loader';
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
 import {useEffect} from 'react';
+import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 const SubjectProficiency = ({roomData}: any) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
   const [activeGroupData, setActiveGroupData] = useState<any>({});
   const [classRoomGroups, setClassRoomGroups] = useState<any>([]);
   const [serverError, setServerError] = useState('');
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: 'It will remove students from group',
+    action: () => {},
+  });
 
   useEffect(() => {
-    getClassRoomStudents();
+    if (roomData?.id) {
+      getClassRoomStudents();
+    }
   }, [roomData?.id]);
 
   const getClassRoomStudents = async () => {
@@ -67,6 +77,43 @@ const SubjectProficiency = ({roomData}: any) => {
   const handleCancel = () => {
     setGroupFormOpen(false);
   };
+  const onDelete = (group: any) => {
+    const onDrop = async () => {
+      setDeleting(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customMutations.deleteClassroomGroups, {
+          input: {id: group?.id},
+        })
+      );
+      if (group.classroomGroupsStudents?.length) {
+        await Promise.all(
+          group.classroomGroupsStudents?.map(
+            async (student: any) =>
+              await API.graphql(
+                graphqlOperation(customMutations.deleteClassroomGroupStudents, {
+                  input: {id: student.id},
+                })
+              )
+          )
+        );
+      }
+      setClassRoomGroups((prevGroups: any) =>
+        prevGroups.filter(
+          (group: any) => group.id !== result?.data?.deleteClassroomGroups.id
+        )
+      );
+      closeDeleteModal();
+      setDeleting(false);
+    };
+    setWarnModal((prevValues) => ({
+      ...prevValues,
+      show: true,
+      action: onDrop,
+    }));
+  };
+  const closeDeleteModal = () => {
+    setWarnModal((prevValues) => ({...prevValues, show: false}));
+  };
 
   return (
     <div>
@@ -85,9 +132,14 @@ const SubjectProficiency = ({roomData}: any) => {
             </div>
           </div>
         ) : classRoomGroups?.length ? (
-          <div className="grid px-2 xl:px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
+          <div className="grid gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
             {classRoomGroups?.map((group: any) => (
-              <GroupCard group={group} key={group.id} handleEditClick={handleEditClick} />
+              <GroupCard
+                group={group}
+                key={group.id}
+                handleEditClick={handleEditClick}
+                handleDelete={() => onDelete(group)}
+              />
             ))}
           </div>
         ) : (
@@ -104,6 +156,15 @@ const SubjectProficiency = ({roomData}: any) => {
         groupData={activeGroupData}
         postMutation={postMutation}
       />
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={closeDeleteModal}
+          saveAction={warnModal.action}
+          saveLabel="Yes"
+          message={warnModal.message}
+          loading={deleting}
+        />
+      )}
     </div>
   );
 };
