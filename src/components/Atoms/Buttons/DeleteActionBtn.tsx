@@ -6,5 +6,5 @@ interface IDeleteActionBtnInterface {
 }
 
 export const DeleteActionBtn = ({handleClick}: IDeleteActionBtnInterface) => {
-  return <HiOutlineTrash className="w-4 h-4 text-red-500" onClick={handleClick} />;
+  return <HiOutlineTrash className="w-4 h-4 text-red-500 cursor-pointer" onClick={handleClick} />;
 };

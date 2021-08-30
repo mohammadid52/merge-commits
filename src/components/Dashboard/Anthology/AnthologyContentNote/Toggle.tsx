@@ -6,6 +6,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 interface IToggleProps extends ContentCardProps {
   toggled?: boolean;
   label?: string;
+  addToJournalUpdateQueue?: (journalObj: any) => void;
 }
 
 const Toggle = ({
@@ -13,17 +14,11 @@ const Toggle = ({
   label,
   allUniversalJournalData,
   currentContentObj,
-  setAllUniversalJournalData,
+  addToJournalUpdateQueue,
 }: IToggleProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const updateJournalShare = async () => {
-    const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
-      if (dataRecord.id === currentContentObj.id) {
-        return {...dataRecord, shared: !dataRecord.shared};
-      } else {
-        return dataRecord;
-      }
-    });
+    addToJournalUpdateQueue(currentContentObj);
 
     setUpdating(true);
     try {
@@ -37,7 +32,6 @@ const Toggle = ({
           },
         })
       );
-      setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
       console.error('error updating sharing - ', e);
     } finally {
