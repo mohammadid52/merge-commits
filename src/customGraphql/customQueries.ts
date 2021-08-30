@@ -3840,3 +3840,53 @@ export const listPersonSentimentss = /* GraphQL */ `
     }
   }
 `;
+
+export const listClassroomGroupss = /* GraphQL */ `
+  query ListClassroomGroupss(
+    $filter: ModelClassroomGroupsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassroomGroupss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classRoomID
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          firstName
+          preferredName
+          lastName
+        }
+        groupLocation
+        classroomGroupsStudents {
+          items {
+            id
+            classRoomGroupID
+            studentEmail
+            studentAuthId
+            student {
+              id
+              firstName
+              preferredName
+              lastName
+              image
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
