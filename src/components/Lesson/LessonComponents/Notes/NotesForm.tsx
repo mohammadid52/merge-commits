@@ -58,4 +58,4 @@ const NotesForm = ({
   );
 };
 
-export default NotesForm;
+export default React.memo(NotesForm);

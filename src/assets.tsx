@@ -107,8 +107,7 @@ const general: any = {
   bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
   okay: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
   good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
-  excited:
-    'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
+  great: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
 };
 
 // main logo (dashboard above sidebar)

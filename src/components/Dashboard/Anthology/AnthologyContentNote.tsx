@@ -30,6 +30,9 @@ const SingleNote = ({
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  // ##################################################################### //
+  // ########################### FEEDBACK LOGIC ########################## //
+  // ##################################################################### //
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -74,6 +77,39 @@ const SingleNote = ({
   useEffect(() => {
     getFeedBackData();
   }, []);
+
+  // ##################################################################### //
+  // ########################### TOGGLE SHARING ########################## //
+  // ##################################################################### //
+  const [shareToggleQueue, setShareToggleQueue] = useState<any[]>([]);
+
+  const addToJournalUpdateQueue = (journalObj: any) => {
+    setShareToggleQueue([...shareToggleQueue, journalObj]);
+  };
+
+  const updateJournalShare = (updatedEntries: any[]) => {
+    setShareToggleQueue([]);
+    const mergedJournalData = updatedEntries.reduce(
+      (allJournalDataAcc: any[], updatedEntry: any) => {
+        return allJournalDataAcc.map((dataRecord: any) => {
+          if (dataRecord.id === updatedEntry.id) {
+            return {...dataRecord, shared: !dataRecord.shared};
+          } else {
+            return dataRecord;
+          }
+        });
+      },
+      allUniversalJournalData
+    );
+
+    setAllUniversalJournalData(mergedJournalData);
+  };
+
+  useEffect(() => {
+    if (shareToggleQueue.length > 0) {
+      updateJournalShare(shareToggleQueue);
+    }
+  }, [shareToggleQueue]);
 
   return (
     <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
@@ -153,7 +189,7 @@ const SingleNote = ({
                     label={`Share With Teacher`}
                     allUniversalJournalData={allUniversalJournalData}
                     currentContentObj={contentObj}
-                    setAllUniversalJournalData={setAllUniversalJournalData}
+                    addToJournalUpdateQueue={addToJournalUpdateQueue}
                   />
                 )}
               </div>
@@ -161,28 +197,29 @@ const SingleNote = ({
               {/**
                *  section:  FEEDBACK
                */}
-              {subSection !== 'Journal' && (
-                <div
-                  onClick={() => setShowComments(!showComments)}
-                  className={`${
-                    feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
-                  } ${
-                    loadingComments ? 'flex items-center justify-between' : ''
-                  }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                  <p>
-                    {loadingComments
-                      ? 'Loading Comments . . .'
-                      : feedbackData.length > 0
-                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                      : 'Leave Feedback'}
-                  </p>
-                  {/* {!loadingComments && (
+              {subSection === 'Work' ||
+                (subSection === 'Journal' && contentObj?.shared && (
+                  <div
+                    onClick={() => setShowComments(!showComments)}
+                    className={`${
+                      feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
+                    } ${
+                      loadingComments ? 'flex items-center justify-between' : ''
+                    }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+                    <p>
+                      {loadingComments
+                        ? 'Loading Comments . . .'
+                        : feedbackData.length > 0
+                        ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                        : 'Leave Feedback'}
+                    </p>
+                    {/* {!loadingComments && (
                     <span className="w-auto ml-4 w-auto">
                       <Loader color="#fff" />
                     </span>
                   )} */}
-                </div>
-              )}
+                  </div>
+                ))}
             </div>
           )}
 
