@@ -133,6 +133,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                   {`${user.role ? getUserRoleString(user.role) : '--'}`}
                 </dd>
               </div>
+              {/* PASSWORD */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
                   <NavLink
@@ -144,6 +145,35 @@ const ProfileInfo = (props: UserInfoProps) => {
                           {
                             dashboardProfileDict[userLanguage]['PERSONAL_INFO'][
                               'PASSWORD'
+                            ]
+                          }
+                        </p>
+                        <IconContext.Provider
+                          value={{
+                            className: 'w-auto',
+                            size: '1rem',
+                            color: 'rgba(160, 174, 192, 1)',
+                          }}>
+                          <RiLock2Fill />
+                        </IconContext.Provider>
+                      </div>
+                    </Tooltip>
+                  </NavLink>
+                </dt>
+                <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
+              </div>
+              {/* PASSCODE */}
+              <div className="sm:col-span-1 p-2">
+                <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
+                  <NavLink
+                    className="flex items-center justify-center w-auto"
+                    to={`${match.url}/passcode`}>
+                    <Tooltip text="edit password">
+                      <div className="flex items-center justify-center">
+                        <p className="w-auto mr-2">
+                          {
+                            dashboardProfileDict[userLanguage]['PERSONAL_INFO'][
+                              'PASSCODE'
                             ]
                           }
                         </p>
