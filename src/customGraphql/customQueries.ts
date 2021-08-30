@@ -254,6 +254,16 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
+export const getPersonPasscode = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      authId
+      email
+      passcode
+    }
+  }
+`;
+
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
