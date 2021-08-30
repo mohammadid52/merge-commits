@@ -19,3 +19,4 @@ ReactDOM.render(<Page />, document.getElementById('app'));
 
 // TODO merge atoms generals and stanards directory.
 //
+// increased node_env on aws
