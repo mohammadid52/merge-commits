@@ -1293,6 +1293,18 @@ export const updateClassroomGroups = /* GraphQL */ `
   }
 `;
 
+export const deleteClassroomGroups = /* GraphQL */ `
+  mutation DeleteClassroomGroups(
+    $input: DeleteClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    deleteClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+    }
+  }
+`;
+
 export const createClassroomGroupStudents = /* GraphQL */ `
   mutation CreateClassroomGroupStudents(
     $input: CreateClassroomGroupStudentsInput!
