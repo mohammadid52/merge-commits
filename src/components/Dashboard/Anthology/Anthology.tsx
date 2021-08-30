@@ -586,7 +586,6 @@ const Anthology = () => {
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
-              title={'This Notebook is Passcode Protected'}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
