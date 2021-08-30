@@ -1510,16 +1510,47 @@ const RoomDetailsDict: any = {
   },
 };
 
+const SubjectProficiencyDict: any = {
+  EN: {
+    NO_GROUP_MESSAGE: 'No group added',
+  },
+  ES: {
+    NO_GROUP_MESSAGE: 'TBD',
+  },
+};
+
 const GroupFormDict: any = {
   EN: {
-    GROUP_NAME: 'Group name',
+    HEADING: 'Group Details',
+    LABELS: {
+      GROUP_NAME: 'Group name',
+      ADVISOR: 'Advisor',
+      LOCATION: 'Location',
+      STUDENTS: 'Students',
+    },
+    PLACEHOLDERS: {
+      GROUP_NAME: 'Enter Group name',
+      ADVISOR: 'Select advisor for group',
+      LOCATION: 'Enter location',
+    },
     MESSAGES: {
       GROUP_NAME: 'Group name is required',
       GROUP_ADVISOR: 'Group advisor is required',
     },
   },
   ES: {
-    GROUP_NAME: 'TBD',
+    HEADING: 'TBD',
+    LABELS: {
+      GROUP_NAME: 'TBD',
+      ADVISOR: 'TBD',
+      LOCATION: 'TBD',
+      STUDENTS: 'TBD',
+    },
+    PLACEHOLDERS: {
+      GROUP_NAME: 'TBD',
+      ADVISOR: 'TBD',
+      LOCATION: 'TBD',
+    },
     MESSAGES: {
       GROUP_NAME: 'TBD',
       GROUP_ADVISOR: 'TBD',
