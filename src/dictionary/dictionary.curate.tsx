@@ -161,6 +161,8 @@ const dashboardProfileDict: any = {
       EMAIL: 'Email address',
       CONTACT: 'Contact Number',
       ROLE: 'Role',
+      PASSWORD: 'Password',
+      PASSCODE: 'Journal Passcode',
     },
     INSTITUTION_INFO: {
       TITLE: 'Organization Information',
@@ -177,6 +179,25 @@ const dashboardProfileDict: any = {
       CONTACT: 'Contact Number',
       SAVE: 'Save',
       CANCEL: 'Cancel',
+    },
+    CHANGE_PASSCODE: {
+      TITLE: 'Change your Passcode',
+      INFO:
+        'Passcode must be at least 4 alphanumeric characters (no spaces or special characters)',
+      OLD_PASS: 'Login Password',
+      NEW_PASS: 'New Passcode',
+      SAVE: 'Save New Passcode',
+      CANCEL: 'Cancel',
+      SUCCESS_MSG: 'Success',
+      WARN_MSG:
+        'This will log you out and take you to the reset password page, do you want to continue?',
+      CONTINUE_BTN: 'Continue',
+      ERRORS: {
+        NO_OLD_PASS: 'Please enter your password',
+        NO_NEW_PASS: 'Please enter your new password',
+        NO_CONFIRM_PASS: 'Please enter your confirmation password',
+        NOT_MATCH: 'Your new password and confirm password do not match',
+      },
     },
     CHANGE_PASSWORD: {
       TITLE: 'Change your Password',
@@ -232,6 +253,25 @@ const dashboardProfileDict: any = {
       CONTACT: 'número de contacto',
       SAVE: 'Salvar',
       CANCEL: 'Cancelar',
+    },
+    CHANGE_PASSCODE: {
+      TITLE: 'Change your Passcode',
+      INFO:
+        'Passcode must be at least 4 alphanumeric characters (no spaces or special characters)',
+      OLD_PASS: 'Login Password',
+      NEW_PASS: 'New Passcode',
+      SAVE: 'Save New Passcode',
+      CANCEL: 'Cancel',
+      SUCCESS_MSG: 'Success',
+      WARN_MSG:
+        'This will log you out and take you to the reset password page, do you want to continue?',
+      CONTINUE_BTN: 'Continue',
+      ERRORS: {
+        NO_OLD_PASS: 'Please enter your old password',
+        NO_NEW_PASS: 'Please enter your new password',
+        NO_CONFIRM_PASS: 'Please enter your confirmation password',
+        NOT_MATCH: 'Your new password and confirm password do not match',
+      },
     },
     CHANGE_PASSWORD: {
       TITLE: 'Cambia tu contraseña',
