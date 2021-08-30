@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx",
-    "build": "node --max_old_space_size=10240 webpack --config webpack.prod.js",
-    "build:dev": "node --max_old_space_size=10240 webpack --config webpack.dev.js",
-    "build:prod": "node --max_old_space_size=10240 webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "build:prod": "webpack --config webpack.prod.js",
     "watch": "npm run build:dev && webpack --watch  --inline --hot --progress --config webpack.dev.js",
     "start": "npx servor public index.html 8085 --reload"
   },
