@@ -27,6 +27,9 @@ import EmptyViewWrapper from './EmptyViewWrapper';
 import {IconContext} from 'react-icons/lib';
 import usePrevious from '../../../customHooks/previousProps';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import Modal from '../../Atoms/Modal';
+import FormInput from '../../Atoms/Form/FormInput';
+import Buttons from '../../Atoms/Buttons';
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -36,15 +39,7 @@ export type ViewEditMode = {
 };
 
 const Anthology = () => {
-  const {
-    state,
-    lessonState,
-    lessonDispatch,
-    dispatch,
-    userLanguage,
-    theme,
-    clientKey,
-  } = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -508,6 +503,54 @@ const Anthology = () => {
     }
   }, [allStudentData, allUniversalJournalData]);
 
+  // ~~~~~~ PRIVATE ROOM VERIFICATION ~~~~~~ //
+
+  const [showPasscodeEntry, setShowPasscodeEntry] = useState<boolean>(false);
+  const [passcodeInput, setPasscodeInput] = useState<string>('');
+  const [accessMessage, setAccessMessage] = useState<any>({message: '', textClass: ''});
+
+  const handlePrivateSectionAccess = async () => {
+    try {
+      setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
+      const personPasscode: any = await API.graphql(
+        graphqlOperation(customQueries.getPersonPasscode, {
+          email: state?.user?.email,
+          authId: state?.user?.authId,
+        })
+      );
+      const unset = personPasscode?.data?.getPerson?.passcode === null;
+      const verified = personPasscode?.data?.getPerson?.passcode === passcodeInput;
+
+      if (verified) {
+        setMainSection('Private');
+        setSectionRoomID('private');
+        setSectionTitle(`Private Notebook`);
+        setSubSection('Journal');
+        setTab(0);
+        setShowPasscodeEntry(false);
+        setPasscodeInput('');
+        setAccessMessage({message: '', textClass: ''});
+      } else if (unset) {
+        setAccessMessage({message: 'Please set a passcode!', textClass: 'text-blue-500'});
+        setTimeout(() => {
+          setMainSection('Private');
+          setSectionRoomID('private');
+          setSectionTitle(`Private Notebook`);
+          setSubSection('Journal');
+          setTab(0);
+          setShowPasscodeEntry(false);
+          setPasscodeInput('');
+          setAccessMessage({message: '', textClass: ''});
+        }, 1000);
+      } else {
+        setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+      }
+    } catch (e) {
+      console.error('handlePrivateSectionAccess - ', e);
+    }
+  };
+
+  // ~~~~~~~~~ STANDARD ROOM SELECT ~~~~~~~~ //
   const handleSectionSelect = (
     section: string,
     roomIdString: string,
@@ -519,12 +562,11 @@ const Anthology = () => {
       setSectionTitle(roomName);
       setSubSection('Work');
       setTab(0);
-    } else {
-      setMainSection('Private');
-      setSectionRoomID(roomIdString);
-      setSectionTitle(`Private Notebook`);
-      setSubSection('Journal');
-      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage('');
+    } else if (section === 'Private Notebook') {
+      setShowPasscodeEntry(true);
     }
   };
 
@@ -540,6 +582,40 @@ const Anthology = () => {
             All your work in place
           </h2>
         </div>
+
+        {showPasscodeEntry && (
+          <div className={'z-100 flex justify-center items-center'}>
+            <Modal
+              showHeader={true}
+              showHeaderBorder={false}
+              showFooter={false}
+              closeAction={() => setShowPasscodeEntry(false)}>
+              <FormInput
+                value={passcodeInput}
+                type={'password'}
+                onChange={(e) => {
+                  setPasscodeInput(e.target.value);
+                }}
+                id="passcode"
+                name="passcode"
+                label={'Enter Your Passcode:'}
+                placeHolder={''}
+                className={`w-full my-2`}
+                isRequired
+              />
+              {accessMessage.message !== '' && (
+                <p className={`${accessMessage.textClass} text-center text-xs`}>
+                  {accessMessage.message}
+                </p>
+              )}
+              <Buttons
+                label={'Submit'}
+                btnClass="w-full px-6 py-4 my-2"
+                onClick={handlePrivateSectionAccess}
+              />
+            </Modal>
+          </div>
+        )}
 
         <div className="mx-auto max-w-256">
           <div className="my-8">

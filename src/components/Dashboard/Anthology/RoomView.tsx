@@ -100,7 +100,6 @@ const RoomView = ({
 
   useEffect(() => {
     if (sectionRoomID !== sectionIDRef || filteredRooms !== roomsRef) {
-      console.log('section id state change');
       const mappedCardsOutput = mapNotebookRoomCards();
       mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
     } else {
