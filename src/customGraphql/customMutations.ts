@@ -92,6 +92,7 @@ export const updatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      passcode
     }
   }
 `;

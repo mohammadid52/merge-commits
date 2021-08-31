@@ -61,10 +61,10 @@ const EmojiFeedback = () => {
       const lastSubmissionDate = moment(
         `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
       );
-      const currentTime = moment();
+      const currentTime = moment().add(1, 'day');
 
-      const hoursDifference = currentTime.diff(lastSubmissionDate, 'hours');
-      if (hoursDifference > 24) {
+      const dayDiff = currentTime.diff(lastSubmissionDate, 'day');
+      if (dayDiff >= 1) {
         setShowSentimentModal(true);
       } else {
         setShowSentimentModal(false);

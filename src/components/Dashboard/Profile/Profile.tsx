@@ -31,6 +31,7 @@ import {
 } from '../../../utilities/strings';
 import {getAsset} from '../../../assets';
 import HeroBanner from '../../Header/HeroBanner';
+import ChangePasscode from './ChangePasscode';
 
 export interface UserInfo {
   authId: string;
@@ -553,6 +554,10 @@ const Profile = (props: ProfilePageProps) => {
                   <Route
                     path={`${match.url}/password`}
                     render={() => <ChangePassword updateAuthState={updateAuthState} />}
+                  />
+                  <Route
+                    path={`${match.url}/passcode`}
+                    render={() => <ChangePasscode />}
                   />
                 </Switch>
                 {showCropper && (

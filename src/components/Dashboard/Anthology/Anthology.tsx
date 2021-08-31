@@ -521,7 +521,7 @@ const Anthology = () => {
       const unset = personPasscode?.data?.getPerson?.passcode === null;
       const verified = personPasscode?.data?.getPerson?.passcode === passcodeInput;
 
-      if (verified || unset) {
+      if (verified) {
         setMainSection('Private');
         setSectionRoomID('private');
         setSectionTitle(`Private Notebook`);
@@ -529,7 +529,19 @@ const Anthology = () => {
         setTab(0);
         setShowPasscodeEntry(false);
         setPasscodeInput('');
-        setAccessMessage({message: 'Success', textClass: 'text-green-500'});
+        setAccessMessage({message: '', textClass: ''});
+      } else if (unset) {
+        setAccessMessage({message: 'Please set a passcode!', textClass: 'text-blue-500'});
+        setTimeout(() => {
+          setMainSection('Private');
+          setSectionRoomID('private');
+          setSectionTitle(`Private Notebook`);
+          setSubSection('Journal');
+          setTab(0);
+          setShowPasscodeEntry(false);
+          setPasscodeInput('');
+          setAccessMessage({message: '', textClass: ''});
+        }, 1000);
       } else {
         setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
       }
@@ -574,7 +586,6 @@ const Anthology = () => {
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
-              title={'This Notebook is Password Protected'}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
@@ -587,7 +598,7 @@ const Anthology = () => {
                 }}
                 id="passcode"
                 name="passcode"
-                label={'Enter Passcode:'}
+                label={'Enter Your Passcode:'}
                 placeHolder={''}
                 className={`w-full my-2`}
                 isRequired
