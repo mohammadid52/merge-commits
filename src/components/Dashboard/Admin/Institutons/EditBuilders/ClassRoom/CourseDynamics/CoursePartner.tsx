@@ -79,7 +79,6 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
   };
 
   const handleCancel = () => {
-    console.log('inside handleCancel', groupFormOpen);
     setGroupFormOpen(false);
     setActiveGroupData({});
   };
@@ -155,16 +154,15 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
       <div className="py-2 m-auto text-center">
         <p className={`text-red-600`}>{serverError}</p>
       </div>
-      {groupFormOpen && (
-        <GroupFormComponent
-          groupData={activeGroupData}
-          groupType={'Partner'}
-          open={groupFormOpen}
-          onCancel={handleCancel}
-          postMutation={postMutation}
-          roomData={roomData}
-        />
-      )}
+      <GroupFormComponent
+        groupData={activeGroupData}
+        groupType={'Partner'}
+        open={groupFormOpen}
+        onCancel={handleCancel}
+        postMutation={postMutation}
+        roomData={roomData}
+      />
+
       {warnModal.show && (
         <ModalPopUp
           closeAction={closeDeleteModal}

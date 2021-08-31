@@ -47,6 +47,8 @@ const GroupFormComponent = ({
   postMutation,
   roomData,
 }: IGroupFormProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
   const cancelButtonRef = useRef();
   const {advisorOptions = []} = roomData || {};
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -66,6 +68,10 @@ const GroupFormComponent = ({
     groupAdvisor: '',
   });
   const [classStudents, setClassStudents] = useState<any>([]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (roomData.class?.id) {
@@ -254,6 +260,10 @@ const GroupFormComponent = ({
       return classRoomGroupStudents;
     }
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <Dialog
