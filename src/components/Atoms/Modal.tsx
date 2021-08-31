@@ -50,13 +50,14 @@ const ModalBody = (bodyProps: {
   children: React.ReactNode;
   hidePadding?: boolean;
   closeOnBackdrop?: boolean;
+  overflowHidden?: boolean;
 }) => {
   const {children, closeOnBackdrop, hidePadding} = bodyProps;
   return (
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto overflow-y-scroll`}
+      } flex-auto overflow-y-${hidePadding ? 'hidden' : 'scroll'}`}
       style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
