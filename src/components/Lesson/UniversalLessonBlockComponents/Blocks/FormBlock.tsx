@@ -17,6 +17,7 @@ import CustomDatePicker from './FormBlock/DatePicker';
 import ReviewSliderBlock from './ReviewSliderBlock';
 import PoemBlock from './PoemBlock';
 import WritingExerciseBlock from './FormBlock/WritingExerciseBlock';
+import AttachmentBlock from './FormBlock/AttachmentBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -304,108 +305,6 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     );
   };
 
-  // ~~~~~~~~~~~~~~ ATTACHMENT ~~~~~~~~~~~~~ //
-  const AttachmentBlock = ({
-    inputID,
-    label,
-    value,
-    numbered,
-    index,
-    required,
-  }: FormControlProps) => {
-    const inputOther = useRef(null);
-
-    const openFilesExplorer = () => inputOther.current.click();
-    // For Attachments - 31
-
-    const UPLOAD_KEY = 'survey_attachments';
-    const [uploading, setUploading] = useState(false);
-    const [fileObject, setfileObject] = useState<any>({});
-    const [, setUrl] = useState(value);
-
-    const handleFileSelection = async (e: any) => {
-      if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        setfileObject(file);
-        `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
-        setUploading(true);
-
-        await uploadImageToS3(file, id, file.type);
-        const imageUrl: any = await getImageFromS3(id);
-        if (isInLesson) {
-          handleUpdateStudentData(inputID, [imageUrl]);
-          setUploading(false);
-        }
-      }
-    };
-
-    const uploadImageToS3 = async (file: any, id: string, type: string) => {
-      // Upload file to s3 bucket
-
-      return new Promise((resolve, reject) => {
-        Storage.put(`ULB/studentdata_${id}`, file, {
-          contentType: type,
-          ContentEncoding: 'base64',
-        })
-          .then((result) => {
-            console.log('File successfully uploaded to s3', result);
-            resolve(true);
-          })
-          .catch((err) => {
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
-
-    const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
-    return (
-      <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
-        </label>
-        <div className="mt-2">
-          <span
-            role="button"
-            tabIndex={-1}
-            onClick={isInLesson ? openFilesExplorer : noop}
-            className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
-            } flex items-center justify-center ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
-            <BiImageAdd className={`w-auto mr-2`} />
-            Upload Attachments
-          </span>
-          <input
-            ref={inputOther}
-            onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
-            type="file"
-            className="hidden"
-            multiple={false}
-          />
-        </div>
-        {fileObject.name && (
-          <Tooltip show={!uploading} placement="bottom" text={'View Attachments'}>
-            <div className="cursor-pointer flex items-center justify-between border-0 border-sea-green rounded-md shadow-sm mt-2 p-2 px-4">
-              <p className={`text-center ${themeTextColor} w-auto truncate`}>
-                {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
-              </p>
-
-              {uploading ? (
-                <div className=" w-auto">
-                  <Loader color={iconColor} />
-                </div>
-              ) : (
-                <AiOutlineCheckCircle className={`w-auto ${themeTextColor} text-lg`} />
-              )}
-            </div>
-          </Tooltip>
-        )}
-      </div>
-    );
-  };
-
   // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
@@ -607,6 +506,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           <AttachmentBlock
             numbered={numbered}
             index={index}
+            handleUpdateStudentData={handleUpdateStudentData}
             id={id}
             required={required}
             value={value}
