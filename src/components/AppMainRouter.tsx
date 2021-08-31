@@ -103,7 +103,7 @@ const MainRouter: React.FC = () => {
             lastLoggedOut: userInfo.lastLoggedOut,
             associateInstitute: instInfo?.data?.listStaffs?.items.filter(
               (item:any) => item.institution
-            ),
+            ) || [],
           },
         });
       } else {
