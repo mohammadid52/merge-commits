@@ -254,6 +254,16 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
+export const getPersonPasscode = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      authId
+      email
+      passcode
+    }
+  }
+`;
+
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -3823,6 +3833,56 @@ export const listPersonSentimentss = /* GraphQL */ `
         time
         backstory
         responseText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listClassroomGroupss = /* GraphQL */ `
+  query ListClassroomGroupss(
+    $filter: ModelClassroomGroupsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassroomGroupss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classRoomID
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          firstName
+          preferredName
+          lastName
+        }
+        groupLocation
+        classroomGroupsStudents {
+          items {
+            id
+            classRoomGroupID
+            studentEmail
+            studentAuthId
+            student {
+              id
+              firstName
+              preferredName
+              lastName
+              image
+            }
+          }
+          nextToken
+        }
         createdAt
         updatedAt
       }
