@@ -12,7 +12,11 @@ import GroupFormComponent from './GroupFormComponent';
 import {useEffect} from 'react';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
-const SubjectProficiency = ({roomData}: any) => {
+interface ISubjectProficiencyProps {
+  roomData: any;
+}
+
+const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
@@ -38,6 +42,7 @@ const SubjectProficiency = ({roomData}: any) => {
         graphqlOperation(customQueries.listClassroomGroupss, {
           filter: {
             classRoomID: {eq: roomData?.id},
+            groupType: {eq: 'Proficiency'},
           },
         })
       );
@@ -76,6 +81,7 @@ const SubjectProficiency = ({roomData}: any) => {
 
   const handleCancel = () => {
     setGroupFormOpen(false);
+    setActiveGroupData({});
   };
   const onDelete = (group: any) => {
     const onDrop = async () => {
@@ -85,9 +91,9 @@ const SubjectProficiency = ({roomData}: any) => {
           input: {id: group?.id},
         })
       );
-      if (group.classroomGroupsStudents?.length) {
+      if (group.classroomGroupsStudents?.items?.length) {
         await Promise.all(
-          group.classroomGroupsStudents?.map(
+          group.classroomGroupsStudents?.items?.map(
             async (student: any) =>
               await API.graphql(
                 graphqlOperation(customMutations.deleteClassroomGroupStudents, {
@@ -143,18 +149,19 @@ const SubjectProficiency = ({roomData}: any) => {
             ))}
           </div>
         ) : (
-          <div>No group added</div>
+          <div className="flex justify-center items-center">No group added</div>
         )}
       </div>
       <div className="py-2 m-auto text-center">
         <p className={`text-red-600`}>{serverError}</p>
       </div>
       <GroupFormComponent
+        groupData={activeGroupData}
+        groupType={'Proficiency'}
         open={groupFormOpen}
         onCancel={handleCancel}
-        roomData={roomData}
-        groupData={activeGroupData}
         postMutation={postMutation}
+        roomData={roomData}
       />
       {warnModal.show && (
         <ModalPopUp

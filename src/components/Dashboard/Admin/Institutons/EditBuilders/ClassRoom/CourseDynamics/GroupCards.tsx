@@ -63,7 +63,7 @@ const GroupCard = ({group, handleDelete,handleEditClick}: IGroupCardProps) => {
             </div>
           </div>
         </div>
-        <div className="mt-5 h-48 overflow-y-auto p-4 pt-0">
+        <div className="my-2 h-52 overflow-y-auto px-4">
           {group.classroomGroupsStudents?.items?.length ? (
             <div className="grid grid-cols-2 2xl:grid-cols-3 gap-2">
               {group.classroomGroupsStudents.items.map((student: any) => (
