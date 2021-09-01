@@ -28,7 +28,7 @@ interface StartProps {
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
-  const _isMounted = useRef(true); // Initial value _isMounted = true
+  const [isMounted, setIsMounted] = useState(false);
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const {
@@ -53,9 +53,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
   useEffect(() => {
-    return () => {
-      _isMounted.current = false;
-    };
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
@@ -114,7 +112,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             filter,
           })
         );
-        if (_isMounted) {
+        if (isMounted) {
           setAttendanceRecorded(Boolean(list?.data.listAttendances?.items.length));
         }
       }
@@ -258,9 +256,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       } else {
         if (isCompleted) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
-        } else if(isActive){
+        } else if (isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
-        } else{
+        } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
         }
       }

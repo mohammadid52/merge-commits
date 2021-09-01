@@ -153,22 +153,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
         );
-
-        // const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        // await saveRoomTeachers(roomData.id);
-        // await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
-        // setUnsavedChanges(false);
-        // history.push(
-        //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
-        // );
       } catch (error) {
-        console.log(error, 'errrrrrrrrrrr');
-
-        // setMessages({
-        //   show: true,
-        //   message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-        //   isError: true,
-        // });
       }
     }
   };
@@ -180,7 +165,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           {classRoomName} {CourseScheduleDict[userLanguage].HEADING}
         </span>
       </div> */}
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="mt-3">
           <div className="text-lg font-medium mb-4">
             {CourseScheduleDict[userLanguage].HEADING}
@@ -196,7 +181,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
                   onChange={(date: Date | null) => handleDateChange(date, 'startDate')}
                 />
-                <div className="text-red-500">{errors.startDate}</div>
+                <div className="text-xs 2xl:text-base text-red-500">
+                  {errors.startDate}
+                </div>
               </div>
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64 relative">
@@ -206,7 +193,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   minDate={scheduleData.startDate || new Date()}
                   onChange={(date: Date | null) => handleDateChange(date, 'endDate')}
                 />
-                <div className="text-red-500">{errors.endDate}</div>
+                <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
               </div>
             </div>
             <div className="flex mt-4">
@@ -222,7 +209,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_TIME}
                 />
-                <div className="text-red-500">{errors.startTime}</div>
+                <div className="text-xs 2xl:text-base text-red-500">
+                  {errors.startTime}
+                </div>
               </div>
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64">
@@ -232,7 +221,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_TIME}
                 />
-                <div className="text-red-500">{errors.endTime}</div>
+                <div className="text-xs 2xl:text-base text-red-500">{errors.endTime}</div>
               </div>
             </div>
             <div className="grid grid-cols-1 2xl:grid-cols-2 w-full 2xl:w-148">

@@ -55,6 +55,7 @@ type globalActions =
         image: string;
         lastLoggedOut?: string;
         lastLoggedIn?: string;
+        associateInstitute?: any[];
       };
     }
   | {
@@ -144,6 +145,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           location: action.payload.location,
           lastLoggedIn: action.payload.lastLoggedIn,
           lastLoggedOut: action.payload.lastLoggedOut,
+          associateInstitute: action.payload.associateInstitute,
         },
       };
     case 'LOG_IN':

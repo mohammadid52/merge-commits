@@ -31,7 +31,6 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
-import {getFilterORArray} from '../../../../utilities/strings';
 
 export interface InitialData {
   name: string;
@@ -671,6 +670,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         message: '',
       });
       discardChanges();
+    } else {
+      setWarnModal({
+        ...warnModal,
+        show: !warnModal.show,
+      });
     }
   };
 
