@@ -226,6 +226,9 @@ const AttachmentBlock = ({
     setImgId(id);
     await uploadImageToS3(file, id, file.type);
     const imageUrl: any = await getImageFromS3(id);
+    if (isInLesson) {
+      handleUpdateStudentData(inputID, [imageUrl]);
+    }
   }, []);
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop,

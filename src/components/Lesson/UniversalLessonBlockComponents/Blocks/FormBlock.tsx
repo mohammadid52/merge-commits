@@ -1,21 +1,14 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {BiImageAdd} from 'react-icons/bi';
+import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
-import Loader from '../../../Atoms/Loader';
-import Tooltip from '../../../Atoms/Tooltip';
-import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EmojiInput from './FormBlock/EmojiInputBlock';
-import Storage from '@aws-amplify/storage';
-import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
 import CustomDatePicker from './FormBlock/DatePicker';
 import ReviewSliderBlock from './ReviewSliderBlock';
-import PoemBlock from './PoemBlock';
 import WritingExerciseBlock from './FormBlock/WritingExerciseBlock';
 import AttachmentBlock from './FormBlock/AttachmentBlock';
 
@@ -85,30 +78,6 @@ const SelectMany = ({
       })}
     </div>
   );
-  // const {label, text, id} = item;
-  // const {
-  //   theme,
-  //   state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
-  // } = useContext(GlobalContext);
-
-  // const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
-  // return (
-  // <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
-  //   <input
-  //     id={id}
-  //     data-key={id}
-  //     data-value={label}
-  //     type="checkbox"
-  //     className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-  //       getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
-  //     }`}
-  //     onChange={onChange}
-  //     checked={getCheckValue(id)}
-  //   />
-
-  //   <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
-  // </div>
-  // );
 };
 
 const SelectOne = ({

@@ -14,6 +14,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {FORM_TYPES} from '../../UI/common/constants';
+import {reject} from 'lodash';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
