@@ -523,6 +523,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         );
         setRoomData({
           ...savedData,
+          institute: {
+            id: savedData.institution?.id,
+            name: savedData.institution?.name,
+            value: savedData.institution?.name,
+          },
           advisorOptions: [
             ...coTeachers.map((teacher: any) => ({
               id: teacher.teacherID,
@@ -629,7 +634,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
-      stepValue: 'other',
+      stepValue: 'class-dynamics',
     },
   ];
 
@@ -637,7 +642,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     switch (currentStep) {
       case 'overview':
         return <ClassRoomDetails roomData={roomData} />;
-      case 'other':
+      case 'class-dynamics':
         return <CourseDynamics roomData={roomData} />;
     }
   };

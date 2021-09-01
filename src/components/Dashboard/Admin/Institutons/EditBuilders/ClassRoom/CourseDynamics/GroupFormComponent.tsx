@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -30,7 +30,26 @@ interface IGroupFields {
   groupAdvisor: {id: string; name: string};
 }
 
-const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}: any) => {
+interface IGroupFormProps {
+  groupData: any;
+  groupType: 'Proficiency' | 'Partner';
+  onCancel: () => void;
+  open: boolean;
+  postMutation: (data: any) => void;
+  roomData: any;
+}
+
+const GroupFormComponent = ({
+  groupData,
+  groupType,
+  onCancel,
+  open,
+  postMutation,
+  roomData,
+}: IGroupFormProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  const cancelButtonRef = useRef();
   const {advisorOptions = []} = roomData || {};
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -49,6 +68,10 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
     groupAdvisor: '',
   });
   const [classStudents, setClassStudents] = useState<any>([]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (roomData.class?.id) {
@@ -158,7 +181,7 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
                 id: formValues.groupId,
                 classRoomID: roomData.id,
                 groupName: formValues.groupName,
-                groupType: 'Proficiency',
+                groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
                 groupLocation: formValues.groupLocation,
@@ -176,7 +199,7 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
               input: {
                 classRoomID: roomData.id,
                 groupName: formValues.groupName,
-                groupType: 'Proficiency',
+                groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
                 groupLocation: formValues.groupLocation,
@@ -238,6 +261,10 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
     }
   };
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <Dialog
       as="div"
@@ -247,6 +274,7 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
             z-100
             ${open ? 'w-auto' : 'w-0 opacity-0 overflow-hidden bg-black bg-opacity-50'}
 `}
+      initialFocus={cancelButtonRef}
       open={open}
       onClose={onCancel}>
       <div className="absolute inset-0 overflow-hidden">
@@ -271,6 +299,7 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
                     </div>
                     <div className="h-7 w-auto flex items-center">
                       <button
+                        ref={cancelButtonRef}
                         type="button"
                         className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         onClick={onCancel}>
@@ -286,7 +315,7 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
                   <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                     <div
                       className={
-                        'space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5'
+                        'space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-6 sm:py-5'
                       }>
                       <div>
                         <label
@@ -409,14 +438,12 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
                 {/* Action buttons */}
                 <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                   <div className="space-x-3 flex justify-end">
-                    {true && (
-                      <button
-                        type="button"
-                        className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        onClick={onCancel}>
-                        {BUTTONS[userLanguage]['CANCEL']}
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      onClick={onCancel}>
+                      {BUTTONS[userLanguage]['CANCEL']}
+                    </button>
                     <button
                       disabled={saving}
                       onClick={handleSubmit}
@@ -436,4 +463,4 @@ const GroupFormComponent = ({groupData, onCancel, open, postMutation, roomData}:
   );
 };
 
-export default GroupFormComponent;
+export default memo(GroupFormComponent);

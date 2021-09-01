@@ -1,17 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import differenceBy from 'lodash/differenceBy';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import * as queries from '../../../../../../graphql/queries';
 import * as mutation from '../../../../../../graphql/mutations';
-import SectionTitle from '../../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../../Atoms/BreadCrums';
 import Buttons from '../../../../../Atoms/Buttons';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import Selector from '../../../../../Atoms/Form/Selector';
@@ -28,7 +24,7 @@ import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 interface EditRoomProps {}
 
 const ClassRoomForm = (props: EditRoomProps) => {
-  const {} = props;
+  const [isMounted, setIsMounted] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
@@ -98,6 +94,10 @@ const ClassRoomForm = (props: EditRoomProps) => {
     show: false,
     message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const onModalSave = () => {
     toggleModal();
@@ -233,6 +233,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
   const getInstitutionList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
+      if(!isMounted){
+        return;
+      }
       const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
@@ -284,6 +287,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
         })
       );
       const listStaffs = list.data.listStaffs.items;
+      if (!isMounted) {
+        return;
+      }
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -342,6 +348,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
         })
       );
       const listClass = list.data.listClasss?.items;
+      if (!isMounted) {
+        return;
+      }
       if (listClass.length === 0) {
         setMessages({
           show: true,
@@ -382,6 +391,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
+      if (!isMounted) {
+        return;
+      }
       const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
@@ -714,7 +726,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
 
   useEffect(() => {
     fetchRoomDetails();
-    getInstitutionList();
+    // getInstitutionList();
   }, []);
 
   const {name, curricular, classRoom, maxPersons, institute, teacher} = roomData;
