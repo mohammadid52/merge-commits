@@ -3911,3 +3911,35 @@ export const getAssignedInstitutionToStaff = /* GraphQL */ `
     }
   }
 `;
+
+export const getClassroomSyllabus = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          lessons {
+            items {
+              id
+              lesson{
+                duration
+                title
+              }
+            }
+          }
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+      createdAt
+      updatedAt
+    }
+  }
+`;

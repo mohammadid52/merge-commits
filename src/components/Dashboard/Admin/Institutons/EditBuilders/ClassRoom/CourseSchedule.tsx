@@ -291,7 +291,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
                 <FormInput
                   name="notes"
-                  value={scheduleData.notes}
+                  value={scheduleData.notes || ''}
                   onChange={handleInputChange}
                   textarea
                   placeHolder={

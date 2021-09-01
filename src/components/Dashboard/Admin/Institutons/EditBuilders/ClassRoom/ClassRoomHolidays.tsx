@@ -15,7 +15,7 @@ import Loader from '../../../../../Atoms/Loader';
 import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
-interface IImpactLog {
+export interface IImpactLog {
   impactDate: Date;
   reasonComment: string;
   lessonImpact: number;
@@ -61,10 +61,12 @@ const ClassRoomHolidays = () => {
       setLoading(false);
     }
   };
+
   const handleEdit = (index: number) => {
     setActiveIndex(index);
     setFormOpen(true);
   };
+
   const handleOnDragEnd = () => {};
 
   const postMutation = (data: any) => {
@@ -163,16 +165,16 @@ const ClassRoomHolidays = () => {
                       // {...provided.draggableProps}
                       // {...provided.dragHandleProps}
                     >
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {new Date(item.impactDate).toLocaleDateString()}
                       </div>
-                      <div className="w-4/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.reasonComment || '-'}
                       </div>
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.lessonImpact * 100}%
                       </div>
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.adjustment || '-'}
                       </div>
                       <div className="w-2/10 flex px-4 py-3 flex justify-center">

@@ -28,6 +28,7 @@ import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepComponent';
 import ClassRoomDetails from './ClassRoomDetails';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
+import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 interface ClassRoomBuilderProps {}
 
@@ -632,6 +633,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       stepValue: 'overview',
     },
     {
+      title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_HEADING,
+      description: "",
+      stepValue: 'unit-planner',
+    },
+    {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
@@ -642,6 +648,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     switch (currentStep) {
       case 'overview':
         return <ClassRoomDetails roomData={roomData} />;
+      case 'unit-planner':
+        return <UnitPlanner roomData={roomData} />;
       case 'class-dynamics':
         return <CourseDynamics roomData={roomData} />;
     }

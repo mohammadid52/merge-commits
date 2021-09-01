@@ -1455,6 +1455,7 @@ const RoomEDITdict: any = {
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',
+    CLASS_UNIT_PLANNER_HEADING: "Unit Planner",
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
       unabletofetch: 'Unable to fetch institution list. Please try again later.',
