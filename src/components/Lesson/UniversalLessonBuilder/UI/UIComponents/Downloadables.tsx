@@ -1,19 +1,68 @@
 import {Transition} from '@headlessui/react';
+import axios from 'axios';
 import {forEach, map} from 'lodash';
-import React from 'react';
+import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {BsCloudDownload} from 'react-icons/bs';
+import {BsCheckCircle, BsCloudDownload} from 'react-icons/bs';
+import {IoClose} from 'react-icons/io5';
+import {setTimeout} from 'timers';
 import {getImageFromS3Static} from '../../../../../utilities/services';
+
+const downloadFile = (fileKey: string, fileName: string, cb: any) => {
+  axios({
+    url: getImageFromS3Static(`ULB/studentdata_${fileKey}`),
+    method: 'GET',
+    responseType: 'blob',
+  }).then((response) => {
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.getElementById('download-file');
+    // @ts-ignore
+    link.href = url;
+    link.setAttribute('download', fileName);
+    setTimeout(() => {
+      link.click();
+      // @ts-ignore
+      link.href = null;
+      link.setAttribute('download', null);
+
+      cb();
+    }, 500);
+  });
+};
+
+const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string}}) => {
+  const [isDownloaded, setIsDownloaded] = useState(false);
+  return (
+    <div className="col-span-1 flex items-center justify-between text-sm break-all dark:text-gray-400 font-medium">
+      <p className="w-auto text-gray-500">{file.fileName}</p>
+      {isDownloaded ? (
+        <span className="h-6 w-6 block text-green-400">
+          <BsCheckCircle className="h-full w-full" />
+        </span>
+      ) : (
+        <span
+          className="inline-flex w-auto border-2 items-center px-2 py-0.5 text-xs font-medium border-gray-500 ml-2 rounded-full hover:bg-gray-600 cursor-pointer transition-all text-gray-500 hover:text-gray-800 hover:border-gray-800"
+          onClick={() => {
+            downloadFile(file.fileKey, file.fileName, () => setIsDownloaded(true));
+          }}>
+          <a id="download-file" className={``}>
+            Download
+          </a>
+        </span>
+      )}
+    </div>
+  );
+};
 
 const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: any) => {
   const mapDownloadablesFilesTogether = () => {
-    let res: {id: string; imgId: string; fileName?: string}[] = [];
+    let res: {id: string; fileKey: string; fileName?: string}[] = [];
     forEach(downloadables, (d) => {
       if (d.partContent && d.partContent.length > 0) {
         forEach(d.partContent, (_d) => {
           if (_d.value && _d.value.length > 0) {
             forEach(_d.value, (f) => {
-              const state = {id: f.id, imgId: f.value, fileName: f.label};
+              const state = {id: f.id, fileKey: f.value, fileName: f.label};
               res.push(state);
             });
           }
@@ -47,24 +96,21 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
             onClick={(e: any) => e.stopPropagation()}
             className="w-auto bg-white dark:bg-gray-800 dark:border-gray-700 cursor-default select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
             show={showDownloadMenu}>
-            <h3 className="text-lg pb-4 dark:text-white leading-6 font-medium text-gray-900">
-              Downloadable Files
-            </h3>
-            <div className="border-t-0 py-4 dark:border-gray-700 border-gray-200 grid grid-cols-1 gap-x-4 max-h-132 overflow-y-auto gap-y-4">
+            <div className="flex items-center pb-2 justify-between">
+              <h3 className="text-lg  dark:text-white leading-6 font-medium text-gray-900">
+                Downloadable Files {allFiles.length > 0 ? `(${allFiles.length})` : ''}
+              </h3>
+              <span
+                onClick={() => setShowDownloadMenu(false)}
+                role="button"
+                aria-label="close button"
+                className="w-6 h-6 block cursor-pointer dark:text-gray-400 text-gray-800">
+                <IoClose className="h-full w-full" />
+              </span>
+            </div>
+            <div className="border-t-0 pt-4 dark:border-gray-700 border-gray-200 grid grid-cols-1 gap-x-4 max-h-132 overflow-y-auto gap-y-4">
               {allFiles && allFiles.length > 0 ? (
-                map(allFiles, (d) => {
-                  return (
-                    <div className="col-span-1 flex items-center justify-between text-sm break-all dark:text-gray-400 font-medium">
-                      <p className="w-auto text-gray-500">{d.fileName}</p>
-                      <a
-                        href={getImageFromS3Static(d.imgId)}
-                        download={d.fileName}
-                        className={`inline-flex w-auto border-2 items-center px-2 py-0.5 text-xs font-medium border-gray-500 ml-2 rounded-full hover:border-gray-600 cursor-pointer transition-all text-gray-500 hover:text-gray-600`}>
-                        Download
-                      </a>
-                    </div>
-                  );
-                })
+                map(allFiles, (d) => <Download file={d} />)
               ) : (
                 <p className="w-auto text-gray-500 text-center">
                   No files available to download

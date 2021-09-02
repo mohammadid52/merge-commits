@@ -8,6 +8,8 @@ import composePartContent from '../../../UniversalLessonBlockComponents/composeP
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {filter} from 'lodash';
+import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 
 const LessonRowComposer = () => {
   const {
@@ -17,6 +19,11 @@ const LessonRowComposer = () => {
     lessonDispatch,
   } = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+
+  const downloadables =
+    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
+      ? filter(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
+      : [];
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
@@ -31,6 +38,8 @@ const LessonRowComposer = () => {
     }
   }, [lessonPage]);
 
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+
   useEffect(() => {
     const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
@@ -43,7 +52,7 @@ const LessonRowComposer = () => {
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
   return (
-    <>
+    <div>
       {activePageData &&
         activePageData.pageContent.map((pagePart: PagePart, idx: number): any => (
           <div key={`row_pagepart_${idx}`} className="relative">
@@ -89,7 +98,15 @@ const LessonRowComposer = () => {
             </div>
           </div>
         ))}
-    </>
+
+      {downloadables && downloadables.length > 0 && (
+        <Downloadables
+          downloadables={downloadables}
+          showDownloadMenu={showDownloadMenu}
+          setShowDownloadMenu={setShowDownloadMenu}
+        />
+      )}
+    </div>
   );
 };
 
