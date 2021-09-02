@@ -33,3 +33,9 @@ export const capitalizeFirstLetter = (str: string = '') => {
     return capitalized;
   }
 };
+
+export const removeExtension = (filename: string) => {
+  const lastDotPosition = filename.lastIndexOf('.');
+  if (lastDotPosition === -1) return filename;
+  else return filename.substr(0, lastDotPosition);
+};

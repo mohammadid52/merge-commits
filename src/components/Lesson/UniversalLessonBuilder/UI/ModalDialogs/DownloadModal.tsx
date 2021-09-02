@@ -15,6 +15,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {FORM_TYPES} from '../common/constants';
 import {getImageFromS3Static} from '../../../../../utilities/services';
+import {removeExtension} from '../../../../../utilities/functions';
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -136,7 +137,7 @@ const File = ({
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, _fileName);
+    updateFilename(id, removeExtension(_fileName));
     setEditingFilename(false);
   };
 
@@ -428,7 +429,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     const _files = map(filesUploading, (f) => {
       return {
         id: f.id,
-        label: f.fileName || f.file.name,
+        label: removeExtension(f.fileName) || removeExtension(f.file.name),
         value: f.fileKey,
       };
     });

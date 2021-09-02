@@ -1,34 +1,38 @@
 import {Transition} from '@headlessui/react';
-import axios from 'axios';
 import {forEach, map} from 'lodash';
 import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {BsCheckCircle, BsCloudDownload} from 'react-icons/bs';
 import {IoClose} from 'react-icons/io5';
 import {setTimeout} from 'timers';
-import {getImageFromS3Static} from '../../../../../utilities/services';
+import Storage from '@aws-amplify/storage';
 
-const downloadFile = (fileKey: string, fileName: string, cb: any) => {
-  axios({
-    url: getImageFromS3Static(`ULB/studentdata_${fileKey}`),
-    method: 'GET',
-    responseType: 'blob',
-  }).then((response) => {
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.getElementById('download-file');
-    // @ts-ignore
-    link.href = url;
-    link.setAttribute('download', fileName);
-    setTimeout(() => {
-      link.click();
-      // @ts-ignore
-      link.href = null;
-      link.setAttribute('download', null);
-
+export function downloadBlob(blob: any, filename: string, cb: any) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || 'download';
+  const clickHandler = () => {
+    if (cb) {
       cb();
-    }, 500);
-  });
-};
+    }
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.removeEventListener('click', clickHandler);
+    }, 150);
+  };
+  a.addEventListener('click', clickHandler, false);
+
+  a.click();
+  return a;
+}
+
+// usage
+async function download(fileKey: string, filename: string, cb: any) {
+  const result = await Storage.get(`ULB/studentdata_${fileKey}`, {download: true});
+  // @ts-ignore
+  downloadBlob(result.Body, filename, cb);
+}
 
 const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string}}) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
@@ -43,9 +47,9 @@ const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string
         <span
           className="inline-flex w-auto border-2 items-center px-2 py-0.5 text-xs font-medium border-gray-500 ml-2 rounded-full hover:bg-gray-600 cursor-pointer transition-all text-gray-500 hover:text-gray-800 hover:border-gray-800"
           onClick={() => {
-            downloadFile(file.fileKey, file.fileName, () => setIsDownloaded(true));
+            download(file.fileKey, file.fileName, () => setIsDownloaded(true));
           }}>
-          <a id="download-file" className={``}>
+          <a id="download-file" target="_blank" className={``}>
             Download
           </a>
         </span>
@@ -75,22 +79,26 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
   const allFiles = mapDownloadablesFilesTogether();
 
   return (
-    <div className="flex items-center justify-center w-16 fixed bottom-5 right-5 z-100">
+    <div className="flex items-center justify-center w-16 fixed bottom-5 right-8 lg:w-18 xl:w-20 z-100">
       <ClickAwayListener onClickAway={() => setShowDownloadMenu(false)}>
         <div
+          title={`downloadables files ${
+            allFiles.length > 0 ? `(${allFiles.length})` : ''
+          }`}
           onClick={() => setShowDownloadMenu(!showDownloadMenu)}
-          className="flex items-center relative justify-center h-12 w-12 rounded-full cursor-pointer dark:bg-gray-700 bg-blue-500">
-          <BsCloudDownload className="text-lg text-white" />
-          <span style={{top: 10, right: 10}} className="absolute flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex iconoclast:bg-400 curate:bg-400 h-full w-full rounded-full opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 iconoclast:bg-500 curate:bg-500"></span>
-          </span>
+          className="flex items-center relative justify-center h-12 w-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full cursor-pointer iconoclast:bg-500 curate:bg-500">
+          <BsCloudDownload className="text-lg lg:text-xl text-white" />
+          {/* <span style={{top: 10, right: 10}} className="absolute flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex bg-white bg-opacity-90 h-full w-full rounded-full opacity-80"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+          </span> */}
           <Transition
             enter="transform transition ease-in-out duration-300"
             enterFrom="opacity-0"
             enterTo="opacity-100"
             leave="transform transition ease-in-out duration-300"
             leaveFrom="opacity-100"
+            title=""
             leaveTo="opacity-0"
             style={{bottom: '1.5rem'}}
             onClick={(e: any) => e.stopPropagation()}
@@ -101,6 +109,7 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
                 Downloadable Files {allFiles.length > 0 ? `(${allFiles.length})` : ''}
               </h3>
               <span
+                title="close"
                 onClick={() => setShowDownloadMenu(false)}
                 role="button"
                 aria-label="close button"
