@@ -14,7 +14,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {FORM_TYPES} from '../common/constants';
-import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
+import {getImageFromS3Static} from '../../../../../utilities/services';
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -156,7 +156,7 @@ const File = ({
             {(_status === 'success' || _status === 'other') && !editingFilename && (
               <Btn
                 onClick={() => setEditingFilename(true)}
-                label={_fileName ? 'Change file name' : 'Add file name'}
+                label={_fileName ? 'Change file label' : 'Add file label'}
               />
             )}
             {(_status === 'success' || _status === 'other') && editingFilename && (
