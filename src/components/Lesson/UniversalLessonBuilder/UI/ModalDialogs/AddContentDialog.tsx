@@ -15,7 +15,7 @@ import {
 } from 'react-icons/ai';
 import {MdInput, MdRateReview, MdTitle} from 'react-icons/md';
 import {RiSurveyLine} from 'react-icons/ri';
-import {BsCheckBox, BsImages, BsNewspaper} from 'react-icons/bs';
+import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
 import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {
@@ -129,10 +129,18 @@ const AddContentDialog = ({
     {
       name: 'Attachments',
       type: FORM_TYPES.ATTACHMENTS,
-      subtitle: 'Add image with details',
+      subtitle: 'Students can upload',
       icon: IoDocumentAttachOutline,
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-100',
+    },
+    {
+      name: 'Download',
+      type: FORM_TYPES.DOWNLOAD,
+      subtitle: 'Students can download',
+      icon: BsCloudDownload,
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100',
     },
     {
       name: 'Link',

@@ -639,15 +639,15 @@ const Dashboard = (props: DashboardProps) => {
                   } else if (userData.role === 'ST') {
                     return <Redirect to={`${match.url}/home`} />;
                   } else {
-                    return !state.user.associateInstitute?.length || state.user
-                      .associateInstitute?.length > 1 ? (
+                    return !state.user.associateInstitute?.length ||
+                      state.user.associateInstitute?.length > 1 ? (
                       <Redirect to={`${match.url}/manage-institutions`} />
                     ) : (
                       <Redirect
                         to={`${match.url}/manage-institutions/institution?id=${state.user.associateInstitute[0].institution.id}`}
                       />
                     );
-                  };
+                  }
                 } else
                   return (
                     <div className="min-h-screen w-full flex flex-col justify-center items-center">
