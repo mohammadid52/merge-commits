@@ -24,9 +24,6 @@ import {IconType} from 'react-icons/lib';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineEyeInvisible} from 'react-icons/ai';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {BsCloudDownload} from 'react-icons/bs';
-import ClickAwayListener from 'react-click-away-listener';
-import {getImageFromS3Static} from '../../../../utilities/services';
 import Downloadables from '../UI/UIComponents/Downloadables';
 
 interface CoreBuilderProps extends ULBSelectionProps {
@@ -89,7 +86,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {
     clientKey,
     userLanguage,
-    state: {lessonPage: {themeBackgroundColor = ''} = {}},
+    state: {user, lessonPage: {themeBackgroundColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
@@ -369,15 +366,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     return replaceAllExistingIds;
   };
 
-  const getKeys = async (imgId: string) => {
-    const key = await Storage.get(`ULB/studentdata_${imgId}`, {
-      download: true,
-    });
-    console.log('🚀 ~ file: CoreBuilder.tsx ~ line 443 ~ {map ~ key', key);
-  };
-
-  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-
   return (
     <>
       {activePageData && show && (
@@ -410,14 +398,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               icon={AiOutlineEyeInvisible}
             />
           </div>
-
-          {downloadables && downloadables.length > 0 && (
-            <Downloadables
-              downloadables={downloadables}
-              showDownloadMenu={showDownloadMenu}
-              setShowDownloadMenu={setShowDownloadMenu}
-            />
-          )}
 
           {!fetchingLessonDetails && (
             <Toolbar
