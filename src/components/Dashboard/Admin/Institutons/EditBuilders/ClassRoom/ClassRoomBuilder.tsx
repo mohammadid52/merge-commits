@@ -29,6 +29,8 @@ import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepCom
 import ClassRoomDetails from './ClassRoomDetails';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
+import ClassRoomForm from './ClassRoomForm';
+import CourseSchedule from './CourseSchedule';
 
 interface ClassRoomBuilderProps {}
 
@@ -633,8 +635,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       stepValue: 'overview',
     },
     {
-      title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_HEADING,
-      description: "",
+      title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
+      description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
     },
     {
@@ -647,9 +649,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
-        return <ClassRoomDetails roomData={roomData} />;
+        return <ClassRoomForm />;
       case 'unit-planner':
-        return <UnitPlanner roomData={roomData} />;
+        return <CourseSchedule roomData={roomData} />;
       case 'class-dynamics':
         return <CourseDynamics roomData={roomData} />;
     }

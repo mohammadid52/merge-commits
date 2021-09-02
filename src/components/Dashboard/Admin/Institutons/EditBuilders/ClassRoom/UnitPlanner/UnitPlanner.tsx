@@ -3,6 +3,8 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import moment, {Moment} from 'moment';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+
+import Buttons from '../../../../../../Atoms/Buttons';
 import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
 import Loader from '../../../../../../Atoms/Loader';
 
@@ -144,23 +146,36 @@ const UnitPlanner = ({roomData}: any) => {
   };
 
   return (
-    <div className="p-4">
-      {loading ? (
-        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-          <div className="w-5/10">
-            <Loader color="rgba(107, 114, 128, 1)" />
-          </div>
+    <div className="py-8">
+      <div className="flex justify-end my-4">
+        <h3 className="text-xl leading-6 font-bold text-gray-900 text-center">
+          Unit Planner
+        </h3>
+        <div className="w-80">
+          <Buttons btnClass="py-3 text-sm" label={'Calculate Schedule'} />
         </div>
-      ) : syllabusList.length ? (
-        syllabusList.map((syllabus: any, index: number) => (
-          <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
-            <div className="mb-4 bg-gray-200 flex justify-between">
-              <div className="px-4 py-2">
-                <div className="text-lg">{syllabus.name}</div>
-              </div>
-              <div className="inline-flex">
-                <span className="w-30 inline-flex items-center">Start Date</span>
+      </div>
+      <div className="my-4">
+        {loading ? (
+          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+            <div className="w-5/10">
+              <Loader color="rgba(107, 114, 128, 1)" />
+            </div>
+          </div>
+        ) : syllabusList.length ? (
+          syllabusList.map((syllabus: any, index: number) => (
+            <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
+              <div className="mb-4 bg-gray-200 flex justify-between">
                 <div className="px-4 py-2">
+                  <div className="text-lg">{syllabus.name}</div>
+                </div>
+                <div className="px-4 py-2 w-88">
+                  <div className="text-lg">Start Date: {roomData.startDate}</div>
+                </div>
+                {/* <div className="inline-flex">
+                <span className="w-30 inline-flex items-center">Start Date:</span>
+                <div className="px-4 py-2">
+                  {roomData.startDate}
                   <DatePickerInput
                     date={syllabus.startDate}
                     placeholder={'Start Date'}
@@ -168,64 +183,65 @@ const UnitPlanner = ({roomData}: any) => {
                     onChange={(date: Date | null) => handleDateChange(date, index)}
                   />
                 </div>
+              </div> */}
               </div>
-            </div>
-            <div>
-              <div className="w-full flex justify-between mt-4">
-                <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                  Lesson Name
+              <div>
+                <div className="w-full flex justify-between mt-4">
+                  <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    Lesson Name
+                  </div>
+                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    Duration ({roomData.frequency})
+                  </div>
+                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    Start date
+                  </div>
+                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    Est. end date
+                  </div>
+                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    Act. end date
+                  </div>
                 </div>
-                <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                  Duration ({roomData.frequency})
-                </div>
-                <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                  Start date
-                </div>
-                <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                  Est. end date
-                </div>
-                <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                  Act. end date
-                </div>
-              </div>
 
-              <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
-                {syllabus.lessons.items?.length ? (
-                  syllabus.lessons.items.map((item: any, idx: number) => {
-                    return (
-                      <div
-                        key={`${idx}`}
-                        className={`flex justify-between bg-white w-full`}>
-                        <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                          {item.lesson?.title}
+                <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
+                  {syllabus.lessons.items?.length ? (
+                    syllabus.lessons.items.map((item: any, idx: number) => {
+                      return (
+                        <div
+                          key={`${idx}`}
+                          className={`flex justify-between bg-white w-full`}>
+                          <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                            {item.lesson?.title}
+                          </div>
+                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                            {item.lesson?.duration}
+                          </div>
+                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                            {item.startDate
+                              ? new Date(item.startDate).toLocaleDateString()
+                              : '-'}
+                          </div>
+                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                            {item.estEndDate
+                              ? new Date(item.estEndDate).toLocaleDateString()
+                              : '-'}
+                          </div>
+                          <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
                         </div>
-                        <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                          {item.lesson?.duration}
-                        </div>
-                        <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                          {item.startDate
-                            ? new Date(item.startDate).toLocaleDateString()
-                            : '-'}
-                        </div>
-                        <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                          {item.estEndDate
-                            ? new Date(item.estEndDate).toLocaleDateString()
-                            : '-'}
-                        </div>
-                        <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-center p-5">No lesson assigned</div>
-                )}
+                      );
+                    })
+                  ) : (
+                    <div className="text-center p-5">No lesson assigned</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))
-      ) : (
-        <div>No unit added in the course</div>
-      )}
+          ))
+        ) : (
+          <div>No unit added in the course</div>
+        )}
+      </div>
     </div>
   );
 };

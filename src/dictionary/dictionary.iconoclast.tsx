@@ -1455,7 +1455,8 @@ const RoomEDITdict: any = {
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',
-    CLASS_UNIT_PLANNER_HEADING: "Unit Planner",
+    CLASS_UNIT_PLANNER_TAB_HEADING: 'Unit Planner',
+    CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'Set the schedule for your class and confirm lesson dates',
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
       unabletofetch: 'Unable to fetch institution list. Please try again later.',
@@ -1540,14 +1541,14 @@ const RoomDetailsDict: any = {
   EN: {
     COURSE_DETAILS: 'Course Details',
     COURSE_FREQUENCY: 'Course Schedule',
-    SUBJECT_PROFICIENCY: 'Subject Proficiency',
     COURSE_PARTNERS: 'Course Partners',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency',
   },
   ES: {
     COURSE_DETAILS: 'TBD',
     COURSE_FREQUENCY: 'TBD',
-    SUBJECT_PROFICIENCY: 'TBD',
     COURSE_PARTNERS: 'TBD',
+    SUBJECT_PROFICIENCY: 'TBD',
   },
 };
 

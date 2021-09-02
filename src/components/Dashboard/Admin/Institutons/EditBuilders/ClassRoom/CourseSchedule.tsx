@@ -5,6 +5,7 @@ import {IoIosCalendar} from 'react-icons/io';
 import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {FaCalendarDay} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import moment from 'moment';
 
 import * as mutation from '../../../../../../graphql/mutations';
 
@@ -16,8 +17,9 @@ import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
 import {awsFormatDate, dateString, timeIntervals} from '../../../../../../utilities/time';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import moment from 'moment';
+
 import ClassRoomHolidays from './ClassRoomHolidays';
+import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 export interface ICourseScheduleProps {
   roomData: any;
@@ -84,9 +86,15 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   }, [roomData]);
 
   const handleSelection = (value: string, fieldName: string) => {
+    let valueNeedsToUpdate = {
+      [fieldName]: value,
+    };
+    if (fieldName === 'frequency' && (value === 'M/W/F' || value === 'Tu/Th')) {
+      valueNeedsToUpdate.weekDay = value === 'M/W/F' ? 'Monday' : 'Tuesday';
+    }
     setScheduleData((prevData: ICourseScheduleFields) => ({
       ...prevData,
-      [fieldName]: value,
+      ...valueNeedsToUpdate,
     }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,8 +161,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
         );
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 
@@ -227,22 +234,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
             <div className="grid grid-cols-1 2xl:grid-cols-2 w-full 2xl:w-148">
               <div className="flex mt-4">
                 <span className="w-auto inline-flex items-center">
-                  <FaCalendarDay className="w-6 h-6 mr-2" />
-                </span>
-                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
-                  <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'weekDay')
-                    }
-                    selectedItem={scheduleData.weekDay}
-                    list={weekdaysOption}
-                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
-                  />
-                </div>
-              </div>
-              <div className="flex mt-4">
-                <span className="w-auto inline-flex items-center">
-                  <FiRefreshCw className="w-6 h-6 ml-1 mr-3" />
+                  <FiRefreshCw className="w-6 h-6 mr-2" />
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
@@ -252,6 +244,22 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                     selectedItem={scheduleData.frequency}
                     list={frequencyOptions}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
+                  />
+                </div>
+              </div>
+              <div className="flex mt-4">
+                <span className="w-auto inline-flex items-center">
+                  <FaCalendarDay className="w-6 h-6 ml-1 mr-3" />
+                </span>
+                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
+                  <Selector
+                    onChange={(_: string, name: string) =>
+                      handleSelection(name, 'weekDay')
+                    }
+                    selectedItem={scheduleData.weekDay}
+                    list={weekdaysOption}
+                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
+                    disabled={scheduleData.frequency === 'M/W/F' || scheduleData.frequency === 'Tu/Th'}
                   />
                 </div>
               </div>
@@ -302,7 +310,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
             </div>
           </div>
-          <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
+          {/* <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
             <Buttons
               btnClass="py-3 px-12 text-sm mr-4"
               label={BUTTONS[userLanguage]['CANCEL']}
@@ -315,11 +323,26 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
               onClick={saveRoomDetails}
             />
-          </div>
+          </div> */}
         </div>
         <div className="mt-3">
           <ClassRoomHolidays />
         </div>
+      </div>
+      <UnitPlanner roomData={roomData} />
+      <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
+        <Buttons
+          btnClass="py-3 px-12 text-sm mr-4"
+          label={BUTTONS[userLanguage]['CANCEL']}
+          // onClick={history.goBack}
+          transparent
+        />
+        <Buttons
+          // disabled={loading}
+          btnClass="py-3 px-12 text-sm ml-4"
+          label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
+          onClick={saveRoomDetails}
+        />
       </div>
     </div>
   );
