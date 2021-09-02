@@ -5,7 +5,7 @@ import moment, {Moment} from 'moment';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 
 import Buttons from '../../../../../../Atoms/Buttons';
-import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
+// import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
 import Loader from '../../../../../../Atoms/Loader';
 
 import {IImpactLog} from '../ClassRoomHolidays';
@@ -13,9 +13,12 @@ import {IImpactLog} from '../ClassRoomHolidays';
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
   Monthly: {unit: 'month', step: 1},
+  'M/W/F': {unit: 'day', step: 2},
+  'Tu/Th': {unit: 'day', step: 2},
 };
 
 const UnitPlanner = ({roomData}: any) => {
+  const [t, setT] = useState(0);
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
@@ -56,92 +59,106 @@ const UnitPlanner = ({roomData}: any) => {
     duration: number,
     scheduleDates: Date[]
   ) => {
+    if (frequency === 'M/W/F' && ![1,3,5].includes(moment(date).day())) {
+      date = moment(new Date(moment(date).add(2, frequency).toDate()));
+    }
+    if (frequency === 'Tu/Th' && ![2,4].includes(moment(date).day())) {
+      date = moment(new Date(moment(date).add(2, frequency).toDate()));
+    }
     let iteration: number = 1,
       startDate,
       estEndDate,
       i = 0;
-    while (iteration <= duration) {
+    while (iteration <= Math.ceil(duration)) {
       const isOccupied = scheduleDates.find(
         (ele) =>
           new Date(new Date(ele).toDateString()).getTime() ===
-          new Date(moment(date).add(i, 'month').toDate()).getTime()
+            new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
+      console.log(isOccupied, 'isOccupied', iteration);
       if (!isOccupied) {
         if (iteration === 1) {
-          startDate = new Date(moment(date).add(i, 'month').toDate());
+          startDate = new Date(moment(date).add(i, frequency).toDate());
+          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
-          estEndDate = new Date(moment(date).add(i, 'month').toDate());
+          estEndDate = new Date(moment(date).add(i, frequency).toDate());
         }
         iteration++;
       }
       i += step;
     }
-    return {startDate, estEndDate};
+    return {startDate, estEndDate: estEndDate || startDate};
   };
 
-  const handleDateChange = (date: Date, syllabusIndex: number) => {
+  const calculateSchedule = () => {
     let count: number = 0,
-      lastOccupiedDate: Date = date,
+      lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
 
     setSyllabusList((prevSyllabusList: any) =>
-      prevSyllabusList.map((syllabus: any, index: number) =>
-        index === syllabusIndex
-          ? {
-              ...syllabus,
-              startDate: date,
-              lessons: {
-                ...syllabus.lessons,
-                items: syllabus.lessons.items.map((item: any) => {
-                  count += item.lesson.duration;
-                  const {startDate, estEndDate}: any = calculateAvailableStartDate(
-                    moment(lastOccupiedDate),
-                    frequencyMapping[roomData.frequency].unit,
-                    frequencyMapping[roomData.frequency].step,
-                    item.lesson.duration,
-                    scheduleDates
-                  );
-                  item.startDate = startDate;
-                  item.estEndDate = estEndDate;
-
-                  // item.startDate = calculateAvailableStartDate(
-                  //   moment(lastOccupiedDate),
-                  //   7,
-                  //   item.lesson.duration,
-                  //   scheduleDates
-                  // );
-                  // item.estEndDate = moment(item.startDate).add(
-                  //   Math.ceil(count - 1),
-                  //   'day'
-                  // );
-                  // const datesBetweenSchedules = scheduleDates.filter(
-                  //   (ele) =>
-                  //     new Date(new Date(ele).toDateString()).getTime() >=
-                  //       new Date(item.startDate).getTime() &&
-                  //     new Date(new Date(ele).toDateString()).getTime() <=
-                  //       new Date(item.estEndDate).getTime()
-                  // );
-
-                  // if (datesBetweenSchedules.length) {
-                  //   item.estEndDate = moment(item.estEndDate).add(
-                  //     datesBetweenSchedules.length,
-                  //     'day'
-                  //   );
-                  // }
-                  lastOccupiedDate = Number.isInteger(count)
-                    ? moment(item.estEndDate).add(
-                        frequencyMapping[roomData.frequency].step,
-                        frequencyMapping[roomData.frequency].unit
-                      )
-                    : item.estEndDate;
-                  count = count >= 1 ? 0 : count;
-                  return item;
-                }),
-              },
+      prevSyllabusList.map((syllabus: any) => ({
+        ...syllabus,
+        startDate: lastOccupiedDate,
+        lessons: {
+          ...syllabus.lessons,
+          items: syllabus.lessons.items.map((item: any) => {
+            if (1 - count < item.lesson.duration) {
+              lastOccupiedDate = moment(lastOccupiedDate).add(
+                frequencyMapping[roomData.frequency].step,
+                frequencyMapping[roomData.frequency].unit
+              );
+              count = 0;
             }
-          : syllabus
-      )
+            count += item.lesson.duration;
+
+            const {startDate, estEndDate}: any = calculateAvailableStartDate(
+              moment(lastOccupiedDate),
+              frequencyMapping[roomData.frequency].unit,
+              frequencyMapping[roomData.frequency].step,
+              item.lesson.duration,
+              scheduleDates
+            );
+            console.log(startDate, estEndDate, 'startDate, estEndDate');
+
+            item.startDate = startDate;
+            item.estEndDate = estEndDate;
+
+            // item.startDate = calculateAvailableStartDate(
+            //   moment(lastOccupiedDate),
+            //   7,
+            //   item.lesson.duration,
+            //   scheduleDates
+            // );
+            // item.estEndDate = moment(item.startDate).add(
+            //   Math.ceil(count - 1),
+            //   'day'
+            // );
+            // const datesBetweenSchedules = scheduleDates.filter(
+            //   (ele) =>
+            //     new Date(new Date(ele).toDateString()).getTime() >=
+            //       new Date(item.startDate).getTime() &&
+            //     new Date(new Date(ele).toDateString()).getTime() <=
+            //       new Date(item.estEndDate).getTime()
+            // );
+
+            // if (datesBetweenSchedules.length) {
+            //   item.estEndDate = moment(item.estEndDate).add(
+            //     datesBetweenSchedules.length,
+            //     'day'
+            //   );
+            // }
+            lastOccupiedDate = Number.isInteger(count)
+              ? moment(item.estEndDate).add(
+                  frequencyMapping[roomData.frequency].step,
+                  frequencyMapping[roomData.frequency].unit
+                )
+              : item.estEndDate;
+            count = count >= 1 ? 0 : count;
+            return item;
+          }),
+        },
+      }))
     );
   };
 
@@ -151,8 +168,12 @@ const UnitPlanner = ({roomData}: any) => {
         <h3 className="text-xl leading-6 font-bold text-gray-900 text-center">
           Unit Planner
         </h3>
-        <div className="w-80">
-          <Buttons btnClass="py-3 text-sm" label={'Calculate Schedule'} />
+        <div className="w-68">
+          <Buttons
+            btnClass="py-3 text-sm"
+            label={'Calculate Schedule'}
+            onClick={calculateSchedule}
+          />
         </div>
       </div>
       <div className="my-4">
@@ -170,7 +191,12 @@ const UnitPlanner = ({roomData}: any) => {
                   <div className="text-lg">{syllabus.name}</div>
                 </div>
                 <div className="px-4 py-2 w-88">
-                  <div className="text-lg">Start Date: {roomData.startDate}</div>
+                  <div className="text-lg">
+                    Start Date:{' '}
+                    {syllabus.lessons.items?.length && syllabus.lessons.items[0].startDate
+                      ? new Date(syllabus.lessons.items[0].startDate).toLocaleDateString()
+                      : '-'}
+                  </div>
                 </div>
                 {/* <div className="inline-flex">
                 <span className="w-30 inline-flex items-center">Start Date:</span>
