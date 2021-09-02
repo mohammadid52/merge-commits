@@ -8,7 +8,7 @@ import composePartContent from '../../../UniversalLessonBlockComponents/composeP
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
-import {filter} from 'lodash';
+import {filter, reject} from 'lodash';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 
 const LessonRowComposer = () => {
@@ -23,6 +23,11 @@ const LessonRowComposer = () => {
   const downloadables =
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
       ? filter(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
+      : [];
+
+  const removeDownloadablesFromlist =
+    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
+      ? reject(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
       : [];
 
   useEffect(() => {
@@ -53,12 +58,12 @@ const LessonRowComposer = () => {
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
   return (
     <div>
-      {activePageData &&
-        activePageData.pageContent.map((pagePart: PagePart, idx: number): any => (
+      {removeDownloadablesFromlist &&
+        removeDownloadablesFromlist.map((pagePart: PagePart, idx: number): any => (
           <div key={`row_pagepart_${idx}`} className="relative">
             <div
               className={`w-auto bottom-${
-                idx === activePageData.pageContent.length - 1 ? 2 : 4
+                idx === removeDownloadablesFromlist.length - 1 ? 2 : 4
               } right-2 z-100`}>
               <BuilderRowWrapper
                 mode={'lesson'}
