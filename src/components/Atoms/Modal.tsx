@@ -14,23 +14,31 @@ interface ModalProps {
   closeAction?: () => void;
   isImage?: boolean;
   closeOnBackdrop?: boolean;
+  hidePadding?: boolean;
   intenseOpacity?: boolean;
+  scrollHidden?: boolean;
   titleButton?: React.ReactElement;
+  customTitle?: React.ReactNode;
 }
 
 const ModalHeader = (headerProps: {
   title?: string;
   onClick?: () => void;
   titleButton?: React.ReactElement;
+  customTitle?: React.ReactNode;
   showBorder?: boolean;
 }) => {
-  const {title, onClick, showBorder, titleButton} = headerProps;
+  const {title, onClick, showBorder, customTitle, titleButton} = headerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
       <div className="flex items-center">
-        {title && <h3 className="w-auto text-xl font-semibold">{title}</h3>}
+        {title ? (
+          <h3 className="w-auto text-xl font-semibold">{title}</h3>
+        ) : customTitle ? (
+          customTitle
+        ) : null}
         {titleButton}
       </div>
 
@@ -45,10 +53,19 @@ const ModalHeader = (headerProps: {
   );
 };
 
-const ModalBody = (bodyProps: {children: React.ReactNode; closeOnBackdrop?: boolean}) => {
-  const {children, closeOnBackdrop} = bodyProps;
+const ModalBody = (bodyProps: {
+  children: React.ReactNode;
+  hidePadding?: boolean;
+  closeOnBackdrop?: boolean;
+  scrollHidden?: boolean;
+}) => {
+  const {children, closeOnBackdrop, scrollHidden, hidePadding} = bodyProps;
   return (
-    <div className={`relative ${closeOnBackdrop ? 'p-2' : 'p-4'} flex-auto`}>
+    <div
+      className={`relative ${
+        hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
+      } flex-auto overflow-y-${scrollHidden ? 'hidden' : 'scroll'}`}
+      style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
   );
@@ -85,6 +102,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     saveAction,
     closeOnBackdrop = false,
     titleButton,
+    hidePadding = false,
+    scrollHidden = false,
+    customTitle,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -113,16 +133,22 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             }
           }}
           className="relative w-auto my-4 mx-auto max-w-lg">
-          <div className={`${theme.modals.content}`}>
+          <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}
+                customTitle={customTitle}
                 title={title}
                 onClick={closeAction}
                 showBorder={showHeaderBorder}
               />
             )}
-            <ModalBody closeOnBackdrop={closeOnBackdrop}>{children}</ModalBody>
+            <ModalBody
+              scrollHidden={scrollHidden}
+              hidePadding={hidePadding}
+              closeOnBackdrop={closeOnBackdrop}>
+              {children}
+            </ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
           </div>
         </div>

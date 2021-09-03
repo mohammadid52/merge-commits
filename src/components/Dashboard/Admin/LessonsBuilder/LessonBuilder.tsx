@@ -31,7 +31,6 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
-import {getFilterORArray} from '../../../../utilities/strings';
 
 export interface InitialData {
   name: string;
@@ -159,7 +158,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const updatedList = listStaffs?.items.map((item: any) => ({
         id: item?.id,
         name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+        value: `${item?.staffMember?.firstName || ''} ${
+          item?.staffMember.lastName || ''
+        }`,
       }));
       setDesignersList(updatedList);
       setDesignersListLoading(false);
@@ -201,6 +202,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
+  const [institutionCollection, setInstitutionCollection] = useState([]);
 
   const getInstitutionByID = async (id: string) => {
     try {
@@ -463,6 +465,30 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           },
         })
       );
+      const insitutionRooms: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutionsForCurricula)
+      );
+
+      const curriculumIds: any[] = [];
+
+      insitutionRooms?.data?.listInstitutions?.items.forEach((item: any) => {
+        item?.rooms?.items?.forEach((item2: any) => {
+          item2?.curricula?.items?.forEach((item3: any) => {
+            curriculumIds.push({
+              teacher: item2?.teacher,
+              institutionId: item?.id,
+              institutionName: item?.name,
+              curriculumId: item3?.curriculum?.id,
+              curriculumName: item3?.curriculum?.name,
+              roomName: item2.name,
+              roomId: item2.id,
+            });
+          });
+        });
+      });
+
+      setInstitutionCollection(curriculumIds);
+
       const curriculums = list.data?.listCurriculums?.items;
       setCurriculumList(curriculums);
       let selectedCurriculums: any = [];
@@ -579,6 +605,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       case 'courses':
         return (
           <LessonCourse
+            institutionCollection={institutionCollection}
             curriculumList={curriculumList}
             fetchCurriculum={fetchCurriculum}
             institution={formData?.institution}
@@ -643,6 +670,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         message: '',
       });
       discardChanges();
+    } else {
+      setWarnModal({
+        ...warnModal,
+        show: !warnModal.show,
+      });
     }
   };
 

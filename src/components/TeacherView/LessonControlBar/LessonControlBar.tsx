@@ -25,8 +25,8 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
   };
 
   return (
-    <nav className="bg-white border-b h-12 border-gray-200 flex" aria-label="Breadcrumb">
-      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+    <nav className="bg-white border-b h-16 lg:h-12 border-gray-200 flex" aria-label="Breadcrumb">
+      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto">
         <li className="flex w-auto">
           <div className="flex items-center">
             <a href="#" className="text-gray-600">

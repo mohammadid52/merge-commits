@@ -1,35 +1,36 @@
-import React, { useContext, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { Auth } from '@aws-amplify/auth';
-import { validate } from 'json-schema';
-import { FaKey } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useHistory, NavLink } from 'react-router-dom';
+import React, {useContext, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {Auth} from '@aws-amplify/auth';
+import {validate} from 'json-schema';
+import {FaKey} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {useHistory, NavLink} from 'react-router-dom';
 
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 
 import * as customMutations from '../../../customGraphql/customMutations';
+import FormInput from '../../Atoms/Form/FormInput';
 
 interface ChangePasswordProps {
   updateAuthState: Function;
 }
 
 const ChangePassword = (props: ChangePasswordProps) => {
-  const { updateAuthState } = props;
+  const {updateAuthState} = props;
   const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [passMatchToggle, setPassMatchToggle] = useState(false);
   const [cookies, , removeCookie] = useCookies();
   const history = useHistory();
 
-  const { userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
-  const { dashboardProfileDict } = useDictionary(clientKey);
+  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
+  const {dashboardProfileDict} = useDictionary(clientKey);
   const dictionary = dashboardProfileDict[userLanguage];
 
   const [warningModal, setWarningModal] = useState({
@@ -37,7 +38,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
     message: dictionary['CHANGE_PASSWORD']['WARN_MSG'],
   });
 
-  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: '',
@@ -62,7 +63,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
         email: state.user.email,
         lastLoggedOut: new Date().toISOString(),
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
       history.push('/forgot-password');
@@ -86,7 +87,8 @@ const ChangePassword = (props: ChangePasswordProps) => {
             return {
               show: true,
               type: 'error',
-              message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+              message:
+                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
             };
           case 'NotAuthorizedException':
             return {
@@ -159,8 +161,8 @@ const ChangePassword = (props: ChangePasswordProps) => {
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       return {
         ...input,
@@ -183,119 +185,138 @@ const ChangePassword = (props: ChangePasswordProps) => {
     <div className="h-full w-full md:px-4 pt-4">
       <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
         <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">{dictionary['CHANGE_PASSWORD']['TITLE']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            {dictionary['CHANGE_PASSWORD']['TITLE']}
+          </h3>
         </div>
 
         <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
-          <div className="text-center text-sm">{dictionary['CHANGE_PASSWORD']['INFO']}</div>
+          <div className="text-center text-sm">
+            {dictionary['CHANGE_PASSWORD']['INFO']}
+          </div>
           <div className="w-full h-auto flex flex-col justify-between items-center my-4">
-            <div className="w-full md:w-1/2 m-1 relative">
-              <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
+            <div className="w-full md:w-1/2 m-1">
+              <div className="relative">
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setOldPassToggle(!oldPassToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale">
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
-                <div className="w-auto flex justify-center items-center mr-2">
-                  <IconContext.Provider value={{ size: '0.8rem', style: { width: 'auto' } }}>
-                    <FaKey />
-                  </IconContext.Provider>
+                <div className="absolute left-1 w-auto mr-2">
+                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                    <IconContext.Provider
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      <FaKey />
+                    </IconContext.Provider>
+                  </div>
                 </div>
                 <label className="hidden" htmlFor="oldPassword">
                   {dictionary['CHANGE_PASSWORD']['OLD_PASS']}
                 </label>
-                <input
-                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  placeholder={dictionary['CHANGE_PASSWORD']['OLD_PASS']}
+                <FormInput
+                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
+                  placeHolder={dictionary['CHANGE_PASSWORD']['OLD_PASS']}
                   type={oldPassToggle ? 'text' : 'password'}
                   id="oldPassword"
                   name="password"
-                  defaultValue={input.oldPassword}
+                  value={input.oldPassword}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
                 />
               </div>
             </div>
 
-            <div className="w-full md:w-1/2 m-1 relative">
-              <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
+            <div className="w-full md:w-1/2 m-1">
+              <div className="relative">
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale">
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
-                <div className="w-auto flex justify-center items-center mr-2">
-                  <IconContext.Provider value={{ size: '0.8rem', style: { width: 'auto' } }}>
-                    <FaKey />
-                  </IconContext.Provider>
+                <div className="w-auto absolute left-1 mr-2">
+                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                    <IconContext.Provider
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      <FaKey />
+                    </IconContext.Provider>
+                  </div>
                 </div>
                 <label className="hidden" htmlFor="password">
                   {dictionary['CHANGE_PASSWORD']['NEW_PASS']}
                 </label>
-                <input
-                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  placeholder={dictionary['CHANGE_PASSWORD']['NEW_PASS']}
+                <FormInput
+                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
+                  placeHolder={dictionary['CHANGE_PASSWORD']['NEW_PASS']}
                   type={passToggle ? 'text' : 'password'}
                   id="newPassword"
                   name="password"
-                  defaultValue={input.newPassword}
+                  value={input.newPassword}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
-            <div className="w-full md:w-1/2 m-1 relative">
-              <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
+            <div className="w-full md:w-1/2 m-1">
+              <div className="relative">
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassMatchToggle(!passMatchToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale">
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1rem', style: { width: 'auto' } }}>
+                      <IconContext.Provider
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
-                <div className="w-auto flex justify-center items-center mr-2">
-                  <IconContext.Provider value={{ size: '0.8rem', style: { width: 'auto' } }}>
-                    <FaKey />
-                  </IconContext.Provider>
+                <div className="w-auto absolute left-1">
+                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                    <IconContext.Provider
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      <FaKey />
+                    </IconContext.Provider>
+                  </div>
                 </div>
                 <label className="hidden" htmlFor="match">
                   {dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
                 </label>
-                <input
-                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  placeholder={dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
+                <FormInput
+                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
+                  placeHolder={dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
                   type={passMatchToggle ? 'text' : 'password'}
                   id="match"
                   name="match"
-                  defaultValue={input.match}
+                  value={input.match}
                   onChange={handleChange}
                 />
               </div>

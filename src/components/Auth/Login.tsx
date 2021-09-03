@@ -10,19 +10,27 @@ import {useHistory, NavLink} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import axios from 'axios';
+
 import * as queries from '../../graphql/queries';
+import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
 import useDictionary from '../../customHooks/dictionary';
+import useDeviceDetect from '../../customHooks/deviceDetect';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
 import {createUserUrl} from '../../utilities/urls';
 
+import BrowserAlert from '../General/BrowserAlert';
+
 interface LoginProps {
-  setJustLoggedIn?: any;
   updateAuthState: Function;
 }
 
-const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
+const Login = ({updateAuthState}: LoginProps) => {
+  const {browser: detectedBrowser} = useDeviceDetect();
+  const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
+    detectedBrowser === 'Safari'
+  );
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
@@ -72,6 +80,14 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
           graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
         userInfo = userInfo.data.getPerson;
+        let instInfo: any = {};
+        if (userInfo.role !== 'ST') {
+          instInfo = await API.graphql(
+            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+              filter: {staffAuthID: {eq: user.username}},
+            })
+          );
+        }
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -82,6 +98,9 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
             onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
             role: userInfo.role,
             image: userInfo.image,
+            associateInstitute:
+              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              [],
           },
         });
         const input = {
@@ -93,7 +112,7 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
         const update: any = await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
-        setJustLoggedIn(true);
+
         updateAuthState(true);
       } catch (error) {
         console.log('error', error);
@@ -545,6 +564,16 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
             'authBackground'
           )} bg-cover bg-center`}></div>
       </div>
+      {openAlertBrowser && (
+        <BrowserAlert
+          alert={openAlertBrowser}
+          closeTab={() => {
+            window.open('', '_parent', '');
+            window.close();
+          }}
+          onContinue={() => setOpenAlertBrowser(false)}
+        />
+      )}
     </div>
   );
 };

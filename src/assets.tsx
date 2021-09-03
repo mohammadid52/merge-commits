@@ -102,6 +102,21 @@ const demo_assets: any = {
     'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
 };
 
+const general: any = {
+  emoji: {
+    awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
+    bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
+    okay:
+      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
+    good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
+    great:
+      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
+  },
+  file: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/file.png',
+  fileImg: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/imgFile.png',
+  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif',
+};
+
 // main logo (dashboard above sidebar)
 // login_page_logo (logo in login pages)
 // loading_logo (logo in loader)
@@ -109,12 +124,14 @@ const demo_assets: any = {
 // favicon, manifest, appleTouchIcon
 // webAppTitle
 
-export function getAsset(clientKey: string, key: string) {
+export function getAsset(clientKey: string, key?: string) {
   if (clientKey === 'iconoclast') {
     return iconoclast_assets[key];
   } else if (clientKey === 'curate') {
     return curate_assets[key];
   } else if (clientKey === 'demo') {
     return demo_assets[key];
+  } else if (clientKey === 'general') {
+    return key ? general[key] : general;
   }
 }

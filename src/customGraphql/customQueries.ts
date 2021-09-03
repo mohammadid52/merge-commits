@@ -254,6 +254,16 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
+export const getPersonPasscode = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      authId
+      email
+      passcode
+    }
+  }
+`;
+
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -790,7 +800,12 @@ export const getRoom = /* GraphQL */ `
       filters
       location
       startDate
+      endDate
       startTime
+      endTime
+      frequency
+      weekDay
+      conferenceCallLink
       length
       repeat
       notes
@@ -813,6 +828,20 @@ export const getRoom = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getRoomLessonImpactLogs = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
     }
   }
 `;
@@ -2093,6 +2122,58 @@ export const listInstitutions = /* GraphQL */ `
   }
 `;
 
+export const listInstitutionsForCurricula = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        rooms {
+          items {
+            id
+            name
+            teacher {
+              firstName
+              preferredName
+              lastName
+              image
+              id
+            }
+            curricula {
+              items {
+                id
+                curriculum {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+        curricula {
+          items {
+            id
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listUniversalLessonStudentDatas = /* GraphQL */ `
   query ListUniversalLessonStudentDatas(
     $id: ID
@@ -2113,6 +2194,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         syllabusLessonID
         lessonID
         lessonPageID
+        roomID
         studentID
         studentAuthID
         studentEmail
@@ -2320,6 +2402,37 @@ export const getClassDetails = /* GraphQL */ `
         }
         nextToken
       }
+      students {
+        items {
+          id
+          classID
+          group
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+          student {
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getClassStudents = /* GraphQL */ `
+  query GetClassDetails($id: ID!) {
+    getClass(id: $id) {
+      id
       students {
         items {
           id
@@ -3395,6 +3508,14 @@ export const listUnits = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -3671,6 +3792,156 @@ export const getCurriculumBasicInfo = /* GraphQL */ `
         id
         name
       }
+    }
+  }
+`;
+
+export const getPersonSentiments = /* GraphQL */ `
+  query GetPersonSentiments($personAuthID: String!, $date: AWSDate!) {
+    getPersonSentiments(personAuthID: $personAuthID, date: $date) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonSentimentss = /* GraphQL */ `
+  query ListPersonSentimentss(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelPersonSentimentsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonSentimentss(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        personAuthID
+        personEmail
+        date
+        time
+        backstory
+        responseText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listClassroomGroupss = /* GraphQL */ `
+  query ListClassroomGroupss(
+    $filter: ModelClassroomGroupsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassroomGroupss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classRoomID
+        groupName
+        groupType
+        advisorEmail
+        advisorAuthId
+        groupAdvisor {
+          id
+          authId
+          firstName
+          preferredName
+          lastName
+        }
+        groupLocation
+        classroomGroupsStudents {
+          items {
+            id
+            classRoomGroupID
+            studentEmail
+            studentAuthId
+            student {
+              id
+              firstName
+              preferredName
+              lastName
+              image
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getAssignedInstitutionToStaff = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+        }
+        staffMember {
+          firstName
+          lastName
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getClassroomSyllabus = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      universalSyllabusSeq
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          lessons {
+            items {
+              id
+              lesson{
+                duration
+                title
+              }
+            }
+          }
+          universalLessonsSeq
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+      createdAt
+      updatedAt
     }
   }
 `;

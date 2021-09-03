@@ -14,6 +14,7 @@ import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import {DIVIDER, FORM_TYPES, TABLE} from '../UniversalLessonBuilder/UI/common/constants';
 import DividerBlock from './Blocks/DividerBlock';
 import TableBlock from './Blocks/TableBlock';
+import DownloadBlock from './Blocks/DownloadBlock';
 
 const composePartContent = (
   id: string,
@@ -111,6 +112,8 @@ const composePartContent = (
     return <DividerBlock value={value[0]?.value} />;
   } else if (type === TABLE) {
     return <TableBlock classString={classString} value={value} />;
+  } else if (type === FORM_TYPES.DOWNLOAD) {
+    return <DownloadBlock value={value} />;
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

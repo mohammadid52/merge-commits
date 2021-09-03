@@ -1,22 +1,16 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {BiImageAdd} from 'react-icons/bi';
+import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
-import Loader from '../../../Atoms/Loader';
-import Tooltip from '../../../Atoms/Tooltip';
-import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EmojiInput from './FormBlock/EmojiInputBlock';
-import Storage from '@aws-amplify/storage';
-import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
 import CustomDatePicker from './FormBlock/DatePicker';
 import ReviewSliderBlock from './ReviewSliderBlock';
-import PoemBlock from './PoemBlock';
 import WritingExerciseBlock from './FormBlock/WritingExerciseBlock';
+import AttachmentBlock from './FormBlock/AttachmentBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -84,30 +78,6 @@ const SelectMany = ({
       })}
     </div>
   );
-  // const {label, text, id} = item;
-  // const {
-  //   theme,
-  //   state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
-  // } = useContext(GlobalContext);
-
-  // const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
-  // return (
-  // <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
-  //   <input
-  //     id={id}
-  //     data-key={id}
-  //     data-value={label}
-  //     type="checkbox"
-  //     className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-  //       getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
-  //     }`}
-  //     onChange={onChange}
-  //     checked={getCheckValue(id)}
-  //   />
-
-  //   <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
-  // </div>
-  // );
 };
 
 const SelectOne = ({
@@ -300,108 +270,6 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
           value={isInLesson ? getDataValue(inputID) : value}
         />
-      </div>
-    );
-  };
-
-  // ~~~~~~~~~~~~~~ ATTACHMENT ~~~~~~~~~~~~~ //
-  const AttachmentBlock = ({
-    inputID,
-    label,
-    value,
-    numbered,
-    index,
-    required,
-  }: FormControlProps) => {
-    const inputOther = useRef(null);
-
-    const openFilesExplorer = () => inputOther.current.click();
-    // For Attachments - 31
-
-    const UPLOAD_KEY = 'survey_attachments';
-    const [uploading, setUploading] = useState(false);
-    const [fileObject, setfileObject] = useState<any>({});
-    const [, setUrl] = useState(value);
-
-    const handleFileSelection = async (e: any) => {
-      if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        setfileObject(file);
-        `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
-        setUploading(true);
-
-        await uploadImageToS3(file, id, file.type);
-        const imageUrl: any = await getImageFromS3(id);
-        if (isInLesson) {
-          handleUpdateStudentData(inputID, [imageUrl]);
-          setUploading(false);
-        }
-      }
-    };
-
-    const uploadImageToS3 = async (file: any, id: string, type: string) => {
-      // Upload file to s3 bucket
-
-      return new Promise((resolve, reject) => {
-        Storage.put(`ULB/studentdata_${id}`, file, {
-          contentType: type,
-          ContentEncoding: 'base64',
-        })
-          .then((result) => {
-            console.log('File successfully uploaded to s3', result);
-            resolve(true);
-          })
-          .catch((err) => {
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
-
-    const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
-    return (
-      <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
-        </label>
-        <div className="mt-2">
-          <span
-            role="button"
-            tabIndex={-1}
-            onClick={isInLesson ? openFilesExplorer : noop}
-            className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
-            } flex items-center justify-center ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
-            <BiImageAdd className={`w-auto mr-2`} />
-            Upload Attachments
-          </span>
-          <input
-            ref={inputOther}
-            onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
-            type="file"
-            className="hidden"
-            multiple={false}
-          />
-        </div>
-        {fileObject.name && (
-          <Tooltip show={!uploading} placement="bottom" text={'View Attachments'}>
-            <div className="cursor-pointer flex items-center justify-between border-0 border-sea-green rounded-md shadow-sm mt-2 p-2 px-4">
-              <p className={`text-center ${themeTextColor} w-auto truncate`}>
-                {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
-              </p>
-
-              {uploading ? (
-                <div className=" w-auto">
-                  <Loader color={iconColor} />
-                </div>
-              ) : (
-                <AiOutlineCheckCircle className={`w-auto ${themeTextColor} text-lg`} />
-              )}
-            </div>
-          </Tooltip>
-        )}
       </div>
     );
   };
@@ -607,6 +475,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           <AttachmentBlock
             numbered={numbered}
             index={index}
+            handleUpdateStudentData={handleUpdateStudentData}
             id={id}
             required={required}
             value={value}

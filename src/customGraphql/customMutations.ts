@@ -92,6 +92,7 @@ export const updatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      passcode
     }
   }
 `;
@@ -1158,6 +1159,227 @@ export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
     updateUniversalSyllabus(input: $input, condition: $condition) {
       id
       universalLessonsSeq
+    }
+  }
+`;
+
+export const updatePersonSentiments = /* GraphQL */ `
+  mutation UpdatePersonSentiments(
+    $input: UpdatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    updatePersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      backstory
+      updatedAt
+    }
+  }
+`;
+
+export const createPersonSentiments = /* GraphQL */ `
+  mutation CreatePersonSentiments(
+    $input: CreatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    createPersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      backstory
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createClassroomGroups = /* GraphQL */ `
+  mutation CreateClassroomGroups(
+    $input: CreateClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    createClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+      groupName
+      groupType
+      advisorEmail
+      advisorAuthId
+      groupAdvisor {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+      }
+      groupLocation
+      classroomGroupsStudents {
+        items {
+          id
+          classRoomGroupID
+          studentEmail
+          studentAuthId
+          studentType
+          studentNote
+          student{
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateClassroomGroups = /* GraphQL */ `
+  mutation UpdateClassroomGroups(
+    $input: UpdateClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    updateClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+      groupName
+      groupType
+      advisorEmail
+      advisorAuthId
+      groupAdvisor {
+        id
+        authId
+        status
+        email
+        firstName
+        preferredName
+        lastName
+      }
+      groupLocation
+      classroomGroupsStudents {
+        items {
+          id
+          classRoomGroupID
+          studentEmail
+          studentAuthId
+          studentType
+          studentNote
+          student{
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const deleteClassroomGroups = /* GraphQL */ `
+  mutation DeleteClassroomGroups(
+    $input: DeleteClassroomGroupsInput!
+    $condition: ModelClassroomGroupsConditionInput
+  ) {
+    deleteClassroomGroups(input: $input, condition: $condition) {
+      id
+      classRoomID
+    }
+  }
+`;
+
+export const createClassroomGroupStudents = /* GraphQL */ `
+  mutation CreateClassroomGroupStudents(
+    $input: CreateClassroomGroupStudentsInput!
+    $condition: ModelClassroomGroupStudentsConditionInput
+  ) {
+    createClassroomGroupStudents(input: $input, condition: $condition) {
+      id
+      classRoomGroupID
+      classRoomGroup {
+        id
+        classRoomID
+        classroomGroupsStudents {
+          items {
+            id
+            classRoomGroupID
+            studentEmail
+            studentAuthId
+            studentType
+            studentNote
+            student{
+              id
+              firstName
+              preferredName
+              lastName
+              image
+            }
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const deleteClassroomGroupStudents = /* GraphQL */ `
+  mutation DeleteClassroomGroupStudents(
+    $input: DeleteClassroomGroupStudentsInput!
+    $condition: ModelClassroomGroupStudentsConditionInput
+  ) {
+    deleteClassroomGroupStudents(input: $input, condition: $condition) {
+      id
+      classRoomGroupID
+      classRoomGroup {
+        id
+        classRoomID
+        classroomGroupsStudents {
+          items {
+            id
+            classRoomGroupID
+            studentEmail
+            studentAuthId
+            studentType
+            studentNote
+            student{
+              id
+              firstName
+              preferredName
+              lastName
+              image
+            }
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

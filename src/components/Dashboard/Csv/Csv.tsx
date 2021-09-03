@@ -186,7 +186,7 @@ const Csv = (props: Csv) => {
           id: curriculumId,
         })
       );
-      let units = curriculumData?.data.getCurriculum?.syllabi?.items || [];
+      let units = curriculumData?.data.getCurriculum?.universalSyllabus?.items || [];
       units = units.map((syl: any) => {
         return { id: syl.id, name: syl.name, value: syl.name };
       });
@@ -260,7 +260,7 @@ const Csv = (props: Csv) => {
           id: unitId,
         })
       );
-      syllabusLessons = syllabusLessons?.data.getSyllabus?.lessons?.items || [];
+      syllabusLessons = syllabusLessons?.data.getUniversalSyllabus?.lessons?.items || [];
       let surveys: any = [];
       let syllabusLessonsData: any = [];
       syllabusLessons.filter((les: any) => {

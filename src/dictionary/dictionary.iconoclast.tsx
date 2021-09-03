@@ -50,6 +50,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
     INSTITUTION_INFO: 'Institute Info',
+    INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
@@ -89,6 +90,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'TBD',
     ADD_INSTITUTION: 'TBD',
     INSTITUTION_INFO: 'TBD',
+    INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
@@ -138,6 +140,7 @@ const dashboardProfileDict: any = {
       CONTACT: 'Contact Number',
       ROLE: 'Role',
       PASSWORD: 'Password',
+      PASSCODE: 'Journal Passcode',
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -154,6 +157,25 @@ const dashboardProfileDict: any = {
       CONTACT: 'Contact Number',
       SAVE: 'Save',
       CANCEL: 'Cancel',
+    },
+    CHANGE_PASSCODE: {
+      TITLE: 'Change your Passcode',
+      INFO:
+        'Passcode must be at least 4 alphanumeric characters (no spaces or special characters)',
+      OLD_PASS: 'Login Password',
+      NEW_PASS: 'New Passcode',
+      SAVE: 'Save New Passcode',
+      CANCEL: 'Cancel',
+      SUCCESS_MSG: 'Success',
+      WARN_MSG:
+        'This will log you out and take you to the reset password page, do you want to continue?',
+      CONTINUE_BTN: 'Continue',
+      ERRORS: {
+        NO_OLD_PASS: 'Please enter your password',
+        NO_NEW_PASS: 'Please enter your new password',
+        NO_CONFIRM_PASS: 'Please enter your confirmation password',
+        NOT_MATCH: 'Your new password and confirm password do not match',
+      },
     },
     CHANGE_PASSWORD: {
       TITLE: 'Change your Password',
@@ -193,6 +215,7 @@ const dashboardProfileDict: any = {
       EMAIL: 'dirección de correo electrónico',
       CONTACT: 'número de contacto',
       PASSWORD: 'contraseña',
+      PASSCODE: 'Journal Passcode',
       ROLE: 'Papel',
     },
     INSTITUTION_INFO: {
@@ -210,6 +233,25 @@ const dashboardProfileDict: any = {
       CONTACT: 'número de contacto',
       SAVE: 'Salvar',
       CANCEL: 'Cancelar',
+    },
+    CHANGE_PASSCODE: {
+      TITLE: 'Change your Passcode',
+      INFO:
+        'Passcode must be at least 4 alphanumeric characters (no spaces or special characters)',
+      OLD_PASS: 'Login Password',
+      NEW_PASS: 'New Passcode',
+      SAVE: 'Save New Passcode',
+      CANCEL: 'Cancel',
+      SUCCESS_MSG: 'Success',
+      WARN_MSG:
+        'This will log you out and take you to the reset password page, do you want to continue?',
+      CONTINUE_BTN: 'Continue',
+      ERRORS: {
+        NO_OLD_PASS: 'Please enter your old password',
+        NO_NEW_PASS: 'Please enter your new password',
+        NO_CONFIRM_PASS: 'Please enter your confirmation password',
+        NOT_MATCH: 'Your new password and confirm password do not match',
+      },
     },
     CHANGE_PASSWORD: {
       TITLE: 'Cambia tu contraseña',
@@ -236,7 +278,9 @@ const dashboardProfileDict: any = {
 
 const anthologyDict: any = {
   EN: {
+    TITLE_CONTAINER: 'Your Notebooks',
     TITLE: 'Notebook',
+    NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Class Work',
@@ -253,7 +297,9 @@ const anthologyDict: any = {
     },
   },
   ES: {
+    TITLE_CONTAINER: 'T.B.D',
     TITLE: 'Cuaderno',
+    NO_SELECTED: 'T.B.D',
     TABS: {
       A: 'Diario',
       B: 'trabajo en clase',
@@ -309,7 +355,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
     UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
-    ANTHOLOGY: 'Notebook',
+    ANTHOLOGY: 'Notebooks',
     NOTICEBOARD: 'Noticeboard',
     NOTEBOOK: 'Notebook',
     DASHBOARD: 'Dashboard',
@@ -873,6 +919,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update institute details. Please try again later.',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
@@ -909,6 +956,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'TBD',
+      typerequired: 'TBD',
       unabletoupdate: 'TBD',
       uploaderr: 'TBD',
       deleterr: 'TBD',
@@ -1389,7 +1437,7 @@ const RoomEDITdict: any = {
   EN: {
     TITLE: 'Edit Classroom',
     SUBTITLE: 'Edit Classroom information',
-    HEADING: 'CLASSROOM INFORMATION',
+    HEADING: 'Classroom information',
     NAME_LABEL: 'Classroom Name',
     NAME_PLACEHOLDER: 'Add Classroom name',
     TEACHER_LABEL: 'Teacher',
@@ -1402,6 +1450,18 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
+    CONFERENCE_CALL_LINK_LABEL: 'Conference link',
+    CONFERENCE_CALL_LINK_PLACEHOLDER: 'Enter zoom, teams or meets link here',
+    LOCATION_LABEL: 'Classroom location',
+    LOCATION_PLACEHOLDER: 'Enter location here',
+    CLASS_DETAILS_TAB_HEADING: 'Class Details',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
+    CLASS_DYNAMICS_TAB_DESCRIPTION:
+      'Manage subject proficiency & create course partners and student groups',
+    CLASS_UNIT_PLANNER_TAB_HEADING: 'Unit Planner',
+    CLASS_UNIT_PLANNER_TAB_DESCRIPTION:
+      'Set the schedule for your class and confirm lesson dates',
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
       unabletofetch: 'Unable to fetch institution list. Please try again later.',
@@ -1448,6 +1508,16 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'TBD',
     MAXSTUDENT_LABEL: 'TBD',
     MAXSTUDENT_PLACHOLDER: 'TBD',
+    CONFERENCE_CALL_LINK_LABEL: 'TBD',
+    CONFERENCE_CALL_LINK_PLACEHOLDER: 'TBD',
+    LOCATION_LABEL: 'TBD',
+    LOCATION_PLACEHOLDER: 'TBD',
+    CLASS_DETAILS_TAB_HEADING: 'TBD',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
+    CLASS_DYNAMICS_TAB_HEADING: 'TBD',
+    CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
+    CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
+    CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -1474,6 +1544,112 @@ const RoomEDITdict: any = {
       SAVE: 'TBD',
       SAVING: 'TBD',
       CANCEL: 'TBD',
+    },
+  },
+};
+
+const RoomDetailsDict: any = {
+  EN: {
+    COURSE_DETAILS: 'Course Details',
+    COURSE_FREQUENCY: 'Course Schedule',
+    COURSE_PARTNERS: 'Course Partners',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency',
+  },
+  ES: {
+    COURSE_DETAILS: 'TBD',
+    COURSE_FREQUENCY: 'TBD',
+    COURSE_PARTNERS: 'TBD',
+    SUBJECT_PROFICIENCY: 'TBD',
+  },
+};
+
+const SubjectProficiencyDict: any = {
+  EN: {
+    NO_GROUP_MESSAGE: 'No group added',
+  },
+  ES: {
+    NO_GROUP_MESSAGE: 'TBD',
+  },
+};
+
+const GroupFormDict: any = {
+  EN: {
+    HEADING: 'Group Details',
+    LABELS: {
+      GROUP_NAME: 'Group name',
+      ADVISOR: 'Advisor',
+      LOCATION: 'Location',
+      STUDENTS: 'Students',
+    },
+    PLACEHOLDERS: {
+      GROUP_NAME: 'Enter Group name',
+      ADVISOR: 'Select advisor for group',
+      LOCATION: 'Enter location',
+    },
+    MESSAGES: {
+      GROUP_NAME: 'Group name is required',
+      GROUP_ADVISOR: 'Group advisor is required',
+    },
+  },
+  ES: {
+    HEADING: 'TBD',
+    LABELS: {
+      GROUP_NAME: 'TBD',
+      ADVISOR: 'TBD',
+      LOCATION: 'TBD',
+      STUDENTS: 'TBD',
+    },
+    PLACEHOLDERS: {
+      GROUP_NAME: 'TBD',
+      ADVISOR: 'TBD',
+      LOCATION: 'TBD',
+    },
+    MESSAGES: {
+      GROUP_NAME: 'TBD',
+      GROUP_ADVISOR: 'TBD',
+    },
+  },
+};
+
+const CourseScheduleDict: any = {
+  EN: {
+    HEADING: 'Schedule Details',
+    PLACEHOLDERS: {
+      START_DATE: 'Start date',
+      END_DATE: 'End date',
+      START_TIME: 'Start Time',
+      END_TIME: 'End Time',
+      WEEK_DAY: 'Week Day',
+      FREQUENCY: 'Frequency',
+      CONFERENCE_CALL_LINK: 'Conference call link',
+      LOCATION: 'Location',
+      ADDITIONAL_NOTES: 'Notes regarding schedule',
+    },
+    MESSAGES: {
+      START_DATE: 'Start date is required',
+      END_DATE: 'End date is required',
+      START_TIME: 'Start time is required',
+      END_TIME: 'End time is required',
+    },
+  },
+  ES: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      WEEK_DAY: 'TBD',
+      FREQUENCY: 'TBD',
+      CONFERENCE_CALL_LINK: 'TBD',
+      LOCATION: 'TBD',
+      ADDITIONAL_NOTES: 'TBD',
+    },
+    MESSAGES: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      startTime: 'TBD',
+      endTime: 'TBD',
     },
   },
 };
@@ -2973,7 +3149,7 @@ const AddNewLessonFormDict: any = {
       MEASUREMENTALREADYADDED: 'This measurment is already added.',
       MEASUREMENTADDSUCCESS: 'Lesson measurment list updated successfully.',
       NODESIGNEROPTION: 'Select Institution first',
-      LOADING: 'Loading...'
+      LOADING: 'Loading...',
     },
     NEXT: 'Next',
     SAVE: 'Save',
@@ -3418,10 +3594,12 @@ const LessonsListDict: any = {
     LESSONTITLE: 'Lesson Title',
     TYPE: 'Type',
     LANGUAGE: 'Language',
-    ACTION: 'Action',
+    ACTION: 'Actions',
     NORESULT: 'No Results',
     BUTTON: {
       ADD: 'Add New Lesson',
+      START_CLONING: 'Start cloning',
+      CLONING: 'cloning',
     },
   },
   ES: {
@@ -3436,6 +3614,8 @@ const LessonsListDict: any = {
     NORESULT: 'TBD',
     BUTTON: {
       ADD: 'TBD',
+      START_CLONING: 'TBD',
+      CLONING: 'TBD',
     },
   },
 };
@@ -3517,6 +3697,35 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const General: any = {
+  EN: {
+    SENTIMENT: {
+      TITLE: "How you've been?",
+      MODAL_TITLE: 'The Backstory',
+      EMOJIS: {
+        AWFUL: 'awful',
+        BAD: 'bad',
+        OKAY: 'okay',
+        GOOD: 'good',
+        GREAT: 'great',
+      },
+    },
+  },
+  ES: {
+    SENTIMENT: {
+      MODAL_TITLE: 'TBD',
+      TITLE: 'TBD',
+      EMOJIS: {
+        AWFUL: 'TBD',
+        BAD: 'TBD',
+        OKAY: 'TBD',
+        GOOD: 'TBD',
+        GREAT: 'TBD',
+      },
+    },
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3528,6 +3737,7 @@ export {
   CsvDict,
   paginationPage,
   BUTTONS,
+  General,
   BreadcrumsTitles,
   appDict,
   anthologyDict,
@@ -3551,6 +3761,9 @@ export {
   RoomBuilderdict,
   EditCurriculardict,
   RoomEDITdict,
+  RoomDetailsDict,
+  GroupFormDict,
+  CourseScheduleDict,
   curricularviewdict,
   CHECKPOINTSDICT,
   LEARINGOBJECTIVEDICT,

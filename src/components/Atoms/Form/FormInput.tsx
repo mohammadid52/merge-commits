@@ -24,7 +24,7 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
-
+  inputRef?: any;
   className?: string;
 }
 
@@ -49,6 +49,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dark,
     min,
     max,
+    inputRef,
     onKeyDown,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
@@ -60,13 +61,15 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      <label
-        htmlFor={id}
-        className={`${
-          dark ? 'text-white' : 'text-gray-700'
-        } block text-xs font-semibold leading-5 `}>
-        {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className={`${
+            dark ? 'text-white' : 'text-gray-700'
+          } block text-xs font-semibold leading-5 `}>
+          {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
+        </label>
+      )}
 
       {textarea ? (
         <textarea
@@ -82,6 +85,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           disabled={disabled}
           maxLength={maxLength}
           name={name}
+          ref={inputRef}
           onKeyDown={(e) => doResize(e.target)}
           onChange={onChange}
           placeholder={placeHolder}
@@ -92,6 +96,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           type={type}
           min={type === 'number' ? min : undefined}
           max={type === 'number' ? max : undefined}
+          ref={inputRef}
           id={id}
           maxLength={maxLength}
           name={name}

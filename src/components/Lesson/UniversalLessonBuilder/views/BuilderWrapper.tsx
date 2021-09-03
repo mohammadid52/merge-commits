@@ -58,6 +58,7 @@ import {capitalizeFirstLetter} from '../../../../utilities/functions';
 import WritingExerciseModal from '../UI/ModalDialogs/WritingExerciseModal';
 import Info from '../../../Atoms/Alerts/Info';
 import Buttons from '../../../Atoms/Buttons';
+import DownloadModal from '../UI/ModalDialogs/DownloadModal';
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalBuilderStep?: string;
@@ -384,6 +385,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
       case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
+      case FORM_TYPES.DOWNLOAD:
+        return <DownloadModal {...commonProps} />;
       case FORM_TYPES.POEM:
       case 'poem-form-default':
         return <LinestarterModalDialog {...commonProps} />;

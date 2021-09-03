@@ -2,8 +2,11 @@ import React, {useState, useContext, useEffect, Suspense} from 'react';
 import {Auth} from '@aws-amplify/auth';
 import {useCookies} from 'react-cookie';
 import API, {graphqlOperation} from '@aws-amplify/api';
+
 import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
+import * as customMutations from '../customGraphql/customMutations';
+import * as customQueries from '../customGraphql/customQueries';
+
 import {GlobalContext} from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
@@ -13,8 +16,6 @@ import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
 import {getAsset} from '../assets';
 
-import * as customMutations from '../customGraphql/customMutations';
-import * as customQueries from '../customGraphql/customQueries';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
@@ -73,6 +74,14 @@ const MainRouter: React.FC = () => {
           graphqlOperation(queries.getPerson, {email: email, authId: sub})
         );
         userInfo = userInfo.data.getPerson;
+        let instInfo: any = {}
+        if (userInfo.role !== 'ST') {
+          instInfo = await API.graphql(
+            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+              filter: {staffAuthID: {eq: sub}},
+            })
+          );
+        }
         updateAuthState(true);
         dispatch({
           type: 'PREV_LOG_IN',
@@ -90,6 +99,11 @@ const MainRouter: React.FC = () => {
             role: userInfo.role,
             image: userInfo.image,
             location: userInfo?.location?.items,
+            lastLoggedIn: userInfo.lastLoggedIn,
+            lastLoggedOut: userInfo.lastLoggedOut,
+            associateInstitute: instInfo?.data?.listStaffs?.items.filter(
+              (item:any) => item.institution
+            ) || [],
           },
         });
       } else {
@@ -142,8 +156,6 @@ const MainRouter: React.FC = () => {
     }
   };
 
-  const [justLoggedIn, setJustLoggedIn] = useState(false);
-
   {
     return (
       <div
@@ -157,14 +169,9 @@ const MainRouter: React.FC = () => {
                 <ComponentLoading />
               </div>
             }>
-            {authState === 'loggedIn' && (
-              <AuthRoutes justLoggedIn={justLoggedIn} updateAuthState={updateAuthState} />
-            )}
+            {authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />}
             {authState === 'notLoggedIn' && (
-              <UnauthRoutes
-                setJustLoggedIn={setJustLoggedIn}
-                updateAuthState={updateAuthState}
-              />
+              <UnauthRoutes updateAuthState={updateAuthState} />
             )}
           </Suspense>
         )}
