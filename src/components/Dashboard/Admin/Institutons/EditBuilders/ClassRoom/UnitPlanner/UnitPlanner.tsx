@@ -13,11 +13,15 @@ import {IImpactLog} from '../ClassRoomHolidays';
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
   Monthly: {unit: 'month', step: 1},
+  Trimestral: {unit: 'month', step: 4},
+  Quarterly: {unit: 'month', step: 3},
+  Semestral: {unit: 'month', step: 6},
   'M/W/F': {unit: 'day', step: 1},
   'Tu/Th': {unit: 'day', step: 1},
+  'One Time': {unit: 'day', step: 1},
 };
 
-const UnitPlanner = ({roomData}: any) => {
+const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
@@ -74,6 +78,12 @@ const UnitPlanner = ({roomData}: any) => {
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
+      console.log(
+        isOccupied,
+        'isOccupied',
+        iteration,
+        moment(date).add(i, frequency).day()
+      );
       if (
         !isOccupied &&
         (roomData.frequency !== 'M/W/F' ||
@@ -83,8 +93,11 @@ const UnitPlanner = ({roomData}: any) => {
           (roomData.frequency === 'Tu/Th' &&
             [2, 4].includes(moment(date).add(i, frequency).day())))
       ) {
+        console.log('inside finalization if');
+
         if (iteration === 1) {
           startDate = new Date(moment(date).add(i, frequency).toDate());
+          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
           estEndDate = new Date(moment(date).add(i, frequency).toDate());
@@ -124,6 +137,8 @@ const UnitPlanner = ({roomData}: any) => {
               item.lesson.duration,
               scheduleDates
             );
+            console.log(startDate, estEndDate, 'startDate, estEndDate');
+
             item.startDate = startDate;
             item.estEndDate = estEndDate;
 
@@ -163,6 +178,7 @@ const UnitPlanner = ({roomData}: any) => {
         },
       }))
     );
+    saveRoomDetails();
   };
 
   return (
@@ -294,7 +310,7 @@ const UnitPlanner = ({roomData}: any) => {
           transparent
         />
         <Buttons
-          // disabled={loading}
+          disabled={saving}
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
           onClick={calculateSchedule}

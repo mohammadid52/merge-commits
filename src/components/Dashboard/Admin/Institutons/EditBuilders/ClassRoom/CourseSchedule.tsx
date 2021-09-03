@@ -41,6 +41,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS, CourseScheduleDict} = useDictionary(clientKey);
 
+  const [saving, setSaving] = useState(false);
   const [timeIntervalOptions, setTimeIntervalOptions] = useState(timeIntervals());
   const [errors, setErrors] = useState({
     startDate: '',
@@ -142,7 +143,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {name: classRoomName = '', id} = roomData || {};
 
   const saveRoomDetails = async () => {
-    // setLoading(true);
+    setSaving(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -161,7 +162,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
         );
-      } catch (error) {}
+        setSaving(false);
+      } catch (error) {
+        setSaving(false);
+      }
     }
   };
 
@@ -332,7 +336,16 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           <ClassRoomHolidays />
         </div>
       </div>
-      <UnitPlanner roomData={{...roomData, ...scheduleData}} />
+      <UnitPlanner
+        roomData={{
+          ...roomData,
+          ...scheduleData,
+          startDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.startDate)),
+          endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate)),
+        }}
+        saveRoomDetails={saveRoomDetails}
+        saving={saving}
+      />
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"
