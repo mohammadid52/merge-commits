@@ -103,7 +103,7 @@ const LessonsListRow = (props: LessonsListRow) => {
             rounded="lg"
             setShow={setShowMenu}
             content={
-              <dl className="grid grid-cols-1 gap-y-2">
+              <dl className="grid grid-cols-1 gap-y-3">
                 <div className="col-span-1">
                   <dt onClick={() => handleLessonsEdit(type)} className={`${textClass}`}>
                     Edit
@@ -111,7 +111,7 @@ const LessonsListRow = (props: LessonsListRow) => {
                 </div>
                 <div className="col-span-1">
                   <dt onClick={onCloneLesson} className={`${textClass}`}>
-                    Clone lesson
+                    Clone Lesson
                   </dt>
                 </div>
               </dl>
