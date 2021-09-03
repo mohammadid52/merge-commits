@@ -34,14 +34,36 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
   }, [roomData.curricular?.id]);
 
   const fetchClassRoomSyllabus = async () => {
-    setLoading(true);
-    const list: any = await API.graphql(
-      graphqlOperation(customQueries.getClassroomSyllabus, {
-        id: roomData.curricular?.id,
-      })
-    );
-    setSyllabusList(list.data?.getCurriculum?.universalSyllabus.items || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.getClassroomSyllabus, {
+          id: roomData.curricular?.id,
+        })
+      );
+      const result: any = list.data?.getCurriculum;
+      setSyllabusList(
+        result?.universalSyllabus.items
+          ?.map((item: any) => ({
+            ...item,
+            index: result?.universalSyllabusSeq?.indexOf(item.id),
+            lessons: {
+              ...item.lessons,
+              items: item.lessons?.items
+                .map((t: any) => {
+                  let index = result?.universalLessonsSeq?.indexOf(t.id);
+                  return {...t, index};
+                })
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+            },
+          }))
+          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)) || []
+      );
+      setLoading(false);
+    } catch (error) {
+      console.log(error, 'error');
+      setLoading(false);
+    }
   };
 
   const getImpactLogs = async () => {

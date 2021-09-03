@@ -38,6 +38,8 @@ const ClassRoomForm = (props: EditRoomProps) => {
     classRoom: {id: '', name: '', value: ''},
     curricular: {id: '', name: '', value: ''},
     maxPersons: '',
+    conferenceCallLink: '',
+    location: ''
   };
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
@@ -545,6 +547,8 @@ const ClassRoomForm = (props: EditRoomProps) => {
             .email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
+          location: roomData.location,
+          conferenceCallLink: roomData.conferenceCallLink,
         };
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
@@ -554,9 +558,14 @@ const ClassRoomForm = (props: EditRoomProps) => {
         await saveRoomTeachers(roomData.id);
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
         setUnsavedChanges(false);
-        history.push(
-          `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
-        );
+        setMessages({
+          show: true,
+          message: RoomEDITdict[userLanguage]['messages']['classupdate'],
+          isError: false,
+        });
+        // history.push(
+        //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
+        // );
       } catch {
         setMessages({
           show: true,
@@ -687,6 +696,8 @@ const ClassRoomForm = (props: EditRoomProps) => {
           // ***** UNCOMMENT THIS ******
           // coTeachers: savedData.coTeachers,
           maxPersons: savedData.maxPersons,
+          location: savedData.location,
+          conferenceCallLink: savedData.conferenceCallLink,
         });
         setPrevName(savedData.name);
         setSelectedCurrID(curricularId);
@@ -729,7 +740,16 @@ const ClassRoomForm = (props: EditRoomProps) => {
     // getInstitutionList();
   }, []);
 
-  const {name, curricular, classRoom, maxPersons, institute, teacher} = roomData;
+  const {
+    name,
+    curricular,
+    classRoom,
+    maxPersons,
+    // institute,
+    teacher,
+    conferenceCallLink,
+    location: roomLocation,
+  } = roomData;
 
   return (
     <div className="">
@@ -834,6 +854,28 @@ const ClassRoomForm = (props: EditRoomProps) => {
                     placeholder={RoomEDITdict[userLanguage]['MAXSTUDENT_PLACEHOLDER']}
                     min="1"
                     max="256"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="px-3 py-4">
+                  <FormInput
+                    label={RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_LABEL}
+                    name="conferenceCallLink"
+                    value={conferenceCallLink}
+                    onChange={editInputField}
+                    placeHolder={
+                      RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
+                    }
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <FormInput
+                    label={RoomEDITdict[userLanguage].LOCATION_LABEL}
+                    name="location"
+                    value={roomLocation}
+                    onChange={editInputField}
+                    placeHolder={RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER}
                   />
                 </div>
               </div>

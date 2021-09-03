@@ -154,10 +154,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           startTime: moment(scheduleData.startTime, 'h:mm A').format('hh:mm:ss'),
           endTime: moment(scheduleData.endTime, 'h:mm A').format('hh:mm:ss'),
           frequency: scheduleData.frequency,
-          location: scheduleData.location,
+          // location: scheduleData.location,
           notes: scheduleData.notes,
           weekDay: scheduleData.weekDay,
-          conferenceCallLink: scheduleData.conferenceCallLink,
+          // conferenceCallLink: scheduleData.conferenceCallLink,
         };
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
@@ -271,7 +271,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex mt-4">
+            {/* <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
                 <IoGlobeOutline className="w-6 h-6 mr-2" />
               </span>
@@ -299,6 +299,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 />
               </div>
             </div>
+             */}
             <div className="flex mt-4">
               <span className="w-auto inline-flex">
                 <CgNotes className="w-6 h-6 mr-2" />

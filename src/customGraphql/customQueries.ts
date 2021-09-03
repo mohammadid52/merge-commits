@@ -3917,6 +3917,7 @@ export const getClassroomSyllabus = /* GraphQL */ `
     getCurriculum(id: $id) {
       id
       institutionID
+      universalSyllabusSeq
       universalSyllabus {
         items {
           id
@@ -3931,6 +3932,7 @@ export const getClassroomSyllabus = /* GraphQL */ `
               }
             }
           }
+          universalLessonsSeq
           status
           createdAt
           updatedAt
