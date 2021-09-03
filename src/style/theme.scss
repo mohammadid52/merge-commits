@@ -147,6 +147,7 @@ $curateColors: (
   }
 }
 
+// -----------BACKGROUND------------- //
 .iconoclast .iconoclast\:bg-main {
   background-color: $iconoclast;
 }
@@ -155,12 +156,24 @@ $curateColors: (
   background-color: $curate;
 }
 
+// -----------BORDER------------- //
+
 .iconoclast .iconoclast\:border-main {
   border-color: $iconoclast;
 }
 
 .curate .curate\:border-main {
   border-color: $curate;
+}
+
+// -----------TEXT------------- //
+
+.iconoclast .iconoclast\:text-main {
+  color: $iconoclast;
+}
+
+.curate .curate\:text-main {
+  color: $curate;
 }
 
 @include iconoclast('bg');
