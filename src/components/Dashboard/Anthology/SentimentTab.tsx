@@ -193,7 +193,7 @@ const SentimentTab = () => {
     };
   }, []);
 
-  const emojiGifs = getAsset('general');
+  const emojiGifs = getAsset('general', 'emoji');
 
   const [view, setView] = useState('emoji');
 

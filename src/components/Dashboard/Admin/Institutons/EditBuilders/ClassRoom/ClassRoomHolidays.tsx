@@ -14,18 +14,23 @@ import Loader from '../../../../../Atoms/Loader';
 
 import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 
-interface IImpactLog {
+export interface IImpactLog {
   impactDate: Date;
   reasonComment: string;
   lessonImpact: number;
   adjustment: string;
 }
 
-const ClassRoomHolidays = () => {
+const ClassRoomHolidays = ({
+  logsChanged,
+  setLogsChanged
+}: any) => {
   const params = useQuery(location.search);
   const roomId = params.get('id');
 
+  const [dateOrder, setDateOrder] = useState('asc');
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -43,10 +48,14 @@ const ClassRoomHolidays = () => {
     }
   }, []);
 
-  const sortRecords = (data:any) => {
-    return data ? data.sort(
-      (a: IImpactLog, b: IImpactLog) => +new Date(a.impactDate) - +new Date(b.impactDate)
-    ) : []; 
+  const sortRecords = (data:any, order:string = 'asc') => {
+    return data
+      ? data.sort((a: IImpactLog, b: IImpactLog) =>
+          order === 'asc'
+            ? +new Date(a.impactDate) - +new Date(b.impactDate)
+            : +new Date(b.impactDate) - +new Date(a.impactDate)
+        )
+      : []; 
   }
 
   const getImpactLogs = async () => {
@@ -61,10 +70,12 @@ const ClassRoomHolidays = () => {
       setLoading(false);
     }
   };
+
   const handleEdit = (index: number) => {
     setActiveIndex(index);
     setFormOpen(true);
   };
+
   const handleOnDragEnd = () => {};
 
   const postMutation = (data: any) => {
@@ -111,27 +122,35 @@ const ClassRoomHolidays = () => {
     <div>
       <div className="flex justify-between">
         <div className="text-lg font-medium mb-4">Schedule Impact Log</div>
-        <AddButton
-          className="ml-4 py-1 mb-2"
-          label={'Add'}
-          onClick={() => setFormOpen(true)}
-        />
+        <AddButton className="py-1" label={'Add'} onClick={() => setFormOpen(true)} />
       </div>
       <div>
         <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
-          <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div
+            className="w-2/10 flex px-4 py-3 items-center bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal"
+            onClick={() =>
+              sortRecords(lessonImpactLogs, dateOrder === 'desc' ? 'asc' : 'desc')
+            }>
             Date
+            <span className="inline-flex items-center ml-1 cursor-pointer">
+              <span className={`w-auto ${dateOrder === 'desc' ? 'text-dark-gray' : ''}`}>
+                <FaArrowDown className="w-2" />
+              </span>
+              <span className={`w-auto ${dateOrder === 'asc' ? 'text-dark-gray' : ''}`}>
+                <FaArrowUp className="w-2" />
+              </span>
+            </span>
           </div>
-          <div className="w-4/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div className="w-4/10 flex items-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Reason
           </div>
-          <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div className="w-2/10 flex items-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Time Impact
           </div>
-          <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div className="w-2/10 flex items-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Lesson Adjustment
           </div>
-          <div className="w-2/10 flex justify-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+          <div className="w-2/10 flex items-center justify-center px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
             Action
           </div>
         </div>
@@ -143,7 +162,7 @@ const ClassRoomHolidays = () => {
             </div>
           </div>
         ) : (
-          <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
+          <div className="mb-4 w-full m-auto max-h-48 overflow-y-auto">
             {lessonImpactLogs.length ? (
               // <DragDropContext onDragEnd={handleOnDragEnd}>
               //   <Droppable droppableId="partContent">
@@ -163,16 +182,16 @@ const ClassRoomHolidays = () => {
                       // {...provided.draggableProps}
                       // {...provided.dragHandleProps}
                     >
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {new Date(item.impactDate).toLocaleDateString()}
                       </div>
-                      <div className="w-4/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.reasonComment || '-'}
                       </div>
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.lessonImpact * 100}%
                       </div>
-                      <div className="w-2/10 flex px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                      <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.adjustment || '-'}
                       </div>
                       <div className="w-2/10 flex px-4 py-3 flex justify-center">

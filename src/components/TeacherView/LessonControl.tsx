@@ -622,7 +622,7 @@ const LessonControl = () => {
           <div
             className={`${
               fullscreen ? 'hidden' : ''
-            } w-full lg:w-4/10 min-w-100 lg:max-w-160 h-1/4 lg:h-full flex flex-col items-center `}>
+            } w-full lg:w-3/10 min-w-100 h-1/4 lg:h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
@@ -652,7 +652,7 @@ const LessonControl = () => {
                 handleHomePopup={handleHomePopup}
               />
             </div> */}
-            <div className="relative w-full h-12 flex flex-col items-center z-100">
+            <div className="relative w-full h-16 lg:h-12 flex flex-col items-center z-100">
               <LessonControlBar handlePageChange={handlePageChange} />
             </div>
           </div>
@@ -660,8 +660,8 @@ const LessonControl = () => {
           {/* RIGHT SECTION */}
           <div
             className={`relative 
-            ${fullscreen ? 'w-full' : 'w-6/10'} 
-            w-6/10 w-full h-full flex flex-col items-center`}
+            ${fullscreen ? 'w-full' : 'w-full lg:w-7/10'} 
+            h-full flex flex-col items-center`}
             style={mobile && !fullscreen ? {height: 'calc(75% - 80px)'} : null}>
             <StudentWindowTitleBar
               handleFullscreen={handleFullscreen}

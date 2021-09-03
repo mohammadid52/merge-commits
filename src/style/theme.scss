@@ -44,7 +44,34 @@ $curateColors: (
   '900': #1e3a8a,
 );
 
+// How to use them
+
+// #------ WITHOUT THESE CLASSES ------#
+// first import state then get theme value and then render classes based on theme
+// for eg. theme === iconoclast ? '#000': '#fff'
+
+// #------ WITH THESE CLASSES ------#
+// No need to import anything
+// iconoclast:bg-500 curate:bg-500 OR iconoclast:border-300 curate:border-300
+// classes will automatically render based on theme
+
 /* stylelint-disable at-rule-no-unknown */
+
+// ##--------  EXAMPLE CLASSES  ---------##
+
+// Background
+// iconoclast:bg-400 curate:bg-400
+
+// Background hover
+// hover:iconoclast:bg-400 hover:curate:bg-400
+
+// Border
+// iconoclast:border-500 curate:border-500
+
+// Border hover
+// hover:iconoclast:border-400 hover:curate:border-400
+
+// ---- Same works with text classes
 
 @mixin iconoclast($util: 'bg') {
   @each $themeName, $themeValue in $iconoclastColors {
@@ -120,6 +147,7 @@ $curateColors: (
   }
 }
 
+// -----------BACKGROUND------------- //
 .iconoclast .iconoclast\:bg-main {
   background-color: $iconoclast;
 }
@@ -128,12 +156,24 @@ $curateColors: (
   background-color: $curate;
 }
 
+// -----------BORDER------------- //
+
 .iconoclast .iconoclast\:border-main {
   border-color: $iconoclast;
 }
 
 .curate .curate\:border-main {
   border-color: $curate;
+}
+
+// -----------TEXT------------- //
+
+.iconoclast .iconoclast\:text-main {
+  color: $iconoclast;
+}
+
+.curate .curate\:text-main {
+  color: $curate;
 }
 
 @include iconoclast('bg');

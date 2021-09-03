@@ -469,10 +469,12 @@ export const frequencyOptions: any = [
   {id: 1, name: 'One Time'},
   {id: 2, name: 'Weekly'},
   {id: 3, name: 'Bi-weekly'},
-  {id: 3, name: 'Monthly'},
-  {id: 3, name: 'Trimestral'},
-  {id: 3, name: 'Quarterly'},
-  {id: 3, name: 'Semestral'},
+  {id: 8, name: 'M/W/F'},
+  {id: 9, name: 'Tu/Th'},
+  {id: 4, name: 'Monthly'},
+  {id: 5, name: 'Trimestral'},
+  {id: 6, name: 'Quarterly'},
+  {id: 7, name: 'Semestral'},
 ];
 
 export const weekdaysOption: any = [

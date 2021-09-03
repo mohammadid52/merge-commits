@@ -10,7 +10,7 @@ import {IoIosAdd} from 'react-icons/io';
 import {reorder, stringToHslColor} from '../../../../../../../utilities/strings';
 
 import Buttons from '../../../../../../Atoms/Buttons';
-import {DeleteActionBtn} from '../../../../../../Atoms/Buttons/DeleteActionBtn';
+
 import Modal from '../../../../../../Atoms/Modal';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
@@ -25,6 +25,7 @@ import {getAsset} from '../../../../../../../assets';
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
 import AddMeasurement from '../TabsActions/AddMeasurement';
 import AddTopic from '../TabsActions/AddTopic';
+import {DeleteActionBtn} from '../../../../../../Atoms/Buttons/DeleteActionBtn';
 
 declare global {
   interface Array<T> {

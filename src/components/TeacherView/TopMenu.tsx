@@ -108,7 +108,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
           />
 
           {/* RIGHT */}
-          <div className="relative w-6/10 lg:w-full h-full flex flex-row justify-between items-center pl-2">
+          <div className="relative w-full lg:w-7/10 h-full flex flex-row justify-between items-center pl-2">
             <div className="h-8 align-middle font-bold text-xs leading-8 ">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
             </div>
@@ -141,7 +141,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         <div
           className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
           {/* LEFT */}
-          <div className="h-full w-4/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
+          <div className="h-full w-3/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
             {basicDetailsElements()}
           </div>
 
@@ -150,7 +150,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
           {/* CONTROL START */}
           <div
             className="relative 
-            w-6/10 lg:w-full h-20 flex flex-col items-center z-100">
+            w-full lg:w-7/10 h-20 flex flex-col items-center z-100">
             <LessonControlBar handlePageChange={handlePageChange} />
           </div>
           {/* CONTROL END */}

@@ -1475,10 +1475,17 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max participants',
+    CONFERENCE_CALL_LINK_LABEL: 'Conference link',
+    CONFERENCE_CALL_LINK_PLACEHOLDER: 'Enter zoom, teams or meets link here',
+    LOCATION_LABEL: 'Classroom location',
+    LOCATION_PLACEHOLDER: 'Enter location here',
     CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',
+    CLASS_UNIT_PLANNER_TAB_HEADING: 'Unit Planner',
+    CLASS_UNIT_PLANNER_TAB_DESCRIPTION:
+      'Set the schedule for your class and confirm lesson dates',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
       unabletofetch: 'Unable to fetch organization list. Please try again later.',
@@ -1523,10 +1530,16 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'TBD',
     MAXSTUDENT_LABEL: 'TBD',
     MAXSTUDENT_PLACHOLDER: 'TBD',
+    CONFERENCE_CALL_LINK_LABEL: 'TBD',
+    CONFERENCE_CALL_LINK_PLACEHOLDER: 'TBD',
+    LOCATION_LABEL: 'TBD',
+    LOCATION_PLACEHOLDER: 'TBD',
     CLASS_DETAILS_TAB_HEADING: 'TBD',
     CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
     CLASS_DYNAMICS_TAB_HEADING: 'TBD',
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
+    CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
+    CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -1623,7 +1636,7 @@ const CourseScheduleDict: any = {
       FREQUENCY: 'Frequency',
       CONFERENCE_CALL_LINK: 'Conference call link',
       LOCATION: 'Location',
-      ADDITIONAL_NOTES: 'Additional Notes',
+      ADDITIONAL_NOTES: 'Notes regarding schedule',
     },
     MESSAGES: {
       START_DATE: 'Start date is required',
@@ -3487,10 +3500,12 @@ const LessonsListDict: any = {
     LESSONTITLE: 'Session Title',
     TYPE: 'Type',
     LANGUAGE: 'Language',
-    ACTION: 'Action',
+    ACTION: 'Actions',
     NORESULT: 'No Results',
     BUTTON: {
       ADD: 'Add New Session',
+      START_CLONING: 'Start cloning',
+      CLONING: 'cloning',
     },
   },
   ES: {
@@ -3505,6 +3520,8 @@ const LessonsListDict: any = {
     NORESULT: 'TBD',
     BUTTON: {
       ADD: 'TBD',
+      START_CLONING: 'TBD',
+      CLONING: 'TBD',
     },
   },
 };
