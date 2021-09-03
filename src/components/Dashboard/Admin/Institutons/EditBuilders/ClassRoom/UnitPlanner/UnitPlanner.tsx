@@ -121,7 +121,7 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
         lessons: {
           ...syllabus.lessons,
           items: syllabus.lessons.items.map((item: any) => {
-            if (1 - count < item.lesson.duration) {
+            if (count !== 0 && 1 - count < item.lesson.duration) {
               lastOccupiedDate = moment(lastOccupiedDate).add(
                 frequencyMapping[roomData.frequency].step,
                 frequencyMapping[roomData.frequency].unit
