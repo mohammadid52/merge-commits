@@ -3890,3 +3890,58 @@ export const listClassroomGroupss = /* GraphQL */ `
     }
   }
 `;
+
+export const getAssignedInstitutionToStaff = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+        }
+        staffMember {
+          firstName
+          lastName
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getClassroomSyllabus = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      universalSyllabusSeq
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          lessons {
+            items {
+              id
+              lesson{
+                duration
+                title
+              }
+            }
+          }
+          universalLessonsSeq
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+      createdAt
+      updatedAt
+    }
+  }
+`;

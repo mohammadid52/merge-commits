@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {CgNotes} from 'react-icons/cg';
-import {FiClock, FiRefreshCw} from 'react-icons/fi';
+import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 import {IoIosCalendar} from 'react-icons/io';
-import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
+// import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {FaCalendarDay} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import moment from 'moment';
 
 import * as mutation from '../../../../../../graphql/mutations';
 
@@ -16,8 +17,11 @@ import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
 import {awsFormatDate, dateString, timeIntervals} from '../../../../../../utilities/time';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import moment from 'moment';
+
 import ClassRoomHolidays from './ClassRoomHolidays';
+import UnitPlanner from './UnitPlanner/UnitPlanner';
+// import ScheduleAlertPopUp from './ScheduleAlertPopUp';
+import Modal from '../../../../../Atoms/Modal';
 
 export interface ICourseScheduleProps {
   roomData: any;
@@ -39,6 +43,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS, CourseScheduleDict} = useDictionary(clientKey);
 
+  const [startDateFocus, setStartDateFocus] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [logsChanged, setLogsChanged] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [timeIntervalOptions, setTimeIntervalOptions] = useState(timeIntervals());
   const [errors, setErrors] = useState({
     startDate: '',
@@ -69,24 +77,36 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       notes,
       weekDay,
       conferenceCallLink,
+      id,
     } = roomData;
-    setScheduleData({
-      startDate: startDate ? new Date(startDate) : null,
-      endDate: endDate ? new Date(endDate) : null,
-      startTime,
-      endTime,
-      frequency,
-      location,
-      notes,
-      weekDay,
-      conferenceCallLink,
-    });
+    if (id) {
+      setScheduleData({
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
+        startTime,
+        endTime,
+        frequency,
+        location,
+        notes,
+        weekDay,
+        conferenceCallLink,
+      });
+      if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
+        setShowAlert(true);
+      }
+    }
   }, [roomData]);
 
   const handleSelection = (value: string, fieldName: string) => {
+    let valueNeedsToUpdate = {
+      [fieldName]: value,
+    };
+    if (fieldName === 'frequency' && (value === 'M/W/F' || value === 'Tu/Th')) {
+      valueNeedsToUpdate.weekDay = value === 'M/W/F' ? 'Monday' : 'Tuesday';
+    }
     setScheduleData((prevData: ICourseScheduleFields) => ({
       ...prevData,
-      [fieldName]: value,
+      ...valueNeedsToUpdate,
     }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,7 +154,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {name: classRoomName = '', id} = roomData || {};
 
   const saveRoomDetails = async () => {
-    // setLoading(true);
+    setSaving(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -145,32 +165,24 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           startTime: moment(scheduleData.startTime, 'h:mm A').format('hh:mm:ss'),
           endTime: moment(scheduleData.endTime, 'h:mm A').format('hh:mm:ss'),
           frequency: scheduleData.frequency,
-          location: scheduleData.location,
+          // location: scheduleData.location,
           notes: scheduleData.notes,
           weekDay: scheduleData.weekDay,
-          conferenceCallLink: scheduleData.conferenceCallLink,
+          // conferenceCallLink: scheduleData.conferenceCallLink,
         };
         const newRoom: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
         );
-
-        // const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        // await saveRoomTeachers(roomData.id);
-        // await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
-        // setUnsavedChanges(false);
-        // history.push(
-        //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
-        // );
+        setSaving(false);
       } catch (error) {
-        console.log(error, 'errrrrrrrrrrr');
-
-        // setMessages({
-        //   show: true,
-        //   message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-        //   isError: true,
-        // });
+        setSaving(false);
       }
     }
+  };
+
+  const onAlertClose = () => {
+    setShowAlert(false);
+    setStartDateFocus(true);
   };
 
   return (
@@ -180,12 +192,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           {classRoomName} {CourseScheduleDict[userLanguage].HEADING}
         </span>
       </div> */}
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="mt-3">
           <div className="text-lg font-medium mb-4">
             {CourseScheduleDict[userLanguage].HEADING}
           </div>
-          <div className="mt-12">
+          <div className="mt-8">
             <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
                 <IoIosCalendar className="w-6 h-6 mr-2" />
@@ -195,8 +207,11 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   date={scheduleData.startDate}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
                   onChange={(date: Date | null) => handleDateChange(date, 'startDate')}
+                  focus={startDateFocus}
                 />
-                <div className="text-red-500">{errors.startDate}</div>
+                <div className="text-xs 2xl:text-base text-red-500">
+                  {errors.startDate}
+                </div>
               </div>
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64 relative">
@@ -206,7 +221,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   minDate={scheduleData.startDate || new Date()}
                   onChange={(date: Date | null) => handleDateChange(date, 'endDate')}
                 />
-                <div className="text-red-500">{errors.endDate}</div>
+                <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
               </div>
             </div>
             <div className="flex mt-4">
@@ -222,7 +237,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_TIME}
                 />
-                <div className="text-red-500">{errors.startTime}</div>
+                <div className="text-xs 2xl:text-base text-red-500">
+                  {errors.startTime}
+                </div>
               </div>
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64">
@@ -232,28 +249,13 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_TIME}
                 />
-                <div className="text-red-500">{errors.endTime}</div>
+                <div className="text-xs 2xl:text-base text-red-500">{errors.endTime}</div>
               </div>
             </div>
             <div className="grid grid-cols-1 2xl:grid-cols-2 w-full 2xl:w-148">
               <div className="flex mt-4">
                 <span className="w-auto inline-flex items-center">
-                  <FaCalendarDay className="w-6 h-6 mr-2" />
-                </span>
-                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
-                  <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'weekDay')
-                    }
-                    selectedItem={scheduleData.weekDay}
-                    list={weekdaysOption}
-                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
-                  />
-                </div>
-              </div>
-              <div className="flex mt-4">
-                <span className="w-auto inline-flex items-center">
-                  <FiRefreshCw className="w-6 h-6 ml-1 mr-3" />
+                  <FiRefreshCw className="w-6 h-6 mr-2" />
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
@@ -266,8 +268,27 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   />
                 </div>
               </div>
+              <div className="flex mt-4">
+                <span className="w-auto inline-flex items-center">
+                  <FaCalendarDay className="w-6 h-6 ml-1 mr-3" />
+                </span>
+                <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
+                  <Selector
+                    onChange={(_: string, name: string) =>
+                      handleSelection(name, 'weekDay')
+                    }
+                    selectedItem={scheduleData.weekDay}
+                    list={weekdaysOption}
+                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
+                    disabled={
+                      scheduleData.frequency === 'M/W/F' ||
+                      scheduleData.frequency === 'Tu/Th'
+                    }
+                  />
+                </div>
+              </div>
             </div>
-            <div className="flex mt-4">
+            {/* <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
                 <IoGlobeOutline className="w-6 h-6 mr-2" />
               </span>
@@ -295,6 +316,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 />
               </div>
             </div>
+             */}
             <div className="flex mt-4">
               <span className="w-auto inline-flex">
                 <CgNotes className="w-6 h-6 mr-2" />
@@ -302,7 +324,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
                 <FormInput
                   name="notes"
-                  value={scheduleData.notes}
+                  value={scheduleData.notes || ''}
                   onChange={handleInputChange}
                   textarea
                   placeHolder={
@@ -313,7 +335,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
             </div>
           </div>
-          <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
+          {/* <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
             <Buttons
               btnClass="py-3 px-12 text-sm mr-4"
               label={BUTTONS[userLanguage]['CANCEL']}
@@ -326,12 +348,65 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
               onClick={saveRoomDetails}
             />
-          </div>
+          </div> */}
         </div>
         <div className="mt-3">
-          <ClassRoomHolidays />
+          <ClassRoomHolidays logsChanged={logsChanged} setLogsChanged={setLogsChanged} />
         </div>
       </div>
+      <UnitPlanner
+        roomData={{
+          ...roomData,
+          ...scheduleData,
+          startDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.startDate)),
+          endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate)),
+        }}
+        saveRoomDetails={saveRoomDetails}
+        saving={saving}
+        isDetailsComplete={
+          scheduleData.startDate &&
+          scheduleData.endDate &&
+          scheduleData.startTime &&
+          scheduleData.endTime &&
+          scheduleData.frequency &&
+          scheduleData.weekDay
+        }
+      />
+      {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
+        <Buttons
+          btnClass="py-3 px-12 text-sm mr-4"
+          label={BUTTONS[userLanguage]['CANCEL']}
+          // onClick={history.goBack}
+          transparent
+        />
+        <Buttons
+          // disabled={loading}
+          btnClass="py-3 px-12 text-sm ml-4"
+          label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
+          onClick={saveRoomDetails}
+        />
+      </div> */}
+      {showAlert && (
+        <Modal
+          showHeader={false}
+          showFooter={false}
+          closeAction={() => setShowAlert(false)}>
+          <div className="py-8 px-16">
+            <div className="mx-auto flex items-center justify-center rounded-full">
+              <FiAlertCircle className="w-8 h-8" />
+            </div>
+            <div className="mt-4">Enter classroom details</div>
+            <div className="flex justify-center mt-4">
+              <Buttons
+                btnClass={'abc'}
+                label={'Ok'}
+                labelClass={'leading-6'}
+                onClick={onAlertClose}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

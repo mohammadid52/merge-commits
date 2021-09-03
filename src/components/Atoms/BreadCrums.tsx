@@ -49,7 +49,8 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                       className={`mr-1 md:mr-2 cursor-pointer text-sm md:text-base ${
                         item.last ? theme.text.secondary : theme.text.default
                       }`}>
-                      {i === 0 ? item.title.toUpperCase() : item.title}
+                      {item.title}
+                      {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                     </span>
                   </div>
                 ) : (
@@ -58,7 +59,8 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                       item.last ? theme.text.secondary : theme.text.default
                     }`}
                     onClick={() => (unsavedChanges ? toggleModal() : history.goBack())}>
-                    {i === 0 ? item.title.toUpperCase() : item.title}
+                    {item.title}
+                    {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                   </span>
                 )}
                 {!item.last && (

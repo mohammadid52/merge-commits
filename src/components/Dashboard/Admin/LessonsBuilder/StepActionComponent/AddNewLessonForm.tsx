@@ -19,6 +19,7 @@ import * as mutations from '../../../../../graphql/mutations';
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 import {getAsset} from '../../../../../assets';
+import {useQuery} from '../../../../../customHooks/urlParam';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -71,6 +72,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const params = useQuery(location.search);
+  const refName = params.get('refName');
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     name: '',
@@ -353,7 +356,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATE'],
               isError: false,
               image: '',
-              imageCaption:'',
+              imageCaption: '',
               institution: '',
               languages: '',
               studentSummary: '',
@@ -378,6 +381,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       }
     }
   };
+
+  const inputRef = React.useRef();
+
+  useEffect(() => {
+    if (refName && refName === 'name') {
+      if (inputRef && inputRef?.current) {
+        // @ts-ignore
+        inputRef?.current?.focus();
+      }
+    }
+  }, [refName, inputRef]);
 
   const {
     name,
@@ -418,6 +432,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </label>
                   <FormInput
                     value={name}
+                    inputRef={inputRef}
                     id="name"
                     onChange={onInputChange}
                     name="name"
@@ -484,8 +499,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                       list={designersList}
                       onChange={selectDesigner}
                       noOptionMessage={
-                        designerListLoading ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING'] :
-                        AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
+                        designerListLoading
+                          ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING']
+                          : AddNewLessonFormDict[userLanguage]['MESSAGES'][
+                              'NODESIGNEROPTION'
+                            ]
                       }
                     />
                   </div>

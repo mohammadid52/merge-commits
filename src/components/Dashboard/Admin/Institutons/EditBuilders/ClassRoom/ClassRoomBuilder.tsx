@@ -28,6 +28,9 @@ import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepComponent';
 import ClassRoomDetails from './ClassRoomDetails';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
+import UnitPlanner from './UnitPlanner/UnitPlanner';
+import ClassRoomForm from './ClassRoomForm';
+import CourseSchedule from './CourseSchedule';
 
 interface ClassRoomBuilderProps {}
 
@@ -523,6 +526,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         );
         setRoomData({
           ...savedData,
+          institute: {
+            id: savedData.institution?.id,
+            name: savedData.institution?.name,
+            value: savedData.institution?.name,
+          },
           advisorOptions: [
             ...coTeachers.map((teacher: any) => ({
               id: teacher.teacherID,
@@ -627,17 +635,24 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       stepValue: 'overview',
     },
     {
+      title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
+      description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
+      stepValue: 'unit-planner',
+    },
+    {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
-      stepValue: 'other',
+      stepValue: 'class-dynamics',
     },
   ];
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
-        return <ClassRoomDetails roomData={roomData} />;
-      case 'other':
+        return <ClassRoomForm />;
+      case 'unit-planner':
+        return <CourseSchedule roomData={roomData} />;
+      case 'class-dynamics':
         return <CourseDynamics roomData={roomData} />;
     }
   };

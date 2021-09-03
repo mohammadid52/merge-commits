@@ -21,7 +21,6 @@ interface SyllabusListProps {
   syllabusSequence: any[];
 }
 
-
 const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 

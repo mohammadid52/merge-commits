@@ -24,7 +24,7 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
-
+  inputRef?: any;
   className?: string;
 }
 
@@ -49,6 +49,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dark,
     min,
     max,
+    inputRef,
     onKeyDown,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
@@ -84,6 +85,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           disabled={disabled}
           maxLength={maxLength}
           name={name}
+          ref={inputRef}
           onKeyDown={(e) => doResize(e.target)}
           onChange={onChange}
           placeholder={placeHolder}
@@ -94,6 +96,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           type={type}
           min={type === 'number' ? min : undefined}
           max={type === 'number' ? max : undefined}
+          ref={inputRef}
           id={id}
           maxLength={maxLength}
           name={name}

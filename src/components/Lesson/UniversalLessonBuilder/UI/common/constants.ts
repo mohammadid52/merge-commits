@@ -12,6 +12,7 @@ export const FORM_TYPES = {
   KEYWORDS: 'keywords',
   JUMBOTRON: 'jumbotron',
   CUSTOM_VIDEO: 'custom_video',
+  DOWNLOAD: 'Download',
   VIDEO: 'video',
   TAG: 'tag',
   LINKS: 'links',

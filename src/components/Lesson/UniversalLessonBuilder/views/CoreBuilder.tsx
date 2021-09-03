@@ -14,24 +14,17 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {v4 as uuidv4} from 'uuid';
 import Toolbar from '../UI/UIComponents/Toolbar';
 import * as customQueries from '../../../../customGraphql/customQueries';
-
-import {find, findLastIndex, map, remove} from 'lodash';
+import Storage from '@aws-amplify/storage';
+import {filter, find, findLastIndex, forEach, map, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
 import {IconType} from 'react-icons/lib';
 import Tooltip from '../../../Atoms/Tooltip';
-import {
-  AiOutlineDelete,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-  AiOutlineFileAdd,
-  AiOutlineFileSearch,
-  AiOutlineSave,
-} from 'react-icons/ai';
+import {AiOutlineEyeInvisible} from 'react-icons/ai';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {VscDiscard} from 'react-icons/vsc';
+import Downloadables from '../UI/UIComponents/Downloadables';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -93,8 +86,22 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {
     clientKey,
     userLanguage,
-    state: {lessonPage: {themeBackgroundColor = ''} = {}},
+    state: {user, lessonPage: {themeBackgroundColor = ''} = {}},
   } = useContext(GlobalContext);
+
+  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
+    (page: UniversalLessonPage) => page.id === selectedPageID
+  );
+
+  const downloadables =
+    selectedPageID &&
+    selectedPageDetails &&
+    selectedPageDetails.pageContent &&
+    selectedPageDetails.pageContent.length > 0
+      ? filter(selectedPageDetails.pageContent, (f) =>
+          f.id.includes('downloadable-files')
+        )
+      : [];
 
   const {
     state: {
@@ -146,7 +153,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           type="button"
           className={`${
             invert ? 'bg-indigo-600' : 'bg-transparent'
-          } ${color} mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+          } gray mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
           {Icon && <Icon className="h-5 w-5" aria-hidden="true" />}
           {text}
         </button>

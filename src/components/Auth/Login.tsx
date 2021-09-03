@@ -10,7 +10,9 @@ import {useHistory, NavLink} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import axios from 'axios';
+
 import * as queries from '../../graphql/queries';
+import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
 import useDictionary from '../../customHooks/dictionary';
 import useDeviceDetect from '../../customHooks/deviceDetect';
@@ -78,6 +80,14 @@ const Login = ({updateAuthState}: LoginProps) => {
           graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
         userInfo = userInfo.data.getPerson;
+        let instInfo: any = {};
+        if (userInfo.role !== 'ST') {
+          instInfo = await API.graphql(
+            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+              filter: {staffAuthID: {eq: user.username}},
+            })
+          );
+        }
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -88,6 +98,9 @@ const Login = ({updateAuthState}: LoginProps) => {
             onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
             role: userInfo.role,
             image: userInfo.image,
+            associateInstitute:
+              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              [],
           },
         });
         const input = {
