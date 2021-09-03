@@ -16,22 +16,29 @@ interface ModalProps {
   closeOnBackdrop?: boolean;
   hidePadding?: boolean;
   intenseOpacity?: boolean;
+  scrollHidden?: boolean;
   titleButton?: React.ReactElement;
+  customTitle?: React.ReactNode;
 }
 
 const ModalHeader = (headerProps: {
   title?: string;
   onClick?: () => void;
   titleButton?: React.ReactElement;
+  customTitle?: React.ReactNode;
   showBorder?: boolean;
 }) => {
-  const {title, onClick, showBorder, titleButton} = headerProps;
+  const {title, onClick, showBorder, customTitle, titleButton} = headerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
       <div className="flex items-center">
-        {title && <h3 className="w-auto text-xl font-semibold">{title}</h3>}
+        {title ? (
+          <h3 className="w-auto text-xl font-semibold">{title}</h3>
+        ) : customTitle ? (
+          customTitle
+        ) : null}
         {titleButton}
       </div>
 
@@ -50,14 +57,14 @@ const ModalBody = (bodyProps: {
   children: React.ReactNode;
   hidePadding?: boolean;
   closeOnBackdrop?: boolean;
-  overflowHidden?: boolean;
+  scrollHidden?: boolean;
 }) => {
-  const {children, closeOnBackdrop, hidePadding} = bodyProps;
+  const {children, closeOnBackdrop, scrollHidden, hidePadding} = bodyProps;
   return (
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto overflow-y-${hidePadding ? 'hidden' : 'scroll'}`}
+      } flex-auto overflow-y-${scrollHidden ? 'hidden' : 'scroll'}`}
       style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
@@ -96,6 +103,8 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     closeOnBackdrop = false,
     titleButton,
     hidePadding = false,
+    scrollHidden = false,
+    customTitle,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -128,12 +137,16 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}
+                customTitle={customTitle}
                 title={title}
                 onClick={closeAction}
                 showBorder={showHeaderBorder}
               />
             )}
-            <ModalBody hidePadding={hidePadding} closeOnBackdrop={closeOnBackdrop}>
+            <ModalBody
+              scrollHidden={scrollHidden}
+              hidePadding={hidePadding}
+              closeOnBackdrop={closeOnBackdrop}>
               {children}
             </ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}

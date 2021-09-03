@@ -3,7 +3,7 @@ import {CallLinkLauncher} from './Launchers/CallLinkLauncher';
 import {FloatingSideMenuProps} from './FloatingSideMenu';
 import {NotesLauncher} from './Launchers/NotesLauncher';
 import {ChatroomListLauncher} from './Launchers/ChatroomListLauncher';
-import {FilesListLauncher} from './Launchers/FilesListLauncher';
+// import {FilesListLauncher} from './Launchers/FilesListLauncher';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
 export const FloatingBar = (props: FloatingSideMenuProps) => {
@@ -96,11 +96,11 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
       {/*  />*/}
       {/*</div>*/}
 
-      <FilesListLauncher
+      {/* <FilesListLauncher
         callback={handleSectionButtons}
         menuState={menuState}
         focusSection={focusSection}
-      />
+      /> */}
 
       {/**
        *

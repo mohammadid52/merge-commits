@@ -3594,10 +3594,12 @@ const LessonsListDict: any = {
     LESSONTITLE: 'Lesson Title',
     TYPE: 'Type',
     LANGUAGE: 'Language',
-    ACTION: 'Action',
+    ACTION: 'Actions',
     NORESULT: 'No Results',
     BUTTON: {
       ADD: 'Add New Lesson',
+      START_CLONING: 'Start cloning',
+      CLONING: 'cloning',
     },
   },
   ES: {
@@ -3612,6 +3614,8 @@ const LessonsListDict: any = {
     NORESULT: 'TBD',
     BUTTON: {
       ADD: 'TBD',
+      START_CLONING: 'TBD',
+      CLONING: 'TBD',
     },
   },
 };

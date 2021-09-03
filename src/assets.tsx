@@ -103,14 +103,18 @@ const demo_assets: any = {
 };
 
 const general: any = {
-  awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
-  bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
-  okay: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
-  good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
-  great: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
-
+  emoji: {
+    awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
+    bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
+    okay:
+      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
+    good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
+    great:
+      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
+  },
   file: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/file.png',
   fileImg: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/imgFile.png',
+  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif',
 };
 
 // main logo (dashboard above sidebar)

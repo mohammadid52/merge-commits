@@ -1,8 +1,12 @@
-import React, {useContext} from 'react';
+import React, {useState} from 'react';
+import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import Popover from '../../../Atoms/Popover';
+
+interface ICloneModalProps {
+  show: boolean;
+  lessonId: string;
+}
 
 interface LessonsListRow {
   id: string;
@@ -12,14 +16,13 @@ interface LessonsListRow {
   languages: string[];
   createdAt: Date;
   updatedAt: Date;
+  setShowCloneModal?: React.Dispatch<React.SetStateAction<ICloneModalProps>>;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
   const match = useRouteMatch();
   const history = useHistory();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS} = useDictionary(clientKey);
+  const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
   const handleLessonsEdit = (type: string) => {
     // if (type === 'Lesson') {
@@ -30,7 +33,24 @@ const LessonsListRow = (props: LessonsListRow) => {
     history.push(`${match.url}/lesson/edit?lessonId=${id}`);
   };
 
-  const {id, index, title, type, languages, createdAt, updatedAt} = props;
+  const {
+    id,
+    index,
+    title,
+    type,
+    languages,
+    setShowCloneModal,
+    createdAt,
+    updatedAt,
+  } = props;
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const onCloneLesson = () => {
+    setShowCloneModal({show: true, lessonId: id});
+    setShowMenu(false);
+  };
+
   return (
     <div
       id={id}
@@ -43,11 +63,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>
       </div>
-      {/* <div className="w-1.5/10 flex items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
-        <span className="w-auto">
-          {type ? type : '--'}
-        </span>
-      </div> */}
+
       <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
       </div>
@@ -76,9 +92,38 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div>
 
       <div
-        className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`}
-        onClick={() => handleLessonsEdit(type)}>
-        <span className="w-auto">{BUTTONS[userLanguage]['EDIT']}</span>
+        className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-sm leading-5 font-medium`}>
+        <span className="w-auto">
+          <Popover
+            show={showMenu}
+            bottom={0.6}
+            dir={'top'}
+            minWidth={48}
+            minHeight={16}
+            rounded="lg"
+            setShow={setShowMenu}
+            content={
+              <dl className="grid grid-cols-1 gap-y-3">
+                <div className="col-span-1">
+                  <dt onClick={() => handleLessonsEdit(type)} className={`${textClass}`}>
+                    Edit
+                  </dt>
+                </div>
+                <div className="col-span-1">
+                  <dt onClick={onCloneLesson} className={`${textClass}`}>
+                    Clone Lesson
+                  </dt>
+                </div>
+              </dl>
+            }>
+            <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+              <BiDotsVerticalRounded
+                title="show menu"
+                className="h-full w-full text-lg text-gray-500"
+              />
+            </span>
+          </Popover>
+        </span>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
 import {IoMdAddCircleOutline} from 'react-icons/io';
-
+import {v4 as uuidv4} from 'uuid';
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -22,6 +22,11 @@ import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
 import LessonListLoader from './LessonListLoader';
+import Modal from '../../../Atoms/Modal';
+import {find} from 'lodash';
+import {UniversalLesson} from '../../../../API';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import CloneLesson from './CloneLesson';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -269,9 +274,26 @@ const LessonsList = () => {
   // if (status !== 'done') {
   //   return <LessonLoading />;
   // }
+
+  const [showCloneModal, setShowCloneModal] = useState<{show: boolean; lessonId: string}>(
+    {show: false, lessonId: ''}
+  );
+
+  const getCloneLessonDetails = () => {
+    if (showCloneModal.show) {
+      return find(currentList, ['id', showCloneModal.lessonId]);
+    }
+  };
+
   {
     return (
       <div className={`w-full h-full`}>
+        {showCloneModal.show && (
+          <CloneLesson
+            setShowCloneModal={setShowCloneModal}
+            getCloneLessonDetails={getCloneLessonDetails}
+          />
+        )}
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
@@ -358,6 +380,7 @@ const LessonsList = () => {
                 ) : currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
+                      setShowCloneModal={setShowCloneModal}
                       key={`lessonsRows${i}`}
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}

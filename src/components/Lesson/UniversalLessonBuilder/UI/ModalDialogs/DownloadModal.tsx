@@ -14,7 +14,8 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {FORM_TYPES} from '../common/constants';
-import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
+import {getImageFromS3Static} from '../../../../../utilities/services';
+import {removeExtension} from '../../../../../utilities/functions';
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -26,10 +27,9 @@ interface IFile {
   progress: number | string | null;
   file: File;
   id?: string;
-  imgId?: string;
+  fileKey?: string;
   fileName?: string;
 }
-const UPLOAD_KEY = 'survey_attachments';
 
 const btnClass = (color: string) =>
   `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
@@ -61,7 +61,7 @@ const File = ({
   progress,
   fileName,
   deleteImage,
-  imgId,
+  fileKey,
   file,
   updateFilename,
   id,
@@ -93,7 +93,9 @@ const File = ({
   };
 
   // const getFile = async () => await getImageFromS3(imgId);
-  const imageUrl = file ? URL.createObjectURL(file) : getImageFromS3Static(imgId);
+  const imageUrl = file
+    ? URL.createObjectURL(file)
+    : getImageFromS3Static(`ULB/studentdata_${fileKey}`);
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
@@ -135,7 +137,7 @@ const File = ({
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, _fileName);
+    updateFilename(id, removeExtension(_fileName));
     setEditingFilename(false);
   };
 
@@ -148,14 +150,14 @@ const File = ({
             <p className="w-auto">
               {_status === 'success' || _status === 'other'
                 ? !fileName
-                  ? 'Unnamed'
+                  ? file.name
                   : fileName
                 : genStatus()}
             </p>{' '}
             {(_status === 'success' || _status === 'other') && !editingFilename && (
               <Btn
                 onClick={() => setEditingFilename(true)}
-                label={_fileName ? 'Change file name' : 'Add file name'}
+                label={_fileName ? 'Change file label' : 'Add file label'}
               />
             )}
             {(_status === 'success' || _status === 'other') && editingFilename && (
@@ -193,7 +195,7 @@ const File = ({
         </div>
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
-            <div onClick={() => deleteImage(imgId)} className={btnClass('red')}>
+            <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
               <IoClose className="text-red-500" />
             </div>
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
@@ -259,13 +261,14 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   } = props;
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  const [filesUploading, setFilesUploading] = useState<IFile[]>([]);
 
   useEffect(() => {
-    if (inputObj && inputObj.length) {
+    if (inputObj && inputObj.length > 0) {
       setIsEditingMode(true);
       const f: IFile[] = map(inputObj, (d) => ({
         id: d.id,
-        imgId: d.value,
+        fileKey: d.value,
         fileName: d.label,
         _status: 'other',
         progress: null,
@@ -275,13 +278,58 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     }
   }, [inputObj]);
 
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const mapNewFiles = (acceptedFiles: any) => {
+    for (const file of acceptedFiles) {
+      const id = nanoid(6);
+      const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
 
-  const [filesUploading, setFilesUploading] = useState<IFile[]>([]);
-  console.log(
-    '🚀 ~ file: DownloadModal.tsx ~ line 281 ~ DownloadModal ~ filesUploading',
-    filesUploading
+      const initState: IFile = {
+        _status: 'progress',
+        progress: fakeInitProgress.toString(),
+        file,
+        fileName: file.name,
+        id,
+      };
+      filesUploading.push(initState);
+
+      setFilesUploading([...filesUploading]);
+    }
+  };
+
+  const uploadNewFiles = async () => {
+    if (filesUploading.length > 0) {
+      const notUploadedFiles = reject(
+        filesUploading,
+        (f) => f._status === 'success' || f._status === 'other'
+      );
+
+      for (const file of notUploadedFiles) {
+        let temp = file.file.name.split('.');
+        const extension = temp.pop();
+        const fileName = `${Date.now()}_${temp
+          .join(' ')
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+        updateImgId(file, fileName);
+        await uploadImageToS3(file.file, fileName, file.file.type, file);
+      }
+    }
+  };
+
+  const uploadFile = useCallback(
+    async (acceptedFiles) => {
+      setUnsavedChanges(true);
+
+      mapNewFiles(acceptedFiles);
+      await uploadNewFiles();
+    },
+    [filesUploading]
   );
+
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    onDrop: uploadFile,
+  });
+
+  const {userLanguage, clientKey} = useContext(GlobalContext);
 
   const updateProgress = (file: IFile, progress: IFile['progress']) => {
     const idx = getId(file);
@@ -295,10 +343,10 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     setFilesUploading([...filesUploading]);
   };
 
-  const deleteImage = (imgId: string) => {
-    remove(filesUploading, (f) => f.imgId === imgId);
+  const deleteImage = (fileKey: string) => {
+    remove(filesUploading, (f) => f.fileKey === fileKey);
     setFilesUploading([...filesUploading]);
-    deletImageFromS3(`ULB/studentdata_${imgId}`);
+    deletImageFromS3(`ULB/studentdata_${fileKey}`);
   };
 
   const uploadImageToS3 = async (
@@ -340,9 +388,9 @@ const DownloadModal = (props: IDownloadDialogProps) => {
 
   const getId = (file: IFile) => findIndex(filesUploading, (f) => f.id === file.id);
 
-  const updateImgId = (file: IFile, imgId: IFile['imgId']) => {
+  const updateImgId = (file: IFile, fileKey: IFile['fileKey']) => {
     const idx = getId(file);
-    update(filesUploading[idx], `imgId`, () => imgId);
+    update(filesUploading[idx], `fileKey`, () => fileKey);
     setFilesUploading([...filesUploading]);
   };
 
@@ -352,49 +400,11 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     setFilesUploading([...filesUploading]);
   };
 
-  const uploadFile = useCallback(async (acceptedFiles) => {
-    setUnsavedChanges(true);
-    for (const file of acceptedFiles) {
-      const id = nanoid(6);
-      const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
-      const initState: IFile = {
-        _status: 'progress',
-        progress: fakeInitProgress.toString(),
-        file,
-        id,
-      };
-      filesUploading.push(initState);
-      setFilesUploading([...filesUploading]);
-    }
-
-    if (filesUploading.length > 0) {
-      const notUploadedFiles = reject(
-        filesUploading,
-        (f) => f._status === 'success' || f._status === 'other'
-      );
-
-      for (const file of notUploadedFiles) {
-        const id = `${UPLOAD_KEY}/${Date.now().toString()}_${file.file.name}`;
-        updateImgId(file, id);
-        let temp = file.file.name.split('.');
-        const extension = temp.pop();
-        const fileName = `${Date.now()}_${temp
-          .join(' ')
-          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-        await uploadImageToS3(file.file, fileName, file.file.type, file);
-      }
-    }
-  }, []);
-
   const handleFileSelection = async (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
       uploadFile(e.target.files);
     }
   };
-
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile,
-  });
 
   const inputOther = useRef(null);
 
@@ -416,11 +426,13 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   };
 
   const onDownloadCreate = async () => {
-    const _files = map(filesUploading, (f) => ({
-      id: f.id,
-      label: f.fileName,
-      value: f.imgId,
-    }));
+    const _files = map(filesUploading, (f) => {
+      return {
+        id: f.id,
+        label: removeExtension(f.fileName) || removeExtension(f.file.name),
+        value: f.fileKey,
+      };
+    });
     const parentKey = 'downloadable-files';
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
@@ -487,7 +499,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         className="mt-4 flex flex-col  gap-y-6">
         {map(filesUploading, (file: IFile) => (
           <File
-            imgId={file.imgId}
+            fileKey={file.fileKey}
             updateFilename={updateFilename}
             file={file.file}
             id={file.id}
