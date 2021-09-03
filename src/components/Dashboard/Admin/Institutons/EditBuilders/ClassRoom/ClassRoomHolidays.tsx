@@ -22,7 +22,10 @@ export interface IImpactLog {
   adjustment: string;
 }
 
-const ClassRoomHolidays = () => {
+const ClassRoomHolidays = ({
+  logsChanged,
+  setLogsChanged
+}: any) => {
   const params = useQuery(location.search);
   const roomId = params.get('id');
 
@@ -145,7 +148,7 @@ const ClassRoomHolidays = () => {
             </div>
           </div>
         ) : (
-          <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
+          <div className="mb-4 w-full m-auto max-h-48 overflow-y-auto">
             {lessonImpactLogs.length ? (
               // <DragDropContext onDragEnd={handleOnDragEnd}>
               //   <Droppable droppableId="partContent">

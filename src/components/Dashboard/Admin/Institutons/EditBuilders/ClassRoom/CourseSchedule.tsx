@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {CgNotes} from 'react-icons/cg';
-import {FiClock, FiRefreshCw} from 'react-icons/fi';
+import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 import {IoIosCalendar} from 'react-icons/io';
-import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
+// import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {FaCalendarDay} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import moment from 'moment';
@@ -45,6 +45,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
   const [startDateFocus, setStartDateFocus] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [logsChanged, setLogsChanged] = useState(false);
   const [saving, setSaving] = useState(false);
   const [timeIntervalOptions, setTimeIntervalOptions] = useState(timeIntervals());
   const [errors, setErrors] = useState({
@@ -350,7 +351,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </div> */}
         </div>
         <div className="mt-3">
-          <ClassRoomHolidays />
+          <ClassRoomHolidays logsChanged={logsChanged} setLogsChanged={setLogsChanged} />
         </div>
       </div>
       <UnitPlanner
@@ -363,12 +364,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         saveRoomDetails={saveRoomDetails}
         saving={saving}
         isDetailsComplete={
-            scheduleData.startDate &&
-            scheduleData.endDate &&
-            scheduleData.startTime &&
-            scheduleData.endTime &&
-            scheduleData.frequency &&
-            scheduleData.weekDay
+          scheduleData.startDate &&
+          scheduleData.endDate &&
+          scheduleData.startTime &&
+          scheduleData.endTime &&
+          scheduleData.frequency &&
+          scheduleData.weekDay
         }
       />
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
@@ -391,7 +392,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           showFooter={false}
           closeAction={() => setShowAlert(false)}>
           <div className="py-8 px-16">
-            <div>Enter classroom details</div>
+            <div className="mx-auto flex items-center justify-center rounded-full">
+              <FiAlertCircle className="w-8 h-8" />
+            </div>
+            <div className="mt-4">Enter classroom details</div>
             <div className="flex justify-center mt-4">
               <Buttons
                 btnClass={'abc'}
