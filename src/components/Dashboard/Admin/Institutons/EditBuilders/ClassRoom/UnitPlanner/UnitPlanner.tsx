@@ -21,7 +21,7 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'One Time': {unit: 'day', step: 1},
 };
 
-const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
+const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any) => {
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
@@ -59,6 +59,11 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
           }))
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)) || []
       );
+      setTimeout(() => {
+        if (isDetailsComplete) {
+          calculateSchedule();
+        }
+      }, 500);
       setLoading(false);
     } catch (error) {
       console.log(error, 'error');
@@ -76,6 +81,27 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving}: any) => {
       setLessonImpactLogs([]);
     }
   };
+
+  // useEffect(() => {
+  //   console.log(
+  //     'inside room data change useeffect',
+  //     syllabusList?.length,
+  //     roomData.startDate,
+  //     roomData.endDate,
+  //     roomData.frequency
+  //   );
+
+  //   if (
+  //     syllabusList?.length &&
+  //     roomData.startDate &&
+  //     roomData.endDate &&
+  //     roomData.frequency
+  //   ) {
+  //     console.log("inside if above calculation");
+
+  //     calculateSchedule();
+  //   }
+  // }, [roomData.startDate, roomData.endDate, roomData.frequency]);
 
   const calculateAvailableStartDate = (
     date: Moment,

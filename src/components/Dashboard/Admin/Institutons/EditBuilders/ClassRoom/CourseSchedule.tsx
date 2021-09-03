@@ -20,6 +20,8 @@ import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 
 import ClassRoomHolidays from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
+// import ScheduleAlertPopUp from './ScheduleAlertPopUp';
+import Modal from '../../../../../Atoms/Modal';
 
 export interface ICourseScheduleProps {
   roomData: any;
@@ -41,6 +43,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS, CourseScheduleDict} = useDictionary(clientKey);
 
+  const [startDateFocus, setStartDateFocus] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [saving, setSaving] = useState(false);
   const [timeIntervalOptions, setTimeIntervalOptions] = useState(timeIntervals());
   const [errors, setErrors] = useState({
@@ -72,18 +76,24 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       notes,
       weekDay,
       conferenceCallLink,
+      id,
     } = roomData;
-    setScheduleData({
-      startDate: startDate ? new Date(startDate) : null,
-      endDate: endDate ? new Date(endDate) : null,
-      startTime,
-      endTime,
-      frequency,
-      location,
-      notes,
-      weekDay,
-      conferenceCallLink,
-    });
+    if (id) {
+      setScheduleData({
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
+        startTime,
+        endTime,
+        frequency,
+        location,
+        notes,
+        weekDay,
+        conferenceCallLink,
+      });
+      if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
+        setShowAlert(true);
+      }
+    }
   }, [roomData]);
 
   const handleSelection = (value: string, fieldName: string) => {
@@ -169,6 +179,11 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     }
   };
 
+  const onAlertClose = () => {
+    setShowAlert(false);
+    setStartDateFocus(true);
+  };
+
   return (
     <div className="p-4">
       {/* <div className="pb-3">
@@ -191,6 +206,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   date={scheduleData.startDate}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
                   onChange={(date: Date | null) => handleDateChange(date, 'startDate')}
+                  focus={startDateFocus}
                 />
                 <div className="text-xs 2xl:text-base text-red-500">
                   {errors.startDate}
@@ -346,6 +362,14 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         }}
         saveRoomDetails={saveRoomDetails}
         saving={saving}
+        isDetailsComplete={
+            scheduleData.startDate &&
+            scheduleData.endDate &&
+            scheduleData.startTime &&
+            scheduleData.endTime &&
+            scheduleData.frequency &&
+            scheduleData.weekDay
+        }
       />
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
@@ -361,6 +385,24 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           onClick={saveRoomDetails}
         />
       </div> */}
+      {showAlert && (
+        <Modal
+          showHeader={false}
+          showFooter={false}
+          closeAction={() => setShowAlert(false)}>
+          <div className="py-8 px-16">
+            <div>Enter classroom details</div>
+            <div className="flex justify-center mt-4">
+              <Buttons
+                btnClass={'abc'}
+                label={'Ok'}
+                labelClass={'leading-6'}
+                onClick={onAlertClose}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
