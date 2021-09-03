@@ -177,7 +177,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           <div className="text-lg font-medium mb-4">
             {CourseScheduleDict[userLanguage].HEADING}
           </div>
-          <div className="mt-12">
+          <div className="mt-8">
             <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
                 <IoIosCalendar className="w-6 h-6 mr-2" />
@@ -259,7 +259,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                     selectedItem={scheduleData.weekDay}
                     list={weekdaysOption}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
-                    disabled={scheduleData.frequency === 'M/W/F' || scheduleData.frequency === 'Tu/Th'}
+                    disabled={
+                      scheduleData.frequency === 'M/W/F' ||
+                      scheduleData.frequency === 'Tu/Th'
+                    }
                   />
                 </div>
               </div>
@@ -329,8 +332,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           <ClassRoomHolidays />
         </div>
       </div>
-      <UnitPlanner roomData={roomData} />
-      <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
+      <UnitPlanner roomData={{...roomData, ...scheduleData}} />
+      {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"
           label={BUTTONS[userLanguage]['CANCEL']}
@@ -343,7 +346,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
           onClick={saveRoomDetails}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

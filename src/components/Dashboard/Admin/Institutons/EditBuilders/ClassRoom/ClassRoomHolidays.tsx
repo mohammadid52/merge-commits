@@ -114,7 +114,7 @@ const ClassRoomHolidays = () => {
       <div className="flex justify-between">
         <div className="text-lg font-medium mb-4">Schedule Impact Log</div>
         <AddButton
-          className="ml-4 py-1 mb-2"
+          className="py-1"
           label={'Add'}
           onClick={() => setFormOpen(true)}
         />

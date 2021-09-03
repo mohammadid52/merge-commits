@@ -13,12 +13,11 @@ import {IImpactLog} from '../ClassRoomHolidays';
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
   Monthly: {unit: 'month', step: 1},
-  'M/W/F': {unit: 'day', step: 2},
-  'Tu/Th': {unit: 'day', step: 2},
+  'M/W/F': {unit: 'day', step: 1},
+  'Tu/Th': {unit: 'day', step: 1},
 };
 
 const UnitPlanner = ({roomData}: any) => {
-  const [t, setT] = useState(0);
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
@@ -59,10 +58,10 @@ const UnitPlanner = ({roomData}: any) => {
     duration: number,
     scheduleDates: Date[]
   ) => {
-    if (frequency === 'M/W/F' && ![1,3,5].includes(moment(date).day())) {
+    if (frequency === 'M/W/F' && ![1, 3, 5].includes(moment(date).day())) {
       date = moment(new Date(moment(date).add(2, frequency).toDate()));
     }
-    if (frequency === 'Tu/Th' && ![2,4].includes(moment(date).day())) {
+    if (frequency === 'Tu/Th' && ![2, 4].includes(moment(date).day())) {
       date = moment(new Date(moment(date).add(2, frequency).toDate()));
     }
     let iteration: number = 1,
@@ -73,13 +72,19 @@ const UnitPlanner = ({roomData}: any) => {
       const isOccupied = scheduleDates.find(
         (ele) =>
           new Date(new Date(ele).toDateString()).getTime() ===
-            new Date(moment(date).add(i, frequency).toDate()).getTime()
+          new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
-      console.log(isOccupied, 'isOccupied', iteration);
-      if (!isOccupied) {
+      if (
+        !isOccupied &&
+        (roomData.frequency !== 'M/W/F' ||
+          (roomData.frequency === 'M/W/F' &&
+            [1, 3, 5].includes(moment(date).add(i, frequency).day()))) &&
+        (roomData.frequency !== 'Tu/Th' ||
+          (roomData.frequency === 'Tu/Th' &&
+            [2, 4].includes(moment(date).add(i, frequency).day())))
+      ) {
         if (iteration === 1) {
           startDate = new Date(moment(date).add(i, frequency).toDate());
-          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
           estEndDate = new Date(moment(date).add(i, frequency).toDate());
@@ -119,8 +124,6 @@ const UnitPlanner = ({roomData}: any) => {
               item.lesson.duration,
               scheduleDates
             );
-            console.log(startDate, estEndDate, 'startDate, estEndDate');
-
             item.startDate = startDate;
             item.estEndDate = estEndDate;
 
@@ -164,19 +167,17 @@ const UnitPlanner = ({roomData}: any) => {
 
   return (
     <div className="py-8">
-      <div className="flex justify-end my-4">
-        <h3 className="text-xl leading-6 font-bold text-gray-900 text-center">
-          Unit Planner
-        </h3>
-        <div className="w-68">
+      <div className="flex my-4">
+        <h3 className="text-xl leading-6 font-bold text-gray-900">Schedule</h3>
+        {/* <div className="w-68">
           <Buttons
             btnClass="py-3 text-sm"
             label={'Calculate Schedule'}
             onClick={calculateSchedule}
           />
-        </div>
+        </div> */}
       </div>
-      <div className="my-4">
+      <div className="my-8">
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -184,21 +185,25 @@ const UnitPlanner = ({roomData}: any) => {
             </div>
           </div>
         ) : syllabusList.length ? (
-          syllabusList.map((syllabus: any, index: number) => (
-            <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
-              <div className="mb-4 bg-gray-200 flex justify-between">
-                <div className="px-4 py-2">
-                  <div className="text-lg">{syllabus.name}</div>
-                </div>
-                <div className="px-4 py-2 w-88">
-                  <div className="text-lg">
-                    Start Date:{' '}
-                    {syllabus.lessons.items?.length && syllabus.lessons.items[0].startDate
-                      ? new Date(syllabus.lessons.items[0].startDate).toLocaleDateString()
-                      : '-'}
+          <>
+            {syllabusList.map((syllabus: any, index: number) => (
+              <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
+                <div className="mb-4 bg-gray-200 flex justify-between">
+                  <div className="px-4 py-2">
+                    <div className="text-lg">{syllabus.name}</div>
                   </div>
-                </div>
-                {/* <div className="inline-flex">
+                  <div className="px-4 py-2 w-88">
+                    <div className="text-lg">
+                      Start Date:{' '}
+                      {syllabus.lessons.items?.length &&
+                      syllabus.lessons.items[0].startDate
+                        ? new Date(
+                            syllabus.lessons.items[0].startDate
+                          ).toLocaleDateString()
+                        : '-'}
+                    </div>
+                  </div>
+                  {/* <div className="inline-flex">
                 <span className="w-30 inline-flex items-center">Start Date:</span>
                 <div className="px-4 py-2">
                   {roomData.startDate}
@@ -210,63 +215,90 @@ const UnitPlanner = ({roomData}: any) => {
                   />
                 </div>
               </div> */}
-              </div>
-              <div>
-                <div className="w-full flex justify-between mt-4">
-                  <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                    Lesson Name
-                  </div>
-                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                    Duration ({roomData.frequency})
-                  </div>
-                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                    Start date
-                  </div>
-                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                    Est. end date
-                  </div>
-                  <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                    Act. end date
-                  </div>
                 </div>
+                <div>
+                  <div className="w-full flex justify-between mt-4">
+                    <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                      Lesson Name
+                    </div>
+                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                      Duration ({roomData.frequency})
+                    </div>
+                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                      Start date
+                    </div>
+                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                      Est. end date
+                    </div>
+                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                      Act. end date
+                    </div>
+                  </div>
 
-                <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
-                  {syllabus.lessons.items?.length ? (
-                    syllabus.lessons.items.map((item: any, idx: number) => {
-                      return (
-                        <div
-                          key={`${idx}`}
-                          className={`flex justify-between bg-white w-full`}>
-                          <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                            {item.lesson?.title}
+                  <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
+                    {syllabus.lessons.items?.length ? (
+                      syllabus.lessons.items.map((item: any, idx: number) => {
+                        return (
+                          <div
+                            key={`${idx}`}
+                            className={`flex justify-between bg-white w-full`}>
+                            <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                              {item.lesson?.title}
+                            </div>
+                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                              {item.lesson?.duration}
+                            </div>
+                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                              {item.startDate
+                                ? new Date(item.startDate).toLocaleDateString()
+                                : '-'}
+                            </div>
+                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                              {item.estEndDate ? (
+                                <>
+                                  {new Date(item.estEndDate).toLocaleDateString()}
+                                  {index === syllabusList.length - 1 &&
+                                  idx === syllabus.lessons.items.length - 1 &&
+                                  moment(item.estEndDate).isBefore(
+                                    moment(roomData.endDate)
+                                  )
+                                    ? '*'
+                                    : ''}
+                                </>
+                              ) : (
+                                '-'
+                              )}
+                            </div>
+                            <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
                           </div>
-                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                            {item.lesson?.duration}
-                          </div>
-                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                            {item.startDate
-                              ? new Date(item.startDate).toLocaleDateString()
-                              : '-'}
-                          </div>
-                          <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                            {item.estEndDate
-                              ? new Date(item.estEndDate).toLocaleDateString()
-                              : '-'}
-                          </div>
-                          <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="text-center p-5">No lesson assigned</div>
-                  )}
+                        );
+                      })
+                    ) : (
+                      <div className="text-center p-5">No lesson assigned</div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+            <div className="flex justify-end">*Past course end date</div>
+          </>
         ) : (
           <div>No unit added in the course</div>
         )}
+      </div>
+      <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
+        <Buttons
+          btnClass="py-3 px-12 text-sm mr-4"
+          label={'Cancel'}
+          // onClick={history.goBack}
+          transparent
+        />
+        <Buttons
+          // disabled={loading}
+          btnClass="py-3 px-12 text-sm ml-4"
+          label={'Run calculations and save'}
+          onClick={calculateSchedule}
+        />
       </div>
     </div>
   );
