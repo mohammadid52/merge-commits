@@ -21,19 +21,24 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'One Time': {unit: 'day', step: 1},
 };
 
-const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any) => {
+const UnitPlanner = ({
+  lessonImpactLogs,
+  roomData,
+  saveRoomDetails,
+  saving,
+  isDetailsComplete,
+}: any) => {
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
-  const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
 
   useEffect(() => {
     if (roomData.curricular?.id) {
       fetchClassRoomSyllabus();
-      getImpactLogs();
     }
   }, [roomData.curricular?.id]);
 
   const fetchClassRoomSyllabus = async () => {
+    console.log('fetchClassRoomSyllabus');
     try {
       setLoading(true);
       const list: any = await API.graphql(
@@ -66,21 +71,15 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
       }, 500);
       setLoading(false);
     } catch (error) {
-      console.log(error, 'error');
       setLoading(false);
     }
   };
 
-  const getImpactLogs = async () => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getRoomLessonImpactLogs, {id: roomData.id})
-      );
-      setLessonImpactLogs(result?.data?.getRoom.lessonImpactLog || []);
-    } catch (error) {
-      setLessonImpactLogs([]);
+  useEffect(() => {
+    if (isDetailsComplete && syllabusList.length) {
+      calculateSchedule();
     }
-  };
+  }, [isDetailsComplete, syllabusList.length]);
 
   // useEffect(() => {
   //   console.log(
@@ -158,6 +157,8 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
   };
 
   const calculateSchedule = () => {
+    console.log('inside calculateSchedule');
+    
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
