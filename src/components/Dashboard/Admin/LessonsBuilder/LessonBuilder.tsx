@@ -16,7 +16,7 @@ import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
 
-import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
+import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LessonActivities from './StepActionComponent/LessonActivities';
 import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
@@ -31,6 +31,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
 
 export interface InitialData {
   name: string;
@@ -49,6 +50,7 @@ export interface InitialData {
   imageUrl?: string;
   imagePreviewUrl?: string;
   studentSummary?: string;
+  lessonPlan?: any[];
 }
 export interface InputValueObject {
   id: string;
@@ -88,6 +90,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     imageUrl: '',
     imageCaption: '',
     studentSummary: '',
+    lessonPlan: [{}],
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -232,6 +235,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         setFormData({
           ...formData,
           ...savedData,
+          lessonPlan: [...savedData.lessonPlan],
           imageCaption: savedData.cardCaption,
           imageUrl: savedData.cardImage,
           imagePreviewUrl: savedData.cardImage

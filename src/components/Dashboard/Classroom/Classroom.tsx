@@ -85,6 +85,8 @@ export interface LessonCardProps {
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
   roomID?: string;
+  getImageFromS3?: boolean;
+  preview?: boolean;
 }
 
 const range = (from: number, to: number, step: number = 1) => {

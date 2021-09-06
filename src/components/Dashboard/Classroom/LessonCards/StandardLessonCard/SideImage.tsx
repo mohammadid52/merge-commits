@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import { getImageFromS3Static } from '../../../../../utilities/services';
+import {getImageFromS3Static} from '../../../../../utilities/services';
 import {LessonCardProps} from '../../Classroom';
 
 const SideImage = (props: LessonCardProps) => {
-  const {lessonProps} = props;
+  const {lessonProps, getImageFromS3 = true} = props;
   const {theme} = useContext(GlobalContext);
 
   return (
@@ -14,7 +14,9 @@ const SideImage = (props: LessonCardProps) => {
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
           lessonProps && lessonProps.lesson?.cardImage
-            ? getImageFromS3Static(lessonProps.lesson?.cardImage)
+            ? getImageFromS3
+              ? getImageFromS3Static(lessonProps.lesson?.cardImage)
+              : lessonProps.lesson?.cardImage
             : null
         })`,
         backgroundSize: 'cover',

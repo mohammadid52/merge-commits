@@ -9,6 +9,55 @@ export const useTabs = (tabs: {name: string; current: boolean}[]) => {
   return {curTab, setCurTab};
 };
 
+export const Tabs2 = ({
+  tabs,
+  curTab,
+  setCurTab,
+}: {
+  tabs: {name: string; current: boolean}[];
+  curTab: string;
+  setCurTab: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  return (
+    <div>
+      <div className="sm:hidden">
+        <label htmlFor="tabs" className="sr-only">
+          Select a tab
+        </label>
+        <select
+          id="tabs"
+          name="tabs"
+          className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          defaultValue={tabs.find((tab) => tab.current).name}>
+          {tabs.map((tab) => (
+            <option key={tab.name}>{tab.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="hidden sm:block">
+        <div className="border-b-0 border-gray-200">
+          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+            {tabs.map((tab) => (
+              <button
+                key={tab.name}
+                onClick={() => setCurTab(tab.name)}
+                className={classNames(
+                  tab.name === curTab
+                    ? 'iconoclast:border-600 curate:border-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  'whitespace-nowrap py-4 px-1 w-auto border-b-2 font-medium text-sm'
+                )}
+                aria-current={tab.current ? 'page' : undefined}>
+                {tab.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Tabs = ({
   tabs,
   curTab,
@@ -37,7 +86,7 @@ const Tabs = ({
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b mb-4 border-gray-200">
+        <div className="border-b-0 mb-4 border-gray-200">
           <nav className="-mb-px flex" aria-label="Tabs">
             {tabs.map((tab) => (
               <button

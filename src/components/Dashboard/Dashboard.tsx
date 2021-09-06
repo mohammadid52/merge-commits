@@ -1,34 +1,27 @@
-import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import Auth from '@aws-amplify/auth';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-
-import SideMenu from './Menu/SideMenu';
+import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
+import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../customGraphql/customQueries';
-import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
-import QuestionBank from './Admin/Questions/QuestionBank';
-import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
+import usePrevious from '../../customHooks/previousProps';
+import * as queries from '../../graphql/queries';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import ErrorBoundary from '../Error/ErrorBoundary';
+import EmojiFeedback from '../General/EmojiFeedback';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
+import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import Noticebar from '../Noticebar/Noticebar';
+import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
+import QuestionBank from './Admin/Questions/QuestionBank';
+import Csv from './Csv/Csv';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
-import ErrorBoundary from '../Error/ErrorBoundary';
-import Csv from './Csv/Csv';
-import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
-import usePrevious from '../../customHooks/previousProps';
-import {
-  getLocalStorageData,
-  removeLocalStorageData,
-  setLocalStorageData,
-} from '../../utilities/localStorage';
-import EmojiFeedback from '../General/EmojiFeedback';
+import LessonPlanHome from './LessonPlanner/LessonPlanHome';
+import SideMenu from './Menu/SideMenu';
+import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));

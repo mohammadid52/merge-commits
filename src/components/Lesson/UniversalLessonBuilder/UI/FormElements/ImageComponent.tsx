@@ -42,7 +42,6 @@ const ImageFormComponent = ({
   customVideo = false,
   askBeforeClose,
   selectedImageFromGallery,
-  setSavingStatus,
 }: IImageFormComponentProps) => {
   const {
     userLanguage,

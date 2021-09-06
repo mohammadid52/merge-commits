@@ -14,6 +14,7 @@ import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 
 import {Lesson} from './Classroom';
+import {noop} from 'lodash';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -24,6 +25,7 @@ interface StartProps {
   roomID: string;
   isActive?: boolean;
   isCompleted?: boolean;
+  preview?: boolean;
   activeRoomInfo?: any;
 }
 
@@ -40,6 +42,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     accessible,
     type,
     roomID,
+    preview,
   } = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
@@ -321,7 +324,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     <div>
       <Buttons
         type="submit"
-        onClick={handleLink}
+        onClick={!preview ? handleLink : noop}
         label={
           loading
             ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
