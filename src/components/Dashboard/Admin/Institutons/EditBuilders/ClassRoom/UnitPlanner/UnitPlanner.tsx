@@ -178,7 +178,9 @@ const UnitPlanner = ({
 
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
-      scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
+      scheduleDates = lessonImpactLogs
+        .filter((log: any) => log.adjustment === 'Push')
+        .map((log: any) => log.impactDate);
 
     setSyllabusList((prevSyllabusList: any) =>
       prevSyllabusList.map((syllabus: any) => ({
@@ -244,7 +246,7 @@ const UnitPlanner = ({
         },
       }))
     );
-    saveRoomDetails();
+    // saveRoomDetails();
     setLogsChanged(false);
   };
 
@@ -380,7 +382,10 @@ const UnitPlanner = ({
           disabled={saving || !logsChanged}
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
-          onClick={calculateSchedule}
+          onClick={() => {
+            calculateSchedule();
+            saveRoomDetails()
+          }}
         />
       </div>
     </div>
