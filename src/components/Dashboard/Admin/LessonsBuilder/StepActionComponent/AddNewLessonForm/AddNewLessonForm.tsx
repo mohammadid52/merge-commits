@@ -570,6 +570,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           <Card cardTitle="Lesson Card" className="col-span-2">
             <div className="p-4">
               <LessonCard
+                cardCaption={formData.imageCaption}
                 studentSummary={studentSummary}
                 onInputChange={onInputChange}
                 imageCaption={imageCaption}

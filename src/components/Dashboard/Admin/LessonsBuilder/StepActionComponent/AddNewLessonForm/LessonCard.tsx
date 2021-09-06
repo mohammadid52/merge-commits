@@ -21,6 +21,7 @@ interface ILessonCard {
   onInputChange: (e: any) => void;
   totalEstTime?: number;
   lessonType: string;
+  cardCaption: string;
 }
 
 const LessonCard = ({
@@ -32,6 +33,7 @@ const LessonCard = ({
   onInputChange,
   totalEstTime,
   lessonType,
+  cardCaption = '',
 }: ILessonCard) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {AddNewLessonFormDict} = useDictionary(clientKey);
@@ -51,6 +53,7 @@ const LessonCard = ({
       summary: studentSummary,
       cardImage: imagePreviewUrl,
       totalEstTime,
+      cardCaption,
     },
   };
   const imageRef = React.useRef(null);
@@ -69,7 +72,7 @@ const LessonCard = ({
                   {imagePreviewUrl ? (
                     <img
                       onClick={handleImage}
-                      className={`profile w-50 h-60 md:w-60 md:h-60 border-0 border-gray-400 rounded-lg customShadow`}
+                      className={`profile w-50 bg-center bg-cover h-60 md:w-60 md:h-60 border-0 border-gray-400 rounded-lg customShadow`}
                       src={imagePreviewUrl}
                     />
                   ) : (
