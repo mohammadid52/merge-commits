@@ -14,6 +14,8 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Popover from '../../../../Atoms/Popover';
+import {BiDotsVerticalRounded} from 'react-icons/bi';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -24,6 +26,91 @@ interface LessonPlansListProps {
   };
 }
 
+interface PageRowProps {
+  index: number;
+  page: UniversalLessonPage;
+  toggleDeleteModal: (show: boolean, id?: string) => void;
+  lessonPagePreview: (id: string) => void;
+}
+
+const PageRow = ({page, lessonPagePreview, toggleDeleteModal, index}: PageRowProps) => {
+  const textClass = `text-sm leading-5  transition-all duration-50 `;
+  const [showMenu, setShowMenu] = useState(false);
+
+  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  return (
+    <Draggable draggableId={`${page.id}`} index={index} key={`${page.id}`}>
+      {(provided) => (
+        <div
+          key={index}
+          className="flex justify-between bg-white w-full border-b-0 border-gray-200"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}>
+          <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 font-medium whitespace-normal">
+            {page.label || '-'}
+          </div>
+          <div className="flex w-5/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+            {page.title || '-'}
+          </div>
+          <div className="flex w-3/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+            {page.interactionType ? page.interactionType.join(', ') : '-'}
+          </div>
+          <div
+            className="flex justify-start flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
+            dangerouslySetInnerHTML={{__html: page.description}}
+          />
+
+          <div className="flex w-2/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+            {page.estTime ? `${page.estTime} min` : ''}
+          </div>
+          <div
+            className={`w-1/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} text-sm justify-center`}>
+            <Popover
+              show={showMenu}
+              bottom={1.5}
+              dir={'top'}
+              minWidth={48}
+              minHeight={16}
+              rounded="lg"
+              setShow={setShowMenu}
+              content={
+                <dl className="grid grid-cols-1 gap-y-3">
+                  <div className="col-span-1">
+                    <dt
+                      onClick={() => lessonPagePreview(page.id)}
+                      className={`${textClass} text-gray-800 hover:iconoclast:text-500  hover:curate:text-500`}>
+                      {LessonBuilderDict[userLanguage]['BUTTON']['PREVIEW']}
+                    </dt>
+                  </div>
+                  <div className="col-span-1">
+                    <dt
+                      onClick={() => {
+                        setShowMenu(false);
+                        toggleDeleteModal(true, page.id);
+                      }}
+                      className={`${textClass} text-red-500 hover:text-red-600`}>
+                      {BUTTONS[userLanguage]['DELETE']}
+                    </dt>
+                  </div>
+                </dl>
+              }>
+              <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+                <BiDotsVerticalRounded
+                  title="show menu"
+                  className="h-full w-full text-lg text-gray-500"
+                />
+              </span>
+            </Popover>
+          </div>
+        </div>
+      )}
+    </Draggable>
+  );
+};
+
 const LessonActivities = ({
   lessonId,
   lessonName,
@@ -33,7 +120,7 @@ const LessonActivities = ({
   const history = useHistory();
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {LessonBuilderDict} = useDictionary(clientKey);
   const {
     newLessonPlanShow,
     setNewLessonPlanShow,
@@ -78,13 +165,6 @@ const LessonActivities = ({
     // history.push(
     //   `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
     // );
-  };
-
-  const editLessonPage = (id: string) => {
-    setPreviewMode(false);
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
-    );
   };
 
   const lessonPagePreview = (id: string) => {
@@ -180,7 +260,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -216,7 +296,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-center">
+                <div className="w-1/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-center">
                   <span className="text-center">
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -233,62 +313,12 @@ const LessonActivities = ({
                       {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
                           {pages.map((page: any, index: number) => (
-                            <Draggable
-                              draggableId={`${page.id}`}
+                            <PageRow
                               index={index}
-                              key={`${page.id}`}>
-                              {(provided) => (
-                                <div
-                                  key={index}
-                                  className="flex justify-between bg-white w-full border-b-0 border-gray-200"
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  {/* <div className="w-1/10 flex items-center px-4 py-4 whitespace-normal text-left text-sm leading-5 font-medium">
-                                  {'-'}
-                                </div> */}
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 font-medium whitespace-normal">
-                                    {page.label || '-'}
-                                  </div>
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                    {page.title || '-'}
-                                  </div>
-                                  <div className="flex w-3/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                    {page.interactionType
-                                      ? page.interactionType.join(', ')
-                                      : '-'}
-                                  </div>
-                                  <div
-                                    className="flex justify-start flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
-                                    dangerouslySetInnerHTML={{__html: page.description}}
-                                  />
-
-                                  <div className="flex w-2/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                    {page.estTime ? `${page.estTime} min` : ''}
-                                  </div>
-                                  <div
-                                    className={`w-3/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} text-sm justify-center`}>
-                                    <span
-                                      className="w-auto"
-                                      onClick={() => lessonPagePreview(page.id)}>
-                                      {
-                                        LessonBuilderDict[userLanguage]['BUTTON'][
-                                          'PREVIEW'
-                                        ]
-                                      }
-                                    </span>
-                                    <span className="flex justify-center w-auto">
-                                      &nbsp;|&nbsp;
-                                    </span>
-                                    <span
-                                      className="w-auto"
-                                      onClick={() => toggleDeleteModal(true, page.id)}>
-                                      {BUTTONS[userLanguage]['DELETE']}
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
+                              page={page}
+                              toggleDeleteModal={toggleDeleteModal}
+                              lessonPagePreview={lessonPagePreview}
+                            />
                           ))}
                           {provided.placeholder}
                         </div>
@@ -423,64 +453,7 @@ const LessonActivities = ({
               <div className="text-center p-5">
                 You don't have any homework activities yet.
               </div>
-              <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
-                {/* <DragDropContext onDragEnd={handleOnDragEnd}>
-                  <Droppable droppableId="partContent">
-                    {(provided) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {pages.map((page: any, index: number) => (
-                          <Draggable
-                            draggableId={`${page.id}`}
-                            index={index}
-                            key={`${page.id}`}>
-                            {(provided) => (
-                              <div
-                                key={index}
-                                className="flex justify-between bg-white w-full border-b-0 border-gray-200"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
-                                <div className="flex w-3/10 truncate items-center px-4 py-3 text-sm leading-4 font-medium whitespace-normal">
-                                  {page.title || '-'}
-                                </div>
-                                <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                  {page.label || '-'}
-                                </div>
-
-                                <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                  {['Group', 'Individual'].join(', ')}
-                                </div>
-
-                                <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                  {'-'}
-                                </div>
-
-                                <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                  {page.estTime ? `${page.estTime}min` : ''}
-                                </div>
-                                <span
-                                  className={`w-2/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}>
-                                  <span onClick={() => lessonPagePreview(page.id)}>
-                                    {LessonBuilderDict[userLanguage]['BUTTON']['PREVIEW']}
-                                  </span>
-                                  <span className="flex justify-center">
-                                    &nbsp;|&nbsp;
-                                  </span>
-                                  <span onClick={() => toggleDeleteModal(true, page.id)}>
-                                    {BUTTONS[userLanguage]['DELETE']}
-                                  </span>
-                                </span>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-               */}
-              </div>
+              <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto"></div>
             </div>
           ) : (
             <Fragment>

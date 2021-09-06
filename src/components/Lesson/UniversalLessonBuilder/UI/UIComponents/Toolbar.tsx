@@ -1,36 +1,33 @@
-import React, {useContext, useEffect, useRef, Fragment, useState} from 'react';
+import {Dialog, Transition} from '@headlessui/react';
+import {CheckCircleIcon, XIcon} from '@heroicons/react/outline';
+import {API, graphqlOperation} from 'aws-amplify';
+import {map} from 'lodash';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {
   AiOutlineCopy,
   AiOutlineDelete,
   AiOutlineEye,
   AiOutlineEyeInvisible,
   AiOutlineFileAdd,
-  AiOutlineSave,
 } from 'react-icons/ai';
+import {FiBook} from 'react-icons/fi';
 import {IconType} from 'react-icons/lib';
-
+import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import useOnScreen from '../../../../../customHooks/useOnScreen';
-import Tooltip from '../../../../Atoms/Tooltip';
-import {Dialog, Transition} from '@headlessui/react';
-import {CheckCircleIcon, XIcon} from '@heroicons/react/outline';
-import {Tree} from '../../UI/UIComponents/TreeView/Tree';
-import {map} from 'lodash';
-import Info from '../../../../Atoms/Alerts/Info';
-import Buttons from '../../../../Atoms/Buttons';
-import {wait} from '../../../../../utilities/functions';
 import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
-import {useHistory} from 'react-router';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-
-import {graphqlOperation, API} from 'aws-amplify';
+import {wait} from '../../../../../utilities/functions';
+import Info from '../../../../Atoms/Alerts/Info';
+import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {FiBook} from 'react-icons/fi';
+import Tooltip from '../../../../Atoms/Tooltip';
+import {Tree} from '../../UI/UIComponents/TreeView/Tree';
 
 const Button = ({
   onClick,
@@ -515,8 +512,6 @@ const Toolbar = ({
           </Container>
 
           <Container>
-            <Button color={themeTextColor} tooltip="Save changes" icon={AiOutlineSave} />
-
             <Button
               color="text-red-500"
               tooltip="Delete this page"
@@ -573,13 +568,6 @@ const Toolbar = ({
               className={`flex items-center flex-col w-auto ${
                 !toolbarOnTop ? 'mb-2' : ''
               }`}>
-              <Button
-                color={themeTextColor}
-                tooltip="Save changes"
-                icon={AiOutlineSave}
-                tooltipPlacement="left"
-              />
-
               <Button
                 color="text-red-500"
                 tooltip="Delete this page"

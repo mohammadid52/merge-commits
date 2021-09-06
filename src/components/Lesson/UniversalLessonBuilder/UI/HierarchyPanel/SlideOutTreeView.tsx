@@ -30,8 +30,9 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setHierarchyVisible,
     setEditMode,
   } = props;
-  const {selectedPageID, updateMovableList, theme, enableDnD} = useULBContext();
+  const {selectedPageID, updateMovableList, theme} = useULBContext();
 
+  const enableDnD = true;
   const getTreeIcon = (partType: string) => {
     switch (partType) {
       case 'paragraph':

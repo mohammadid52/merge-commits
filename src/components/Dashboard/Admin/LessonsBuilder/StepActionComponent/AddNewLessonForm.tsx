@@ -58,17 +58,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     designersList,
     selectedDesigners,
     setSelectedDesigners,
-    changeLessonType,
+
     setUnsavedChanges,
     setFormData,
     postLessonCreation,
-    allMeasurement,
+
     lessonId,
     institutionList,
   } = props;
 
-  const [selectedMeasu, setSelectedMeasu] = useState({id: '', name: '', value: ''});
-  const [measurementList, setMeasurementList] = useState(allMeasurement);
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {AddNewLessonFormDict} = useDictionary(clientKey);
@@ -88,9 +86,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   });
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
-  // const [imagePreviewUrl, setImagePreviewUrl] = useState('');
-  const [uploadImageUrl, setUploadImageUrl] = useState(null);
-  const [fileObject, setFileObject] = useState<any>({});
+
   const onInputChange = (e: any) => {
     const {name, value} = e.target;
     setFormData({
@@ -174,8 +170,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const fileReader = new FileReader();
-
-      setFileObject(file);
       fileReader.onload = function () {
         setImageData(fileReader.result);
       };

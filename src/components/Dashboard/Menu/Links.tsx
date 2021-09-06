@@ -154,32 +154,36 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Institutions',
               path: 'manage-institutions',
             },
-            role !== 'BLD' ? {
-              title: sideBarLinksDict[userLanguage].PEOPLE,
-              name: sideBarLinksDict[userLanguage].PEOPLE,
-              label: 'People',
-              path: 'manage-users',
-              subMenuItems: [{title: 'Add New Person', path: 'registration'}],
-            } : null,
-            role !== 'BLD' ? {
-              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              label: 'Lesson Planner',
-              path: '',
-              subMenuItems:
-                state.roomData.rooms.length &&
-                state.roomData.rooms.map((room: Room, i: number) => {
-                  return {
-                    title: room.name,
-                    active:
-                      room.id === state.activeRoom &&
-                      state.currentPage === 'lesson-planner',
-                    path: room.id,
-                    onClick: (e: any) =>
-                      handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
-                  };
-                }),
-            } : null,
+            role !== 'BLD'
+              ? {
+                  title: sideBarLinksDict[userLanguage].PEOPLE,
+                  name: sideBarLinksDict[userLanguage].PEOPLE,
+                  label: 'People',
+                  path: 'manage-users',
+                  subMenuItems: [{title: 'Add New Person', path: 'registration'}],
+                }
+              : null,
+            role !== 'BLD'
+              ? {
+                  title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+                  name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+                  label: 'Lesson Planner',
+                  path: '',
+                  subMenuItems:
+                    state.roomData.rooms.length &&
+                    state.roomData.rooms.map((room: Room, i: number) => {
+                      return {
+                        title: room.name,
+                        active:
+                          room.id === state.activeRoom &&
+                          state.currentPage === 'lesson-planner',
+                        path: room.id,
+                        onClick: (e: any) =>
+                          handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
+                      };
+                    }),
+                }
+              : null,
             // {
             //   title: sideBarLinksDict[userLanguage].NOTICEBOARD,
             //   name: sideBarLinksDict[userLanguage].NOTICEBOARD,
@@ -492,6 +496,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                         return (
                           <div key={`${d.path}_key`} className="custom_tooltip_container">
                             <a
+                              title={d.title}
                               id={d.path}
                               style={{paddingLeft: '3.5rem'}}
                               onClick={(e) => {

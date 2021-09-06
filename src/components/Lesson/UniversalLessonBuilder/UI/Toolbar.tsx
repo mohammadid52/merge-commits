@@ -1,13 +1,9 @@
 import React from 'react';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {BuilderMenuToggle} from './Toolbar/BuilderMenuToggle';
 import {HierarchyToggle} from './Toolbar/HierarchyToggle';
 import {PageGalleryToggle} from './Toolbar/PageGalleryToggle';
-import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
-import {BuilderMenuToggle} from './Toolbar/BuilderMenuToggle';
-import ModalPopIn from '../../../Molecules/ModalPopIn';
-import NewPageDialog from './ModalDialogs/NewPageDialog';
-import UseTemplateDialog from './ModalDialogs/UseTemplateDialog';
-import AddContentDialog from './ModalDialogs/AddContentDialog';
-import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export interface ToolbarProps extends ULBSelectionProps {
   hierarchyVisible?: boolean;
@@ -45,7 +41,7 @@ export const Toolbar = (props: ToolbarProps) => {
     if (dialogToToggle) {
       if (modalPopVisible) {
         if (currentModalDialog === dialogToToggle) {
-          hideAllModals()
+          hideAllModals();
         } else {
           handleModalPopToggle(dialogToToggle);
         }
@@ -54,7 +50,7 @@ export const Toolbar = (props: ToolbarProps) => {
         handleModalPopToggle(dialogToToggle);
       }
     } else {
-      hideAllModals()
+      hideAllModals();
     }
   };
 

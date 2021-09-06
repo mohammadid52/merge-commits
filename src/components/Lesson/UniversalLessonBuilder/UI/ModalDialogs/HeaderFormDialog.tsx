@@ -1,15 +1,15 @@
-import React, {useContext, useState, useEffect} from 'react';
-
+import {Switch} from '@headlessui/react';
+import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {wait} from '../../../../../utilities/functions';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {v4 as uuidv4} from 'uuid';
-import {Switch} from '@headlessui/react';
 import {classNames} from '../FormElements/TextInput';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {

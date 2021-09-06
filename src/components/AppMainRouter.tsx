@@ -1,21 +1,17 @@
-import React, {useState, useContext, useEffect, Suspense} from 'react';
-import {Auth} from '@aws-amplify/auth';
-import {useCookies} from 'react-cookie';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import * as queries from '../graphql/queries';
+import {Auth} from '@aws-amplify/auth';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {getAsset} from '../assets';
+import MobileOops from '../components/Error/MobileOops';
+import {GlobalContext} from '../contexts/GlobalContext';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
-
-import {GlobalContext} from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
-import MobileOops from '../components/Error/MobileOops';
-import ComponentLoading from './Lesson/Loading/ComponentLoading';
-
+import * as queries from '../graphql/queries';
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
-import {getAsset} from '../assets';
-
+import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
@@ -74,7 +70,7 @@ const MainRouter: React.FC = () => {
           graphqlOperation(queries.getPerson, {email: email, authId: sub})
         );
         userInfo = userInfo.data.getPerson;
-        let instInfo: any = {}
+        let instInfo: any = {};
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
             graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
@@ -101,9 +97,9 @@ const MainRouter: React.FC = () => {
             location: userInfo?.location?.items,
             lastLoggedIn: userInfo.lastLoggedIn,
             lastLoggedOut: userInfo.lastLoggedOut,
-            associateInstitute: instInfo?.data?.listStaffs?.items.filter(
-              (item:any) => item.institution
-            ) || [],
+            associateInstitute:
+              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              [],
           },
         });
       } else {

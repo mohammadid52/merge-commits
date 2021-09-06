@@ -1,20 +1,19 @@
 import React, {useContext, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
-import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {BuilderRowWrapper} from './BuilderRowWrapper';
-import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
+import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {FORM_TYPES} from '../../UI/common/constants';
-import {reject} from 'lodash';
+import {BuilderRowWrapper} from './BuilderRowWrapper';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -47,8 +46,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     selIDForHover,
     previewMode,
     updateMovableList,
-    enableDnD,
   } = useULBContext();
+
+  const enableDnD = true;
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID

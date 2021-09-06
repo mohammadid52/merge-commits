@@ -115,5 +115,6 @@ export interface IContentTypeComponentProps {
     customPageContentId?: string
   ) => void;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+
   askBeforeClose: () => void;
 }
