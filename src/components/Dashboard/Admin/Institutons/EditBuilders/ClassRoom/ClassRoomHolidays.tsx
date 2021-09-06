@@ -14,7 +14,7 @@ import Loader from '../../../../../Atoms/Loader';
 
 import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 
 export interface IImpactLog {
   impactDate: Date;
@@ -23,14 +23,21 @@ export interface IImpactLog {
   adjustment: string;
 }
 
+interface IClassRoomHolidaysProps {
+  lessonImpactLogs: IImpactLog[];
+  logsLoading: boolean;
+  setLessonImpactLogs: React.Dispatch<React.SetStateAction<IImpactLog[]>>;
+  setLogsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+  sortLogsByDate: (data: IImpactLog[], order?: string) => IImpactLog[] | [];
+}
+
 const ClassRoomHolidays = ({
   lessonImpactLogs,
-  logsChanged,
   logsLoading,
   setLessonImpactLogs,
   setLogsChanged,
   sortLogsByDate,
-}: any) => {
+}: IClassRoomHolidaysProps) => {
   const params = useQuery(location.search);
   const roomId = params.get('id');
 
@@ -55,6 +62,7 @@ const ClassRoomHolidays = ({
     setLessonImpactLogs(sortLogsByDate(data));
     setActiveIndex(null);
     setFormOpen(false);
+    setLogsChanged(true);
   };
 
   const closeDeleteModal = () => {
@@ -75,6 +83,7 @@ const ClassRoomHolidays = ({
       );
       setLessonImpactLogs(sortLogsByDate(result?.data?.updateRoom.lessonImpactLog));
       setDeleting(false);
+      setLogsChanged(true);
       closeDeleteModal();
     };
     setWarnModal({
@@ -96,7 +105,7 @@ const ClassRoomHolidays = ({
     setLessonImpactLogs(
       sortLogsByDate(lessonImpactLogs, dateOrder === 'desc' ? 'asc' : 'desc')
     );
-  }
+  };
 
   return (
     <div>

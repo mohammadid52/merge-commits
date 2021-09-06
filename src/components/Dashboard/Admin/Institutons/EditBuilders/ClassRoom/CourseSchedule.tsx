@@ -68,6 +68,11 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     weekDay: '',
     conferenceCallLink: '',
   });
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [serverMessage, setServerMessage] = useState({
+    message:'',
+    isError: false
+  })
 
   useEffect(() => {
     const {
@@ -100,7 +105,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     }
   }, [roomData]);
 
-  const sortLogsByDate = (data: any, order: string = 'asc') => {
+  const sortLogsByDate = (data: IImpactLog[], order: string = 'asc') => {
     return data
       ? data.sort((a: IImpactLog, b: IImpactLog) =>
           order === 'asc'
@@ -131,6 +136,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   };
 
   const handleSelection = (value: string, fieldName: string) => {
+    setUnsavedChanges(true);
     let valueNeedsToUpdate = {
       [fieldName]: value,
     };
@@ -150,6 +156,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       ...prevData,
       [name]: value,
     }));
+    setUnsavedChanges(true);
   };
 
   const handleDateChange = (date: Date | null, fieldName: string) => {
@@ -157,6 +164,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       ...prevData,
       [fieldName]: date,
     }));
+    setUnsavedChanges(true);
   };
 
   const validateForm = async () => {
@@ -203,9 +211,20 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           weekDay: scheduleData.weekDay,
           // conferenceCallLink: scheduleData.conferenceCallLink,
         };
-        const newRoom: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
         );
+        setServerMessage({
+          message: CourseScheduleDict[userLanguage]['MESSAGES']['SUCCESS_MESSAGE'],
+          isError: false,
+        });
+        setTimeout(() => {
+          setServerMessage({
+            message: '',
+            isError: false,
+          });
+        }, 4000);
+        setUnsavedChanges(false);
         setSaving(false);
       } catch (error) {
         setSaving(false);
@@ -387,7 +406,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           <ClassRoomHolidays
             lessonImpactLogs={lessonImpactLogs}
             logsLoading={logsLoading}
-            logsChanged={logsChanged}
             setLessonImpactLogs={setLessonImpactLogs}
             setLogsChanged={setLogsChanged}
             sortLogsByDate={sortLogsByDate}
@@ -396,6 +414,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       </div>
       <UnitPlanner
         lessonImpactLogs={lessonImpactLogs}
+        logsChanged={logsChanged || unsavedChanges}
+        setLogsChanged={setLogsChanged}
         roomData={{
           ...roomData,
           ...scheduleData,
@@ -404,15 +424,20 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         }}
         saveRoomDetails={saveRoomDetails}
         saving={saving}
-        isDetailsComplete={
-          Boolean(scheduleData.startDate &&
-          scheduleData.endDate &&
-          scheduleData.startTime &&
-          scheduleData.endTime &&
-          scheduleData.frequency &&
-          scheduleData.weekDay)
-        }
+        isDetailsComplete={Boolean(
+          scheduleData.startDate &&
+            scheduleData.endDate &&
+            scheduleData.startTime &&
+            scheduleData.endTime &&
+            scheduleData.frequency &&
+            scheduleData.weekDay
+        )}
       />
+      {serverMessage.message && <div className="py-2 m-auto text-center">
+        <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
+          {serverMessage.message}
+        </p>
+      </div>}
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"

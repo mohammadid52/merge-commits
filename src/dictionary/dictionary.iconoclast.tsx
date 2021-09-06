@@ -1630,6 +1630,7 @@ const CourseScheduleDict: any = {
       END_DATE: 'End date is required',
       START_TIME: 'Start time is required',
       END_TIME: 'End time is required',
+      SUCCESS_MESSAGE: 'Course Schedule updated successfully',
     },
   },
   ES: {
@@ -1648,8 +1649,9 @@ const CourseScheduleDict: any = {
     MESSAGES: {
       START_DATE: 'TBD',
       END_DATE: 'TBD',
-      startTime: 'TBD',
-      endTime: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      SUCCESS_MESSAGE: 'TBD',
     },
   },
 };

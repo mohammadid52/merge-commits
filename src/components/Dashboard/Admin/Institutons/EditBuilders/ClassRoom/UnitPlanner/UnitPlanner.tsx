@@ -7,8 +7,7 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import Buttons from '../../../../../../Atoms/Buttons';
 // import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
 import Loader from '../../../../../../Atoms/Loader';
-
-import {IImpactLog} from '../ClassRoomHolidays';
+import { IImpactLog } from '../ClassRoomHolidays';
 
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
@@ -21,13 +20,25 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'One Time': {unit: 'day', step: 1},
 };
 
+interface IUnitPlannerProps {
+  isDetailsComplete: boolean;
+  lessonImpactLogs: IImpactLog[];
+  logsChanged: boolean;
+  roomData: any;
+  saveRoomDetails: any;
+  saving: boolean;
+  setLogsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const UnitPlanner = ({
   lessonImpactLogs,
+  logsChanged,
   roomData,
   saveRoomDetails,
   saving,
+  setLogsChanged,
   isDetailsComplete,
-}: any) => {
+}: IUnitPlannerProps) => {
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
 
@@ -80,6 +91,12 @@ const UnitPlanner = ({
       calculateSchedule();
     }
   }, [isDetailsComplete, syllabusList.length]);
+
+  // useEffect(() => {
+  //   if (logsChanged) {
+  //     calculateSchedule();
+  //   }
+  // }, [logsChanged, syllabusList.length]);
 
   // useEffect(() => {
   //   console.log(
@@ -158,7 +175,7 @@ const UnitPlanner = ({
 
   const calculateSchedule = () => {
     console.log('inside calculateSchedule');
-    
+
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
@@ -228,6 +245,7 @@ const UnitPlanner = ({
       }))
     );
     saveRoomDetails();
+    setLogsChanged(false);
   };
 
   return (
@@ -359,7 +377,7 @@ const UnitPlanner = ({
           transparent
         />
         <Buttons
-          disabled={saving}
+          disabled={saving || !logsChanged}
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
           onClick={calculateSchedule}

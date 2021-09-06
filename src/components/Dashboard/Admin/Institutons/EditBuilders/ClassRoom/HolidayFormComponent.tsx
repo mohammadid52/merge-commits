@@ -30,12 +30,26 @@ interface IImpactLog {
   adjustment: string;
 }
 
+interface IHolidayFormComponentProps {
+  activeIndex: number;
+  handleCancel: () => void;
+  lessonImpactLogs: {
+    impactDate: Date;
+    reasonComment: string;
+    lessonImpact: number;
+    adjustment: string;
+  }[];
+  postMutation: (data: any) => void;
+  roomId: string;
+}
+
 const HolidayFormComponent = ({
-  roomId,
-  lessonImpactLogs = [],
   activeIndex,
+  handleCancel,
+  lessonImpactLogs = [],
   postMutation,
-}: any) => {
+  roomId,
+}: IHolidayFormComponentProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS} = useDictionary(clientKey);
 
@@ -67,7 +81,7 @@ const HolidayFormComponent = ({
           adjustment,
         });
       }
-    }else{
+    } else {
       setFormValues({
         impactDate: null,
         reasonComment: '',
@@ -204,7 +218,7 @@ const HolidayFormComponent = ({
         <Buttons
           btnClass="py-3 px-10 mr-4"
           label={BUTTONS[userLanguage]['CANCEL']}
-          onClick={() => console.log()}
+          onClick={handleCancel}
           transparent
         />
         <Buttons
