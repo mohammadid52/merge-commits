@@ -1,11 +1,13 @@
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Auth from '@aws-amplify/auth';
-import {GlobalContext} from '../../contexts/GlobalContext';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
+import moment, {Moment} from 'moment';
+
+import {GlobalContext} from '../../contexts/GlobalContext';
 
 import SideMenu from './Menu/SideMenu';
-import {useCookies} from 'react-cookie';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
@@ -29,6 +31,7 @@ import {
   setLocalStorageData,
 } from '../../utilities/localStorage';
 import EmojiFeedback from '../General/EmojiFeedback';
+import {frequencyMapping} from '../../utilities/staticData';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -439,6 +442,114 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.activeRoom]);
 
+  const calculateAvailableStartEndDate = (
+    date: Moment,
+    frequency: any,
+    step: number,
+    duration: number,
+    scheduleDates: Date[],
+    scheduleData: any
+  ) => {
+    if (frequency === 'M/W/F' && ![1, 3, 5].includes(moment(date).day())) {
+      date = moment(new Date(moment(date).add(2, frequency).toDate()));
+    }
+    if (frequency === 'Tu/Th' && ![2, 4].includes(moment(date).day())) {
+      date = moment(new Date(moment(date).add(2, frequency).toDate()));
+    }
+    let iteration: number = 1,
+      startDate,
+      estEndDate,
+      i = 0;
+    while (iteration <= Math.ceil(duration)) {
+      const isOccupied = scheduleDates.find(
+        (ele) =>
+          new Date(new Date(ele).toDateString()).getTime() ===
+          new Date(moment(date).add(i, frequency).toDate()).getTime()
+      );
+      console.log(
+        isOccupied,
+        'isOccupied',
+        iteration,
+        moment(date).add(i, frequency).day()
+      );
+      if (
+        !isOccupied &&
+        (scheduleData.frequency !== 'M/W/F' ||
+          (scheduleData.frequency === 'M/W/F' &&
+            [1, 3, 5].includes(moment(date).add(i, frequency).day()))) &&
+        (scheduleData.frequency !== 'Tu/Th' ||
+          (scheduleData.frequency === 'Tu/Th' &&
+            [2, 4].includes(moment(date).add(i, frequency).day())))
+      ) {
+        console.log('inside finalization if');
+
+        if (iteration === 1) {
+          startDate = new Date(moment(date).add(i, frequency).toDate());
+          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
+        }
+        if (iteration === duration) {
+          estEndDate = new Date(moment(date).add(i, frequency).toDate());
+        }
+        iteration++;
+      }
+      i += step;
+    }
+    return {startDate, estEndDate: estEndDate || startDate};
+  };
+
+  const calculateSchedule = (syllabusList: any, scheduleData: any) => {
+    console.log('inside calculateSchedule');
+    const {startDate, frequency, lessonImpactLog = []} = scheduleData;
+    let count: number = 0,
+      lastOccupiedDate: any = startDate,
+      scheduleDates = lessonImpactLog
+        .filter((log: any) => log.adjustment === 'Push')
+        .map((log: any) => log.impactDate);
+
+    return syllabusList.map((syllabus: any) => ({
+      ...syllabus,
+      startDate: lastOccupiedDate,
+      lessons: {
+        ...syllabus.lessons,
+        items: syllabus.lessons.items.map((item: any) => {
+            if (count !== 0 && 1 - count < item.lesson.duration) {
+              lastOccupiedDate = moment(lastOccupiedDate).add(
+                frequencyMapping[frequency].step,
+                frequencyMapping[frequency].unit
+              );
+              count = 0;
+            }
+            count += item.lesson.duration;
+
+            const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
+              moment(lastOccupiedDate),
+              frequencyMapping[frequency].unit,
+              frequencyMapping[frequency].step,
+              item.lesson.duration,
+              scheduleDates,
+              scheduleData
+            );
+            console.log(
+              startDate,
+              estEndDate,
+              'startDate, estEndDate inside calculate schedule'
+            );
+
+            item.startDate = startDate;
+            item.estEndDate = estEndDate;
+            lastOccupiedDate = Number.isInteger(count)
+              ? moment(item.estEndDate).add(
+                  frequencyMapping[scheduleData.frequency].step,
+                  frequencyMapping[scheduleData.frequency].unit
+                )
+              : item.estEndDate;
+            count = count >= 1 ? 0 : count;
+            return item;
+          }),
+      },
+    }));
+  };
+
   /**
    * 5. LIST AVAILABLE SYLLABUS
    */
@@ -448,8 +559,12 @@ const Dashboard = (props: DashboardProps) => {
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
         try {
+          let scheduleDetails: any = await API.graphql(
+            graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+          );
+          scheduleDetails = scheduleDetails?.data?.getRoom;
           const getCurriculum = await API.graphql(
-            graphqlOperation(queries.getCurriculum, {id: curriculumIds})
+            graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
           );
           // @ts-ignore
           const response = await getCurriculum.data.getCurriculum;
@@ -457,22 +572,38 @@ const Dashboard = (props: DashboardProps) => {
           const syllabi = response.universalSyllabus.items;
           const sequence = response.universalSyllabusSeq;
 
-          const mappedResponseObjects = sequence?.reduce(
-            (acc: any[], syllabusID: string) => {
+          const mappedResponseObjects = sequence
+            ?.reduce((acc: any[], syllabusID: string) => {
               return [
                 ...acc,
                 syllabi.find((syllabus: any) => syllabus.id === syllabusID),
               ];
-            },
-            []
-          );
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'syllabus',
-              data: mappedResponseObjects,
-            },
-          });
+            }, [])
+            .map((syllabus: any) => ({
+              ...syllabus,
+              lessons: {
+                ...syllabus.lessons,
+                items: syllabus.lessons.items
+                  .map((t: any) => {
+                    let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                    return {...t, index};
+                  })
+                  .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+              },
+            }));
+          if (
+            scheduleDetails &&
+            scheduleDetails.startDate &&
+            scheduleDetails.endDate &&
+            scheduleDetails.frequency
+          ) {
+            const modifiedData = calculateSchedule(
+              mappedResponseObjects,
+              scheduleDetails
+            );
+            console.log(modifiedData, 'modifiedData+++++');
+          }
+
           dispatch({
             type: 'UPDATE_ROOM',
             payload: {
@@ -526,7 +657,14 @@ const Dashboard = (props: DashboardProps) => {
         );
         //@ts-ignore
         const response = await syllabusLessonFetch.data.getUniversalSyllabus;
-        const lessons = response?.lessons.items;
+        const lessons = response?.lessons.items
+          .map((t: any) => {
+            let index = response?.universalLessonsSeq?.indexOf(t.id);
+            return {...t, index};
+          })
+          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+        console.log(activeRoomInfo, '+++++++++++++');
+
         dispatch({
           type: 'UPDATE_ROOM',
           payload: {

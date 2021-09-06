@@ -29,6 +29,12 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
   }, [props]);
 
   useEffect(() => {
+    if (lessonLoading && lessonsBySession.length) {
+      setLessonsBySession([]);
+    }
+  }, [lessonLoading]);
+
+  useEffect(() => {
     if (lessons?.length) {
       const temp: any = [];
       const groupedData = groupBy(lessons, 'session');

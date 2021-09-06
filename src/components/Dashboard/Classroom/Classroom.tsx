@@ -154,6 +154,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     open: 0,
     completed: 0,
   });
+  const [lessonData, setLessonData] = useState<Array<any>>([]);
 
   // ##################################################################### //
   // ########################## LESSON GROUPING ########################## //
@@ -187,32 +188,59 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         )
       : [];
 
-  // reconstructing lesson data after adding some calculated fields
-  let count: number = 0;
-  let lessonData = state.roomData.lessons;
-  lessonData?.map((item: any) => {
-    let temp = Math.ceil(count + item.lesson.duration);
-    item.sessionHeading = `Session ${
-      item.lesson.duration > 1
-        ? range(Math.ceil(count) + 1, temp)
-            .join(', ')
-            .replace(/, ([^,]*)$/, ' & $1')
-        : temp
-    }`;
-    count += item.lesson.duration;
-    item.session = Math.ceil(count);
-    item.lesson = {
-      ...item.lesson,
-      totalEstTime:
-        Math.ceil(
-          item.lesson.lessonPlan.reduce(
-            (total: number, obj: any) => Number(obj.estTime) + total,
-            0
-          ) / 5
-        ) * 5,
-    };
-    return item;
-  });
+  useEffect(() => {
+    // reconstructing lesson data after adding some calculated fields
+    let count: number = 0;
+    let temp = state.roomData.lessons;
+    const syllabusList = state.roomData?.syllabus;
+    const activeSyllabusLessons =
+      syllabusList.find((syllabus: any) => syllabus.id === activeRoomInfo?.activeSyllabus)
+        ?.lessons?.items || [];
+    console.log(
+      temp,
+      'temp inside useeffect',
+      state.roomData?.syllabus,
+      activeSyllabusLessons
+    );
+
+    if (temp?.length && syllabusList?.length) {
+      setLessonData(
+        temp?.map((item: any) => {
+          const lessonScheduleData = activeSyllabusLessons?.find(
+            (lesson: any) => lesson.id === item.id
+          );
+          let temp = Math.ceil(count + item.lesson.duration);
+          item.sessionHeading = lessonScheduleData?.startDate
+            ? item.lesson.duration > 1
+              ? [
+                  new Date(lessonScheduleData.startDate).toLocaleDateString(),
+                  new Date(lessonScheduleData.estEndDate).toLocaleDateString(),
+                ].join(' - ')
+              : new Date(lessonScheduleData.startDate).toLocaleDateString()
+            : `Session ${
+                item.lesson.duration > 1
+                  ? range(Math.ceil(count) + 1, temp)
+                      .join(', ')
+                      .replace(/, ([^,]*)$/, ' & $1')
+                  : temp
+              }`;
+          count += item.lesson.duration;
+          item.session = Math.ceil(count);
+          item.lesson = {
+            ...item.lesson,
+            totalEstTime:
+              Math.ceil(
+                item.lesson.lessonPlan.reduce(
+                  (total: number, obj: any) => Number(obj.estTime) + total,
+                  0
+                ) / 5
+              ) * 5,
+          };
+          return item;
+        })
+      );
+    }
+  }, [state.roomData.lessons, state.roomData?.syllabus]);
 
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
