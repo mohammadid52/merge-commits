@@ -7,8 +7,7 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import Buttons from '../../../../../../Atoms/Buttons';
 // import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
 import Loader from '../../../../../../Atoms/Loader';
-
-import {IImpactLog} from '../ClassRoomHolidays';
+import { IImpactLog } from '../ClassRoomHolidays';
 
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
@@ -21,19 +20,36 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'One Time': {unit: 'day', step: 1},
 };
 
-const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any) => {
+interface IUnitPlannerProps {
+  isDetailsComplete: boolean;
+  lessonImpactLogs: IImpactLog[];
+  logsChanged: boolean;
+  roomData: any;
+  saveRoomDetails: any;
+  saving: boolean;
+  setLogsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const UnitPlanner = ({
+  lessonImpactLogs,
+  logsChanged,
+  roomData,
+  saveRoomDetails,
+  saving,
+  setLogsChanged,
+  isDetailsComplete,
+}: IUnitPlannerProps) => {
   const [loading, setLoading] = useState(true);
   const [syllabusList, setSyllabusList] = useState([]);
-  const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
 
   useEffect(() => {
     if (roomData.curricular?.id) {
       fetchClassRoomSyllabus();
-      getImpactLogs();
     }
   }, [roomData.curricular?.id]);
 
   const fetchClassRoomSyllabus = async () => {
+    console.log('fetchClassRoomSyllabus');
     try {
       setLoading(true);
       const list: any = await API.graphql(
@@ -66,21 +82,21 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
       }, 500);
       setLoading(false);
     } catch (error) {
-      console.log(error, 'error');
       setLoading(false);
     }
   };
 
-  const getImpactLogs = async () => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getRoomLessonImpactLogs, {id: roomData.id})
-      );
-      setLessonImpactLogs(result?.data?.getRoom.lessonImpactLog || []);
-    } catch (error) {
-      setLessonImpactLogs([]);
+  useEffect(() => {
+    if (isDetailsComplete && syllabusList.length) {
+      calculateSchedule();
     }
-  };
+  }, [isDetailsComplete, syllabusList.length]);
+
+  // useEffect(() => {
+  //   if (logsChanged) {
+  //     calculateSchedule();
+  //   }
+  // }, [logsChanged, syllabusList.length]);
 
   // useEffect(() => {
   //   console.log(
@@ -158,6 +174,8 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
   };
 
   const calculateSchedule = () => {
+    console.log('inside calculateSchedule');
+
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
@@ -227,6 +245,7 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
       }))
     );
     saveRoomDetails();
+    setLogsChanged(false);
   };
 
   return (
@@ -358,7 +377,7 @@ const UnitPlanner = ({roomData, saveRoomDetails, saving, isDetailsComplete}: any
           transparent
         />
         <Buttons
-          disabled={saving}
+          disabled={saving || !logsChanged}
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
           onClick={calculateSchedule}
