@@ -178,7 +178,9 @@ const UnitPlanner = ({
 
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
-      scheduleDates = lessonImpactLogs.map((log: any) => log.impactDate);
+      scheduleDates = lessonImpactLogs
+        .filter((log: any) => log.adjustment === 'Push')
+        .map((log: any) => log.impactDate);
 
     setSyllabusList((prevSyllabusList: any) =>
       prevSyllabusList.map((syllabus: any) => ({
@@ -244,7 +246,7 @@ const UnitPlanner = ({
         },
       }))
     );
-    saveRoomDetails();
+    // saveRoomDetails();
     setLogsChanged(false);
   };
 
@@ -304,7 +306,7 @@ const UnitPlanner = ({
                     <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
                       Lesson Name
                     </div>
-                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
+                    <div className="w-2/10 flex justify-center px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
                       Duration ({roomData.frequency})
                     </div>
                     <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
@@ -328,7 +330,7 @@ const UnitPlanner = ({
                             <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                               {item.lesson?.title}
                             </div>
-                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                            <div className="w-2/10 flex justify-center px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                               {item.lesson?.duration}
                             </div>
                             <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
@@ -380,7 +382,10 @@ const UnitPlanner = ({
           disabled={saving || !logsChanged}
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
-          onClick={calculateSchedule}
+          onClick={() => {
+            calculateSchedule();
+            saveRoomDetails()
+          }}
         />
       </div>
     </div>
