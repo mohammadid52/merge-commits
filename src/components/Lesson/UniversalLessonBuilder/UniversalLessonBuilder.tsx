@@ -1,28 +1,25 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
 import {API, graphqlOperation} from 'aws-amplify';
+import {nanoid} from 'nanoid';
+import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
-
-import Tooltip from '../../Atoms/Tooltip';
-import BreadCrums from '../../Atoms/BreadCrums';
-
+import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
 import {useQuery} from '../../../customHooks/urlParam';
+import {LessonPlansProps} from '../../../interfaces/LessonInterfaces';
+import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
-
-import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
-import BuilderWrapper from './views/BuilderWrapper';
+import BreadCrums from '../../Atoms/BreadCrums';
+import Tooltip from '../../Atoms/Tooltip';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import * as customQueries from '../../../customGraphql/customQueries';
-import {nanoid} from 'nanoid';
+import BuilderWrapper from './views/BuilderWrapper';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];

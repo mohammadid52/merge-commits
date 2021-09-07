@@ -1,4 +1,5 @@
-import {findIndex, update} from 'lodash';
+import update from 'lodash/update';
+import findIndex from 'lodash/findIndex';
 import React, {useContext, createContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {UniversalLesson} from '../interfaces/UniversalLessonInterfaces';

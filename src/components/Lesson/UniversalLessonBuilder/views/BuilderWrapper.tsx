@@ -47,7 +47,6 @@ import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import WritingExerciseModal from '../UI/ModalDialogs/WritingExerciseModal';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
-import PageSelector from '../UI/PageSelector';
 import {Accordion} from '../UI/UIComponents/Accordian';
 import {CoreBuilder} from './CoreBuilder';
 
@@ -98,7 +97,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
-  const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
+
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
 
@@ -139,9 +138,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const hideAllUIMenus = () => {
     if (hierarchyVisible) {
       setHierarchyVisible(false);
-    }
-    if (builderMenuVisible) {
-      setBuilderMenuVisible(false);
     }
   };
 
@@ -228,21 +224,21 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      case dialogLabelList.VIEW_PAGES:
-        return (
-          <PageSelector
-            universalLessonDetails={universalLessonDetails}
-            deleteFromULBHandler={deleteFromULBHandler}
-            universalBuilderDict={UniversalBuilderDict}
-            userLanguage={userLanguage}
-            galleryVisible={galleryVisible}
-            loading={loading}
-            selectedPageID={selectedPageID}
-            setSelectedPageID={setSelectedPageID}
-            handleModalPopToggle={handleModalPopToggle}
-            hideAllModals={hideAllModals}
-          />
-        );
+      // case dialogLabelList.VIEW_PAGES:
+      //   return (
+      //     <PageSelector
+      //       universalLessonDetails={universalLessonDetails}
+      //       deleteFromULBHandler={deleteFromULBHandler}
+      //       universalBuilderDict={UniversalBuilderDict}
+      //       userLanguage={userLanguage}
+      //       galleryVisible={galleryVisible}
+      //       loading={loading}
+      //       selectedPageID={selectedPageID}
+      //       setSelectedPageID={setSelectedPageID}
+      //       handleModalPopToggle={handleModalPopToggle}
+      //       hideAllModals={hideAllModals}
+      //     />
+      //   );
       case dialogLabelList.NEW_PAGE:
         return (
           <NewPageDialog
@@ -629,14 +625,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-
-      {/* NO LONGER IN USE*/}
-      {/* <BuilderMenu
-        galleryVisible={galleryVisible}
-        setGalleryVisible={setGalleryVisible}
-        builderMenuVisible={builderMenuVisible}
-        setBuilderMenuVisible={setBuilderMenuVisible}
-      /> */}
 
       <CoreBuilder
         mode={mode}

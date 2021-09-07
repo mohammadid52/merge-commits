@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaCompress, FaExpand} from 'react-icons/fa';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaCompress, FaExpand} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as mutations from '../../../graphql/mutations';
+import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
 
 interface StudentWindowTitleBarProps {

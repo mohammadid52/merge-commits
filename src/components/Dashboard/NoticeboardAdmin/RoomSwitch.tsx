@@ -1,16 +1,15 @@
-import React, { useContext } from 'react';
-import { DashboardProps } from '../Dashboard';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import useLoadRooms from '../../../customHooks/loadRooms';
-import { Room } from '../Menu/SideRoomSelector';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import useLoadRooms from '../../../customHooks/loadRooms';
+import {DashboardProps} from '../Dashboard';
+import {Room} from '../Menu/SideRoomSelector';
 
 const RoomSwitch = (props: DashboardProps) => {
-  const { loading, activeRoom, setActiveRoom, setActiveRoomName } = props;
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {loading, activeRoom, setActiveRoom, setActiveRoomName} = props;
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {noticeboardDict} = useDictionary(clientKey);
   const rooms = useLoadRooms();
-
 
   const handleRoomSelection = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
@@ -21,7 +20,8 @@ const RoomSwitch = (props: DashboardProps) => {
     }
   };
 
-  const linkClass = 'w-full p-2 text-sm tracking-wider mx-auto border-b-0 border-medium-gray';
+  const linkClass =
+    'w-full p-2 text-sm tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return (
     <div className={`${theme.section}`}>
@@ -35,9 +35,11 @@ const RoomSwitch = (props: DashboardProps) => {
                 onClick={(e) => handleRoomSelection(e)}
                 className={`rounded p-2 cursor-pointer truncate ...
                 ${linkClass} 
-                ${activeRoom === room.id 
-                  ? 'font-semibold text-grayscale-lightest bg-darker-gray bg-opacity-20' 
-                  : 'text-grayscale-lightest bg-grayscale-light bg-opacity-80'} 
+                ${
+                  activeRoom === room.id
+                    ? 'font-semibold text-grayscale-lightest bg-darker-gray bg-opacity-20'
+                    : 'text-grayscale-lightest bg-grayscale-light bg-opacity-80'
+                } 
               `}>
                 {room.name}
               </div>

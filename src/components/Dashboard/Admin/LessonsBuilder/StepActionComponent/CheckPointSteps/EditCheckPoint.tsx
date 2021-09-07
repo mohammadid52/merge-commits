@@ -1,37 +1,29 @@
-import React, {Fragment, useContext, useState, useEffect} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {findIndex, remove} from 'lodash';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {AiOutlineEdit, AiOutlineInfoCircle} from 'react-icons/ai';
+import {BsFillTrashFill} from 'react-icons/bs';
 import {IoIosKeypad} from 'react-icons/io';
+import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {
-  IoCaretDownCircleOutline,
-  IoCaretUpCircleOutline,
-  IoOptionsOutline,
-} from 'react-icons/io5';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../../graphql/queries';
-import * as mutations from '../../../../../../graphql/mutations';
-
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../../Atoms/Form/Selector';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../../Atoms/Buttons';
-import RichTextEditor from '../../../../../Atoms/RichTextEditor';
-import {AddNewCheckPointProps} from './AddNewCheckPoint';
-
-import {getTypeString, reorder} from '../../../../../../utilities/strings';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
-import {findIndex, get, remove, update} from 'lodash';
-import {AiOutlineEdit, AiOutlineInfoCircle} from 'react-icons/ai';
-import ToolTip from '../../../../../Atoms/Tooltip';
-import {BsFillTrashFill} from 'react-icons/bs';
+import * as mutations from '../../../../../../graphql/mutations';
+import * as queries from '../../../../../../graphql/queries';
+import {getTypeString, reorder} from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import FormInput from '../../../../../Atoms/Form/FormInput';
+import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
+import Selector from '../../../../../Atoms/Form/Selector';
+import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
+import {AddNewCheckPointProps} from './AddNewCheckPoint';
 
 interface EditCheckPointProps {
   changeStep: (step: string) => void;
@@ -415,10 +407,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     subtitle,
     language,
     label,
-    instructionsTitle,
-    purposeHtml,
-    objectiveHtml,
-    instructionHtml,
+
     estTime,
   } = checkPointData;
 
@@ -744,7 +733,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
         </div>
 
         {/* Question table */}
-        <div className="py-6  border-0 border-gray-200 border-0 my-4">
+        <div className="py-6  border-0 border-gray-200 my-4">
           <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
             {EditCheckPointDict[userLanguage]['CHECKPOINTQUE']}
           </p>

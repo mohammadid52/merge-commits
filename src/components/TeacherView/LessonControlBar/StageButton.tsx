@@ -1,8 +1,5 @@
-import React, {useContext, ReactNode, useState, ReactElement} from 'react';
+import React, {useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {LessonControlContext} from '../../../contexts/LessonControlContext';
-
-import StageLabels from '../../General/LabelSwitch';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 
@@ -24,20 +21,12 @@ interface StageButtonProps {
 const StageButton = (props: StageButtonProps) => {
   const {
     iconID,
-    active,
-    breakdown,
-    open,
-    menuOpen,
-    handleOpenMenu,
-    disabled,
-    label,
+
     handlePageChange,
-    counter,
+
     page,
   } = props;
-  const {lessonState, id, lessonDispatch, controlState, controlDispatch} = useContext(
-    GlobalContext
-  );
+  const {lessonState, controlDispatch} = useContext(GlobalContext);
 
   const match = useRouteMatch();
   const history = useHistory();

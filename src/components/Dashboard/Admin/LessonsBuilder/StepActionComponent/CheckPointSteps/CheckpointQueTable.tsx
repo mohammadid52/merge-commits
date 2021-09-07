@@ -1,15 +1,12 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-
-import * as queries from '../../../../../../graphql/queries';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {getAsset} from '../../../../../../assets';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
-
-import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
-import Buttons from '../../../../../Atoms/Buttons';
-import { getTypeString } from '../../../../../../utilities/strings';
-import { getAsset } from '../../../../../../assets';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import * as queries from '../../../../../../graphql/queries';
+import {getTypeString} from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
 
 interface CheckPointContentProps {
   changeStep?: (step?: string) => void;
@@ -20,11 +17,17 @@ interface CheckPointContentProps {
 }
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
-  const { changeStep, checkpointId, showActionIcons, DeleteCheckpoint, editCheckPoint } = props;
+  const {
+    changeStep,
+    checkpointId,
+    showActionIcons,
+    DeleteCheckpoint,
+    editCheckPoint,
+  } = props;
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { CheckpointQueTableDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {CheckpointQueTableDict} = useDictionary(clientKey);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -39,21 +42,24 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
         })
       );
       let questionSequence: any = await API.graphql(
-        graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
+        graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${checkpointId}`})
       );
       questionSequence = questionSequence?.data.getCSequences?.sequence || [];
       if (!fetchCheckpointsData) {
         setError(true);
         throw new Error('fail!');
       } else {
-        const checkpointQuestions = fetchCheckpointsData.data?.getCheckpoint?.questions?.items;
-        const quesionsListIds = checkpointQuestions.map((item: { questionID: string }) => item.questionID);
+        const checkpointQuestions =
+          fetchCheckpointsData.data?.getCheckpoint?.questions?.items;
+        checkpointQuestions.map((item: {questionID: string}) => item.questionID);
         if (checkpointQuestions?.length > 0) {
-          const questionsList: any = checkpointQuestions.map((item: any) => item.question);
+          const questionsList: any = checkpointQuestions.map(
+            (item: any) => item.question
+          );
           let list = questionsList
             .map((t: any) => {
               let index = questionSequence.indexOf(t.id);
-              return { ...t, index };
+              return {...t, index};
             })
             .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
           setQuestionsList(list);
@@ -137,7 +143,10 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                     ))
                   ) : (
                     <div className="py-12 my-6 text-center">
-                      <p> {CheckpointQueTableDict[userLanguage]['NOQUESTIONCHECKPOINT']}</p>
+                      <p>
+                        {' '}
+                        {CheckpointQueTableDict[userLanguage]['NOQUESTIONCHECKPOINT']}
+                      </p>
                     </div>
                   )}
                 </Fragment>

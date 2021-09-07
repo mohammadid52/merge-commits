@@ -86,12 +86,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     institutionList,
   } = props;
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
   const {AddNewLessonFormDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
   const refName = params.get('refName');
-  const [loading, setLoading] = useState(false);
+
   const [validation, setValidation] = useState({
     name: '',
     type: '',
@@ -348,7 +348,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       } else {
         // Updating existing Lesson
         try {
-          setLoading(true);
           const input = {
             id: lessonId,
             type: formData.type.value,
@@ -397,7 +396,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             languages: '',
             studentSummary: '',
           });
-          setLoading(false);
         }
       }
     }

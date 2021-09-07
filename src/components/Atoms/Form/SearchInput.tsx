@@ -1,9 +1,8 @@
 import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
-import {IoSearchSharp, IoClose} from 'react-icons/io5';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {IoClose, IoSearchSharp} from 'react-icons/io5';
 import {getAsset} from '../../../assets';
-import {throttle} from 'lodash';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 interface SearchProps {
   value?: string;

@@ -1,6 +1,6 @@
 import React, {lazy, useContext, useEffect, useState} from 'react';
+import {Redirect, Route, Switch, useRouteMatch} from 'react-router-dom';
 import {LessonControlContext} from '../../contexts/LessonControlContext';
-import {Redirect, Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 

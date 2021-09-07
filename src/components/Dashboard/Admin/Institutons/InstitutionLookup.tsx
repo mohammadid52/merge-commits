@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoBusinessSharp } from 'react-icons/io5';
-import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
-
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
+import {IoBusinessSharp} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../customGraphql/customQueries';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import InstitutionRow from './InstitutionRow';
-import Buttons from '../../../Atoms/Buttons';
-import Selector from '../../../Atoms/Form/Selector';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Pagination from '../../../Atoms/Pagination';
-import SearchInput from '../../../Atoms/Form/SearchInput';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
-import { getAsset } from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
+import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
+import SearchInput from '../../../Atoms/Form/SearchInput';
+import Selector from '../../../Atoms/Form/Selector';
+import PageCountSelector from '../../../Atoms/PageCountSelector';
+import Pagination from '../../../Atoms/Pagination';
+import SectionTitle from '../../../Atoms/SectionTitle';
+import InstitutionRow from './InstitutionRow';
 import InstitutionRowLoader from './InstitutionRowLoader';
 
 /**
@@ -28,8 +26,8 @@ import InstitutionRowLoader from './InstitutionRowLoader';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey, userLanguage, state } = useContext(GlobalContext);
-  const { InstitutionDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
+  const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -52,7 +50,7 @@ const InstitutionLookup: React.FC = () => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: `${match.url}`,
@@ -61,14 +59,14 @@ const InstitutionLookup: React.FC = () => {
   ];
 
   const sortByList = [
-    { id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name' },
-    { id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type' },
+    {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
+    {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
     {
       id: 3,
       name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
       value: 'website',
     },
-    { id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone' },
+    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'},
   ];
 
   const goNextPage = () => {
@@ -128,25 +126,32 @@ const InstitutionLookup: React.FC = () => {
     const fetchInstitutionData: any = await API.graphql(
       graphqlOperation(customQueries.getInstListForNonAdmin, {
         filter: {
-          staffAuthID: { eq: state.user.authId },
-          staffEmail: { eq: state.user.email },
-          status: { eq: 'Active' },
-      }})
+          staffAuthID: {eq: state.user.authId},
+          staffEmail: {eq: state.user.email},
+          status: {eq: 'Active'},
+        },
+      })
     );
     let userInstitutes: any = fetchInstitutionData.data?.listStaffs?.items;
-    return userInstitutes.filter((inst: any) => inst.institution).map((inst: any) => inst.institution)
+    return userInstitutes
+      .filter((inst: any) => inst.institution)
+      .map((inst: any) => inst.institution);
   }
 
   async function getInstitutionsData() {
     try {
       let instituteList: any;
       if (isTeacher) {
-        instituteList = await fetchInstListForNonAdmin()
+        instituteList = await fetchInstListForNonAdmin();
       } else {
-        instituteList = await fetchInstListForAdmin()
+        instituteList = await fetchInstListForAdmin();
       }
       const totalListPages = Math.floor(instituteList.length / userCount);
-      setTotalPages(totalListPages * userCount === instituteList.length ? totalListPages : totalListPages + 1)
+      setTotalPages(
+        totalListPages * userCount === instituteList.length
+          ? totalListPages
+          : totalListPages + 1
+      );
       setTotalInstNum(instituteList.length);
       setInstitutionsData(instituteList);
       setStatus('done');
@@ -188,13 +193,13 @@ const InstitutionLookup: React.FC = () => {
 
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({ value: '', isActive: false });
+    setSearchInput({value: '', isActive: false});
   };
 
   const fetchSortedList = () => {
     const newInstList = [...institutionsData].sort((a, b) =>
       a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
-        sortingType.asc
+      sortingType.asc
         ? 1
         : -1
     );
@@ -351,27 +356,26 @@ const InstitutionLookup: React.FC = () => {
 
               {/* Pagination And Counter */}
               <div className="flex justify-center my-4">
-                {!searchInput.isActive &&
-                  Boolean(currentList?.length) && (
-                    <Fragment>
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                        {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
-                        {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
-                        {InstitutionDict[userLanguage]['PAGES']}
-                      </span>
-                      <Pagination
-                        currentPage={currentPage + 1}
-                        setNext={goNextPage}
-                        setPrev={goPrevPage}
-                        firstPage={firstPage}
-                        lastPage={lastPage}
-                      />
-                      <PageCountSelector
-                        pageSize={userCount}
-                        setPageSize={(c: number) => setUserCount(c)}
-                      />
-                    </Fragment>
-                  )}
+                {!searchInput.isActive && Boolean(currentList?.length) && (
+                  <Fragment>
+                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
+                      {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
+                      {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
+                      {InstitutionDict[userLanguage]['PAGES']}
+                    </span>
+                    <Pagination
+                      currentPage={currentPage + 1}
+                      setNext={goNextPage}
+                      setPrev={goPrevPage}
+                      firstPage={firstPage}
+                      lastPage={lastPage}
+                    />
+                    <PageCountSelector
+                      pageSize={userCount}
+                      setPageSize={(c: number) => setUserCount(c)}
+                    />
+                  </Fragment>
+                )}
               </div>
             </div>
           </div>
