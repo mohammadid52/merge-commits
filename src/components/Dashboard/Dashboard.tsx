@@ -498,7 +498,6 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   const calculateSchedule = (syllabusList: any, scheduleData: any) => {
-    console.log('inside calculateSchedule');
     const {startDate, frequency, lessonImpactLog = []} = scheduleData;
     let count: number = 0,
       lastOccupiedDate: any = startDate,
@@ -512,40 +511,40 @@ const Dashboard = (props: DashboardProps) => {
       lessons: {
         ...syllabus.lessons,
         items: syllabus.lessons.items.map((item: any) => {
-            if (count !== 0 && 1 - count < item.lesson.duration) {
-              lastOccupiedDate = moment(lastOccupiedDate).add(
-                frequencyMapping[frequency].step,
-                frequencyMapping[frequency].unit
-              );
-              count = 0;
-            }
-            count += item.lesson.duration;
-
-            const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
-              moment(lastOccupiedDate),
-              frequencyMapping[frequency].unit,
+          if (count !== 0 && 1 - count < item.lesson.duration) {
+            lastOccupiedDate = moment(lastOccupiedDate).add(
               frequencyMapping[frequency].step,
-              item.lesson.duration,
-              scheduleDates,
-              scheduleData
+              frequencyMapping[frequency].unit
             );
-            console.log(
-              startDate,
-              estEndDate,
-              'startDate, estEndDate inside calculate schedule'
-            );
+            count = 0;
+          }
+          count += item.lesson.duration;
 
-            item.startDate = startDate;
-            item.estEndDate = estEndDate;
-            lastOccupiedDate = Number.isInteger(count)
-              ? moment(item.estEndDate).add(
-                  frequencyMapping[scheduleData.frequency].step,
-                  frequencyMapping[scheduleData.frequency].unit
-                )
-              : item.estEndDate;
-            count = count >= 1 ? 0 : count;
-            return item;
-          }),
+          const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
+            moment(lastOccupiedDate),
+            frequencyMapping[frequency].unit,
+            frequencyMapping[frequency].step,
+            item.lesson.duration,
+            scheduleDates,
+            scheduleData
+          );
+          console.log(
+            startDate,
+            estEndDate,
+            'startDate, estEndDate inside calculate schedule'
+          );
+
+          item.startDate = startDate;
+          item.estEndDate = estEndDate;
+          lastOccupiedDate = Number.isInteger(count)
+            ? moment(item.estEndDate).add(
+                frequencyMapping[scheduleData.frequency].step,
+                frequencyMapping[scheduleData.frequency].unit
+              )
+            : item.estEndDate;
+          count = count >= 1 ? 0 : count;
+          return item;
+        }),
       },
     }));
   };
@@ -555,7 +554,13 @@ const Dashboard = (props: DashboardProps) => {
    */
   useEffect(() => {
     setSyllabusLoading(true);
-
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'syllabus',
+        data: [],
+      },
+    });
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
         try {
@@ -601,7 +606,6 @@ const Dashboard = (props: DashboardProps) => {
               mappedResponseObjects,
               scheduleDetails
             );
-            console.log(modifiedData, 'modifiedData+++++');
           }
 
           dispatch({
@@ -663,7 +667,6 @@ const Dashboard = (props: DashboardProps) => {
             return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-        console.log(activeRoomInfo, '+++++++++++++');
 
         dispatch({
           type: 'UPDATE_ROOM',

@@ -155,6 +155,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     completed: 0,
   });
   const [lessonData, setLessonData] = useState<Array<any>>([]);
+  const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
   // ##################################################################### //
   // ########################## LESSON GROUPING ########################## //
@@ -189,28 +190,31 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
+    if (lessonLoading) {
+      setLessonData([]);
+    }
+  }, [lessonLoading]);
+
+  useEffect(() => {
     // reconstructing lesson data after adding some calculated fields
     let count: number = 0;
-    let temp = state.roomData.lessons;
+    let temp = [...state.roomData.lessons];
     const syllabusList = state.roomData?.syllabus;
     const activeSyllabusLessons =
       syllabusList.find((syllabus: any) => syllabus.id === activeRoomInfo?.activeSyllabus)
         ?.lessons?.items || [];
-    console.log(
-      temp,
-      'temp inside useeffect',
-      state.roomData?.syllabus,
-      activeSyllabusLessons
-    );
+    if (lessonLoading && state.roomData.lessons?.length) {
+      setSettingLessons(true);
+    }
 
-    if (temp?.length && syllabusList?.length) {
+    if (temp?.length && syllabusList?.length && activeSyllabusLessons?.length) {
       setLessonData(
         temp?.map((item: any) => {
           const lessonScheduleData = activeSyllabusLessons?.find(
             (lesson: any) => lesson.id === item.id
           );
           let temp = Math.ceil(count + item.lesson.duration);
-          item.sessionHeading = lessonScheduleData?.startDate
+          const sessionHeading = lessonScheduleData?.startDate
             ? item.lesson.duration > 1
               ? [
                   new Date(lessonScheduleData.startDate).toLocaleDateString(),
@@ -225,8 +229,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   : temp
               }`;
           count += item.lesson.duration;
-          item.session = Math.ceil(count);
-          item.lesson = {
+          const session = Math.ceil(count);
+          const lesson = {
             ...item.lesson,
             totalEstTime:
               Math.ceil(
@@ -236,9 +240,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 ) / 5
               ) * 5,
           };
-          return item;
+          return {...item, lesson, session, sessionHeading};
         })
       );
+      setSettingLessons(false);
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
@@ -438,7 +443,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       activeRoom={state.activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       isTeacher={isTeacher}
-                      lessonLoading={lessonLoading}
+                      lessonLoading={lessonLoading || settingLessons || syllabusLoading}
                       lessons={lessonData}
                     />
                   </div>

@@ -40,7 +40,6 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
       const groupedData = groupBy(lessons, 'session');
       for (const [key, value] of Object.entries(groupedData)) {
         const associatedLessons: any = value;
-        console.log(`${key}: ${value}`);
         temp.push({
           sessionHeading: associatedLessons[0].sessionHeading,
           lessons: value,
@@ -50,7 +49,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
     }
   }, [lessons]);
 
-  const emptyStyles = 'flex justify-center items-center w-full h-48';
+  const emptyStyles = 'flex justify-center items-center w-full h-48'
 
   return (
     <>
@@ -62,7 +61,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
               <ClassroomLoader />
             </Fragment>
           ))
-      ) : lessons?.length ? (
+      ) : lessonsBySession?.length ? (
         lessonsBySession.map((session: any, index: number) => (
           <Fragment key={index}>
             <div className="relative mb-2">
