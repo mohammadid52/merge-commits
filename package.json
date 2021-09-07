@@ -75,6 +75,7 @@
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/ui": "^0.4.0",
     "@types/draftjs-to-html": "^0.8.0",
+    "encoding": "^0.1.13",
     "@types/html-to-draftjs": "^1.4.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-csv": "^1.1.1",
