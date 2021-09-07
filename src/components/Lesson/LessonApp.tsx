@@ -819,7 +819,7 @@ const LessonApp = () => {
     <>
       <FloatingSideMenu />
       <div
-        className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
+        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}>
         <div
           className={`opacity-${
             showRequiredNotification

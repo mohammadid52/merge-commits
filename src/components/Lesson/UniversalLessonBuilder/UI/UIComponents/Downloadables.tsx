@@ -119,7 +119,7 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
             </div>
             <div className="border-t-0 pt-4 dark:border-gray-700 border-gray-200 grid grid-cols-1 gap-x-4 max-h-132 overflow-y-auto gap-y-4">
               {allFiles && allFiles.length > 0 ? (
-                map(allFiles, (d) => <Download file={d} />)
+                map(allFiles, (d) => <Download key={d.id} file={d} />)
               ) : (
                 <p className="w-auto text-gray-500 text-center">
                   No files available to download

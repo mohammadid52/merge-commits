@@ -1,20 +1,16 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {useHistory} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import {awsFormatDate, dateString} from '../../../utilities/time';
-
+import {noop} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
+import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
-import useDictionary from '../../../customHooks/dictionary';
-
+import {awsFormatDate, dateString} from '../../../utilities/time';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
-
 import {Lesson} from './Classroom';
-import {noop} from 'lodash';
 
 interface StartProps {
   isTeacher?: boolean;

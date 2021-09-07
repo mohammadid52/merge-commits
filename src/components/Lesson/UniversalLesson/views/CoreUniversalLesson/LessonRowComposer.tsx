@@ -76,9 +76,10 @@ const LessonRowComposer = () => {
                   pagePart.partContent.map((content: PartContent, idx2: number) => {
                     if (content.value.length > 0) {
                       return (
-                        <div className={`${paddingForHeader(content.type)}`}>
+                        <div
+                          key={`row_pagepart_${idx}_${idx2}`}
+                          className={`${paddingForHeader(content.type)}`}>
                           <div
-                            key={`row_pagepart_${idx}_${idx2}`}
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
