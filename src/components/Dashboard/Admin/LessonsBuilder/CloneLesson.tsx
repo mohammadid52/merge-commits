@@ -36,7 +36,6 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
     /**
      * This object will replace all the existing ids with new ones
      * hope this works 😼
-     * Please don't change anything 👏
      */
 
     const replaceAllExistingIds: any = {
