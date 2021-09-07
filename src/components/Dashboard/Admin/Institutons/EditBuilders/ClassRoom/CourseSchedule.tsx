@@ -70,9 +70,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   });
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [serverMessage, setServerMessage] = useState({
-    message:'',
-    isError: false
-  })
+    message: '',
+    isError: false,
+  });
 
   useEffect(() => {
     const {
@@ -91,8 +91,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       setScheduleData({
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
-        startTime,
-        endTime,
+        startTime: startTime ? moment(startTime, 'HH:mm:ss').format('h:mm A') : null,
+        endTime: endTime ? moment(endTime, 'HH:mm:ss').format('h:mm A') : null,
         frequency,
         location,
         notes,
@@ -203,17 +203,15 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           id,
           startDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.startDate)),
           endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate)),
-          startTime: moment(scheduleData.startTime, 'h:mm A').format('hh:mm:ss'),
-          endTime: moment(scheduleData.endTime, 'h:mm A').format('hh:mm:ss'),
+          startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
+          endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
           frequency: scheduleData.frequency,
           // location: scheduleData.location,
           notes: scheduleData.notes,
           weekDay: scheduleData.weekDay,
           // conferenceCallLink: scheduleData.conferenceCallLink,
         };
-        await API.graphql(
-          graphqlOperation(mutation.updateRoom, {input: input})
-        );
+        await API.graphql(graphqlOperation(mutation.updateRoom, {input: input}));
         setServerMessage({
           message: CourseScheduleDict[userLanguage]['MESSAGES']['SUCCESS_MESSAGE'],
           isError: false,
@@ -433,11 +431,13 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
             scheduleData.weekDay
         )}
       />
-      {serverMessage.message && <div className="py-2 m-auto text-center">
-        <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
-          {serverMessage.message}
-        </p>
-      </div>}
+      {serverMessage.message && (
+        <div className="py-2 m-auto text-center">
+          <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
+            {serverMessage.message}
+          </p>
+        </div>
+      )}
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"

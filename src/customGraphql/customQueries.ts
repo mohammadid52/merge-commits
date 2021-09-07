@@ -3945,3 +3945,121 @@ export const getClassroomSyllabus = /* GraphQL */ `
     }
   }
 `;
+
+export const getCurriculumForClasses = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
+      designers
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          lessons {
+            items {
+              id
+              lesson{
+                duration
+                title
+              }
+            }
+          }
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getScheduleDetails = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      startDate
+      endDate
+      startTime
+      endTime
+      frequency
+      weekDay
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
+    }
+  }
+`;
