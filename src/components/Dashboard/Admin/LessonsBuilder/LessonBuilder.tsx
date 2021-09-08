@@ -189,7 +189,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     show: false,
     message: '',
   });
-  const [isCheckpUnsaved, setIsCheckpUnsaved] = useState<boolean>(false);
+
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
   const [selDesigners, setSelDesigners] = useState<any>([]);

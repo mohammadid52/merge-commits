@@ -9,9 +9,17 @@ interface IModal {
   children: children;
   header?: string;
   subHeader?: string;
+  dark?: boolean;
 }
 
-const ThemeModal = ({setOpen, subHeader, open, children, header}: IModal) => {
+const ThemeModal = ({
+  setOpen,
+  subHeader,
+  open,
+  children,
+  header,
+  dark = true,
+}: IModal) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -44,18 +52,26 @@ const ThemeModal = ({setOpen, subHeader, open, children, header}: IModal) => {
             leave="ease-in duration-200"
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <div className="w-auto max-w-256 inline-block align-bottom bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div
+              className={`${
+                dark ? 'bg-gray-800 ' : 'bg-white'
+              } w-auto max-w-256 inline-block align-bottom  rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6`}>
               <div className="w-auto hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
-                  className="w-auto bg-gray-800 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className={`${
+                    dark ? 'bg-gray-800' : 'bg-white'
+                  } w-auto  rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                   onClick={() => setOpen(false)}>
                   <span className="sr-only">Close</span>
                   <XIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
               {header && (
-                <div className="modal-header border-b-0 pb-2 border-gray-700 ">
+                <div
+                  className={`${
+                    dark ? 'border-gray-700' : 'border-gray-200'
+                  } modal-header border-b-0 pb-2  `}>
                   <h3 className="dark:text-white text-2xl font-semibold">{header}</h3>
                   {subHeader && (
                     <p className="text-sm truncate whitespace-pre text-gray-400">
@@ -64,7 +80,12 @@ const ThemeModal = ({setOpen, subHeader, open, children, header}: IModal) => {
                   )}
                 </div>
               )}
-              <div className="p-2">{children}</div>
+              <div
+                className={`p-2 ${
+                  dark ? 'dark-scroll' : ''
+                } max-h-256 overflow-y-auto overflow-hidden`}>
+                {children}
+              </div>
             </div>
           </Transition.Child>
         </div>
