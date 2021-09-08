@@ -1,24 +1,26 @@
+import {filter, reject} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
-import {filter, reject} from 'lodash';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
+import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
+import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
   const {
-    state: {user, lessonPage = {}},
-    dispatch,
+    state: {lessonPage = {}},
+
     lessonState,
-    lessonDispatch,
   } = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+
+  const [currentLesson, setCurrentLesson] = useState<any>();
 
   const downloadables =
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
@@ -51,6 +53,9 @@ const LessonRowComposer = () => {
       const CURRENT_PAGE = lessonState.currentPage;
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
+    }
+    if (lessonState.lessonData) {
+      setCurrentLesson(lessonState.lessonData);
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
@@ -112,6 +117,8 @@ const LessonRowComposer = () => {
           setShowDownloadMenu={setShowDownloadMenu}
         />
       )}
+
+      <LessonModule currentLesson={currentLesson} />
     </div>
   );
 };
