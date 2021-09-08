@@ -12,6 +12,7 @@ import * as queries from '../../../../../graphql/queries';
 import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';
 import Loader from '../../../../Atoms/Loader';
 import {AiFillCheckCircle} from 'react-icons/ai';
+import {getLocalStorageData} from '../../../../../utilities/localStorage';
 
 const EvidenceTab = ({
   curTab,
@@ -23,6 +24,10 @@ const EvidenceTab = ({
   setSelectedCurriculumList,
   selectedCurriculumList,
 }: any) => {
+  console.log(
+    '🚀 ~ file: LessonModule.tsx ~ line 26 ~ selectedCurriculumList',
+    selectedCurriculumList
+  );
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -56,11 +61,7 @@ const EvidenceTab = ({
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
-    // const activeIndex = selectedCurriculumList.findIndex(
-    //   (item) => item.id === curricularId
-    // );
-    // const temp = [...selectedCurriculumList];
-    // if (!temp[activeIndex].learningEvidenceList) {
+
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
       graphqlOperation(customQueries.listRubrics, {
@@ -170,22 +171,34 @@ const EvidenceTab = ({
     }
   };
 
+  const roomInfo = getLocalStorageData('room_info');
+
+  const curricula = roomInfo?.curricula?.items || [];
+
   const generateCheckedList = (list: any[]) => {
     let result: any[] = [];
-    list.forEach((curriculum: any) => {
-      curriculum.learningObjectiveData.forEach((objective: any) => {
-        objective.associatedTopics.forEach((topic: any) => {
-          topic.associatedRubrics.forEach((rubric: any) => {
-            if (
-              selectedMeasurements.find(
-                (measurement: any) => measurement.rubricID === rubric.id
-              )?.checked
-            ) {
-              result.push(rubric);
-            }
-          });
-        });
-      });
+    list.forEach((curriculum: any): void => {
+      curriculum.learningObjectiveData.forEach(
+        (objective: {curriculumID: string; associatedTopics: any[]}): void => {
+          if (
+            curricula.find(
+              (c: {curriculumID: string}) => c.curriculumID === objective.curriculumID
+            )
+          )
+            objective.associatedTopics.forEach((topic: any) => {
+              topic.associatedRubrics.forEach((rubric: {id: string}) => {
+                if (
+                  selectedMeasurements.find(
+                    (measurement: {rubricID: string}) =>
+                      measurement.rubricID === rubric.id
+                  )?.checked
+                ) {
+                  result.push(rubric);
+                }
+              });
+            });
+        }
+      );
     });
     return result;
   };
