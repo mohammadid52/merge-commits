@@ -4063,3 +4063,14 @@ export const getScheduleDetails = /* GraphQL */ `
     }
   }
 `;
+
+export const getBasicDetailsOfInstitution = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      address
+      image
+    }
+  }
+`;
