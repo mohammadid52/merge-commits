@@ -1,0 +1,38 @@
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+thead,
+tbody,
+tr,
+th,
+td {
+  display: block;
+}
+
+thead tr {
+  width: 97%;
+  width: -webkit-calc(100% - 16px);
+  width: -moz-calc(100% - 16px);
+  width: calc(100% - 16px);
+}
+
+tr:after {
+  content: ' ';
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+tbody {
+  height: 22rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+tbody td,
+thead th {
+  width: 19%;
+  float: left;
+}

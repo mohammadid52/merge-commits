@@ -140,11 +140,13 @@ export const Tabs3 = ({
   curTab,
   setCurTab,
   config = {fullColor: false},
+  numbered = false,
 }: {
   tabs: ITab[];
   curTab: string;
   config?: {fullColor?: boolean};
   setCurTab: setState['string'];
+  numbered?: boolean;
 }) => {
   return (
     <div>
@@ -164,7 +166,7 @@ export const Tabs3 = ({
       </div>
       <div className="hidden sm:block">
         <nav className="transition-all flex space-x-4" aria-label="Tabs">
-          {tabs.map((tab) => (
+          {tabs.map((tab, idx: number) => (
             <div
               onClick={() => setCurTab(tab.name)}
               key={tab.name}
@@ -178,6 +180,7 @@ export const Tabs3 = ({
                 'px-3 transition-all py-2 font-medium text-sm rounded-md'
               )}
               aria-current={tab.current ? 'page' : undefined}>
+              {numbered ? `${idx + 1}. ` : ''}
               {tab.name}
             </div>
           ))}

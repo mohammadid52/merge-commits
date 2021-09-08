@@ -1,6 +1,7 @@
 import React from 'react';
 import map from 'lodash/map';
 import camelCase from 'lodash/camelCase';
+import '../../style/atoms/_table.scss';
 
 const Table = ({
   dataList,
@@ -32,24 +33,24 @@ const Table = ({
               <thead
                 className={`${
                   config?.headers?.bgColor || 'iconoclast:bg-main curate:bg-main'
-                } block`}>
+                } `}>
                 <tr>
                   {map(headers, (header) => (
                     <th
                       scope="col"
                       className={`${
                         config?.headers?.textColor || 'text-gray-500'
-                      } px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider`}>
+                      } px-6 py-3  text-left text-xs font-medium  uppercase tracking-wider`}>
                       {header}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="max-h-88 overflow-y-auto block dark-scroll">
+              <tbody className="max-h-88 overflow-y-auto dark-scroll">
                 {dataList.map((item, idx) => (
                   <tr
                     key={item.id}
-                    className={`${
+                    className={` ${
                       config?.dataList?.bgColor
                         ? config?.dataList?.bgColor
                         : config?.dataList?.pattern === 'striped'
@@ -62,7 +63,7 @@ const Table = ({
                       <td
                         className={`${
                           config?.dataList?.textColor || 'text-gray-500'
-                        } px-6 py-4 whitespace-nowrap text-sm`}>
+                        } px-6 py-4  whitespace-nowrap text-sm`}>
                         {item[camelCase(header.toLowerCase())]}
                       </td>
                     ))}

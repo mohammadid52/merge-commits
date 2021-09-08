@@ -286,7 +286,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
     <ThemeModal
       dark={currentLesson?.darkMode || true}
       subHeader={currentLesson?.summary}
-      header={currentLesson?.title}
+      header={`${currentLesson?.title} - Lesson Overview`}
       open={open}
       setOpen={setOpen}>
       <div>
@@ -296,6 +296,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
             setCurTab={setCurTab}
             curTab={curTab}
             tabs={tabs}
+            numbered
           />
 
           <div className="mt-4">
