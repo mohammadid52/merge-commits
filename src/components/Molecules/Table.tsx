@@ -32,7 +32,7 @@ const Table = ({
               <thead
                 className={`${
                   config?.headers?.bgColor || 'iconoclast:bg-main curate:bg-main'
-                }`}>
+                } block`}>
                 <tr>
                   {map(headers, (header) => (
                     <th
@@ -45,7 +45,7 @@ const Table = ({
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="max-h-88 overflow-y-auto block dark-scroll">
                 {dataList.map((item, idx) => (
                   <tr
                     key={item.id}

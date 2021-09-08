@@ -222,9 +222,15 @@ const EvidenceTab = ({
             className="text-gray-500 flex-col text-lg"
           />
         </div>
+      ) : checkedEvidence.length === 0 ? (
+        <div className="flex items-center justify-center min-h-32">
+          <p className="text-gray-400 font-medium text-lg leading-3">
+            No Evidences Listed
+          </p>
+        </div>
       ) : (
         <Transition
-          show={checkedEvidence.length > 0}
+          show={true}
           enter="transition-opacity duration-75"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -302,13 +308,19 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
               leaveFrom="translate-x-0 opacity-100"
               leaveTo="translate-x-full opacity-0"
               show={curTab === 'Objectives'}>
-              <div>
-                <p className="text-gray-400 font-medium text-lg leading-3">
-                  {currentLesson?.objectives[0]
-                    ? ReactHtmlParser(currentLesson?.objectives[0])
-                    : 'No objectives'}
-                </p>
-              </div>
+              {currentLesson?.objectives[0] ? (
+                <div>
+                  <p className="text-gray-400 font-medium text-lg leading-3">
+                    {ReactHtmlParser(currentLesson?.objectives[0])}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center min-h-32">
+                  <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
+                    No Objectives Listed
+                  </p>
+                </div>
+              )}
             </Transition>
             <Transition
               enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -318,11 +330,19 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
               leaveFrom="translate-x-0 opacity-100"
               leaveTo="translate-x-full opacity-0"
               show={curTab === 'Resources'}>
-              <div>
-                <p className="text-gray-400 font-medium text-lg leading-3">
-                  {currentLesson?.resources ? currentLesson?.resources : 'No Resources'}
-                </p>
-              </div>
+              {currentLesson?.resources ? (
+                <div>
+                  <p className="text-gray-400 font-medium text-lg leading-3">
+                    {currentLesson?.resources}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center min-h-32">
+                  <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
+                    No Resources Listed
+                  </p>
+                </div>
+              )}
             </Transition>
             <Transition
               enter="transform transition ease-in-out duration-500 sm:duration-700"
