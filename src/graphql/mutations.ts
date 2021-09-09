@@ -14806,3 +14806,72 @@ export const deletePersonSentiments = /* GraphQL */ `
     }
   }
 `;
+export const createPersonFiles = /* GraphQL */ `
+  mutation CreatePersonFiles(
+    $input: CreatePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    createPersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePersonFiles = /* GraphQL */ `
+  mutation UpdatePersonFiles(
+    $input: UpdatePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    updatePersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePersonFiles = /* GraphQL */ `
+  mutation DeletePersonFiles(
+    $input: DeletePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    deletePersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;

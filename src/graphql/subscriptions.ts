@@ -14158,3 +14158,63 @@ export const onDeletePersonSentiments = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePersonFiles = /* GraphQL */ `
+  subscription OnCreatePersonFiles {
+    onCreatePersonFiles {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePersonFiles = /* GraphQL */ `
+  subscription OnUpdatePersonFiles {
+    onUpdatePersonFiles {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePersonFiles = /* GraphQL */ `
+  subscription OnDeletePersonFiles {
+    onDeletePersonFiles {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;

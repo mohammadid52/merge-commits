@@ -4187,6 +4187,74 @@ export type DeletePersonSentimentsInput = {
   date: string,
 };
 
+export type CreatePersonFilesInput = {
+  id?: string | null,
+  personAuthID: string,
+  personEmail: string,
+  fileName: string,
+  fileKey: string,
+  uploadedAt?: string | null,
+  feedbacks?: Array< string | null > | null,
+  shared?: boolean | null,
+  lessonID?: string | null,
+  syllabusLessonID?: string | null,
+  lessonType?: string | null,
+  roomID?: string | null,
+};
+
+export type ModelPersonFilesConditionInput = {
+  fileName?: ModelStringInput | null,
+  fileKey?: ModelStringInput | null,
+  uploadedAt?: ModelStringInput | null,
+  feedbacks?: ModelStringInput | null,
+  shared?: ModelBooleanInput | null,
+  lessonID?: ModelIDInput | null,
+  syllabusLessonID?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  and?: Array< ModelPersonFilesConditionInput | null > | null,
+  or?: Array< ModelPersonFilesConditionInput | null > | null,
+  not?: ModelPersonFilesConditionInput | null,
+};
+
+export type PersonFiles = {
+  __typename: "PersonFiles",
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
+  fileName?: string,
+  fileKey?: string,
+  uploadedAt?: string | null,
+  feedbacks?: Array< string | null > | null,
+  shared?: boolean | null,
+  lessonID?: string | null,
+  syllabusLessonID?: string | null,
+  lessonType?: string | null,
+  roomID?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdatePersonFilesInput = {
+  id?: string | null,
+  personAuthID: string,
+  personEmail: string,
+  fileName?: string | null,
+  fileKey?: string | null,
+  uploadedAt?: string | null,
+  feedbacks?: Array< string | null > | null,
+  shared?: boolean | null,
+  lessonID?: string | null,
+  syllabusLessonID?: string | null,
+  lessonType?: string | null,
+  roomID?: string | null,
+};
+
+export type DeletePersonFilesInput = {
+  personEmail: string,
+  personAuthID: string,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -5109,6 +5177,30 @@ export type ModelPersonSentimentsFilterInput = {
 export type ModelPersonSentimentsConnection = {
   __typename: "ModelPersonSentimentsConnection",
   items?:  Array<PersonSentiments | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelPersonFilesFilterInput = {
+  id?: ModelIDInput | null,
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  fileName?: ModelStringInput | null,
+  fileKey?: ModelStringInput | null,
+  uploadedAt?: ModelStringInput | null,
+  feedbacks?: ModelStringInput | null,
+  shared?: ModelBooleanInput | null,
+  lessonID?: ModelIDInput | null,
+  syllabusLessonID?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  and?: Array< ModelPersonFilesFilterInput | null > | null,
+  or?: Array< ModelPersonFilesFilterInput | null > | null,
+  not?: ModelPersonFilesFilterInput | null,
+};
+
+export type ModelPersonFilesConnection = {
+  __typename: "ModelPersonFilesConnection",
+  items?:  Array<PersonFiles | null > | null,
   nextToken?: string | null,
 };
 
@@ -21564,6 +21656,81 @@ export type DeletePersonSentimentsMutation = {
   } | null,
 };
 
+export type CreatePersonFilesMutationVariables = {
+  input?: CreatePersonFilesInput,
+  condition?: ModelPersonFilesConditionInput | null,
+};
+
+export type CreatePersonFilesMutation = {
+  createPersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdatePersonFilesMutationVariables = {
+  input?: UpdatePersonFilesInput,
+  condition?: ModelPersonFilesConditionInput | null,
+};
+
+export type UpdatePersonFilesMutation = {
+  updatePersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeletePersonFilesMutationVariables = {
+  input?: DeletePersonFilesInput,
+  condition?: ModelPersonFilesConditionInput | null,
+};
+
+export type DeletePersonFilesMutation = {
+  deletePersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetPersonQueryVariables = {
   email?: string,
   authId?: string,
@@ -28833,6 +29000,64 @@ export type ListPersonSentimentssQuery = {
       time: string,
       responseText?: string | null,
       backstory?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetPersonFilesQueryVariables = {
+  personEmail?: string,
+  personAuthID?: string,
+};
+
+export type GetPersonFilesQuery = {
+  getPersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListPersonFilessQueryVariables = {
+  personEmail?: string | null,
+  personAuthID?: ModelStringKeyConditionInput | null,
+  filter?: ModelPersonFilesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListPersonFilessQuery = {
+  listPersonFiless?:  {
+    __typename: "ModelPersonFilesConnection",
+    items?:  Array< {
+      __typename: "PersonFiles",
+      id: string,
+      personAuthID: string,
+      personEmail: string,
+      fileName: string,
+      fileKey: string,
+      uploadedAt?: string | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+      lessonID?: string | null,
+      syllabusLessonID?: string | null,
+      lessonType?: string | null,
+      roomID?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -44681,6 +44906,66 @@ export type OnDeletePersonSentimentsSubscription = {
     time: string,
     responseText?: string | null,
     backstory?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreatePersonFilesSubscription = {
+  onCreatePersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdatePersonFilesSubscription = {
+  onUpdatePersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeletePersonFilesSubscription = {
+  onDeletePersonFiles?:  {
+    __typename: "PersonFiles",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    fileName: string,
+    fileKey: string,
+    uploadedAt?: string | null,
+    feedbacks?: Array< string | null > | null,
+    shared?: boolean | null,
+    lessonID?: string | null,
+    syllabusLessonID?: string | null,
+    lessonType?: string | null,
+    roomID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
