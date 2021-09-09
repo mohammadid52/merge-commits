@@ -56,6 +56,8 @@ const deletImageFromS3 = (key: string) => {
   });
 };
 
+const UPLOAD_KEY = 'ULB/teachers_upload/';
+
 const File = ({
   _status,
   progress,
@@ -95,7 +97,7 @@ const File = ({
   // const getFile = async () => await getImageFromS3(imgId);
   const imageUrl = file
     ? URL.createObjectURL(file)
-    : getImageFromS3Static(`ULB/studentdata_${fileKey}`);
+    : getImageFromS3Static(`${UPLOAD_KEY}${fileKey}`);
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
@@ -346,7 +348,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   const deleteImage = (fileKey: string) => {
     remove(filesUploading, (f) => f.fileKey === fileKey);
     setFilesUploading([...filesUploading]);
-    deletImageFromS3(`ULB/studentdata_${fileKey}`);
+    deletImageFromS3(`${UPLOAD_KEY}${fileKey}`);
   };
 
   const uploadImageToS3 = async (
@@ -357,7 +359,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   ) => {
     // Upload file to s3 bucket
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/studentdata_${id}`, file, {
+      Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {

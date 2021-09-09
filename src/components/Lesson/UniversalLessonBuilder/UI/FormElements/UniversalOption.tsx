@@ -12,7 +12,7 @@ import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
 import {isEmpty} from '@aws-amplify/core';
-import Tabs from '../UIComponents/Tabs';
+import Tabs from '../UIComponents/Tabs/Tabs';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 const InputContainer = ({

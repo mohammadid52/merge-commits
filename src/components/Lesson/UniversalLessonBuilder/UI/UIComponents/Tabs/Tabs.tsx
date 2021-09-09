@@ -1,8 +1,6 @@
-import React, {useContext, useState} from 'react';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {setState} from '../../../../../interfaces';
-import {classNames} from '../FormElements/UniversalInput';
+import React, {useState} from 'react';
+import {setState} from '../../../../../../interfaces';
+import {classNames} from '../../FormElements/UniversalInput';
 
 interface ITab {
   name: string;
@@ -12,7 +10,8 @@ interface ITab {
 export const useTabs = (tabs: ITab[]) => {
   const [curTab, setCurTab] = useState(tabs[0].name);
 
-  return {curTab, setCurTab};
+  const helpers = [...tabs.map((tab) => curTab === tab.name)];
+  return {curTab, setCurTab, helpers};
 };
 
 /**
@@ -82,8 +81,6 @@ const Tabs = ({
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const {clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
   return (
     <div>
       <div className="sm:hidden">
@@ -109,11 +106,8 @@ const Tabs = ({
                 onClick={() => setCurTab(tab.name)}
                 className={classNames(
                   curTab === tab.name
-                    ? `border-${
-                        themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                      }-500 text-${
-                        themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                      }-600`
+                    ? `iconoclast:text-main curate:text-main 
+                      iconoclast:border-main curate:border-main `
                     : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
                   'py-4 cursor-pointer px-1 text-center border-b-3 font-medium text-sm'
                 )}

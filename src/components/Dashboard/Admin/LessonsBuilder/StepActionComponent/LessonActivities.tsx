@@ -307,13 +307,17 @@ const LessonActivities = ({
                 </div>
               </div>
               {pages.length ? (
-                <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
+                <div
+                  className={`${
+                    pages.length > 4 ? 'max-h-88 overflow-y-auto' : ''
+                  } mb-8 w-full m-auto`}>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="partContent">
                       {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
                           {pages.map((page: any, index: number) => (
                             <PageRow
+                              key={page.id}
                               index={index}
                               page={page}
                               toggleDeleteModal={toggleDeleteModal}
