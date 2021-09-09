@@ -305,6 +305,7 @@ const anthologyDict: any = {
       A: 'Journal',
       B: 'Session Work',
       C: 'Session Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Edit',
@@ -324,6 +325,7 @@ const anthologyDict: any = {
       A: 'Diario',
       B: 'Cohort Work',
       C: 'Cohort Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Editar',

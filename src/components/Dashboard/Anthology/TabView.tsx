@@ -17,6 +17,7 @@ import {IoKeyOutline} from 'react-icons/io5';
 import SentimentTab from './SentimentTab';
 import {IconContext} from 'react-icons/lib';
 import {IoIosJournal} from 'react-icons/io';
+import UploadsTab from './UploadsTab';
 
 const TabView = ({
   viewEditMode,
@@ -37,7 +38,7 @@ const TabView = ({
   allUniversalJournalData,
   setAllUniversalJournalData,
 }: ContentCardProps) => {
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {state, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
 
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
@@ -109,6 +110,12 @@ const TabView = ({
       title: anthologyDict[userLanguage].TABS.C,
       id: 'Notes',
       content: Content,
+    },
+    {
+      index: 2,
+      title: anthologyDict[userLanguage].TABS.D,
+      id: 'Uploads',
+      content: <UploadsTab user={state?.user} />,
     },
   ];
 
