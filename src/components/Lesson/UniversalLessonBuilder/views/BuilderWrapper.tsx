@@ -69,8 +69,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     initialUniversalLessonPagePartContent,
   } = props;
   const {
-    userLanguage,
-    clientKey,
     state: {user},
   } = useContext(GlobalContext);
   const {
@@ -86,13 +84,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setSavingStatus,
   } = useULBContext();
 
-  //@ts-ignore
-  const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
   const isNewPage = params.get('isNewPage');
   const lessonId = params.get('lessonId');
-
-  const [loading] = useState(false);
 
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
@@ -548,24 +542,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
-          titleButton={
-            !blockConfig.isEditingMode && (
-              <span
-                onClick={() => {
-                  if (unsavedChanges) {
-                    askBeforeClose();
-                  } else {
-                    hideAllModals();
-                    handleModalPopToggle(dialogLabelList.ADD_CONTENT);
-                  }
-                }}
-                className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
-                Go Back
-              </span>
-            )
-          }
           closeAction={askBeforeClose}>
-          <div className="min-w-256">
+          <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>
           <UnsavedModal />

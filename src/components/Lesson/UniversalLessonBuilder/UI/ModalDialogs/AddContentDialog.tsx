@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-
-import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import {
   AiOutlineBorderlessTable,
   AiOutlineCalendar,
@@ -9,22 +7,20 @@ import {
   AiOutlineLink,
   AiOutlineMinus,
   AiOutlineQuestionCircle,
-  AiOutlineSwapRight,
   AiOutlineVideoCameraAdd,
   AiOutlineYoutube,
 } from 'react-icons/ai';
-import {MdInput, MdRateReview, MdTitle} from 'react-icons/md';
-import {RiSurveyLine} from 'react-icons/ri';
-import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
-import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
+import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
 import {
   HiOutlineArrowRight,
   HiOutlineEmojiHappy,
   HiOutlineExternalLink,
 } from 'react-icons/hi';
-import {GrDomain} from 'react-icons/gr';
 import {IoDocumentAttachOutline} from 'react-icons/io5';
+import {MdInput, MdTitle} from 'react-icons/md';
+import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
+import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
 
 interface AddContentDialog {
   addContentModal: {show: boolean; type: string};

@@ -1,31 +1,26 @@
-import React, {useContext, useEffect, useState} from 'react';
 import Storage from '@aws-amplify/storage';
-
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
-import Selector from '../../../../Atoms/Form/Selector';
-
+import {Switch} from '@headlessui/react';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {getImageFromS3Static} from '../../../../../utilities/services';
+import {blur, tinting} from '../../../../../utilities/staticData';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
-import {blur, scrim, tinting} from '../../../../../utilities/staticData';
-import {getAsset} from '../../../../../assets';
-import ColorPicker from '../ColorPicker/ColorPicker';
-import QuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/QuoteBlock';
+import Buttons from '../../../../Atoms/Buttons';
+import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
+import FormInput from '../../../../Atoms/Form/FormInput';
+import Selector from '../../../../Atoms/Form/Selector';
+import Loader from '../../../../Atoms/Loader';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
-import {Switch} from '@headlessui/react';
+import ColorPicker from '../ColorPicker/ColorPicker';
 import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
-import {update} from 'lodash';
-import Tabs from '../UIComponents/Tabs';
+import Tabs from '../UIComponents/Tabs/Tabs';
 
 const Toggle = ({
   checked,
@@ -441,10 +436,6 @@ const JumbotronModalDialog = ({
     {name: 'Component Details', current: true},
     {name: 'Preview', current: false},
   ];
-
-  function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ');
-  }
 
   const [curTab, setCurTab] = useState(tabs[0].name);
 

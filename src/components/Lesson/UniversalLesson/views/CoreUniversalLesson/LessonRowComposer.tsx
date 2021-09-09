@@ -14,7 +14,7 @@ import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
   const {
-    state: {lessonPage = {}},
+    state: {user, lessonPage = {}},
 
     lessonState,
   } = useContext(GlobalContext);
@@ -110,15 +110,19 @@ const LessonRowComposer = () => {
           </div>
         ))}
 
-      {downloadables && downloadables.length > 0 && (
-        <Downloadables
-          downloadables={downloadables}
-          showDownloadMenu={showDownloadMenu}
-          setShowDownloadMenu={setShowDownloadMenu}
-        />
-      )}
+      {user.role === 'ST' && (
+        <>
+          {downloadables && downloadables.length > 0 && (
+            <Downloadables
+              downloadables={downloadables}
+              showDownloadMenu={showDownloadMenu}
+              setShowDownloadMenu={setShowDownloadMenu}
+            />
+          )}
 
-      <LessonModule currentLesson={currentLesson} />
+          <LessonModule currentLesson={currentLesson} />
+        </>
+      )}
     </div>
   );
 };

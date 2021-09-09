@@ -5,7 +5,7 @@ import ReactHtmlParser from 'react-html-parser';
 import {UniversalLesson} from '../../../../../API';
 import Table from '../../../../Molecules/Table';
 import ThemeModal from '../../../../Molecules/ThemeModal';
-import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs';
+import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
@@ -24,10 +24,6 @@ const EvidenceTab = ({
   setSelectedCurriculumList,
   selectedCurriculumList,
 }: any) => {
-  console.log(
-    '🚀 ~ file: LessonModule.tsx ~ line 26 ~ selectedCurriculumList',
-    selectedCurriculumList
-  );
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 

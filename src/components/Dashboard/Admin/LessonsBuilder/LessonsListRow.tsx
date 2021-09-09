@@ -59,6 +59,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         {index + 1}.
       </div>
       <div
+        title={title ? title : '--'}
         className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal"
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>

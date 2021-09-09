@@ -17,7 +17,6 @@ import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {wait} from '../../../../utilities/functions';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
@@ -436,7 +435,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               // if anyone is making a component out of it .
               // PLEASE replace this with that component
               // :)
-              <div className="border border-gray-300 shadow rounded-md p-4 max-w-sm w-full mx-auto mt-12">
+              <div className="p-4 max-w-sm w-full mx-auto mt-12">
                 <div className="animate-pulse space-y-8 flex flex-col">
                   <div className="flex-1 space-y-4 py-1">
                     <div className="h-4 bg-gray-400 rounded w-3/4"></div>
