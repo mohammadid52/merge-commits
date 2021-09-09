@@ -6,6 +6,7 @@ import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../../customGraphql/customMutations';
 import {FiLogOut} from 'react-icons/all';
+import { removeLocalStorageData } from '../../utilities/localStorage';
 
 interface SignOutButtonProps {
   updateAuthState: Function;
@@ -29,6 +30,8 @@ const SignOutButton = (props: SignOutButtonProps) => {
       updateAuthState(false);
       removeCookie('auth', {path: '/'});
       sessionStorage.removeItem('accessToken');
+      removeLocalStorageData('active_step_section');
+      removeLocalStorageData('selected_institution');
       dispatch({type: 'CLEANUP'});
     } catch (error) {
       console.log('error signing out: ', error);

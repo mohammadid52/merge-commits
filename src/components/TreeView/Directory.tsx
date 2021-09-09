@@ -11,6 +11,7 @@ export const Directory = ({
   activeSectionId,
   headingPrefix,
   hoverClassName,
+  isOpen,
   item,
   onContextMenu,
   onItemClick,
@@ -20,6 +21,7 @@ export const Directory = ({
   activeSectionId?: string;
   headingPrefix?: string;
   hoverClassName?: string;
+  isOpen?: boolean;
   item: any;
   onContextMenu: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   onItemClick?: (section: {id: string; title: string}) => void;
@@ -27,7 +29,7 @@ export const Directory = ({
   textClassName?: string;
 }>): JSX.Element => {
   const history = useHistory();
-  const [toggle, setToggle] = useState<boolean>(true);
+  const [toggle, setToggle] = useState<boolean>(isOpen || false);
   const onItemClicked = useCallback(
     (
       event: React.MouseEvent<HTMLLIElement, MouseEvent>,
@@ -38,7 +40,7 @@ export const Directory = ({
       console.log('after onItemClicked');
       setToggle((prevValue) => !prevValue);
       setShow(false);
-      if (!item.children?.length && onItemClick) {
+      if (onItemClick) {
         onItemClick(section);
       }
       if (item.redirectionUrl) {

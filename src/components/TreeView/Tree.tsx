@@ -41,7 +41,7 @@ export const Tree = ({
     (event: React.MouseEvent<HTMLLIElement, MouseEvent>, section: any) => {
       event.stopPropagation();
       setShow(false);
-      if (!section.children?.length && onItemClick) {
+      if (onItemClick) {
         onItemClick({id: section.id, title: section.title});
       }
       if (section.redirectionUrl) {
@@ -71,6 +71,7 @@ export const Tree = ({
                 onContextMenu={onContextMenu}
                 onItemClick={onItemClick}
                 textClassName={textClassName}
+                isOpen={index === 0 ? true : false}
               />
             );
           return (
