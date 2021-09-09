@@ -1,7 +1,6 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 import React, {useContext, useEffect, useState} from 'react';
-import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../customHooks/dictionary';
@@ -325,6 +324,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardImage: fileName,
             cardCaption: formData.imageCaption,
             purpose: formData.purposeHtml,
+            studentMaterials: formData.studentMaterials,
             objectives: [formData.objectiveHtml],
             notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),
