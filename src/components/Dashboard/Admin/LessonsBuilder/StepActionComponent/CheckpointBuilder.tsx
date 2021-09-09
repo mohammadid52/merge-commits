@@ -1,23 +1,19 @@
-import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import CheckpointLookup from './CheckPointSteps/CheckpointLookup';
-import AddNewCheckPoint from './CheckPointSteps/AddNewCheckPoint';
-import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
+import React, {useEffect, useState} from 'react';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as queries from '../../../../../graphql/queries';
+import {LessonPlansProps} from '../../../../../interfaces/LessonInterfaces';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  reorder,
+} from '../../../../../utilities/strings';
+import AddNewCheckPoint, {InitialData} from './CheckPointSteps/AddNewCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
+import CheckpointLookup from './CheckPointSteps/CheckpointLookup';
+import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
 import QuestionLookup from './CheckPointSteps/QuestionLookup';
 import SelectedCheckPointsList from './CheckPointSteps/SelectedCheckPointsList';
-import {LessonPlansProps} from '../LessonEdit';
-import {InitialData} from './CheckPointSteps/AddNewCheckPoint';
-
-import * as queries from '../../../../../graphql/queries';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import {
-  reorder,
-  createFilterToFetchSpecificItemsOnly,
-} from '../../../../../utilities/strings';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 interface CheckpointBuilderProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -56,8 +52,6 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     lessonType,
     hasUnsavedCheckpoint,
   } = props;
-
-  const {userLanguage} = useContext(GlobalContext);
 
   const initialCheckpData = {
     title: '',

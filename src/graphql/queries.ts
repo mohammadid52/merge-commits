@@ -6593,6 +6593,63 @@ export const listPersonSentimentss = /* GraphQL */ `
     }
   }
 `;
+export const getPersonFiles = /* GraphQL */ `
+  query GetPersonFiles($personEmail: String!, $personAuthID: String!) {
+    getPersonFiles(personEmail: $personEmail, personAuthID: $personAuthID) {
+      id
+      personAuthID
+      personEmail
+      fileName
+      fileKey
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonFiless = /* GraphQL */ `
+  query ListPersonFiless(
+    $personEmail: String
+    $personAuthID: ModelStringKeyConditionInput
+    $filter: ModelPersonFilesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonFiless(
+      personEmail: $personEmail
+      personAuthID: $personAuthID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        fileName
+        fileKey
+        uploadedAt
+        feedbacks
+        shared
+        lessonID
+        syllabusLessonID
+        lessonType
+        roomID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID

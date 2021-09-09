@@ -1,14 +1,23 @@
-import React, {useContext, useState} from 'react';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {classNames} from '../FormElements/UniversalInput';
+import React, {useState} from 'react';
+import {setState} from '../../../../../../interfaces';
+import {classNames} from '../../FormElements/UniversalInput';
 
-export const useTabs = (tabs: {name: string; current: boolean}[]) => {
+interface ITab {
+  name: string;
+  current: boolean;
+}
+
+export const useTabs = (tabs: ITab[]) => {
   const [curTab, setCurTab] = useState(tabs[0].name);
 
-  return {curTab, setCurTab};
+  const helpers = [...tabs.map((tab) => curTab === tab.name)];
+  return {curTab, setCurTab, helpers};
 };
 
+/**
+ *
+ * The one with underline tabs
+ */
 export const Tabs2 = ({
   tabs,
   curTab,
@@ -58,6 +67,11 @@ export const Tabs2 = ({
   );
 };
 
+/**
+ *
+ * The one with full-width underline tabs
+ */
+
 const Tabs = ({
   tabs,
   curTab,
@@ -67,8 +81,6 @@ const Tabs = ({
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const {clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
   return (
     <div>
       <div className="sm:hidden">
@@ -94,11 +106,8 @@ const Tabs = ({
                 onClick={() => setCurTab(tab.name)}
                 className={classNames(
                   curTab === tab.name
-                    ? `border-${
-                        themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                      }-500 text-${
-                        themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                      }-600`
+                    ? `iconoclast:text-main curate:text-main 
+                      iconoclast:border-main curate:border-main `
                     : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
                   'py-4 cursor-pointer px-1 text-center border-b-3 font-medium text-sm'
                 )}
@@ -114,3 +123,63 @@ const Tabs = ({
 };
 
 export default Tabs;
+
+/**
+ *
+ * The one with Pill tabs with brand color
+ *
+ */
+export const Tabs3 = ({
+  tabs,
+  curTab,
+  setCurTab,
+  config = {fullColor: false},
+  numbered = false,
+}: {
+  tabs: ITab[];
+  curTab: string;
+  config?: {fullColor?: boolean};
+  setCurTab: setState['string'];
+  numbered?: boolean;
+}) => {
+  return (
+    <div>
+      <div className="sm:hidden">
+        <label htmlFor="tabs" className="sr-only">
+          Select a tab
+        </label>
+        <select
+          id="tabs"
+          name="tabs"
+          className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-0 border-gray-300 rounded-md"
+          defaultValue={tabs.find((tab) => tab.current).name}>
+          {tabs.map((tab) => (
+            <option key={tab.name}>{tab.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="hidden sm:block">
+        <nav className="transition-all flex space-x-4" aria-label="Tabs">
+          {tabs.map((tab, idx: number) => (
+            <div
+              onClick={() => setCurTab(tab.name)}
+              key={tab.name}
+              role="button"
+              className={classNames(
+                tab.name === curTab
+                  ? config.fullColor
+                    ? 'iconoclast:bg-main text-white curate:bg-main '
+                    : 'iconoclast:bg-100 iconoclast:text-700 curate:bg-100 curate:text-700 '
+                  : 'text-gray-500 hover:text-gray-600',
+                'px-3 transition-all py-2 font-medium text-sm rounded-md'
+              )}
+              aria-current={tab.current ? 'page' : undefined}>
+              {numbered ? `${idx + 1}. ` : ''}
+              {tab.name}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+};

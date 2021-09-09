@@ -1,37 +1,33 @@
-import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoDocumentText, IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
-
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as mutations from '../../../../graphql/mutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-
-import ModalPopUp from '../../../Molecules/ModalPopUp';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import Loader from '../../../Atoms/Loader';
-import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-
-import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
-import LessonActivities from './StepActionComponent/LessonActivities';
-import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
-import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
-import {
-  InstructionInitialState,
-  SavedLessonDetailsProps,
-  LessonPlansProps,
-} from './LessonEdit';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
+import * as mutations from '../../../../graphql/mutations';
+import {
+  LessonPlansProps,
+  SavedLessonDetailsProps,
+} from '../../../../interfaces/LessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
+import Loader from '../../../Atoms/Loader';
+import PageWrapper from '../../../Atoms/PageWrapper';
+import SectionTitle from '../../../Atoms/SectionTitle';
+import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
+
+import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
+import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
+import LessonActivities from './StepActionComponent/LessonActivities';
+import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 
 export interface InitialData {
   name: string;
@@ -172,11 +168,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const savedCheckpointModal = () => {
-    setActiveStep(checkpointSaveModal.stepOnHold);
-    closeCheckpointModal();
-    setUnsavedChanges(false);
-  };
   const closeCheckpointModal = () => {
     setCheckpointSaveModal({
       ...checkpointSaveModal,
@@ -198,7 +189,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     show: false,
     message: '',
   });
-  const [isCheckpUnsaved, setIsCheckpUnsaved] = useState<boolean>(false);
+
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
   const [selDesigners, setSelDesigners] = useState<any>([]);
@@ -300,30 +291,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     fetchCurriculum();
   }, [formData?.institution]);
 
-  const hasUnsavedCheckpoint = (
-    val: boolean,
-    isIndividualEmpty: boolean,
-    data: any,
-    checkpQuestions: any,
-    selDesigners: any[]
-  ) => {
-    if (isIndividualEmpty) {
-      setIndividualFieldEmpty(true);
-    } else {
-      setIndividualFieldEmpty(false);
-    }
-    if (val !== isCheckpUnsaved) {
-      setIsCheckpUnsaved(val);
-      setUnsavedCheckPData(data);
-      if (data.title && val) {
-        setShowModal(true);
-      } else {
-        setShowModal(false);
-      }
-      setCheckpQuestions(checkpQuestions);
-      setSelDesigners(selDesigners);
-    }
-  };
   const addCheckpointQuestions = async (
     quesId: string,
     checkpointID: string,
@@ -653,19 +620,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const gobackToLessonsList = () => {
-    if (unsavedChanges) {
-      toggleModal();
-    } else {
-      history.push('/dashboard/lesson-builder');
-    }
-  };
-
-  const onModalSave = () => {
-    goBack();
-    toggleModal();
-  };
-
   const saveBeforeLeave = async () => {
     if (activeStep === 'learning-evidence') {
       await updateMeasurementList(selectedMeasurements);
@@ -680,13 +634,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         show: !warnModal.show,
       });
     }
-  };
-
-  const toggleModal = () => {
-    setWarnModal({
-      ...warnModal,
-      show: !warnModal.show,
-    });
   };
 
   const toggleUnSaveModal = (url?: string) => {
@@ -738,14 +685,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     // } else {
     //   setActiveStep('Instructions');
     // }
-  };
-
-  const onInstructionSaved = (obj: InstructionInitialState) => {
-    setSavedLessonDetails({
-      ...savedLessonDetails,
-      lessonInstructions: obj,
-    });
-    setActiveStep('Builder');
   };
 
   const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {

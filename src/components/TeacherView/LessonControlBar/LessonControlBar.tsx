@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
-import StageButton from './StageButton';
+import {BiBook} from 'react-icons/bi';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
-import {BiBook} from 'react-icons/bi';
+import StageButton from './StageButton';
 
 interface LessonControlBarProps {
   pageViewed?: {pageID: number; stage: string};
@@ -25,7 +25,9 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
   };
 
   return (
-    <nav className="bg-white border-b h-16 lg:h-12 border-gray-200 flex" aria-label="Breadcrumb">
+    <nav
+      className="bg-white border-b h-16 lg:h-12 border-gray-200 flex"
+      aria-label="Breadcrumb">
       <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto">
         <li className="flex w-auto">
           <div className="flex items-center">

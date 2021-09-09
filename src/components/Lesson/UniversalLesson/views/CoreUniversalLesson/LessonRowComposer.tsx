@@ -1,24 +1,26 @@
+import {filter, reject} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
-import {filter, reject} from 'lodash';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
+import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
+import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
   const {
     state: {user, lessonPage = {}},
-    dispatch,
+
     lessonState,
-    lessonDispatch,
   } = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+
+  const [currentLesson, setCurrentLesson] = useState<any>();
 
   const downloadables =
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
@@ -52,6 +54,9 @@ const LessonRowComposer = () => {
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
+    if (lessonState.lessonData) {
+      setCurrentLesson(lessonState.lessonData);
+    }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
   // this is only for header component
@@ -76,9 +81,10 @@ const LessonRowComposer = () => {
                   pagePart.partContent.map((content: PartContent, idx2: number) => {
                     if (content.value.length > 0) {
                       return (
-                        <div className={`${paddingForHeader(content.type)}`}>
+                        <div
+                          key={`row_pagepart_${idx}_${idx2}`}
+                          className={`${paddingForHeader(content.type)}`}>
                           <div
-                            key={`row_pagepart_${idx}_${idx2}`}
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
@@ -104,12 +110,18 @@ const LessonRowComposer = () => {
           </div>
         ))}
 
-      {downloadables && downloadables.length > 0 && (
-        <Downloadables
-          downloadables={downloadables}
-          showDownloadMenu={showDownloadMenu}
-          setShowDownloadMenu={setShowDownloadMenu}
-        />
+      {user.role === 'ST' && (
+        <>
+          {downloadables && downloadables.length > 0 && (
+            <Downloadables
+              downloadables={downloadables}
+              showDownloadMenu={showDownloadMenu}
+              setShowDownloadMenu={setShowDownloadMenu}
+            />
+          )}
+
+          <LessonModule currentLesson={currentLesson} />
+        </>
       )}
     </div>
   );

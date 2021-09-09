@@ -17,8 +17,8 @@ const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
     withText = false,
   } = loadingProps;
   return withText ? (
-    <div className="flex items-center mr-2">
-      <div className={`animate-spin ${className}`}>
+    <div className={`flex ${className} items-center mr-2`}>
+      <div className={`animate-spin `}>
         <IconContext.Provider value={{size, color: className || color}}>
           <VscLoading />
         </IconContext.Provider>

@@ -1,25 +1,24 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory} from 'react-router-dom';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {FaPlus, FaEdit, FaTrashAlt} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
-
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import useDictionary from '../../../../customHooks/dictionary';
+import {statesList} from '../../../../utilities/staticData';
 import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
+import CheckBox from '../../../Atoms/Form/CheckBox';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Selector from '../../../Atoms/Form/Selector';
-import CheckBox from '../../../Atoms/Form/CheckBox';
-import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
-import * as customMutations from '../../../../customGraphql/customMutations';
+import PageWrapper from '../../../Atoms/PageWrapper';
+import SectionTitle from '../../../Atoms/SectionTitle';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
-import {statesList} from '../../../../utilities/staticData';
-import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 const InstitutionAdd = () => {
   const history = useHistory();

@@ -1,18 +1,17 @@
-import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad} from 'react-icons/io';
-import {RiArrowRightLine} from 'react-icons/ri';
 import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
-
-import {getLanguageString} from '../../../../../../utilities/strings';
-
-import SearchInput from '../../../../../Atoms/Form/SearchInput';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import Buttons from '../../../../../Atoms/Buttons';
-import CheckpointQueTable from './CheckpointQueTable';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {RiArrowRightLine} from 'react-icons/ri';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import {getLanguageString} from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import SearchInput from '../../../../../Atoms/Form/SearchInput';
+import CheckpointQueTable from './CheckpointQueTable';
+
 interface CheckpointLookupProps {
   changeStep: (step: string) => void;
   onSave: (ids: string[]) => void;
@@ -34,13 +33,10 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {CheckpointLookupDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {CheckpointLookupDict} = useDictionary(clientKey);
 
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
-  console.log(
-    '🚀 ~ file: CheckpointLookup.tsx ~ line 41 ~ CheckpointLookup ~ selectedCheckpointIds',
-    selectedCheckpointIds
-  );
+
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [filteredList, setFilteredList] = useState(checkpointList);

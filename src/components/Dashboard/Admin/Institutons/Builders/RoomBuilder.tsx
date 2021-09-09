@@ -1,29 +1,23 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import * as customQueries from '../../../../../customGraphql/customQueries';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../../../assets';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import * as customMutation from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import useDictionary from '../../../../../customHooks/dictionary';
 import * as mutation from '../../../../../graphql/mutations';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper';
+import * as queries from '../../../../../graphql/queries';
+import {getImageFromS3} from '../../../../../utilities/services';
+import {getFilterORArray} from '../../../../../utilities/strings';
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  getFilterORArray,
-} from '../../../../../utilities/strings';
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../../../utilities/services';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {getAsset} from '../../../../../assets';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import {goBackBreadCrumb} from '../../../../../utilities/functions';
+import Selector from '../../../../Atoms/Form/Selector';
+import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
+import PageWrapper from '../../../../Atoms/PageWrapper';
+import SectionTitle from '../../../../Atoms/SectionTitle';
 
 interface RoomBuilderProps {}
 

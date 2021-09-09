@@ -1,18 +1,23 @@
-import React, { useContext } from 'react';
-import { NoticeboardFormProps } from '../NoticeboardAdminContent';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineSave,
+  AiOutlineStop,
+} from 'react-icons/all';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineSave, AiOutlineStop } from 'react-icons/all';
 import Buttons from '../../../Atoms/Buttons';
+import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CancelSaveDelete = (props: NoticeboardFormProps) => {
-  const { widgetObj, viewEditMode, handleEditToggle, resetNewWidgetData } = props;
-  const { state, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const {widgetObj, viewEditMode, handleEditToggle, resetNewWidgetData} = props;
+  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {anthologyDict} = useDictionary(clientKey);
 
-  const handleCancel = () =>{
+  const handleCancel = () => {
     resetNewWidgetData();
-  }
+  };
 
   return (
     <div className={`flex p-2 mt-2`}>

@@ -7,7 +7,7 @@ import TextArea from '../../../../../Atoms/Form/TextArea';
 import {
   Tabs2,
   useTabs,
-} from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs';
+} from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
 import {v4 as uuidv4} from 'uuid';
 import {getLocalStorageData} from '../../../../../../utilities/localStorage';

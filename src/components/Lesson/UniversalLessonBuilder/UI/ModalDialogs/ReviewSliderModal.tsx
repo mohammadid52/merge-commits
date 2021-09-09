@@ -9,7 +9,7 @@ import {FORM_TYPES} from '../common/constants';
 import {v4 as uuidv4} from 'uuid';
 import Selector from '../../../../Atoms/Form/Selector';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import Tabs from '../UIComponents/Tabs';
+import Tabs from '../UIComponents/Tabs/Tabs';
 import ReviewSliderBlock, {
   extractValuesFromClassString,
 } from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';

@@ -6,7 +6,7 @@ import {v4 as uuidv4} from 'uuid';
 import {filter, forEach, map, omit, remove, update} from 'lodash';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
-import Tabs, {useTabs} from '../UIComponents/Tabs';
+import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
 import {TABLE} from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import ColorPicker from '../ColorPicker/ColorPicker';

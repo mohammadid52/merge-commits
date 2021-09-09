@@ -79,7 +79,7 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
   const allFiles = mapDownloadablesFilesTogether();
 
   return (
-    <div className="flex items-center justify-center w-16 fixed bottom-5 right-8 lg:w-18 xl:w-20 z-100">
+    <div className="flex items-center justify-center w-16 fixed bottom-5 right-8 lg:w-18 xl:w-20 z-50">
       <ClickAwayListener onClickAway={() => setShowDownloadMenu(false)}>
         <div
           title={`downloadables files ${
@@ -119,7 +119,7 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
             </div>
             <div className="border-t-0 pt-4 dark:border-gray-700 border-gray-200 grid grid-cols-1 gap-x-4 max-h-132 overflow-y-auto gap-y-4">
               {allFiles && allFiles.length > 0 ? (
-                map(allFiles, (d) => <Download file={d} />)
+                map(allFiles, (d) => <Download key={d.id} file={d} />)
               ) : (
                 <p className="w-auto text-gray-500 text-center">
                   No files available to download

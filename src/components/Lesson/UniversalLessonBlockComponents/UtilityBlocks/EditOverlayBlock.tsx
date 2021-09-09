@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import {useState} from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
@@ -7,8 +6,7 @@ import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 interface IEditOverlayBlockProps extends RowWrapperProps {
   handleEditBlockContent?: () => void;
   section?: string;
-  rightMenu?: boolean;
-  setRightMenu?: React.Dispatch<React.SetStateAction<boolean>>;
+
   pageContentID?: string;
   partContentID?: string;
 }

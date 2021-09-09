@@ -1,13 +1,12 @@
-import ContentCard from '../../Atoms/ContentCard';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
-
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import ImageAlternate from '../../Atoms/ImageAlternative';
+import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
+import ContentCard from '../../Atoms/ContentCard';
+import ImageAlternate from '../../Atoms/ImageAlternative';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {ModifiedListProps} from './Home';
-import useDictionary from '../../../customHooks/dictionary';
 
 const RoomTiles = (props: {
   isTeacher?: boolean;

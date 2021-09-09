@@ -1,19 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-// Iconz
-import {IoMdDisc} from 'react-icons/io';
-import {FaAppleAlt} from 'react-icons/fa';
-import {AiOutlineUsergroupAdd, AiOutlineBook} from 'react-icons/ai';
-import {HiOutlineOfficeBuilding} from 'react-icons/hi';
-import {IoIosPeople, IoMdBuild} from 'react-icons/io';
-import {IoBarChart, IoBookOutline} from 'react-icons/io5';
-import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
-import {IoIosHome} from 'react-icons/io';
-
-import useDictionary from '../../../customHooks/dictionary';
-import {getAsset} from '../../../assets';
 import {findIndex} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineBook, AiOutlineUsergroupAdd} from 'react-icons/ai';
+import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
+import {FaAppleAlt} from 'react-icons/fa';
+import {HiOutlineOfficeBuilding} from 'react-icons/hi';
+// Iconz
+import {IoIosHome, IoIosPeople, IoMdBuild, IoMdDisc} from 'react-icons/io';
+import {IoBarChart, IoBookOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
 
 type LinkObject = {
   name: string;
@@ -508,7 +505,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                                 activeLink
                                   ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
                                   : 'border-transparent'
-                              } group sidenav_sub_item block flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
+                              } group sidenav_sub_item  flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
                               <span className="sidenav_sub_icon_wrapper">
                                 <IoMdDisc
                                   className={
