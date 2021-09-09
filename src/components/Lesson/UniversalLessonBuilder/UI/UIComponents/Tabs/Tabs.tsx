@@ -36,7 +36,7 @@ export const Tabs2 = ({
         <select
           id="tabs"
           name="tabs"
-          className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:iconoclast:border-500 focus:curate:border-500 sm:text-sm rounded-md"
           defaultValue={tabs.find((tab) => tab.current).name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
