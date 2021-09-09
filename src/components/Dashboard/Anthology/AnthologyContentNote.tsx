@@ -197,29 +197,28 @@ const SingleNote = ({
               {/**
                *  section:  FEEDBACK
                */}
-              {subSection === 'Work' ||
-                (subSection === 'Journal' && contentObj?.shared && (
-                  <div
-                    onClick={() => setShowComments(!showComments)}
-                    className={`${
-                      feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
-                    } ${
-                      loadingComments ? 'flex items-center justify-between' : ''
-                    }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                    <p>
-                      {loadingComments
-                        ? 'Loading Comments . . .'
-                        : feedbackData.length > 0
-                        ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                        : 'Leave Feedback'}
-                    </p>
-                    {/* {!loadingComments && (
+              {subSection === 'Work' || contentObj?.shared ? (
+                <div
+                  onClick={() => setShowComments(!showComments)}
+                  className={`${
+                    feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
+                  } ${
+                    loadingComments ? 'flex items-center justify-between' : ''
+                  }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+                  <p>
+                    {loadingComments
+                      ? 'Loading Comments . . .'
+                      : feedbackData.length > 0
+                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                      : 'Leave Feedback'}
+                  </p>
+                  {/* {!loadingComments && (
                     <span className="w-auto ml-4 w-auto">
                       <Loader color="#fff" />
                     </span>
                   )} */}
-                  </div>
-                ))}
+                </div>
+              ) : null}
             </div>
           )}
 
