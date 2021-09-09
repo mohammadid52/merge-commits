@@ -323,6 +323,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardImage: fileName,
             cardCaption: formData.imageCaption,
             purpose: formData.purposeHtml,
+            studentMaterials: formData.studentMaterials,
             objectives: [formData.objectiveHtml],
             notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),

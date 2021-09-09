@@ -35,6 +35,7 @@ export interface InitialData {
   duration: string;
   purpose: string;
   purposeHtml: string;
+  studentMaterials: string;
   objective: string;
   objectiveHtml: string;
   notes?: string;
@@ -76,6 +77,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
+    studentMaterials: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
     notes: '',
@@ -238,6 +240,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             lessonTypeList.find((item: any) => item.value === savedData.type),
           purposeHtml: savedData?.purpose ? savedData.purpose : '',
           notesHtml: savedData?.notes ? savedData.notes : '',
+          studentMaterials: savedData?.studentMaterials ? savedData.studentMaterials : '',
           objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
           languages: savedData.language.map((it: any) =>
             languageList.find((it2: any) => it2.value === it)
