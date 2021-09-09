@@ -3,25 +3,28 @@ import {IoIosCheckmarkCircle} from 'react-icons/io';
 import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory} from 'react-router';
+import {BsCircleFill} from 'react-icons/bs';
+import {HiOutlineRefresh} from 'react-icons/hi';
+import {FiAlertCircle} from 'react-icons/fi';
 
 import * as queries from '../../../../../graphql/queries';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {ContextMenuProvider} from '../../../../../contexts/TreeContext';
-
-import Selector from '../../../../Atoms/Form/Selector';
-
-import {Tree} from '../../../../TreeView/Tree';
-import {useHistory} from 'react-router';
 import {
   getLocalStorageData,
   removeLocalStorageData,
   setLocalStorageData,
 } from '../../../../../utilities/localStorage';
-import {BsCircleFill} from 'react-icons/bs';
+
+import Buttons from '../../../../Atoms/Buttons';
+import Selector from '../../../../Atoms/Form/Selector';
 import Loader from '../../../../Atoms/Loader';
-import {HiOutlineRefresh} from 'react-icons/hi';
+import Modal from '../../../../Atoms/Modal';
+
+import {Tree} from '../../../../TreeView/Tree';
 
 const InformationalWalkThrough = ({open, onCancel}: any) => {
   const {state: {user: {associateInstitute = [], role = ''} = {}} = {}} = useContext(
@@ -29,6 +32,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   );
   const history = useHistory();
   const cancelButtonRef = useRef();
+  const [showAlert, setShowAlert] = useState(true);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
@@ -42,11 +46,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     title: 'root',
     children: [
       {
-        title: `${selectedInstitution?.institution?.name || 'Institution'} Setup`,
+        title: `Institution Setup`,
         type: 'menu',
         id: 'inst',
         redirectionUrl: selectedInstitution?.institution?.id
-          ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`
+          ? `/dashboard/manage-institutions/institution?id={institutionId}`
           : '/dashboard/manage-institutions',
         children: [
           {
@@ -54,18 +58,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id={institutionId}`,
           },
           {
             title: 'Staff',
             type: 'list',
             children: [],
             id: 'inst_staff',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=1`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=0`,
           },
           {
             title: 'Classes',
@@ -75,7 +75,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Create Class',
                 type: 'list',
                 id: 'inst_classes_create',
-                redirectionUrl: `/dashboard/manage-institutions/institution/class-creation?id=${selectedInstitution?.institution?.id}`,
+                redirectionUrl: `/dashboard/manage-institutions/institution/class-creation?id={institutionId}`,
               },
               {
                 title: 'Add Student',
@@ -85,34 +85,26 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               },
             ],
             id: 'inst_classes',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=1`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=1`,
           },
           {
             title: 'Curriculum',
             type: 'menu',
             id: 'inst_curriculum',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
             children: [
               {
                 title: 'Add Curriculum Information',
                 type: 'list',
                 id: 'inst_curriculum_general_info',
-                redirectionUrl: selectedInstitution?.institution?.id
-                  ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`
-                  : '/dashboard/manage-institutions',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
               },
               {
                 title: 'Create Learning Objectives',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_learning_objectives',
-                redirectionUrl: selectedInstitution?.institution?.id
-                  ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`
-                  : '/dashboard/manage-institutions',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
               },
               {
                 title: 'Create Units',
@@ -130,18 +122,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   },
                 ],
                 id: 'inst_curriculum_units',
-                redirectionUrl: selectedInstitution?.institution?.id
-                  ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`
-                  : '/dashboard/manage-institutions',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
               },
               {
                 title: 'Demographics & Information',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_demographic_information',
-                redirectionUrl: selectedInstitution?.institution?.id
-                  ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`
-                  : '/dashboard/manage-institutions',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
               },
             ],
           },
@@ -150,40 +138,28 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_curriculum_classroom',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=4`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=4`,
           },
           {
             title: 'Service Providers',
             type: 'list',
             children: [],
             id: 'inst_curriculum_service_provider',
-            redirectionUrl: selectedInstitution?.institution?.id
-              ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=3`
-              : '/dashboard/manage-institutions',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
           },
         ],
       },
       {
-        title: `${
-          selectedInstitution?.institution?.name || 'Institution'
-        } Lesson Builder`,
+        title: `Lesson Builder`,
         type: 'menu',
         id: 'institution',
-        redirectionUrl: selectedInstitution?.institution?.id
-          ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`
-          : '/dashboard/manage-institutions',
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
       {
-        title: `${
-          selectedInstitution?.institution?.name || 'Institution'
-        } Service Provider Setup`,
+        title: `Service Provider`,
         type: 'menu',
         id: 'institution',
-        redirectionUrl: selectedInstitution?.institution?.id
-          ? `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`
-          : '/dashboard/manage-institutions',
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
     ],
   };
@@ -245,10 +221,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     setLoading(false);
   };
 
-  const onItemClick = async (section: {id: string; title: string}) => {
+  const onItemClick = async (section: {
+    id: string;
+    redirectionUrl: string;
+    title: string;
+  }) => {
     setLocalStorageData('active_step_section', section);
     setCompletedSections((prevSections) => [...prevSections, section]);
     setActiveSection(section);
+
+    if (section.redirectionUrl && selectedInstitution?.institution?.id) {
+      history.push(
+        `${section.redirectionUrl.replace(
+          '{institutionId}',
+          selectedInstitution?.institution?.id
+        )}`
+      );
+    }
     const data = await fetchDataOfActiveSection(
       section.id,
       selectedInstitution?.institution?.id
@@ -273,7 +262,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           console.log(error, 'error');
         }
       }
-      case 'inst_general_info': {
+      case 'inst_staff': {
         try {
           if (instId) {
             const result: any = await API.graphql(
@@ -292,6 +281,19 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 (member: any) => member.staffMember.role === 'TR'
               ),
             };
+          }
+          return null;
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'inst_classes_create': {
+        try {
+          if (instId) {
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.GetInstitutionClasses, {id: instId})
+            );
+            return {classes: result.data?.getInstitution?.classes.items};
           }
           return null;
         } catch (error) {
@@ -363,11 +365,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution?id=${
-                        associateInstitute?.length
-                          ? associateInstitute[0].institution?.id
-                          : ''
-                      }`
+                      `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   1. Add Your Institution's Avatar
@@ -385,11 +383,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="w-auto text-base font-bold cursor-pointer"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${
-                        associateInstitute?.length
-                          ? associateInstitute[0].institution?.id
-                          : ''
-                      }`
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   2. Enter your Institution's contact information
@@ -427,19 +421,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="w-auto text-base font-bold cursor-pointer"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${
-                        associateInstitute?.length
-                          ? associateInstitute[0].institution?.id
-                          : ''
-                      }`
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   2. Add a builder (optional)
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Update the address, contact number and website of your organization. The
-                service provider checkbox will be covered later.
+                A builder is someone who works creates curriculum and does analysis on
+                lesson results but is not assigned classrooms or interacts with students.
               </div>
             </div>
           </div>
@@ -454,7 +444,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   Create a class for your institution
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.classes.length)}
               </div>
               <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
@@ -817,6 +807,27 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         </div>
       </div>
+      {/* {showAlert && (
+        <Modal
+          showHeader={false}
+          showFooter={false}
+          closeAction={() => setShowAlert(false)}>
+          <div className="py-8 px-16">
+            <div className="mx-auto flex items-center justify-center rounded-full">
+              <FiAlertCircle className="w-8 h-8" />
+            </div>
+            <div className="mt-4">Enter classroom details</div>
+            <div className="flex justify-center mt-4">
+              <Buttons
+                btnClass={'abc'}
+                label={'Ok'}
+                labelClass={'leading-6'}
+                onClick={() => setShowAlert(false)}
+              />
+            </div>
+          </div>
+        </Modal>
+      )} */}
     </Dialog>
   );
 };

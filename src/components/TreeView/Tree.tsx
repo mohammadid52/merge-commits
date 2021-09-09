@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
 import {FaTasks} from 'react-icons/fa';
-import {useHistory} from 'react-router';
 import {Directory} from './Directory';
 import {Item} from './Item';
 import {useContextMenu} from '../../contexts/TreeContext';
@@ -16,11 +15,10 @@ export const Tree = ({
   activeSectionId?: string;
   headingPrefix?: string;
   hoverClassName?: string;
-  onItemClick?: (section: {id: string; title: string}) => void;
+  onItemClick?: (section: {id: string; title: string; redirectionUrl: string}) => void;
   root: any;
   textClassName?: string;
 }>): JSX.Element => {
-  const history = useHistory();
   const {setShow, setPosition}: any = useContextMenu();
   const color_gen = useMemo(() => Math.floor(Math.random() * 16777215).toString(16), []);
   const onContextMenu = useCallback(
@@ -37,19 +35,20 @@ export const Tree = ({
     [setShow, setPosition]
   );
 
-  const onItemClicked = useCallback(
-    (event: React.MouseEvent<HTMLLIElement, MouseEvent>, section: any) => {
-      event.stopPropagation();
-      setShow(false);
-      if (onItemClick) {
-        onItemClick({id: section.id, title: section.title});
-      }
-      if (section.redirectionUrl) {
-        history.push(section.redirectionUrl);
-      }
-    },
-    []
-  );
+  const onItemClicked = (
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    section: any
+  ) => {
+    event.stopPropagation();
+    setShow(false);
+    if (onItemClick) {
+      onItemClick({
+        id: section.id,
+        title: section.title,
+        redirectionUrl: section.redirectionUrl,
+      });
+    }
+  };
 
   return (
     <ul

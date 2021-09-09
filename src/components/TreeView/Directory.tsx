@@ -1,5 +1,4 @@
 import React, {useCallback, useState} from 'react';
-import {useHistory} from 'react-router';
 import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {BsCircleFill, BsFillCaretDownFill, BsFillCaretRightFill} from 'react-icons/bs';
 import {Transition} from '@headlessui/react';
@@ -24,35 +23,34 @@ export const Directory = ({
   isOpen?: boolean;
   item: any;
   onContextMenu: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
-  onItemClick?: (section: {id: string; title: string}) => void;
+  onItemClick?: (section: {id: string; title: string; redirectionUrl: string}) => void;
   setShow: (s: boolean) => void;
   textClassName?: string;
 }>): JSX.Element => {
-  const history = useHistory();
   const [toggle, setToggle] = useState<boolean>(isOpen || false);
-  const onItemClicked = useCallback(
-    (
-      event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-      section: {id: string; title: string}
-    ) => {
-      console.log('onItemClicked');
-      event.stopPropagation();
-      console.log('after onItemClicked');
-      setToggle((prevValue) => !prevValue);
-      setShow(false);
-      if (onItemClick) {
-        onItemClick(section);
-      }
-      if (item.redirectionUrl) {
-        history.push(item.redirectionUrl);
-      }
-    },
-    []
-  );
+  const onItemClicked = (
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    section: {id: string; title: string; redirectionUrl: string}
+  ) => {
+    console.log('onItemClicked');
+    event.stopPropagation();
+    console.log('after onItemClicked');
+    setToggle((prevValue) => !prevValue);
+    setShow(false);
+    if (onItemClick) {
+      onItemClick(section);
+    }
+  };
 
   return (
     <Item
-      onClick={(e) => onItemClicked(e, {id: item.id, title: item.title})}
+      onClick={(e) =>
+        onItemClicked(e, {
+          id: item.id,
+          title: item.title,
+          redirectionUrl: item.redirectionUrl,
+        })
+      }
       onContextMenu={onContextMenu}>
       <span
         className={`hover:${hoverClassName || 'bg-gray-400'} ${

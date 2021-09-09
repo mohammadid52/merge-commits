@@ -4074,3 +4074,27 @@ export const getBasicDetailsOfInstitution = /* GraphQL */ `
     }
   }
 `;
+
+export const GetInstitutionClasses = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      createdAt
+      updatedAt
+    }
+  }
+`;
