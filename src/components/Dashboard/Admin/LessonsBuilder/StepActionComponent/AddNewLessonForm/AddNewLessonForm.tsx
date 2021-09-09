@@ -16,6 +16,7 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
+import MaterialsCard from './MaterialsCard';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -545,15 +546,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Purpose">
-            <div className="max-h-96 p-4">
-              <RichTextEditor
-                initialValue={purposeHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
-                }
-              />
-            </div>
+          <Card cardTitle="Materials">
+            <MaterialsCard
+              purposeHtml={purposeHtml}
+              setEditorContent={setEditorContent}
+            />
           </Card>
           <Card cardTitle="Reminder & Notes">
             <div className="max-h-96 p-4">
