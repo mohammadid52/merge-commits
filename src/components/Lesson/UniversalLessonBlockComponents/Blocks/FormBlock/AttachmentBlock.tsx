@@ -1,17 +1,18 @@
+import Storage from '@aws-amplify/storage';
+import {Transition} from '@headlessui/react';
+import {noop} from 'lodash';
 import React, {useCallback, useContext, useRef, useState} from 'react';
-import {BiDotsVerticalRounded, BiImageAdd, BiPause} from 'react-icons/bi';
+import ClickAwayListener from 'react-click-away-listener';
+import {useDropzone} from 'react-dropzone';
+import {BiDotsVerticalRounded, BiImageAdd} from 'react-icons/bi';
+import {IoClose} from 'react-icons/io5';
+import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import {useQuery} from '../../../../../customHooks/urlParam';
 import {getImageFromS3} from '../../../../../utilities/services';
-import {FormControlProps} from '../FormBlock';
-import Storage from '@aws-amplify/storage';
-import {noop} from 'lodash';
 import Modal from '../../../../Atoms/Modal';
-import {Transition} from '@headlessui/react';
-import {IoClose} from 'react-icons/io5';
-import {useDropzone} from 'react-dropzone';
-import ClickAwayListener from 'react-click-away-listener';
-import {getAsset} from '../../../../../assets';
+import {FormControlProps} from '../FormBlock';
 
 const btnClass = (color: string) =>
   `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
@@ -152,11 +153,12 @@ const AttachmentBlock = ({
   const isInLesson = useInLessonCheck();
   const inputOther = useRef(null);
 
+  const params = useQuery(location.search);
+
   const openFilesExplorer = () => inputOther.current.click();
   // For Attachments - 31
 
   const fileIcon = getAsset('general', 'file');
-  const fileImgIcon = getAsset('general', 'fileImg');
 
   const [fileObj, setFileObj] = useState<any>(null);
 
@@ -212,10 +214,10 @@ const AttachmentBlock = ({
     setFileObj(null);
     setStatus(null);
     setProgress(null);
-    deletImageFromS3(`ULB/studentdata_${imgId}`);
+    deletImageFromS3(`${UPLOAD_KEY}/${imgId}`);
   };
 
-  const UPLOAD_KEY = 'survey_attachments';
+  const UPLOAD_KEY = `ULB/studentdata/${params.get('lessonId')}/${user.id}`;
 
   const onDrop = useCallback(async (acceptedFile) => {
     setStatus('progress');
