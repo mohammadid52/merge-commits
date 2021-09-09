@@ -262,11 +262,11 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson.title,
     time: `${lesson.estTime} min`,
-    overview: lesson.description ? ReactHtmlParser(lesson.description) : '--',
+    instructions: lesson.description ? ReactHtmlParser(lesson.description) : '--',
   }));
 
   const lessonPlanTableConfig = {
-    headers: ['Name', 'Time', 'Overview'],
+    headers: ['Name', 'Time', 'Instructions'],
     dataList,
     config: {
       dark: currentLesson?.darkMode || true,

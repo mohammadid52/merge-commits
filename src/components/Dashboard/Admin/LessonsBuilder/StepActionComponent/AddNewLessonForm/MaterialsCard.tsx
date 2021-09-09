@@ -6,7 +6,7 @@ import {
   useTabs,
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 
-const MaterialsCard = ({purposeHtml, setEditorContent}: any) => {
+const MaterialsCard = ({purposeHtml, studentMaterials, setEditorContent}: any) => {
   const tabs = [
     {name: 'Teacher', current: true},
     {name: 'Student', current: false},
@@ -35,9 +35,9 @@ const MaterialsCard = ({purposeHtml, setEditorContent}: any) => {
         {onStudentTab && (
           <div className="mt-5">
             <RichTextEditor
-              initialValue={purposeHtml}
+              initialValue={studentMaterials}
               onChange={(htmlContent, plainText) =>
-                setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
+                setEditorContent(htmlContent, plainText, 'studentMaterials', '')
               }
             />
           </div>
