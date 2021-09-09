@@ -217,7 +217,7 @@ const AttachmentBlock = ({
     deletImageFromS3(`${UPLOAD_KEY}/${imgId}`);
   };
 
-  const UPLOAD_KEY = `ULB/studentdata/${params.get('lessonId')}/${user.id}`;
+  const UPLOAD_KEY = `ULB/studentdata/${user.id}/${params.get('lessonId')}`;
 
   const onDrop = useCallback(async (acceptedFile) => {
     setStatus('progress');
