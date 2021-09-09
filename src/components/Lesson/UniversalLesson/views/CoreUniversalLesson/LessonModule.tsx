@@ -320,10 +320,10 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
             <AnimatedContainer show={onResourcesTab} animationType="scale">
               {onResourcesTab && (
                 <>
-                  {currentLesson?.resources ? (
+                  {currentLesson?.studentMaterials ? (
                     <div>
                       <p className="text-gray-400 font-medium text-lg leading-3">
-                        {currentLesson?.resources}
+                        {currentLesson?.studentMaterials}
                       </p>
                     </div>
                   ) : (
