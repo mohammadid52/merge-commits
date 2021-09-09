@@ -1,3 +1,4 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 import {Transition} from '@headlessui/react';
 import {noop} from 'lodash';
@@ -6,6 +7,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {BiDotsVerticalRounded, BiImageAdd} from 'react-icons/bi';
 import {IoClose} from 'react-icons/io5';
+import * as mutations from '../../../../../graphql/mutations';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
@@ -13,6 +15,8 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {getImageFromS3} from '../../../../../utilities/services';
 import Modal from '../../../../Atoms/Modal';
 import {FormControlProps} from '../FormBlock';
+import {v4 as uuidv4} from 'uuid';
+import {getLocalStorageData} from '../../../../../utilities/localStorage';
 
 const btnClass = (color: string) =>
   `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
@@ -217,21 +221,57 @@ const AttachmentBlock = ({
     deletImageFromS3(`${UPLOAD_KEY}/${imgId}`);
   };
 
-  const UPLOAD_KEY = `ULB/studentdata/${user.id}/${params.get('lessonId')}`;
+  const lessonId = params.get('lessonId');
+
+  const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
 
   const onDrop = useCallback(async (acceptedFile) => {
+    uploadFile(acceptedFile);
+  }, []);
+
+  const {authId, email} = user;
+
+  const roomInfo = getLocalStorageData('room_info');
+
+  /**
+   * This Function will store all image data to createPersonFiles table
+   */
+  const uploadFileDataToTable = async (file: any, fileKey: string) => {
+    try {
+      const payload = {
+        id: uuidv4(),
+        personAuthID: authId,
+        personEmail: email,
+        fileName: file.name,
+        fileKey,
+        lessonID: lessonId,
+        syllabusLessonID: roomInfo?.activeSyllabus,
+        roomID: roomInfo?.id,
+      };
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.createPersonFiles, {input: payload})
+      );
+    } catch (error) {
+      console.error('@uploadFileDataToTable: ', error.message);
+    }
+  };
+
+  const uploadFile = async (file: any) => {
     setStatus('progress');
     setProgress('5');
-    const file = acceptedFile;
+
     setFileObj(file);
     const id = `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
     setImgId(id);
+
     await uploadImageToS3(file, id, file.type);
+    uploadFileDataToTable(file, id);
     const imageUrl: any = await getImageFromS3(id);
     if (isInLesson) {
       handleUpdateStudentData(inputID, [imageUrl]);
     }
-  }, []);
+  };
+
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop,
     multiple: false,
@@ -239,18 +279,7 @@ const AttachmentBlock = ({
 
   const handleFileSelection = async (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
-      setStatus('progress');
-      setProgress('5');
-      const file = e.target.files[0];
-      setFileObj(file);
-      const id = `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
-      setImgId(id);
-
-      await uploadImageToS3(file, id, file.type);
-      const imageUrl: any = await getImageFromS3(id);
-      if (isInLesson) {
-        handleUpdateStudentData(inputID, [imageUrl]);
-      }
+      uploadFile(e.target.files[0]);
     }
   };
 
