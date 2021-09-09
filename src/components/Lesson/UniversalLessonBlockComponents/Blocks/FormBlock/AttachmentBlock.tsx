@@ -17,6 +17,7 @@ import Modal from '../../../../Atoms/Modal';
 import {FormControlProps} from '../FormBlock';
 import {v4 as uuidv4} from 'uuid';
 import {getLocalStorageData} from '../../../../../utilities/localStorage';
+import {useRouteMatch} from 'react-router';
 
 const btnClass = (color: string) =>
   `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
@@ -165,6 +166,7 @@ const AttachmentBlock = ({
   const fileIcon = getAsset('general', 'file');
 
   const [fileObj, setFileObj] = useState<any>(null);
+  const match: any = useRouteMatch();
 
   const [progress, setProgress] = useState(null);
   const [status, setStatus] = useState(null);
@@ -221,7 +223,8 @@ const AttachmentBlock = ({
     deletImageFromS3(`${UPLOAD_KEY}/${imgId}`);
   };
 
-  const lessonId = params.get('lessonId');
+  const lessonId = match.params?.lessonID;
+  console.log('🚀 ~ file: AttachmentBlock.tsx ~ line 227 ~ lessonId', lessonId);
 
   const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
 
@@ -239,15 +242,18 @@ const AttachmentBlock = ({
   const uploadFileDataToTable = async (file: any, fileKey: string) => {
     try {
       const payload = {
-        id: uuidv4(),
         personAuthID: authId,
         personEmail: email,
         fileName: file.name,
         fileKey,
-        lessonID: lessonId,
+        lessonID: roomInfo?.activeLessonId,
         syllabusLessonID: roomInfo?.activeSyllabus,
         roomID: roomInfo?.id,
       };
+      console.log(
+        '🚀 ~ file: AttachmentBlock.tsx ~ line 254 ~ uploadFileDataToTable ~ payload',
+        payload
+      );
       const result: any = await API.graphql(
         graphqlOperation(mutations.createPersonFiles, {input: payload})
       );
