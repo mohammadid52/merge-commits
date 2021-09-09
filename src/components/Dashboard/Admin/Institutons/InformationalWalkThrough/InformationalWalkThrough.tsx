@@ -19,67 +19,80 @@ import {
 } from '../../../../../utilities/localStorage';
 import {BsCircleFill} from 'react-icons/bs';
 
-const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => {
+const InformationalWalkThrough = ({open, onCancel}: any) => {
+  const {state: {user: {associateInstitute = [], role = ''} = {}} = {}} = useContext(
+    GlobalContext
+  );
   const history = useHistory();
   const cancelButtonRef = useRef();
+  const [activeSection, setActiveSection] = useState<any>(null);
+  const [completedSections, setCompletedSections] = useState([]);
+  const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const data: any = {
     title: 'root',
     children: [
       {
-        title: 'Institution',
+        title: `${
+          selectedInstitution ? selectedInstitution?.institution?.name : 'Institution'
+        }`,
         type: 'menu',
         id: 'institution',
-        redirectionUrl: '/dashboard/manage-institutions',
+        redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`,
         children: [
           {
             title: 'General Info',
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id=${
-              associateInstitute?.length ? associateInstitute[0].institution?.id : ''
-            }`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`,
           },
           {
             title: 'Classes',
             type: 'list',
             children: [],
             id: 'inst_classes',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=1`,
           },
           {
             title: 'Staff',
             type: 'list',
             children: [],
             id: 'inst_staff',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=1`,
           },
           {
             title: 'Curriculum',
             type: 'menu',
             id: 'inst_curriculum',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`,
             children: [
               {
                 title: 'General Info',
                 type: 'list',
                 id: 'inst_curriculum_general_info',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`,
               },
               {
                 title: 'Learning Objectives',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_learning_objectives',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`,
               },
               {
                 title: 'Units',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_units',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`,
               },
               {
                 title: 'Demographics & Information',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_demographic_information',
+                redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=2`,
               },
             ],
           },
@@ -88,54 +101,68 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
             type: 'list',
             children: [],
             id: 'inst_curriculum_classroom',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=4`,
           },
           {
             title: 'Service Providers',
             type: 'list',
             children: [],
             id: 'inst_curriculum_service_provider',
+            redirectionUrl: `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=3`,
           },
         ],
       },
     ],
   };
-  const {state} = useContext(GlobalContext);
-  const [activeSection, setActiveSection] = useState<any>(null);
-  const [completedSections, setCompletedSections] = useState([]);
-  const [selectedInstitution, setSelectedInstitution] = useState([]);
+
+  useEffect(() => {
+    const selected_institution: any = getLocalStorageData('selected_institution');
+    if (associateInstitute?.length && !selected_institution?.institution?.id) {
+      setLocalStorageData('selected_institution', associateInstitute[0]);
+      setSelectedInstitution(associateInstitute[0]);
+    }
+  }, [associateInstitute]);
 
   useEffect(() => {
     const setupActiveSection = async () => {
       const activeStep = getLocalStorageData('active_step_section');
+      const selected_institution: any = getLocalStorageData('selected_institution');
       if (activeStep) {
-        const data = await fetchDataOfActiveSection(activeStep.id);
+        const data = await fetchDataOfActiveSection(
+          activeStep.id,
+          selected_institution?.institution?.id
+        );
         setActiveSection({...activeStep, data});
       }
+      if (selected_institution) {
+        setSelectedInstitution(selected_institution);
+      }
     };
-    setupActiveSection();
-  }, []);
+    if (open) {
+      setupActiveSection();
+    }
+  }, [open]);
 
   const onItemClick = async (section: {id: string; title: string}) => {
-    console.log(section, 'sectionsectionsection');
-
     setLocalStorageData('active_step_section', section);
     setCompletedSections((prevSections) => [...prevSections, section]);
     const data = await fetchDataOfActiveSection(section.id);
     setActiveSection({...section, data});
   };
 
-  const fetchDataOfActiveSection = async (id: string) => {
+  const fetchDataOfActiveSection = async (id: string, instId?: string) => {
     switch (id) {
       case 'inst_general_info': {
-        console.log('above query call');
         try {
-          const result: any = await API.graphql(
-            graphqlOperation(customQueries.getBasicDetailsOfInstitution, {
-              id: associateInstitute?.length ? associateInstitute[0].institution?.id : '',
-            })
-          );
-          console.log(data, 'dataaaaaaa');
-          return result?.data.getInstitution;
+          if (instId || selectedInstitution?.institution?.id) {
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.getBasicDetailsOfInstitution, {
+                id: instId || selectedInstitution?.institution?.id || '',
+              })
+            );
+            return result?.data.getInstitution;
+          }
+          return null;
         } catch (error) {
           console.log(error, 'error');
         }
@@ -143,11 +170,25 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
     }
   };
 
+  const onInstituteChange = async (_: string, name: string, id: string) => {
+    const selectedData = associateInstitute.find(
+      (item: any) => item.institution?.id === id
+    );
+    setSelectedInstitution(selectedData);
+    setLocalStorageData('selected_institution', selectedData);
+
+    const data = await fetchDataOfActiveSection(
+      activeSection.id,
+      selectedData?.institution?.id
+    );
+    setActiveSection((prevData: any) => ({...prevData, data}));
+  };
+
   const stepsOfActiveSection = () => {
     return (
       <>
-        <div className="h-3/4">
-          <div className="mt-2">
+        <div className="h-3/4 mt-6">
+          <div className="mb-4">
             <div className="text-base flex item-center">
               <span
                 className="cursor-pointer w-auto font-bold"
@@ -175,13 +216,13 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
               extensions are recommended but jpg will work as well.
             </div>
           </div>
-          <div className="mt-2">
+          <div className="mb-4">
             <div className="text-base flex item-center">
               <span
-                className="w-auto text-base font-bold"
+                className="w-auto text-base font-bold cursor-pointer"
                 onClick={() =>
                   history.push(
-                    `/dashboard/manage-institutions/institution?id=${
+                    `/dashboard/manage-institutions/institution/edit?id=${
                       associateInstitute?.length
                         ? associateInstitute[0].institution?.id
                         : ''
@@ -198,10 +239,10 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
                 )}
               </span>
             </div>
-          </div>
-          <div className="my-1 ml-3 italic">
-            Update the address, contact number and website of your organization. The
-            service provider checkbox will be covered later.
+            <div className="my-1 ml-3 italic">
+              Update the address, contact number and website of your organization. The
+              service provider checkbox will be covered later.
+            </div>
           </div>
         </div>
         {/* <hr className="my-2 text-gray-500" />
@@ -215,8 +256,6 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
       </>
     );
   };
-
-  console.log(associateInstitute, activeSection, 'associateInstituteassociateInstitute');
 
   return (
     <Dialog
@@ -248,18 +287,19 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
                     <div className="space-y-1">
                       <div className="flex justify-between">
                         <Dialog.Title className="text-lg font-medium text-gray-900">
-                          {`${state.user.firstName} ${state.user.lastName} Set-Up Navigator`}
+                          {`${selectedInstitution?.institution?.name} Set-Up Navigator`}
                         </Dialog.Title>
-                        {associateInstitute?.length > 1 && (
+                        {role === 'ADM' && associateInstitute?.length > 1 && (
                           <Selector
-                            selectedItem={''}
+                            selectedItem={selectedInstitution?.institution?.name}
                             label={''}
                             placeholder={'Select institution'}
                             list={associateInstitute.map((item: any) => ({
                               ...item,
                               name: item.institution.name,
+                              id: item.institution.id,
                             }))}
-                            onChange={() => console.log('dfgdfgd')}
+                            onChange={onInstituteChange}
                           />
                         )}
                       </div>
@@ -295,9 +335,10 @@ const InformationalWalkThrough = ({associateInstitute, open, onCancel}: any) => 
                     </ContextMenuProvider>
                   </div>
                   <div className="p-4 w-3/5">
-                    <div className="text-lg font-bold mb-5">
+                    <div className="text-lg font-bold">
                       Steps for Setting up {activeSection?.title}
                     </div>
+                    <hr className="my-2 text-gray-500" />
                     {stepsOfActiveSection()}
                   </div>
                 </div>

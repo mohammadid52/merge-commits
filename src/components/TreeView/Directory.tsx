@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {BsCircleFill, BsFillCaretDownFill, BsFillCaretRightFill} from 'react-icons/bs';
 import {Transition} from '@headlessui/react';
@@ -26,7 +26,7 @@ export const Directory = ({
   setShow: (s: boolean) => void;
   textClassName?: string;
 }>): JSX.Element => {
-  const history = useHistory()
+  const history = useHistory();
   const [toggle, setToggle] = useState<boolean>(true);
   const onItemClicked = useCallback(
     (
@@ -40,9 +40,9 @@ export const Directory = ({
       setShow(false);
       if (!item.children?.length && onItemClick) {
         onItemClick(section);
-        if (item.redirectionUrl) {
-          history.push(item.redirectionUrl);
-        }
+      }
+      if (item.redirectionUrl) {
+        history.push(item.redirectionUrl);
       }
     },
     []

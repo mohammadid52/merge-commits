@@ -744,7 +744,6 @@ const Dashboard = (props: DashboardProps) => {
         handleRoomSelection={handleRoomSelection}
       />
     );
-  console.log(state.user, 'sdsdsjfjf');
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
@@ -912,7 +911,6 @@ const Dashboard = (props: DashboardProps) => {
         <InformationalWalkThrough
           open={openWalkThroughModal}
           onCancel={() => setOpenWalkThroughModal(false)}
-          associateInstitute={state.user.associateInstitute}
         />
       </div>
       {/* </ResizablePanels> */}

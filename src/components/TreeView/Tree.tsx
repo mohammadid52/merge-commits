@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 import {FaTasks} from 'react-icons/fa';
+import {useHistory} from 'react-router';
 import {Directory} from './Directory';
 import {Item} from './Item';
 import {useContextMenu} from '../../contexts/TreeContext';
@@ -19,6 +20,7 @@ export const Tree = ({
   root: any;
   textClassName?: string;
 }>): JSX.Element => {
+  const history = useHistory();
   const {setShow, setPosition}: any = useContextMenu();
   const color_gen = useMemo(() => Math.floor(Math.random() * 16777215).toString(16), []);
   const onContextMenu = useCallback(
@@ -36,13 +38,15 @@ export const Tree = ({
   );
 
   const onItemClicked = useCallback(
-    (
-      event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-      section: {id: string; title: string}
-    ) => {
+    (event: React.MouseEvent<HTMLLIElement, MouseEvent>, section: any) => {
       event.stopPropagation();
       setShow(false);
-      onItemClick(section);
+      if (!section.children?.length && onItemClick) {
+        onItemClick({id: section.id, title: section.title});
+      }
+      if (section.redirectionUrl) {
+        history.push(section.redirectionUrl);
+      }
     },
     []
   );
@@ -72,7 +76,7 @@ export const Tree = ({
           return (
             <Item
               key={item.title}
-              onClick={(e) => onItemClicked(e, {id: item.id, title: item.title})}
+              onClick={(e) => onItemClicked(e, item)}
               onContextMenu={onContextMenu}>
               <span className="hover:bg-gray-400 transition block pl-0 p-2 truncate flex">
                 <span className="w-6 h-6 mx-1 inline-flex items-center">
