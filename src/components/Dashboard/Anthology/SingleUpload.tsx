@@ -14,7 +14,7 @@ import {IUploadCardProps} from './UploadsTab';
 import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
 import {dateFromServer} from '../../../utilities/time';
-import {getImageFromS3} from '../../../utilities/services';
+import {getImageFromS3, getImageFromS3Static} from '../../../utilities/services';
 
 const SingleUpload = ({
   idx,
@@ -125,7 +125,7 @@ const SingleUpload = ({
   };
 
   const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3(uniqKey);
+    const imageUrl: any = await getImageFromS3Static(uniqKey);
     if (imageUrl) {
       console.log('imageUrl', imageUrl);
       return imageUrl;
