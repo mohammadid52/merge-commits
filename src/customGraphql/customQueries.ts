@@ -2010,6 +2010,7 @@ export const getUniversalLesson = /* GraphQL */ `
       summaryTitle
       duration
       resources
+      studentMaterials
       notes
       darkMode
       cardImage
@@ -3847,11 +3848,7 @@ export const listClassroomGroupss = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listClassroomGroupss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classRoomID
@@ -3926,7 +3923,7 @@ export const getClassroomSyllabus = /* GraphQL */ `
           lessons {
             items {
               id
-              lesson{
+              lesson {
                 duration
                 title
               }
@@ -4011,7 +4008,7 @@ export const getCurriculumForClasses = /* GraphQL */ `
           lessons {
             items {
               id
-              lesson{
+              lesson {
                 duration
                 title
               }

@@ -6,8 +6,10 @@ const AnimatedContainer = ({
   show,
   animationType = 'opacity',
   duration = '150',
+  className,
 }: {
   show: boolean;
+  className?: string;
   children: React.ReactNode;
   duration?: '150' | '200' | '300' | '500' | '700' | '1000';
   animationType?: 'slider' | 'opacity' | 'scale' | 'translateY';
@@ -33,7 +35,8 @@ const AnimatedContainer = ({
       className={classNames(
         genAnimation(),
         'transition-all  transform',
-        `duration-${duration}`
+        `duration-${duration}`,
+        className
       )}>
       {children}
     </div>

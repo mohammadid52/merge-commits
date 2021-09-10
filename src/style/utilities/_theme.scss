@@ -61,6 +61,25 @@
         }
       }
     }
+    .iconoclast .focus\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:focus {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        &:focus {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        &:focus {
+          color: $themeValue;
+        }
+      }
+    }
   }
 }
 
@@ -94,6 +113,26 @@
 
       @if $util == 'text' {
         &:hover {
+          color: $themeValue;
+        }
+      }
+    }
+
+    .curate .focus\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:focus {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        &:focus {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        &:focus {
           color: $themeValue;
         }
       }

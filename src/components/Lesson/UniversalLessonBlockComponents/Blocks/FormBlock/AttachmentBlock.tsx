@@ -7,16 +7,16 @@ import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {BiDotsVerticalRounded, BiImageAdd} from 'react-icons/bi';
 import {IoClose} from 'react-icons/io5';
-import * as mutations from '../../../../../graphql/mutations';
+import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 import {useQuery} from '../../../../../customHooks/urlParam';
+import * as mutations from '../../../../../graphql/mutations';
+import {getLocalStorageData} from '../../../../../utilities/localStorage';
 import {getImageFromS3} from '../../../../../utilities/services';
 import Modal from '../../../../Atoms/Modal';
 import {FormControlProps} from '../FormBlock';
-import {v4 as uuidv4} from 'uuid';
-import {getLocalStorageData} from '../../../../../utilities/localStorage';
 
 const btnClass = (color: string) =>
   `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
@@ -56,7 +56,7 @@ const File = ({
     }
   };
 
-  const imageUrl = URL.createObjectURL(file);
+  const imageUrl = file ? URL.createObjectURL(file) : null;
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
@@ -91,15 +91,17 @@ const File = ({
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
                   show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
-                    <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File name</dt>
-                      <img
-                        onClick={onImageClick}
-                        src={imageUrl}
-                        className="mt-1 rounded-md customShadow h-16 w-16"
-                        alt={file.name}
-                      />
-                    </div>
+                    {imageUrl && (
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500">File name</dt>
+                        <img
+                          onClick={onImageClick}
+                          src={imageUrl}
+                          className="mt-1 rounded-md customShadow h-16 w-16"
+                          alt={file.name}
+                        />
+                      </div>
+                    )}
                     <div className="sm:col-span-1">
                       <dt className="text-sm font-medium text-gray-500">File name</dt>
                       <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
@@ -165,6 +167,7 @@ const AttachmentBlock = ({
   const fileIcon = getAsset('general', 'file');
 
   const [fileObj, setFileObj] = useState<any>(null);
+  const match: any = useRouteMatch();
 
   const [progress, setProgress] = useState(null);
   const [status, setStatus] = useState(null);
@@ -221,7 +224,8 @@ const AttachmentBlock = ({
     deletImageFromS3(`${UPLOAD_KEY}/${imgId}`);
   };
 
-  const lessonId = params.get('lessonId');
+  const lessonId = match.params?.lessonID;
+  console.log('🚀 ~ file: AttachmentBlock.tsx ~ line 227 ~ lessonId', lessonId);
 
   const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
 
@@ -239,15 +243,15 @@ const AttachmentBlock = ({
   const uploadFileDataToTable = async (file: any, fileKey: string) => {
     try {
       const payload = {
-        id: uuidv4(),
         personAuthID: authId,
         personEmail: email,
         fileName: file.name,
         fileKey,
-        lessonID: lessonId,
+        lessonID: roomInfo?.activeLessonId,
         syllabusLessonID: roomInfo?.activeSyllabus,
         roomID: roomInfo?.id,
       };
+
       const result: any = await API.graphql(
         graphqlOperation(mutations.createPersonFiles, {input: payload})
       );

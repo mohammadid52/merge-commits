@@ -20,6 +20,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       summary
       summaryTitle
       duration
+      studentMaterials
       resources
       notes
       cardImage
@@ -1228,7 +1229,7 @@ export const createClassroomGroups = /* GraphQL */ `
           studentAuthId
           studentType
           studentNote
-          student{
+          student {
             id
             firstName
             preferredName
@@ -1276,7 +1277,7 @@ export const updateClassroomGroups = /* GraphQL */ `
           studentAuthId
           studentType
           studentNote
-          student{
+          student {
             id
             firstName
             preferredName
@@ -1325,7 +1326,7 @@ export const createClassroomGroupStudents = /* GraphQL */ `
             studentAuthId
             studentType
             studentNote
-            student{
+            student {
               id
               firstName
               preferredName
@@ -1363,7 +1364,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
             studentAuthId
             studentType
             studentNote
-            student{
+            student {
               id
               firstName
               preferredName

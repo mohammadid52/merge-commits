@@ -15,6 +15,7 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
+import MaterialsCard from './MaterialsCard';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -323,6 +324,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardImage: fileName,
             cardCaption: formData.imageCaption,
             purpose: formData.purposeHtml,
+            studentMaterials: formData.studentMaterials,
             objectives: [formData.objectiveHtml],
             notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),
@@ -359,6 +361,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             summary: formData.studentSummary,
             cardImage: fileName,
             darkMode: true,
+            studentMaterials: formData.studentMaterials,
             cardCaption: formData.imageCaption,
             duration: Number(formData.duration),
           };
@@ -544,15 +547,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Purpose">
-            <div className="max-h-96 p-4">
-              <RichTextEditor
-                initialValue={purposeHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
-                }
-              />
-            </div>
+          <Card cardTitle="Materials">
+            <MaterialsCard
+              purposeHtml={purposeHtml}
+              studentMaterials={formData.studentMaterials}
+              setEditorContent={setEditorContent}
+            />
           </Card>
           <Card cardTitle="Reminder & Notes">
             <div className="max-h-96 p-4">
@@ -614,110 +614,3 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 };
 
 export default AddNewLessonForm;
-
-// <div className="h-9/10 md:flex-row">
-// <div className="border-b-0 border-gray-200 mt-10">
-//   <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-//     <h3 className="text-lg leading-6 font-medium text-gray-900">
-//       Lesson Details
-//     </h3>
-//   </div>
-
-// </div>
-// <div className="border-b-0 border-gray-200 mt-10">
-//   <div className="grid grid-cols-2">
-//     <div>
-//       <div className="pr-4">
-//         <div
-//           className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-//           <h3 className="text-lg leading-6 font-medium text-gray-900">
-//             {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-//           </h3>
-//         </div>
-//       </div>
-//       <div className="py-4 pl-4">
-//         <div className="px-3 py-4">
-//           {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-//           {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-//         </label> */}
-// <RichTextEditor
-//   initialValue={objectiveHtml}
-//   onChange={(htmlContent, plainText) =>
-//     setEditorContent(
-//       htmlContent,
-//       plainText,
-//       'objectiveHtml',
-//       'objective'
-//     )
-//   }
-// />
-//         </div>
-//       </div>
-//     </div>
-//     <div>
-//       <div className="pl-4">
-//         <div
-//           className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-//           <h3 className="text-lg leading-6 font-medium text-gray-900">
-//             {AddNewLessonFormDict[userLanguage]['MATERIALS']}
-//           </h3>
-//         </div>
-//       </div>
-//       <div className="py-4 pr-4">
-//         <div className="px-3 py-4">
-//           {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-//           {AddNewLessonFormDict[userLanguage]['PURPOSE']}
-//         </label> */}
-// <RichTextEditor
-//   initialValue={purposeHtml}
-//   onChange={(htmlContent, plainText) =>
-//     setEditorContent(
-//       htmlContent,
-//       plainText,
-//       'purposeHtml',
-//       'purpose'
-//     )
-//   }
-// />
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-// </div>
-// <div className="mt-10">
-//   <div className="grid grid-cols-2">
-//     <div>
-//       <div className="pr-4">
-//         <div
-//           className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-//           <h3 className="text-lg leading-6 font-medium text-gray-900">
-//             {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
-//           </h3>
-//         </div>
-//       </div>
-//       <div className="pl-4 py-4">
-//         <div className="px-3 py-4">
-// <RichTextEditor
-//   initialValue={notesHtml}
-//   onChange={(htmlContent, plainText) =>
-//     setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
-//   }
-// />
-//         </div>
-//       </div>
-//     </div>
-
-//     {/* ---------- Lesson card ------  */}
-// <LessonCard
-//   studentSummary={studentSummary}
-//   onInputChange={onInputChange}
-//   imageCaption={imageCaption}
-//   cropSelecetedImage={cropSelecetedImage}
-//   validation={validation}
-//   imagePreviewUrl={imagePreviewUrl}
-//   totalEstTime={totalEstTime}
-//   lessonType={formData.type.value}
-// />
-//   </div>
-// </div>
-// </div>
