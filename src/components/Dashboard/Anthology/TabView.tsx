@@ -8,8 +8,10 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
-import AnthologyContent, {ContentCardProps} from './AnthologyContent';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  UniversalJournalData,
+  UniversalLessonStudentData,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {stringToHslColor} from '../../../utilities/strings';
@@ -18,6 +20,41 @@ import SentimentTab from './SentimentTab';
 import {IconContext} from 'react-icons/lib';
 import {IoIosJournal} from 'react-icons/io';
 import UploadsTab from './UploadsTab';
+import {getAsset} from '../../../assets';
+import {ViewEditMode} from './Anthology';
+import WrittenContentTab from './WrittenContentTab';
+
+export interface ITabParentProps {
+  handleEditToggle?: (
+    editMode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '',
+    dataID: string,
+    option?: number | 0,
+    recordID?: string
+  ) => void;
+  viewEditMode?: ViewEditMode;
+  mainSection?: string;
+  sectionRoomID?: string;
+  sectionTitle?: string;
+  subSection?: string;
+  setSubSection?: any;
+  tab?: any;
+  setTab?: any;
+  onCancel?: any;
+  viewModeView?: any;
+}
+
+export interface ITabViewProps extends ITabParentProps {
+  handleEditUpdate?: (e: any) => void;
+  updateJournalContent?: (html: string, targetType: string) => void;
+  createTemplate?: any;
+  currentContentObj?: UniversalJournalData;
+  content?: UniversalJournalData[];
+  allStudentData?: UniversalLessonStudentData[];
+  setAllStudentData?: any;
+  allExerciseData?: any[];
+  allUniversalJournalData?: UniversalJournalData[];
+  setAllUniversalJournalData?: any;
+}
 
 const TabView = ({
   viewEditMode,
@@ -37,8 +74,9 @@ const TabView = ({
   allExerciseData,
   allUniversalJournalData,
   setAllUniversalJournalData,
-}: ContentCardProps) => {
-  const {state, userLanguage, clientKey} = useContext(GlobalContext);
+}: ITabViewProps) => {
+  const {state, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const {anthologyDict} = useDictionary(clientKey);
 
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
@@ -77,8 +115,8 @@ const TabView = ({
     }
   };
 
-  const Content = (
-    <AnthologyContent
+  const WrittenContent = (
+    <WrittenContentTab
       // loadingContent={loadingContent}
       onCancel={() => {}}
       viewEditMode={viewEditMode}
@@ -95,7 +133,6 @@ const TabView = ({
       setAllStudentData={setAllStudentData}
     />
   );
-
   // ~~~~~~~~~~~~~~~~~ TABS ~~~~~~~~~~~~~~~~ //
 
   const CLASS_TABS = [
@@ -103,19 +140,31 @@ const TabView = ({
       index: 0,
       title: anthologyDict[userLanguage].TABS.B,
       id: 'Work',
-      content: Content,
+      content: WrittenContent,
     },
     {
       index: 1,
       title: anthologyDict[userLanguage].TABS.C,
       id: 'Notes',
-      content: Content,
+      content: WrittenContent,
     },
     {
       index: 2,
       title: anthologyDict[userLanguage].TABS.D,
       id: 'Uploads',
-      content: <UploadsTab user={state?.user} />,
+      content: (
+        <UploadsTab
+          personAuthID={state?.user?.authId}
+          personEmail={state?.user?.email}
+          sectionRoomID={sectionRoomID}
+          themeColor={theme?.textColor[themeColor]}
+          onCancel={() => {}}
+          viewEditMode={viewEditMode}
+          handleEditToggle={handleEditToggle}
+          mainSection={mainSection}
+          subSection={subSection}
+        />
+      ),
     },
   ];
 
@@ -130,7 +179,7 @@ const TabView = ({
       index: 1,
       title: anthologyDict[userLanguage].TABS.A,
       id: 'Journal',
-      content: Content,
+      content: WrittenContent,
     },
   ];
 

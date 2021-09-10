@@ -10,7 +10,7 @@ import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 
 import HeroBanner from '../../Header/HeroBanner';
-import AnthologyContent from './AnthologyContent';
+import WrittenContentTab from './WrittenContentTab';
 import {getAsset} from '../../../assets';
 import {
   StudentExerciseData,

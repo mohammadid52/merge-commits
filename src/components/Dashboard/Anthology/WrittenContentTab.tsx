@@ -8,7 +8,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
 
-import SingleNote from './AnthologyContentNote';
+import SingleNote from './SingleNote';
 import {
   UniversalJournalData,
   UniversalLessonStudentData,
@@ -19,36 +19,9 @@ import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {getAsset} from '../../../assets';
+import {ITabViewProps} from './TabView';
 
-export interface ContentCardProps {
-  viewEditMode?: ViewEditMode;
-  handleEditToggle?: (
-    editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    dataID: string,
-    option?: number | 0,
-    recordID?: string
-  ) => void;
-  handleEditUpdate?: (e: any) => void;
-  updateJournalContent?: (html: string, targetType: string) => void;
-  mainSection?: string;
-  sectionRoomID?: string;
-  sectionTitle?: string;
-  subSection?: string;
-  setSubSection?: any;
-  tab?: any;
-  setTab?: any;
-  createTemplate?: any;
-  currentContentObj?: UniversalJournalData;
-  content?: UniversalJournalData[];
-  allStudentData?: UniversalLessonStudentData[];
-  setAllStudentData?: any;
-  allExerciseData?: any[];
-  allUniversalJournalData?: UniversalJournalData[];
-  setAllUniversalJournalData?: any;
-  onCancel?: any;
-}
-
-const AnthologyContent = (props: ContentCardProps) => {
+const WrittenContentTab = (props: ITabViewProps) => {
   const {
     viewEditMode,
     handleEditToggle,
@@ -312,4 +285,4 @@ const AnthologyContent = (props: ContentCardProps) => {
   );
 };
 
-export default React.memo(AnthologyContent);
+export default React.memo(WrittenContentTab);

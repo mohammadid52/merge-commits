@@ -146,11 +146,14 @@ const AttachmentBlock = ({
   handleUpdateStudentData,
 }: FormControlProps) => {
   const {
+    lessonState,
     state: {
       user,
       lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
     },
   } = useContext(GlobalContext);
+
+  const lessonType = lessonState?.lessonData?.type;
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -225,7 +228,7 @@ const AttachmentBlock = ({
   };
 
   const lessonId = match.params?.lessonID;
-  console.log('🚀 ~ file: AttachmentBlock.tsx ~ line 227 ~ lessonId', lessonId);
+  // console.log('🚀 ~ file: AttachmentBlock.tsx ~ line 227 ~ lessonId', lessonId);
 
   const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
 
@@ -239,6 +242,11 @@ const AttachmentBlock = ({
 
   /**
    * This Function will store all image data to createPersonFiles table
+   *
+   * @Mohammad - The issue is with the PersonFiles type in api.schema.graphql
+   * - Only 1 personAuthId/personEmail can upload 1 file per lesson
+   * - If the same person wants to upload a second file and register it in the table
+   * personFiles, there is a graphQl error
    */
   const uploadFileDataToTable = async (file: any, fileKey: string) => {
     try {
@@ -246,9 +254,12 @@ const AttachmentBlock = ({
         personAuthID: authId,
         personEmail: email,
         fileName: file.name,
-        fileKey,
+        fileKey: fileKey,
+        feedbacks: [''],
+        shared: true,
         lessonID: roomInfo?.activeLessonId,
         syllabusLessonID: roomInfo?.activeSyllabus,
+        lessonType: lessonType,
         roomID: roomInfo?.id,
       };
 
