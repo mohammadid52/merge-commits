@@ -1891,6 +1891,37 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
   }
 `;
 
+export const listUniversalLessonsForInstitution = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        lessonPlan {
+          id
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getUniversalSyllabus = /* GraphQL */ `
   query GetUniversalSyllabus($id: ID!) {
     getUniversalSyllabus(id: $id) {
@@ -4093,6 +4124,35 @@ export const GetInstitutionClasses = /* GraphQL */ `
         nextToken
       }
       filters
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getInstitutionCurriculums = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      curricula {
+        items {
+          id
+          image
+          institutionID
+          name
+          type
+          languages
+          description
+          designers
+          objectives
+          summary
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

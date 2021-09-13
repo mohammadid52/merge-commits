@@ -32,8 +32,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   );
   const history = useHistory();
   const cancelButtonRef = useRef();
-  const [showAlert, setShowAlert] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [instListLoading, setInstListLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
     title: 'Institution Setup',
@@ -97,7 +98,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Add Curriculum Information',
                 type: 'list',
                 id: 'inst_curriculum_general_info',
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`,
               },
               {
                 title: 'Create Learning Objectives',
@@ -167,10 +168,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   useEffect(() => {
     const selected_institution: any = getLocalStorageData('selected_institution');
     if (associateInstitute?.length) {
-      // if (!selected_institution?.institution?.id) {
-      //   setLocalStorageData('selected_institution', associateInstitute[0]);
-      //   setSelectedInstitution(associateInstitute[0]);
-      // }
+      if (!selected_institution?.institution?.id) {
+        setLocalStorageData('selected_institution', selected_institution);
+      }
       setInstitutionList(
         associateInstitute.map((item: any) => ({
           ...item,
@@ -178,7 +178,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           id: item.institution.id,
         }))
       );
-      setLoading(false);
+      setInstListLoading(false);
     }
     if (!associateInstitute?.length) {
       fetchInstListForAdmin();
@@ -198,6 +198,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       }
       if (selected_institution) {
         setSelectedInstitution(selected_institution);
+        setLoading(false);
+      } else {
+        setLoading(false);
       }
     };
     if (open) {
@@ -218,7 +221,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         },
       })) || []
     );
-    setLoading(false);
+    setInstListLoading(false);
   };
 
   const onItemClick = async (section: {
@@ -228,21 +231,31 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   }) => {
     setLocalStorageData('active_step_section', section);
     setCompletedSections((prevSections) => [...prevSections, section]);
-    setActiveSection(section);
+    setActiveSection((prevSection: any) => ({
+      ...prevSection,
+      ...section,
+    }));
 
-    if (section.redirectionUrl && selectedInstitution?.institution?.id) {
-      history.push(
-        `${section.redirectionUrl.replace(
-          '{institutionId}',
-          selectedInstitution?.institution?.id
-        )}`
-      );
+    if (selectedInstitution?.institution?.id) {
+      if (section.redirectionUrl) {
+        history.push(
+          `${section.redirectionUrl?.replace(
+            '{institutionId}',
+            selectedInstitution?.institution?.id
+          )}`
+        );
+      }
+    } else {
+      setShowAlert(true);
     }
     const data = await fetchDataOfActiveSection(
       section.id,
       selectedInstitution?.institution?.id
     );
-    setActiveSection({...section, data});
+    setActiveSection((prevSection: any) => ({
+      ...prevSection,
+      data: {...prevSection.data, ...data},
+    }));
   };
 
   const fetchDataOfActiveSection = async (id: string, instId: string) => {
@@ -296,6 +309,118 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             return {classes: result.data?.getInstitution?.classes.items};
           }
           return null;
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'inst_curriculum_general_info': {
+        try {
+          if (instId) {
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
+            );
+            return {curriculum: result.data?.getInstitution?.curricula.items};
+          }
+          return null;
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'inst_curriculum_learning_objectives': {
+        try {
+          if (instId) {
+            let curriculums: any = activeSection?.data?.curriculum;
+            if (!curriculums) {
+              const result: any = await API.graphql(
+                graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
+              );
+              curriculums = result.data?.getInstitution?.curricula.items;
+            }
+            console.log(curriculums, 'curriculums++++');
+
+            if (curriculums?.length) {
+              const filter = {
+                or: curriculums.map((curriculum: any) => ({
+                  curriculumID: {eq: curriculum.id},
+                })),
+              };
+              let learningObjectives: any = await API.graphql(
+                graphqlOperation(queries.listLearningObjectives, {
+                  filter,
+                })
+              );
+              learningObjectives =
+                learningObjectives?.data?.listLearningObjectives?.items || [];
+              console.log(learningObjectives, 'learningObjectives');
+              let topics: any = await API.graphql(
+                graphqlOperation(queries.listTopics, {
+                  filter,
+                })
+              );
+              topics = topics?.data?.listTopics?.items || [];
+              console.log(topics, 'topics');
+              let rubrics: any = await API.graphql(
+                graphqlOperation(queries.listRubrics, {
+                  filter,
+                })
+              );
+              rubrics = rubrics?.data?.listRubrics?.items || [];
+              console.log(rubrics, 'rubrics');
+              return {
+                learningObjectives,
+                topics,
+                rubrics,
+              };
+            }
+          }
+          return null;
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'inst_curriculum_units_general_info': {
+        try {
+          if (instId) {
+            let curriculums: any = activeSection?.data?.curriculum;
+            if (!curriculums) {
+              const result: any = await API.graphql(
+                graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
+              );
+              curriculums = result.data?.getInstitution?.curricula.items;
+            }
+            console.log(curriculums, 'curriculums++++');
+
+            if (curriculums?.length) {
+              const filter = {
+                or: curriculums.map((curriculum: any) => ({
+                  curriculumID: {eq: curriculum.id},
+                })),
+              };
+              let universalSyllabus: any = await API.graphql(
+                graphqlOperation(queries.listUniversalSyllabuss, {
+                  filter,
+                  // limit: 1,
+                })
+              );
+              universalSyllabus = universalSyllabus?.data?.listUniversalSyllabuss?.items;
+              console.log(universalSyllabus, 'universalSyllabus***********');
+              return {universalSyllabus};
+            }
+          }
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'inst_curriculum_units_lesson_plan_manager': {
+        try {
+          if (instId) {
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
+                filter: {institutionID: {eq: instId}},
+              })
+            );
+            return {universalLessons: result.data?.listUniversalLessons?.items};
+          }
         } catch (error) {
           console.log(error, 'error');
         }
@@ -444,7 +569,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   Create a class for your institution
                 </span>
-                {progressIndicator(activeSection?.data?.classes.length)}
+                {progressIndicator(activeSection?.data?.classes?.length)}
               </div>
               <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
@@ -489,7 +614,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Add curriculum image
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  Boolean(
+                    activeSection?.data?.curriculum?.some(
+                      (curriculum: any) => curriculum.image
+                    )
+                  )
+                )}
               </div>
               <div className="my-1 ml-3 italic">
                 Click the avatar square. SVG or PNG files are recommended but jpg files
@@ -503,7 +634,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   2. Name your curriculum
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  Boolean(
+                    activeSection?.data?.curriculum?.some(
+                      (curriculum: any) => curriculum.name
+                    )
+                  )
+                )}
               </div>
               <div className="my-1 ml-3 italic">
                 For multi-lingual classrooms, you can have more than one lesson languages.
@@ -516,7 +653,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   3. Select the language(s) of your lessons
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  Boolean(
+                    activeSection?.data?.curriculum?.some(
+                      (curriculum: any) => curriculum.languages?.length
+                    )
+                  )
+                )}
               </div>
             </div>
             <div className="mb-4">
@@ -526,7 +669,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   4. Add the people who contributed to the design of the curriculum
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  Boolean(
+                    activeSection?.data?.curriculum?.some(
+                      (curriculum: any) => curriculum.designers?.length
+                    )
+                  )
+                )}
               </div>
               <div className="my-1 ml-3 italic">
                 Can be a mix of teachers and builders
@@ -539,7 +688,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   5. Select the audience of your curriculum
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(Boolean(activeSection?.data?.curriculum?.length))}
               </div>
               <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
@@ -553,12 +702,21 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   6. Add the purpose, description and objective of the course
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  Boolean(
+                    activeSection?.data?.curriculum?.some(
+                      (curriculum: any) =>
+                        curriculum.summary &&
+                        curriculum.description &&
+                        curriculum.objectives?.filter(Boolean)?.length
+                    )
+                  )
+                )}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
                 next step.
-              </div>
+              </div> */}
             </div>
           </div>
         );
@@ -572,12 +730,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Click on Add Learning Objective button
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.learningObjectives?.length)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Click the avatar square. SVG or PNG files are recommended but jpg files
                 will work as well.
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -588,9 +746,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
                 {progressIndicator(false)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 For multi-lingual classrooms, you can have more than one lesson languages.
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -599,7 +757,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   3. Add a topic to the Learning Objective
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.topics?.length)}
               </div>
             </div>
             <div className="mb-4">
@@ -611,9 +769,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
                 {progressIndicator(false)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Can be a mix of teachers and builders
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -622,12 +780,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   5. Add at least one measurements to your topic
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.rubrics?.length)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
                 next step.
-              </div>
+              </div> */}
             </div>
           </div>
         );
@@ -641,12 +799,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Enter name of unit
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.universalSyllabus?.length)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Click the avatar square. SVG or PNG files are recommended but jpg files
                 will work as well.
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -657,9 +815,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
                 {progressIndicator(false)}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 For multi-lingual classrooms, you can have more than one lesson languages.
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -684,7 +842,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Click on the New Lesson button
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(activeSection?.data?.universalLessons)}
               </div>
               <div className="my-1 ml-3 italic">
                 One lesson for the institution is in the lesson table
@@ -757,6 +915,20 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                           )
                         )}
                       </div>
+                      {showAlert && (
+                        <div
+                          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                          role="alert">
+                          <span className="block sm:inline">
+                            Please select institution before continuing
+                          </span>
+                          <span
+                            className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto"
+                            onClick={() => setShowAlert(false)}>
+                            <XIcon className="h-6 w-6" aria-hidden="true" />
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="h-7 w-auto flex items-center">
                       <button
@@ -770,19 +942,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     </div>
                   </div>
                 </div>
-                {loading ? (
-                  <div className="h-100 flex justify-center items-center">
+                {loading || instListLoading ? (
+                  <div className="w-196 2xl:w-256 h-100 flex justify-center items-center">
                     <div className="w-5/10">
                       <Loader />
                     </div>
                   </div>
                 ) : (
-                  <div style={{minHeight: 'calc(100vh - 76px)'}} className={'w-256 flex'}>
+                  <div
+                    style={{minHeight: 'calc(100vh - 76px)'}}
+                    className={'w-196 2xl:w-256 flex'}>
                     {/* <div
                     className="grid grid-cols-2"
                     style={{height: 'calc(100vh - 76px)'}}> */}
-                    <div className="bg-indigo-100 p-4 w-2/5">
-                      <div className="text-xl font-bold mb-4">Sections</div>
+                    <div
+                      className="bg-indigo-100 p-4 w-2/5 text-sm 2xl:text-base overflow-y-scroll"
+                      style={{height: 'calc(100vh - 76px)'}}>
+                      <div className="text-base 2xl:text-xl font-bold mb-4">Sections</div>
                       <ContextMenuProvider>
                         <Tree
                           root={data}
