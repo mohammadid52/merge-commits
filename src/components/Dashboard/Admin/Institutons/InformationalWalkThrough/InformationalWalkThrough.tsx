@@ -34,6 +34,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const cancelButtonRef = useRef();
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
   const [instListLoading, setInstListLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
@@ -105,7 +106,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_learning_objectives',
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`,
               },
               {
                 title: 'Create Units',
@@ -136,25 +137,62 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           },
           {
             title: 'Classroom',
-            type: 'list',
-            children: [],
-            id: 'inst_curriculum_classroom',
+            type: 'menu',
+            children: [
+              {
+                title: 'Class Details',
+                type: 'list',
+                id: 'inst_classroom_class_detail',
+                redirectionUrl: `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`,
+              },
+              {
+                title: 'Unit Planner',
+                type: 'list',
+                children: [],
+                id: 'inst_classroom_unit_planner',
+                // redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular?id={curriculumId}`,
+              },
+              {
+                title: 'Class Dynamics (Optional)',
+                type: 'list',
+                id: 'inst_curriculum_class_dynamics',
+                children: [],
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+              },
+            ],
+            id: 'inst_classroom',
             redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=4`,
-          },
-          {
-            title: 'Service Providers',
-            type: 'list',
-            children: [],
-            id: 'inst_curriculum_service_provider',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
           },
         ],
       },
       {
         title: `Lesson Builder`,
         type: 'menu',
-        id: 'institution',
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        id: 'lesson_builder',
+        redirectionUrl: `/dashboard/lesson-builder`,
+        children: [
+          {
+            title: 'Lesson List',
+            type: 'menu',
+            id: 'lesson_builder_list',
+            children: [
+              {
+                title: 'Create new lesson',
+                type: 'list',
+                id: 'lesson_builder_list_create_new_lesson',
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+            ],
+            redirectionUrl: `/dashboard/lesson-builder`,
+          },
+          {
+            title: 'Overview',
+            type: 'menu',
+            id: 'lesson_builder_overview',
+            children: [],
+            redirectionUrl: `/dashboard/lesson-builder`,
+          },
+        ],
       },
       {
         title: `Service Provider`,
@@ -190,11 +228,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       const activeStep = getLocalStorageData('active_step_section');
       const selected_institution: any = getLocalStorageData('selected_institution');
       if (activeStep) {
+        setSectionDetailsLoading(true);
         const data = await fetchDataOfActiveSection(
           activeStep.id,
           selected_institution?.institution?.id
         );
         setActiveSection({...activeStep, data});
+        setSectionDetailsLoading(false);
       }
       if (selected_institution) {
         setSelectedInstitution(selected_institution);
@@ -259,6 +299,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   };
 
   const fetchDataOfActiveSection = async (id: string, instId: string) => {
+    console.log(id, 'id in fetchDataOfActiveSection');
+
     switch (id) {
       case 'inst_general_info': {
         try {
@@ -336,6 +378,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               );
               curriculums = result.data?.getInstitution?.curricula.items;
             }
+
             console.log(curriculums, 'curriculums++++');
 
             if (curriculums?.length) {
@@ -367,6 +410,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               rubrics = rubrics?.data?.listRubrics?.items || [];
               console.log(rubrics, 'rubrics');
               return {
+                curriculum: curriculums,
                 learningObjectives,
                 topics,
                 rubrics,
@@ -411,11 +455,34 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           console.log(error, 'error');
         }
       }
+      case 'inst_classroom_unit_planner':
+      case 'inst_classroom_class_detail': {
+        try {
+          console.log('inside inst_classroom_class_detail');
+
+          if (instId) {
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.listRoomsBasicDetails, {
+                filter: {institutionID: {eq: instId}},
+              })
+            );
+            console.log(
+              instId,
+              result.data?.listRooms?.items,
+              'result.data?.listRooms?.items'
+            );
+
+            return {classRooms: result.data?.listRooms?.items};
+          }
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
       case 'inst_curriculum_units_lesson_plan_manager': {
         try {
           if (instId) {
             const result: any = await API.graphql(
-              graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
+              graphqlOperation(customQueries.listRoomsBasicDetails, {
                 filter: {institutionID: {eq: instId}},
               })
             );
@@ -452,6 +519,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       </span>
     );
   };
+
+  console.log(activeSection, 'activeSection+++++++++');
 
   const stepsOfActiveSection = () => {
     switch (activeSection?.id) {
@@ -611,7 +680,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   1. Add curriculum image
                 </span>
                 {progressIndicator(
@@ -690,10 +763,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
                 {progressIndicator(Boolean(activeSection?.data?.curriculum?.length))}
               </div>
-              <div className="my-1 ml-3 italic">
+              {/* <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
                 next step.
-              </div>
+              </div> */}
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -720,14 +793,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_curriculum_learning_objectives':
+      case 'inst_curriculum_learning_objectives': {
+        const redirectionPath = activeSection?.data?.curriculum?.length
+          ? `/dashboard/manage-institutions/${selectedInstitution?.institution?.id}/curricular?id=${activeSection?.data?.curriculum[0].id}`
+          : `/dashboard/manage-institutions/institution/curricular-creation?id=${selectedInstitution?.institution?.id}`;
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   1. Click on Add Learning Objective button
                 </span>
                 {progressIndicator(activeSection?.data?.learningObjectives?.length)}
@@ -741,7 +817,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   2. Create Learning Objective and add a description
                 </span>
                 {progressIndicator(false)}
@@ -754,7 +830,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   3. Add a topic to the Learning Objective
                 </span>
                 {progressIndicator(activeSection?.data?.topics?.length)}
@@ -764,7 +840,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   4. Add description and rubric to your topic
                 </span>
                 {progressIndicator(false)}
@@ -777,7 +853,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   5. Add at least one measurements to your topic
                 </span>
                 {progressIndicator(activeSection?.data?.rubrics?.length)}
@@ -789,14 +865,18 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_curriculum_units_general_info':
+      }
+      case 'inst_curriculum_units_general_info': {
+        const redirectionPath = activeSection?.data?.curriculum?.length
+          ? `/dashboard/manage-institutions/${selectedInstitution?.institution?.id}/curricular?id=${activeSection?.data?.curriculum[0].id}&tab=1`
+          : `/dashboard/manage-institutions/institution/curricular-creation?id=${selectedInstitution?.institution?.id}`;
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   1. Enter name of unit
                 </span>
                 {progressIndicator(activeSection?.data?.universalSyllabus?.length)}
@@ -832,6 +912,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
+      }
       case 'inst_curriculum_units_lesson_plan_manager':
         return (
           <div className="mt-6">
@@ -850,7 +931,172 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-
+      case 'inst_classroom_class_detail':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
+                    )
+                  }>
+                  1. Enter classroom name, select curriculum, select teachers &
+                  co-teachers, add class, conference call link and location objectives,
+                  policies, purpose and methodologies of the unit
+                </span>
+                {progressIndicator(
+                  activeSection?.data?.classRooms?.filter((item: any) => item.startDate)
+                    .length
+                )}
+              </div>
+              {/* <div className="my-1 ml-3 italic">
+                One lesson for the institution is in the lesson table
+              </div> */}
+            </div>
+          </div>
+        );
+      case 'inst_classroom_unit_planner':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.classRooms?.length
+                        ? `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
+                        : `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=overview`
+                    )
+                  }>
+                  1. Set up schedule details
+                </span>
+                {progressIndicator(
+                  activeSection?.data?.classRooms?.filter((item: any) => item.startDate)
+                    .length
+                )}
+              </div>
+              <div className="my-1 ml-3 italic">
+                This section will be used to project the dates for your lessons
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  2. Add any details which impact the schedule
+                </span>
+                {progressIndicator(false)}
+              </div>
+              <div className="my-1 ml-3 italic">
+                This area is to record events which will impact your lessons or lesson
+                dates. Push means you will push the next lesson to the following project
+                date. Compact means that you will continue with the lesson but will need
+                to abbreviate the lesson coursework to meet schedule
+              </div>
+            </div>
+          </div>
+        );
+      case 'inst_curriculum_class_dynamics':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  1. Create subject proficiency groups
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Group students by their knowledge proficiency
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  2. Create course partner groups
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Put students into course study groups if applicable for your material
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_list_create_new_lesson':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  1. Click Create New Lesson from scratch
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  2. Edit or delete a lesson
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Click on the three dots under the Actions header to edit or clone a lesson
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_overview':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  1. Enter the core details of your lesson
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  2. Create a lesson card for your classroom page
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Click on the tree dots under the Actions header to edit or clone a lesson
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  3. List any materials for instructor and/or participant to bring for the
+                  lesson
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Click on the tree dots under the Actions header to edit or clone a lesson
+              </div>
+            </div>
+          </div>
+        );
       default:
         break;
     }
@@ -974,7 +1220,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         Steps for Setting up {activeSection?.title}
                       </div>
                       <hr className="my-2 text-gray-500" />
-                      {stepsOfActiveSection()}
+                      {sectionDetailsLoading ? (
+                        <div className="h-100 flex justify-center items-center">
+                          <div className="w-5/10">
+                            <Loader />
+                          </div>
+                        </div>
+                      ) : (
+                        stepsOfActiveSection()
+                      )}
                     </div>
                   </div>
                 )}
