@@ -171,11 +171,13 @@ const InstitutionAdd = () => {
     setImageUrl(null);
   };
 
+  const [fileObj, setFileObj] = useState({});
+
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    setS3Image(image);
-    const imageUrl = URL.createObjectURL(image);
+    setS3Image(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     setInstituteData({
       ...instituteData,
@@ -263,7 +265,10 @@ const InstitutionAdd = () => {
                   <label className="cursor-pointer flex justify-center">
                     <DroppableMedia
                       mediaRef={mediaRef}
-                      setImage={setUpImage}
+                      setImage={(img: any, file: any) => {
+                        setUpImage(img);
+                        setFileObj(file);
+                      }}
                       toggleCropper={toggleCropper}>
                       <img
                         onClick={handleImage}
@@ -281,7 +286,10 @@ const InstitutionAdd = () => {
             ) : (
               <DroppableMedia
                 mediaRef={mediaRef}
-                setImage={setUpImage}
+                setImage={(img: any, file: any) => {
+                  setUpImage(img);
+                  setFileObj(file);
+                }}
                 toggleCropper={toggleCropper}>
                 <label
                   onClick={handleImage}

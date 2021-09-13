@@ -116,6 +116,8 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     });
   };
 
+  const [fileObj, setFileObj] = useState({});
+
   const handleEditFormSubmit = async () => {
     if (!editFormValues.name) {
       setError({
@@ -223,7 +225,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image, editFormValues.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, editFormValues.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(
       `instituteImages/institute_image_${editFormValues.id}`
     );
@@ -299,7 +301,10 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
               <label className="cursor-pointer flex justify-center">
                 <DroppableMedia
                   mediaRef={mediaRef}
-                  setImage={setUpImage}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
                   toggleCropper={toggleCropper}>
                   <img
                     onClick={handleImage}
@@ -317,7 +322,10 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         ) : (
           <DroppableMedia
             mediaRef={mediaRef}
-            setImage={setUpImage}
+            setImage={(img: any, file: any) => {
+              setUpImage(img);
+              setFileObj(file);
+            }}
             toggleCropper={toggleCropper}>
             <label
               onClick={handleImage}

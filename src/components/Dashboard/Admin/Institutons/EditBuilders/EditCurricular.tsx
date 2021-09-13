@@ -67,6 +67,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
+  const [fileObj, setFileObj] = useState({});
 
   const [error, setError] = useState({
     show: true,
@@ -466,8 +467,8 @@ const EditCurricular = (props: EditCurricularProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    setS3Image(image);
-    const imageUrl = URL.createObjectURL(image);
+    setS3Image(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     toggleCropper();
     setImageLoading(false);
@@ -544,7 +545,10 @@ const EditCurricular = (props: EditCurricularProps) => {
               <label className="cursor-pointer flex justify-center">
                 <DroppableMedia
                   mediaRef={mediaRef}
-                  setImage={setUpImage}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
                   toggleCropper={toggleCropper}>
                   {imageUrl ? (
                     <img

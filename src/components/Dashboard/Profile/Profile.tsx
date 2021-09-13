@@ -150,11 +150,12 @@ const Profile = (props: ProfilePageProps) => {
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
+  const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image, person.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, person.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`);
     setImageUrl(imageUrl);
     setPerson({...person, image: `profile_image_${person.id}`});
@@ -391,7 +392,10 @@ const Profile = (props: ProfilePageProps) => {
                         <Fragment>
                           <label className="cursor-pointer">
                             <DroppableMedia
-                              setImage={setUpImage}
+                              setImage={(img: any, file: any) => {
+                                setUpImage(img);
+                                setFileObj(file);
+                              }}
                               toggleCropper={toggleCropper}
                               mediaRef={mediaRef}>
                               {imageUrl ? (
@@ -427,7 +431,10 @@ const Profile = (props: ProfilePageProps) => {
                       )}
                       <DroppableMedia
                         mediaRef={mediaRef}
-                        setImage={setUpImage}
+                        setImage={(img: any, file: any) => {
+                          setUpImage(img);
+                          setFileObj(file);
+                        }}
                         toggleCropper={toggleCropper}>
                         <div onClick={handleImage} />
                       </DroppableMedia>

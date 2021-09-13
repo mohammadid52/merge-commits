@@ -4,22 +4,25 @@ import {useDropzone} from 'react-dropzone';
 const DroppableMedia = ({
   children,
   mediaRef,
-
+  className = 'w-auto',
   setImage,
   toggleCropper,
 }: {
   mediaRef: any;
   setImage?: any;
+  className?: string;
   toggleCropper?: () => void;
   children: React.ReactNode;
 }) => {
   const _setImage = (file: any) => {
     const fileReader = new FileReader();
     fileReader.onload = function () {
-      setImage(fileReader.result);
+      setImage(fileReader.result, file);
     };
     fileReader.readAsDataURL(file);
-    toggleCropper();
+    if (typeof toggleCropper === 'function') {
+      toggleCropper();
+    }
   };
 
   const cropSelectedImage = async (e: any, files: any) => {
@@ -46,7 +49,7 @@ const DroppableMedia = ({
   });
 
   return (
-    <div className="w-auto" {...getRootProps()}>
+    <div className={className} {...getRootProps()}>
       {children}
       <input
         {...getInputProps()}

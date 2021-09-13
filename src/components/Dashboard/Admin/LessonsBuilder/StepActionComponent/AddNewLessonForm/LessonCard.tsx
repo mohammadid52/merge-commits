@@ -27,6 +27,7 @@ interface ILessonCard {
   cardCaption: string;
   toggleCropper?: () => void;
   setImage?: any;
+  setFileObj: any;
 }
 
 const LessonCard = ({
@@ -39,6 +40,7 @@ const LessonCard = ({
   setImage,
   onInputChange,
   totalEstTime,
+  setFileObj,
   lessonType,
   cardCaption = '',
 }: ILessonCard) => {
@@ -61,6 +63,7 @@ const LessonCard = ({
       cardCaption,
     },
   };
+
   const imageRef = React.useRef(null);
   const handleImage = () => imageRef?.current?.click();
 
@@ -87,13 +90,17 @@ const LessonCard = ({
                 <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center">
                   <div className="cursor-pointer flex justify-center">
                     <DroppableMedia
+                      className="w-full"
                       mediaRef={imageRef}
-                      setImage={setImage}
+                      setImage={(img: any, file: any) => {
+                        setImage(img);
+                        setFileObj(file);
+                      }}
                       toggleCropper={toggleCropper}>
                       {imagePreviewUrl ? (
                         <img
                           onClick={handleImage}
-                          className={`profile w-50 bg-center bg-cover h-60 md:w-60 md:h-60 border-0 border-gray-400 rounded-lg customShadow`}
+                          className={`profile w-50 bg-center bg-cover h-60 md:w-96 md:h-60 border-0 border-gray-400 rounded-lg customShadow`}
                           src={imagePreviewUrl}
                         />
                       ) : (

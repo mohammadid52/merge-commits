@@ -196,11 +196,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
+  const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
     toggleCropper();
-    setImageData(image);
-    const imageUrl = URL.createObjectURL(image);
+    setImageData(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setFormData({
       ...formData,
       imagePreviewUrl: imageUrl,
@@ -561,6 +562,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 imageCaption={imageCaption}
                 setImage={setImageData}
                 validation={validation}
+                setFileObj={setFileObj}
                 imagePreviewUrl={imagePreviewUrl}
                 totalEstTime={totalEstTime}
                 toggleCropper={toggleCropper}
@@ -594,6 +596,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       {showCropper && (
         <ProfileCropModal
           upImg={imageData}
+          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
         />

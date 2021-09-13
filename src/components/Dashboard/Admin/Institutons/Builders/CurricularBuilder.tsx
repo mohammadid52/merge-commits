@@ -58,6 +58,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
+  const [fileObj, setFileObj] = useState({});
 
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
@@ -315,8 +316,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    setS3Image(image);
-    const imageUrl = URL.createObjectURL(image);
+    setS3Image(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     toggleCropper();
     setImageLoading(false);
@@ -432,7 +433,10 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 <label className="cursor-pointer flex justify-center">
                   <DroppableMedia
                     mediaRef={mediaRef}
-                    setImage={setUpImage}
+                    setImage={(img: any, file: any) => {
+                      setUpImage(img);
+                      setFileObj(file);
+                    }}
                     toggleCropper={toggleCropper}>
                     {imageUrl ? (
                       <img

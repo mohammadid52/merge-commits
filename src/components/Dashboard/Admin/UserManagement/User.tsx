@@ -97,6 +97,7 @@ const User = () => {
 
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);
+  const [fileObj, setFileObj] = useState({});
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
@@ -299,7 +300,7 @@ const User = () => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image, user.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, user.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`user_profile_image_${user.id}`);
     setImageUrl(imageUrl);
     setUser({...user, image: `user_profile_image_${user.id}`});
@@ -769,6 +770,7 @@ const User = () => {
 
   const getFullNameString = (obj: any) =>
     obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
+
   const subSectionKey: any = {
     Journal: ['journal'],
     Work: ['poem', 'story'],
@@ -1408,17 +1410,18 @@ const User = () => {
                               <label className="cursor-pointer">
                                 <DroppableMedia
                                   mediaRef={mediaRef}
-                                  setImage={setUpImage}
+                                  setImage={(img: any, file: any) => {
+                                    setUpImage(img);
+                                    setFileObj(file);
+                                  }}
                                   toggleCropper={toggleCropper}>
                                   {imageUrl ? (
                                     <img
-                                      onClick={handleImage}
                                       className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                       src={imageUrl}
                                     />
                                   ) : (
                                     <div
-                                      onClick={handleImage}
                                       className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                     />
                                   )}
@@ -1426,7 +1429,7 @@ const User = () => {
                               </label>
                             </>
                           ) : (
-                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
                               <Loader />
                             </div>
                           )}
@@ -1436,7 +1439,10 @@ const User = () => {
                           {!imageLoading ? (
                             <DroppableMedia
                               mediaRef={mediaRef}
-                              setImage={setUpImage}
+                              setImage={(img: any, file: any) => {
+                                setUpImage(img);
+                                setFileObj(file);
+                              }}
                               toggleCropper={toggleCropper}>
                               <div
                                 onClick={handleImage}
@@ -1560,7 +1566,9 @@ const User = () => {
         {showCropper && (
           <ProfileCropModal
             upImg={upImage}
-            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            saveCroppedImage={(img: string) => {
+              saveCroppedImage(img);
+            }}
             closeAction={toggleCropper}
           />
         )}
