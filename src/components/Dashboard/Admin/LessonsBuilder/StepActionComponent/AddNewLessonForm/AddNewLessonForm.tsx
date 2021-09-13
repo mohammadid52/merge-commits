@@ -193,18 +193,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setImageData(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
-
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
@@ -571,10 +559,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 studentSummary={studentSummary}
                 onInputChange={onInputChange}
                 imageCaption={imageCaption}
-                cropSelecetedImage={cropSelecetedImage}
+                setImage={setImageData}
                 validation={validation}
                 imagePreviewUrl={imagePreviewUrl}
                 totalEstTime={totalEstTime}
+                toggleCropper={toggleCropper}
                 lessonType={formData.type.value}
               />
             </div>

@@ -18,6 +18,7 @@ import Selector from '../../../../Atoms/Form/Selector';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import SectionTitle from '../../../../Atoms/SectionTitle';
+import DroppableMedia from '../../../../Molecules/DroppableMedia';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 interface CurricularBuilderProps {}
@@ -307,18 +308,6 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   };
 
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
-
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
@@ -400,6 +389,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }, [institutionList]);
 
+  const mediaRef = React.useRef(null);
+  const handleImage = () => mediaRef?.current?.click();
+
   const {
     name,
     description,
@@ -438,25 +430,24 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 <label className="cursor-pointer flex justify-center">
-                  {imageUrl ? (
-                    <img
-                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
-                      src={imageUrl}
-                    />
-                  ) : (
-                    <div
-                      className={`profile justify-center lign-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
-                      <IoImage className="fill-current text-gray-80" size={32} />
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => cropSelecetedImage(e)}
-                    onClick={(e: any) => (e.target.value = '')}
-                    accept="image/*"
-                    multiple={false}
-                  />
+                  <DroppableMedia
+                    mediaRef={mediaRef}
+                    setImage={setUpImage}
+                    toggleCropper={toggleCropper}>
+                    {imageUrl ? (
+                      <img
+                        onClick={handleImage}
+                        className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                        src={imageUrl}
+                      />
+                    ) : (
+                      <div
+                        onClick={handleImage}
+                        className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                        <IoImage className="fill-current text-gray-80" size={32} />
+                      </div>
+                    )}
+                  </DroppableMedia>
                 </label>
               </button>
               <p className="text-gray-600 my-4">Click to add curricular image</p>

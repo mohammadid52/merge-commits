@@ -1,46 +1,45 @@
-import React, {useEffect, useState, useContext, useRef} from 'react';
-import {useLocation} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {FaEdit} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
-import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
-import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
-import ReactHtmlParser from 'react-html-parser';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import Storage from '@aws-amplify/storage';
+import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
-import {MdCancel, MdImage} from 'react-icons/md';
-import {BsCameraVideoFill} from 'react-icons/bs';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
+import {BsCameraVideoFill} from 'react-icons/bs';
+import {FaEdit} from 'react-icons/fa';
 import {HiEmojiHappy} from 'react-icons/hi';
-import EmojiPicker from 'emoji-picker-react';
-
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as queries from '../../../../graphql/queries';
-import * as mutations from '../../../../graphql/mutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
+import {IoIosTime} from 'react-icons/io';
+import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
+import {MdCancel, MdImage} from 'react-icons/md';
+import {Route, Switch, useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../customGraphql/customQueries';
 import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
+import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+import * as mutations from '../../../../graphql/mutations';
+import * as queries from '../../../../graphql/queries';
 import {getImageFromS3} from '../../../../utilities/services';
 import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
 import Modal from '../../../Atoms/Modal';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
-
-import UserInformation from './UserInformation';
-import UserEdit from './UserEdit';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import DroppableMedia from '../../../Molecules/DroppableMedia';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
-import {getAsset} from '../../../../assets';
-import Feedback from './Feedback';
 import Attendance from './Attendance';
-import {IoIosTime} from 'react-icons/io';
-import {useQuery} from '../../../../customHooks/urlParam';
+import Feedback from './Feedback';
+import UserEdit from './UserEdit';
+import UserInformation from './UserInformation';
 
 export interface UserInfo {
   authId: string;
@@ -109,7 +108,9 @@ const User = () => {
     {name: 'Notebook', current: false},
   ];
 
-  const [curTab, setCurTab] = useState<string>(tabs[0].name);
+  const {curTab, setCurTab, helpers} = useTabs(tabs);
+
+  const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
   const [urlState, setUrlState] = useUrlState(
@@ -148,6 +149,10 @@ const User = () => {
   const {id, t: tab} = urlState;
 
   const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
+
+  const mediaRef = React.useRef(null);
+  const handleImage = () => mediaRef?.current?.click();
+
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
@@ -271,18 +276,6 @@ const User = () => {
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
-  };
-
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
   };
 
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
@@ -1388,7 +1381,7 @@ const User = () => {
             <Tabs />
 
             <div className="flex justify-end w-auto">
-              {currentPath !== 'edit' && curTab === 'User Information' && (
+              {currentPath !== 'edit' && onUserInformationTab && (
                 <Buttons
                   btnClass="mr-4 px-6"
                   label="Edit"
@@ -1401,127 +1394,124 @@ const User = () => {
               )}
             </div>
           </div>
-          {curTab === 'User Information' && (
-            <div
-              className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-              <div className="h-1/2 flex flex-col md:flex-row">
-                <div className="w-1/4 p-4 flex flex-col text-center items-center">
-                  <div className="cursor-pointer">
-                    {user.image ? (
-                      <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                        {!imageLoading ? (
-                          <>
-                            <label className="cursor-pointer">
-                              {imageUrl ? (
-                                <img
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                  src={imageUrl}
-                                />
-                              ) : (
-                                <div
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                />
-                              )}
-
-                              <input
-                                type="file"
-                                className="hidden"
-                                onChange={(e) => cropSelecetedImage(e)}
-                                onClick={(e: any) => (e.target.value = '')}
-                                accept="image/*"
-                                multiple={false}
-                                disabled={disableProfileChange}
-                              />
-                            </label>
-                          </>
-                        ) : (
-                          <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                            <Loader />
-                          </div>
-                        )}
-                      </button>
-                    ) : (
-                      <label className={`flex justify-center items-center mx-auto`}>
-                        {!imageLoading ? (
-                          <div
-                            className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                            <div
-                              className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
-                              style={{
-                                /* stylelint-disable */
-                                background: `${stringToHslColor(
-                                  user.preferredName
-                                    ? user.preferredName
-                                    : user.firstName + ' ' + user.lastName
-                                )}`,
-                                textShadow: '0.2rem 0.2rem 3px #423939b3',
-                              }}>
-                              {initials(
-                                user.preferredName ? user.preferredName : user.firstName,
-                                user.lastName
-                              )}
+          <AnimatedContainer show={onUserInformationTab}>
+            {onUserInformationTab && (
+              <div
+                className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+                <div className="h-1/2 flex flex-col md:flex-row">
+                  <div className="w-1/4 p-4 flex flex-col text-center items-center">
+                    <div className="cursor-pointer">
+                      {user.image ? (
+                        <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                          {!imageLoading ? (
+                            <>
+                              <label className="cursor-pointer">
+                                <DroppableMedia
+                                  mediaRef={mediaRef}
+                                  setImage={setUpImage}
+                                  toggleCropper={toggleCropper}>
+                                  {imageUrl ? (
+                                    <img
+                                      onClick={handleImage}
+                                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                      src={imageUrl}
+                                    />
+                                  ) : (
+                                    <div
+                                      onClick={handleImage}
+                                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                    />
+                                  )}
+                                </DroppableMedia>
+                              </label>
+                            </>
+                          ) : (
+                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+                              <Loader />
                             </div>
-                          </div>
-                        ) : (
-                          <Loader />
-                        )}
-                        <input
-                          type="file"
-                          className="hidden"
-                          onChange={(e) => cropSelecetedImage(e)}
-                          onClick={(e: any) => (e.target.value = '')}
-                          accept="image/*"
-                          disabled={disableProfileChange}
-                          multiple={false}
+                          )}
+                        </button>
+                      ) : (
+                        <label className={`flex justify-center items-center mx-auto`}>
+                          {!imageLoading ? (
+                            <DroppableMedia
+                              mediaRef={mediaRef}
+                              setImage={setUpImage}
+                              toggleCropper={toggleCropper}>
+                              <div
+                                onClick={handleImage}
+                                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                                <div
+                                  className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                                  style={{
+                                    /* stylelint-disable */
+                                    background: `${stringToHslColor(
+                                      user.preferredName
+                                        ? user.preferredName
+                                        : user.firstName + ' ' + user.lastName
+                                    )}`,
+                                    textShadow: '0.2rem 0.2rem 3px #423939b3',
+                                  }}>
+                                  {initials(
+                                    user.preferredName
+                                      ? user.preferredName
+                                      : user.firstName,
+                                    user.lastName
+                                  )}
+                                </div>
+                              </div>
+                            </DroppableMedia>
+                          ) : (
+                            <Loader />
+                          )}
+                        </label>
+                      )}
+                    </div>
+                    <div className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
+                      {`${user.preferredName ? user.preferredName : user.firstName} ${
+                        user.lastName
+                      }`}
+                      <p className="text-md md:text-lg">{`${
+                        user.institution ? user.institution : ''
+                      }`}</p>
+                    </div>
+                  </div>
+                  <Switch>
+                    <Route
+                      path={`${match.url}/edit`}
+                      render={() => (
+                        <UserEdit
+                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          setTab={setTab}
+                          user={user}
+                          status={status}
+                          setStatus={setStatus}
+                          getUserById={getUserById}
+                          questionData={questionData}
+                          stdCheckpoints={stdCheckpoints}
                         />
-                      </label>
-                    )}
-                  </div>
-                  <div className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
-                    {`${user.preferredName ? user.preferredName : user.firstName} ${
-                      user.lastName
-                    }`}
-                    <p className="text-md md:text-lg">{`${
-                      user.institution ? user.institution : ''
-                    }`}</p>
-                  </div>
+                      )}
+                    />
+                    <Route
+                      path={`${match.url}/`}
+                      render={() => (
+                        <UserInformation
+                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          setTab={setTab}
+                          questionData={questionData}
+                          stdCheckpoints={stdCheckpoints}
+                          user={user}
+                          status={status}
+                        />
+                      )}
+                    />
+                  </Switch>
                 </div>
-                <Switch>
-                  <Route
-                    path={`${match.url}/edit`}
-                    render={() => (
-                      <UserEdit
-                        tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                        setTab={setTab}
-                        user={user}
-                        status={status}
-                        setStatus={setStatus}
-                        getUserById={getUserById}
-                        questionData={questionData}
-                        stdCheckpoints={stdCheckpoints}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/`}
-                    render={() => (
-                      <UserInformation
-                        tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                        setTab={setTab}
-                        questionData={questionData}
-                        stdCheckpoints={stdCheckpoints}
-                        user={user}
-                        status={status}
-                      />
-                    )}
-                  />
-                </Switch>
               </div>
-            </div>
-          )}
-          {curTab === 'Coursework & Attendance' &&
-            user?.classes?.items.length > 0 &&
-            user.role === 'ST' && (
+            )}
+          </AnimatedContainer>
+          <AnimatedContainer show={onCATab}>
+            {onCATab && user?.classes?.items.length > 0 && user.role === 'ST' && (
               <div
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 {isTimelineOpen ? (
@@ -1535,28 +1525,30 @@ const User = () => {
                 )}
               </div>
             )}
-
-          {curTab === 'Notebook' &&
-            (loading ? (
-              <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="">
-                  <Loader color="rgba(107, 114, 128, 1)" />
-                  <p className="mt-2 text-center text-lg text-gray-500">
-                    {'Loading Notebook Data'}
-                  </p>
+          </AnimatedContainer>
+          <AnimatedContainer show={onNotebookTab}>
+            {onNotebookTab &&
+              (loading ? (
+                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
+                  <div className="">
+                    <Loader color="rgba(107, 114, 128, 1)" />
+                    <p className="mt-2 text-center text-lg text-gray-500">
+                      {'Loading Notebook Data'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : studentData && studentData.length > 0 ? (
-              studentData.map((item: any) => <StudentData item={item} />)
-            ) : (
-              <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="">
-                  <p className="mt-2 text-center text-lg text-gray-500">
-                    {'No Notebook Data Found'}
-                  </p>
+              ) : studentData && studentData.length > 0 ? (
+                studentData.map((item: any) => <StudentData item={item} />)
+              ) : (
+                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
+                  <div className="">
+                    <p className="mt-2 text-center text-lg text-gray-500">
+                      {'No Notebook Data Found'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </AnimatedContainer>
 
           {curTab === 'Timeline' && (
             <div

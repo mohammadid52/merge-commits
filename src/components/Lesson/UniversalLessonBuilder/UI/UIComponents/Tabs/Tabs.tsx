@@ -27,7 +27,7 @@ export const Tabs2 = ({
   curTab,
   setCurTab,
 }: {
-  tabs: {name: string; current: boolean}[];
+  tabs?: {name: string; current: boolean}[];
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -143,7 +143,7 @@ export const Tabs3 = ({
   config = {fullColor: false},
   numbered = false,
 }: {
-  tabs: ITab[];
+  tabs?: ITab[];
   curTab: string;
   config?: {fullColor?: boolean};
   setCurTab: setState['string'];
