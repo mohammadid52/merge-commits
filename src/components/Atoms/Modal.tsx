@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
-
 import {GlobalContext} from '../../contexts/GlobalContext';
+// @ts-ignore
 
 interface ModalProps {
   showHeader: boolean;
@@ -59,7 +59,15 @@ const ModalBody = (bodyProps: {
   closeOnBackdrop?: boolean;
   scrollHidden?: boolean;
 }) => {
-  const {children, closeOnBackdrop, scrollHidden, hidePadding} = bodyProps;
+  const {
+    children,
+
+    closeOnBackdrop,
+
+    scrollHidden,
+    hidePadding,
+  } = bodyProps;
+
   return (
     <div
       className={`relative ${
@@ -117,6 +125,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     document.addEventListener('keydown', close);
     return () => document.removeEventListener('keydown', close);
   });
+
   return (
     <>
       <div
@@ -125,14 +134,16 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         } fixed inset-0 z-40 bg-black`}></div>
       <div
         onClick={() => closeOnBackdrop && closeAction()}
-        className="fixed modal show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
+        className={
+          'fixed modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none'
+        }>
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {
               e.stopPropagation();
             }
           }}
-          className="relative w-auto my-4 mx-auto max-w-lg">
+          className="relative w-auto my-4 mx-auto max-w-lg ">
           <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
             {showHeader && (
               <ModalHeader

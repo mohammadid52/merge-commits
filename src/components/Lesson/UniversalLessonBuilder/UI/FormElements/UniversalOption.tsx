@@ -12,8 +12,9 @@ import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
 import {isEmpty} from '@aws-amplify/core';
-import Tabs from '../UIComponents/Tabs/Tabs';
+import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
 
 const InputContainer = ({
   shouldShowActions,
@@ -36,6 +37,7 @@ const InputContainer = ({
   removeItemFromList,
 }: any) => {
   const [selForm, setSelForm] = useState(selectedForm);
+
   return (
     <div className="flex flex-col input-container">
       <div className="px-2">
@@ -470,13 +472,6 @@ const UniversalOption = ({
     return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
   };
 
-  const tabs = [
-    {name: 'Component Details', current: true},
-    {name: 'Preview', current: false},
-  ];
-
-  const [curTab, setCurTab] = useState(tabs[0].name);
-
   const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
     <span className="text-red-500"> {isRequired ? '*' : null}</span>
   );
@@ -587,141 +582,147 @@ const UniversalOption = ({
   };
 
   const filterCompleteQuestions = filter(list, (q) => q.label.length > 0);
+  const {curTab, setCurTab, helpers, goTo} = useTabs();
+  const [onSetupTab, onPreviewTab] = helpers;
+  const [_, toPreviewTab] = goTo;
 
   return (
     <>
-      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
-      {curTab === tabs[0].name && (
-        <>
-          <div>
-            {map(list, (input: any, idx: number) => {
-              const shouldShowActions = idx !== list.length - 1;
+      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <AnimatedContainer show={onSetupTab}>
+        {onSetupTab && (
+          <>
+            <div>
+              {map(list, (input: any, idx: number) => {
+                const shouldShowActions = idx !== list.length - 1;
 
-              return (
-                <InputContainer
-                  key={idx}
-                  input={input}
-                  idx={idx}
-                  shouldShowActions={shouldShowActions}
-                  numbered={numbered}
-                  onChange={onChange}
-                  themeColor={themeColor}
-                  onOptionInputChange={onOptionInputChange}
-                  onOptionAdd={onOptionAdd}
-                  getColor={getColor}
-                  onOptionRemove={onOptionRemove}
-                  selectedForm={selectedForm}
-                  removeExtraOption={removeExtraOption}
-                  addExtraOption={addExtraOption}
-                  suggestionModal={suggestionModal}
-                  setSuggestionModal={setSuggestionModal}
-                  changeBool={changeBool}
-                  changeValue={changeValue}
-                  removeItemFromList={removeItemFromList}
-                />
-              );
-            })}
-          </div>
-          <div className="flex mt-8 justify-between px-6 pb-4">
-            <div className="flex items-center w-auto">
-              <button
-                onClick={addOneLinkField}
-                className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-                + Add Field
-              </button>
-              <button
-                onClick={() => setNumbered(!numbered)}
-                className={`${
-                  numbered
-                    ? 'border-indigo-500 text-white bg-indigo-400'
-                    : 'border-gray-300 text-dark'
-                } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-                {numbered ? 'Numbered' : 'Unnumbered'}
-              </button>
-              <button
-                onClick={() => setCurTab(tabs[1].name)}
-                className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}>
-                See the preview
-              </button>
+                return (
+                  <InputContainer
+                    key={idx}
+                    input={input}
+                    idx={idx}
+                    shouldShowActions={shouldShowActions}
+                    numbered={numbered}
+                    onChange={onChange}
+                    themeColor={themeColor}
+                    onOptionInputChange={onOptionInputChange}
+                    onOptionAdd={onOptionAdd}
+                    getColor={getColor}
+                    onOptionRemove={onOptionRemove}
+                    selectedForm={selectedForm}
+                    removeExtraOption={removeExtraOption}
+                    addExtraOption={addExtraOption}
+                    suggestionModal={suggestionModal}
+                    setSuggestionModal={setSuggestionModal}
+                    changeBool={changeBool}
+                    changeValue={changeValue}
+                    removeItemFromList={removeItemFromList}
+                  />
+                );
+              })}
             </div>
-            <div className="flex items-center w-auto">
-              <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
-                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                onClick={askBeforeClose}
-                transparent
-              />
-              <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
-                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                onClick={onRadioCreate}
-              />
-            </div>
-          </div>
-        </>
-      )}
-
-      {curTab === tabs[1].name && (
-        <div>
-          <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark-gray py-4 px-2">
-            {filterCompleteQuestions.length > 0 &&
-            filterCompleteQuestions[0].options[0].text ? (
-              filterCompleteQuestions.map(
-                (
-                  question: {
-                    id: string;
-                    label: string;
-                    required: boolean;
-                    inLine: boolean;
-                    type: string;
-                    options: {id: string; label: string; text: string}[];
-                  },
-                  index: number
-                ) => {
-                  return (
-                    <div
-                      id={question.id}
-                      key={'preview_question_439i3u4u23'}
-                      className={`mb-4 px-4`}>
-                      <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-                        {numbered && `${index + 1}.`} {question.label}{' '}
-                        <RequiredMark isRequired={question.required} />
-                      </label>
-                      {generateCheckbox(
-                        question.options,
-                        question.type === SELECT_MANY ? true : false,
-                        question.id,
-                        question.inLine
-                      )}
-                    </div>
-                  );
-                }
-              )
-            ) : (
-              <div className="h-full flex items-center justify-center">
-                <p className="text-white text-lg text-center">
-                  Add atleast one question with one option
-                </p>
+            <div className="flex mt-8 justify-between px-6 pb-4">
+              <div className="flex items-center w-auto">
+                <button
+                  onClick={addOneLinkField}
+                  className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+                  + Add Field
+                </button>
+                <button
+                  onClick={() => setNumbered(!numbered)}
+                  className={`${
+                    numbered
+                      ? 'border-indigo-500 text-white bg-indigo-400'
+                      : 'border-gray-300 text-dark'
+                  } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+                  {numbered ? 'Numbered' : 'Unnumbered'}
+                </button>
+                <button
+                  onClick={() => setCurTab(toPreviewTab)}
+                  className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}>
+                  See the preview
+                </button>
               </div>
-            )}
-          </div>
-          <div className="flex mt-8 justify-end px-6 pb-4">
-            <div className="flex items-center w-auto">
-              <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
-                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                onClick={askBeforeClose}
-                transparent
-              />
-              <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
-                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                onClick={onRadioCreate}
-              />
+              <div className="flex items-center w-auto">
+                <Buttons
+                  btnClass="py-1 px-4 text-xs mr-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  onClick={askBeforeClose}
+                  transparent
+                />
+                <Buttons
+                  btnClass="py-1 px-8 text-xs ml-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  onClick={onRadioCreate}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </AnimatedContainer>
+      <AnimatedContainer show={onPreviewTab}>
+        {onPreviewTab && (
+          <div>
+            <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark-gray py-4 px-2">
+              {filterCompleteQuestions.length > 0 &&
+              filterCompleteQuestions[0].options[0].text ? (
+                filterCompleteQuestions.map(
+                  (
+                    question: {
+                      id: string;
+                      label: string;
+                      required: boolean;
+                      inLine: boolean;
+                      type: string;
+                      options: {id: string; label: string; text: string}[];
+                    },
+                    index: number
+                  ) => {
+                    return (
+                      <div
+                        id={question.id}
+                        key={'preview_question_439i3u4u23'}
+                        className={`mb-4 px-4`}>
+                        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+                          {numbered && `${index + 1}.`} {question.label}{' '}
+                          <RequiredMark isRequired={question.required} />
+                        </label>
+                        {generateCheckbox(
+                          question.options,
+                          question.type === SELECT_MANY ? true : false,
+                          question.id,
+                          question.inLine
+                        )}
+                      </div>
+                    );
+                  }
+                )
+              ) : (
+                <div className="h-full flex items-center justify-center">
+                  <p className="text-white text-lg text-center">
+                    Add atleast one question with one option
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="flex mt-8 justify-end px-6 pb-4">
+              <div className="flex items-center w-auto">
+                <Buttons
+                  btnClass="py-1 px-4 text-xs mr-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  onClick={askBeforeClose}
+                  transparent
+                />
+                <Buttons
+                  btnClass="py-1 px-8 text-xs ml-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  onClick={onRadioCreate}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatedContainer>
     </>
   );
 };

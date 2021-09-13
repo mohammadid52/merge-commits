@@ -261,17 +261,19 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
-  const closeAction = () => {
+  const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
-    wait(700).then(() => {
-      setSavingStatus('loading');
-      wait(1000).then(() => {
-        setSavingStatus('loaded');
-        wait(1500).then(() => {
-          setSavingStatus('initial');
+    if (showPopup) {
+      wait(700).then(() => {
+        setSavingStatus('loading');
+        wait(1000).then(() => {
+          setSavingStatus('loaded');
+          wait(1500).then(() => {
+            setSavingStatus('initial');
+          });
         });
       });
-    });
+    }
   };
 
   /**
@@ -326,7 +328,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     let commonProps = {
       createNewBlockULBHandler: createNewBlock,
-      closeAction: closeAction,
+      closeAction: () => closeAction(true),
       inputObj: inputObj,
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
@@ -410,7 +412,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateContent={updateBlockContent}
             setUnsavedChanges={setUnsavedChanges}
             askBeforeClose={askBeforeClose}
-            closeAction={closeAction}
+            closeAction={() => closeAction(true)}
             selectedForm={
               type === FORM_TYPES.ATTACHMENTS
                 ? ATTACHMENTS
@@ -437,7 +439,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateContent={updateBlockContent}
             setUnsavedChanges={setUnsavedChanges}
             askBeforeClose={askBeforeClose}
-            closeAction={closeAction}
+            closeAction={() => closeAction(true)}
             selectedForm={type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY}
           />
         );
@@ -514,6 +516,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   } = useUnsavedChanges(closeAction);
 
   const [optionsCollapse, setOptionsCollapse] = useState(true);
+  const [modalHeight, setModalHeight] = useState(null);
 
   return (
     <div

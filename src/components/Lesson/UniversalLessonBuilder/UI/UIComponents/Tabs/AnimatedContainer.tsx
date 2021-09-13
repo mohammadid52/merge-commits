@@ -4,8 +4,8 @@ import {classNames} from '../../FormElements/TextInput';
 const AnimatedContainer = ({
   children,
   show,
-  animationType = 'opacity',
-  duration = '150',
+  animationType = 'scale',
+  duration = '300',
   className,
 }: {
   show: boolean;
