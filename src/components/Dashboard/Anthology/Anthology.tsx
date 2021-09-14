@@ -37,9 +37,16 @@ export type ViewEditMode = {
 };
 
 const Anthology = () => {
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const userLanguage = gContext.userLanguage;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  // other
   const {anthologyDict} = useDictionary(clientKey);
-  const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
