@@ -15,6 +15,7 @@ import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
 import {dateFromServer} from '../../../utilities/time';
 import {getImageFromS3, getImageFromS3Static} from '../../../utilities/services';
+import FeedbacksUploads from './FeedbacksUploads';
 
 const SingleUpload = ({
   idx,
@@ -29,6 +30,8 @@ const SingleUpload = ({
   handleCancel,
   editID,
   editMode,
+  personAuthID,
+  personEmail
 }: IUploadCardProps) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -39,7 +42,9 @@ const SingleUpload = ({
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [contentObject, setcontentObject] = useState({});
+  const [fileObject, setFileObject] = useState({});
+
+  // ~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~ //
 
   const listComments = async (feedbacks: string[] = []) => {
     const filter: any = feedbacks.map((id: string) => {
@@ -81,39 +86,7 @@ const SingleUpload = ({
     getFeedBackData();
   }, []);
 
-  // ##################################################################### //
-  // ########################### TOGGLE SHARING ########################## //
-  // ##################################################################### //
-  // const [shareToggleQueue, setShareToggleQueue] = useState<any[]>([]);
-
-  // const addToJournalUpdateQueue = (journalObj: any) => {
-  //   setShareToggleQueue([...shareToggleQueue, journalObj]);
-  // };
-
-  // const updateJournalShare = (updatedEntries: any[]) => {
-  //   setShareToggleQueue([]);
-  //   const mergedJournalData = updatedEntries.reduce(
-  //     (allJournalDataAcc: any[], updatedEntry: any) => {
-  //       return allJournalDataAcc.map((dataRecord: any) => {
-  //         if (dataRecord.id === updatedEntry.id) {
-  //           return {...dataRecord, shared: !dataRecord.shared};
-  //         } else {
-  //           return dataRecord;
-  //         }
-  //       });
-  //     },
-  //     allUniversalJournalData
-  //   );
-
-  //   setAllUniversalJournalData(mergedJournalData);
-  // };
-
-  // useEffect(() => {
-  //   if (shareToggleQueue.length > 0) {
-  //     updateJournalShare(shareToggleQueue);
-  //   }
-  // }, [shareToggleQueue]);
-
+ 
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //
   // ##################################################################### //
@@ -241,20 +214,13 @@ const SingleUpload = ({
                     </div>
                   )
                 ) : null}
-                {/* SHOW SHARE TOGGLE ONLY IN JOURNAL */}
-                {/* {mainSection === 'Private' && (
-                  <Toggle
-                    toggled={contentObj?.shared}
-                    label={`Share With Teacher`}
-                    currentContentObj={contentObj}
-                  />
-                )} */}
+
               </div>
 
               {/**
                *  section:  FEEDBACK
                */}
-              {subSection === 'Work' || contentObj?.shared ? (
+              {subSection === 'Uploads' ? (
                 <div
                   onClick={() => setShowComments(!showComments)}
                   className={`${
@@ -279,26 +245,24 @@ const SingleUpload = ({
             </div>
           )}
 
-          {/* {showComments && (
+          {showComments && (
             <div className="border-t-0 border-gray-200 mt-4">
-              <Feedbacks
+              <FeedbacksUploads
                 key={contentObj.id}
-                item={contentObj}
-                allUniversalJournalData={allUniversalJournalData}
-                setAllUniversalJournalData={setAllUniversalJournalData}
-                allStudentData={allStudentData}
-                setAllStudentData={setAllStudentData}
+                contentObj={contentObj}
                 subSection={subSection}
                 feedbackData={feedbackData}
+                setFeedbackData={setFeedbackData}
                 loadingComments={loadingComments}
                 showComments={showComments}
                 setShowComments={setShowComments}
-                contentObject={contentObject}
-                setcontentObject={setcontentObject}
-                setFeedbackData={setFeedbackData}
+                fileObject={fileObject}
+                setFileObject={setFileObject}
+                personEmail={personEmail}
+                personAuthID={personAuthID}
               />
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </ContentCard>

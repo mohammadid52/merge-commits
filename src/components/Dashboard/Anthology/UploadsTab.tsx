@@ -1,19 +1,19 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {FaImages, FaSpinner} from 'react-icons/fa';
-import {getImagesFromS3Folder, getImageFromS3Static} from '../../../utilities/services';
+import { FaImages, FaSpinner } from 'react-icons/fa';
+import { getImagesFromS3Folder, getImageFromS3Static } from '../../../utilities/services';
 import Loader from '../../Atoms/Loader';
 import Auth from '@aws-amplify/auth';
-import {API, graphqlOperation} from '@aws-amplify/api';
+import { API, graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
-import {IconContext} from 'react-icons';
+import { IconContext } from 'react-icons';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import SingleNote from './SingleNote';
-import {ITabParentProps} from './TabView';
+import { ITabParentProps } from './TabView';
 import SingleUpload from './SingleUpload';
-import {dateFromServer} from '../../../utilities/time';
-import {ViewEditMode} from './Anthology';
-import {AiOutlineFile} from 'react-icons/ai';
+import { dateFromServer } from '../../../utilities/time';
+import { ViewEditMode } from './Anthology';
+import { AiOutlineFile } from 'react-icons/ai';
 
 const LIMIT = 100;
 
@@ -55,9 +55,9 @@ const UploadsTab = ({
     try {
       const listFilter = {
         filter: {
-          personEmail: {eq: personEmail},
-          personAuthID: {eq: personAuthID},
-          roomID: {eq: sectionRoomID},
+          personEmail: { eq: personEmail },
+          personAuthID: { eq: personAuthID },
+          roomID: { eq: sectionRoomID },
         },
       };
 
@@ -71,11 +71,11 @@ const UploadsTab = ({
 
         setAllPersonLessonFiles(personLessonFilesRows);
       } else {
-        console.log('anthology - NO universalJournalDatas');
+        console.log('anthology - NO personLessonFiles');
       }
       setPersonLessonFilesLoaded(true);
     } catch (e) {
-      console.error('error listing journal data - ', e);
+      console.error('error listing personLessonFilesa - ', e);
       setPersonLessonFilesLoaded(true);
     } finally {
     }
@@ -127,39 +127,41 @@ const UploadsTab = ({
     <>
       {allPersonLessonFiles && allPersonLessonFiles.length > 0
         ? allPersonLessonFiles.map((lessonFileObj: any, idx: number) => {
-            return (
-              <EmptyViewWrapper
-                key={`lessonfilecard_${idx}`}
-                wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-                timedRevealInt={idx + 1}
-                fallbackContents={
-                  <IconContext.Provider
-                    value={{
-                      size: '1.2rem',
-                      style: {},
-                      className: `relative mr-4 animate-spin ${themeColor}`,
-                    }}>
-                    <FaSpinner />
-                  </IconContext.Provider>
-                }>
-                <SingleUpload
-                  idx={idx}
-                  mainSection={mainSection}
-                  subSection={subSection}
-                  onCancel={onCancel}
-                  handleEdit={() => handleEdit(lessonFileObj.id)}
-                  handleSave={handleSave}
-                  handleDelete={() => handleDelete(lessonFileObj.id)}
-                  handleConfirm={handleConfirm}
-                  handleCancel={handleCancel}
-                  editID={editID}
-                  editMode={editMode}
-                  contentLen={allPersonLessonFiles?.length}
-                  contentObj={lessonFileObj}
-                />
-              </EmptyViewWrapper>
-            );
-          })
+          return (
+            <EmptyViewWrapper
+              key={`lessonfilecard_${idx}`}
+              wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+              timedRevealInt={idx + 1}
+              fallbackContents={
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
+                    style: {},
+                    className: `relative mr-4 animate-spin ${themeColor}`,
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              }>
+              <SingleUpload
+                idx={idx}
+                mainSection={mainSection}
+                subSection={subSection}
+                onCancel={onCancel}
+                handleEdit={() => handleEdit(lessonFileObj.id)}
+                handleSave={handleSave}
+                handleDelete={() => handleDelete(lessonFileObj.id)}
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
+                editID={editID}
+                editMode={editMode}
+                contentLen={allPersonLessonFiles?.length}
+                contentObj={lessonFileObj}
+                personEmail={personEmail}
+                personAuthID={personAuthID}
+              />
+            </EmptyViewWrapper>
+          );
+        })
         : null}
     </>
   );

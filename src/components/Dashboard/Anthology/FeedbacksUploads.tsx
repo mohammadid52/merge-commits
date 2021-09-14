@@ -1,40 +1,38 @@
-import {find, findIndex} from 'lodash';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {BiLinkAlt} from 'react-icons/bi';
-import {BsCameraVideoFill} from 'react-icons/bs';
-import {IoSendSharp} from 'react-icons/io5';
-import {MdCancel, MdImage} from 'react-icons/md';
+import { find, findIndex } from 'lodash';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { BiLinkAlt } from 'react-icons/bi';
+import { BsCameraVideoFill } from 'react-icons/bs';
+import { IoSendSharp } from 'react-icons/io5';
+import { MdCancel, MdImage } from 'react-icons/md';
 import Storage from '@aws-amplify/storage';
 import * as mutations from '../../../graphql/mutations';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {AddQuestionModalDict} from '../../../dictionary/dictionary.iconoclast';
-import {getImageFromS3} from '../../../utilities/services';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { GlobalContext } from '../../../contexts/GlobalContext';
+import { AddQuestionModalDict } from '../../../dictionary/dictionary.iconoclast';
+import { getImageFromS3 } from '../../../utilities/services';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import Feedback from '../Admin/UserManagement/Feedback';
 import Modal from '../../Atoms/Modal';
-import {getAsset} from '../../../assets';
-import {HiEmojiHappy} from 'react-icons/hi';
+import { getAsset } from '../../../assets';
+import { HiEmojiHappy } from 'react-icons/hi';
 import EmojiPicker from 'emoji-picker-react';
 
 const Feedbacks = ({
-  showComments,
-  item,
-  allStudentData,
-  setAllStudentData,
-  allUniversalJournalData,
-  setAllUniversalJournalData,
+  idx,
+  contentObj,
   subSection,
   feedbackData,
   setFeedbackData,
   loadingComments,
-  idx,
+  showComments,
   fileObject,
   setFileObject,
+  personEmail,
+  personAuthID
 }: any) => {
-  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const { state, clientKey, userLanguage } = useContext(GlobalContext);
 
   const [profileUrl, setProfileUrl] = useState('');
   useEffect(() => {
@@ -52,12 +50,12 @@ const Feedbacks = ({
   // ##################################################################### //
 
   // ~~~~~~~~~~~~~~~~ MODALS ~~~~~~~~~~~~~~~ //
-  const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
-  const [editModal, setEditModal] = useState({show: false, id: '', content: ''});
-  const [deleteModal, setDeleteModal] = useState({show: false, id: ''});
+  const [attModal, setAttModal] = useState({ show: false, type: '', url: '' });
+  const [editModal, setEditModal] = useState({ show: false, id: '', content: '' });
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: '' });
 
   const closeEditModal = () => {
-    setEditModal({show: false, id: '', content: ''});
+    setEditModal({ show: false, id: '', content: '' });
   };
 
   // ~~~~~~~~~ LOCAL COMMENT STATE ~~~~~~~~~ //
@@ -85,16 +83,16 @@ const Feedbacks = ({
     const finalInput =
       attachments && attachments.type
         ? {
-            ...localObj,
-            attachments: [
-              {
-                url: attachments.url,
-                filename: attachments.filename,
-                size: attachments.size,
-                type: attachments.type,
-              },
-            ],
-          }
+          ...localObj,
+          attachments: [
+            {
+              url: attachments.url,
+              filename: attachments.filename,
+              size: attachments.size,
+              type: attachments.type,
+            },
+          ],
+        }
         : localObj;
 
     setFeedbackData([...feedbackData, finalInput]);
@@ -114,7 +112,7 @@ const Feedbacks = ({
   };
 
   const updateCommentLocalState = (commentObject: any) => {
-    const {comment, id} = commentObject;
+    const { comment, id } = commentObject;
 
     const idx = findIndex(feedbackData, (fdbck: any) => fdbck.id === id);
 
@@ -130,9 +128,9 @@ const Feedbacks = ({
     const commentObject: any = getCurrentComment(id);
 
     if (commentObject) {
-      updateCommentLocalState({comment: editCommentInput, id: commentObject.id});
+      updateCommentLocalState({ comment: editCommentInput, id: commentObject.id });
       closeEditModal();
-      await updateCommentFromDB({comment: editCommentInput, id: commentObject.id});
+      await updateCommentFromDB({ comment: editCommentInput, id: commentObject.id });
     }
   };
 
@@ -140,71 +138,29 @@ const Feedbacks = ({
   // ################################ CRUD ############################### //
   // ##################################################################### //
 
-  // ~~~~~~~~ DB-UPDATE STUDENT DATA ~~~~~~~ //
 
-  const updateExerciseFeedback = async (newFeedBackIds: string[]) => {
-    const selectStudentDataRecord = allStudentData.find(
-      (record: any) => record.id === item.recordID
-    );
+  // ~~~~~~~~ DB-UPDATE UPLOAD ENTRY ~~~~~~~ //
 
-    const newExerciseFeedback = {
-      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
-        if (exercise.id === item.id) {
-          return {...exercise, feedbacks: newFeedBackIds};
-        } else {
-          return exercise;
-        }
-      }),
-    };
+  const updateUploadsFeedback = async (newFeedBackIds: string[]) => {
+    const updatedContentObj = { ...contentObj, feedbacks: newFeedBackIds }
 
-    const mergedStudentData = allStudentData.map((dataRecord: any) => {
-      if (dataRecord.id === selectStudentDataRecord.id) {
-        return {...dataRecord, exerciseData: newExerciseFeedback.exerciseData};
-      } else {
-        return dataRecord;
-      }
-    });
 
     try {
-      const updatedStudentData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+      const updateUploadsData: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonFiles, {
           input: {
-            id: selectStudentDataRecord.id,
-            exerciseData: newExerciseFeedback.exerciseData,
-          },
-        })
-      );
-      setAllStudentData(mergedStudentData);
-    } catch (e) {
-      console.error('error updating exercise feedbacks- ', e);
-    } finally {
-      //
-    }
-  };
-
-  // ~~~~~~~ DB-UPDATE JOURNAL ENTRY ~~~~~~~ //
-
-  const updateJournalFeedback = async (newFeedBackIds: string[]) => {
-    const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
-      if (dataRecord.id === item.id) {
-        return {...dataRecord, feedbacks: newFeedBackIds};
-      } else {
-        return dataRecord;
-      }
-    });
-
-    try {
-      const updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
-          input: {
-            id: item.id,
+            id: contentObj.id,
+            personEmail: personEmail,
+            personAuthID: personAuthID,
             feedbacks: newFeedBackIds,
           },
         })
       );
-      setAllUniversalJournalData(mergedJournalData);
+
+      // TODO: set this to 'setAllPersonLessonFiles'
+      // setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
-      console.error('error updating journal feedbacks - ', e);
+      console.error('error updating uploads feedbacks - ', e);
     } finally {
       //
     }
@@ -228,7 +184,7 @@ const Feedbacks = ({
     }
   };
 
-  const pushCommentToDatabase = async (text: string, item: any, attachments?: any) => {
+  const pushCommentToDatabase = async (text: string, contentObj: any, attachments?: any) => {
     try {
       let input = {
         email: state.user.email,
@@ -239,54 +195,46 @@ const Feedbacks = ({
       const finalInput =
         attachments && attachments.url
           ? {
-              ...input,
-              attachments: {
-                type: attachments.type,
-                url: attachments.url,
-                filename: attachments.filename,
-                size: attachments.size,
-              },
-            }
+            ...input,
+            attachments: {
+              type: attachments.type,
+              url: attachments.url,
+              filename: attachments.filename,
+              size: attachments.size,
+            },
+          }
           : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {input: finalInput})
+        graphqlOperation(mutations.createAnthologyComment, { input: finalInput })
       );
 
       const commentData: any = results.data.createAnthologyComment;
-      let newFeedbacks = item.feedbacks || [];
+      let newFeedbacks = contentObj.feedbacks || [];
 
       if (!newFeedbacks.includes(commentData.id)) {
         newFeedbacks.push(commentData.id);
       }
 
-      if (subSection === 'Work') {
-        await updateExerciseFeedback(newFeedbacks);
-      } else {
-        await updateJournalFeedback(newFeedbacks);
-      }
-
+      updateUploadsFeedback(newFeedbacks);
 
     } catch (error) {
       console.error('error @createAnthologyComment: ', error);
     }
   };
 
-  const deleteCommentFromDatabase = async (id: string, item: any) => {
+  const deleteCommentFromDatabase = async (id: string, contentObj: any) => {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
+        graphqlOperation(mutations.deleteAnthologyComment, { input: { id } })
       );
 
       let newFeedbacks =
-        item.feedbacks.length > 0
-          ? item.feedbacks.filter((feedbackId: string) => feedbackId !== id)
+        contentObj.feedbacks.length > 0
+          ? contentObj.feedbacks.filter((feedbackId: string) => feedbackId !== id)
           : [];
 
-      if (subSection === 'Work') {
-        await updateExerciseFeedback(newFeedbacks);
-      } else {
-        await updateJournalFeedback(newFeedbacks);
-      }
+      updateUploadsFeedback(newFeedbacks);
+
     } catch (e) {
       console.error('error deleting comment - ', e);
     }
@@ -315,7 +263,7 @@ const Feedbacks = ({
 
       const imageUrl: any = await getImageFromS3(id);
 
-      pushCommentToDatabase(_comment, item, {
+      pushCommentToDatabase(_comment, contentObj, {
         url: imageUrl,
         type,
         filename: _fileObject.name,
@@ -330,7 +278,7 @@ const Feedbacks = ({
       setUploadingAttachment(false);
     } else {
       pushCommentToLocalState(comment);
-      pushCommentToDatabase(comment, item);
+      pushCommentToDatabase(comment, contentObj);
     }
     setFileObject({});
     setComment('');
@@ -347,7 +295,7 @@ const Feedbacks = ({
 
       const filteredData: any = feedbackData.filter((data: any) => data.id !== id);
       setFeedbackData(filteredData); // this is to update local state
-      deleteCommentFromDatabase(id, item);
+      deleteCommentFromDatabase(id, contentObj);
     }
   };
 
@@ -360,7 +308,7 @@ const Feedbacks = ({
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
-        progressCallback: ({loaded, total}: any) => {
+        progressCallback: ({ loaded, total }: any) => {
           console.log((loaded * 100) / total);
         },
       })
@@ -435,7 +383,7 @@ const Feedbacks = ({
     obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
 
   const AttachmentsModalPopUp = (props: any) => {
-    const {children, closeAction} = props;
+    const { children, closeAction } = props;
     return (
       <Modal
         closeOnBackdrop
@@ -502,9 +450,8 @@ const Feedbacks = ({
 
   const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
   const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 ${
-    themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
-  }`;
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 ${themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
+    }`;
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
@@ -516,10 +463,10 @@ const Feedbacks = ({
         <div className="comment-container">
           {attModal.show && (
             <AttachmentsModalPopUp
-              closeAction={() => setAttModal({show: false, url: '', type: ''})}>
+              closeAction={() => setAttModal({ show: false, url: '', type: '' })}>
               {attModal.type.includes('image') && (
                 <img
-                  style={{objectFit: 'cover', maxHeight: '90vh', maxWidth: '90vw'}}
+                  style={{ objectFit: 'cover', maxHeight: '90vh', maxWidth: '90vw' }}
                   className="h-auto w-auto rounded"
                   src={attModal.url}
                 />
@@ -536,7 +483,7 @@ const Feedbacks = ({
               <div>
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
-                  style={{resize: 'none'}}
+                  style={{ resize: 'none' }}
                   cols={125}
                   rows={1}
                   placeholder="Edit Feedback"
@@ -560,7 +507,7 @@ const Feedbacks = ({
                     {showEmojiForEdit && (
                       <div
                         onClick={(e: any) => {
-                          const {id} = e.target;
+                          const { id } = e.target;
                           if (id === 'picker-wrapper') {
                             setShowEmojiForEdit(false);
                           }
@@ -594,9 +541,9 @@ const Feedbacks = ({
               deleteModal
               saveAction={() => {
                 deleteComment(deleteModal.id);
-                setDeleteModal({show: false, id: ''});
+                setDeleteModal({ show: false, id: '' });
               }}
-              closeAction={() => setDeleteModal({show: false, id: ''})}
+              closeAction={() => setDeleteModal({ show: false, id: '' })}
             />
           )}
           {loadingComments ? (
@@ -636,11 +583,11 @@ const Feedbacks = ({
           )}
           <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
             <div
-              style={{minHeight: '2.5rem'}}
+              style={{ minHeight: '2.5rem' }}
               className="flex comment-box__inner flex-col border-b-0 border-gray-200">
               <textarea
                 onKeyUp={(e) => do_resize(e.target)}
-                style={{resize: 'none'}}
+                style={{ resize: 'none' }}
                 placeholder="Add Feedback"
                 className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
                 rows={1}
@@ -653,7 +600,7 @@ const Feedbacks = ({
                 {isImage && (
                   <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                     <img
-                      style={{objectFit: 'cover'}}
+                      style={{ objectFit: 'cover' }}
                       id="output_image"
                       className="h-16 w-16 mr-2 rounded-lg"
                     />
@@ -743,7 +690,7 @@ const Feedbacks = ({
                   {showEmoji && (
                     <div
                       onClick={(e: any) => {
-                        const {id} = e.target;
+                        const { id } = e.target;
 
                         if (id === 'picker-wrapper') {
                           setShowEmoji(false);
@@ -769,11 +716,10 @@ const Feedbacks = ({
               <div className="right-action w-auto p-2">
                 <div
                   onClick={onCommentSubmit}
-                  className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
-                    comment.length || fileObject.name
-                      ? 'bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600'
-                      : 'cursor-default text-indigo-300'
-                  }`}>
+                  className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${comment.length || fileObject.name
+                    ? 'bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600'
+                    : 'cursor-default text-indigo-300'
+                    }`}>
                   <IoSendSharp className="" />
                 </div>
               </div>
