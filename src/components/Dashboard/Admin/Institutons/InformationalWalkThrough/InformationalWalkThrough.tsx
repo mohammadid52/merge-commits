@@ -61,7 +61,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id={institutionId}`,
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
           },
           {
             title: 'Staff',
@@ -117,11 +117,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'General Information',
                     type: 'list',
                     id: 'inst_curriculum_units_general_info',
+                    redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular/{curriculumId}/syllabus/edit?id={syllabusId}&step=overview`,
                   },
                   {
                     title: 'Lesson Plan Manager',
                     type: 'list',
                     id: 'inst_curriculum_units_lesson_plan_manager',
+                    redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular/{curriculumId}/syllabus/edit?id={syllabusId}&step=lessons`,
                   },
                 ],
                 id: 'inst_curriculum_units',
@@ -272,7 +274,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Provide service to another organization',
             type: 'list',
             id: 'service_provider_provide_service',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id={institutionId}`,
           },
           {
             title: 'Request service from another organization',
@@ -698,10 +700,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               );
               universalSyllabus = universalSyllabus?.data?.listUniversalSyllabuss?.items;
               if (redirectionUrl) {
-                redirectToSelectedSection(redirectionUrl, {
-                  ...replaceObject,
-                  curriculumId: curriculums[0].id,
-                });
+                if (universalSyllabus?.length) {
+                  redirectToSelectedSection(redirectionUrl, {
+                    ...replaceObject,
+                    curriculumId: universalSyllabus[0].curriculumID,
+                    syllabusId: universalSyllabus[0].id,
+                  });
+                } else {
+                  redirectToSelectedSection(
+                    '/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}'
+                  );
+                }
               }
               return {universalSyllabus};
             }
@@ -729,7 +738,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   ...replaceObject,
                   roomId: rooms[0].id,
                 });
-              }else{
+              } else {
                 redirectToSelectedSection(
                   '/dashboard/manage-institutions/institution/room-creation?id=${institutionId}',
                   replaceObject
@@ -1041,7 +1050,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/class-creation?id=${selectedInstitution?.institution?.id}`
+                    )
+                  }>
                   Create a class for your institution
                 </span>
                 {progressIndicator(activeSection?.data?.classes?.length)}
@@ -1110,7 +1123,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   2. Name your curriculum
                 </span>
                 {progressIndicator(
@@ -1129,7 +1146,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   3. Select the language(s) of your lessons
                 </span>
                 {progressIndicator(
@@ -1145,7 +1166,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   4. Add the people who contributed to the design of the curriculum
                 </span>
                 {progressIndicator(
@@ -1164,7 +1189,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   5. Select the audience of your curriculum
                 </span>
                 {progressIndicator(Boolean(activeSection?.data?.curriculum?.length))}
@@ -1178,7 +1207,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`
+                    )
+                  }>
                   6. Add the purpose, description and objective of the course
                 </span>
                 {progressIndicator(
@@ -1296,7 +1329,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   2. Select the languages of the lessons
                 </span>
                 {progressIndicator(false)}
@@ -1309,7 +1342,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   3. Add the description of the description, objectives, policies, purpose
                   and methodologies of the unit
                 </span>
@@ -1326,7 +1359,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(`/dashboard/lesson-builder`)}>
                   1. Click on the New Lesson button
                 </span>
                 {progressIndicator(activeSection?.data?.universalLessons)}
@@ -1347,7 +1380,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() =>
                     history.push(
                       activeSection?.data?.classRooms?.length
-                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=overview`
+                        ? `/dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=overview`
                         : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
@@ -1376,7 +1409,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() =>
                     history.push(
                       activeSection?.data?.classRooms?.length
-                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=unit-planner`
+                        ? `/dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=unit-planner`
                         : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
@@ -1398,7 +1431,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() =>
                     history.push(
                       activeSection?.data?.classRooms?.length
-                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=class-dynamics`
+                        ? `/dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=class-dynamics`
                         : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
@@ -1415,14 +1448,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_curriculum_class_dynamics':
+      case 'inst_curriculum_class_dynamics': {
+        const redirectionPath = activeSection?.data?.classRooms?.length
+          ? `/dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=class-dynamics`
+          : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`;
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   1. Create subject proficiency groups
                 </span>
               </div>
@@ -1434,7 +1470,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(redirectionPath)}>
                   2. Create course partner groups
                 </span>
               </div>
@@ -1444,6 +1480,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
+      }
       case 'lesson_builder_list_create_new_lesson':
         return (
           <div className="mt-6">
@@ -1634,14 +1671,26 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       }
-      case 'lesson_builder_plan_manager':
+      case 'lesson_builder_plan_manager': {
+        const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
+          (lesson: any) =>
+            lesson.lessonPlan?.find((plan: any) =>
+              plan.pageContent?.find((page: any) => page?.partContent?.length)
+            )
+        );
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      lessonPlanWithBlock
+                        ? `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonPlanWithBlock.id}&pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
                   1. Move your activities around so they are in the order you want to
                   teach them and set the initial dark/light mode of your lessons
                 </span>
@@ -1663,14 +1712,27 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'lesson_builder_plan_homework_and_challenges':
+      }
+      case 'lesson_builder_plan_homework_and_challenges': {
+        const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
+          (lesson: any) =>
+            lesson.lessonPlan?.find((plan: any) =>
+              plan.pageContent?.find((page: any) => page?.partContent?.length)
+            )
+        );
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      lessonPlanWithBlock
+                        ? `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonPlanWithBlock.id}&pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
                   <b> Coming Soon </b> You will be able to add homework and challenges to
                   lesson plans soon
                 </span>
@@ -1696,6 +1758,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
+      }
       case 'lesson_builder_courses':
         return (
           <div className="mt-6">
@@ -1773,7 +1836,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}&tab=3`
+                      `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=3`
                     )
                   }>
                   Select service provider from list
