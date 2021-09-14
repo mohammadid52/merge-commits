@@ -13,6 +13,7 @@ import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';
 import Loader from '../../../../Atoms/Loader';
 import {AiFillCheckCircle} from 'react-icons/ai';
 import {getLocalStorageData} from '../../../../../utilities/localStorage';
+import AnimatedContainer from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 const EvidenceTab = ({
   curTab,
@@ -257,16 +258,17 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [checkedEvidence, setCheckedEvidence] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
-  const {curTab, setCurTab} = useTabs(tabs);
+  const {curTab, setCurTab, helpers} = useTabs(tabs);
+  const [onObjectivesTab, onResourcesTab, onEvidencesTab] = helpers;
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson.title,
     time: `${lesson.estTime} min`,
-    overview: lesson.description ? ReactHtmlParser(lesson.description) : '--',
+    instructions: lesson.description ? ReactHtmlParser(lesson.description) : '--',
   }));
 
   const lessonPlanTableConfig = {
-    headers: ['Name', 'Time', 'Overview'],
+    headers: ['Name', 'Time', 'Instructions'],
     dataList,
     config: {
       dark: currentLesson?.darkMode || true,
@@ -296,70 +298,58 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
           />
 
           <div className="mt-4">
-            <Transition
-              appear={false}
-              enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full opacity-0"
-              enterTo="translate-x-0 opacity-100"
-              leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0 opacity-100"
-              leaveTo="translate-x-full opacity-0"
-              show={curTab === 'Objectives'}>
-              {currentLesson?.objectives[0] ? (
-                <div>
-                  <p className="text-gray-400 font-medium text-lg leading-3">
-                    {ReactHtmlParser(currentLesson?.objectives[0])}
-                  </p>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center min-h-32">
-                  <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
-                    No Objectives Listed
-                  </p>
-                </div>
+            <AnimatedContainer show={onObjectivesTab} animationType="scale">
+              {onObjectivesTab && (
+                <>
+                  {currentLesson?.objectives[0] ? (
+                    <div>
+                      <p className="text-gray-400 font-medium text-lg leading-3">
+                        {ReactHtmlParser(currentLesson?.objectives[0])}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center min-h-32">
+                      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
+                        No Objectives Listed
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
-            </Transition>
-            <Transition
-              enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full opacity-0"
-              enterTo="translate-x-0 opacity-100"
-              leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0 opacity-100"
-              leaveTo="translate-x-full opacity-0"
-              show={curTab === 'Resources'}>
-              {currentLesson?.resources ? (
-                <div>
-                  <p className="text-gray-400 font-medium text-lg leading-3">
-                    {currentLesson?.resources}
-                  </p>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center min-h-32">
-                  <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
-                    No Resources Listed
-                  </p>
-                </div>
+            </AnimatedContainer>
+            <AnimatedContainer show={onResourcesTab} animationType="scale">
+              {onResourcesTab && (
+                <>
+                  {currentLesson?.studentMaterials ? (
+                    <div>
+                      <p className="text-gray-400 font-medium text-lg leading-3">
+                        {currentLesson?.studentMaterials}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center min-h-32">
+                      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
+                        No Resources Listed
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
-            </Transition>
-            <Transition
-              enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full opacity-0"
-              enterTo="translate-x-0 opacity-100"
-              leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0 opacity-100"
-              leaveTo="translate-x-full opacity-0"
-              show={curTab === 'Evidences'}>
-              <EvidenceTab
-                selectedMeasurements={selectedMeasurements}
-                setSelectedMeasurements={setSelectedMeasurements}
-                checkedEvidence={checkedEvidence}
-                setCheckedEvidence={setCheckedEvidence}
-                curTab={curTab}
-                selectedCurriculumList={selectedCurriculumList}
-                setSelectedCurriculumList={setSelectedCurriculumList}
-                currentLesson={currentLesson}
-              />
-            </Transition>
+            </AnimatedContainer>
+            <AnimatedContainer show={onEvidencesTab} animationType="scale">
+              {onEvidencesTab && (
+                <EvidenceTab
+                  selectedMeasurements={selectedMeasurements}
+                  setSelectedMeasurements={setSelectedMeasurements}
+                  checkedEvidence={checkedEvidence}
+                  setCheckedEvidence={setCheckedEvidence}
+                  curTab={curTab}
+                  selectedCurriculumList={selectedCurriculumList}
+                  setSelectedCurriculumList={setSelectedCurriculumList}
+                  currentLesson={currentLesson}
+                />
+              )}
+            </AnimatedContainer>
           </div>
         </div>
         <div className="min-h-56 py-4">

@@ -264,17 +264,12 @@ const HeaderModalComponent = ({
     return isValid;
   };
 
-  const tabs = [
-    {name: 'Component Details', current: true},
-    {name: 'Preview', current: false},
-  ];
-
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
+  const {curTab, setCurTab, helpers} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
   return (
     <div>
-      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
+      <Tabs curTab={curTab} setCurTab={setCurTab} />
 
       <AnimatedContainer animationType="scale" show={onSetupTab}>
         {onSetupTab && (

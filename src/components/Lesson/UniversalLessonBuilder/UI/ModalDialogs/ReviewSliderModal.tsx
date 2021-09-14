@@ -9,11 +9,14 @@ import {FORM_TYPES} from '../common/constants';
 import {v4 as uuidv4} from 'uuid';
 import Selector from '../../../../Atoms/Form/Selector';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import Tabs from '../UIComponents/Tabs/Tabs';
+import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
 import ReviewSliderBlock, {
   extractValuesFromClassString,
 } from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {find, map, omit} from 'lodash';
+import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
+import PreviewLayout from '../Preview/Layout/PreviewLayout';
+import DummyContent from '../Preview/DummyContent';
 
 interface ReviewProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -174,178 +177,188 @@ const ReviewSliderModal = ({
     {name: 'Preview', current: false},
   ];
 
-  const [curTab, setCurTab] = useState(tabs[0].name);
+  const {curTab, setCurTab, helpers, goTo} = useTabs();
+  const [onSetupTab, onPreviewTab] = helpers;
+  const [_, toPreviewTab] = goTo;
 
   return (
     <>
       <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
 
-      {curTab === tabs[0].name && (
-        <div className="grid grid-cols-3 my-2 gap-4">
-          <div className="col-span-3">
-            <div className={'my-2'}>
-              <div className="mb-2">
-                <FormInput
-                  label={'Enter review title'}
-                  onChange={onChange}
-                  error={errors.label}
-                  name={'label'}
-                  isRequired
-                  value={reviewFields?.label}
-                  placeHolder={'Rate you experience'}
-                />
+      <AnimatedContainer show={onSetupTab}>
+        {onSetupTab && (
+          <div className="grid grid-cols-3 my-2 gap-4">
+            <div className="col-span-3">
+              <div className={'my-2'}>
+                <div className="mb-2">
+                  <FormInput
+                    label={'Enter review title'}
+                    onChange={onChange}
+                    error={errors.label}
+                    name={'label'}
+                    isRequired
+                    value={reviewFields?.label}
+                    placeHolder={'Rate you experience'}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <h3 className="col-span-3 text-base text-black font-medium">
-            Customize slider
-          </h3>
-          <div className="col-span-1 ">
-            <label
-              htmlFor={'range'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-              Select range
-            </label>
-            <Selector
-              placeholder="Select range"
-              selectedItem={reviewFields.range}
-              onChange={(_, name) => setReviewFields({...reviewFields, range: name})}
-              list={[
-                {id: 0, name: '1-5'},
-                {id: 1, name: '1-10'},
-              ]}
-            />
-          </div>
-          <div className="col-span-1 relative h-full">
-            <label
-              htmlFor={'bgColor'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-              Select background color
-            </label>
-            <button
-              onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.bgColor?.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.bgColor?.split('-')[1])}
-              </span>
-
-              <span
-                className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-gray-400`}></span>
-            </button>
-            {colorPickerActiveBG && (
-              <ColorPicker
-                isMainPage
-                classString={classString}
-                callbackColor={(pickedColor) => {
-                  setColorPickerActiveBG(false);
-                  handleColorPickerSelect(pickedColor, 'bg');
-                }}
-                styleString={{top: '100%'}}
+            <h3 className="col-span-3 text-base text-black font-medium">
+              Customize slider
+            </h3>
+            <div className="col-span-1 ">
+              <label
+                htmlFor={'range'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                Select range
+              </label>
+              <Selector
+                placeholder="Select range"
+                selectedItem={reviewFields.range}
+                onChange={(_, name) => setReviewFields({...reviewFields, range: name})}
+                list={[
+                  {id: 0, name: '1-5'},
+                  {id: 1, name: '1-10'},
+                ]}
               />
-            )}
-          </div>
-          <div className="col-span-1 relative h-full">
-            <label
-              htmlFor={'foreground'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-              Select foreground color
-            </label>
-            <button
-              onClick={() => setColorPickerActiveFG(!colorPickerActiveFG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.fgColor?.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.fgColor?.split('-')[1])}
-              </span>
+            </div>
+            <div className="col-span-1 relative h-full">
+              <label
+                htmlFor={'bgColor'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                Select background color
+              </label>
+              <button
+                onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.bgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.bgColor?.split('-')[1])}
+                </span>
 
-              <span
-                className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-gray-400`}></span>
-            </button>
-            {colorPickerActiveFG && (
-              <ColorPicker
-                isMainPage
-                classString={classString}
-                callbackColor={(pickedColor) => {
-                  setColorPickerActiveFG(false);
-                  handleColorPickerSelect(pickedColor, 'fg');
-                }}
-                styleString={{top: '100%'}}
-              />
-            )}
-          </div>
-          <h3 className="col-span-3 text-base text-black font-medium">Customize card</h3>
-          <div className="col-span-1 relative h-full">
-            <label
-              htmlFor={'foreground'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-              Select card background color
-            </label>
-            <button
-              onClick={() => setColorPickerActiveCardBG(!colorPickerActiveCardBG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.cardBgColor?.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.cardBgColor?.split('-')[1])}
-              </span>
+                <span
+                  className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-gray-400`}></span>
+              </button>
+              {colorPickerActiveBG && (
+                <ColorPicker
+                  isMainPage
+                  classString={classString}
+                  callbackColor={(pickedColor) => {
+                    setColorPickerActiveBG(false);
+                    handleColorPickerSelect(pickedColor, 'bg');
+                  }}
+                  styleString={{top: '100%'}}
+                />
+              )}
+            </div>
+            <div className="col-span-1 relative h-full">
+              <label
+                htmlFor={'foreground'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                Select foreground color
+              </label>
+              <button
+                onClick={() => setColorPickerActiveFG(!colorPickerActiveFG)}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.fgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.fgColor?.split('-')[1])}
+                </span>
 
-              <span
-                className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-gray-400`}></span>
-            </button>
-            {colorPickerActiveCardBG && (
-              <ColorPicker
-                isMainPage
-                classString={classString}
-                callbackColor={(pickedColor) => {
-                  setColorPickerActiveCardBG(false);
-                  handleColorPickerSelect(pickedColor, 'cardBg');
-                }}
-                styleString={{top: '100%'}}
+                <span
+                  className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-gray-400`}></span>
+              </button>
+              {colorPickerActiveFG && (
+                <ColorPicker
+                  isMainPage
+                  classString={classString}
+                  callbackColor={(pickedColor) => {
+                    setColorPickerActiveFG(false);
+                    handleColorPickerSelect(pickedColor, 'fg');
+                  }}
+                  styleString={{top: '100%'}}
+                />
+              )}
+            </div>
+            <h3 className="col-span-3 text-base text-black font-medium">
+              Customize card
+            </h3>
+            <div className="col-span-1 relative h-full">
+              <label
+                htmlFor={'foreground'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                Select card background color
+              </label>
+              <button
+                onClick={() => setColorPickerActiveCardBG(!colorPickerActiveCardBG)}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.cardBgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.cardBgColor?.split('-')[1])}
+                </span>
+
+                <span
+                  className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-gray-400`}></span>
+              </button>
+              {colorPickerActiveCardBG && (
+                <ColorPicker
+                  isMainPage
+                  classString={classString}
+                  callbackColor={(pickedColor) => {
+                    setColorPickerActiveCardBG(false);
+                    handleColorPickerSelect(pickedColor, 'cardBg');
+                  }}
+                  styleString={{top: '100%'}}
+                />
+              )}
+            </div>
+            <div className="col-span-1 ">
+              <label
+                htmlFor={'range'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                Select corners
+              </label>
+              <Selector
+                placeholder="Select corners"
+                selectedItem={reviewFields.cardCorners}
+                onChange={(_, name) =>
+                  setReviewFields({...reviewFields, cardCorners: name})
+                }
+                list={roundedCornerListSelector}
               />
-            )}
+            </div>
           </div>
-          <div className="col-span-1 ">
-            <label
-              htmlFor={'range'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-              Select corners
-            </label>
-            <Selector
-              placeholder="Select corners"
-              selectedItem={reviewFields.cardCorners}
-              onChange={(_, name) =>
-                setReviewFields({...reviewFields, cardCorners: name})
+        )}
+      </AnimatedContainer>
+      <AnimatedContainer show={onPreviewTab}>
+        {onPreviewTab && (
+          <PreviewLayout
+            notAvailable={
+              reviewFields.label.length === 0 ? 'Add label to see the preview' : false
+            }>
+            <DummyContent />
+
+            <ReviewSliderBlock
+              inputID={'preview_review_slider_id'}
+              disabled={false}
+              classString={getClassValue()}
+              label={reviewFields.label}
+              value={reviewFields.previewValue}
+              onChange={(e) =>
+                setReviewFields({...reviewFields, previewValue: [e.target.value]})
               }
-              list={roundedCornerListSelector}
             />
-          </div>
-        </div>
-      )}
-
-      {curTab === tabs[1].name &&
-        (reviewFields.label ? (
-          <ReviewSliderBlock
-            inputID={'preview_review_slider_id'}
-            disabled={false}
-            classString={getClassValue()}
-            label={reviewFields.label}
-            value={reviewFields.previewValue}
-            onChange={(e) =>
-              setReviewFields({...reviewFields, previewValue: [e.target.value]})
-            }
-          />
-        ) : (
-          <div className="h-12 bg-dark-gray rounded-lg mt-4 flex items-center justify-center">
-            <p className="text-white text-lg text-center">Add label to see the preview</p>
-          </div>
-        ))}
+            <DummyContent />
+          </PreviewLayout>
+        )}
+      </AnimatedContainer>
 
       <div className="flex mt-4 justify-between px-6 pl-0 pb-4">
-        {curTab === tabs[0].name ? (
+        {onSetupTab ? (
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={'See the preview'}
-            onClick={() => setCurTab(tabs[1].name)}
+            onClick={() => setCurTab(toPreviewTab)}
           />
         ) : (
           <div className="w-auto" />

@@ -18,6 +18,7 @@ import Selector from '../../../Atoms/Form/Selector';
 import Loader from '../../../Atoms/Loader';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import SectionTitle from '../../../Atoms/SectionTitle';
+import DroppableMedia from '../../../Molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 
 const InstitutionAdd = () => {
@@ -137,17 +138,6 @@ const InstitutionAdd = () => {
       isServiceProvider: !instituteData.isServiceProvider,
     });
   };
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
@@ -181,11 +171,13 @@ const InstitutionAdd = () => {
     setImageUrl(null);
   };
 
+  const [fileObj, setFileObj] = useState({});
+
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    setS3Image(image);
-    const imageUrl = URL.createObjectURL(image);
+    setS3Image(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     setInstituteData({
       ...instituteData,
@@ -225,6 +217,9 @@ const InstitutionAdd = () => {
       id: uuidv4(),
     });
   }, []);
+
+  const mediaRef = React.useRef(null);
+  const handleImage = () => mediaRef?.current?.click();
 
   const {
     name,
@@ -268,57 +263,46 @@ const InstitutionAdd = () => {
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 {!imageLoading ? (
                   <label className="cursor-pointer flex justify-center">
-                    <img
-                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                      src={imageUrl}
-                    />
-                    <input
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => cropSelecetedImage(e)}
-                      onClick={(e: any) => (e.target.value = '')}
-                      accept="image/*"
-                      multiple={false}
-                    />
+                    <DroppableMedia
+                      mediaRef={mediaRef}
+                      setImage={(img: any, file: any) => {
+                        setUpImage(img);
+                        setFileObj(file);
+                      }}
+                      toggleCropper={toggleCropper}>
+                      <img
+                        onClick={handleImage}
+                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        src={imageUrl}
+                      />
+                    </DroppableMedia>
                   </label>
                 ) : (
                   <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                     <Loader />
                   </div>
                 )}
-                {/* <span className="hidden group-focus:flex justify-around mt-6">
-                  <label className="w-8 cursor-pointer">
-                    <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
-                      <FaEdit />
-                    </IconContext.Provider>
-                    <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
-                  </label>
-                  <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                    <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
-                      <FaTrashAlt />
-                    </IconContext.Provider>
-                  </span>
-                </span> */}
               </button>
             ) : (
-              <label
-                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                {!imageLoading ? (
-                  <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                    <FaPlus />
-                  </IconContext.Provider>
-                ) : (
-                  <Loader />
-                )}
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => cropSelecetedImage(e)}
-                  onClick={(e: any) => (e.target.value = '')}
-                  accept="image/*"
-                  multiple={false}
-                />
-              </label>
+              <DroppableMedia
+                mediaRef={mediaRef}
+                setImage={(img: any, file: any) => {
+                  setUpImage(img);
+                  setFileObj(file);
+                }}
+                toggleCropper={toggleCropper}>
+                <label
+                  onClick={handleImage}
+                  className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                  {!imageLoading ? (
+                    <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
+                      <FaPlus />
+                    </IconContext.Provider>
+                  ) : (
+                    <Loader />
+                  )}
+                </label>
+              </DroppableMedia>
             )}
             <p className="text-gray-600 my-4">
               {InstitutionAddDict[userLanguage]['INFOA']}
