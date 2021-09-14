@@ -1221,12 +1221,15 @@ type PersonFiles @model @key(fields: ["id"]) {
   lessonType: String
   roomID: String
   files: [File]
+  lessonPageID: ID
 }
 
 type File {
   fileName: String!
   fileKey: String!
 }
+
+
 
 type Subscription {
   onChangePersonLocation(
