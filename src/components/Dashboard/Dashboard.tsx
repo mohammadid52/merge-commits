@@ -79,8 +79,16 @@ export interface ClassroomControlProps extends DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const stateUser = gContext.state.user;
+  
   const {updateAuthState} = props;
-  const {state, dispatch} = useContext(GlobalContext);
+
+  // other
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
@@ -97,7 +105,7 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: '',
   });
-  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+  const isTeacher = stateUser.role === 'FLW' || stateUser.role === 'TR';
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -150,7 +158,7 @@ const Dashboard = (props: DashboardProps) => {
   }
 
   useEffect(() => {
-    if (!state.user.firstName) {
+    if (!stateUser.firstName) {
       getUser();
     } else {
       setUserData({
@@ -158,13 +166,13 @@ const Dashboard = (props: DashboardProps) => {
         image: state.user?.image,
       });
     }
-  }, [state.user.role]);
+  }, [stateUser.role]);
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
    */
   useEffect(() => {
-    const userRole = state.user.role;
+    const userRole = stateUser.role;
     if (userRole === 'ADM') {
       setRoomsLoading(true);
     }
@@ -247,15 +255,15 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
   useEffect(() => {
-    const authId = state.user.authId;
-    const email = state.user.email;
-    if (state.user.role === 'ST') {
+    const authId = stateUser.authId;
+    const email = stateUser.email;
+    if (stateUser.role === 'ST') {
       getDashboardData(authId, email);
     }
     if (isTeacher) {
       getDashboardDataForTeachers(authId);
     }
-  }, [state.user.role, isTeacher]);
+  }, [stateUser.role, isTeacher]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -340,11 +348,11 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   useEffect(() => {
-    if (state.user.role === 'FLW' || state.user.role === 'TR') {
-      const teacherAuthID = state.user.authId;
+    if (stateUser.role === 'FLW' || stateUser.role === 'TR') {
+      const teacherAuthID = stateUser.authId;
       listRoomTeacher(teacherAuthID);
     }
-  }, [state.user.role]);
+  }, [stateUser.role]);
 
   /******************************************
    * 3.1 LIST ALL WIDGETS FOR ROOM          *
@@ -742,7 +750,7 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
-      {state.user.role === 'ST' && <EmojiFeedback />}
+      {stateUser.role === 'ST' && <EmojiFeedback />}
 
       {/* <ResizablePanels> */}
       <SideMenu
@@ -777,12 +785,12 @@ const Dashboard = (props: DashboardProps) => {
                   } else if (userData.role === 'ST') {
                     return <Redirect to={`${match.url}/home`} />;
                   } else {
-                    return !state.user.associateInstitute?.length ||
-                      state.user.associateInstitute?.length > 1 ? (
+                    return !stateUser.associateInstitute?.length ||
+                      stateUser.associateInstitute?.length > 1 ? (
                       <Redirect to={`${match.url}/manage-institutions`} />
                     ) : (
                       <Redirect
-                        to={`${match.url}/manage-institutions/institution?id=${state.user.associateInstitute[0].institution.id}`}
+                        to={`${match.url}/manage-institutions/institution?id=${stateUser.associateInstitute[0].institution.id}`}
                       />
                     );
                   }

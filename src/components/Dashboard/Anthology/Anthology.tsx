@@ -29,14 +29,22 @@ import Modal from '../../Atoms/Modal';
 import FormInput from '../../Atoms/Form/FormInput';
 import Buttons from '../../Atoms/Buttons';
 
-export type ViewEditMode = {
+
+// ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
+
+export interface IAnthologyProps {
+  studentID?: string;
+  studentAuthID?: string;
+  studentEmail?: string;
+}
+export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
   option?: number;
   recordID?: string;
 };
 
-const Anthology = () => {
+const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const gContext = useContext(GlobalContext);
