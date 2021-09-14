@@ -570,6 +570,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         {showCropper && (
           <ProfileCropModal
             upImg={upImage}
+            customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+            locked
             saveCroppedImage={(img: string) => saveCroppedImage(img)}
             closeAction={toggleCropper}
           />

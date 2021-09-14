@@ -688,6 +688,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       {showCropper && (
         <ProfileCropModal
           upImg={upImage}
+          locked
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
         />

@@ -13,13 +13,24 @@ interface ProfileCropModalProps {
   closeAction: () => void;
   handleImage?: () => void;
   imageClassName?: string;
+  customCropProps?: {[key: string]: any};
+  locked?: boolean;
 }
 
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (
   props: ProfileCropModalProps
 ) => {
-  const {upImg, imageClassName, saveCroppedImage, closeAction} = props;
-  const initial = {unit: '%', x: 0, y: 0, width: 100, aspect: 1};
+  const {
+    upImg,
+    customCropProps,
+    locked = false,
+    imageClassName,
+    saveCroppedImage,
+    closeAction,
+  } = props;
+  const initial = customCropProps
+    ? {...customCropProps}
+    : {unit: '%', x: 0, y: 0, width: 100, aspect: 1};
   const [crop, setCrop] = useState<any>(initial);
   const [completedCrop, setCompletedCrop] = useState(null);
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -68,10 +79,6 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
 
   const [showCropper, setShowCropper] = useState(false);
 
-  const saveAction = () => {
-    saveCroped();
-  };
-
   return (
     <Modal
       showHeader={true}
@@ -105,6 +112,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
               src={upImg}
               onImageLoaded={onLoad}
               crop={crop}
+              locked={locked}
               // imageStyle={{ width: 'auto', margin: 'auto', height: '25rem' }}        // style for the image tag in cropper
               onChange={(c: any) => setCrop(c)}
               onComplete={(c: any) => setCompletedCrop(c)}

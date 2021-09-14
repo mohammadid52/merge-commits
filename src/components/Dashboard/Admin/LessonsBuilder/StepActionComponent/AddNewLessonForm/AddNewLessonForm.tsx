@@ -596,6 +596,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       {showCropper && (
         <ProfileCropModal
           upImg={imageData}
+          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+          locked
           imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
