@@ -1,4 +1,4 @@
-import {filter, reject} from 'lodash';
+import {filter, forEach, map, reject} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {
@@ -27,10 +27,24 @@ const LessonRowComposer = () => {
       ? filter(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
       : [];
 
-  const removeDownloadablesFromlist =
+  const getRemovedDownloadablesFromlist = () => {
+    const removeDownloadablesFromlist: any[] = [];
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? reject(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
+      ? activePageData.pageContent.forEach((a) => {
+          const objArray: any[] = [];
+          a.partContent.forEach((b) => {
+            if (!b.type.includes('Download')) {
+              objArray.push(b);
+            }
+          });
+          removeDownloadablesFromlist.push({...a, partContent: objArray});
+        })
       : [];
+
+    return removeDownloadablesFromlist;
+  };
+
+  const removeDownloadablesFromlist = getRemovedDownloadablesFromlist();
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
