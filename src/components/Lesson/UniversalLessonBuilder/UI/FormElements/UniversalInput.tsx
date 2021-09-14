@@ -170,10 +170,10 @@ const UniversalInput = (props: any) => {
                 )}
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
-                    <div className="flex items-center mt-4 ">
+                    <div className="flex items-center mt-4 gap-x-4">
                       {selectedForm === INPUT && (
                         <>
-                          <div className="flex items-center w-auto">
+                          <div className="sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm w-auto">
                             <div className="flex items-center text-xs w-auto">
                               Sentence
                               <Toggle
@@ -182,11 +182,10 @@ const UniversalInput = (props: any) => {
                               />
                               Paragraph
                             </div>
-                            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                           </div>
                         </>
                       )}
-                      <div className="flex items-center text-xs w-auto">
+                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         Make this required
                         <Toggle
                           checked={input.required}
@@ -202,10 +201,10 @@ const UniversalInput = (props: any) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center mt-4 ">
+                  <div className="flex items-center mt-4 gap-x-4">
                     {selectedForm === INPUT && (
                       <>
-                        <div className="flex items-center w-auto ">
+                        <div className="flex items-center w-auto sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
                           <div className="flex items-center text-xs w-auto">
                             Sentence
                             <Toggle
@@ -214,11 +213,10 @@ const UniversalInput = (props: any) => {
                             />
                             Paragraph
                           </div>
-                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                         </div>
                       </>
                     )}
-                    <div className="flex items-center text-xs w-auto">
+                    <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                       Make this required
                       <Toggle
                         checked={input.required}
@@ -236,7 +234,7 @@ const UniversalInput = (props: any) => {
         })}
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
-        {hideBtns && (
+        {!hideBtns ? (
           <div className="flex items-center w-auto">
             <button
               onClick={addOneInputField}
@@ -253,6 +251,8 @@ const UniversalInput = (props: any) => {
               {numbered ? 'Numbered' : 'Unnumbered'}
             </button>
           </div>
+        ) : (
+          <div className="w-auto" />
         )}
         <div className="flex items-center w-auto">
           <Buttons
