@@ -93,13 +93,13 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
   const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
 
   const getStudentData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
+    // const user = await Auth.currentAuthenticatedUser();
+    // const studentAuthId = user.username;
 
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId},
+          studentAuthID: {eq: studentAuthID},
           hasExerciseData: {eq: true},
         },
       };
@@ -199,9 +199,9 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
   // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
   const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
     id: '',
-    studentID: state.user.authId,
-    studentAuthID: state.user.authId,
-    studentEmail: state.user.studentEmail,
+    studentID: studentAuthID,
+    studentAuthID: studentAuthID,
+    studentEmail: studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
     shared: false,
