@@ -33,21 +33,22 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const history = useHistory();
   const cancelButtonRef = useRef();
   const [showAlert, setShowAlert] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(role === 'ADM' || role === 'BLD');
   const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
-  const [instListLoading, setInstListLoading] = useState(true);
+  const [instListLoading, setInstListLoading] = useState(
+    role === 'ADM' || role === 'BLD'
+  );
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
     title: 'Institution Setup',
   });
-  const [completedSections, setCompletedSections] = useState([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
   const [institutionList, setInstitutionList] = useState<any>([]);
 
   const data: any = {
     title: 'root',
     children: [
-      {
+      (role === 'ADM' || role === 'BLD') && {
         title: `Institution Setup`,
         type: 'menu',
         id: 'inst',
@@ -106,7 +107,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_learning_objectives',
-                redirectionUrl: `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`,
+                redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular?id={curriculumId}`,
               },
               {
                 title: 'Create Units',
@@ -124,7 +125,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   },
                 ],
                 id: 'inst_curriculum_units',
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular?id={curriculumId}&tab=1`,
               },
               {
                 title: 'Demographics & Information',
@@ -143,21 +144,21 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Class Details',
                 type: 'list',
                 id: 'inst_classroom_class_detail',
-                redirectionUrl: `/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}`,
+                redirectionUrl: `/dashboard/manage-institutions/room-edit?id={roomId}&step=overview`,
               },
               {
                 title: 'Unit Planner',
                 type: 'list',
                 children: [],
                 id: 'inst_classroom_unit_planner',
-                // redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular?id={curriculumId}`,
+                redirectionUrl: `/dashboard/manage-institutions/room-edit?id={roomId}&step=unit-planner`,
               },
               {
                 title: 'Class Dynamics (Optional)',
                 type: 'list',
                 id: 'inst_curriculum_class_dynamics',
                 children: [],
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/manage-institutions/room-edit?id={roomId}&step=class-dynamics`,
               },
             ],
             id: 'inst_classroom',
@@ -165,7 +166,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           },
         ],
       },
-      {
+      (role === 'ADM' || role === 'BLD') && {
         title: `Lesson Builder`,
         type: 'menu',
         id: 'lesson_builder',
@@ -195,7 +196,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 id: 'lesson_builder_overview',
                 children: [],
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/add`,
               },
               {
                 title: 'Activities',
@@ -206,16 +207,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'Lesson Planner',
                     type: 'list',
                     id: 'lesson_builder_activities_lesson_planner',
-                    redirectionUrl: `/dashboard/lesson-builder`,
+                    redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=activities`,
                   },
                   {
                     title: 'Overlay',
                     type: 'list',
                     id: 'lesson_builder_activities_overlay',
-                    redirectionUrl: `/dashboard/lesson-builder`,
+                    redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=activities`,
                   },
                 ],
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=activities`,
               },
               {
                 title: 'Lesson Plan Builder',
@@ -226,13 +227,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'Blocks & Components',
                     type: 'list',
                     id: 'lesson_builder_plan_block_and_component',
-                    redirectionUrl: `/dashboard/lesson-builder`,
+                    redirectionUrl: `/dashboard/lesson-builder/lesson/page-builder?lessonId={lessonId}&pageId={pageId}`,
                   },
                   {
                     title: 'Lesson Plan Manager',
                     type: 'list',
                     id: 'lesson_builder_plan_manager',
-                    redirectionUrl: `/dashboard/lesson-builder`,
+                    redirectionUrl: `/dashboard/lesson-builder/lesson/page-builder?lessonId={lessonId}&pageId={pageId}`,
                   },
                   {
                     title: 'Homework & Challenges (Coming Soon)',
@@ -248,21 +249,21 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 id: 'lesson_builder_courses',
                 children: [],
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=courses`,
               },
               {
                 title: 'Learning Evidence',
                 type: 'list',
                 id: 'lesson_builder_learning_evidence',
                 children: [],
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=learning-evidence`,
               },
             ],
             redirectionUrl: `/dashboard/lesson-builder`,
           },
         ],
       },
-      {
+      (role === 'ADM' || role === 'BLD') && {
         title: `Service Provider`,
         type: 'menu',
         id: 'service_provider',
@@ -271,18 +272,18 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Provide service to another organization',
             type: 'list',
             id: 'service_provider_provide_service',
-            redirectionUrl: `/dashboard/lesson-builder`,
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
           },
           {
             title: 'Request service from another organization',
             type: 'list',
             id: 'service_provider_request_service',
-            redirectionUrl: `/dashboard/lesson-builder`,
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
           },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
       },
-      {
+      (role === 'ADM' || role === 'BLD') && {
         title: `Research & Analytics`,
         type: 'menu',
         id: 'research_and_analytics',
@@ -296,21 +297,132 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         ],
         redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
-      // {
-      //   title: 'Live Classroom',
-      //   type: 'menu',
-      //   id: 'research_and_analytics',
-      //   children: [
-      //     {
-      //       title: 'Survey Download',
-      //       type: 'list',
-      //       id: 'research_and_analytics_survey_download',
-      //       redirectionUrl: `/dashboard/csv`,
-      //     },
-      //   ],
-      //   redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
-      // },
-    ],
+      (role === 'FLW' || role === 'TR') && {
+        title: 'Live Classroom',
+        type: 'list',
+        id: 'live_classroom',
+        children: [
+          {
+            title: 'Roster',
+            type: 'list',
+            id: 'live_classroom_roaster',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'Lesson Pace Setter',
+            type: 'list',
+            id: 'live_classroom_lesson_pace_SEtter',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'View Student Page',
+            type: 'list',
+            id: 'live_classroom_view_student_page',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'Share Student Page',
+            type: 'list',
+            id: 'live_classroom_student_share_page',
+            redirectionUrl: `/dashboard/csv`,
+          },
+        ],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+      (role === 'FLW' || role === 'TR') && {
+        title: 'Student Profile',
+        type: 'list',
+        id: 'live_classroom',
+        children: [
+          {
+            title: 'Demographics & Information',
+            type: 'list',
+            id: 'live_classroom_roaster',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'Attendance',
+            type: 'list',
+            id: 'live_classroom_lesson_pace_SEtter',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'Notebooks',
+            type: 'list',
+            id: 'live_classroom_view_student_page',
+            redirectionUrl: `/dashboard/csv`,
+          },
+        ],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+      role === 'ST' && {
+        title: 'Dashboard',
+        type: 'list',
+        id: 'dashboard',
+        children: [],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+      role === 'ST' && {
+        title: 'Live Classroom',
+        type: 'list',
+        id: 'live_classroom',
+        children: [
+          {
+            title: 'Survey Download',
+            type: 'list',
+            id: 'research_and_analytics_survey_download',
+            redirectionUrl: `/dashboard/csv`,
+          },
+        ],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+      role === 'ST' && {
+        title: 'Notebooks',
+        type: 'menu',
+        id: 'notebooks',
+        children: [
+          {
+            title: 'Class Notebooks',
+            type: 'list',
+            id: 'class_notebooks',
+            redirectionUrl: `/dashboard/csv`,
+          },
+          {
+            title: 'Private Notebooks',
+            type: 'menu',
+            id: 'private_notebooks',
+            children: [
+              {
+                title: 'Sentiment Tracking',
+                type: 'list',
+                id: 'class_notebooks',
+                redirectionUrl: `/dashboard/csv`,
+              },
+              {
+                title: 'Class work',
+                type: 'list',
+                id: 'class_notebooks',
+                redirectionUrl: `/dashboard/csv`,
+              },
+              {
+                title: 'Class notes',
+                type: 'list',
+                id: 'class_notebooks',
+                redirectionUrl: `/dashboard/csv`,
+              },
+              {
+                title: 'Attachments',
+                type: 'list',
+                id: 'class_notebooks',
+                redirectionUrl: `/dashboard/csv`,
+              },
+            ],
+            redirectionUrl: `/dashboard/csv`,
+          },
+        ],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+    ].filter(Boolean),
   };
 
   useEffect(() => {
@@ -379,38 +491,56 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     redirectionUrl: string;
     title: string;
   }) => {
+    setSectionDetailsLoading(true);
     setLocalStorageData('active_step_section', section);
-    setCompletedSections((prevSections) => [...prevSections, section]);
-    setActiveSection((prevSection: any) => ({
-      ...prevSection,
-      ...section,
-    }));
+    // setActiveSection((prevSection: any) => ({
+    //   ...prevSection,
+    //   ...section,
+    // }));
 
     if (selectedInstitution?.institution?.id) {
-      if (section.redirectionUrl) {
-        history.push(
-          `${section.redirectionUrl?.replace(
-            '{institutionId}',
-            selectedInstitution?.institution?.id
-          )}`
-        );
-      }
+      // if (section.redirectionUrl) {
+      //   history.push(
+      //     `${section.redirectionUrl?.replace(
+      //       '{institutionId}',
+      //       selectedInstitution?.institution?.id
+      //     )}`
+      //   );
+      // }
     } else {
       setShowAlert(true);
     }
     const data = await fetchDataOfActiveSection(
       section.id,
-      selectedInstitution?.institution?.id
+      selectedInstitution?.institution?.id,
+      section.redirectionUrl
     );
+    setSectionDetailsLoading(false);
     setActiveSection((prevSection: any) => ({
-      ...prevSection,
+      ...section,
       data: {...prevSection.data, ...data},
     }));
   };
 
-  const fetchDataOfActiveSection = async (id: string, instId: string) => {
-    console.log(id, 'id in fetchDataOfActiveSection');
+  const redirectToSelectedSection = (redirectionUrl: string, replaceObject?: any) => {
+    let url = redirectionUrl;
+    for (const key in replaceObject) {
+      if (replaceObject.hasOwnProperty(key)) {
+        const val = replaceObject[key];
+        url = url.replace(new RegExp(`{${key}}`, 'g'), val);
+      }
+    }
+    history.push(url);
+  };
 
+  const fetchDataOfActiveSection = async (
+    id: string,
+    instId: string,
+    redirectionUrl?: string
+  ) => {
+    let replaceObject: any = {
+      institutionId: selectedInstitution?.institution?.id,
+    };
     switch (id) {
       case 'inst_general_info': {
         try {
@@ -420,6 +550,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 id: instId,
               })
             );
+            if (redirectionUrl) {
+              redirectToSelectedSection(redirectionUrl, replaceObject);
+            }
             return result?.data.getInstitution;
           }
           return null;
@@ -441,6 +574,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 },
               })
             );
+            if (redirectionUrl) {
+              redirectToSelectedSection(redirectionUrl, replaceObject);
+            }
             return {
               staff: result.data.listStaffs.items.filter(
                 (member: any) => member.staffMember.role === 'TR'
@@ -489,8 +625,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               curriculums = result.data?.getInstitution?.curricula.items;
             }
 
-            console.log(curriculums, 'curriculums++++');
-
             if (curriculums?.length) {
               const filter = {
                 or: curriculums.map((curriculum: any) => ({
@@ -518,7 +652,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 })
               );
               rubrics = rubrics?.data?.listRubrics?.items || [];
-              console.log(rubrics, 'rubrics');
+              if (redirectionUrl) {
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  curriculumId: curriculums[0].id,
+                });
+              }
               return {
                 curriculum: curriculums,
                 learningObjectives,
@@ -526,6 +665,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 rubrics,
               };
             }
+            redirectToSelectedSection(
+              '/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}'
+            );
           }
           return null;
         } catch (error) {
@@ -542,8 +684,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               );
               curriculums = result.data?.getInstitution?.curricula.items;
             }
-            console.log(curriculums, 'curriculums++++');
-
             if (curriculums?.length) {
               const filter = {
                 or: curriculums.map((curriculum: any) => ({
@@ -557,9 +697,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 })
               );
               universalSyllabus = universalSyllabus?.data?.listUniversalSyllabuss?.items;
-              console.log(universalSyllabus, 'universalSyllabus***********');
+              if (redirectionUrl) {
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  curriculumId: curriculums[0].id,
+                });
+              }
               return {universalSyllabus};
             }
+            redirectToSelectedSection(
+              '/dashboard/manage-institutions/institution/curricular-creation?id={institutionId}'
+            );
           }
         } catch (error) {
           console.log(error, 'error');
@@ -574,12 +722,20 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 filter: {institutionID: {eq: instId}},
               })
             );
-            console.log(
-              instId,
-              result.data?.listRooms?.items,
-              'result.data?.listRooms?.items'
-            );
-
+            const rooms = result.data?.listRooms?.items;
+            if (redirectionUrl) {
+              if (rooms.length) {
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  roomId: rooms[0].id,
+                });
+              }else{
+                redirectToSelectedSection(
+                  '/dashboard/manage-institutions/institution/room-creation?id=${institutionId}',
+                  replaceObject
+                );
+              }
+            }
             return {classRooms: result.data?.listRooms?.items};
           }
         } catch (error) {
@@ -593,13 +749,57 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       case 'lesson_builder_plan_block_and_component':
       case 'lesson_builder_overview': {
         try {
-          if (instId && !activeSection?.data?.universalLessons?.length) {
+          let universalLessons = activeSection?.data?.universalLessons?.length;
+          if (instId && !universalLessons?.length) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
                 filter: {institutionID: {eq: instId}},
               })
             );
-            return {universalLessons: result.data?.listUniversalLessons?.items};
+            universalLessons = result.data?.listUniversalLessons?.items;
+            if (redirectionUrl) {
+              if (universalLessons.length) {
+                const lessonPlanWithBlock = universalLessons?.find((lesson: any) =>
+                  lesson.lessonPlan?.find((plan: any) =>
+                    plan.pageContent?.find((page: any) => page?.partContent?.length)
+                  )
+                );
+                if (lessonPlanWithBlock) {
+                  replaceObject = {
+                    ...replaceObject,
+                    pageId: lessonPlanWithBlock.lessonPlan[0].id,
+                  };
+                }
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  lessonId: universalLessons[0].id,
+                });
+              } else {
+                redirectToSelectedSection('/dashboard/lesson-builder/lesson/add');
+              }
+            }
+            return {universalLessons};
+          }
+          if (redirectionUrl) {
+            if (universalLessons.length) {
+              const lessonPlanWithBlock = universalLessons?.find((lesson: any) =>
+                lesson.lessonPlan?.find((plan: any) =>
+                  plan.pageContent?.find((page: any) => page?.partContent?.length)
+                )
+              );
+              if (lessonPlanWithBlock) {
+                replaceObject = {
+                  ...replaceObject,
+                  pageId: lessonPlanWithBlock.lessonPlan[0].id,
+                };
+              }
+              redirectToSelectedSection(redirectionUrl, {
+                ...replaceObject,
+                lessonId: universalLessons[0].id,
+              });
+            } else {
+              redirectToSelectedSection('/dashboard/lesson-builder/lesson/add');
+            }
           }
         } catch (error) {
           console.log(error, 'error');
@@ -638,7 +838,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 isCourseAdded = Boolean(assignedSyllabi.length);
               }
             });
-            return {isCourseAdded};
+            if (universalLessonsList.length) {
+              redirectToSelectedSection(redirectionUrl, {
+                ...replaceObject,
+                lessonId: universalLessonsList[0].id,
+              });
+            } else {
+              redirectToSelectedSection('/dashboard/lesson-builder/lesson/add');
+            }
+            return {isCourseAdded, universalLessons: universalLessonsList};
           }
         } catch (error) {
           console.log(error, 'error');
@@ -667,10 +875,27 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 limit: 1,
               })
             );
-            return {lessonRubrics: result?.data?.listLessonRubricss?.items};
+            if (universalLessonsList.length) {
+              redirectToSelectedSection(redirectionUrl, {
+                ...replaceObject,
+                lessonId: universalLessonsList[0].id,
+              });
+            } else {
+              redirectToSelectedSection('/dashboard/lesson-builder/lesson/add');
+            }
+            return {
+              lessonRubrics: result?.data?.listLessonRubricss?.items,
+              universalLessons: universalLessonsList,
+            };
           }
         } catch (error) {
           console.log(error, 'error');
+        }
+      }
+      case 'service_provider_provide_service':
+      case 'service_provider_request_service': {
+        if (redirectionUrl) {
+          redirectToSelectedSection(redirectionUrl, replaceObject);
         }
       }
     }
@@ -740,7 +965,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   1. Add Your Institution's Avatar
@@ -1121,7 +1346,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
+                      activeSection?.data?.classRooms?.length
+                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=overview`
+                        : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   1. Enter classroom name, select curriculum, select teachers &
@@ -1149,8 +1376,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() =>
                     history.push(
                       activeSection?.data?.classRooms?.length
-                        ? `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
-                        : `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=overview`
+                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=unit-planner`
+                        : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
                     )
                   }>
                   1. Set up schedule details
@@ -1168,7 +1395,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.classRooms?.length
+                        ? `dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=class-dynamics`
+                        : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`
+                    )
+                  }>
                   2. Add any details which impact the schedule
                 </span>
                 {progressIndicator(false)}
@@ -1218,12 +1451,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
-                  1. Click Create New Lesson from scratch
+                  onClick={() => history.push(`/dashboard/lesson-builder`)}>
+                  1. Click Create New Lesson button
                 </span>
                 {progressIndicator(activeSection?.data?.universalLessons?.length)}
               </div>
-              <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div>
+              {/* <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div> */}
             </div>
             {/* <div className="mb-4">
               <div className="text-base flex item-center">
@@ -1246,7 +1479,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(`/dashboard/lesson-builder/lesson/add`)}>
                   1. Enter the core details of your lesson
                 </span>
                 {progressIndicator(activeSection?.data?.universalLessons?.length)}
@@ -1270,7 +1503,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(`/dashboard/lesson-builder/lesson/add`)}>
                   2. Create a lesson card for your classroom page
                 </span>
               </div>
@@ -1283,7 +1516,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(`/dashboard/lesson-builder/lesson/add`)}>
                   3. List any materials for instructor and/or participant to bring for the
                   lesson
                 </span>
@@ -1364,8 +1597,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               plan.pageContent?.find((page: any) => page?.partContent?.length)
             )
         );
-        console.log(lessonPlanWithBlock, 'lessonPlanWithBlocklessonPlanWithBlock');
-
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1472,7 +1703,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.universalLessons?.length
+                        ? `/dashboard/lesson-builder/lesson/edit?lessonId=${activeSection?.data?.universalLessons[0].id}&step=courses`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
                   Click Add Lesson to Syllabus button
                 </span>
                 {progressIndicator(activeSection?.data?.isCourseAdded)}
@@ -1490,7 +1727,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.universalLessons?.length
+                        ? `/dashboard/lesson-builder/lesson/edit?lessonId=${activeSection?.data?.universalLessons[0].id}&step=learning-evidence`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
                   Check all learning evidences which are applicable for each selected
                   curriculum
                 </span>
@@ -1508,7 +1751,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}&tab=3`
                     )
                   }>
                   Toggle service provider to be true
@@ -1530,7 +1773,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}&tab=3`
                     )
                   }>
                   Select service provider from list
