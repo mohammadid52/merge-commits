@@ -598,7 +598,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           upImg={imageData}
           cardLayout
           customCropProps={{x: 25, y: 25, width: 384, height: 180}}
-          locked
+          locked={false}
           imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
