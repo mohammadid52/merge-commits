@@ -14176,8 +14176,6 @@ export const onCreatePersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14185,6 +14183,10 @@ export const onCreatePersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+      }
       createdAt
       updatedAt
     }
@@ -14196,8 +14198,6 @@ export const onUpdatePersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14205,6 +14205,10 @@ export const onUpdatePersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+      }
       createdAt
       updatedAt
     }
@@ -14216,8 +14220,6 @@ export const onDeletePersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14225,6 +14227,10 @@ export const onDeletePersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+      }
       createdAt
       updatedAt
     }

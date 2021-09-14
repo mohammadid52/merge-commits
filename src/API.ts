@@ -4195,8 +4195,6 @@ export type CreatePersonFilesInput = {
   id?: string | null,
   personAuthID: string,
   personEmail: string,
-  fileName: string,
-  fileKey: string,
   uploadedAt?: string | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -4204,11 +4202,17 @@ export type CreatePersonFilesInput = {
   syllabusLessonID?: string | null,
   lessonType?: string | null,
   roomID?: string | null,
+  files?: Array< FileInput | null > | null,
+};
+
+export type FileInput = {
+  fileName: string,
+  fileKey: string,
 };
 
 export type ModelPersonFilesConditionInput = {
-  fileName?: ModelStringInput | null,
-  fileKey?: ModelStringInput | null,
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
   uploadedAt?: ModelStringInput | null,
   feedbacks?: ModelStringInput | null,
   shared?: ModelBooleanInput | null,
@@ -4226,8 +4230,6 @@ export type PersonFiles = {
   id?: string,
   personAuthID?: string,
   personEmail?: string,
-  fileName?: string,
-  fileKey?: string,
   uploadedAt?: string | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -4235,16 +4237,21 @@ export type PersonFiles = {
   syllabusLessonID?: string | null,
   lessonType?: string | null,
   roomID?: string | null,
+  files?:  Array<File | null > | null,
   createdAt?: string,
   updatedAt?: string,
 };
 
+export type File = {
+  __typename: "File",
+  fileName?: string,
+  fileKey?: string,
+};
+
 export type UpdatePersonFilesInput = {
-  id?: string | null,
-  personAuthID: string,
-  personEmail: string,
-  fileName?: string | null,
-  fileKey?: string | null,
+  id: string,
+  personAuthID?: string | null,
+  personEmail?: string | null,
   uploadedAt?: string | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -4252,11 +4259,11 @@ export type UpdatePersonFilesInput = {
   syllabusLessonID?: string | null,
   lessonType?: string | null,
   roomID?: string | null,
+  files?: Array< FileInput | null > | null,
 };
 
 export type DeletePersonFilesInput = {
-  personEmail: string,
-  personAuthID: string,
+  id: string,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -5189,8 +5196,6 @@ export type ModelPersonFilesFilterInput = {
   id?: ModelIDInput | null,
   personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
-  fileName?: ModelStringInput | null,
-  fileKey?: ModelStringInput | null,
   uploadedAt?: ModelStringInput | null,
   feedbacks?: ModelStringInput | null,
   shared?: ModelBooleanInput | null,
@@ -21684,8 +21689,6 @@ export type CreatePersonFilesMutation = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -21693,6 +21696,11 @@ export type CreatePersonFilesMutation = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21709,8 +21717,6 @@ export type UpdatePersonFilesMutation = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -21718,6 +21724,11 @@ export type UpdatePersonFilesMutation = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21734,8 +21745,6 @@ export type DeletePersonFilesMutation = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -21743,6 +21752,11 @@ export type DeletePersonFilesMutation = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -29032,8 +29046,7 @@ export type ListPersonSentimentssQuery = {
 };
 
 export type GetPersonFilesQueryVariables = {
-  personEmail?: string,
-  personAuthID?: string,
+  id?: string,
 };
 
 export type GetPersonFilesQuery = {
@@ -29042,8 +29055,6 @@ export type GetPersonFilesQuery = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -29051,14 +29062,18 @@ export type GetPersonFilesQuery = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type ListPersonFilessQueryVariables = {
-  personEmail?: string | null,
-  personAuthID?: ModelStringKeyConditionInput | null,
+  id?: string | null,
   filter?: ModelPersonFilesFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
@@ -29073,8 +29088,6 @@ export type ListPersonFilessQuery = {
       id: string,
       personAuthID: string,
       personEmail: string,
-      fileName: string,
-      fileKey: string,
       uploadedAt?: string | null,
       feedbacks?: Array< string | null > | null,
       shared?: boolean | null,
@@ -29082,6 +29095,11 @@ export type ListPersonFilessQuery = {
       syllabusLessonID?: string | null,
       lessonType?: string | null,
       roomID?: string | null,
+      files?:  Array< {
+        __typename: "File",
+        fileName: string,
+        fileKey: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -44954,8 +44972,6 @@ export type OnCreatePersonFilesSubscription = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -44963,6 +44979,11 @@ export type OnCreatePersonFilesSubscription = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44974,8 +44995,6 @@ export type OnUpdatePersonFilesSubscription = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -44983,6 +45002,11 @@ export type OnUpdatePersonFilesSubscription = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44994,8 +45018,6 @@ export type OnDeletePersonFilesSubscription = {
     id: string,
     personAuthID: string,
     personEmail: string,
-    fileName: string,
-    fileKey: string,
     uploadedAt?: string | null,
     feedbacks?: Array< string | null > | null,
     shared?: boolean | null,
@@ -45003,6 +45025,11 @@ export type OnDeletePersonFilesSubscription = {
     syllabusLessonID?: string | null,
     lessonType?: string | null,
     roomID?: string | null,
+    files?:  Array< {
+      __typename: "File",
+      fileName: string,
+      fileKey: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
