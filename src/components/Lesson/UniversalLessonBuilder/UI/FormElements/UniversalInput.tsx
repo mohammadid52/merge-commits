@@ -137,6 +137,8 @@ const UniversalInput = (props: any) => {
     setUnsavedChanges(false);
   };
 
+  const hideBtns = selectedForm === ATTACHMENTS;
+
   return (
     <>
       <div>
@@ -234,22 +236,24 @@ const UniversalInput = (props: any) => {
         })}
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
-        <div className="flex items-center w-auto">
-          <button
-            onClick={addOneInputField}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-            + Add Field
-          </button>
-          <button
-            onClick={() => setNumbered(!numbered)}
-            className={`${
-              numbered
-                ? 'border-indigo-500 text-white bg-indigo-400'
-                : 'border-gray-300 text-dark'
-            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Numbered' : 'Unnumbered'}
-          </button>
-        </div>
+        {hideBtns && (
+          <div className="flex items-center w-auto">
+            <button
+              onClick={addOneInputField}
+              className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+              + Add Field
+            </button>
+            <button
+              onClick={() => setNumbered(!numbered)}
+              className={`${
+                numbered
+                  ? 'border-indigo-500 text-white bg-indigo-400'
+                  : 'border-gray-300 text-dark'
+              } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+              {numbered ? 'Numbered' : 'Unnumbered'}
+            </button>
+          </div>
+        )}
         <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
