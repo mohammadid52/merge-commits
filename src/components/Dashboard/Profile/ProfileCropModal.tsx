@@ -15,6 +15,7 @@ interface ProfileCropModalProps {
   imageClassName?: string;
   customCropProps?: {[key: string]: any};
   locked?: boolean;
+  cardLayout?: boolean;
 }
 
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (
@@ -25,6 +26,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
     customCropProps,
     locked = false,
     imageClassName,
+    cardLayout = false,
     saveCroppedImage,
     closeAction,
   } = props;
@@ -86,20 +88,45 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
       title={'Preview image'}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="mx-auto mb-5  max-w-256 w-132  overflow-hidden">
+      <div className="mx-auto mb-5  max-w-256 w-140  overflow-hidden">
         <AnimatedContainer show={!showCropper}>
           {!showCropper && (
             <div className="flex flex-col p-2 w-auto">
-              <div className="flex items-center gap-x-6 w-auto">
-                <img
-                  src={upImg}
-                  className={
-                    imageClassName ||
-                    'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
-                  }
-                />
-                <DummyContent />
-              </div>
+              {cardLayout ? (
+                <div
+                  className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 `}>
+                  {/**
+                   *  LEFT SECTION IMAGE
+                   */}
+
+                  <div
+                    className={`w-full md:h-56 h-48   rounded-tl rounded-bl shadow`}
+                    style={{
+                      /* stylelint-disable */
+                      backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${upImg})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}></div>
+
+                  {/**
+                   *  RIGHT SECTION
+                   */}
+                  <div className={`w-full md:w-7.5/10 ml-4 flex flex-col rounded-b`}>
+                    <DummyContent />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-x-6 w-auto">
+                  <img
+                    src={upImg}
+                    className={
+                      imageClassName ||
+                      'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
+                    }
+                  />
+                  <DummyContent />
+                </div>
+              )}
               <div>
                 <DummyContent />
               </div>

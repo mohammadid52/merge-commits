@@ -156,19 +156,6 @@ const LessonCard = ({
                   </div>
                 </div>
               </div>
-              {/* <div
-                className={classNames(
-                  imagePreviewUrl ? '' : 'min-w-56',
-                  'pr-3 py-5  mr-4'
-                )}>
-                <SideImage
-                  getImageFromS3={false}
-                  lessonProps={{id: '123', lesson: {cardImage: imagePreviewUrl}}}
-                />
-              </div>
-              <div className="">
-                
-              </div> */}
             </>
           )}
         </AnimatedContainer>
