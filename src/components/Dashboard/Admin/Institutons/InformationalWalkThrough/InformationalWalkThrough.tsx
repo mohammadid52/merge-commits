@@ -296,6 +296,20 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         ],
         redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
+      // {
+      //   title: 'Live Classroom',
+      //   type: 'menu',
+      //   id: 'research_and_analytics',
+      //   children: [
+      //     {
+      //       title: 'Survey Download',
+      //       type: 'list',
+      //       id: 'research_and_analytics_survey_download',
+      //       redirectionUrl: `/dashboard/csv`,
+      //     },
+      //   ],
+      //   redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      // },
     ],
   };
 
@@ -612,26 +626,19 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             );
             const curriculums = list.data?.listCurriculums?.items;
             const lessonIds = universalLessonsList?.map((lesson: any) => lesson.id);
+            let isCourseAdded = false;
             curriculums.map((curriculum: any) => {
-              const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-                (syllabus: any) =>
-                  syllabus.lessons?.items.filter((lesson: any) =>
-                    lessonIds.include(lesson.lessonID)
-                  ).length
-              );
-              console.log(assignedSyllabi, 'assignedSyllabi');
-
-              const isCourseAdded = Boolean(assignedSyllabi.length);
-              // if (isCourseAdded) {
-              //   selectedCurriculums.push({
-              //     ...curriculum,
-              //     assignedSyllabi,
-              //     // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-              //     assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
-              //   });
-              // }
+              if (!isCourseAdded) {
+                const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+                  (syllabus: any) =>
+                    syllabus.lessons?.items.filter((lesson: any) =>
+                      lessonIds.includes(lesson.lessonID)
+                    ).length
+                );
+                isCourseAdded = Boolean(assignedSyllabi.length);
+              }
             });
-            // return {lessonRubrics: result?.data?.listLessonRubricss?.items};
+            return {isCourseAdded};
           }
         } catch (error) {
           console.log(error, 'error');
@@ -1468,6 +1475,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   Click Add Lesson to Syllabus button
                 </span>
+                {progressIndicator(activeSection?.data?.isCourseAdded)}
               </div>
               <div className="my-1 ml-3 italic">
                 Add lesson to one or more curriculum and units
