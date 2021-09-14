@@ -16,6 +16,7 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import {FORM_TYPES} from '../common/constants';
 import {getImageFromS3Static} from '../../../../../utilities/services';
 import {removeExtension} from '../../../../../utilities/functions';
+import {UPLOAD_KEYS} from '../../../constants';
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -56,7 +57,7 @@ const deletImageFromS3 = (key: string) => {
   });
 };
 
-const UPLOAD_KEY = 'ULB/teachers_upload/';
+const UPLOAD_KEY = UPLOAD_KEYS.TEACHER_UPLOAD;
 
 const File = ({
   _status,
