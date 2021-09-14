@@ -14,6 +14,7 @@ import {getLocalStorageData} from '../../../../../../utilities/localStorage';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import DroppableMedia from '../../../../../Molecules/DroppableMedia';
 import {classNames} from '../../../../../Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import SideImage from '../../../../../Dashboard/Classroom/LessonCards/StandardLessonCard/SideImage';
 
 interface ILessonCard {
   validation: any;
@@ -83,73 +84,91 @@ const LessonCard = ({
           {onSetupTab && (
             <>
               <div
-                className={classNames(
-                  imagePreviewUrl ? '' : 'min-w-56',
-                  'pr-3 py-5 w-1/4 mr-4'
-                )}>
-                <button className=" cursor-pointer  justify-center group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center">
-                  <DroppableMedia
-                    className="w-full"
-                    mediaRef={imageRef}
-                    setImage={(img: any, file: any) => {
-                      setImage(img);
-                      setFileObj(file);
-                    }}
-                    toggleCropper={toggleCropper}>
-                    {imagePreviewUrl ? (
-                      <img
-                        onClick={handleImage}
-                        className={`profile w-50 bg-center bg-cover h-60 md:w-full  border-0 border-gray-400 rounded-lg customShadow`}
-                        src={imagePreviewUrl}
-                      />
-                    ) : (
-                      <div
-                        onClick={handleImage}
-                        className={`profile justify-center align-center items-center content-center w-50 h-60 md:w-50 md:h-60 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
-                        <IoCamera className="fill-current text-gray-80" size={32} />
-                      </div>
-                    )}
-                  </DroppableMedia>
-                </button>
-              </div>
-              <div className="col-span-2 w-3/4">
-                <div className="pr-8 pt-5">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
-                    {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
-                    <span className="text-red-500"> * </span>
-                  </label>
-                  <FormInput
-                    value={imageCaption}
-                    id="imageCaption"
-                    onChange={onInputChange}
-                    name="imageCaption"
-                    maxLength={25}
-                  />
-                  {validation.imageCaption && (
-                    <p className="text-red-600 text-sm">{validation.imageCaption}</p>
+                className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 `}>
+                {/**
+                 *  LEFT SECTION IMAGE
+                 */}
+                <DroppableMedia
+                  className="w-full md:h-56 h-48 sm:w-2.5/10  rounded-tl rounded-bl shadow"
+                  mediaRef={imageRef}
+                  setImage={(img: any, file: any) => {
+                    setImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}>
+                  {imagePreviewUrl ? (
+                    <div
+                      onClick={handleImage}
+                      className={`w-full md:h-56 h-48   rounded-tl rounded-bl shadow`}
+                      style={{
+                        /* stylelint-disable */
+                        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${imagePreviewUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}></div>
+                  ) : (
+                    <div
+                      onClick={handleImage}
+                      className={`profile justify-center align-center items-center content-center w-50 h-60 md:w-50 md:h-60 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      <IoCamera className="fill-current text-gray-80" size={32} />
+                    </div>
                   )}
-                  <div className="text-right text-gray-400">
-                    {imageCaption.length} of 25
+                </DroppableMedia>
+                {/**
+                 *  RIGHT SECTION
+                 */}
+                <div className={`w-full md:w-7.5/10 ml-4 flex flex-col rounded-b`}>
+                  <div className="pr-8 pt-5">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
+                      {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <FormInput
+                      value={imageCaption}
+                      id="imageCaption"
+                      onChange={onInputChange}
+                      name="imageCaption"
+                      maxLength={25}
+                    />
+                    {validation.imageCaption && (
+                      <p className="text-red-600 text-sm">{validation.imageCaption}</p>
+                    )}
+                    <div className="text-right text-gray-400">
+                      {imageCaption.length} of 25
+                    </div>
+                  </div>
+
+                  <div className="pr-8 pt-1">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                      {AddNewLessonFormDict[userLanguage]['SUMMARY']}
+                      <span className="text-red-500"> *</span>
+                    </label>
+                    <TextArea
+                      rows={5}
+                      id="studentSummary"
+                      value={studentSummary}
+                      onChange={onInputChange}
+                      name="studentSummary"
+                      maxLength={500}
+                      showCharacterUsage
+                      error={validation.studentSummary}
+                    />
                   </div>
                 </div>
-
-                <div className="pr-8 pt-1">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                    {AddNewLessonFormDict[userLanguage]['SUMMARY']}
-                    <span className="text-red-500"> *</span>
-                  </label>
-                  <TextArea
-                    rows={5}
-                    id="studentSummary"
-                    value={studentSummary}
-                    onChange={onInputChange}
-                    name="studentSummary"
-                    maxLength={500}
-                    showCharacterUsage
-                    error={validation.studentSummary}
-                  />
-                </div>
               </div>
+              {/* <div
+                className={classNames(
+                  imagePreviewUrl ? '' : 'min-w-56',
+                  'pr-3 py-5  mr-4'
+                )}>
+                <SideImage
+                  getImageFromS3={false}
+                  lessonProps={{id: '123', lesson: {cardImage: imagePreviewUrl}}}
+                />
+              </div>
+              <div className="">
+                
+              </div> */}
             </>
           )}
         </AnimatedContainer>
