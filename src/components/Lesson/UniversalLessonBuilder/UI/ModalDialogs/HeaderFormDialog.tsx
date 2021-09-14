@@ -1,20 +1,23 @@
 import {Switch} from '@headlessui/react';
+// import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import {HeaderBlock} from '../../../UniversalLessonBlockComponents/Blocks/HeaderBlock';
-import ColorPicker from '../ColorPicker/ColorPicker';
-import {classNames} from '../FormElements/TextInput';
-import DummyContent from '../Preview/DummyContent';
-import PreviewLayout from '../Preview/Layout/PreviewLayout';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import Selector from '@atoms/Form/Selector';
+import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
+import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
+import {classNames} from '@UlbUI/FormElements/TextInput';
+import DummyContent from '@UlbUI/Preview/DummyContent';
+import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Tabs, {
+  useTabs,
+} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
