@@ -16,6 +16,7 @@ import * as mutations from '../../../../../graphql/mutations';
 import {getLocalStorageData} from '../../../../../utilities/localStorage';
 import {getImageFromS3} from '../../../../../utilities/services';
 import Modal from '../../../../Atoms/Modal';
+import {UPLOAD_KEYS} from '../../../constants';
 import {FormControlProps} from '../FormBlock';
 
 const btnClass = (color: string) =>
@@ -197,7 +198,7 @@ const AttachmentBlock = ({
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/studentdata_${id}`, file, {
+      Storage.put(`${UPLOAD_KEY}/${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
@@ -229,10 +230,12 @@ const AttachmentBlock = ({
 
   const lessonId = match.params?.lessonID;
 
-  const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
+  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonId);
 
   const onDrop = useCallback(async (acceptedFile) => {
-    uploadFile(acceptedFile);
+    // if (acceptedFile.length === 0) {
+    uploadFile(acceptedFile[0]);
+    // }
   }, []);
 
   const {authId, email} = user;

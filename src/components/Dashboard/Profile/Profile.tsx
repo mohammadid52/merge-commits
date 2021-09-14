@@ -338,7 +338,6 @@ const Profile = (props: ProfilePageProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const mediaRef = React.useRef(null);
-  const handleImage = () => mediaRef?.current?.click();
 
   if (status !== 'done') {
     return <LessonLoading />;
@@ -400,13 +399,11 @@ const Profile = (props: ProfilePageProps) => {
                               mediaRef={mediaRef}>
                               {imageUrl ? (
                                 <img
-                                  onClick={handleImage}
                                   className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                   src={imageUrl}
                                 />
                               ) : (
                                 <div
-                                  onClick={handleImage}
                                   className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                 />
                               )}
@@ -436,7 +433,7 @@ const Profile = (props: ProfilePageProps) => {
                           setFileObj(file);
                         }}
                         toggleCropper={toggleCropper}>
-                        <div onClick={handleImage} />
+                        <div />
                       </DroppableMedia>
                     </label>
                   )}

@@ -24,22 +24,24 @@ const SideImage = (props: LessonCardProps) => {
       }}>
       <div className="h-30 sm:h-7/10 flex justify-center items-center" />
 
-      <div className="">
-        {/* <div className="h-1/10 pl-6">
+      {lessonProps?.lesson?.cardCaption && (
+        <div className="">
+          {/* <div className="h-1/10 pl-6">
           <div
             className="tracking-widest text-center text-2xl md:text-lg text-gray-300"
             style={{textShadow: '1px 1px black'}}>
             {lessonProps?.lesson?.cardCaption}
           </div>
         </div> */}
-        <div className="h-14 flex flex-row-reverse">
-          <h2
-            className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest mb-2 mx-2 text-gray-200`}
-            style={{textShadow: '1px 1px black'}}>
-            {lessonProps?.lesson?.cardCaption}
-          </h2>
+          <div className="h-14 flex flex-row-reverse">
+            <h2
+              className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest mb-2 mx-2 text-gray-200`}
+              style={{textShadow: '1px 1px black'}}>
+              {lessonProps?.lesson?.cardCaption}
+            </h2>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

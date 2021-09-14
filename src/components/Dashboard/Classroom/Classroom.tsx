@@ -1,22 +1,18 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import isEmpty from 'lodash/isEmpty';
+import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import SurveyCard from './SurveyCard';
-import Today from './TodayLesson';
-import UpcomingLessons from './UpcomingLessons';
-import CompletedLessons from './CompletedLessons';
+import useDictionary from '../../../customHooks/dictionary';
+import * as mutations from '../../../graphql/mutations';
+import BreadCrums from '../../Atoms/BreadCrums';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
+import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
-import useDictionary from '../../../customHooks/dictionary';
-import {getAsset} from '../../../assets';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import BreadCrums from '../../Atoms/BreadCrums';
-import DashboardContainer from '../DashboardContainer';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../../graphql/mutations';
+import Today from './TodayLesson';
 
 interface Artist {
   id: string;

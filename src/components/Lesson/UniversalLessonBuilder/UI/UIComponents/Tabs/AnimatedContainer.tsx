@@ -11,8 +11,8 @@ const AnimatedContainer = ({
   show: boolean;
   className?: string;
   children: React.ReactNode;
-  duration?: '150' | '200' | '300' | '500' | '700' | '1000';
-  animationType?: 'slider' | 'opacity' | 'scale' | 'translateY';
+  duration?: '150' | '200' | '300' | '500' | '700' | '1000' | string;
+  animationType?: 'slider' | 'opacity' | 'scale' | 'translateY' | string;
 }) => {
   const genAnimation = () => {
     switch (animationType) {
