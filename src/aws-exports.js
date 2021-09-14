@@ -13,14 +13,7 @@ const awsmobile = {
     "aws_appsync_authenticationType": "API_KEY",
     "aws_appsync_apiKey": "da2-7j4nhhaq7nbgrbt42zn6spmx5m",
     "aws_user_files_s3_bucket": "iconoclaststorage83444-uatenv",
-    "aws_user_files_s3_bucket_region": "us-east-1",
-    "aws_cloud_logic_custom": [
-        {
-            "name": "personapi",
-            "endpoint": "https://lmsesew1bl.execute-api.us-east-1.amazonaws.com/uatenv",
-            "region": "us-east-1"
-        }
-    ]
+    "aws_user_files_s3_bucket_region": "us-east-1"
 };
 
 

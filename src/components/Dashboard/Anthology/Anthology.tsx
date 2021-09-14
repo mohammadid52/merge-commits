@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEdit, FaSpinner} from 'react-icons/fa';
+import {FaSpinner} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -10,10 +10,8 @@ import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 
 import HeroBanner from '../../Header/HeroBanner';
-import WrittenContentTab from './WrittenContentTab';
 import {getAsset} from '../../../assets';
 import {
-  StudentExerciseData,
   UniversalJournalData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
