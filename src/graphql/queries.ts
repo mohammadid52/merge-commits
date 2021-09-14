@@ -6601,13 +6601,11 @@ export const listPersonSentimentss = /* GraphQL */ `
   }
 `;
 export const getPersonFiles = /* GraphQL */ `
-  query GetPersonFiles($personEmail: String!, $personAuthID: String!) {
-    getPersonFiles(personEmail: $personEmail, personAuthID: $personAuthID) {
+  query GetPersonFiles($id: ID!) {
+    getPersonFiles(id: $id) {
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -6615,6 +6613,11 @@ export const getPersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+      }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -6622,16 +6625,14 @@ export const getPersonFiles = /* GraphQL */ `
 `;
 export const listPersonFiless = /* GraphQL */ `
   query ListPersonFiless(
-    $personEmail: String
-    $personAuthID: ModelStringKeyConditionInput
+    $id: ID
     $filter: ModelPersonFilesFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
     listPersonFiless(
-      personEmail: $personEmail
-      personAuthID: $personAuthID
+      id: $id
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -6641,8 +6642,6 @@ export const listPersonFiless = /* GraphQL */ `
         id
         personAuthID
         personEmail
-        fileName
-        fileKey
         uploadedAt
         feedbacks
         shared
@@ -6650,6 +6649,11 @@ export const listPersonFiless = /* GraphQL */ `
         syllabusLessonID
         lessonType
         roomID
+        files {
+          fileName
+          fileKey
+        }
+        lessonPageID
         createdAt
         updatedAt
       }
