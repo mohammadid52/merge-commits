@@ -186,10 +186,78 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `/dashboard/lesson-builder`,
           },
           {
-            title: 'Overview',
+            title: 'Lesson Editor',
             type: 'menu',
-            id: 'lesson_builder_overview',
-            children: [],
+            id: 'lesson_builder_editor',
+            children: [
+              {
+                title: 'Overview',
+                type: 'list',
+                id: 'lesson_builder_overview',
+                children: [],
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+              {
+                title: 'Activities',
+                type: 'menu',
+                id: 'lesson_builder_activities',
+                children: [
+                  {
+                    title: 'Lesson Planner',
+                    type: 'list',
+                    id: 'lesson_builder_activities_lesson_planner',
+                    redirectionUrl: `/dashboard/lesson-builder`,
+                  },
+                  {
+                    title: 'Overlay',
+                    type: 'list',
+                    id: 'lesson_builder_activities_overlay',
+                    redirectionUrl: `/dashboard/lesson-builder`,
+                  },
+                ],
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+              {
+                title: 'Lesson Plan Builder',
+                type: 'menu',
+                id: 'lesson_builder_plan',
+                children: [
+                  {
+                    title: 'Blocks & Components',
+                    type: 'list',
+                    id: 'lesson_builder_plan_block_and_component',
+                    redirectionUrl: `/dashboard/lesson-builder`,
+                  },
+                  {
+                    title: 'Lesson Plan Manager',
+                    type: 'list',
+                    id: 'lesson_builder_plan_manager',
+                    redirectionUrl: `/dashboard/lesson-builder`,
+                  },
+                  {
+                    title: 'Homework & Challenges (Coming Soon)',
+                    type: 'list',
+                    id: 'lesson_builder_plan_homework_and_challenges',
+                    redirectionUrl: `/dashboard/lesson-builder`,
+                  },
+                ],
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+              {
+                title: 'Courses',
+                type: 'list',
+                id: 'lesson_builder_courses',
+                children: [],
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+              {
+                title: 'Learning Evidence',
+                type: 'list',
+                id: 'lesson_builder_learning_evidence',
+                children: [],
+                redirectionUrl: `/dashboard/lesson-builder`,
+              },
+            ],
             redirectionUrl: `/dashboard/lesson-builder`,
           },
         ],
@@ -197,7 +265,35 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       {
         title: `Service Provider`,
         type: 'menu',
-        id: 'institution',
+        id: 'service_provider',
+        children: [
+          {
+            title: 'Provide service to another organization',
+            type: 'list',
+            id: 'service_provider_provide_service',
+            redirectionUrl: `/dashboard/lesson-builder`,
+          },
+          {
+            title: 'Request service from another organization',
+            type: 'list',
+            id: 'service_provider_request_service',
+            redirectionUrl: `/dashboard/lesson-builder`,
+          },
+        ],
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+      },
+      {
+        title: `Research & Analytics`,
+        type: 'menu',
+        id: 'research_and_analytics',
+        children: [
+          {
+            title: 'Survey Download',
+            type: 'list',
+            id: 'research_and_analytics_survey_download',
+            redirectionUrl: `/dashboard/csv`,
+          },
+        ],
         redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
     ],
@@ -458,8 +554,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       case 'inst_classroom_unit_planner':
       case 'inst_classroom_class_detail': {
         try {
-          console.log('inside inst_classroom_class_detail');
-
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.listRoomsBasicDetails, {
@@ -478,15 +572,95 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           console.log(error, 'error');
         }
       }
-      case 'inst_curriculum_units_lesson_plan_manager': {
+      case 'inst_curriculum_units_lesson_plan_manager':
+      case 'lesson_builder_list_create_new_lesson':
+      case 'lesson_builder_activities_lesson_planner':
+      case 'lesson_builder_activities_overlay':
+      case 'lesson_builder_plan_block_and_component':
+      case 'lesson_builder_overview': {
         try {
-          if (instId) {
+          if (instId && !activeSection?.data?.universalLessons?.length) {
             const result: any = await API.graphql(
-              graphqlOperation(customQueries.listRoomsBasicDetails, {
+              graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
                 filter: {institutionID: {eq: instId}},
               })
             );
             return {universalLessons: result.data?.listUniversalLessons?.items};
+          }
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'lesson_builder_courses': {
+        try {
+          if (instId) {
+            let universalLessonsList = activeSection?.data?.universalLessons;
+            if (!universalLessonsList) {
+              const result: any = await API.graphql(
+                graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
+                  filter: {institutionID: {eq: instId}},
+                })
+              );
+              universalLessonsList = result.data?.listUniversalLessons?.items;
+            }
+            const list: any = await API.graphql(
+              graphqlOperation(customQueries.listCurriculumsForLessons, {
+                filter: {
+                  institutionID: {eq: instId},
+                },
+              })
+            );
+            const curriculums = list.data?.listCurriculums?.items;
+            const lessonIds = universalLessonsList?.map((lesson: any) => lesson.id);
+            curriculums.map((curriculum: any) => {
+              const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+                (syllabus: any) =>
+                  syllabus.lessons?.items.filter((lesson: any) =>
+                    lessonIds.include(lesson.lessonID)
+                  ).length
+              );
+              console.log(assignedSyllabi, 'assignedSyllabi');
+
+              const isCourseAdded = Boolean(assignedSyllabi.length);
+              // if (isCourseAdded) {
+              //   selectedCurriculums.push({
+              //     ...curriculum,
+              //     assignedSyllabi,
+              //     // : assignedSyllabi.map((syllabus: any) => syllabus.name),
+              //     assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+              //   });
+              // }
+            });
+            // return {lessonRubrics: result?.data?.listLessonRubricss?.items};
+          }
+        } catch (error) {
+          console.log(error, 'error');
+        }
+      }
+      case 'lesson_builder_learning_evidence': {
+        try {
+          if (instId) {
+            let universalLessonsList = activeSection?.data?.universalLessons;
+            if (!universalLessonsList) {
+              const result: any = await API.graphql(
+                graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
+                  filter: {institutionID: {eq: instId}},
+                })
+              );
+              universalLessonsList = result.data?.listUniversalLessons?.items;
+            }
+            const filter = {
+              or: universalLessonsList.map((lesson: any) => ({
+                lessonID: {eq: lesson.id},
+              })),
+            };
+            const result: any = await API.graphql(
+              graphqlOperation(customQueries.listLessonRubricss, {
+                filter,
+                limit: 1,
+              })
+            );
+            return {lessonRubrics: result?.data?.listLessonRubricss?.items};
           }
         } catch (error) {
           console.log(error, 'error');
@@ -1040,10 +1214,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Click Create New Lesson from scratch
                 </span>
+                {progressIndicator(activeSection?.data?.universalLessons?.length)}
               </div>
               <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
@@ -1054,7 +1229,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="my-1 ml-3 italic">
                 Click on the three dots under the Actions header to edit or clone a lesson
               </div>
-            </div>
+            </div> */}
           </div>
         );
       case 'lesson_builder_overview':
@@ -1067,8 +1242,22 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() => history.push(`/dashboard/registration`)}>
                   1. Enter the core details of your lesson
                 </span>
+                {progressIndicator(activeSection?.data?.universalLessons?.length)}
               </div>
-              <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div>
+              <div className="my-1 ml-3 italic">
+                a. a <b>lesson</b> is a list of activities for learning, a <b>survey</b>{' '}
+                are questions with no answer key and an <b> assessment </b> is a set of
+                questions that have an answer key.
+              </div>
+              <div className="my-1 ml-3 italic">
+                b. Duration is the number of time periods the lesson will be taught over.
+                Fractional times mean you will use two or more lesson blocks in one time
+                period.
+              </div>
+              <div className="my-1 ml-3 italic">
+                c. Institution is the organization who is the intellectual owner of the
+                material
+              </div>
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
@@ -1079,7 +1268,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Click on the tree dots under the Actions header to edit or clone a lesson
+                Materials has two tabs. One is a reminder for the educator, the second tab
+                is to notify participants if they need to bring materials to class.
               </div>
             </div>
             <div className="mb-4">
@@ -1092,7 +1282,269 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Click on the tree dots under the Actions header to edit or clone a lesson
+                Add an image, put some text over the image and provide a quick overview to
+                the lessons for the participants
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_activities_lesson_planner':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.universalLessons?.length
+                        ? `/dashboard/lesson-builder/lesson/edit?lessonId=${activeSection?.data?.universalLessons[0].id}&step=activities`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
+                  1. Click on Add New Class Activity button
+                </span>
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.filter(
+                    (lesson: any) => lesson.lessonPlan?.length
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_activities_overlay':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      activeSection?.data?.universalLessons?.length
+                        ? `/dashboard/lesson-builder/lesson/edit?lessonId=${activeSection?.data?.universalLessons[0].id}&step=activities`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
+                  1. Click on View icon on top right-hand corner of editor
+                </span>
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.filter(
+                    (lesson: any) => lesson.lessonPlan?.length
+                  )
+                )}
+              </div>
+              <div className="my-1 ml-3 italic">
+                a. First icon is to look at page in preview mode.
+              </div>
+              <div className="my-1 ml-3 italic">
+                b. Next icon is to copy or clone a page from another lesson.
+              </div>
+              <div className="my-1 ml-3 italic">
+                c. The next icon is to create a new page from scratch
+              </div>
+              <div className="my-1 ml-3 italic">
+                d. The last icon is to delete the page (can not be recovered)
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_plan_block_and_component': {
+        const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
+          (lesson: any) =>
+            lesson.lessonPlan?.find((plan: any) =>
+              plan.pageContent?.find((page: any) => page?.partContent?.length)
+            )
+        );
+        console.log(lessonPlanWithBlock, 'lessonPlanWithBlocklessonPlanWithBlock');
+
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      lessonPlanWithBlock
+                        ? `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonPlanWithBlock.id}&pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
+                        : `/dashboard/lesson-builder/lesson/add`
+                    )
+                  }>
+                  1. Click on Add New Block section
+                </span>
+                {progressIndicator(Boolean(lessonPlanWithBlock))}
+              </div>
+              <div className="my-1 ml-3 italic">
+                a. Text Content is information you are pushing to participants but do not
+                want a response from this content.
+              </div>
+              <div className="my-1 ml-3 italic">
+                b. Media are the various ways to interact with participants outside
+                written content
+              </div>
+              <div className="my-1 ml-3 italic">
+                c. User Interaction is content where you want a response or a participant
+                to create something in the activity
+              </div>
+              <div className="mt-3 italic">
+                A block is one or more components that create a single idea
+              </div>
+              <div className="italic">A component is a single unit of content</div>
+            </div>
+          </div>
+        );
+      }
+      case 'lesson_builder_plan_manager':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  1. Move your activities around so they are in the order you want to
+                  teach them and set the initial dark/light mode of your lessons
+                </span>
+              </div>
+              <div className="mt-1 ml-3 italic">
+                <b>Try this out: </b>
+              </div>
+              <div className="ml-3 italic">
+                1. Move an activity to a different order (you can always move it back)
+              </div>
+              <div className="my-1 ml-3 italic">
+                2. Click on the dark/light mode to see the different views of your lesson
+                plan (be sure to check this. Participants can change their views in the
+                classroom so make sure both views work for your class!)
+              </div>
+              <div className="my-3 ml-3 italic">
+                3. Create homework and challenges for lesson (coming soon)
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_plan_homework_and_challenges':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  <b> Coming Soon </b> You will be able to add homework and challenges to
+                  lesson plans soon
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                a. Text Content is information you are pushing to participants but do not
+                want a response from this content.
+              </div>
+              <div className="my-1 ml-3 italic">
+                b. Media are the various ways to interact with participants outside
+                written content
+              </div>
+              <div className="my-1 ml-3 italic">
+                c. User Interaction is content where you want a response or a participant
+                to create something in the activity
+              </div>
+              <div className="my-3 ml-3 italic">
+                A block is one or more components that create a single idea
+              </div>
+              <div className="my-1 ml-3 italic">
+                A component is a single unit of content
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_courses':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  Click Add Lesson to Syllabus button
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Add lesson to one or more curriculum and units
+              </div>
+            </div>
+          </div>
+        );
+      case 'lesson_builder_learning_evidence':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/registration`)}>
+                  Check all learning evidences which are applicable for each selected
+                  curriculum
+                </span>
+                {progressIndicator(activeSection?.data?.lessonRubrics?.length)}
+              </div>
+            </div>
+          </div>
+        );
+      case 'service_provider_provide_service':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                    )
+                  }>
+                  Toggle service provider to be true
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                As a service provider you can make your curriculum, teachers and fellows
+                available to other organizations
+              </div>
+            </div>
+          </div>
+        );
+      case 'service_provider_request_service':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() =>
+                    history.push(
+                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                    )
+                  }>
+                  Select service provider from list
+                </span>
+              </div>
+              <div className="my-1 ml-3 italic">
+                Service providers make their curriculum, teachers and fellows available
+                for you to add to your own classrooms
+              </div>
+            </div>
+          </div>
+        );
+      case 'research_and_analytics_survey_download':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/csv`)}>
+                  Select classroom, unit and survey to download
+                </span>
               </div>
             </div>
           </div>

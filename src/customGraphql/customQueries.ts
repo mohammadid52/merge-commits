@@ -1915,6 +1915,12 @@ export const listUniversalLessonsForInstitution = /* GraphQL */ `
         language
         lessonPlan {
           id
+          pageContent{
+            id
+            partContent{
+              id
+            }
+          }
         }
       }
       nextToken
