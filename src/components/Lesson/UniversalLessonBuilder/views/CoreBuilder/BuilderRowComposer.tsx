@@ -48,7 +48,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     updateMovableList,
   } = useULBContext();
 
-  const enableDnD = true;
+  const enableDnD = false;
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID

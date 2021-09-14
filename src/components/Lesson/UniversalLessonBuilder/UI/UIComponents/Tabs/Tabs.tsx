@@ -1,17 +1,21 @@
 import React, {useState} from 'react';
 import {setState} from '../../../../../../interfaces';
 import {classNames} from '../../FormElements/UniversalInput';
-
+const _tabs = [
+  {name: 'Component Details', current: true},
+  {name: 'Preview', current: false},
+];
 interface ITab {
   name: string;
   current: boolean;
 }
 
-export const useTabs = (tabs: ITab[]) => {
+export const useTabs = (tabs: ITab[] = _tabs) => {
   const [curTab, setCurTab] = useState(tabs[0].name);
 
   const helpers = [...tabs.map((tab) => curTab === tab.name)];
-  return {curTab, setCurTab, helpers};
+  const goTo = [...tabs.map((tab) => tab.name)];
+  return {curTab, setCurTab, helpers, goTo};
 };
 
 /**
@@ -19,11 +23,11 @@ export const useTabs = (tabs: ITab[]) => {
  * The one with underline tabs
  */
 export const Tabs2 = ({
-  tabs,
+  tabs = _tabs,
   curTab,
   setCurTab,
 }: {
-  tabs: {name: string; current: boolean}[];
+  tabs?: {name: string; current: boolean}[];
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -73,12 +77,13 @@ export const Tabs2 = ({
  */
 
 const Tabs = ({
-  tabs,
+  tabs = _tabs,
   curTab,
   setCurTab,
 }: {
-  tabs: {name: string; current: boolean}[];
+  tabs?: {name: string; current: boolean}[];
   curTab: string;
+
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
@@ -103,7 +108,9 @@ const Tabs = ({
             {tabs.map((tab) => (
               <button
                 key={tab.name}
-                onClick={() => setCurTab(tab.name)}
+                onClick={() => {
+                  setCurTab(tab.name);
+                }}
                 className={classNames(
                   curTab === tab.name
                     ? `iconoclast:text-main curate:text-main 
@@ -130,13 +137,13 @@ export default Tabs;
  *
  */
 export const Tabs3 = ({
-  tabs,
+  tabs = _tabs,
   curTab,
   setCurTab,
   config = {fullColor: false},
   numbered = false,
 }: {
-  tabs: ITab[];
+  tabs?: ITab[];
   curTab: string;
   config?: {fullColor?: boolean};
   setCurTab: setState['string'];

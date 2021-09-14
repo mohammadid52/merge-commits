@@ -193,26 +193,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setImageData(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
-
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
+  const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
     toggleCropper();
-    setImageData(image);
-    const imageUrl = URL.createObjectURL(image);
+    setImageData(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setFormData({
       ...formData,
       imagePreviewUrl: imageUrl,
@@ -571,10 +560,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 studentSummary={studentSummary}
                 onInputChange={onInputChange}
                 imageCaption={imageCaption}
-                cropSelecetedImage={cropSelecetedImage}
+                setImage={setImageData}
                 validation={validation}
+                setFileObj={setFileObj}
                 imagePreviewUrl={imagePreviewUrl}
                 totalEstTime={totalEstTime}
+                toggleCropper={toggleCropper}
                 lessonType={formData.type.value}
               />
             </div>
@@ -605,6 +596,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       {showCropper && (
         <ProfileCropModal
           upImg={imageData}
+          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+          locked
+          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
         />

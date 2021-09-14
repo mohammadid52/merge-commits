@@ -12,27 +12,35 @@ import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLesson
 import {v4 as uuidv4} from 'uuid';
 import {getLocalStorageData} from '../../../../../../utilities/localStorage';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import DroppableMedia from '../../../../../Molecules/DroppableMedia';
+import {classNames} from '../../../../../Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 
 interface ILessonCard {
   validation: any;
   imagePreviewUrl: string;
   studentSummary: string;
   imageCaption: string;
-  cropSelecetedImage: (e: any) => void;
+
   onInputChange: (e: any) => void;
   totalEstTime?: number;
   lessonType: string;
   cardCaption: string;
+  toggleCropper?: () => void;
+  setImage?: any;
+  setFileObj: any;
 }
 
 const LessonCard = ({
   validation,
   imagePreviewUrl,
-  cropSelecetedImage,
+
   imageCaption,
   studentSummary,
+  toggleCropper,
+  setImage,
   onInputChange,
   totalEstTime,
+  setFileObj,
   lessonType,
   cardCaption = '',
 }: ILessonCard) => {
@@ -55,6 +63,7 @@ const LessonCard = ({
       cardCaption,
     },
   };
+
   const imageRef = React.useRef(null);
   const handleImage = () => imageRef?.current?.click();
 
@@ -69,17 +78,28 @@ const LessonCard = ({
         <AnimatedContainer
           duration="500"
           animationType="translateY"
-          className="flex items-center w-auto justify-start"
+          className="flex items-center w-full justify-start"
           show={onSetupTab}>
           {onSetupTab && (
             <>
-              <div className="pr-3 py-5 w-auto mr-4">
-                <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center">
-                  <div className="cursor-pointer flex justify-center">
+              <div
+                className={classNames(
+                  imagePreviewUrl ? '' : 'min-w-56',
+                  'pr-3 py-5 w-1/4 mr-4'
+                )}>
+                <button className=" cursor-pointer  justify-center group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center">
+                  <DroppableMedia
+                    className="w-full"
+                    mediaRef={imageRef}
+                    setImage={(img: any, file: any) => {
+                      setImage(img);
+                      setFileObj(file);
+                    }}
+                    toggleCropper={toggleCropper}>
                     {imagePreviewUrl ? (
                       <img
                         onClick={handleImage}
-                        className={`profile w-50 bg-center bg-cover h-60 md:w-60 md:h-60 border-0 border-gray-400 rounded-lg customShadow`}
+                        className={`profile w-50 bg-center bg-cover h-60 md:w-full  border-0 border-gray-400 rounded-lg customShadow`}
                         src={imagePreviewUrl}
                       />
                     ) : (
@@ -89,19 +109,10 @@ const LessonCard = ({
                         <IoCamera className="fill-current text-gray-80" size={32} />
                       </div>
                     )}
-                    <input
-                      type="file"
-                      ref={imageRef}
-                      className="hidden"
-                      onChange={cropSelecetedImage}
-                      onClick={(e: any) => (e.target.value = '')}
-                      accept="image/*"
-                      multiple={false}
-                    />
-                  </div>
+                  </DroppableMedia>
                 </button>
               </div>
-              <div className="col-span-2">
+              <div className="col-span-2 w-3/4">
                 <div className="pr-8 pt-5">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
                     {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
@@ -121,8 +132,7 @@ const LessonCard = ({
                     {imageCaption.length} of 25
                   </div>
                 </div>
-                {/* </div> */}
-                {/* <div className="col-span-3"> */}
+
                 <div className="pr-8 pt-1">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                     {AddNewLessonFormDict[userLanguage]['SUMMARY']}

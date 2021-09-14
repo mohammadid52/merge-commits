@@ -228,7 +228,6 @@ const AttachmentBlock = ({
   };
 
   const lessonId = match.params?.lessonID;
-  // console.log('🚀 ~ file: AttachmentBlock.tsx ~ line 227 ~ lessonId', lessonId);
 
   const UPLOAD_KEY = `ULB/studentdata/${user.id}/${lessonId}`;
 
