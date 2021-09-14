@@ -14838,6 +14838,7 @@ export const createPersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14863,6 +14864,7 @@ export const updatePersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14888,6 +14890,7 @@ export const deletePersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }

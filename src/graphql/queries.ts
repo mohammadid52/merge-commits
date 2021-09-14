@@ -6617,6 +6617,7 @@ export const getPersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -6652,6 +6653,7 @@ export const listPersonFiless = /* GraphQL */ `
           fileName
           fileKey
         }
+        lessonPageID
         createdAt
         updatedAt
       }

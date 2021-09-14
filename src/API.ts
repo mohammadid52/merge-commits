@@ -4203,6 +4203,7 @@ export type CreatePersonFilesInput = {
   lessonType?: string | null,
   roomID?: string | null,
   files?: Array< FileInput | null > | null,
+  lessonPageID?: string | null,
 };
 
 export type FileInput = {
@@ -4220,6 +4221,7 @@ export type ModelPersonFilesConditionInput = {
   syllabusLessonID?: ModelStringInput | null,
   lessonType?: ModelStringInput | null,
   roomID?: ModelStringInput | null,
+  lessonPageID?: ModelIDInput | null,
   and?: Array< ModelPersonFilesConditionInput | null > | null,
   or?: Array< ModelPersonFilesConditionInput | null > | null,
   not?: ModelPersonFilesConditionInput | null,
@@ -4238,6 +4240,7 @@ export type PersonFiles = {
   lessonType?: string | null,
   roomID?: string | null,
   files?:  Array<File | null > | null,
+  lessonPageID?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -4260,6 +4263,7 @@ export type UpdatePersonFilesInput = {
   lessonType?: string | null,
   roomID?: string | null,
   files?: Array< FileInput | null > | null,
+  lessonPageID?: string | null,
 };
 
 export type DeletePersonFilesInput = {
@@ -5203,6 +5207,7 @@ export type ModelPersonFilesFilterInput = {
   syllabusLessonID?: ModelStringInput | null,
   lessonType?: ModelStringInput | null,
   roomID?: ModelStringInput | null,
+  lessonPageID?: ModelIDInput | null,
   and?: Array< ModelPersonFilesFilterInput | null > | null,
   or?: Array< ModelPersonFilesFilterInput | null > | null,
   not?: ModelPersonFilesFilterInput | null,
@@ -21701,6 +21706,7 @@ export type CreatePersonFilesMutation = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21729,6 +21735,7 @@ export type UpdatePersonFilesMutation = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21757,6 +21764,7 @@ export type DeletePersonFilesMutation = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -29067,6 +29075,7 @@ export type GetPersonFilesQuery = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -29100,6 +29109,7 @@ export type ListPersonFilessQuery = {
         fileName: string,
         fileKey: string,
       } | null > | null,
+      lessonPageID?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -44984,6 +44994,7 @@ export type OnCreatePersonFilesSubscription = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -45007,6 +45018,7 @@ export type OnUpdatePersonFilesSubscription = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -45030,6 +45042,7 @@ export type OnDeletePersonFilesSubscription = {
       fileName: string,
       fileKey: string,
     } | null > | null,
+    lessonPageID?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

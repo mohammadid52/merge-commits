@@ -14187,6 +14187,7 @@ export const onCreatePersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14209,6 +14210,7 @@ export const onUpdatePersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14231,6 +14233,7 @@ export const onDeletePersonFiles = /* GraphQL */ `
         fileName
         fileKey
       }
+      lessonPageID
       createdAt
       updatedAt
     }
