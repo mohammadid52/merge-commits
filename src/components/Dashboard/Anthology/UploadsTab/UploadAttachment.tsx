@@ -8,14 +8,12 @@ import React, {useCallback, useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import {BiImageAdd} from 'react-icons/bi';
 import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {UPLOAD_KEYS} from '../../../Lesson/constants';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import Buttons from '@components/Atoms/Buttons';
-import ModalFill from '@components/Atoms/ModalFill';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../../../graphql/mutations';
 
@@ -248,6 +246,7 @@ const File = ({
 
 interface IUploadAttachmentProps {
   personFilesID?: string;
+  updateLoadedFilesList?: (personFilesID: string, filesArray: any[]) => void;
   filesArray?: any[];
   lessonPageID?: string;
   lessonID?: string;
@@ -257,6 +256,7 @@ interface IUploadAttachmentProps {
 
 const UploadAttachment = ({
   personFilesID,
+  updateLoadedFilesList,
   filesArray,
   lessonPageID,
   lessonID,
@@ -281,8 +281,6 @@ const UploadAttachment = ({
   // For Attachments - 31
 
   const fileIcon = getAsset('general', 'file');
-
-  const match: any = useRouteMatch();
 
   const deletImageFromS3 = (key: string) => {
     // Remove image from bucket
@@ -380,10 +378,10 @@ const UploadAttachment = ({
         syllabusLessonID: syllabusLessonID,
       };
 
-      // TODO: RE-enable this
       const result: any = await API.graphql(
         graphqlOperation(mutations.updatePersonFiles, {input: payload})
       );
+      await updateLoadedFilesList(personFilesID, payload.files);
       resetAll();
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error.message);
@@ -541,24 +539,7 @@ const UploadAttachment = ({
           </div>
         </div>
       </div>
-
-      {/* <div className={`mb-4 p-4`}>
-        <div className="mt-2">
-          <span
-            role="button"
-            tabIndex={-1}
-            onClick={true ? () => setShowModal(true) : noop}
-            className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
-            } flex items-center justify-center ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
-            <BiImageAdd className={`w-auto mr-2`} />
-            Upload Attachments
-          </span>
-        </div>
-      </div> */}
     </>
   );
 };
-export default UploadAttachment;
+export default React.memo(UploadAttachment);

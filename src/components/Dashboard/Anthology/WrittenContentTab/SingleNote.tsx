@@ -1,15 +1,15 @@
 import {sortBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import * as queries from '../../../graphql/queries';
+import * as queries from '../../../../graphql/queries';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../Atoms/Buttons';
-import ContentCard from '../../Atoms/ContentCard';
-import Loader from '../../Atoms/Loader';
-import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
+import Buttons from '../../../Atoms/Buttons';
+import ContentCard from '../../../Atoms/ContentCard';
+import Loader from '../../../Atoms/Loader';
+import {getAsset} from '../../../../assets';
 import Feedbacks from './Feedbacks';
-import Toggle from './AnthologyContentNote/Toggle';
+import Toggle from './../AnthologyContentNote/Toggle';
 
 const SingleNote = ({
   idx,

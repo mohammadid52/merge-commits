@@ -6,9 +6,18 @@ import {getImageFromS3} from '../../../../utilities/services';
 interface IFileListItem {
   fileName: string;
   fileKey: string;
+  deleteFileKey: string;
+  handleToggleDelete: (fileKeyToToggle: string) => void;
+  handleConfirmDelete: () => void;
 }
 
-const FileListItem = ({fileName, fileKey}: IFileListItem) => {
+const FileListItem = ({
+  fileName,
+  fileKey,
+  deleteFileKey,
+  handleToggleDelete,
+  handleConfirmDelete,
+}: IFileListItem) => {
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //
   // ##################################################################### //
@@ -57,16 +66,29 @@ const FileListItem = ({fileName, fileKey}: IFileListItem) => {
           <p className="text-sm text-gray-500 truncate">{fileName}</p>
         </div>
         <div className="w-auto mx-2">
-          <a
-            href="#"
-            className="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-            Delete
-          </a>
+          {fileKey === deleteFileKey ? (
+            <>
+              <a
+                onClick={() => handleToggleDelete(fileKey)}
+                className="cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                Cancel
+              </a>
+              <a
+                onClick={() => handleConfirmDelete()}
+                className="cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                Confirm
+              </a>
+            </>
+          ) : (
+            <a
+              onClick={() => handleToggleDelete(fileKey)}
+              className="cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+              Delete
+            </a>
+          )}
         </div>
         <div className="w-auto">
-          <a
-            href="#"
-            className="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+          <a className="cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
             View
           </a>
         </div>
@@ -75,4 +97,4 @@ const FileListItem = ({fileName, fileKey}: IFileListItem) => {
   );
 };
 
-export default FileListItem;
+export default React.memo(FileListItem);

@@ -19,6 +19,7 @@ export interface IUploadCardProps extends ITabParentProps {
   contentObj?: any;
   editID?: string;
   editMode?: string;
+  updateLoadedFilesList?: (personFilesID: string, filesArray: any[]) => void;
   handleEdit?: any;
   handleSave?: any;
   handleDelete?: any;
@@ -40,6 +41,7 @@ const UploadsTab = ({
   // ##################################################################### //
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
+
   const [personLessonFilesLoaded, setPersonLessonFilesLoaded] = useState<boolean>(false);
   const [allPersonLessonFiles, setAllPersonLessonFiles] = useState<any[]>([]);
 
@@ -73,6 +75,8 @@ const UploadsTab = ({
     }
   }, [personAuthID, sectionRoomID]);
 
+  // ~~~~~~~~~~~~~~~ ON MOUNT ~~~~~~~~~~~~~~ //
+
   useEffect(() => {
     // do this on mount
     if (personAuthID && sectionRoomID) {
@@ -80,8 +84,26 @@ const UploadsTab = ({
     }
   }, [personAuthID, sectionRoomID]);
 
+  // ~~~~~~~ UPDATE LOADED FILES LIST ~~~~~~ //
+  /****************************************************
+   *  THIS FUNCTION JUST UPDATES LOCAL STATE SO YOU   *
+   * DON'T HAVE TO DO A RE-FETCH OF THE NEWLY MUTATED *
+   *                      FILES                       *
+   ****************************************************/
+
+  const updateLoadedFilesList = async (personFilesID: string, filesArray: any[]) => {
+    const updated = allPersonLessonFiles.map((contentObj: any) => {
+      if (contentObj.id === personFilesID) {
+        return {...contentObj, files: filesArray};
+      } else {
+        return contentObj;
+      }
+    });
+    setAllPersonLessonFiles(updated);
+  };
+
   // ##################################################################### //
-  // ######################## TOGGLE EDITING FILES ####################### //
+  // ######################## TOGGLE EDITING CARDS ####################### //
   // ##################################################################### //
 
   const [editID, setEditID] = useState<string>('');
@@ -115,6 +137,10 @@ const UploadsTab = ({
     setEditID('');
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
+
   return (
     <>
       {allPersonLessonFiles && allPersonLessonFiles.length > 0
@@ -139,6 +165,7 @@ const UploadsTab = ({
                   mainSection={mainSection}
                   subSection={subSection}
                   onCancel={onCancel}
+                  updateLoadedFilesList={updateLoadedFilesList}
                   handleEdit={() => handleEdit(lessonFileObj.id)}
                   handleSave={handleSave}
                   handleDelete={() => handleDelete(lessonFileObj.id)}

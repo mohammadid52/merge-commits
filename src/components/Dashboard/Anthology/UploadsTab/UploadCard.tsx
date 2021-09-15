@@ -1,3 +1,4 @@
+import Storage from '@aws-amplify/storage';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
 import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
@@ -11,26 +12,27 @@ import * as queries from '../../../../graphql/queries';
 import {dateFromServer} from '../../../../utilities/time';
 import Buttons from '../../../Atoms/Buttons';
 import ContentCard from '../../../Atoms/ContentCard';
-import FeedbacksUploads from '../FeedbacksUploads';
+import FeedbacksUploads from '@components/Dashboard/Anthology/UploadsTab/FeedbacksUploads';
 import {IUploadCardProps} from '../UploadsTab';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
+import * as mutations from '@graphql/mutations';
 
 const UploadCard = ({
   idx,
-  mainSection,
   subSection,
   contentLen,
   contentObj,
+  updateLoadedFilesList,
   handleEdit,
   handleSave,
-  handleDelete,
-  handleConfirm,
   handleCancel,
   editID,
-  editMode,
   personAuthID,
   personEmail,
 }: IUploadCardProps) => {
   const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const user = state.user;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
@@ -42,6 +44,93 @@ const UploadCard = ({
 
   const [showComments, setShowComments] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState<boolean>(false);
+
+  // ##################################################################### //
+  // ###################### INDIVIDUAL FILE DELETION ##################### //
+  // ##################################################################### //
+
+  const [deleteFileKey, setdeleteFileKey] = useState<string>('');
+
+  // ~~~~~~~~~~ TOGGLE & FUNCTIONS ~~~~~~~~~ //
+
+  const handleToggleDelete = (fileKeyToToggle: string) => {
+    if (fileKeyToToggle === deleteFileKey) {
+      setdeleteFileKey('');
+    } else if (fileKeyToToggle !== deleteFileKey || deleteFileKey !== '') {
+      setdeleteFileKey(fileKeyToToggle);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    const newFiles = contentObj.files.reduce((acc: any[], fileObj: any) => {
+      if (fileObj.fileKey !== deleteFileKey) {
+        return [...acc, fileObj];
+      } else {
+        return acc;
+      }
+    }, []);
+    // console.log('contentObj.files -', contentObj.files);
+    // console.log('newFiles - ', newFiles);
+    try {
+      await deleteImage(deleteFileKey);
+      await updatePersonFiles(newFiles);
+      await updateLoadedFilesList(contentObj.id, newFiles);
+    } catch (e) {
+      console.error('@handleConfirmDelete - ', e);
+    } finally {
+      //
+    }
+  };
+
+  // ~~~~~~ UPDATE PERSON FILES TABLE ~~~~~~ //
+
+  const updatePersonFiles = async (newFilesArray: any[]) => {
+    try {
+      const payload = {
+        id: contentObj.id,
+        personAuthID: state.user.authId,
+        personEmail: state.user.email,
+        files: newFilesArray,
+        lessonPageID: contentObj.lessonPageID,
+        lessonID: contentObj.lessonID,
+        syllabusLessonID: contentObj.syllabusLessonID,
+      };
+
+      console.log('payu;lpoad - ', payload);
+
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonFiles, {input: payload})
+      );
+    } catch (error) {
+      console.error('@uploadFileDataToTable: ', error.message);
+    } finally {
+      setdeleteFileKey('');
+    }
+  };
+
+  // ~~~~~~~~~ S3 STORAGE DELETION ~~~~~~~~~ //
+
+  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user?.id, contentObj.lessonID);
+
+  const deleteImageFromS3 = (key: string) => {
+    // Remove image from bucket
+    return new Promise((resolve, reject) => {
+      Storage.remove(key)
+        .then((result) => {
+          console.log('deleted: ', key);
+          resolve(result);
+        })
+        .catch((err) => {
+          console.error(err.message);
+
+          reject(err);
+        });
+    });
+  };
+
+  const deleteImage = async (fileKey: string) => {
+    deleteImageFromS3(`${UPLOAD_KEY}${fileKey}`);
+  };
 
   // ##################################################################### //
   // ########################### FEEDBACK LOGIC ########################## //
@@ -117,7 +206,13 @@ const UploadCard = ({
           <ul role="list" className="-my-5 divide-y divide-gray-200">
             {contentObj && contentObj?.files.length > 0
               ? contentObj.files.map((file: any) => (
-                  <FileListItem fileName={file.fileName} fileKey={file.fileKey} />
+                  <FileListItem
+                    fileName={file.fileName}
+                    fileKey={file.fileKey}
+                    deleteFileKey={deleteFileKey}
+                    handleToggleDelete={handleToggleDelete}
+                    handleConfirmDelete={handleConfirmDelete}
+                  />
                 ))
               : null}
           </ul>
@@ -191,6 +286,7 @@ const UploadCard = ({
           {showUploadDialog && (
             <UploadAttachment
               personFilesID={contentObj.id}
+              updateLoadedFilesList={updateLoadedFilesList}
               filesArray={contentObj.files}
               lessonPageID={contentObj.lessonPageID}
               lessonID={contentObj.lessonID}
@@ -223,4 +319,4 @@ const UploadCard = ({
   );
 };
 
-export default UploadCard;
+export default React.memo(UploadCard);

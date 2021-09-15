@@ -8,7 +8,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
 
-import SingleNote from './SingleNote';
+import SingleNote from './WrittenContentTab/SingleNote';
 import {
   UniversalJournalData,
   UniversalLessonStudentData,
