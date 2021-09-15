@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   AiOutlineBorderlessTable,
   AiOutlineCalendar,
@@ -12,6 +12,7 @@ import {
 } from 'react-icons/ai';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
+import {CgNotes} from 'react-icons/cg';
 import {
   HiOutlineArrowRight,
   HiOutlineEmojiHappy,
@@ -155,6 +156,14 @@ const AddContentDialog = ({
   ];
   const userInterfaceContent = [
     {
+      name: 'Notes ⭐',
+      type: FORM_TYPES.NOTES,
+      subtitle: 'Interactive notes for students',
+      icon: CgNotes,
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-100',
+    },
+    {
       name: 'Review slider',
       type: FORM_TYPES.REVIEW_SLIDER,
       subtitle: 'Add review slider',
@@ -239,14 +248,6 @@ const AddContentDialog = ({
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab] = helpers;
-
-  // const Content = () => {
-  //   return (
-  //     <>
-
-  //     </>
-  //   );
-  // };
 
   return (
     <>
