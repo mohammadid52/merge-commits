@@ -410,16 +410,6 @@ type AdditionalContent {
   links: [Link]
 }
 
-type Artist @model {
-  id: ID!
-  images: [String!]
-  name: String!
-  type: String!
-  bio: [String!]!
-  quotes: [Quote!]!
-  additionalContent: AdditionalContent
-}
-
 type StudentInfo {
   id: String
   firstName: String
@@ -433,23 +423,6 @@ type DisplayData {
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
-}
-
-type DoFirst @model {
-  id: ID!
-  type: String!
-  required: Boolean!
-  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
-}
-
-type DoFirstQuestion
-  @model(queries: null)
-  @key(name: "byDoFirst", fields: ["doFirstID", "questionID"]) {
-  id: ID!
-  doFirstID: ID!
-  questionID: ID!
-  doFirst: DoFirst @connection(fields: ["doFirstID"])
-  question: Question @connection(fields: ["questionID"])
 }
 
 type Instructions {
@@ -513,20 +486,6 @@ type Tool {
   name: String!
   color: String!
   icon: String!
-}
-
-type CoreLesson @model {
-  id: ID!
-  title: String!
-  label: String!
-  stage: String!
-  type: String!
-  language: Language!
-  SELTypes: [ID!]
-  instructions: Instructions!
-  content: Content!
-  tools: [Tool!]!
-  breakdown: Breakdown!
 }
 
 type Activity @model {
@@ -675,14 +634,6 @@ type RoomMsgs
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
 }
 
-type Course @model {
-  id: ID!
-  name: String!
-  type: String
-  startDate: AWSDate
-  duration: Int
-}
-
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String!
@@ -692,8 +643,7 @@ type Lesson @model @key(fields: ["id"]) {
   instructionsTitle: String
   theme: Theme
   grades: [Int]
-  artistID: ID!
-  artist: Artist @connection(fields: ["artistID"])
+  artistID: ID
   language: [Language!]
   SELStructure: String
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
@@ -703,12 +653,9 @@ type Lesson @model @key(fields: ["id"]) {
   designers: [String]
   objectives: [String]
   checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
-  doFirstID: ID!
-  doFirst: DoFirst @connection(fields: ["doFirstID"])
-  warmUpId: ID!
-  warmUp: WarmUp @connection(fields: ["warmUpId"])
-  coreLessonId: ID!
-  coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
+  doFirstID: ID
+  warmUpId: ID
+  coreLessonId: ID
   activityId: ID!
   activity: Activity @connection(fields: ["activityId"])
   assessmentID: ID!
@@ -800,7 +747,6 @@ type SyllabusLesson
   startDate: AWSDate
   endDate: AWSDate
   data: [StudentData] @connection(keyName: "bySyllabusLesson", fields: ["id"])
-  feedback: [Feedback] @connection(fields: ["id"])
 }
 
 type StudentData
@@ -880,14 +826,6 @@ type QuestionDataStudentData
   studentData: StudentData @connection(fields: ["studentDataID"])
   questionDataID: ID!
   questionData: QuestionData @connection(fields: ["questionDataID"])
-}
-
-type Feedback @model {
-  id: ID!
-  syllabusLessonID: ID!
-  liked: String
-  comment: String
-  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
 
 type Theme {

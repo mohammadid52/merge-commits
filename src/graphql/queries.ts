@@ -2190,61 +2190,6 @@ export const listRoomCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getArtist = /* GraphQL */ `
-  query GetArtist($id: ID!) {
-    getArtist(id: $id) {
-      id
-      images
-      name
-      type
-      bio
-      quotes {
-        id
-        source
-        text
-      }
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listArtists = /* GraphQL */ `
-  query ListArtists(
-    $filter: ModelArtistFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listArtists(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getWarmUp = /* GraphQL */ `
   query GetWarmUp($id: ID!) {
     getWarmUp(id: $id) {

@@ -1886,71 +1886,6 @@ export type DeleteRoomCurriculumInput = {
   id: string,
 };
 
-export type CreateArtistInput = {
-  id?: string | null,
-  images?: Array< string > | null,
-  name: string,
-  type: string,
-  bio: Array< string >,
-  quotes: Array< QuoteInput >,
-  additionalContent?: AdditionalContentInput | null,
-};
-
-export type QuoteInput = {
-  id?: string | null,
-  source?: string | null,
-  text: string,
-};
-
-export type AdditionalContentInput = {
-  video?: string | null,
-  links?: Array< LinkInput | null > | null,
-};
-
-export type LinkInput = {
-  id?: string | null,
-  type?: string | null,
-  text?: string | null,
-  link?: string | null,
-};
-
-export type ModelArtistConditionInput = {
-  images?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  bio?: ModelStringInput | null,
-  and?: Array< ModelArtistConditionInput | null > | null,
-  or?: Array< ModelArtistConditionInput | null > | null,
-  not?: ModelArtistConditionInput | null,
-};
-
-export type Artist = {
-  __typename: "Artist",
-  id?: string,
-  images?: Array< string > | null,
-  name?: string,
-  type?: string,
-  bio?: Array< string >,
-  quotes?:  Array<Quote >,
-  additionalContent?: AdditionalContent,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateArtistInput = {
-  id: string,
-  images?: Array< string > | null,
-  name?: string | null,
-  type?: string | null,
-  bio?: Array< string > | null,
-  quotes?: Array< QuoteInput > | null,
-  additionalContent?: AdditionalContentInput | null,
-};
-
-export type DeleteArtistInput = {
-  id: string,
-};
-
 export type CreateWarmUpInput = {
   id?: string | null,
   title: string,
@@ -2543,6 +2478,24 @@ export type ThemeInput = {
   connection?: string | null,
   images: Array< string >,
   additionalContent?: AdditionalContentInput | null,
+};
+
+export type QuoteInput = {
+  id?: string | null,
+  source?: string | null,
+  text: string,
+};
+
+export type AdditionalContentInput = {
+  video?: string | null,
+  links?: Array< LinkInput | null > | null,
+};
+
+export type LinkInput = {
+  id?: string | null,
+  type?: string | null,
+  text?: string | null,
+  link?: string | null,
 };
 
 export type LessonComponentsInput = {
@@ -4286,23 +4239,6 @@ export type ModelRoomCurriculumFilterInput = {
   and?: Array< ModelRoomCurriculumFilterInput | null > | null,
   or?: Array< ModelRoomCurriculumFilterInput | null > | null,
   not?: ModelRoomCurriculumFilterInput | null,
-};
-
-export type ModelArtistFilterInput = {
-  id?: ModelIDInput | null,
-  images?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  bio?: ModelStringInput | null,
-  and?: Array< ModelArtistFilterInput | null > | null,
-  or?: Array< ModelArtistFilterInput | null > | null,
-  not?: ModelArtistFilterInput | null,
-};
-
-export type ModelArtistConnection = {
-  __typename: "ModelArtistConnection",
-  items?:  Array<Artist | null > | null,
-  nextToken?: string | null,
 };
 
 export type ModelWarmUpFilterInput = {
@@ -10015,111 +9951,6 @@ export type DeleteRoomCurriculumMutation = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateArtistMutationVariables = {
-  input?: CreateArtistInput,
-  condition?: ModelArtistConditionInput | null,
-};
-
-export type CreateArtistMutation = {
-  createArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateArtistMutationVariables = {
-  input?: UpdateArtistInput,
-  condition?: ModelArtistConditionInput | null,
-};
-
-export type UpdateArtistMutation = {
-  updateArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteArtistMutationVariables = {
-  input?: DeleteArtistInput,
-  condition?: ModelArtistConditionInput | null,
-};
-
-export type DeleteArtistMutation = {
-  deleteArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -22190,73 +22021,6 @@ export type ListRoomCurriculumsQuery = {
   } | null,
 };
 
-export type GetArtistQueryVariables = {
-  id?: string,
-};
-
-export type GetArtistQuery = {
-  getArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListArtistsQueryVariables = {
-  filter?: ModelArtistFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListArtistsQuery = {
-  listArtists?:  {
-    __typename: "ModelArtistConnection",
-    items?:  Array< {
-      __typename: "Artist",
-      id: string,
-      images?: Array< string > | null,
-      name: string,
-      type: string,
-      bio: Array< string >,
-      quotes:  Array< {
-        __typename: "Quote",
-        id?: string | null,
-        source?: string | null,
-        text: string,
-      } >,
-      additionalContent?:  {
-        __typename: "AdditionalContent",
-        video?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetWarmUpQueryVariables = {
   id?: string,
 };
@@ -32353,96 +32117,6 @@ export type OnDeleteRoomCurriculumSubscription = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateArtistSubscription = {
-  onCreateArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateArtistSubscription = {
-  onUpdateArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteArtistSubscription = {
-  onDeleteArtist?:  {
-    __typename: "Artist",
-    id: string,
-    images?: Array< string > | null,
-    name: string,
-    type: string,
-    bio: Array< string >,
-    quotes:  Array< {
-      __typename: "Quote",
-      id?: string | null,
-      source?: string | null,
-      text: string,
-    } >,
-    additionalContent?:  {
-      __typename: "AdditionalContent",
-      video?: string | null,
-      links?:  Array< {
-        __typename: "Link",
-        id?: string | null,
-        type?: string | null,
-        text?: string | null,
-        link?: string | null,
-      } | null > | null,
     } | null,
     createdAt: string,
     updatedAt: string,
