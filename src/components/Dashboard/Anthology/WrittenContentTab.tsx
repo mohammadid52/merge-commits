@@ -241,6 +241,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
         content.map((contentObj: UniversalJournalData, idx: number) => {
           return (
             <EmptyViewWrapper
+              key={`emptyview_${idx}`}
               wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
               timedRevealInt={idx + 1}
               fallbackContents={

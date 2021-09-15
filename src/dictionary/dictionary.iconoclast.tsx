@@ -295,6 +295,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancel',
       DELETE: 'Delete',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
   ES: {
@@ -315,6 +316,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
 };

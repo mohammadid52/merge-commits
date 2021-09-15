@@ -10,7 +10,7 @@ import { IconContext } from 'react-icons';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import SingleNote from './SingleNote';
 import { ITabParentProps } from './TabView';
-import SingleUpload from './SingleUpload';
+import SingleUpload from './UploadsTab/UploadCard';
 import { dateFromServer } from '../../../utilities/time';
 import { ViewEditMode } from './Anthology';
 import { AiOutlineFile } from 'react-icons/ai';
@@ -67,7 +67,7 @@ const UploadsTab = ({
       const personLessonFilesRows = personLessonFiles.data.listPersonFiless.items;
 
       if (personLessonFilesRows?.length > 0) {
-        console.log('anthology - personLessonFiles exist ', personLessonFilesRows);
+        // console.log('anthology - personLessonFiles exist ', personLessonFilesRows);
 
         setAllPersonLessonFiles(personLessonFilesRows);
       } else {
@@ -79,14 +79,14 @@ const UploadsTab = ({
       setPersonLessonFilesLoaded(true);
     } finally {
     }
-  }, [personAuthID, sectionRoomID, personEmail]);
+  }, [personAuthID, sectionRoomID]);
 
   useEffect(() => {
     // do this on mount
     if (personAuthID && sectionRoomID) {
       listPersonLessonFiles();
     }
-  }, [personAuthID, sectionRoomID, personEmail]);
+  }, [personAuthID, sectionRoomID]);
 
   // ##################################################################### //
   // ######################## TOGGLE EDITING FILES ####################### //

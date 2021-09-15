@@ -1,20 +1,23 @@
 import {sortBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import * as queries from '../../../graphql/queries';
+import * as queries from '../../../../graphql/queries';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../Atoms/Buttons';
-import ContentCard from '../../Atoms/ContentCard';
-import {getAsset} from '../../../assets';
-import {IUploadCardProps} from './UploadsTab';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
+import Buttons from '../../../Atoms/Buttons';
+import ContentCard from '../../../Atoms/ContentCard';
+import {getAsset} from '../../../../assets';
+import {IUploadCardProps} from '../UploadsTab';
 import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
-import {dateFromServer} from '../../../utilities/time';
-import {getImageFromS3Static} from '../../../utilities/services';
-import FeedbacksUploads from './FeedbacksUploads';
+import {dateFromServer} from '../../../../utilities/time';
+import {getImageFromS3Static} from '../../../../utilities/services';
+import FeedbacksUploads from '../FeedbacksUploads';
+import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
+import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
+import {BiImageAdd} from 'react-icons/bi';
 
-const SingleUpload = ({
+const UploadCard = ({
   idx,
   mainSection,
   subSection,
@@ -28,17 +31,28 @@ const SingleUpload = ({
   editID,
   editMode,
   personAuthID,
-  personEmail
+  personEmail,
 }: IUploadCardProps) => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  // ##################################################################### //
+  // ############################# VISIBILITY ############################ //
+  // ##################################################################### //
+
+  const [showComments, setShowComments] = useState(false);
+  const [showUploadDialog, setShowUploadDialog] = useState<boolean>(false);
 
   // ##################################################################### //
   // ########################### FEEDBACK LOGIC ########################## //
   // ##################################################################### //
-  const [showComments, setShowComments] = useState(false);
+
   const [feedbackData, setFeedbackData] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
+
   const [fileObject, setFileObject] = useState({});
 
   // ~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~ //
@@ -83,32 +97,6 @@ const SingleUpload = ({
     getFeedBackData();
   }, []);
 
- 
-  // ##################################################################### //
-  // ######################## HANDLE IMAGE LOADING ####################### //
-  // ##################################################################### //
-
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  const isImage = (filenameStr: string) => {
-    return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(filenameStr);
-  };
-
-  const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3Static(uniqKey);
-    if (imageUrl) {
-      console.log('imageUrl', imageUrl);
-      return imageUrl;
-    } else {
-      return '';
-    }
-  };
-
-  useEffect(() => {
-    const imageURL = getImageURL(contentObj.fileKey);
-    Promise.resolve(imageURL).then((urlStr: string) => setImageUrl(urlStr));
-  }, [contentObj]);
-
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -130,32 +118,11 @@ const SingleUpload = ({
         </div>
         <div className="flow-root mt-6">
           <ul role="list" className="-my-5 divide-y divide-gray-200">
-            <li className="py-4">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 overflow-hidden">
-                  {isImage(contentObj?.fileName) ? (
-                    <img src={imageUrl} id={contentObj.id} alt={contentObj.fileName} />
-                  ) : (
-                    <IconContext.Provider value={{size: '48px', color: 'darkgrey'}}>
-                      <AiOutlineFile />
-                    </IconContext.Provider>
-                  )}
-                </div>
-                <div className="w-full">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {contentObj?.fileName}
-                  </p>
-                  <p className="text-sm text-gray-500 truncate">{contentObj?.fileName}</p>
-                </div>
-                <div className="w-auto">
-                  <a
-                    href="#"
-                    className="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-                    View
-                  </a>
-                </div>
-              </div>
-            </li>
+            {contentObj && contentObj?.files.length > 0
+              ? contentObj.files.map((file: any) => (
+                  <FileListItem fileName={file.fileName} fileKey={file.fileKey} />
+                ))
+              : null}
           </ul>
         </div>
 
@@ -188,30 +155,12 @@ const SingleUpload = ({
                   {anthologyDict[userLanguage].ACTIONS.EDIT}
                 </div>
 
-                {/* CONDITIONAL SHOW OF DELETE AND DELETE CONFIRM BTNS */}
-                {subSection !== 'Work' && subSection !== 'Notes' ? (
-                  editMode === 'delete' && editID === contentObj.id ? (
-                    <>
-                      <div
-                        className={`${theme.btn.confirm}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                        onClick={() => handleConfirm()}>
-                        {anthologyDict[userLanguage].ACTIONS.CONFIRM}
-                      </div>
-                      <div
-                        className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                        onClick={() => handleCancel()}>
-                        {anthologyDict[userLanguage].ACTIONS.CANCEL}
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      className={`${theme.btn.delete}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                      onClick={() => handleDelete()}>
-                      {anthologyDict[userLanguage].ACTIONS.DELETE}
-                    </div>
-                  )
-                ) : null}
-
+                <div
+                  className={`${theme.btn[themeColor]} w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2 flex flex-row`}
+                  onClick={() => setShowUploadDialog(!showUploadDialog)}>
+                  <BiImageAdd className={`w-auto mr-2`} />
+                  {anthologyDict[userLanguage].ACTIONS.UPLOAD}
+                </div>
               </div>
 
               {/**
@@ -242,6 +191,17 @@ const SingleUpload = ({
             </div>
           )}
 
+          {showUploadDialog && (
+            <UploadAttachment
+              personFilesID={contentObj.id}
+              filesArray={contentObj.files}
+              lessonPageID={contentObj.lessonPageID}
+              lessonID={contentObj.lessonID}
+              syllabusLessonID={contentObj.syllabusLessonID}
+              roomID={contentObj.roomID}
+            />
+          )}
+
           {showComments && (
             <div className="border-t-0 border-gray-200 mt-4">
               <FeedbacksUploads
@@ -266,4 +226,4 @@ const SingleUpload = ({
   );
 };
 
-export default SingleUpload;
+export default UploadCard;
