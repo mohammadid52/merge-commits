@@ -1,21 +1,21 @@
+import Storage from '@aws-amplify/storage';
 import {Transition} from '@headlessui/react';
 import {findIndex, map, reject, remove, update} from 'lodash';
+import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {IoClose} from 'react-icons/io5';
+import {AiOutlineEyeInvisible} from 'react-icons/ai';
 import {getAsset} from '../../../../../assets';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import Storage from '@aws-amplify/storage';
-import {nanoid} from 'nanoid';
-import Buttons from '../../../../Atoms/Buttons';
-import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {FORM_TYPES} from '../common/constants';
-import {getImageFromS3Static} from '../../../../../utilities/services';
+import useDictionary from '../../../../../customHooks/dictionary';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {removeExtension} from '../../../../../utilities/functions';
+import {getImageFromS3Static} from '../../../../../utilities/services';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import {UPLOAD_KEYS} from '../../../constants';
+import {FORM_TYPES} from '../common/constants';
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -56,6 +56,8 @@ const deletImageFromS3 = (key: string) => {
   });
 };
 
+const UPLOAD_KEY = UPLOAD_KEYS.TEACHER_UPLOAD;
+
 const File = ({
   _status,
   progress,
@@ -95,7 +97,7 @@ const File = ({
   // const getFile = async () => await getImageFromS3(imgId);
   const imageUrl = file
     ? URL.createObjectURL(file)
-    : getImageFromS3Static(`ULB/studentdata_${fileKey}`);
+    : getImageFromS3Static(`${UPLOAD_KEY}${fileKey}`);
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
@@ -195,21 +197,21 @@ const File = ({
         </div>
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
-            <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
+            {/* <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
               <IoClose className="text-red-500" />
-            </div>
+            </div> */}
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
               <div
                 onClick={() => setShowMenu(!showMenu)}
                 className={`relative ${btnClass('gray')}`}>
-                <BiDotsVerticalRounded className="text-gray-500" />
+                <AiOutlineEyeInvisible className="text-gray-500" />
                 <Transition
                   style={{bottom: '1.5rem'}}
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
                   show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File</dt>
+                      <dt className="text-sm font-medium text-gray-500">File preview</dt>
                       <img
                         onClick={onImageClick}
                         src={imageUrl}
@@ -225,8 +227,13 @@ const File = ({
                     </div>
                     <div className="sm:col-span-1">
                       <dt className="text-sm font-medium text-gray-500">Size</dt>
-                      <dd className="mt-1 text-sm text-gray-700 font-medium">
-                        {getSizeInBytes(file?.size)}
+                      <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                        <p className="w-auto">{getSizeInBytes(file?.size)}</p>
+                        <div
+                          onClick={() => deleteImage(fileKey)}
+                          className="w-auto text-red-500 hover:text-red-800">
+                          delete
+                        </div>
                       </dd>
                     </div>
                   </dl>
@@ -346,7 +353,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   const deleteImage = (fileKey: string) => {
     remove(filesUploading, (f) => f.fileKey === fileKey);
     setFilesUploading([...filesUploading]);
-    deletImageFromS3(`ULB/studentdata_${fileKey}`);
+    deletImageFromS3(`${UPLOAD_KEY}${fileKey}`);
   };
 
   const uploadImageToS3 = async (
@@ -357,7 +364,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   ) => {
     // Upload file to s3 bucket
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/studentdata_${id}`, file, {
+      Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {

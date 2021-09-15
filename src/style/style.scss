@@ -1,26 +1,14 @@
+// Variables
+@import 'variables';
+
 /* OTHER / GENERAL */
 @import 'general/scrollbars';
 
 /* THEME */
-@import 'theme.scss';
+@import 'utilities/theme';
 
 /* MAIN PARTS */
 @import 'lessons';
-
-$iconoclast: #667eea;
-$curate: #0081cb;
-$gray-50: #f9fafb;
-$gray-100: #f3f4f6;
-$gray-200: #e5e7eb;
-$gray-300: #d1d5db;
-$gray-400: #9ca3af;
-$gray-500: #6b7280;
-$gray-600: #4b5563;
-$gray-700: #374151;
-$gray-800: #1f2937;
-$gray-900: #111827;
-$indigo-50: #eef2ff;
-$indigo-100: #e0e7ff;
 
 .sentiment-table-view {
   & thead tr th:first-child,
@@ -1075,7 +1063,7 @@ $indigo-100: #e0e7ff;
     background-color: rgba(237, 242, 247, 1);
   }
   border-radius: 8px;
-  height: 20rem !important;
+  height: 20rem;
   padding: 1rem;
   &.dark::-webkit-scrollbar {
     height: 8px;
@@ -1274,5 +1262,25 @@ $indigo-100: #e0e7ff;
   .rdw-remove-wrapper,
   .rdw-inline-wrapper {
     margin-bottom: 0 !important;
+  }
+}
+
+.iconoclast {
+  .half-border::after {
+    --tw-gradient-to: #4338ca;
+    --tw-gradient-from: #818cf8;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(239, 68, 68, 0));
+    content: '';
+    position: absolute;
+    bottom: -3px;
+
+    left: 0;
+    right: 0;
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+    // background: $iconoclast;
+    height: 2px;
+    border-radius: 999px;
+    width: 7%;
   }
 }

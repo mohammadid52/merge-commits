@@ -1,27 +1,26 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {FaChalkboardTeacher, FaGraduationCap, FaHandshake, FaHotel} from 'react-icons/fa';
+import {HiPencil} from 'react-icons/hi';
+import {IoPeople} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake} from 'react-icons/fa';
-
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from '../../../../utilities/services';
 import {
-  initials,
-  stringToHslColor,
   formatPhoneNumber,
   getHostNameFromUrl,
   getInitialsFromString,
+  initials,
+  stringToHslColor,
 } from '../../../../utilities/strings';
+import Tooltip from '../../../Atoms/Tooltip';
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
-import {IoPeople} from 'react-icons/io5';
-import {HiPencil} from 'react-icons/hi';
-import {getImageFromS3} from '../../../../utilities/services';
 import ClassList from './Listing/ClassList';
-import StaffBuilder from './Listing/StaffBuilder';
-import ServiceProviders from './Listing/ServiceProviders';
 import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
-import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import Tooltip from '../../../Atoms/Tooltip';
-import {getAsset} from '../../../../assets';
+import ServiceProviders from './Listing/ServiceProviders';
+import StaffBuilder from './Listing/StaffBuilder';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -55,7 +54,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const [imageUrl, setImageUrl] = useState();
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {Institute_info, BreadcrumsTitles} = useDictionary(clientKey);
+  const {Institute_info} = useDictionary(clientKey);
 
   const tabs = [
     {

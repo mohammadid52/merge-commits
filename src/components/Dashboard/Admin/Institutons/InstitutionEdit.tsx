@@ -1,23 +1,22 @@
-import React, { useContext, useState, useEffect } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
-import { useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
-
-import FormInput from '../../../Atoms/Form/FormInput';
-import Loader from '../../../Atoms/Loader';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from '../../../../utilities/services';
+import {statesList} from '../../../../utilities/staticData';
 import Buttons from '../../../Atoms/Buttons';
-import Selector from '../../../Atoms/Form/Selector';
 import CheckBox from '../../../Atoms/Form/CheckBox';
+import FormInput from '../../../Atoms/Form/FormInput';
+import Selector from '../../../Atoms/Form/Selector';
+import Loader from '../../../Atoms/Loader';
+import DroppableMedia from '../../../Molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
-
-import { getImageFromS3 } from '../../../../utilities/services';
-import { statesList } from '../../../../utilities/staticData';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
 
 interface InstitutionEditProps {
   institute: InstInfo;
@@ -39,26 +38,13 @@ interface InstInfo {
 }
 
 const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
-  const instituteData = {
-    name: '',
-    type: '',
-    website: '',
-    address: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    zip: '',
-    image: '',
-    phone: '',
-    isServiceProvider: false,
-  };
   const [editFormValues, setEditFormValues] = useState<InstInfo>(instEditPrps.institute);
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { InstitutionEditDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {InstitutionEditDict} = useDictionary(clientKey);
   const [showModal, setShowModal] = useState({
     warnModal: false,
     infoModal: false,
@@ -71,18 +57,38 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const history = useHistory();
 
   const institutionTypeList = [
-    { id: 1, name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'], value: 'School' },
-    { id: 2, name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'], value: 'After School' },
-    { id: 3, name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'], value: 'Day Camp' },
-    { id: 4, name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'], value: 'Summer Camp' },
-    { id: 5, name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['C3'], value: '501C3' },
+    {
+      id: 1,
+      name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
+      value: 'School',
+    },
+    {
+      id: 2,
+      name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
+      value: 'After School',
+    },
+    {
+      id: 3,
+      name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
+      value: 'Day Camp',
+    },
+    {
+      id: 4,
+      name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
+      value: 'Summer Camp',
+    },
+    {
+      id: 5,
+      name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['C3'],
+      value: '501C3',
+    },
   ];
 
   const handleEditFormChange = (e: React.FormEvent /* <HTMLFormElement> */) => {
     const name = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;
     removeErrorMSg();
-    setEditFormValues({ ...editFormValues, [name]: value });
+    setEditFormValues({...editFormValues, [name]: value});
   };
 
   const removeErrorMSg = () => {
@@ -109,6 +115,8 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
       state: str,
     });
   };
+
+  const [fileObj, setFileObj] = useState({});
 
   const handleEditFormSubmit = async () => {
     if (!editFormValues.name) {
@@ -139,7 +147,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           isServiceProvider: editFormValues.isServiceProvider,
         };
 
-        const updatedList = await API.graphql(
+        await API.graphql(
           graphqlOperation(customMutations.updateInstitution, {input: input})
         );
         instEditPrps.toggleUpdateState();
@@ -186,17 +194,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
       modalMessage: '',
     });
   };
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
@@ -225,36 +222,18 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     });
   };
 
-  const deletImageFromS3 = (key: string) => {
-    // Remove image from bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.remove(key)
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: InstitutionEditDict[userLanguage]['messages']['deleterr'],
-          });
-          reject(err);
-        });
-    });
-  };
-
-  const deletUserProfile = async () => {
-    await deletImageFromS3(`instituteImages/institute_image_${editFormValues.id}`);
-    setEditFormValues({ ...editFormValues, image: '' });
-  };
-
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image, editFormValues.id, 'image/jpeg');
-    const imageUrl: any = await getImageFromS3(`instituteImages/institute_image_${editFormValues.id}`);
+    await uploadImageToS3(image ? image : fileObj, editFormValues.id, 'image/jpeg');
+    const imageUrl: any = await getImageFromS3(
+      `instituteImages/institute_image_${editFormValues.id}`
+    );
     setImageUrl(imageUrl);
-    setEditFormValues({ ...editFormValues, image: `instituteImages/institute_image_${editFormValues.id}` });
+    setEditFormValues({
+      ...editFormValues,
+      image: `instituteImages/institute_image_${editFormValues.id}`,
+    });
     toggleCropper();
     setImageLoading(false);
   };
@@ -265,7 +244,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         id: editFormValues.id,
         image: editFormValues.image,
       };
-      const update: any = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updateInstitution, {input: input})
+      );
       instEditPrps.toggleUpdateState();
     } catch (error) {
       setError({
@@ -307,6 +288,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     isServiceProvider,
   } = editFormValues;
 
+  const mediaRef = React.useRef(null);
+  const handleImage = () => mediaRef?.current?.click();
+
   return (
     <div className="h-9/10 flex flex-col md:flex-row">
       {/* Profile section */}
@@ -315,58 +299,46 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
             {!imageLoading ? (
               <label className="cursor-pointer flex justify-center">
-                <img
-                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                  src={imageUrl}
-                />
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => cropSelecetedImage(e)}
-                  onClick={(e: any) => (e.target.value = '')}
-                  accept="image/*"
-                  multiple={false}
-                />
+                <DroppableMedia
+                  mediaRef={mediaRef}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}>
+                  <img
+                    onClick={handleImage}
+                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                    src={imageUrl}
+                  />
+                </DroppableMedia>
               </label>
             ) : (
               <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                 <Loader />
               </div>
             )}
-
-            {/* <span className="hidden group-focus:flex justify-around mt-6">
-              <label className="w-8 cursor-pointer">
-                <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
-                  <FaEdit />
-                </IconContext.Provider>
-                <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
-              </label>
-              <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
-                  <FaTrashAlt />
-                </IconContext.Provider>
-              </span>
-            </span> */}
           </button>
         ) : (
-          <label
-            className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-            {!imageLoading ? (
-              <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
-                <FaPlus />
-              </IconContext.Provider>
-            ) : (
-              <Loader />
-            )}
-            <input
-              type="file"
-              className="hidden"
-              onChange={(e) => cropSelecetedImage(e)}
-              onClick={(e: any) => (e.target.value = '')}
-              accept="image/*"
-              multiple={false}
-            />
-          </label>
+          <DroppableMedia
+            mediaRef={mediaRef}
+            setImage={(img: any, file: any) => {
+              setUpImage(img);
+              setFileObj(file);
+            }}
+            toggleCropper={toggleCropper}>
+            <label
+              onClick={handleImage}
+              className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+              {!imageLoading ? (
+                <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
+                  <FaPlus />
+                </IconContext.Provider>
+              ) : (
+                <Loader />
+              )}
+            </label>
+          </DroppableMedia>
         )}
         <p className="text-gray-600 my-4">Click circle to manage your avatar.</p>
       </div>
@@ -389,7 +361,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                     isRequired
                     selectedItem={type}
                     label={InstitutionEditDict[userLanguage]['FORM']['INSTITUTION_TYPE']}
-                    placeholder={InstitutionEditDict[userLanguage]['FORM']['INSTITUTION_TYPE']}
+                    placeholder={
+                      InstitutionEditDict[userLanguage]['FORM']['INSTITUTION_TYPE']
+                    }
                     list={institutionTypeList}
                     onChange={onTypeSelect}
                   />
@@ -402,7 +376,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   id="name"
                   name="name"
                   label={InstitutionEditDict[userLanguage]['FORM']['NAME_INPUT_LABEL']}
-                  placeHolder={InstitutionEditDict[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']}
+                  placeHolder={
+                    InstitutionEditDict[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']
+                  }
                   isRequired
                 />
               </div>
@@ -412,8 +388,12 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   onChange={handleEditFormChange}
                   id="website"
                   name="website"
-                  label={InstitutionEditDict[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']}
-                  placeHolder={InstitutionEditDict[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']}
+                  label={
+                    InstitutionEditDict[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']
+                  }
+                  placeHolder={
+                    InstitutionEditDict[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']
+                  }
                 />
               </div>
               <div className="sm:col-span-3 px-3 py-2">
@@ -432,7 +412,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   id="addressLine2"
                   onChange={handleEditFormChange}
                   name="addressLine2"
-                  label={InstitutionEditDict[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']}
+                  label={
+                    InstitutionEditDict[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']
+                  }
                 />
               </div>
 
@@ -450,7 +432,12 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                   {InstitutionEditDict[userLanguage]['FORM']['STATE_LABEL']}
                 </label>
-                <Selector selectedItem={state} placeholder="State" list={statesList} onChange={onStateSelect} />
+                <Selector
+                  selectedItem={state}
+                  placeholder="State"
+                  list={statesList}
+                  onChange={onStateSelect}
+                />
               </div>
 
               <div className="sm:col-span-3 px-3 py-2">
@@ -477,13 +464,17 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   value={isServiceProvider}
                   onChange={onServiceProviderChange}
                   name="isServiceProvider"
-                  label={InstitutionEditDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']}
+                  label={
+                    InstitutionEditDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']
+                  }
                 />
               </div>
             </div>
           </div>
 
-          {error.show ? <span className="text-sm text-red-600 my-6 mx-3">{error.errorMsg}</span> : null}
+          {error.show ? (
+            <span className="text-sm text-red-600 my-6 mx-3">{error.errorMsg}</span>
+          ) : null}
 
           {/* Cancel-save buttons */}
           <div className="px-4 w-full flex justify-end">

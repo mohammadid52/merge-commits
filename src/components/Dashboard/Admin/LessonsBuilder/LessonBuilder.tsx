@@ -1,36 +1,34 @@
-import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoDocumentText, IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
-
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as mutations from '../../../../graphql/mutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-
-import ModalPopUp from '../../../Molecules/ModalPopUp';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import Loader from '../../../Atoms/Loader';
-import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-
-import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
-import LessonActivities from './StepActionComponent/LessonActivities';
-import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
-import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
-import {
-  InstructionInitialState,
-  SavedLessonDetailsProps,
-  LessonPlansProps,
-} from './LessonEdit';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
+import * as mutations from '../../../../graphql/mutations';
+import {
+  LessonPlansProps,
+  SavedLessonDetailsProps,
+} from '../../../../interfaces/LessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
+import Loader from '../../../Atoms/Loader';
+import PageWrapper from '../../../Atoms/PageWrapper';
+import SectionTitle from '../../../Atoms/SectionTitle';
+import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
+import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
+
+import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
+import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
+import LessonActivities from './StepActionComponent/LessonActivities';
+import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 
 export interface InitialData {
   name: string;
@@ -38,6 +36,7 @@ export interface InitialData {
   duration: string;
   purpose: string;
   purposeHtml: string;
+  studentMaterials: string;
   objective: string;
   objectiveHtml: string;
   notes?: string;
@@ -49,6 +48,7 @@ export interface InitialData {
   imageUrl?: string;
   imagePreviewUrl?: string;
   studentSummary?: string;
+  lessonPlan?: any[];
 }
 export interface InputValueObject {
   id: string;
@@ -78,6 +78,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
+    studentMaterials: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
     notes: '',
@@ -88,6 +89,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     imageUrl: '',
     imageCaption: '',
     studentSummary: '',
+    lessonPlan: [{}],
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -169,11 +171,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const savedCheckpointModal = () => {
-    setActiveStep(checkpointSaveModal.stepOnHold);
-    closeCheckpointModal();
-    setUnsavedChanges(false);
-  };
   const closeCheckpointModal = () => {
     setCheckpointSaveModal({
       ...checkpointSaveModal,
@@ -195,7 +192,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     show: false,
     message: '',
   });
-  const [isCheckpUnsaved, setIsCheckpUnsaved] = useState<boolean>(false);
+
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
   const [selDesigners, setSelDesigners] = useState<any>([]);
@@ -232,6 +229,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         setFormData({
           ...formData,
           ...savedData,
+          lessonPlan: [...savedData.lessonPlan],
           imageCaption: savedData.cardCaption,
           imageUrl: savedData.cardImage,
           imagePreviewUrl: savedData.cardImage
@@ -243,6 +241,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             lessonTypeList.find((item: any) => item.value === savedData.type),
           purposeHtml: savedData?.purpose ? savedData.purpose : '',
           notesHtml: savedData?.notes ? savedData.notes : '',
+          studentMaterials: savedData?.studentMaterials ? savedData.studentMaterials : '',
           objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
           languages: savedData.language.map((it: any) =>
             languageList.find((it2: any) => it2.value === it)
@@ -296,30 +295,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     fetchCurriculum();
   }, [formData?.institution]);
 
-  const hasUnsavedCheckpoint = (
-    val: boolean,
-    isIndividualEmpty: boolean,
-    data: any,
-    checkpQuestions: any,
-    selDesigners: any[]
-  ) => {
-    if (isIndividualEmpty) {
-      setIndividualFieldEmpty(true);
-    } else {
-      setIndividualFieldEmpty(false);
-    }
-    if (val !== isCheckpUnsaved) {
-      setIsCheckpUnsaved(val);
-      setUnsavedCheckPData(data);
-      if (data.title && val) {
-        setShowModal(true);
-      } else {
-        setShowModal(false);
-      }
-      setCheckpQuestions(checkpQuestions);
-      setSelDesigners(selDesigners);
-    }
-  };
   const addCheckpointQuestions = async (
     quesId: string,
     checkpointID: string,
@@ -649,19 +624,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const gobackToLessonsList = () => {
-    if (unsavedChanges) {
-      toggleModal();
-    } else {
-      history.push('/dashboard/lesson-builder');
-    }
-  };
-
-  const onModalSave = () => {
-    goBack();
-    toggleModal();
-  };
-
   const saveBeforeLeave = async () => {
     if (activeStep === 'learning-evidence') {
       await updateMeasurementList(selectedMeasurements);
@@ -676,13 +638,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         show: !warnModal.show,
       });
     }
-  };
-
-  const toggleModal = () => {
-    setWarnModal({
-      ...warnModal,
-      show: !warnModal.show,
-    });
   };
 
   const toggleUnSaveModal = (url?: string) => {
@@ -734,14 +689,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     // } else {
     //   setActiveStep('Instructions');
     // }
-  };
-
-  const onInstructionSaved = (obj: InstructionInitialState) => {
-    setSavedLessonDetails({
-      ...savedLessonDetails,
-      lessonInstructions: obj,
-    });
-    setActiveStep('Builder');
   };
 
   const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
@@ -819,6 +766,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     },
   ];
 
+  const animationProps = {animationType: 'translateY', duration: '500'};
+
   return (
     <div className="w-full h-full">
       {/* Section Header */}
@@ -865,6 +814,69 @@ const LessonBuilder = (props: LessonBuilderProps) => {
               </div>
             ) : (
               <div className="">{currentStepComp(activeStep)}</div>
+              // <div>
+              //   <AnimatedContainer show={activeStep === 'overview'} {...animationProps}>
+              //     {activeStep === 'overview' && (
+              //       <AddNewLessonForm
+              //         lessonId={lessonId}
+              //         changeLessonType={changeLessonType}
+              //         formData={formData}
+              //         setFormData={setFormData}
+              //         designerListLoading={designerListLoading}
+              //         designersList={designersList}
+              //         selectedDesigners={selectedDesigners}
+              //         setSelectedDesigners={setSelectedDesigners}
+              //         postLessonCreation={postLessonCreation}
+              //         allMeasurement={measurementList}
+              //         institutionList={institutionList}
+              //         setUnsavedChanges={setUnsavedChanges}
+              //         fetchStaffByInstitution={fetchStaffByInstitution}
+              //       />
+              //     )}
+              //   </AnimatedContainer>
+              //   <AnimatedContainer show={activeStep === 'activities'} {...animationProps}>
+              //     {activeStep === 'activities' && (
+              //       <LessonActivities
+              //         loading={loading}
+              //         lessonId={lessonId}
+              //         lessonName={formData?.name}
+              //         universalLessonDetails={universalLessonDetails}
+              //       />
+              //     )}
+              //   </AnimatedContainer>
+              //   <AnimatedContainer show={activeStep === 'courses'} {...animationProps}>
+              //     {activeStep === 'courses' && (
+              //       <LessonCourse
+              //         institutionCollection={institutionCollection}
+              //         curriculumList={curriculumList}
+              //         fetchCurriculum={fetchCurriculum}
+              //         institution={formData?.institution}
+              //         lessonId={lessonId}
+              //         lessonPlans={universalLessonDetails?.lessonPlan}
+              //         lessonType={formData.type?.value}
+              //         loading={curriculumLoading}
+              //         selectedCurriculums={selectedCurriculumList}
+              //       />
+              //     )}
+              //   </AnimatedContainer>
+              //   <AnimatedContainer
+              //     show={activeStep === 'learning-evidence'}
+              //     {...animationProps}>
+              //     {activeStep === 'learning-evidence' && (
+              //       <LearningEvidence
+              //         fetchLessonRubrics={fetchLessonRubrics}
+              //         institutionId={formData?.institution?.id}
+              //         lessonId={lessonId}
+              //         selectedMeasurements={selectedMeasurements}
+              //         setSelectedMeasurements={setSelectedMeasurements}
+              //         setUnsavedChanges={setUnsavedChanges}
+              //         serverMessage={serverMessage}
+              //         updating={updating}
+              //         updateMeasurementList={updateMeasurementList}
+              //       />
+              //     )}
+              //   </AnimatedContainer>
+              // </div>
             )}
           </div>
         </div>

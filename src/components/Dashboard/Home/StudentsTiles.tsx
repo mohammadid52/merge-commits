@@ -1,12 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-
-import ContentCard from '../../Atoms/ContentCard';
-import ImageAlternate from '../../Atoms/ImageAlternative';
-
 import Buttons from '../../Atoms/Buttons';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import ContentCard from '../../Atoms/ContentCard';
 import SearchInput from '../../Atoms/Form/SearchInputToggle';
+import ImageAlternate from '../../Atoms/ImageAlternative';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
 const StudentsTiles = (props: {
   studentsList: any;
@@ -83,7 +81,7 @@ const StudentsTiles = (props: {
         withButton={
           <div
             className={`flex items-center justify-${
-              list.length > 12 && isTeacher ? 'center' : 'end'
+              list.length > 12 && isTeacher ? 'end' : 'end'
             } w-full`}>
             {isTeacher && (
               <div className="w-auto">

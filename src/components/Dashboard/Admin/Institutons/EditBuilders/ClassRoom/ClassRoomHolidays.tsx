@@ -14,7 +14,7 @@ import Loader from '../../../../../Atoms/Loader';
 
 import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 
 export interface IImpactLog {
   impactDate: Date;
@@ -23,17 +23,26 @@ export interface IImpactLog {
   adjustment: string;
 }
 
+interface IClassRoomHolidaysProps {
+  lessonImpactLogs: IImpactLog[];
+  logsLoading: boolean;
+  setLessonImpactLogs: React.Dispatch<React.SetStateAction<IImpactLog[]>>;
+  setLogsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+  sortLogsByDate: (data: IImpactLog[], order?: string) => IImpactLog[] | [];
+}
+
 const ClassRoomHolidays = ({
-  logsChanged,
-  setLogsChanged
-}: any) => {
+  lessonImpactLogs,
+  logsLoading,
+  setLessonImpactLogs,
+  setLogsChanged,
+  sortLogsByDate,
+}: IClassRoomHolidaysProps) => {
   const params = useQuery(location.search);
   const roomId = params.get('id');
 
   const [dateOrder, setDateOrder] = useState('asc');
   const [formOpen, setFormOpen] = useState<boolean>(false);
-  const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [warnModal, setWarnModal] = useState({
@@ -41,35 +50,6 @@ const ClassRoomHolidays = ({
     message: '',
     action: () => {},
   });
-
-  useEffect(() => {
-    if (roomId) {
-      getImpactLogs();
-    }
-  }, []);
-
-  const sortRecords = (data:any, order:string = 'asc') => {
-    return data
-      ? data.sort((a: IImpactLog, b: IImpactLog) =>
-          order === 'asc'
-            ? +new Date(a.impactDate) - +new Date(b.impactDate)
-            : +new Date(b.impactDate) - +new Date(a.impactDate)
-        )
-      : []; 
-  }
-
-  const getImpactLogs = async () => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getRoomLessonImpactLogs, {id: roomId})
-      );
-      setLessonImpactLogs(sortRecords(result?.data?.getRoom.lessonImpactLog));
-      setLoading(false);
-    } catch (error) {
-      setLessonImpactLogs([]);
-      setLoading(false);
-    }
-  };
 
   const handleEdit = (index: number) => {
     setActiveIndex(index);
@@ -79,9 +59,10 @@ const ClassRoomHolidays = ({
   const handleOnDragEnd = () => {};
 
   const postMutation = (data: any) => {
-    setLessonImpactLogs(sortRecords(data));
+    setLessonImpactLogs(sortLogsByDate(data));
     setActiveIndex(null);
     setFormOpen(false);
+    setLogsChanged(true);
   };
 
   const closeDeleteModal = () => {
@@ -100,8 +81,9 @@ const ClassRoomHolidays = ({
           },
         })
       );
-      setLessonImpactLogs(sortRecords(result?.data?.updateRoom.lessonImpactLog));
+      setLessonImpactLogs(sortLogsByDate(result?.data?.updateRoom.lessonImpactLog));
       setDeleting(false);
+      setLogsChanged(true);
       closeDeleteModal();
     };
     setWarnModal({
@@ -113,9 +95,16 @@ const ClassRoomHolidays = ({
 
   const handleCancel = () => {
     setFormOpen(false);
-    if(activeIndex){
+    if (activeIndex) {
       setActiveIndex(null);
     }
+  };
+
+  const handleDateOrderChange = () => {
+    setDateOrder(dateOrder === 'desc' ? 'asc' : 'desc');
+    setLessonImpactLogs(
+      sortLogsByDate(lessonImpactLogs, dateOrder === 'desc' ? 'asc' : 'desc')
+    );
   };
 
   return (
@@ -128,9 +117,7 @@ const ClassRoomHolidays = ({
         <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
           <div
             className="w-2/10 flex px-4 py-3 items-center bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal"
-            onClick={() =>
-              sortRecords(lessonImpactLogs, dateOrder === 'desc' ? 'asc' : 'desc')
-            }>
+            onClick={handleDateOrderChange}>
             Date
             <span className="inline-flex items-center ml-1 cursor-pointer">
               <span className={`w-auto ${dateOrder === 'desc' ? 'text-dark-gray' : ''}`}>
@@ -154,7 +141,7 @@ const ClassRoomHolidays = ({
             Action
           </div>
         </div>
-        {loading ? (
+        {logsLoading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
             <div className="items-center flex justify-center flex-col">
               <Loader color="rgba(160, 174, 192, 1)" />

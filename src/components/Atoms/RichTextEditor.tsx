@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {Editor} from 'react-draft-wysiwyg';
+import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import {EditorState, convertToRaw, ContentState} from 'draft-js';
+import React, {useEffect, useState} from 'react';
+import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
-import useInLessonCheck from '../../customHooks/checkIfInLesson';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -21,6 +20,7 @@ interface RichTextEditorProps {
    * Don't use this if the content is serious
    */
   withStyles?: boolean;
+  maxHeight?: string;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
@@ -35,6 +35,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     features = [],
     theme,
     withStyles = false,
+    maxHeight,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -128,8 +129,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       ? `${dark ? 'dark' : ''} editorClassName ${previewMode ? 'previewMode' : ''}  ${
           fullWHOverride ? 'flex-1' : ''
         }`
-      : 'editorClassName'
-  }`;
+      : 'editorClassName '
+  }  ${maxHeight ? maxHeight : ''}`;
 
   const editorRef = React.useRef();
 

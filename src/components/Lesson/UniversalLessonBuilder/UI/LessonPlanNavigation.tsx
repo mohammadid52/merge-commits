@@ -1,15 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {useHistory} from 'react-router';
-import {useQuery} from '../../../../customHooks/urlParam';
-import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import CustomToggle from './Toggle';
 import {BiBook, BiSun} from 'react-icons/bi';
-
 import {BsMoon} from 'react-icons/bs';
+import {useHistory} from 'react-router';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {useQuery} from '../../../../customHooks/urlParam';
+import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
+import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import Tooltip from '../../../Atoms/Tooltip';
 
 interface ILessonPlanNavigationProps {

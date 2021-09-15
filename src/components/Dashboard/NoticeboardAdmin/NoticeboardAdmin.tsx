@@ -1,17 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import {API, graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
+import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import ContentCard from '../../Atoms/ContentCard';
 import SectionTitle from '../../Atoms/SectionTitleV2';
 import SubSectionTabs from '../Anthology/SubSectionTabs';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { API, graphqlOperation } from '@aws-amplify/api';
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
-import useDictionary from '../../../customHooks/dictionary';
+import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
 import RoomSwitch from './RoomSwitch';
-
-import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
-import TopWidgetBar from '../Noticebooard/TopWidgetBar';
-import ContentCard from '../../Atoms/ContentCard';
 
 export interface NoticeboardAdmin {
   setCurrentPage: any;
@@ -44,17 +43,17 @@ const initialNewWidgetData = {
   placement: 'sidebar',
   title: '',
   description: '',
-  content: { text: '', image: '' },
+  content: {text: '', image: ''},
   quotes: [{}],
   links: [{}],
   active: true,
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
-  const { theme } = useContext(GlobalContext);
-  const { setCurrentPage } = props;
-  const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
-  const { noticeboardDict } = useDictionary(clientKey);
+  const {theme} = useContext(GlobalContext);
+  const {setCurrentPage} = props;
+  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
   //
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -70,7 +69,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     placement: 'sidebar',
     title: '',
     description: '',
-    content: { text: '', image: '' },
+    content: {text: '', image: ''},
     quotes: [],
     links: [],
     active: true,
@@ -78,16 +77,22 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Sidebar Widgets');
-  const [widgetTypeCount, setWidgetTypeCount] = useState<{ sidebar: number; topbar: number }>({
+  const [widgetTypeCount, setWidgetTypeCount] = useState<{
+    sidebar: number;
+    topbar: number;
+  }>({
     sidebar: 0,
     topbar: 0,
   });
 
   // For editing specific poems/stories
-  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
+  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
+    mode: '',
+    widgetID: '',
+  });
 
   useEffect(() => {
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'noticeboard' } });
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'noticeboard'}});
   }, []);
 
   //  TOP Function to load widgets
@@ -95,7 +100,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     setLoading(true);
     try {
       const noticeboardWidgetsFetch: any = await API.graphql(
-        graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoom } } })
+        graphqlOperation(queries.listNoticeboardWidgets, {
+          filter: {roomID: {eq: activeRoom}},
+        })
       );
       const response = await noticeboardWidgetsFetch;
       const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
@@ -120,16 +127,16 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     if (widgetArray) {
       console.log('widgetArray - ', widgetArray);
       return widgetArray.reduce(
-        (acc: { sidebar: number; topbar: number }, widgetObj: any) => {
+        (acc: {sidebar: number; topbar: number}, widgetObj: any) => {
           if (widgetObj.placement === 'sidebar') {
-            return { ...acc, sidebar: acc.sidebar + 1 };
+            return {...acc, sidebar: acc.sidebar + 1};
           } else if (widgetObj.placement === 'topbar') {
-            return { ...acc, topbar: acc.topbar + 1 };
+            return {...acc, topbar: acc.topbar + 1};
           } else {
             return acc;
           }
         },
-        { sidebar: 0, topbar: 0 }
+        {sidebar: 0, topbar: 0}
       );
     } else {
       return {
@@ -146,7 +153,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   }, [widgetData]);
 
   useEffect(() => {
-    setViewEditMode({ mode: '', widgetID: '' });
+    setViewEditMode({mode: '', widgetID: ''});
     setNewWidgetData(initialNewWidgetData);
 
     const initializeWidgetData = async () => {
@@ -170,7 +177,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    * */
   const handleEditUpdateQuotes = (e: React.ChangeEvent) => {
     const target = e.target as any;
-    const { id, value } = target;
+    const {id, value} = target;
     const basekey = e.target.getAttribute('data-basekey');
     const nestkey1 = e.target.getAttribute('data-nestkey1');
     const nestkey2 = e.target.getAttribute('data-nestkey2');
@@ -182,7 +189,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
           ...newWidgetData,
           [basekey]: newWidgetData[basekey].map((nestedObj: any, idx: number) => {
             if (idx === parseInt(nestkey2)) {
-              return { ...nestedObj, [nestkey1]: value };
+              return {...nestedObj, [nestkey1]: value};
             } else {
               return nestedObj;
             }
@@ -197,7 +204,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   const handleEditUpdateDefault = (e: React.ChangeEvent) => {
     const target = e.target as any;
-    const { id, value } = target;
+    const {id, value} = target;
     const dataVal = e.target.getAttribute('data-value');
     const basekey = e.target.getAttribute('data-basekey');
     const nestkey1 = e.target.getAttribute('data-nestkey1');
@@ -208,13 +215,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     switch (viewEditMode.mode) {
       case 'edit':
         if (basekey && nestkey1) {
-          setNewWidgetData({ ...newWidgetData, [basekey]: { [nestkey1]: usableValue } });
+          setNewWidgetData({...newWidgetData, [basekey]: {[nestkey1]: usableValue}});
         } else {
-          setNewWidgetData({ ...newWidgetData, [basekey]: usableValue });
+          setNewWidgetData({...newWidgetData, [basekey]: usableValue});
         }
         break;
       case 'create':
-        const updatedNewWidgetData = { ...newWidgetData, [basekey]: usableValue };
+        const updatedNewWidgetData = {...newWidgetData, [basekey]: usableValue};
         setNewWidgetData(updatedNewWidgetData);
         break;
     }
@@ -229,7 +236,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    *       = nestkey1 => first nested property
    *         = nestkey2 => second nester property
    * */
-  const handleEditUpdateWYSIWYG = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
+  const handleEditUpdateWYSIWYG = (
+    id: string,
+    value: string,
+    basekey: string,
+    nestkey1: string,
+    nestkey2: string
+  ) => {
     switch (viewEditMode.mode) {
       case 'create':
       case 'edit':
@@ -242,7 +255,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
                   // @ts-ignore
                   ...newWidgetData[basekey],
                   // @ts-ignore
-                  [nestkey1]: { ...newWidgetData[basekey][nestkey1], [nestkey2]: value },
+                  [nestkey1]: {...newWidgetData[basekey][nestkey1], [nestkey2]: value},
                 },
               };
               setNewWidgetData(updatedNewWidgetData);
@@ -251,16 +264,19 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
               const updatedNewWidgetData = {
                 ...newWidgetData,
                 // @ts-ignore
-                [basekey]: { ...newWidgetData[basekey], [nestkey1]: value },
+                [basekey]: {...newWidgetData[basekey], [nestkey1]: value},
               };
               setNewWidgetData(updatedNewWidgetData);
             }
           } else {
-            const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+            const updatedNewWidgetData = {...newWidgetData, [basekey]: value};
             setNewWidgetData(updatedNewWidgetData);
           }
         } else {
-          console.error('create err0r -> ', ' no basekey provided for update function...');
+          console.error(
+            'create err0r -> ',
+            ' no basekey provided for update function...'
+          );
         }
         break;
       default:
@@ -269,17 +285,17 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const handleEditToggle = (editMode: ViewEditMode['mode'], widgetID: string) => {
-    setViewEditMode({ mode: editMode, widgetID: widgetID });
+    setViewEditMode({mode: editMode, widgetID: widgetID});
   };
 
   const handleActivation = (id: string) => {
-    const updatedWidgetData = { ...newWidgetData, active: !newWidgetData.active };
+    const updatedWidgetData = {...newWidgetData, active: !newWidgetData.active};
     setNewWidgetData(updatedWidgetData);
   };
 
   // Function group to handle section-switching
   const handleTabClick = (e: React.MouseEvent) => {
-    const { id } = e.target as HTMLElement;
+    const {id} = e.target as HTMLElement;
 
     if (id !== subSection) {
       if (id !== 'subSectionTabs') {
@@ -293,9 +309,11 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     'Sidebar Widgets': 'sidebar',
   };
 
-  const filterWidgetContentBySubsection = widgetData.filter((widgetObj: NoticeboardWidgetMapItem) => {
-    if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
-  });
+  const filterWidgetContentBySubsection = widgetData.filter(
+    (widgetObj: NoticeboardWidgetMapItem) => {
+      if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
+    }
+  );
 
   // TODO: move this function to utils and improve functionality
   const appendHttp = (inputUrl: string) => {
@@ -311,7 +329,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   const linkArrayMap = (inputArray: any[]) => {
     return inputArray.map((elem: any) => {
-      return { ...elem, url: appendHttp(elem.url) };
+      return {...elem, url: appendHttp(elem.url)};
     });
   };
 
@@ -339,7 +357,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     } catch (e) {
       console.error('noticeboardWidgetUpdate: widget: ', e);
     } finally {
-      setViewEditMode({ mode: '', widgetID: '' });
+      setViewEditMode({mode: '', widgetID: ''});
     }
   };
 
@@ -363,12 +381,14 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     } catch (e) {
       console.error('noticeboardWidgetCreate: widget: ', e);
     } finally {
-      setViewEditMode({ mode: '', widgetID: '' });
+      setViewEditMode({mode: '', widgetID: ''});
     }
   };
 
   const noticeboardDelete = async () => {
-    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
+    const getWidgetObj = widgetData.find(
+      (widgetObj: any) => widgetObj.id === viewEditMode.widgetID
+    );
     const input = {
       id: getWidgetObj.id,
     };
@@ -382,7 +402,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     } catch (e) {
       console.error('error deleting widget, -> ', e);
     } finally {
-      setViewEditMode({ mode: '', widgetID: '' });
+      setViewEditMode({mode: '', widgetID: ''});
     }
   };
 
@@ -409,7 +429,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     <>
       <TopWidgetBar />
       <ContentCard additionalClass={`flex-col`}>
-        <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
+        <SectionTitle
+          title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`}
+        />
 
         {/*
         Boetons to select between rooms
@@ -422,7 +444,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
           setActiveRoomName={setActiveRoomName}
         />
 
-        <SectionTitle title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`} />
+        <SectionTitle
+          title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`}
+        />
 
         {/*
         Tabs to select between:

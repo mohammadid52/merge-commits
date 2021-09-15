@@ -42,10 +42,7 @@ const Checkpoint = (props: {
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch, currentPage} = switchContext;
-
-  const [urlState] = useUrlState({roomId: ''});
-  const {roomId} = urlState;
+  const {state, theme, dispatch} = switchContext;
 
   const [title, setTitle] = useState('');
 

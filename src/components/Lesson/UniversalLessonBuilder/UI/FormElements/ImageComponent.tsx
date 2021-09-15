@@ -15,6 +15,7 @@ import {
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import ProgressBar from '../ProgressBar';
+import {wait} from '../../../../../utilities/functions';
 
 interface IImageInput {
   value: string;
@@ -46,7 +47,7 @@ const ImageFormComponent = ({
     userLanguage,
     state: {user},
   } = useContext(GlobalContext);
-  const [openGallery, setOpenGallery] = useState<boolean>(false);
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     value: '',

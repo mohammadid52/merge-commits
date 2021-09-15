@@ -1,11 +1,19 @@
 import React from 'react';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import { MinutesToHHMM } from '../../../../../utilities/time';
+import {MinutesToHHMM} from '../../../../../utilities/time';
 import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 
 const BottomBar = (props: LessonCardProps) => {
-  const {isTeacher, activeRoomInfo, roomID, lessonProps, accessible, lessonType} = props;
+  const {
+    isTeacher,
+    preview = false,
+    activeRoomInfo,
+    roomID,
+    lessonProps,
+    accessible,
+    lessonType,
+  } = props;
 
   return (
     <div>
@@ -18,7 +26,8 @@ const BottomBar = (props: LessonCardProps) => {
           <div className="w-auto text-gray-500">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
-          <div className={`w-auto mx-2 sm:mx-4 text-sm 2xl:text-base text-gray-500`}>
+          <div
+            className={`w-auto mx-2 sm:mx-4 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
@@ -63,6 +72,7 @@ const BottomBar = (props: LessonCardProps) => {
         {/* START */}
         <div className="flex w-3.3/10 hidden sm:block">
           <Start
+            preview={preview}
             roomID={roomID}
             isTeacher={isTeacher}
             lessonKey={lessonProps ? lessonProps.lessonID : null}
@@ -82,6 +92,7 @@ const BottomBar = (props: LessonCardProps) => {
       </div>
       <div className="w-full block sm:hidden">
         <Start
+          preview={preview}
           roomID={roomID}
           isTeacher={isTeacher}
           lessonKey={lessonProps ? lessonProps.lessonID : null}

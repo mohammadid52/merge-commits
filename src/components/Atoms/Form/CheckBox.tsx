@@ -1,5 +1,4 @@
-import React, {useContext, Fragment} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import React from 'react';
 
 interface CheckBoxProps {
   label?: string;
@@ -10,7 +9,6 @@ interface CheckBoxProps {
 
 const CheckBox = (checkBoxProps: CheckBoxProps) => {
   const {label, value, onChange, name} = checkBoxProps;
-  const {theme} = useContext(GlobalContext);
 
   return (
     <label className="inline-flex justify-center items-center mr-2 mt-2">

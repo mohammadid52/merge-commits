@@ -54,24 +54,6 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
         ${menuState === 3 ? 'h-136 rounded-l-lg' : ''}
         bg-gray-700 border-r-1 border-gray-700  shadow
         flex flex-col`}>
-      {/*<div className={`flex-0 h-12 border-b-0 border-charcoal`}>*/}
-      {/*  <ButtonsRound*/}
-      {/*    Icon={IoChatbubble}*/}
-      {/*    iconSizePX={16}*/}
-      {/*    buttonWHClass={`w-12 h-12`}*/}
-      {/*    onClick={() =>*/}
-      {/*      handleSectionButtons(Object.keys(chatroom).length > 0 ? 'Chatroom' : 'Chat')*/}
-      {/*    }*/}
-      {/*    containerBgClass={`${*/}
-      {/*      (menuState > 0 && focusSection === 'Chat') || focusSection === 'Chatroom'*/}
-      {/*        ? 'bg-red-700 hover:bg-red-600'*/}
-      {/*        : 'bg-transparent hover:bg-gray-800'*/}
-      {/*    } rounded-tl-lg `}*/}
-      {/*    buttonBgClass={`bg-transparent`}*/}
-      {/*    iconTxtColorClass={`text-white`}*/}
-      {/*  />*/}
-      {/*</div>*/}
-
       <ChatroomListLauncher
         chatroom={chatroom}
         callback={handleSectionButtons}
@@ -80,60 +62,13 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
         focusSection={focusSection}
       />
 
-      {/*<div className={`flex-0 h-12 border-b-0 border-charcoal`}>*/}
-      {/*  <ButtonsRound*/}
-      {/*    Icon={IoDocument}*/}
-      {/*    iconSizePX={16}*/}
-      {/*    buttonWHClass={`w-12 h-12`}*/}
-      {/*    onClick={() => handleSectionButtons('File')}*/}
-      {/*    containerBgClass={`${*/}
-      {/*      menuState > 0 && focusSection === 'File'*/}
-      {/*        ? 'bg-red-700 hover:bg-red-600'*/}
-      {/*        : 'bg-transparent hover:bg-gray-800'*/}
-      {/*    }`}*/}
-      {/*    buttonBgClass={`bg-transparent`}*/}
-      {/*    iconTxtColorClass={`text-white`}*/}
-      {/*  />*/}
-      {/*</div>*/}
-
-      {/* <FilesListLauncher
-        callback={handleSectionButtons}
-        menuState={menuState}
-        focusSection={focusSection}
-      /> */}
-
-      {/**
-       *
-       * ADD API/SEARCH ICON BACK WHEN FUNCTION AVAILABLE
-       *
-       **/}
-
-      {/*<div className={`flex-0 h-12 border-b-0 border-charcoal`}>*/}
-      {/*  <ButtonsRound*/}
-      {/*    Icon={AiOutlineSearch}*/}
-      {/*    iconSizePX={16}*/}
-      {/*    buttonWHClass={`w-12 h-12`}*/}
-      {/*    pointerEvents={focusSection === 'Search'}*/}
-      {/*    onClick={() => handleSectionButtons('Search')}*/}
-      {/*    containerBgClass={`${*/}
-      {/*      menuState > 0 && focusSection === 'Search'*/}
-      {/*        ? 'bg-red-700 hover:bg-red-600'*/}
-      {/*        : 'bg-transparent hover:bg-gray-800'*/}
-      {/*    }`}*/}
-      {/*    buttonBgClass={`bg-transparent`}*/}
-      {/*    iconTxtColorClass={`${*/}
-      {/*      focusSection === 'Search' ? 'text-white' : 'text-gray-600'*/}
-      {/*    }`}*/}
-      {/*  />*/}
-      {/*</div>*/}
-
       {lessonState.lessonData && lessonState.lessonData.id ? (
         <NotesLauncher callback={handleSectionButtons} />
       ) : null}
 
       <div
         onClick={() => handleSectionButtons(focusSection)}
-        className={`h-max w-12 overflow-hidden flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal hover:bg-gray-800 cursor-pointer`}>
+        className={`h-max w-12 overflow-hidden flex flex-1 flex-col items-center justify-center text-center bg-charcoal hover:bg-gray-800 cursor-pointer`}>
         <div
           className={`transform -rotate-90 w-max flex flex-1 justify-center content-center items-center`}>
           <div

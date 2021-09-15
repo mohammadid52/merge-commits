@@ -1,8 +1,4 @@
-import {
-  PagePart,
-  UniversalLesson,
-  UniversalLessonPage,
-} from './UniversalLessonInterfaces';
+import {PagePart, UniversalLesson} from './UniversalLessonInterfaces';
 
 export interface ModalProps {
   saveAction?: () => void;
@@ -90,7 +86,6 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   handleEditBlockToggle?: () => void;
   idx?: number;
   isPagePart?: boolean;
-  rightMenu?: boolean;
 }
 
 export interface IContentTypeComponentProps {
@@ -115,5 +110,6 @@ export interface IContentTypeComponentProps {
     customPageContentId?: string
   ) => void;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+
   askBeforeClose: () => void;
 }

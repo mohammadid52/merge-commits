@@ -15,6 +15,8 @@ const StandardLessonCard = (props: LessonCardProps) => {
     lessonProps,
     accessible,
     lessonType,
+    getImageFromS3 = true,
+    preview = false,
   } = props;
   const {theme} = useContext(GlobalContext);
 
@@ -25,7 +27,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  LEFT SECTION IMAGE
        */}
-      <SideImage lessonProps={lessonProps} />
+      <SideImage getImageFromS3={getImageFromS3} lessonProps={lessonProps} />
       {/**
        *  RIGHT SECTION
        */}
@@ -35,6 +37,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
         <BottomBar
           isTeacher={isTeacher}
           activeRoomInfo={activeRoomInfo}
+          preview={preview}
           accessible={accessible}
           roomID={roomID}
           lessonProps={lessonProps}

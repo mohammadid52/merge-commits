@@ -1,11 +1,10 @@
-import React, { Fragment, useContext, useEffect } from 'react';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { NoticeboardFormProps } from '../NoticeboardAdminContent';
-import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
-import { EditQuoteContent } from './EditContentViews/EditQuoteContent';
-import EditWidgetToolbar from './editWidgetToolbar';
-import ContentCardTitle from '../../../Atoms/ContentCardTitle';
+import React, {Fragment, useContext, useEffect} from 'react';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import {NoticeboardFormProps} from '../NoticeboardAdminContent';
+import {EditDefaultContent} from './EditContentViews/EditDefaultContent';
+import {EditQuoteContent} from './EditContentViews/EditQuoteContent';
+import EditWidgetToolbar from './editWidgetToolbar';
 
 // Standard widget card view
 export const EditModeView = (props: NoticeboardFormProps) => {
@@ -22,7 +21,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     widgetData,
     setWidgetData,
   } = props;
-  const { theme,clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {noticeboardDict} = useDictionary(clientKey);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     widgetObj &&
     newWidgetData && (
       <>
-               {/**
+        {/**
          *  section: TOP INFO
          */}
 
@@ -51,7 +50,9 @@ export const EditModeView = (props: NoticeboardFormProps) => {
          */}
         <div className={`mt-2 px-2 `}>
           <Fragment>
-            <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
+            <label
+              htmlFor={widgetObj.id}
+              className="block text-xs font-semibold leading-5 text-gray-700">
               {noticeboardDict[userLanguage].FORM.TITLE}
             </label>
             <input
@@ -61,7 +62,11 @@ export const EditModeView = (props: NoticeboardFormProps) => {
               onChange={handleEditUpdateDefault}
               value={newWidgetData.title ? newWidgetData.title : ''}
               className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-              placeholder={widgetObj.title ? widgetObj.title : noticeboardDict[userLanguage].FORM.PLEASE_ADD_TITLE}
+              placeholder={
+                widgetObj.title
+                  ? widgetObj.title
+                  : noticeboardDict[userLanguage].FORM.PLEASE_ADD_TITLE
+              }
             />
           </Fragment>
         </div>
@@ -84,23 +89,22 @@ export const EditModeView = (props: NoticeboardFormProps) => {
             widgetData={widgetData}
           />
         ) : null}
-        {
-          widgetObj.type === 'quote' ||
-          widgetObj.type === 'links' ||
-          widgetObj.type === 'call' ||
-          widgetObj.type === 'file' ? (
-            <EditQuoteContent
-              newWidgetData={newWidgetData}
-              setNewWidgetData={setNewWidgetData}
-              widgetData={widgetData}
-              setWidgetData={setWidgetData}
-              handleEditUpdateQuotes={handleEditUpdateQuotes}
-              handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-              viewEditMode={viewEditMode}
-              widgetObj={newWidgetData}
-              setEditorContent={setEditorContent}
-              handleActivation={handleActivation}
-            />
+        {widgetObj.type === 'quote' ||
+        widgetObj.type === 'links' ||
+        widgetObj.type === 'call' ||
+        widgetObj.type === 'file' ? (
+          <EditQuoteContent
+            newWidgetData={newWidgetData}
+            setNewWidgetData={setNewWidgetData}
+            widgetData={widgetData}
+            setWidgetData={setWidgetData}
+            handleEditUpdateQuotes={handleEditUpdateQuotes}
+            handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+            viewEditMode={viewEditMode}
+            widgetObj={newWidgetData}
+            setEditorContent={setEditorContent}
+            handleActivation={handleActivation}
+          />
         ) : null}
       </>
     )

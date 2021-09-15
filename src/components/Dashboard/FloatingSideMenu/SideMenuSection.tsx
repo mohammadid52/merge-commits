@@ -1,9 +1,8 @@
-import React, {useContext} from 'react';
-import ButtonsRound from '../../Atoms/ButtonsRound';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
+import React from 'react';
 import {IconType} from 'react-icons';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {AiOutlineSave} from 'react-icons/all';
-import {LessonContext} from '../../../contexts/LessonContext';
+import ButtonsRound from '../../Atoms/ButtonsRound';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -26,12 +25,10 @@ export const SideMenuSection = (props: {
     sectionLabel,
     sectionTitle,
     focusSection,
-    setFocusSection,
+
     saveInProgress,
-    setSaveInProgress,
   } = props;
   const thisSectionActive = focusSection === sectionLabel;
-  const noSectionActive = focusSection === '';
 
   const switchCloseIcon = (sectionName: string): IconType => {
     switch (sectionName) {

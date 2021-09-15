@@ -1,17 +1,14 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
-
-import useDictionary from '../../customHooks/dictionary';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useParams} from 'react-router-dom';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import RosterRow from './ClassRoster/RosterRow';
-
+import useDictionary from '../../customHooks/dictionary';
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
-
-import API, {graphqlOperation} from '@aws-amplify/api';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import {useParams} from 'react-router-dom';
+import RosterRow from './ClassRoster/RosterRow';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -273,10 +270,10 @@ const ClassRoster = (props: classRosterProps) => {
         className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
         <div
           className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
-          <span className="w-auto">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
-          <span
-            className={`w-8`}
-            onClick={handleManualRefresh}>
+          <span className="w-auto">
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
+          </span>
+          <span className={`w-8`} onClick={handleManualRefresh}>
             <IconContext.Provider value={{color: '#EDF2F7'}}>
               <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
             </IconContext.Provider>
