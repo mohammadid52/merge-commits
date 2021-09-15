@@ -593,8 +593,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       case 'inst_classes':
       case 'inst_classes_add_student':
       case 'inst_curriculum':
-      case 'inst_curriculum_units': 
-      case 'inst_classroom': {
+      case 'inst_curriculum_units':
+      case 'inst_classroom':
+      case 'inst_curriculum_demographic_information': {
         if (redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
@@ -1323,6 +1324,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         const redirectionPath = activeSection?.data?.curriculum?.length
           ? `/dashboard/manage-institutions/${selectedInstitution?.institution?.id}/curricular?id=${activeSection?.data?.curriculum[0].id}&tab=1`
           : `/dashboard/manage-institutions/institution/curricular-creation?id=${selectedInstitution?.institution?.id}`;
+        const activeSyllabus = activeSection?.data?.universalSyllabus.length
+          ? activeSection?.data?.universalSyllabus[0]
+          : {};
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1357,10 +1361,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() => history.push(redirectionPath)}>
-                  3. Add the description of the description, objectives, policies, purpose
-                  and methodologies of the unit
+                  3. Add the description, objectives, policies, purpose and methodologies
+                  of the unit
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  activeSyllabus?.description &&
+                    activeSyllabus?.methodology &&
+                    activeSyllabus?.objectives &&
+                    activeSyllabus?.policies &&
+                    activeSyllabus?.pupose
+                )}
               </div>
             </div>
           </div>
@@ -1451,7 +1461,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   }>
                   2. Add any details which impact the schedule
                 </span>
-                {progressIndicator(false)}
+                {progressIndicator(
+                  activeSection?.data?.classRooms?.filter(
+                    (item: any) => item.lessonImpactLog?.length
+                  ).length
+                )}
               </div>
               <div className="my-1 ml-3 italic">
                 This area is to record events which will impact your lessons or lesson
