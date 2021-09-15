@@ -502,6 +502,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
         return 'Review Slider Component';
+      case FORM_TYPES.NOTES:
+        return 'Notes Component';
       case FORM_TYPES.WRITING_EXERCISE:
       case 'writing-exercise-form-default':
         return 'Writing Exercise Component';
@@ -513,12 +515,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     UnsavedModal,
     askBeforeClose,
-    unsavedChanges,
+
     setUnsavedChanges,
   } = useUnsavedChanges(closeAction);
 
   const [optionsCollapse, setOptionsCollapse] = useState(true);
-  const [modalHeight, setModalHeight] = useState(null);
 
   return (
     <div

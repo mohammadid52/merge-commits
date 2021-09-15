@@ -1,38 +1,15 @@
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Selector from '@components/Atoms/Form/Selector';
-import {TrashIcon} from '@heroicons/react/solid';
 import {IOnChange} from '@interfaces/index';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
+import NotesBlock from '@UlbBlocks/NotesBlock';
 import {map, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useState} from 'react';
-
-const Divider = () => {
-  return (
-    <div className="relative">
-      <div className="absolute inset-0 flex items-center" aria-hidden="true">
-        <div
-          className={`w-full border-t-0  border-opacity-30 dark:border-gray-300 border-gray-700`}
-        />
-      </div>
-      <div className="relative flex justify-center">
-        <button
-          type="button"
-          className={`transition-all duration-200  inline-flex w-auto items-center shadow-sm px-4 py-1.5   text-sm leading-5 font-medium rounded-full text-gray-600 dark:text-white dark:bg-gray-700 bg-gray-200 focus:outline-none `}>
-          <TrashIcon
-            className={`-ml-1.5 mr-1 h-5 w-5 text-gray-600 dark:text-gray-400`}
-            aria-hidden="true"
-          />
-          <span>Delete</span>
-        </button>
-      </div>
-    </div>
-  );
-};
 
 interface NoteModalProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -64,6 +41,8 @@ const NotesModalDialog = (props: NoteModalProps) => {
 
   const {curTab, setCurTab, helpers} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
+
+  const notesList = map(fields, (f) => ({value: f.noteText, class: f.bgColor, id: f.id}));
 
   return (
     <div>
@@ -133,8 +112,11 @@ const NotesModalDialog = (props: NoteModalProps) => {
       <AnimatedContainer show={onPreviewTab}>
         {onPreviewTab && (
           <div>
-            <PreviewLayout notAvailable="Preview tab">
-              <div />
+            <PreviewLayout
+              notAvailable={
+                notesList.length === 0 ? 'Please add notes to see preview' : false
+              }>
+              <NotesBlock value={notesList} />
             </PreviewLayout>
           </div>
         )}
