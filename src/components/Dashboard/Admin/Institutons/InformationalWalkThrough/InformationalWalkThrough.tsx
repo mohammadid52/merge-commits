@@ -178,18 +178,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         redirectionUrl: `/dashboard/lesson-builder`,
         children: [
           {
-            title: 'Lesson List',
-            type: 'menu',
-            id: 'lesson_builder_list',
-            children: [
-              {
-                title: 'Create new lesson',
-                type: 'list',
-                id: 'lesson_builder_list_create_new_lesson',
-                redirectionUrl: `/dashboard/lesson-builder/lesson/add`,
-              },
-            ],
-            redirectionUrl: `/dashboard/lesson-builder`,
+            title: 'Create new lesson',
+            type: 'list',
+            id: 'lesson_builder_list_create_new_lesson',
+            redirectionUrl: `/dashboard/lesson-builder/lesson/add`,
           },
           {
             title: 'Lesson Editor',
@@ -324,7 +316,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Classroom',
-        type: 'list',
+        type: 'menu',
         id: 'classroom',
         children: [
           {
@@ -337,7 +329,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Live Lesson',
             type: 'list',
             id: 'live_classroom_lesson',
-            redirectionUrl: `/dashboard/csv`,
+            // redirectionUrl: `/dashboard/csv`,
           },
         ],
         redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
@@ -2032,7 +2024,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'classroom_lesson_planner':
+      case 'live_classroom_lesson':
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -2040,22 +2032,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() => history.push(`/dashboard/home`)}>
-                  1. Activate lesson unit
+                  1. Live classroom has the following areas:
                 </span>
               </div>
             </div>
-            <div className="mb-4">
-              <div className="text-base flex item-center">
-                <span
-                  className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
-                  2. Click on lesson to teach
-                </span>
-              </div>
-            </div>
+            <div className="">a. Lesson overview</div>
+            <div className="mb-4">b. Roster</div>
           </div>
         );
-
       default:
         break;
     }
