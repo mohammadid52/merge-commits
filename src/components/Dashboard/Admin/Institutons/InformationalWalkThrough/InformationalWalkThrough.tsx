@@ -618,6 +618,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           message:
             'Select whether you want to provide or request a service as an organization in one of the steps provided',
         });
+        return;
       }
       case 'lesson_builder':
       case 'lesson_builder_list':
