@@ -290,45 +290,53 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       },
       (role === 'ADM' || role === 'BLD') && {
         title: `Research & Analytics`,
-        type: 'menu',
+        type: 'list',
         id: 'research_and_analytics',
-        children: [
-          {
-            title: 'Survey Download',
-            type: 'list',
-            id: 'research_and_analytics_survey_download',
-            redirectionUrl: `/dashboard/csv`,
-          },
-        ],
+        // children: [
+        //   {
+        //     title: 'Survey Download',
+        //     type: 'list',
+        //     id: 'research_and_analytics_survey_download',
+        //     redirectionUrl: `/dashboard/csv`,
+        //   },
+        // ],
         redirectionUrl: `/dashboard/csv`,
       },
       (role === 'FLW' || role === 'TR') && {
-        title: 'Live Classroom',
-        type: 'list',
-        id: 'live_classroom',
+        title: 'Dashboard',
+        type: 'menu',
+        id: 'dashboard',
         children: [
           {
-            title: 'Roster',
+            title: 'Your Classrooms',
             type: 'list',
-            id: 'live_classroom_roaster',
-            redirectionUrl: `/dashboard/csv`,
+            id: 'dashboard_classroom',
+            redirectionUrl: `/dashboard/home`,
           },
           {
-            title: 'Lesson Pace Setter',
+            title: 'Your Students',
             type: 'list',
-            id: 'live_classroom_lesson_pace_SEtter',
-            redirectionUrl: `/dashboard/csv`,
+            id: 'dashboard_student',
+            redirectionUrl: `/dashboard/home`,
+          },
+        ],
+        redirectionUrl: `/dashboard/home`,
+      },
+      (role === 'FLW' || role === 'TR') && {
+        title: 'Classroom',
+        type: 'list',
+        id: 'classroom',
+        children: [
+          {
+            title: 'Lesson Planner',
+            type: 'list',
+            id: 'classroom_lesson_planner',
+            redirectionUrl: `/dashboard/lesson-planner`,
           },
           {
-            title: 'View Student Page',
+            title: 'Live Lesson',
             type: 'list',
-            id: 'live_classroom_view_student_page',
-            redirectionUrl: `/dashboard/csv`,
-          },
-          {
-            title: 'Share Student Page',
-            type: 'list',
-            id: 'live_classroom_student_share_page',
+            id: 'live_classroom_lesson',
             redirectionUrl: `/dashboard/csv`,
           },
         ],
@@ -496,7 +504,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     redirectionUrl: string;
     title: string;
   }) => {
-    setSectionDetailsLoading(true);
     setLocalStorageData('active_step_section', section);
     // setActiveSection((prevSection: any) => ({
     //   ...prevSection,
@@ -510,6 +517,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     }
     let data = {};
     if (selectedInstitution?.institution?.id) {
+      setSectionDetailsLoading(true);
       data = await fetchDataOfActiveSection(
         section.id,
         selectedInstitution?.institution?.id,
@@ -1651,11 +1659,44 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   }>
                   1. Click on Add New Class Activity button
                 </span>
-                {progressIndicator(
+                {/* {progressIndicator(
                   activeSection?.data?.universalLessons?.filter(
                     (lesson: any) => lesson.lessonPlan?.length
                   )
+                )} */}
+              </div>
+              <div className="my-1 ml-3 italic flex item-center">
+                a. Activity Name
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.filter((lesson: any) =>
+                    lesson.lessonPlan?.filter((activity: any) => activity.title)
+                  ).length
                 )}
+              </div>
+              <div className="my-1 ml-3 italic flex item-center">
+                b. Activity Label
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.filter((lesson: any) =>
+                    lesson.lessonPlan?.filter((activity: any) => activity.label)
+                  ).length
+                )}
+              </div>
+              <div className="my-1 ml-3 italic">
+                c. Activity Instructions (not required, but this shows up on the lesson
+                plan for students so it is highly suggested to complete this section)
+              </div>
+              <div className="my-1 ml-3 italic">
+                d. Interaction type (Group, Small Group, Individual)
+              </div>
+              <div className="my-1 ml-3 italic">
+                d. Interaction type (Group, Small Group, Individual)
+              </div>
+              <div className="my-1 ml-3 italic">
+                e. Estimated Time (not required, but this shows up on the lesson plan for
+                students so it is highly suggested to complete this section)
+              </div>
+              <div className="my-1 ml-3 italic">
+                f. Tags (future functionality. not required)
               </div>
             </div>
           </div>
@@ -1919,7 +1960,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'research_and_analytics_survey_download':
+      case 'research_and_analytics':
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1933,6 +1974,88 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
+      case 'dashboard_classroom':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  Select classroom, unit and survey to download
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      case 'dashboard_student':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  1. Click on student to see the following details:
+                </span>
+              </div>
+            </div>
+            <ul className="mb-4">
+              <li>a. General information</li>
+              <li>b. General information</li>
+              <li>c. Private individual details (optional)</li>
+              <li>d. Coursework & Attendance</li>
+              <li>e. Notebooks</li>
+            </ul>
+          </div>
+        );
+      case 'classroom_lesson_planner':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  1. Activate lesson unit
+                </span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  2. Click on lesson to teach
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      case 'classroom_lesson_planner':
+        return (
+          <div className="mt-6">
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  1. Activate lesson unit
+                </span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-base flex item-center">
+                <span
+                  className="cursor-pointer w-auto font-bold"
+                  onClick={() => history.push(`/dashboard/home`)}>
+                  2. Click on lesson to teach
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         break;
     }

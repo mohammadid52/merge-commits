@@ -1915,6 +1915,8 @@ export const listUniversalLessonsForInstitution = /* GraphQL */ `
         language
         lessonPlan {
           id
+          title
+          label
           pageContent{
             id
             partContent{
