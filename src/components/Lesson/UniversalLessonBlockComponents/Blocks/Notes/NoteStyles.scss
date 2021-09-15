@@ -1,9 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
+#container {
+  height: 801px;
+  overflow: visible;
+  padding: 0;
+  position: relative;
+}
+
+.box {
+  background-color: #91e600;
+  text-align: center;
+  padding: 18px 10px 10px 10px;
+  resize: both;
+
+  width: 196px;
+  height: 100px;
+  line-height: 100px;
+  color: black;
+  position: absolute;
+  top: 0;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .sticky-container {
   font-family: 'Patrick Hand', cursive;
   .sticky {
-    position: relative;
+    position: absolute;
+    cursor: text;
     height: 280px;
     width: 220px;
     display: inline-block;
@@ -15,7 +48,7 @@
 
     resize: both;
     overflow: scroll;
-    animation: stickAnim 0.3s ease;
+    // animation: stickAnim 0.3s ease;
 
     &::-webkit-scrollbar {
       display: none;

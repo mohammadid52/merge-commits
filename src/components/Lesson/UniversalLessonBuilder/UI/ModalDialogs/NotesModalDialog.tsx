@@ -6,7 +6,7 @@ import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInte
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import NotesBlock from '@UlbBlocks/NotesBlock';
+import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {map, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useState} from 'react';
@@ -52,7 +52,9 @@ const NotesModalDialog = (props: NoteModalProps) => {
           <div>
             <div className="flex flex-col">
               {map(fields, (singleNoteData, idx) => (
-                <div className="flex flex-col items-center justify-start mb-4 gap-x-4">
+                <div
+                  key={singleNoteData.id}
+                  className="flex flex-col items-center justify-start mb-4 gap-x-4">
                   <div className="mb-2">
                     <FormInput
                       label={'Add note text'}
