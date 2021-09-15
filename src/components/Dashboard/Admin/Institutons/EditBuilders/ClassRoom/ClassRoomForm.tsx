@@ -64,39 +64,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
     return new URLSearchParams(location.search);
   };
 
-  const {BreadcrumsTitles, RoomBuilderdict, RoomEDITdict} = useDictionary(clientKey);
+  const {RoomBuilderdict, RoomEDITdict} = useDictionary(clientKey);
 
   const params = useQuery();
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: roomData.institute?.name || BreadcrumsTitles[userLanguage]['LOADING'],
-      goBack: true,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
-      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
-      last: false,
-    },
-    match.url.search('room-edit') > -1
-      ? {
-          title: roomData.name,
-          url: `/dashboard/room-edit?id=${params.get('id')}`,
-          last: true,
-        }
-      : {
-          title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
-          url: `${match.url}`,
-          last: true,
-        },
-    ,
-  ];
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -118,14 +88,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
       ...warnModal,
       show: !warnModal.show,
     });
-  };
-
-  const goBack = () => {
-    if (unsavedChanges) {
-      toggleModal();
-    } else {
-      goBackBreadCrumb(breadCrumsList, history);
-    }
   };
 
   const selectTeacher = (val: string, name: string, id: string) => {

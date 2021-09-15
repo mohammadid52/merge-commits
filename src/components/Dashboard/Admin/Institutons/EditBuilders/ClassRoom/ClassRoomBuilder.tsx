@@ -80,11 +80,17 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       url: `/dashboard/manage-institutions/institution?id=${roomData?.institute?.id}&tab=4`,
       last: false,
     },
-    {
-      title: roomData.name,
-      url: `/dashboard/room-edit?id=${params.get('id')}`,
-      last: true,
-    },
+    match.url.search('room-edit') > -1
+      ? {
+          title: roomData.name || BreadcrumsTitles[userLanguage]['LOADING'],
+          url: `/dashboard/room-edit?id=${params.get('id')}`,
+          last: true,
+        }
+      : {
+          title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
+          url: `${match.url}`,
+          last: true,
+        },
   ];
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -120,6 +126,13 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           id: instId,
         })
       );
+      setRoomData((prevData: any) => ({
+        ...prevData,
+        institute: {
+          ...prevData.institute,
+          name: list.data.getInstitution?.name,
+        },
+      }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
     } catch {
@@ -540,7 +553,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       } else {
         history.push('/dashboard/manage-institutions');
       }
-    }else{
+    } else {
       setRoomData({
         ...roomData,
         institute: {
