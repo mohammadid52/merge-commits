@@ -134,7 +134,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_demographic_information',
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/csv`,
               },
             ],
           },
@@ -510,7 +510,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       //   );
       // }
     } else {
-      setShowAlert(true);
+      if (role === 'ADM' || role === 'BLD') {
+        setShowAlert(true);
+      }
     }
     const data = await fetchDataOfActiveSection(
       section.id,

@@ -32,9 +32,7 @@ export const Directory = ({
     event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     section: {id: string; title: string; redirectionUrl: string}
   ) => {
-    console.log('onItemClicked');
     event.stopPropagation();
-    console.log('after onItemClicked');
     setToggle((prevValue) => !prevValue);
     setShow(false);
     if (onItemClick) {
@@ -55,7 +53,7 @@ export const Directory = ({
       <span
         className={`hover:${hoverClassName || 'bg-gray-400'} ${
           activeSectionId === item.id ? hoverClassName || 'bg-gray-400' : ''
-        } transition block pl-0 px-2 py-1 truncate flex`}>
+        } transition block pl-0 px-2 py-1 flex`}>
         <span className="w-6 h-6 mx-1 inline-flex justify-center items-center">
           {item.type === 'list' ? (
             <BsCircleFill className="w-2 h-2" />
@@ -73,7 +71,7 @@ export const Directory = ({
             <FaBookOpen />
           )}
         </span>
-        <span>
+        <span className="break-normal">
           {headingPrefix} {item.title}
         </span>
       </span>
