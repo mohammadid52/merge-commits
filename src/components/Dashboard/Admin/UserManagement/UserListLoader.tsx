@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserListLoader = () => {
+const UserListLoader = ({userRole}: {userRole: string}) => {
   return (
     <div className="animate-pulse space-y-8 flex flex-col">
       <div className="flex justify-between bg-white w-full border-b-0 border-gray-200">
@@ -22,6 +22,11 @@ const UserListLoader = () => {
         <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <span className="w-16 flex h-4 bg-gray-400"></span>
         </div>
+        {userRole !== 'ST' && (
+          <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+            <span className="w-16 flex h-4 bg-gray-400"></span>
+          </div>
+        )}
       </div>
     </div>
   );
