@@ -120,7 +120,7 @@ const File = ({
     </span>
   );
 
-  const [_fileName, setFileName] = useState(fileName || '');
+  const [_fileName, setFileName] = useState(removeExtension(fileName) || '');
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
@@ -207,7 +207,7 @@ const File = ({
                     <div className="sm:col-span-1">
                       <dt className="text-sm font-medium text-gray-500">File name</dt>
                       <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
-                        {_fileName}
+                        {removeExtension(_fileName)}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
