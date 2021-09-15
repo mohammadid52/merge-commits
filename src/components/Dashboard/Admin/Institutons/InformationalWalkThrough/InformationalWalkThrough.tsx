@@ -32,7 +32,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   );
   const history = useHistory();
   const cancelButtonRef = useRef();
-  const [showAlert, setShowAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({
+    show: false,
+    message: '',
+  });
   const [loading, setLoading] = useState(role === 'ADM' || role === 'BLD');
   const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
   const [instListLoading, setInstListLoading] = useState(
@@ -158,7 +161,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               {
                 title: 'Class Dynamics (Optional)',
                 type: 'list',
-                id: 'inst_curriculum_class_dynamics',
+                id: 'inst_classroom_class_dynamics',
                 children: [],
                 redirectionUrl: `/dashboard/manage-institutions/room-edit?id={roomId}&step=class-dynamics`,
               },
@@ -183,7 +186,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Create new lesson',
                 type: 'list',
                 id: 'lesson_builder_list_create_new_lesson',
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/add`,
               },
             ],
             redirectionUrl: `/dashboard/lesson-builder`,
@@ -244,7 +247,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     redirectionUrl: `/dashboard/lesson-builder`,
                   },
                 ],
-                redirectionUrl: `/dashboard/lesson-builder`,
+                redirectionUrl: `/dashboard/lesson-builder/lesson/page-builder?lessonId={lessonId}&pageId={pageId}`,
               },
               {
                 title: 'Courses',
@@ -261,7 +264,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 redirectionUrl: `/dashboard/lesson-builder/lesson/edit?lessonId={lessonId}&step=learning-evidence`,
               },
             ],
-            redirectionUrl: `/dashboard/lesson-builder`,
+            redirectionUrl: `/dashboard/lesson-builder/lesson/add`,
           },
         ],
       },
@@ -297,7 +300,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `/dashboard/csv`,
           },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/csv`,
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Live Classroom',
@@ -499,27 +502,28 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     //   ...prevSection,
     //   ...section,
     // }));
-
+    if (alertConfig.show) {
+      setAlertConfig({
+        show: false,
+        message: '',
+      });
+    }
+    let data = {};
     if (selectedInstitution?.institution?.id) {
-      // if (section.redirectionUrl) {
-      //   history.push(
-      //     `${section.redirectionUrl?.replace(
-      //       '{institutionId}',
-      //       selectedInstitution?.institution?.id
-      //     )}`
-      //   );
-      // }
+      data = await fetchDataOfActiveSection(
+        section.id,
+        selectedInstitution?.institution?.id,
+        section.redirectionUrl
+      );
+      setSectionDetailsLoading(false);
     } else {
       if (role === 'ADM' || role === 'BLD') {
-        setShowAlert(true);
+        setAlertConfig({
+          show: true,
+          message: 'Please select institution before continuing',
+        });
       }
     }
-    const data = await fetchDataOfActiveSection(
-      section.id,
-      selectedInstitution?.institution?.id,
-      section.redirectionUrl
-    );
-    setSectionDetailsLoading(false);
     setActiveSection((prevSection: any) => ({
       ...section,
       data: {...prevSection.data, ...data},
@@ -606,6 +610,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         if (instId && redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
+        return;
+      }
+      case 'service_provider': {
+        setAlertConfig({
+          show: true,
+          message:
+            'Select whether you want to provide or request a service as an organization in one of the steps provided',
+        });
+      }
+      case 'lesson_builder':
+      case 'lesson_builder_list':
+      case 'lesson_builder_editor':
+      case 'research_and_analytics': {
+        if (redirectionUrl) {
+          redirectToSelectedSection(redirectionUrl);
+        }
+        return;
       }
       case 'inst_classes_create': {
         try {
@@ -749,7 +770,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         }
       }
       case 'inst_classroom_unit_planner':
-      case 'inst_classroom_class_detail': {
+      case 'inst_classroom_class_detail':
+      case 'inst_classroom_class_dynamics': {
         try {
           if (instId) {
             const result: any = await API.graphql(
@@ -779,8 +801,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       }
       case 'inst_curriculum_units_lesson_plan_manager':
       case 'lesson_builder_list_create_new_lesson':
+      case 'lesson_builder_activities':
       case 'lesson_builder_activities_lesson_planner':
       case 'lesson_builder_activities_overlay':
+      case 'lesson_builder_plan':
       case 'lesson_builder_plan_block_and_component':
       case 'lesson_builder_overview': {
         try {
@@ -929,7 +953,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       }
       case 'service_provider_provide_service':
       case 'service_provider_request_service': {
-        if (redirectionUrl) {
+        if (instId && redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
       }
@@ -940,8 +964,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     const selectedData = institutionList.find((item: any) => item.institution?.id === id);
     setSelectedInstitution(selectedData);
     setLocalStorageData('selected_institution', selectedData);
-    if (showAlert) {
-      setShowAlert(false);
+    if (alertConfig.show) {
+      setAlertConfig({
+        show: false,
+        message: '',
+      });
     }
     if (activeSection) {
       const data = await fetchDataOfActiveSection(
@@ -1486,7 +1513,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_curriculum_class_dynamics': {
+      case 'inst_classroom_class_dynamics': {
         const redirectionPath = activeSection?.data?.classRooms?.length
           ? `/dashboard/manage-institutions/room-edit?id=${activeSection?.data?.classRooms[0].id}&step=class-dynamics`
           : `/dashboard/manage-institutions/institution/room-creation?id=${selectedInstitution?.institution?.id}`;
@@ -1496,7 +1523,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() =>
+                    history.push(`${redirectionPath}&sub-step=subject-proficiency`)
+                  }>
                   1. Create subject proficiency groups
                 </span>
               </div>
@@ -1508,7 +1537,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() =>
+                    history.push(`${redirectionPath}&sub-step=course-partners`)
+                  }>
                   2. Create course partner groups
                 </span>
               </div>
@@ -1965,16 +1996,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                           )
                         )}
                       </div>
-                      {showAlert && (
+                      {alertConfig.show && (
                         <div
                           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
                           role="alert">
-                          <span className="block sm:inline">
-                            Please select institution before continuing
-                          </span>
+                          <span className="block sm:inline">{alertConfig.message}</span>
                           <span
-                            className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto"
-                            onClick={() => setShowAlert(false)}>
+                            className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
+                            onClick={() => setAlertConfig({show: false, message: ''})}>
                             <XIcon className="h-6 w-6" aria-hidden="true" />
                           </span>
                         </div>
