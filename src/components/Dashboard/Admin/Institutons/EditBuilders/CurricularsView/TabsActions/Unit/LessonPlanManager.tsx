@@ -197,8 +197,6 @@ const LessonPlanManager = ({
   }, [savedLessonsList]);
 
   useEffect(() => {
-    console.log(savedLessonsList, allLessonsList, 'allLessonsList');
-
     if (Array.isArray(savedLessonsList) && savedLessonsList.length) {
       updateListAndDropdown();
     }
@@ -375,20 +373,20 @@ const LessonPlanManager = ({
           ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
             <div>
               {/* *************** LESSONS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['LESSON_NAME']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['TYPE']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
+                </div>
+                <div className="w-1/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>

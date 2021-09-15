@@ -546,6 +546,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       institutionId: selectedInstitution?.institution?.id,
     };
     switch (id) {
+      case 'inst': {
+        if (redirectionUrl) {
+          redirectToSelectedSection(redirectionUrl, replaceObject);
+        }
+      }
       case 'inst_general_info': {
         try {
           if (instId) {
@@ -598,7 +603,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       case 'inst_curriculum_units':
       case 'inst_classroom':
       case 'inst_curriculum_demographic_information': {
-        if (redirectionUrl) {
+        if (instId && redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
       }
@@ -613,7 +618,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             }
             return {classes: result.data?.getInstitution?.classes.items};
           }
-          if (redirectionUrl) {
+          if (instId && redirectionUrl) {
             redirectToSelectedSection(redirectionUrl, replaceObject);
           }
           return null;
@@ -935,6 +940,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     const selectedData = institutionList.find((item: any) => item.institution?.id === id);
     setSelectedInstitution(selectedData);
     setLocalStorageData('selected_institution', selectedData);
+    if (showAlert) {
+      setShowAlert(false);
+    }
     if (activeSection) {
       const data = await fetchDataOfActiveSection(
         activeSection.id,
