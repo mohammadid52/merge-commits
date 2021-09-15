@@ -57,7 +57,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     isError: false,
   });
   const [originalTeacher, setOriginalTeacher] = useState([]);
-  const [coTeachersList, setCoTeachersList] = useState(teachersList);
   const [selectedCoTeachers, setSelectedCoTeachers] = useState<
     {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
@@ -81,11 +80,17 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       url: `/dashboard/manage-institutions/institution?id=${roomData?.institute?.id}&tab=4`,
       last: false,
     },
-    {
-      title: roomData.name,
-      url: `/dashboard/room-edit?id=${params.get('id')}`,
-      last: true,
-    },
+    match.url.search('room-edit') > -1
+      ? {
+          title: roomData.name || BreadcrumsTitles[userLanguage]['LOADING'],
+          url: `/dashboard/room-edit?id=${params.get('id')}`,
+          last: true,
+        }
+      : {
+          title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
+          url: `${match.url}`,
+          last: true,
+        },
   ];
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -114,26 +119,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     }
   };
 
-  const removeErrorMsg = () => {
-    if (messages.show) {
-      setMessages({
-        show: false,
-        message: '',
-        isError: false,
-      });
-    }
-  };
-
-  const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3(uniqKey);
-    if (imageUrl) {
-      console.log(imageUrl);
-      return imageUrl;
-    } else {
-      return '';
-    }
-  };
-
   const getInstituteInfo = async (instId: string) => {
     try {
       const list: any = await API.graphql(
@@ -141,6 +126,13 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           id: instId,
         })
       );
+      setRoomData((prevData: any) => ({
+        ...prevData,
+        institute: {
+          ...prevData.institute,
+          name: list.data.getInstitution?.name,
+        },
+      }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
     } catch {
@@ -198,7 +190,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           return !duplicate;
         });
         setTeachersList(filteredArray);
-        setCoTeachersList(filteredArray.filter((item: any) => item.id !== teacher.id));
       }
     } catch {
       setMessages({
@@ -494,98 +485,83 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   };
 
   const fetchRoomDetails = async () => {
-    const currID = params.get('id');
-    if (currID) {
-      try {
-        const result: any = await API.graphql(
-          graphqlOperation(customQueries.getRoom, {id: currID})
-        );
-        const savedData = result.data.getRoom;
-        const curricularId = savedData.curricula.items[0].curriculumID;
+    const isRoomEditPage = match.url.search('room-edit') > -1;
+    const roomId = params.get('id');
+    if (isRoomEditPage) {
+      if (roomId) {
+        try {
+          const result: any = await API.graphql(
+            graphqlOperation(customQueries.getRoom, {id: roomId})
+          );
+          const savedData = result.data.getRoom;
+          const curricularId = savedData.curricula.items[0].curriculumID;
 
-        const coTeachers = savedData.coTeachers?.items;
-        setOriginalTeacher(
-          coTeachers?.map((d: any) => {
-            return {
-              rowId: d.id,
-              id: d.teacherID,
-            };
-          })
-        );
-        setSelectedCoTeachers(
-          coTeachers?.map((d: any) => {
-            return {
-              id: d.teacherID,
-              authId: d.teacherAuthID,
-              email: d.teacherEmail,
-              name: `${d.teacher.firstName} ${d.teacher.lastName}`,
-              value: `${d.teacher.firstName} ${d.teacher.lastName}`,
-              rowId: d.id,
-            };
-          })
-        );
-        setRoomData({
-          ...savedData,
-          institute: {
-            id: savedData.institution?.id,
-            name: savedData.institution?.name,
-            value: savedData.institution?.name,
-          },
-          advisorOptions: [
-            ...coTeachers.map((teacher: any) => ({
-              id: teacher.teacherID,
-              name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
-              authId: teacher.teacherAuthID,
-              email: teacher.teacherEmail,
-            })),
-            savedData.teacher
-              ? {
-                  id: savedData.teacher.id,
-                  name: `${savedData.teacher.firstName} ${savedData.teacher.lastName}`,
-                  authId: savedData.teacher.authId,
-                  email: savedData.teacher.email,
-                }
-              : null,
-          ].filter(Boolean),
-        });
-        // setRoomData({
-        //   ...roomData,
-        //   id: savedData.id,
-        //   name: savedData.name,
-        //   institute: {
-        //     id: savedData.institution?.id,
-        //     name: savedData.institution?.name,
-        //     value: savedData.institution?.name,
-        //   },
-        //   teacher: {
-        //     id: savedData.teacher?.id,
-        //     name: `${savedData.teacher?.firstName || ''} ${
-        //       savedData.teacher?.lastName || ''
-        //     }`,
-        //     value: `${savedData.teacher?.firstName || ''} ${
-        //       savedData.teacher?.lastName || ''
-        //     }`,
-        //   },
-        //   classRoom: {
-        //     id: savedData.class?.id,
-        //     name: savedData.class?.name,
-        //     value: savedData.class?.name,
-        //   },
-        //   // ***** UNCOMMENT THIS ******
-        //   // coTeachers: savedData.coTeachers,
-        //   maxPersons: savedData.maxPersons,
-        // });
-        setPrevName(savedData.name);
-        setSelectedCurrID(curricularId);
-      } catch {
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['errfetch'],
-          isError: true,
-        });
+          const coTeachers = savedData.coTeachers?.items;
+          setOriginalTeacher(
+            coTeachers?.map((d: any) => {
+              return {
+                rowId: d.id,
+                id: d.teacherID,
+              };
+            })
+          );
+          setSelectedCoTeachers(
+            coTeachers?.map((d: any) => {
+              return {
+                id: d.teacherID,
+                authId: d.teacherAuthID,
+                email: d.teacherEmail,
+                name: `${d.teacher.firstName} ${d.teacher.lastName}`,
+                value: `${d.teacher.firstName} ${d.teacher.lastName}`,
+                rowId: d.id,
+              };
+            })
+          );
+          setRoomData({
+            ...savedData,
+            institute: {
+              id: savedData.institution?.id,
+              name: savedData.institution?.name,
+              value: savedData.institution?.name,
+            },
+            advisorOptions: [
+              ...coTeachers.map((teacher: any) => ({
+                id: teacher.teacherID,
+                name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
+                authId: teacher.teacherAuthID,
+                email: teacher.teacherEmail,
+              })),
+              savedData.teacher
+                ? {
+                    id: savedData.teacher.id,
+                    name: `${savedData.teacher.firstName} ${savedData.teacher.lastName}`,
+                    authId: savedData.teacher.authId,
+                    email: savedData.teacher.email,
+                  }
+                : null,
+            ].filter(Boolean),
+          });
+          setPrevName(savedData.name);
+          setSelectedCurrID(curricularId);
+        } catch {
+          setMessages({
+            show: true,
+            message: RoomEDITdict[userLanguage]['messages']['errfetch'],
+            isError: true,
+          });
+        }
+      } else {
+        history.push('/dashboard/manage-institutions');
       }
     } else {
-      history.push('/dashboard/manage-institutions');
+      setRoomData({
+        ...roomData,
+        institute: {
+          id: params.get('id'),
+          name: '',
+          value: '',
+        },
+      });
     }
   };
 
@@ -638,11 +614,13 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
+      disabled: !roomData?.id,
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
+      disabled: !roomData?.id,
     },
   ];
 

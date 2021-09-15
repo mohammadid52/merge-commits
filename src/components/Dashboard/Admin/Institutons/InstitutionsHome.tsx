@@ -58,7 +58,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         <Route
           path={`${match.url}/institution/room-creation`}
-          render={() => <RoomBuilder />} // Create new room
+          render={() => <ClassRoomBuilder />} // Create new room
         />
         <Route
           path={`${match.url}/institution`}
