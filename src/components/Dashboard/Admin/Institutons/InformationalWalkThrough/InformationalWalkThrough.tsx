@@ -127,7 +127,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   },
                 ],
                 id: 'inst_curriculum_units',
-                redirectionUrl: `/dashboard/manage-institutions/{institutionId}/curricular?id={curriculumId}&tab=1`,
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
               },
               {
                 title: 'Demographics & Information',
@@ -590,13 +590,28 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           console.log(error, 'error');
         }
       }
+      case 'inst_classes':
+      case 'inst_classes_add_student':
+      case 'inst_curriculum':
+      case 'inst_curriculum_units': 
+      case 'inst_classroom': {
+        if (redirectionUrl) {
+          redirectToSelectedSection(redirectionUrl, replaceObject);
+        }
+      }
       case 'inst_classes_create': {
         try {
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.GetInstitutionClasses, {id: instId})
             );
+            if (redirectionUrl) {
+              redirectToSelectedSection(redirectionUrl, replaceObject);
+            }
             return {classes: result.data?.getInstitution?.classes.items};
+          }
+          if (redirectionUrl) {
+            redirectToSelectedSection(redirectionUrl, replaceObject);
           }
           return null;
         } catch (error) {
@@ -609,6 +624,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
             );
+            if (redirectionUrl) {
+              redirectToSelectedSection(redirectionUrl, replaceObject);
+            }
             return {curriculum: result.data?.getInstitution?.curricula.items};
           }
           return null;
@@ -1028,11 +1046,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="w-auto text-base font-bold cursor-pointer"
-                  onClick={() =>
-                    history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
-                    )
-                  }>
+                  onClick={() => history.push(`/dashboard/registration`)}>
                   2. Add a builder (optional)
                 </span>
               </div>
