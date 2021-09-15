@@ -53,6 +53,8 @@ type Person
   sentiments: [String]
   passcode: String
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
+  spotlightDate: AWSDate,
+  spotlightUser: Boolean
 }
 
 type Institution @model @key(fields: ["id"]) {
@@ -1167,7 +1169,33 @@ type File {
   fileKey: String!
 }
 
+type Community @model @key(fields: ["id"]) {
+  id: ID!
+  cardName: String,
+  cardDate: AWSDate,
+  summary: String,
+  cardImageLink: String,
+  startTime: AWSDateTime,
+  endTime: AWSDateTime,
+  location: String,
+  geoLocation: String
+  additionalLinks: [String],
+  additionalInfo: String,
+  personAuthID: String!
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+}
 
+type CommunityChat @model 
+@key(name: "chatByCommunity", fields: ["communityId"]) {
+  id: ID!
+  communityId: ID!
+  personAuthID: String!
+  personEmail: String!
+  msg: String
+  createdAt: AWSDateTime
+}
 
 type Subscription {
   onChangePersonLocation(
