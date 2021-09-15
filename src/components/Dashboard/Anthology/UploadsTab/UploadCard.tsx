@@ -1,21 +1,18 @@
-import {sortBy} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import * as queries from '../../../../graphql/queries';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../Atoms/Buttons';
-import ContentCard from '../../../Atoms/ContentCard';
-import {getAsset} from '../../../../assets';
-import {IUploadCardProps} from '../UploadsTab';
-import {IconContext} from 'react-icons';
-import {AiOutlineFile} from 'react-icons/ai';
-import {dateFromServer} from '../../../../utilities/time';
-import {getImageFromS3Static} from '../../../../utilities/services';
-import FeedbacksUploads from '../FeedbacksUploads';
 import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
 import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
+import {sortBy} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
+import * as queries from '../../../../graphql/queries';
+import {dateFromServer} from '../../../../utilities/time';
+import Buttons from '../../../Atoms/Buttons';
+import ContentCard from '../../../Atoms/ContentCard';
+import FeedbacksUploads from '../FeedbacksUploads';
+import {IUploadCardProps} from '../UploadsTab';
 
 const UploadCard = ({
   idx,

@@ -1,34 +1,28 @@
+import {API, graphqlOperation} from '@aws-amplify/api';
+import {Auth} from '@aws-amplify/auth';
+import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
-import {API, graphqlOperation} from '@aws-amplify/api';
-
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-
-import HeroBanner from '../../Header/HeroBanner';
+import {IconContext} from 'react-icons/lib';
 import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customQueries from '../../../customGraphql/customQueries';
+import useDictionary from '../../../customHooks/dictionary';
+import usePrevious from '../../../customHooks/previousProps';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import {
   UniversalJournalData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {nanoid} from 'nanoid';
-import {Auth} from '@aws-amplify/auth';
-import {useParams} from 'react-router-dom';
-
-import TabView from './TabView';
-import RoomView from './RoomView';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {IconContext} from 'react-icons/lib';
-import usePrevious from '../../../customHooks/previousProps';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import Modal from '../../Atoms/Modal';
-import FormInput from '../../Atoms/Form/FormInput';
 import Buttons from '../../Atoms/Buttons';
-
+import FormInput from '../../Atoms/Form/FormInput';
+import Modal from '../../Atoms/Modal';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import HeroBanner from '../../Header/HeroBanner';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import RoomView from './RoomView';
+import TabView from './TabView';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -42,7 +36,7 @@ export interface ViewEditMode {
   dataID: string;
   option?: number;
   recordID?: string;
-};
+}
 
 const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //

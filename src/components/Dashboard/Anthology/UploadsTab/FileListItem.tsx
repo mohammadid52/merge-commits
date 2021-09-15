@@ -1,18 +1,7 @@
-import {sortBy} from 'lodash';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import * as queries from '../../../../graphql/queries';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../Atoms/Buttons';
-import ContentCard from '../../../Atoms/ContentCard';
-import {getAsset} from '../../../../assets';
-import {IUploadCardProps} from '../UploadsTab';
+import React, {useCallback, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
-import {dateFromServer} from '../../../../utilities/time';
-import {getImageFromS3, getImageFromS3Static} from '../../../../utilities/services';
-import FeedbacksUploads from '../FeedbacksUploads';
+import {getImageFromS3} from '../../../../utilities/services';
 
 interface IFileListItem {
   fileName: string;
@@ -20,7 +9,6 @@ interface IFileListItem {
 }
 
 const FileListItem = ({fileName, fileKey}: IFileListItem) => {
-
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //
   // ##################################################################### //

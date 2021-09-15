@@ -454,7 +454,7 @@ const AttachmentBlock = ({
 
   const handleFileSelection = async (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
-      uploadFile(e.target.files[0]);
+      uploadFile(e.target.files);
     }
   };
 
@@ -500,7 +500,6 @@ const AttachmentBlock = ({
                 onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
                 type="file"
                 className="hidden"
-                multiple={false}
               />
               <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
               {isDragActive ? (

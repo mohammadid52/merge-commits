@@ -1,19 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { FaImages, FaSpinner } from 'react-icons/fa';
-import { getImagesFromS3Folder, getImageFromS3Static } from '../../../utilities/services';
-import Loader from '../../Atoms/Loader';
-import Auth from '@aws-amplify/auth';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import {API, graphqlOperation} from '@aws-amplify/api';
+import React, {useCallback, useEffect, useState} from 'react';
+import {IconContext} from 'react-icons';
+import {FaSpinner} from 'react-icons/fa';
 import * as queries from '../../../graphql/queries';
-import { IconContext } from 'react-icons';
 import EmptyViewWrapper from './EmptyViewWrapper';
-import SingleNote from './SingleNote';
-import { ITabParentProps } from './TabView';
+import {ITabParentProps} from './TabView';
 import SingleUpload from './UploadsTab/UploadCard';
-import { dateFromServer } from '../../../utilities/time';
-import { ViewEditMode } from './Anthology';
-import { AiOutlineFile } from 'react-icons/ai';
 
 const LIMIT = 100;
 
@@ -55,9 +47,9 @@ const UploadsTab = ({
     try {
       const listFilter = {
         filter: {
-          personEmail: { eq: personEmail },
-          personAuthID: { eq: personAuthID },
-          roomID: { eq: sectionRoomID },
+          personEmail: {eq: personEmail},
+          personAuthID: {eq: personAuthID},
+          roomID: {eq: sectionRoomID},
         },
       };
 
@@ -127,41 +119,41 @@ const UploadsTab = ({
     <>
       {allPersonLessonFiles && allPersonLessonFiles.length > 0
         ? allPersonLessonFiles.map((lessonFileObj: any, idx: number) => {
-          return (
-            <EmptyViewWrapper
-              key={`lessonfilecard_${idx}`}
-              wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-              timedRevealInt={idx + 1}
-              fallbackContents={
-                <IconContext.Provider
-                  value={{
-                    size: '1.2rem',
-                    style: {},
-                    className: `relative mr-4 animate-spin ${themeColor}`,
-                  }}>
-                  <FaSpinner />
-                </IconContext.Provider>
-              }>
-              <SingleUpload
-                idx={idx}
-                mainSection={mainSection}
-                subSection={subSection}
-                onCancel={onCancel}
-                handleEdit={() => handleEdit(lessonFileObj.id)}
-                handleSave={handleSave}
-                handleDelete={() => handleDelete(lessonFileObj.id)}
-                handleConfirm={handleConfirm}
-                handleCancel={handleCancel}
-                editID={editID}
-                editMode={editMode}
-                contentLen={allPersonLessonFiles?.length}
-                contentObj={lessonFileObj}
-                personEmail={personEmail}
-                personAuthID={personAuthID}
-              />
-            </EmptyViewWrapper>
-          );
-        })
+            return (
+              <EmptyViewWrapper
+                key={`lessonfilecard_${idx}`}
+                wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+                timedRevealInt={idx + 1}
+                fallbackContents={
+                  <IconContext.Provider
+                    value={{
+                      size: '1.2rem',
+                      style: {},
+                      className: `relative mr-4 animate-spin ${themeColor}`,
+                    }}>
+                    <FaSpinner />
+                  </IconContext.Provider>
+                }>
+                <SingleUpload
+                  idx={idx}
+                  mainSection={mainSection}
+                  subSection={subSection}
+                  onCancel={onCancel}
+                  handleEdit={() => handleEdit(lessonFileObj.id)}
+                  handleSave={handleSave}
+                  handleDelete={() => handleDelete(lessonFileObj.id)}
+                  handleConfirm={handleConfirm}
+                  handleCancel={handleCancel}
+                  editID={editID}
+                  editMode={editMode}
+                  contentLen={allPersonLessonFiles?.length}
+                  contentObj={lessonFileObj}
+                  personEmail={personEmail}
+                  personAuthID={personAuthID}
+                />
+              </EmptyViewWrapper>
+            );
+          })
         : null}
     </>
   );
