@@ -42,6 +42,8 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightDate
+      spotlightUser
       createdAt
       updatedAt
     }
@@ -91,6 +93,8 @@ export const listPersons = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -311,6 +315,8 @@ export const getStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -394,6 +400,8 @@ export const listStaffs = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -520,6 +528,8 @@ export const getRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -676,6 +686,8 @@ export const listRooms = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -786,6 +798,8 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -825,6 +839,8 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -886,6 +902,8 @@ export const listClassroomGroupStudentss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -968,6 +986,8 @@ export const getClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -1038,6 +1058,8 @@ export const getClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1133,6 +1155,8 @@ export const listClassroomGroupss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -1220,6 +1244,8 @@ export const getRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -1286,6 +1312,8 @@ export const getRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1362,6 +1390,8 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -1583,6 +1613,8 @@ export const getClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1638,6 +1670,8 @@ export const listClassStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2827,6 +2861,8 @@ export const getRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2872,6 +2908,8 @@ export const listRoomMsgss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -3772,6 +3810,8 @@ export const getStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -3922,6 +3962,8 @@ export const listStudentDatas = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -3995,6 +4037,8 @@ export const getAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -4050,6 +4094,8 @@ export const listAnthologyComments = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -4102,6 +4148,8 @@ export const getQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -4219,6 +4267,8 @@ export const listQuestionDatas = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -4290,6 +4340,8 @@ export const getPersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -4422,6 +4474,8 @@ export const getPersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -4516,6 +4570,8 @@ export const listPersonLocations = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -4623,6 +4679,8 @@ export const getNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -4688,6 +4746,8 @@ export const listNoticeboardWidgets = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -4900,6 +4960,8 @@ export const getAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -5833,6 +5895,8 @@ export const getStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -5863,6 +5927,8 @@ export const getStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -5913,6 +5979,8 @@ export const listStudentConnectionss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -5940,6 +6008,8 @@ export const listStudentConnectionss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -5982,6 +6052,8 @@ export const getPersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6038,6 +6110,8 @@ export const listPersonSentimentss = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -6113,6 +6187,172 @@ export const listPersonFiless = /* GraphQL */ `
     }
   }
 `;
+export const getCommunity = /* GraphQL */ `
+  query GetCommunity($id: ID!) {
+    getCommunity(id: $id) {
+      id
+      cardName
+      cardDate
+      summary
+      cardImageLink
+      startTime
+      endTime
+      location
+      geoLocation
+      additionalLinks
+      additionalInfo
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightDate
+        spotlightUser
+        createdAt
+        updatedAt
+      }
+      chat {
+        items {
+          id
+          communityId
+          personAuthID
+          personEmail
+          msg
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCommunitys = /* GraphQL */ `
+  query ListCommunitys(
+    $id: ID
+    $filter: ModelCommunityFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCommunitys(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        cardName
+        cardDate
+        summary
+        cardImageLink
+        startTime
+        endTime
+        location
+        geoLocation
+        additionalLinks
+        additionalInfo
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightDate
+          spotlightUser
+          createdAt
+          updatedAt
+        }
+        chat {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCommunityChat = /* GraphQL */ `
+  query GetCommunityChat($id: ID!) {
+    getCommunityChat(id: $id) {
+      id
+      communityId
+      personAuthID
+      personEmail
+      msg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCommunityChats = /* GraphQL */ `
+  query ListCommunityChats(
+    $filter: ModelCommunityChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCommunityChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        communityId
+        personAuthID
+        personEmail
+        msg
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -6155,6 +6395,8 @@ export const userById = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6204,6 +6446,8 @@ export const usersByRole = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6285,6 +6529,8 @@ export const messagesByRoomId = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -6342,6 +6588,8 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }

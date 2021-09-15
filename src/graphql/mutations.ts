@@ -72,6 +72,8 @@ export const batchAddClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -385,6 +387,8 @@ export const createPerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightDate
+      spotlightUser
       createdAt
       updatedAt
     }
@@ -433,6 +437,8 @@ export const updatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightDate
+      spotlightUser
       createdAt
       updatedAt
     }
@@ -481,6 +487,8 @@ export const deletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightDate
+      spotlightUser
       createdAt
       updatedAt
     }
@@ -1053,6 +1061,8 @@ export const createStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1137,6 +1147,8 @@ export const updateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1221,6 +1233,8 @@ export const deleteStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1366,6 +1380,8 @@ export const createRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1550,6 +1566,8 @@ export const updateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1734,6 +1752,8 @@ export const deleteRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -1888,6 +1908,8 @@ export const createClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -1927,6 +1949,8 @@ export const createClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2007,6 +2031,8 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2046,6 +2072,8 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2126,6 +2154,8 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2165,6 +2195,8 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2248,6 +2280,8 @@ export const createClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2318,6 +2352,8 @@ export const createClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2413,6 +2449,8 @@ export const updateClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2483,6 +2521,8 @@ export const updateClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2578,6 +2618,8 @@ export const deleteClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2648,6 +2690,8 @@ export const deleteClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2746,6 +2790,8 @@ export const createRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2812,6 +2858,8 @@ export const createRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -2896,6 +2944,8 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -2962,6 +3012,8 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -3046,6 +3098,8 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -3112,6 +3166,8 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -3493,6 +3549,8 @@ export const createClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -3574,6 +3632,8 @@ export const updateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -3655,6 +3715,8 @@ export const deleteClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6132,6 +6194,8 @@ export const createRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6178,6 +6242,8 @@ export const updateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -6224,6 +6290,8 @@ export const deleteRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -8622,6 +8690,8 @@ export const createStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -8812,6 +8882,8 @@ export const updateStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9002,6 +9074,8 @@ export const deleteStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9124,6 +9198,8 @@ export const createAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9176,6 +9252,8 @@ export const updateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9228,6 +9306,8 @@ export const deleteAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9281,6 +9361,8 @@ export const createQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9399,6 +9481,8 @@ export const updateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9517,6 +9601,8 @@ export const deleteQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -9653,6 +9739,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -9719,6 +9807,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -9809,6 +9899,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -9875,6 +9967,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -9965,6 +10059,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -10031,6 +10127,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -10106,6 +10204,8 @@ export const createPersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -10238,6 +10338,8 @@ export const createPersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -10323,6 +10425,8 @@ export const updatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -10455,6 +10559,8 @@ export const updatePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -10540,6 +10646,8 @@ export const deletePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -10672,6 +10780,8 @@ export const deletePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -10770,6 +10880,8 @@ export const createNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -10832,6 +10944,8 @@ export const updateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -10894,6 +11008,8 @@ export const deleteNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -11107,6 +11223,8 @@ export const createAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -11356,6 +11474,8 @@ export const updateAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -11605,6 +11725,8 @@ export const deleteAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightDate
+          spotlightUser
           createdAt
           updatedAt
         }
@@ -12927,6 +13049,8 @@ export const createStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -12957,6 +13081,8 @@ export const createStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13004,6 +13130,8 @@ export const updateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13034,6 +13162,8 @@ export const updateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13081,6 +13211,8 @@ export const deleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13111,6 +13243,8 @@ export const deleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13154,6 +13288,8 @@ export const createPersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13201,6 +13337,8 @@ export const updatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13248,6 +13386,8 @@ export const deletePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightDate
+        spotlightUser
         createdAt
         updatedAt
       }
@@ -13333,6 +13473,258 @@ export const deletePersonFiles = /* GraphQL */ `
         fileKey
       }
       lessonPageID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCommunity = /* GraphQL */ `
+  mutation CreateCommunity(
+    $input: CreateCommunityInput!
+    $condition: ModelCommunityConditionInput
+  ) {
+    createCommunity(input: $input, condition: $condition) {
+      id
+      cardName
+      cardDate
+      summary
+      cardImageLink
+      startTime
+      endTime
+      location
+      geoLocation
+      additionalLinks
+      additionalInfo
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightDate
+        spotlightUser
+        createdAt
+        updatedAt
+      }
+      chat {
+        items {
+          id
+          communityId
+          personAuthID
+          personEmail
+          msg
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCommunity = /* GraphQL */ `
+  mutation UpdateCommunity(
+    $input: UpdateCommunityInput!
+    $condition: ModelCommunityConditionInput
+  ) {
+    updateCommunity(input: $input, condition: $condition) {
+      id
+      cardName
+      cardDate
+      summary
+      cardImageLink
+      startTime
+      endTime
+      location
+      geoLocation
+      additionalLinks
+      additionalInfo
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightDate
+        spotlightUser
+        createdAt
+        updatedAt
+      }
+      chat {
+        items {
+          id
+          communityId
+          personAuthID
+          personEmail
+          msg
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCommunity = /* GraphQL */ `
+  mutation DeleteCommunity(
+    $input: DeleteCommunityInput!
+    $condition: ModelCommunityConditionInput
+  ) {
+    deleteCommunity(input: $input, condition: $condition) {
+      id
+      cardName
+      cardDate
+      summary
+      cardImageLink
+      startTime
+      endTime
+      location
+      geoLocation
+      additionalLinks
+      additionalInfo
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightDate
+        spotlightUser
+        createdAt
+        updatedAt
+      }
+      chat {
+        items {
+          id
+          communityId
+          personAuthID
+          personEmail
+          msg
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCommunityChat = /* GraphQL */ `
+  mutation CreateCommunityChat(
+    $input: CreateCommunityChatInput!
+    $condition: ModelCommunityChatConditionInput
+  ) {
+    createCommunityChat(input: $input, condition: $condition) {
+      id
+      communityId
+      personAuthID
+      personEmail
+      msg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCommunityChat = /* GraphQL */ `
+  mutation UpdateCommunityChat(
+    $input: UpdateCommunityChatInput!
+    $condition: ModelCommunityChatConditionInput
+  ) {
+    updateCommunityChat(input: $input, condition: $condition) {
+      id
+      communityId
+      personAuthID
+      personEmail
+      msg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCommunityChat = /* GraphQL */ `
+  mutation DeleteCommunityChat(
+    $input: DeleteCommunityChatInput!
+    $condition: ModelCommunityChatConditionInput
+  ) {
+    deleteCommunityChat(input: $input, condition: $condition) {
+      id
+      communityId
+      personAuthID
+      personEmail
+      msg
       createdAt
       updatedAt
     }
