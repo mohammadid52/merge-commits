@@ -1,27 +1,24 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useRouteMatch, useHistory} from 'react-router-dom';
-import {FaQuestionCircle, FaUnity, FaEdit, FaChartLine} from 'react-icons/fa';
-import {IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {graphqlOperation, API} from 'aws-amplify';
-
-import Buttons from '../../../../Atoms/Buttons';
+import {API, graphqlOperation} from 'aws-amplify';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import useDictionary from '../../../../../customHooks/dictionary';
+import {useQuery} from '../../../../../customHooks/urlParam';
+import {languageList} from '../../../../../utilities/staticData';
 import BreadCrums from '../../../../Atoms/BreadCrums';
+import Buttons from '../../../../Atoms/Buttons';
 import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 // import Tooltip from '../../../../Atoms/Tooltip';
 import UnderlinedTabs, {ITabElementProps} from '../../../../Atoms/UnderlinedTabs';
-
-import UnitLookup from './UnitLookup';
 import LessonMeasurements from './LessonMeasurements';
-import LessonSummaryForm from './LessonSummaryForm';
 import LessonPlansList from './LessonPlansList';
-
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import {languageList} from '../../../../../utilities/staticData';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import LessonSummaryForm from './LessonSummaryForm';
+import UnitLookup from './UnitLookup';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -42,9 +39,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
-    clientKey
-  );
+  const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');

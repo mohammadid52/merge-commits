@@ -1,9 +1,8 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
-
-import Loader from '../../../../../Atoms/Loader';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import Loader from '../../../../../Atoms/Loader';
 
 interface IMeasurementList {
   setAddModalShow?: any;

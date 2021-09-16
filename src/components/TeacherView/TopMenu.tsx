@@ -1,18 +1,10 @@
 import React, {useContext} from 'react';
-
-import useDictionary from '../../customHooks/dictionary';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {LessonControlContext} from '../../contexts/LessonControlContext';
-
-import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
-import LessonControlBar from './LessonControlBar/LessonControlBar';
-
-import HamburgerMenu from './TopMenu/HamburgerMenu';
-/**
- * IMPORT FUNCTIONS
- */
-import {formatPattern} from '../../utilities/strings';
+import useDictionary from '../../customHooks/dictionary';
 import {getLocalStorageData} from '../../utilities/localStorage';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
+import HamburgerMenu from './TopMenu/HamburgerMenu';
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
 interface TopMenuControlProps {
   isSameStudentShared: boolean;
@@ -35,22 +27,17 @@ export type LessonInfoTitleBarProps = Pick<
 
 const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProps) => {
   const {
-    isSameStudentShared,
     handleOpen,
     handleComplete,
     handleLessonButton,
-    handleQuitViewing,
-    handleShareStudentData,
-    handleQuitShare,
+
     handleClick,
     handleHomePopup,
     handlePageChange,
     setQuickRegister,
   } = props;
 
-  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(
-    GlobalContext
-  );
+  const {lessonState, controlState} = useContext(GlobalContext);
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonPlannerDict} = useDictionary(clientKey);
 
@@ -86,10 +73,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
             </p>*/}
 
         <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
-              {lessonState.lessonData?.duration}{' '}
-              {`${lessonState.lessonData?.duration > 1 ? 'weeks' : 'week'}`}
-            </p>
+          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
+          {lessonState.lessonData?.duration}{' '}
+          {`${lessonState.lessonData?.duration > 1 ? 'weeks' : 'week'}`}
+        </p>
       </div>
     );
   };
@@ -159,7 +146,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
       {/* For mobile */}
       {/* <div
         className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
-        <div className="h-full w-full border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between block lg:hidden">
+        <div className="h-full w-full border-r-0 border-white bg-light-gray bg-opacity-10 pl-2  flex-row justify-between block lg:hidden">
           {basicDetailsElements()}
         </div>
       </div> */}

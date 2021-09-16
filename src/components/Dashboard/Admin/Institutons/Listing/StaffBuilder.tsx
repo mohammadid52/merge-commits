@@ -248,7 +248,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       await getStaffSequence(),
     ]);
     let staffSequence = sequenceData?.sequence || [];
-    const staffMembersIds = staffLists.map((item: any) => item.userId);
+    const staffMembersIds = staffLists?.map((item: any) => item.userId);
     if (sequenceData) {
       if (!sequenceData.id && staffSequence?.length === 0) {
         createStaffSequence(staffMembersIds);

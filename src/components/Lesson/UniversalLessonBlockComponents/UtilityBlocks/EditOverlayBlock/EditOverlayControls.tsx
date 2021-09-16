@@ -1,33 +1,24 @@
+import {find, findIndex, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {
-  AiOutlineBgColors,
-  AiOutlineDelete,
-  AiOutlineEdit,
-  AiOutlineMinus,
-} from 'react-icons/ai';
-import {BsLayoutSplit} from 'react-icons/bs';
+import {AiOutlineBgColors, AiOutlineDelete, AiOutlineEdit} from 'react-icons/ai';
+import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
-import {v4 as uuidv4} from 'uuid';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import useDictionary from '../../../../../customHooks/dictionary';
+import {useQuery} from '../../../../../customHooks/urlParam';
 import {
   RowWrapperProps,
   ULBSelectionProps,
 } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
-import SplitColumnDropdown from '../../../UniversalLessonBuilder/UI/SplitColumn/SplitColumnDropdown';
+import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {reorder} from '../../../../../utilities/strings';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {find, findIndex, findLastIndex, update} from 'lodash';
-import {reorder} from '../../../../../utilities/strings';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import Storage from '@aws-amplify/storage';
-import {DIVIDER, FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
+import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -42,7 +33,7 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const {
     contentID,
-    editedID,
+
     isActive,
     isPagePart,
     classString,
@@ -50,7 +41,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     section,
     handleEditBlockContent,
     handleEditBlockToggle,
-    createNewBlockULBHandler,
+
     deleteFromULBHandler,
     updateFromULBHandler,
     pageContentID,
@@ -58,7 +49,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
-  const [colDropdownActive, setColDropdownActive] = useState<boolean>(false);
+
   const {
     previewMode,
     getCurrentPage,
@@ -66,7 +57,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     selectedPageID,
     setUniversalLessonDetails,
     selID,
-    selIDForHover,
+
     setSelIDForHover,
     setSelID,
   } = useULBContext();
@@ -196,7 +187,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
    * either in the middle of the row component, or to the side of the row
    */
   const componentAlignmentToggleClass = 'justify-center';
-  const rowAlignmentToggleClass = 'w-auto';
 
   const bgClass = `hover:${
     theme === 'dark' ? 'bg-white' : 'bg-gray-700'
@@ -260,21 +250,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       key: '',
     });
   };
-  const deletImageFromS3 = (key: string) => {
-    // Remove image from bucket
 
-    return new Promise((resolve, reject) => {
-      Storage.remove(key)
-        .then((result) => {
-          resolve(result);
-          closeAction();
-        })
-        .catch((err) => {
-          console.log('Error in deleting file from s3', err);
-          reject(err);
-        });
-    });
-  };
   const deletePartContent = async (contentID: string, type?: string, key?: string) => {
     // if (type === 'image' || type === 'custom_video') {
     //   await deletImageFromS3(key);
@@ -327,7 +303,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           onClickAway={() => {
             setOverlayVisible(false);
             setColorPickerActive(false);
-            setColDropdownActive(false);
+
             clearIds();
           }}>
           <div

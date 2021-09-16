@@ -1,35 +1,32 @@
-import {BsFillTrashFill} from 'react-icons/bs';
-import React, {Fragment, useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {remove} from 'lodash';
+import isEqual from 'lodash/isEqual';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {BsFillTrashFill} from 'react-icons/bs';
+import {IoIosKeypad} from 'react-icons/io';
 import {
   IoCaretDownCircleOutline,
   IoCaretUpCircleOutline,
   IoOptionsOutline,
 } from 'react-icons/io5';
-import {IoIosKeypad} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import isEqual from 'lodash/isEqual';
-
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-import * as mutations from '../../../../../../graphql/mutations';
-
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../../Atoms/Form/Selector';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../../Atoms/Buttons';
-import RichTextEditor from '../../../../../Atoms/RichTextEditor';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import {LessonPlansProps} from '../../LessonEdit';
-
-import {getTypeString, reorder} from '../../../../../../utilities/strings';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import {remove} from 'lodash';
-import {deleteQuestion} from '../../../../../../graphql/mutations';
+import * as mutations from '../../../../../../graphql/mutations';
+import {LessonPlansProps} from '../../../../../../interfaces/LessonInterfaces';
+import {getTypeString, reorder} from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import FormInput from '../../../../../Atoms/Form/FormInput';
+import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
+import Selector from '../../../../../Atoms/Form/Selector';
+import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void;
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void;
@@ -108,7 +105,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddNewCheckPointDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {AddNewCheckPointDict} = useDictionary(clientKey);
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
@@ -420,10 +417,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     subtitle,
     language,
     label,
-    instructionsTitle,
-    purposeHtml,
-    objectiveHtml,
-    instructionHtml,
+
     estTime,
   } = checkPointData;
 
@@ -546,18 +540,15 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl mt-6">
             <ul className="rounded-xl">
               {accordionSteps.map(
-                (
-                  item: {
-                    id: string;
-                    header: string;
-                    textEditorName: string;
-                    textEditorValue: string;
-                    titleLabel?: string;
-                    titleValue?: string;
-                    title?: string;
-                  },
-                  index
-                ) => (
+                (item: {
+                  id: string;
+                  header: string;
+                  textEditorName: string;
+                  textEditorValue: string;
+                  titleLabel?: string;
+                  titleValue?: string;
+                  title?: string;
+                }) => (
                   <Fragment key={item.id}>
                     <li
                       className={`relative border-b-0 border-gray-200 ${

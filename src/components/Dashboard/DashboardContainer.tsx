@@ -1,11 +1,8 @@
+import isEmpty from 'lodash/isEmpty';
 import React, {useContext} from 'react';
+import {getAsset} from '../../assets';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import HeroBanner from '../Header/HeroBanner';
-import SideWidgetBar from './Noticebooard/SideWidgetBar';
-import isEmpty from 'lodash/isEmpty';
-import {getAsset} from '../../assets';
-import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
-import ErrorBoundary from '../Error/ErrorBoundary';
 
 interface DashboardContainerProps {
   currentPage: string;

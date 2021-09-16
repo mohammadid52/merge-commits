@@ -1,5 +1,5 @@
-import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
+import ContentCard from '../../Atoms/ContentCard';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
 interface Teacher {

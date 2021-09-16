@@ -1,34 +1,29 @@
-import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {useParams} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-  UniversalLessonStudentData,
-} from '../../interfaces/UniversalLessonInterfaces';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
-import * as subscriptions from '../../graphql/subscriptions';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {useParams} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../contexts/GlobalContext';
+import * as customQueries from '../../customGraphql/customQueries';
 import useDeviceDetect from '../../customHooks/deviceDetect';
 import useDictionary from '../../customHooks/dictionary';
-
+import * as mutations from '../../graphql/mutations';
+import * as queries from '../../graphql/queries';
+import * as subscriptions from '../../graphql/subscriptions';
+import {
+  StudentPageInput,
+  UniversalLessonStudentData,
+} from '../../interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import QuickRegister from '../Auth/QuickRegister';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import ClassRoster from './ClassRoster';
-import PositiveAlert from '../General/Popup';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
-import TopMenu from './TopMenu';
-import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
-import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import PositiveAlert from '../General/Popup';
+import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
-import HamburgerMenu from './TopMenu/HamburgerMenu';
+import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
+import TopMenu from './TopMenu';
 
 const LessonControl = () => {
   const {

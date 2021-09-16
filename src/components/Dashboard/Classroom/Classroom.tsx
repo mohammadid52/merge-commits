@@ -1,22 +1,18 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import isEmpty from 'lodash/isEmpty';
+import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import SurveyCard from './SurveyCard';
-import Today from './TodayLesson';
-import UpcomingLessons from './UpcomingLessons';
-import CompletedLessons from './CompletedLessons';
+import useDictionary from '../../../customHooks/dictionary';
+import * as mutations from '../../../graphql/mutations';
+import BreadCrums from '../../Atoms/BreadCrums';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
+import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
-import useDictionary from '../../../customHooks/dictionary';
-import {getAsset} from '../../../assets';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import BreadCrums from '../../Atoms/BreadCrums';
-import DashboardContainer from '../DashboardContainer';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../../graphql/mutations';
+import Today from './TodayLesson';
 
 interface Artist {
   id: string;
@@ -85,6 +81,8 @@ export interface LessonCardProps {
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
   roomID?: string;
+  getImageFromS3?: boolean;
+  preview?: boolean;
 }
 
 const range = (from: number, to: number, step: number = 1) => {
@@ -154,6 +152,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     open: 0,
     completed: 0,
   });
+  const [lessonData, setLessonData] = useState<Array<any>>([]);
+  const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
   // ##################################################################### //
   // ########################## LESSON GROUPING ########################## //
@@ -187,32 +187,63 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         )
       : [];
 
-  // reconstructing lesson data after adding some calculated fields
-  let count: number = 0;
-  let lessonData = state.roomData.lessons;
-  lessonData?.map((item: any) => {
-    let temp = Math.ceil(count + item.lesson.duration);
-    item.sessionHeading = `Session ${
-      item.lesson.duration > 1
-        ? range(Math.ceil(count) + 1, temp)
-            .join(', ')
-            .replace(/, ([^,]*)$/, ' & $1')
-        : temp
-    }`;
-    count += item.lesson.duration;
-    item.session = Math.ceil(count);
-    item.lesson = {
-      ...item.lesson,
-      totalEstTime:
-        Math.ceil(
-          item.lesson.lessonPlan.reduce(
-            (total: number, obj: any) => Number(obj.estTime) + total,
-            0
-          ) / 5
-        ) * 5,
-    };
-    return item;
-  });
+  useEffect(() => {
+    if (lessonLoading) {
+      setLessonData([]);
+    }
+  }, [lessonLoading]);
+
+  useEffect(() => {
+    // reconstructing lesson data after adding some calculated fields
+    let count: number = 0;
+    let temp = [...state.roomData.lessons];
+    const syllabusList = state.roomData?.syllabus;
+    const activeSyllabusLessons =
+      syllabusList.find((syllabus: any) => syllabus.id === activeRoomInfo?.activeSyllabus)
+        ?.lessons?.items || [];
+    if (lessonLoading && state.roomData.lessons?.length) {
+      setSettingLessons(true);
+    }
+
+    if (temp?.length && syllabusList?.length && activeSyllabusLessons?.length) {
+      setLessonData(
+        temp?.map((item: any) => {
+          const lessonScheduleData = activeSyllabusLessons?.find(
+            (lesson: any) => lesson.id === item.id
+          );
+          let temp = Math.ceil(count + item.lesson.duration);
+          const sessionHeading = lessonScheduleData?.startDate
+            ? item.lesson.duration > 1
+              ? [
+                  new Date(lessonScheduleData.startDate).toLocaleDateString(),
+                  new Date(lessonScheduleData.estEndDate).toLocaleDateString(),
+                ].join(' - ')
+              : new Date(lessonScheduleData.startDate).toLocaleDateString()
+            : `Session ${
+                item.lesson.duration > 1
+                  ? range(Math.ceil(count) + 1, temp)
+                      .join(', ')
+                      .replace(/, ([^,]*)$/, ' & $1')
+                  : temp
+              }`;
+          count += item.lesson.duration;
+          const session = Math.ceil(count);
+          const lesson = {
+            ...item.lesson,
+            totalEstTime:
+              Math.ceil(
+                item.lesson.lessonPlan.reduce(
+                  (total: number, obj: any) => Number(obj.estTime) + total,
+                  0
+                ) / 5
+              ) * 5,
+          };
+          return {...item, lesson, session, sessionHeading};
+        })
+      );
+      setSettingLessons(false);
+    }
+  }, [state.roomData.lessons, state.roomData?.syllabus]);
 
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
@@ -410,7 +441,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       activeRoom={state.activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       isTeacher={isTeacher}
-                      lessonLoading={lessonLoading}
+                      lessonLoading={lessonLoading || settingLessons || syllabusLoading}
                       lessons={lessonData}
                     />
                   </div>

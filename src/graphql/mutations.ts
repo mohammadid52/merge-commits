@@ -12596,6 +12596,7 @@ export const createAttendance = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -12844,6 +12845,7 @@ export const updateAttendance = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -13092,6 +13094,7 @@ export const deleteAttendance = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -13309,6 +13312,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13330,6 +13334,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13342,6 +13347,7 @@ export const createUniversalLesson = /* GraphQL */ `
       groupType
       smallGroupSize
       smallGroupOption
+      studentMaterials
       createdAt
       updatedAt
     }
@@ -13389,6 +13395,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13410,6 +13417,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13422,6 +13430,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       groupType
       smallGroupSize
       smallGroupOption
+      studentMaterials
       createdAt
       updatedAt
     }
@@ -13469,6 +13478,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13490,6 +13500,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13502,6 +13513,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
       groupType
       smallGroupSize
       smallGroupOption
+      studentMaterials
       createdAt
       updatedAt
     }
@@ -13907,6 +13919,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -14031,6 +14044,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -14155,6 +14169,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -14254,6 +14269,7 @@ export const createUniversalLessonFeedback = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -14330,6 +14346,7 @@ export const updateUniversalLessonFeedback = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -14406,6 +14423,7 @@ export const deleteUniversalLessonFeedback = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -14801,6 +14819,87 @@ export const deletePersonSentiments = /* GraphQL */ `
       time
       responseText
       backstory
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPersonFiles = /* GraphQL */ `
+  mutation CreatePersonFiles(
+    $input: CreatePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    createPersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePersonFiles = /* GraphQL */ `
+  mutation UpdatePersonFiles(
+    $input: UpdatePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    updatePersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePersonFiles = /* GraphQL */ `
+  mutation DeletePersonFiles(
+    $input: DeletePersonFilesInput!
+    $condition: ModelPersonFilesConditionInput
+  ) {
+    deletePersonFiles(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
       createdAt
       updatedAt
     }

@@ -1,21 +1,17 @@
-import React, {useContext, useState} from 'react';
-import {useCookies} from 'react-cookie';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
-import {validate} from 'json-schema';
+import React, {useContext, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {FaKey} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {useHistory, NavLink} from 'react-router-dom';
-
-import ErrorNote from '../Admin/UserManagement/ErrorNote';
+import {useHistory} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
-import ModalPopUp from '../../Molecules/ModalPopUp';
-
-import * as customMutations from '../../../customGraphql/customMutations';
 import FormInput from '../../Atoms/Form/FormInput';
+import ErrorNote from '../Admin/UserManagement/ErrorNote';
 
 interface ChangePasscodeProps {
   updateAuthState?: Function;

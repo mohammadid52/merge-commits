@@ -1,15 +1,13 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-
+import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {getAsset} from '../../../../../assets';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../../customGraphql/customMutations';
-
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import { InstructionInitialState } from '../LessonEdit';
-import { getAsset } from '../../../../../assets';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import {InstructionInitialState} from '../../../../../interfaces/LessonInterfaces';
+import Buttons from '../../../../Atoms/Buttons';
+import FormInput from '../../../../Atoms/Form/FormInput';
+import RichTextEditor from '../../../../Atoms/RichTextEditor';
 
 interface AssessmentInstuctionsProps {
   savedInstructions?: InstructionInitialState;
@@ -21,10 +19,17 @@ interface AssessmentInstuctionsProps {
 }
 
 const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
-  const { savedInstructions, lessonId, updateParentState, lessonType, lessonName, setUnsavedChanges } = props;
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {
+    savedInstructions,
+    lessonId,
+    updateParentState,
+    lessonType,
+    lessonName,
+    setUnsavedChanges,
+  } = props;
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { AssessmentInstuctionsDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {AssessmentInstuctionsDict} = useDictionary(clientKey);
   const [formData, setFormData] = useState<InstructionInitialState>(savedInstructions);
   const [loading, setLoading] = useState(false);
   const [selectedBlock, setSelectedBlock] = useState('1');
@@ -49,7 +54,9 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       header: `${lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions`,
       title: 'instructionsTitle',
       titleValue: formData.instructionsTitle,
-      titleLabel: `${lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions Title`,
+      titleLabel: `${
+        lessonType === 'survey' ? 'Survey' : 'Assessment'
+      } Instructions Title`,
       textEditorName: 'instructions',
       textEditorValue:
         typeof formData.instructions === 'object' && formData.instructions
@@ -110,7 +117,9 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
         instructions: formData.instructions,
         summary: formData.summary,
       };
-      const results: any = await API.graphql(graphqlOperation(customMutations.updateLesson, { input: input }));
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.updateLesson, {input: input})
+      );
       const lessonsData = results?.data?.updateLesson;
       setValidation({
         ...validation,
@@ -131,24 +140,24 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
   };
 
   useEffect(() => {
-    setFormData({ ...savedInstructions });
+    setFormData({...savedInstructions});
   }, [savedInstructions]);
 
-  const { introductionTitle, instructionsTitle, summaryTitle, introduction, instructions, summary } = formData;
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {' '}
-          {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AssessmentInstuctionsDict[userLanguage]['INSTRUCTION']} -{' '}
-          {lessonName}
+          {lessonType === 'survey' ? 'Survey' : 'Assessment'}{' '}
+          {AssessmentInstuctionsDict[userLanguage]['INSTRUCTION']} - {lessonName}
         </h3>
       </div>
 
       <div className="p-4">
         <div className="flex justify-between">
           <p className="text-sm text-gray-500 flex items-center px-4 my-6">
-            {AssessmentInstuctionsDict[userLanguage]['HEADING']} {lessonType === 'survey' ? 'Survey' : 'Assessment'}.
+            {AssessmentInstuctionsDict[userLanguage]['HEADING']}{' '}
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'}.
           </p>
         </div>
 
@@ -170,10 +179,14 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
               ) => (
                 <Fragment key={item.id}>
                   <li
-                    className={`relative border-b-0 border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
+                    className={`relative border-b-0 border-gray-200 ${
+                      selectedBlock === item.id ? 'rounded-lg' : ''
+                    }`}>
                     <div
                       className={`w-full px-8 py-6 text-left ${
-                        selectedBlock === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''
+                        selectedBlock === item.id
+                          ? 'border-0 border-indigo-400 rounded-lg'
+                          : ''
                       }`}>
                       <div className="flex items-center justify-center">
                         <span
@@ -201,7 +214,11 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
                           <RichTextEditor
                             initialValue={item.textEditorValue}
                             onChange={(htmlContent, plainText) =>
-                              setEditorContent(htmlContent, plainText, item.textEditorName)
+                              setEditorContent(
+                                htmlContent,
+                                plainText,
+                                item.textEditorName
+                              )
                             }
                           />
                         </div>
@@ -216,7 +233,9 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
 
         {validation.message && (
           <div className="py-4 m-auto mt-4 text-center">
-            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {validation.message}
+            </p>
           </div>
         )}
         <div className="flex my-8 justify-center">

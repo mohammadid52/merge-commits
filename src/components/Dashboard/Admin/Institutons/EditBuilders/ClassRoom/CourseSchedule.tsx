@@ -8,6 +8,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import moment from 'moment';
 
 import * as mutation from '../../../../../../graphql/mutations';
+import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import {frequencyOptions, weekdaysOption} from '../../../../../../utilities/staticData';
 import Buttons from '../../../../../Atoms/Buttons';
@@ -18,7 +19,7 @@ import {awsFormatDate, dateString, timeIntervals} from '../../../../../../utilit
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 
-import ClassRoomHolidays from './ClassRoomHolidays';
+import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 // import ScheduleAlertPopUp from './ScheduleAlertPopUp';
 import Modal from '../../../../../Atoms/Modal';
@@ -47,6 +48,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const [showAlert, setShowAlert] = useState(false);
   const [logsChanged, setLogsChanged] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
   const [timeIntervalOptions, setTimeIntervalOptions] = useState(timeIntervals());
   const [errors, setErrors] = useState({
     startDate: '',
@@ -64,6 +67,11 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     notes: '',
     weekDay: '',
     conferenceCallLink: '',
+  });
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [serverMessage, setServerMessage] = useState({
+    message: '',
+    isError: false,
   });
 
   useEffect(() => {
@@ -83,8 +91,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       setScheduleData({
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
-        startTime,
-        endTime,
+        startTime: startTime ? moment(startTime, 'HH:mm:ss').format('h:mm A') : null,
+        endTime: endTime ? moment(endTime, 'HH:mm:ss').format('h:mm A') : null,
         frequency,
         location,
         notes,
@@ -97,7 +105,38 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     }
   }, [roomData]);
 
+  const sortLogsByDate = (data: IImpactLog[], order: string = 'asc') => {
+    return data
+      ? data.sort((a: IImpactLog, b: IImpactLog) =>
+          order === 'asc'
+            ? +new Date(a.impactDate) - +new Date(b.impactDate)
+            : +new Date(b.impactDate) - +new Date(a.impactDate)
+        )
+      : [];
+  };
+
+  useEffect(() => {
+    if (roomData.id) {
+      getImpactLogs();
+    }
+  }, [roomData.id]);
+
+  const getImpactLogs = async () => {
+    try {
+      setLogsLoading(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getRoomLessonImpactLogs, {id: roomData.id})
+      );
+      setLessonImpactLogs(sortLogsByDate(result?.data?.getRoom.lessonImpactLog));
+      setLogsLoading(false);
+    } catch (error) {
+      setLessonImpactLogs([]);
+      setLogsLoading(false);
+    }
+  };
+
   const handleSelection = (value: string, fieldName: string) => {
+    setUnsavedChanges(true);
     let valueNeedsToUpdate = {
       [fieldName]: value,
     };
@@ -117,6 +156,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       ...prevData,
       [name]: value,
     }));
+    setUnsavedChanges(true);
   };
 
   const handleDateChange = (date: Date | null, fieldName: string) => {
@@ -124,6 +164,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       ...prevData,
       [fieldName]: date,
     }));
+    setUnsavedChanges(true);
   };
 
   const validateForm = async () => {
@@ -162,17 +203,26 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           id,
           startDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.startDate)),
           endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate)),
-          startTime: moment(scheduleData.startTime, 'h:mm A').format('hh:mm:ss'),
-          endTime: moment(scheduleData.endTime, 'h:mm A').format('hh:mm:ss'),
+          startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
+          endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
           frequency: scheduleData.frequency,
           // location: scheduleData.location,
           notes: scheduleData.notes,
           weekDay: scheduleData.weekDay,
           // conferenceCallLink: scheduleData.conferenceCallLink,
         };
-        const newRoom: any = await API.graphql(
-          graphqlOperation(mutation.updateRoom, {input: input})
-        );
+        await API.graphql(graphqlOperation(mutation.updateRoom, {input: input}));
+        setServerMessage({
+          message: CourseScheduleDict[userLanguage]['MESSAGES']['SUCCESS_MESSAGE'],
+          isError: false,
+        });
+        setTimeout(() => {
+          setServerMessage({
+            message: '',
+            isError: false,
+          });
+        }, 4000);
+        setUnsavedChanges(false);
         setSaving(false);
       } catch (error) {
         setSaving(false);
@@ -351,10 +401,19 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </div> */}
         </div>
         <div className="mt-3">
-          <ClassRoomHolidays logsChanged={logsChanged} setLogsChanged={setLogsChanged} />
+          <ClassRoomHolidays
+            lessonImpactLogs={lessonImpactLogs}
+            logsLoading={logsLoading}
+            setLessonImpactLogs={setLessonImpactLogs}
+            setLogsChanged={setLogsChanged}
+            sortLogsByDate={sortLogsByDate}
+          />
         </div>
       </div>
       <UnitPlanner
+        lessonImpactLogs={lessonImpactLogs}
+        logsChanged={logsChanged || unsavedChanges}
+        setLogsChanged={setLogsChanged}
         roomData={{
           ...roomData,
           ...scheduleData,
@@ -363,15 +422,22 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         }}
         saveRoomDetails={saveRoomDetails}
         saving={saving}
-        isDetailsComplete={
+        isDetailsComplete={Boolean(
           scheduleData.startDate &&
-          scheduleData.endDate &&
-          scheduleData.startTime &&
-          scheduleData.endTime &&
-          scheduleData.frequency &&
-          scheduleData.weekDay
-        }
+            scheduleData.endDate &&
+            scheduleData.startTime &&
+            scheduleData.endTime &&
+            scheduleData.frequency &&
+            scheduleData.weekDay
+        )}
       />
+      {serverMessage.message && (
+        <div className="py-2 m-auto text-center">
+          <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
+            {serverMessage.message}
+          </p>
+        </div>
+      )}
       {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"

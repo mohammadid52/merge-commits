@@ -1,22 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
-
-import * as queries from '../../../../../../graphql/queries';
-import * as mutations from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import * as customQueries from '../../../../../../customGraphql/customQueries';
 import useDictionary from '../../../../../../customHooks/dictionary';
-
-import Accordion from '../../../../../Atoms/Accordion';
+import * as queries from '../../../../../../graphql/queries';
 import Buttons from '../../../../../Atoms/Buttons';
 import Loader from '../../../../../Atoms/Loader';
 import Modal from '../../../../../Atoms/Modal';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
-
 import AddEvidence from './AddEvidence';
-import MeasurementsList from './MeasurementsList';
 import CourseMeasurementsCard from './CourseMeasurementsCard';
+import MeasurementsList from './MeasurementsList';
 
 interface ILearningEvidence {
   fetchLessonRubrics: () => void;

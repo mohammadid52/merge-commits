@@ -16,6 +16,7 @@ import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {FaTrashAlt} from 'react-icons/fa';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -25,24 +26,6 @@ interface KeywordModalDialog extends IContentTypeComponentProps {
 const initialInputFieldsState = [
   {
     id: 'keyword_1',
-    type: '',
-    label: 'Keyword Title',
-    value: 'Keyword description',
-  },
-  {
-    id: 'keyword_2',
-    type: '',
-    label: 'Keyword Title',
-    value: 'Keyword description',
-  },
-  {
-    id: 'keyword_3',
-    type: '',
-    label: 'Keyword Title',
-    value: 'Keyword description',
-  },
-  {
-    id: 'keyword_4',
     type: '',
     label: 'Keyword Title',
     value: 'Keyword description',
@@ -169,11 +152,24 @@ const KeywordModalDialog = ({
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
               <div className="my-2" key={`keyword_${idx}`}>
-                <label
-                  htmlFor={'Link'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-                  Word Tile {idx + 1}:
-                </label>
+                <div className="w-auto flex items-center justify-between">
+                  <label
+                    htmlFor={'Link'}
+                    className="mb-2 w-auto block text-xs font-semibold leading-5 text-gray-700">
+                    Word Tile {idx + 1}:
+                  </label>
+                  {idx !== 0 ? (
+                    <span
+                      onClick={() => removeItemFromList(inputObj.id)}
+                      className="w-auto text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
+                    mb-2
+                  ">
+                      <FaTrashAlt />
+                    </span>
+                  ) : (
+                    <span className="w-auto" />
+                  )}
+                </div>
 
                 <div className="mb-2">
                   <FormInput
@@ -191,11 +187,6 @@ const KeywordModalDialog = ({
                     placeHolder={inputFieldsArray[idx]?.value}
                   />
                 </div>
-                <RemoveInput
-                  idx={idx}
-                  inputId={inputObj.id}
-                  removeItemFromList={removeItemFromList}
-                />
               </div>
             );
           })}

@@ -1,37 +1,30 @@
-import React, {useContext, useState, useEffect, Fragment} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {FaEdit, FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {RiLock2Fill} from 'react-icons/ri';
-import {FaPlus, FaEdit, FaTrashAlt} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {Switch, useHistory, Route, useRouteMatch, Link, NavLink} from 'react-router-dom';
-
-import * as queries from '../../../graphql/queries';
+import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import ProfileInfo from './ProfileInfo';
-import AboutMe from './AboutMe';
-import ChangePassword from './ChangePassword';
-import ProfileVault from './ProfileVault';
-import ProfileEdit from './ProfileEdit';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
 import * as customQueries from '../../../customGraphql/customQueries';
-import ToolTip from '../../General/ToolTip/ToolTip';
-import ProfileCropModal from './ProfileCropModal';
+import useDictionary from '../../../customHooks/dictionary';
 import {getImageFromS3} from '../../../utilities/services';
+import {getUniqItems} from '../../../utilities/strings';
 import BreadCrums from '../../Atoms/BreadCrums';
-import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
-import useDictionary from '../../../customHooks/dictionary';
-import {
-  getUniqItems,
-  createFilterToFetchSpecificItemsOnly,
-} from '../../../utilities/strings';
-import {getAsset} from '../../../assets';
+import SectionTitle from '../../Atoms/SectionTitle';
 import HeroBanner from '../../Header/HeroBanner';
+import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import AboutMe from './AboutMe';
 import ChangePasscode from './ChangePasscode';
+import ChangePassword from './ChangePassword';
+import ProfileCropModal from './ProfileCropModal';
+import ProfileEdit from './ProfileEdit';
+import ProfileInfo from './ProfileInfo';
+import ProfileVault from './ProfileVault';
+import DroppableMedia from '../../Molecules/DroppableMedia';
 
 export interface UserInfo {
   authId: string;
@@ -145,26 +138,24 @@ const Profile = (props: ProfilePageProps) => {
     });
   };
 
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
+  const setImage = (file: any) => {
+    const fileReader = new FileReader();
+    fileReader.onload = function () {
+      setUpImage(fileReader.result);
+    };
+    fileReader.readAsDataURL(file);
+    toggleCropper();
   };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
+  const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image, person.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, person.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`);
     setImageUrl(imageUrl);
     setPerson({...person, image: `profile_image_${person.id}`});
@@ -346,12 +337,14 @@ const Profile = (props: ProfilePageProps) => {
   const profileBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  const mediaRef = React.useRef(null);
+
   if (status !== 'done') {
     return <LessonLoading />;
   }
   {
     return (
-      <>
+      <div className="relative">
         {/* Hero Section */}
         <div>
           <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
@@ -376,11 +369,6 @@ const Profile = (props: ProfilePageProps) => {
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
 
-            {/* <Buttons
-                label="Go Back"
-                onClick={history.goBack}
-                Icon={IoArrowUndoCircleOutline}
-              /> */}
             {currentPath !== 'edit' && currentPath !== 'password' ? (
               <div className="flex justify-end py-2 2xl:py-4 mb-2 2xl:mb-4 w-full md:w-3/5 lg:w-5/10">
                 <Buttons
@@ -402,24 +390,24 @@ const Profile = (props: ProfilePageProps) => {
                       {!imageLoading ? (
                         <Fragment>
                           <label className="cursor-pointer">
-                            {imageUrl ? (
-                              <img
-                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                src={imageUrl}
-                              />
-                            ) : (
-                              <div
-                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                              />
-                            )}
-                            <input
-                              type="file"
-                              className="hidden"
-                              onChange={(e) => cropSelecetedImage(e)}
-                              onClick={(e: any) => (e.target.value = '')}
-                              accept="image/*"
-                              multiple={false}
-                            />
+                            <DroppableMedia
+                              setImage={(img: any, file: any) => {
+                                setUpImage(img);
+                                setFileObj(file);
+                              }}
+                              toggleCropper={toggleCropper}
+                              mediaRef={mediaRef}>
+                              {imageUrl ? (
+                                <img
+                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                  src={imageUrl}
+                                />
+                              ) : (
+                                <div
+                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                />
+                              )}
+                            </DroppableMedia>
                           </label>
                         </Fragment>
                       ) : (
@@ -427,19 +415,6 @@ const Profile = (props: ProfilePageProps) => {
                           <Loader />
                         </div>
                       )}
-                      {/* <span className="hidden group-focus:flex justify-around mt-6">
-                          <label className="w-8 cursor-pointer">
-                            <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
-                              <FaEdit />
-                            </IconContext.Provider>
-                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
-                          </label>
-                          <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                            <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
-                              <FaTrashAlt />
-                            </IconContext.Provider>
-                          </span>
-                        </span> */}
                     </button>
                   ) : (
                     <label
@@ -451,14 +426,15 @@ const Profile = (props: ProfilePageProps) => {
                       ) : (
                         <Loader />
                       )}
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={(e) => cropSelecetedImage(e)}
-                        onClick={(e: any) => (e.target.value = '')}
-                        accept="image/*"
-                        multiple={false}
-                      />
+                      <DroppableMedia
+                        mediaRef={mediaRef}
+                        setImage={(img: any, file: any) => {
+                          setUpImage(img);
+                          setFileObj(file);
+                        }}
+                        toggleCropper={toggleCropper}>
+                        <div />
+                      </DroppableMedia>
                     </label>
                   )}
                 </div>
@@ -571,7 +547,7 @@ const Profile = (props: ProfilePageProps) => {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };

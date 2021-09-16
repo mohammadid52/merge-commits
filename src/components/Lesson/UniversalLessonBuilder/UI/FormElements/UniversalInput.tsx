@@ -137,6 +137,8 @@ const UniversalInput = (props: any) => {
     setUnsavedChanges(false);
   };
 
+  const hideBtns = selectedForm === ATTACHMENTS;
+
   return (
     <>
       <div>
@@ -168,10 +170,10 @@ const UniversalInput = (props: any) => {
                 )}
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
-                    <div className="flex items-center mt-4 ">
+                    <div className="flex items-center mt-4 gap-x-4">
                       {selectedForm === INPUT && (
                         <>
-                          <div className="flex items-center w-auto">
+                          <div className="sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm w-auto">
                             <div className="flex items-center text-xs w-auto">
                               Sentence
                               <Toggle
@@ -180,11 +182,10 @@ const UniversalInput = (props: any) => {
                               />
                               Paragraph
                             </div>
-                            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                           </div>
                         </>
                       )}
-                      <div className="flex items-center text-xs w-auto">
+                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         Make this required
                         <Toggle
                           checked={input.required}
@@ -200,10 +201,10 @@ const UniversalInput = (props: any) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center mt-4 ">
+                  <div className="flex items-center mt-4 gap-x-4">
                     {selectedForm === INPUT && (
                       <>
-                        <div className="flex items-center w-auto ">
+                        <div className="flex items-center w-auto sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
                           <div className="flex items-center text-xs w-auto">
                             Sentence
                             <Toggle
@@ -212,11 +213,10 @@ const UniversalInput = (props: any) => {
                             />
                             Paragraph
                           </div>
-                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                         </div>
                       </>
                     )}
-                    <div className="flex items-center text-xs w-auto">
+                    <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                       Make this required
                       <Toggle
                         checked={input.required}
@@ -234,22 +234,26 @@ const UniversalInput = (props: any) => {
         })}
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
-        <div className="flex items-center w-auto">
-          <button
-            onClick={addOneInputField}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-            + Add Field
-          </button>
-          <button
-            onClick={() => setNumbered(!numbered)}
-            className={`${
-              numbered
-                ? 'border-indigo-500 text-white bg-indigo-400'
-                : 'border-gray-300 text-dark'
-            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Numbered' : 'Unnumbered'}
-          </button>
-        </div>
+        {!hideBtns ? (
+          <div className="flex items-center w-auto">
+            <button
+              onClick={addOneInputField}
+              className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+              + Add Field
+            </button>
+            <button
+              onClick={() => setNumbered(!numbered)}
+              className={`${
+                numbered
+                  ? 'border-indigo-500 text-white bg-indigo-400'
+                  : 'border-gray-300 text-dark'
+              } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+              {numbered ? 'Numbered' : 'Unnumbered'}
+            </button>
+          </div>
+        ) : (
+          <div className="w-auto" />
+        )}
         <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"

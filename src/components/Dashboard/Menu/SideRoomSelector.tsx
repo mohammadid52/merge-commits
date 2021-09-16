@@ -1,15 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-
-import { ClassroomControlProps } from '../Dashboard';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { API, graphqlOperation } from '@aws-amplify/api';
-import * as customQueries from '../../../customGraphql/customQueries';
-import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
-import * as queries from '../../../graphql/queries';
-import { Syllabus } from '../Classroom/Classroom';
+import {ClassroomControlProps} from '../Dashboard';
 
 export interface Room {
   id: string;
@@ -20,13 +12,14 @@ export interface Room {
 
 const SideRoomSelector = (props: ClassroomControlProps) => {
   // Essentials
-  const { homeData, activeRoom, roomsLoading, handleRoomSelection } = props;
-  const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { classRoomDict } = useDictionary(clientKey);
+  const {activeRoom, roomsLoading, handleRoomSelection} = props;
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const {classRoomDict} = useDictionary(clientKey);
 
   const roomsTitle =
     'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
+  const linkClass =
+    'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return (
     <div className={'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray'}>
@@ -49,11 +42,15 @@ const SideRoomSelector = (props: ClassroomControlProps) => {
           })
         ) : roomsLoading === false ? (
           <>
-            <p className={`${linkClass}`}>Loading {classRoomDict[userLanguage]['LIST_TITLE']}...</p>
+            <p className={`${linkClass}`}>
+              Loading {classRoomDict[userLanguage]['LIST_TITLE']}...
+            </p>
           </>
         ) : (
           <>
-            <p className={`${linkClass}`}>No {classRoomDict[userLanguage]['LIST_TITLE']} assigned to user</p>
+            <p className={`${linkClass}`}>
+              No {classRoomDict[userLanguage]['LIST_TITLE']} assigned to user
+            </p>
           </>
         )}
       </div>

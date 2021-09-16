@@ -1,19 +1,16 @@
-import React, {Fragment, useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-
-import * as mutations from '../../../../../../graphql/mutations';
-
-import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../Atoms/Form/TextArea';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import Selector from '../../../../../Atoms/Form/Selector';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import * as mutations from '../../../../../../graphql/mutations';
+import Buttons from '../../../../../Atoms/Buttons';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import FormInput from '../../../../../Atoms/Form/FormInput';
+import Selector from '../../../../../Atoms/Form/Selector';
 
 interface AddNewQuestionProps {
   changeStep: (step: string) => void;
@@ -53,7 +50,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddNewQuestionDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {AddNewQuestionDict} = useDictionary(clientKey);
 
   const initialState = {
     question: '',
@@ -224,7 +221,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     if (isValid) {
       try {
         setLoading(true);
-        const questOptions = questionData.options;
+
         const input = {
           label: questionData.label,
           type: questionData.type.value,
@@ -288,7 +285,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
   const {
     question,
-    notes,
+
     label,
     type,
     language,

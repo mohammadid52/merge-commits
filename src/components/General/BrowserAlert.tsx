@@ -1,27 +1,8 @@
 import React from 'react';
 import {FaCopy} from 'react-icons/fa';
 import {FiAlertCircle} from 'react-icons/fi';
-import {IoAlertCircleSharp, IoCopyOutline} from 'react-icons/io5';
 import Tooltip from '../Atoms/Tooltip';
 import {useOutsideAlerter} from './hooks/outsideAlerter';
-
-export interface WritingAlertProps {
-  children?: any;
-  identifier?: string | number;
-  alert?: boolean;
-  setAlert?: React.Dispatch<React.SetStateAction<boolean>>;
-  handleButton1?: () => void;
-  handleButton2?: () => void;
-  header?: string;
-  content?: string;
-  button1?: string;
-  button1Color?: string;
-  button2?: string;
-  button2Color?: string;
-  svg?: string;
-  theme?: 'dark' | 'light';
-  fill?: 'screen' | 'section';
-}
 
 const BrowserAlert = (props: any) => {
   const {closeTab, onContinue} = props;
