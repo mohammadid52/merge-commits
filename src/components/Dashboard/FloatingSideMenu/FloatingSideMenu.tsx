@@ -1,17 +1,16 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
 import {nanoid} from 'nanoid';
 import React, {SetStateAction, useContext, useState} from 'react';
-import {useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDeviceDetect from '../../../customHooks/deviceDetect';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
+import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData} from '../../../utilities/localStorage';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getLocalStorageData} from '../../../utilities/localStorage';
 
 export interface FloatingSideMenuProps {
   menuState?: number;
@@ -55,7 +54,7 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
 };
 
 const FloatingSideMenu = () => {
-  const {lessonState, clientKey} = useContext(GlobalContext);
+  const {lessonState} = useContext(GlobalContext);
   const getRoomData = getLocalStorageData('room_info');
   const {browser} = useDeviceDetect();
   const urlParams: any = useParams();
@@ -226,10 +225,7 @@ const FloatingSideMenu = () => {
   };
 
   const updateJournalData = async () => {
-    const {lessonID} = urlParams;
     const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
 
     try {
       const input = {
@@ -292,7 +288,7 @@ const FloatingSideMenu = () => {
               bg-gray-800 
               shadow`}>
             <div
-              className={`relative transition transition-all ease-in-out duration-400 w-full h-full`}>
+              className={`relative  transition-all ease-in-out duration-400 w-full h-full`}>
               <FloatingBar
                 menuState={menuOpenLevel}
                 setMenuState={handleSetMenuState}

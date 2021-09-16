@@ -1,21 +1,18 @@
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
+import {FaTrashAlt} from 'react-icons/fa';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   Options,
   PartContentSub,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {nanoid} from 'nanoid';
-import {isEmpty, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import FormInput from '../../../../Atoms/Form/FormInput';
 import {FORM_TYPES} from '../common/constants';
-import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
-import {FaTrashAlt} from 'react-icons/fa';
-import Toggle from '../Toggle';
-import {v4 as uuidv4} from 'uuid';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -64,7 +61,6 @@ const LinestarterModalDialog = ({
   updateBlockContentULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  classString = 'title-show || lineStarter-hide',
 }: ILinestarterModalDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -106,13 +102,6 @@ const LinestarterModalDialog = ({
       {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`},
     ];
     setInputFieldsArray(longerInputFieldsArray);
-  };
-
-  const handleDeleteLinestarter = (linestarterIdx: number) => {
-    const shorterInputFieldsArray: Options[] = inputFieldsArray.filter(
-      (inputObj: Options, idx: number) => idx !== linestarterIdx
-    );
-    setInputFieldsArray(shorterInputFieldsArray);
   };
 
   //////////////////////////

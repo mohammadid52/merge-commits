@@ -136,6 +136,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_INFO: 'Institute Info',
     INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
+    CURRICULUM: 'Curriculum',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
@@ -175,6 +176,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_INFO: 'TBD',
     INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
+    CURRICULUM: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
     CLASSROOMS: 'TBD',
@@ -1675,6 +1677,7 @@ const CourseScheduleDict: any = {
       END_DATE: 'End date is required',
       START_TIME: 'Start time is required',
       END_TIME: 'End time is required',
+      SUCCESS_MESSAGE: 'Course Schedule updated successfully',
     },
   },
   ES: {
@@ -1693,8 +1696,9 @@ const CourseScheduleDict: any = {
     MESSAGES: {
       START_DATE: 'TBD',
       END_DATE: 'TBD',
-      startTime: 'TBD',
-      endTime: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      SUCCESS_MESSAGE: 'TBD',
     },
   },
 };

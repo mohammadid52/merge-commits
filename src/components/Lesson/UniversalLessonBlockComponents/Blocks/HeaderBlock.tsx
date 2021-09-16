@@ -1,13 +1,12 @@
-import './styles/HeaderStyles.scss';
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import './styles/HeaderStyles.scss';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
-  pagePartId: string;
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {

@@ -1,12 +1,13 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {Auth} from '@aws-amplify/auth';
 import React, {useContext, useEffect, useState} from 'react';
-import LessonHeaderBar from '../Header/LessonHeaderBar';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
-import ErrorBoundary from '../Error/ErrorBoundary';
+import {UniversalLessonStudentData} from '../../API';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exampleUniversalLessonData';
-import Foot from './Foot/Foot';
-import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
+import usePrevious from '../../customHooks/previousProps';
+import * as mutations from '../../graphql/mutations';
 import {
   PagePart,
   PartContent,
@@ -15,17 +16,14 @@ import {
   StudentPageInput,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../graphql/mutations';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as queries from '../../graphql/queries';
-import {Auth} from '@aws-amplify/auth';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import {UniversalLessonStudentData} from '../../API';
+import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import ErrorBoundary from '../Error/ErrorBoundary';
+import LessonHeaderBar from '../Header/LessonHeaderBar';
+import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
-import usePrevious from '../../customHooks/previousProps';
+import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -819,7 +817,7 @@ const LessonApp = () => {
     <>
       <FloatingSideMenu />
       <div
-        className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
+        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}>
         <div
           className={`opacity-${
             showRequiredNotification

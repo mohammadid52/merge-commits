@@ -1,19 +1,18 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {find, isEmpty} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
-import * as mutations from '../../../../../graphql/mutations';
-
-import Modal from '../../../../Atoms/Modal';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import CheckBox from '../../../../Atoms/Form/CheckBox';
-import Selector from '../../../../Atoms/Form/Selector';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import {find, isEmpty} from 'lodash';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../../../graphql/mutations';
+import Buttons from '../../../../Atoms/Buttons';
+import CheckBox from '../../../../Atoms/Form/CheckBox';
+import FormInput from '../../../../Atoms/Form/FormInput';
+import Selector from '../../../../Atoms/Form/Selector';
+import TextArea from '../../../../Atoms/Form/TextArea';
+import Modal from '../../../../Atoms/Modal';
 
 interface EditQuestionModalProps {
   closeAction?: () => void;
@@ -43,7 +42,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {EditQuestionModalDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {EditQuestionModalDict} = useDictionary(clientKey);
   const questionItems = checkpItem.question;
 
   const initialState = {

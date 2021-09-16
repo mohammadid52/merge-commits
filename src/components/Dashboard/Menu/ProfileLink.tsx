@@ -1,14 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {getImageFromS3} from '../../../utilities/services';
-import {getUserRoleString} from '../../../utilities/strings';
-import {stringToHslColor} from '../../../utilities/strings';
+import {getUserRoleString, stringToHslColor} from '../../../utilities/strings';
 import {LinkProps} from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const {state, theme, dispatch} = useContext(GlobalContext);
+  const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState('');

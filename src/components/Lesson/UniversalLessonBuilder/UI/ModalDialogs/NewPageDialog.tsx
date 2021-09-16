@@ -24,7 +24,7 @@ interface INewPageDialog {
 }
 
 const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) => {
-  const {addNewPageHandler, selectedLessonID, setSelectedPageID} = useULBContext();
+  const {addNewPageHandler, setSelectedPageID} = useULBContext();
   const {userLanguage} = useContext(GlobalContext);
   const [focussed, setFocussed] = useState<
     'new_page' | 'existing_page' | 'template' | ''
@@ -91,9 +91,9 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
         pageContent: [],
       });
 
-      if (selectedLessonID) {
-        addLessonToDatabase(selectedLessonID);
-      }
+      // if (selectedLessonID) {
+      //   addLessonToDatabase(selectedLessonID);
+      // }
       closeAction();
       setSelectedPageID(inputObj.id);
     } else {

@@ -25,6 +25,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {LessonEditDict} from '../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
+import DroppableMedia from '../../../../Molecules/DroppableMedia';
 
 interface EditCurricularProps {
   closeAction: () => void;
@@ -66,6 +67,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
+  const [fileObj, setFileObj] = useState({});
 
   const [error, setError] = useState({
     show: true,
@@ -363,7 +365,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         );
         const savedData = result.data.getCurriculum;
         console.log(savedData, 'savedData');
-        
+
         setCurricularData({
           ...curricularData,
           id: savedData.id,
@@ -412,36 +414,36 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   useEffect(() => {
     console.log(languageList, 'languageList');
-    
-    async function mapData(){
-        setCurricularData({
-          ...curricularData,
-          id: curricularDetails.id,
-          name: curricularDetails.name,
-          type: curricularDetails.type,
-          summary: curricularDetails.summary,
-          institute: curricularDetails.institute,
-          description: curricularDetails.description,
-          objectives: curricularDetails.objectives[0],
-          languages: curricularDetails.languages,
-        });
-        // Load from response value
-        const imageUrl: any = curricularDetails.image
-          ? await getImageFromS3(`instituteImages/curricular_image_${curricularDetails.id}`)
-          : null;
-        setImageUrl(imageUrl);
 
-        if (
-          curricularDetails &&
-          curricularDetails.designers &&
-          curricularDetails.designers.length
-        ) {
-          setDesignerIds([...curricularDetails?.designers]);
-        }
-        setPreviousName(curricularDetails.name);
+    async function mapData() {
+      setCurricularData({
+        ...curricularData,
+        id: curricularDetails.id,
+        name: curricularDetails.name,
+        type: curricularDetails.type,
+        summary: curricularDetails.summary,
+        institute: curricularDetails.institute,
+        description: curricularDetails.description,
+        objectives: curricularDetails.objectives[0],
+        languages: curricularDetails.languages,
+      });
+      // Load from response value
+      const imageUrl: any = curricularDetails.image
+        ? await getImageFromS3(`instituteImages/curricular_image_${curricularDetails.id}`)
+        : null;
+      setImageUrl(imageUrl);
+
+      if (
+        curricularDetails &&
+        curricularDetails.designers &&
+        curricularDetails.designers.length
+      ) {
+        setDesignerIds([...curricularDetails?.designers]);
+      }
+      setPreviousName(curricularDetails.name);
     }
-    mapData()
-  },[curricularDetails])
+    mapData();
+  }, [curricularDetails]);
 
   useEffect(() => {
     if (designersList && Array.isArray(designersList) && designersList.length > 0) {
@@ -458,18 +460,6 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   }, [designersList, designerIds]);
 
-  const cropSelecetedImage = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setUpImage(fileReader.result);
-      };
-      fileReader.readAsDataURL(file);
-      toggleCropper();
-    }
-  };
-
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
@@ -477,8 +467,8 @@ const EditCurricular = (props: EditCurricularProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    setS3Image(image);
-    const imageUrl = URL.createObjectURL(image);
+    setS3Image(image ? image : fileObj);
+    const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     toggleCropper();
     setImageLoading(false);
@@ -506,6 +496,9 @@ const EditCurricular = (props: EditCurricularProps) => {
         });
     });
   };
+
+  const mediaRef = React.useRef(null);
+  const handleImage = () => mediaRef?.current?.click();
 
   // Temporary List
   //*******//
@@ -550,25 +543,27 @@ const EditCurricular = (props: EditCurricularProps) => {
           <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
               <label className="cursor-pointer flex justify-center">
-                {imageUrl ? (
-                  <img
-                    className={`profile w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
-                    src={imageUrl}
-                  />
-                ) : (
-                  <div
-                    className={`profile justify-center lign-center items-center content-center  w-56 h-56 md:w-56 md:h-56 bg-gray-100 border flex border-gray-400`}>
-                    <IoImage className="fill-current text-gray-80" size={32} />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => cropSelecetedImage(e)}
-                  onClick={(e: any) => (e.target.value = '')}
-                  accept="image/*"
-                  multiple={false}
-                />
+                <DroppableMedia
+                  mediaRef={mediaRef}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}>
+                  {imageUrl ? (
+                    <img
+                      onClick={handleImage}
+                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                      src={imageUrl}
+                    />
+                  ) : (
+                    <div
+                      onClick={handleImage}
+                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      <IoImage className="fill-current text-gray-80" size={32} />
+                    </div>
+                  )}
+                </DroppableMedia>
               </label>
             </button>
             <p className="text-sm text-gray-600 my-4">Click to edit curricular image</p>
@@ -693,6 +688,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       {showCropper && (
         <ProfileCropModal
           upImg={upImage}
+          locked
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
         />

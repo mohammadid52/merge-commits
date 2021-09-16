@@ -477,6 +477,17 @@ export const frequencyOptions: any = [
   {id: 7, name: 'Semestral'},
 ];
 
+export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
+  Weekly: {unit: 'week', step: 1},
+  Monthly: {unit: 'month', step: 1},
+  Trimestral: {unit: 'month', step: 4},
+  Quarterly: {unit: 'month', step: 3},
+  Semestral: {unit: 'month', step: 6},
+  'M/W/F': {unit: 'day', step: 1},
+  'Tu/Th': {unit: 'day', step: 1},
+  'One Time': {unit: 'day', step: 1},
+};
+
 export const weekdaysOption: any = [
   {id: 1, name: 'Monday'},
   {id: 2, name: 'Tuesday'},

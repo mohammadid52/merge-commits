@@ -1,21 +1,21 @@
-import React, { Fragment, useContext } from 'react';
-import { Quote } from '../../../../../interfaces/ClassroomComponentsInterfaces';
-import { NoticeboardFormProps } from '../../NoticeboardAdminContent';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {AiOutlineDelete} from 'react-icons/all';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineDelete } from 'react-icons/all';
+import {Quote} from '../../../../../interfaces/ClassroomComponentsInterfaces';
+import {NoticeboardFormProps} from '../../NoticeboardAdminContent';
 import AddRemoveButton from '../addRemoveButton';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
-  const { widgetObj, setNewWidgetData, handleEditUpdateQuotes } = props;
-  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict, noticeboardDict } = useDictionary(clientKey);
+  const {widgetObj, setNewWidgetData, handleEditUpdateQuotes} = props;
+  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const {anthologyDict, noticeboardDict} = useDictionary(clientKey);
 
-  const quoteItem = { text: '', author: '' };
-  const callItem = { text: '', url: '' };
-  const fileItem = { text: '', url: '' };
+  const quoteItem = {text: '', author: ''};
+  const callItem = {text: '', url: ''};
+  const fileItem = {text: '', url: ''};
 
   const switchKey = (): {
     key: string;
@@ -100,7 +100,10 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   return (
     <div className={`mt-2 mb-2 p-2`}>
-      {theSwitchObj && theSwitchObj?.key && widgetObj && widgetObj[theSwitchObj?.key].length > 0 ? (
+      {theSwitchObj &&
+      theSwitchObj?.key &&
+      widgetObj &&
+      widgetObj[theSwitchObj?.key].length > 0 ? (
         widgetObj[theSwitchObj?.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <div
@@ -110,55 +113,58 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               }`}>
               <div className={`w-8 m-1`}>
                 {/* NUMBER */}
-                <div className={`w-6 h-6 p-2 mb-2 rounded-full bg-blueberry flex justify-center items-center`}>
-                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx + 1}</span>
+                <div
+                  className={`w-6 h-6 p-2 mb-2 rounded-full bg-blueberry flex justify-center items-center`}>
+                  <span
+                    className={`w-auto h-auto text-center text-white text-lg font-semibold `}>
+                    {idx + 1}
+                  </span>
                 </div>
                 {/* TRASH ICON */}
-                <div className={`mt-4 cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>
-                  <IconContext.Provider value={{ className: 'w-auto pointer-events-none' }}>
+                <div
+                  className={`mt-4 cursor-pointer`}
+                  onClick={() => decreaseQuoteCount(idx)}>
+                  <IconContext.Provider value={{className: 'w-auto pointer-events-none'}}>
                     <AiOutlineDelete size={24} />
                   </IconContext.Provider>
                 </div>
               </div>
 
               <div className={`w-full`}>
-                {
-                  widgetObj.type !== 'call' && (
-                    <div className={`flex flex-row`}>
-                      <label
-                        htmlFor={`text_${idx}_${widgetObj.id}`}
-                        className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
-                        {`${theSwitchObj.label}`}
-                      </label>
+                {widgetObj.type !== 'call' && (
+                  <div className={`flex flex-row`}>
+                    <label
+                      htmlFor={`text_${idx}_${widgetObj.id}`}
+                      className="w-16 mr-2 text-right block text-xs font-semibold leading-5 text-gray-700">
+                      {`${theSwitchObj.label}`}
+                    </label>
 
-                      <input
-                        id={`${widgetObj.id}`}
-                        onChange={handleEditUpdateQuotes}
-                        data-basekey={`${theSwitchObj.key}`}
-                        data-nestkey1={`${theSwitchObj.key2}`}
-                        data-nestkey2={idx}
-                        className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                        value={
-                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                            : ''
-                        }
-                        placeholder={
-                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                            : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
-                        }
-                      />
-                    </div>
-                  )
-                }
-
+                    <input
+                      id={`${widgetObj.id}`}
+                      onChange={handleEditUpdateQuotes}
+                      data-basekey={`${theSwitchObj.key}`}
+                      data-nestkey1={`${theSwitchObj.key2}`}
+                      data-nestkey2={idx}
+                      className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                      value={
+                        widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                          ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                          : ''
+                      }
+                      placeholder={
+                        widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                          ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                          : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
+                      }
+                    />
+                  </div>
+                )}
 
                 <div className={`flex flex-col`}>
                   <div className={`flex flex-row`}>
                     <label
                       htmlFor={`text_${idx}_${widgetObj.id}`}
-                      className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                      className="w-16 mr-2  text-right block text-xs font-semibold leading-5 text-gray-700">
                       {`${theSwitchObj.label2}`}
                     </label>
 
@@ -169,7 +175,9 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                       data-nestkey1={`${theSwitchObj.key3}`}
                       data-nestkey2={idx}
                       className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                      value={widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]}
+                      value={
+                        widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                      }
                       placeholder={
                         widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
                           ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
@@ -182,8 +190,11 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
                   {widgetObj.type !== 'quote' && (
                     <p className={`text-center w-full ${theme.lessonCard.subtitle}`}>
-                      {widgetObj.type !== 'quote' && widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                        ? appendHttp(widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`])
+                      {widgetObj.type !== 'quote' &&
+                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        ? appendHttp(
+                            widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                          )
                         : 'https://'}
                     </p>
                   )}
@@ -197,7 +208,10 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           <p>No quotes added...</p>
         </>
       )}
-      <AddRemoveButton clickFunction={increaseQuoteCount} label={anthologyDict[userLanguage].ACTIONS.ADD} />
+      <AddRemoveButton
+        clickFunction={increaseQuoteCount}
+        label={anthologyDict[userLanguage].ACTIONS.ADD}
+      />
     </div>
   );
 };

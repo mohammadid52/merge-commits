@@ -1,14 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useLocation} from 'react-router';
 import {IoIosMenu} from 'react-icons/io';
 import {RiArrowRightSLine} from 'react-icons/ri';
+import {useHistory, useLocation} from 'react-router';
+import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDeviceDetect from '../../../customHooks/deviceDetect';
+import Tooltip from '../../Atoms/Tooltip';
 import SignOutButton from '../../Auth/SignOut';
-import {getAsset} from '../../../assets';
 import Links from './Links';
 import ProfileLink from './ProfileLink';
-import Tooltip from '../../Atoms/Tooltip';
 
 interface SideMenuProps {
   children?: React.ReactNode;
@@ -24,15 +24,15 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
     role,
     updateAuthState,
     setActiveRoomName,
-    setActiveRoomSyllabus,
+
     setSyllabusLoading,
     setLessonLoading,
     handleRoomSelection,
   } = props;
   const {mobile} = useDeviceDetect();
-  const {dispatch, theme, clientKey} = useContext(GlobalContext);
+  const {dispatch, clientKey} = useContext(GlobalContext);
   const history = useHistory();
-  const { pathname } = useLocation();
+  const {pathname} = useLocation();
   const [collapse, setCollapse] = useState(false);
 
   const handleLink = (e: React.MouseEvent) => {
@@ -75,7 +75,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
           minWidth: collapse ? '0rem' : '16rem',
           maxWidth: collapse ? '0rem' : '16rem',
         }}
-        className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav bg-charcoal ${
+        className={`md:flex md:flex-shrink-0 w-60 sidenav bg-charcoal ${
           collapse && 'cursor-pointer'
         }`}>
         {!collapse && (
@@ -94,7 +94,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                 />
                 <IoIosMenu
                   onClick={() => setCollapse(!collapse)}
-                  className="w-auto cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
+                  className=" cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
                 />
               </div>
               <div className="flex-1 flex flex-col">

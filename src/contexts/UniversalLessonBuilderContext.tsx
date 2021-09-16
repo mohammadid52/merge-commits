@@ -1,7 +1,8 @@
-import {findIndex, get, update} from 'lodash';
+import update from 'lodash/update';
+import findIndex from 'lodash/findIndex';
 import React, {useContext, createContext, useState} from 'react';
 import {useHistory} from 'react-router';
-import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../interfaces/UniversalLessonInterfaces';
 export const UniversalLessonBuilderContext = createContext(null);
 
 const initialUniversalLessonData: UniversalLesson = {
@@ -37,7 +38,6 @@ const INITIAL_STATE: FieldsInterface = {
 };
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
-  const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
@@ -46,42 +46,12 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
-  const [selectedLessonID, setSelectedLessonID] = useState<string>('');
   const [lessonPlanFields, setLessonPlanFields] = useState(INITIAL_STATE);
 
   // Getters
 
   const getCurrentPage = (id: string) =>
     universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
-
-  const getCurrentPageIdx = (id: string) =>
-    findIndex(universalLessonDetails.lessonPlan, (page: any) => page.id === id);
-
-  const getPageContent = (pageIdx: number) =>
-    get(universalLessonDetails, `lessonPlan[${pageIdx}].pageContent`, []);
-
-  const getPartContent = (pageIdx: number, pageContentIdx: number) =>
-    get(
-      universalLessonDetails,
-      `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`,
-      []
-    );
-
-  const addULBHandler = (pageId: string, newPageContent: PagePart) => {
-    // find current page object from lessonPlan array
-    let currentPage = getCurrentPage(pageId);
-    // find current page content from pageContent array
-    let pageContent = currentPage.pageContent;
-    if (pageContent && pageContent.length > 0) {
-      pageContent.splice(newBlockSeqId + 1, 0, newPageContent);
-
-      setUniversalLessonDetails({...universalLessonDetails});
-    }
-  };
-
-  const theme = {
-    bg: 'bg-gray-800',
-  };
 
   const updateMovableList = (
     items: any,
@@ -187,12 +157,16 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
+  const [savingStatus, setSavingStatus] = useState<
+    'initial' | 'loaded' | 'loading' | 'failed'
+  >('initial');
+
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
-        selectedLessonID,
+
         suggestionModal,
         setSuggestionModal,
         editMode,
@@ -202,10 +176,10 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         pushUserToThisId,
         setSelID,
         setEditMode,
-        setSelectedLessonID,
+        savingStatus,
+        setSavingStatus,
         newBlockSeqId,
         setNewBlockSeqId,
-        getCurrentPageIdx,
         universalLessonDetails,
         selectedPageID,
         lessonPlanFields,
@@ -216,20 +190,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         setActiveTab,
         setSelectedPageID,
         getCurrentPage,
-        theme,
         newLessonPlanShow,
-        blockConfig,
-        setBlockConfig,
+        blockConfig, // move this to Builder wrapper
+        setBlockConfig, // move this to Builder wrapper
         setNewLessonPlanShow,
         setUniversalLessonDetails,
-        setEnableDnD,
-        addFromULBHandler: addULBHandler,
         addNewPageHandler,
         updateMovableList,
-        getPartContent,
-        getPageContent,
 
-        enableDnD,
         fetchingLessonDetails,
         setFetchingLessonDetails,
       }}>
