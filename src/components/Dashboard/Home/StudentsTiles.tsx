@@ -81,7 +81,7 @@ const StudentsTiles = (props: {
         withButton={
           <div
             className={`flex items-center justify-${
-              list.length > 12 && isTeacher ? 'center' : 'end'
+              list.length > 12 && isTeacher ? 'end' : 'end'
             } w-full`}>
             {isTeacher && (
               <div className="w-auto">

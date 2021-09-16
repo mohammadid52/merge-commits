@@ -1,19 +1,20 @@
-import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Auth from '@aws-amplify/auth';
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
-import moment, { Moment } from 'moment';
+import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
+import moment, {Moment} from 'moment';
+import {BsFillInfoCircleFill} from 'react-icons/bs';
 
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { UniversalLessonBuilderProvider } from '../../contexts/UniversalLessonBuilderContext';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import usePrevious from '../../customHooks/previousProps';
-import { getLocalStorageData, setLocalStorageData } from '../../utilities/localStorage';
-import { frequencyMapping } from '../../utilities/staticData';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {frequencyMapping} from '../../utilities/staticData';
 
 import ErrorBoundary from '../Error/ErrorBoundary';
 import EmojiFeedback from '../General/EmojiFeedback';
@@ -29,6 +30,8 @@ import HomeForTeachers from './Home/HomeForTeachers';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
+import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import {getAsset} from '../../assets';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -83,15 +86,18 @@ const Dashboard = (props: DashboardProps) => {
   const state = gContext.state;
   const dispatch = gContext.dispatch;
   const stateUser = gContext.state.user;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
 
-
-  const { updateAuthState } = props;
+  const {updateAuthState} = props;
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
   const getRoomData = getLocalStorageData('room_info');
 
+  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
@@ -125,8 +131,8 @@ const Dashboard = (props: DashboardProps) => {
 
     setCookie(
       'auth',
-      { ...cookies.auth, role: user.role, firstName: firstName, id: user.id },
-      { path: '/' }
+      {...cookies.auth, role: user.role, firstName: firstName, id: user.id},
+      {path: '/'}
     );
   };
 
@@ -136,7 +142,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'queries.getPerson',
-        valueObj: { email: userEmail, authId: userAuthId },
+        valueObj: {email: userEmail, authId: userAuthId},
       };
 
       const user: any = await API.graphql(
@@ -145,8 +151,8 @@ const Dashboard = (props: DashboardProps) => {
       setUser(user.data.getPerson);
     } catch (error) {
       if (!userEmail && !userAuthId) {
-        removeCookie('auth', { path: '/' });
-        dispatch({ type: 'CLEANUP' });
+        removeCookie('auth', {path: '/'});
+        dispatch({type: 'CLEANUP'});
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
@@ -189,7 +195,7 @@ const Dashboard = (props: DashboardProps) => {
   // Fetching results
   const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
 
-  const [homeData, setHomeData] = useState<{ class: any }[]>();
+  const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
 
   // const [classIds, setClassIds] = useState<string[]>([]);
@@ -234,14 +240,14 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: { teacherAuthID: { eq: teacherAuthID } },
+          filter: {teacherAuthID: {eq: teacherAuthID}},
         })
       );
 
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = response?.data?.listRooms?.items;
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
-        return { class: { rooms: { items: arrayOfResponseObjects } } };
+        return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
 
       setHomeDataForTeachers(arrayOfResponseObjects);
@@ -268,15 +274,15 @@ const Dashboard = (props: DashboardProps) => {
   const getClassList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-        return [
-          ...acc,
-          {
-            name: dataObj?.class?.name,
-            rooms: dataObj?.class?.rooms,
-            students: dataObj?.class?.students,
-          },
-        ];
-      }, [])
+          return [
+            ...acc,
+            {
+              name: dataObj?.class?.name,
+              rooms: dataObj?.class?.rooms,
+              students: dataObj?.class?.students,
+            },
+          ];
+        }, [])
       : [];
 
   useEffect(() => {
@@ -289,14 +295,14 @@ const Dashboard = (props: DashboardProps) => {
     let rooms: any = [];
     classList && classList.length
       ? classList.forEach((classObj) =>
-        classObj.rooms.items.length
-          ? classObj.rooms.items.forEach((room: any) =>
-            room.curricula?.items.length && room.curricula?.items[0].curriculum
-              ? rooms.push(room)
-              : null
-          )
-          : null
-      )
+          classObj.rooms.items.length
+            ? classObj.rooms.items.forEach((room: any) =>
+                room.curricula?.items.length && room.curricula?.items[0].curriculum
+                  ? rooms.push(room)
+                  : null
+              )
+            : null
+        )
       : null;
     return rooms;
   };
@@ -320,7 +326,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'customQueries.listRooms',
-        valueObj: { filter: { teacherAuthID: { eq: teacherAuthID } } },
+        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
       const classIdFromRoomsFetch = await API.graphql(
@@ -397,7 +403,7 @@ const Dashboard = (props: DashboardProps) => {
           const queryObj = {
             name: 'customQueries.listRoomCurriculums',
             valueObj: {
-              roomID: { eq: state.activeRoom },
+              roomID: {eq: state.activeRoom},
             },
           };
 
@@ -412,7 +418,7 @@ const Dashboard = (props: DashboardProps) => {
           const roomCurriculumsFetch = await API.graphql(
             graphqlOperation(queries.listRoomCurriculums, {
               filter: {
-                roomID: { eq: state.activeRoom },
+                roomID: {eq: state.activeRoom},
               },
             })
           );
@@ -496,11 +502,11 @@ const Dashboard = (props: DashboardProps) => {
       }
       i += step;
     }
-    return { startDate, estEndDate: estEndDate || startDate };
+    return {startDate, estEndDate: estEndDate || startDate};
   };
 
   const calculateSchedule = (syllabusList: any, scheduleData: any) => {
-    const { startDate, frequency, lessonImpactLog = [] } = scheduleData;
+    const {startDate, frequency, lessonImpactLog = []} = scheduleData;
     let count: number = 0,
       lastOccupiedDate: any = startDate,
       scheduleDates = lessonImpactLog
@@ -522,7 +528,7 @@ const Dashboard = (props: DashboardProps) => {
           }
           count += item.lesson.duration;
 
-          const { startDate, estEndDate }: any = calculateAvailableStartEndDate(
+          const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
             moment(lastOccupiedDate),
             frequencyMapping[frequency].unit,
             frequencyMapping[frequency].step,
@@ -540,9 +546,9 @@ const Dashboard = (props: DashboardProps) => {
           item.estEndDate = estEndDate;
           lastOccupiedDate = Number.isInteger(count)
             ? moment(item.estEndDate).add(
-              frequencyMapping[scheduleData.frequency].step,
-              frequencyMapping[scheduleData.frequency].unit
-            )
+                frequencyMapping[scheduleData.frequency].step,
+                frequencyMapping[scheduleData.frequency].unit
+              )
             : item.estEndDate;
           count = count >= 1 ? 0 : count;
           return item;
@@ -567,11 +573,11 @@ const Dashboard = (props: DashboardProps) => {
       if (curriculumIds.length > 0) {
         try {
           let scheduleDetails: any = await API.graphql(
-            graphqlOperation(customQueries.getScheduleDetails, { id: activeRoomInfo.id })
+            graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
           );
           scheduleDetails = scheduleDetails?.data?.getRoom;
           const getCurriculum = await API.graphql(
-            graphqlOperation(customQueries.getCurriculumForClasses, { id: curriculumIds })
+            graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
           );
           // @ts-ignore
           const response = await getCurriculum.data.getCurriculum;
@@ -593,7 +599,7 @@ const Dashboard = (props: DashboardProps) => {
                 items: syllabus.lessons.items
                   .map((t: any) => {
                     let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                    return { ...t, index };
+                    return {...t, index};
                   })
                   .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
               },
@@ -621,7 +627,7 @@ const Dashboard = (props: DashboardProps) => {
             type: 'UPDATE_ROOM',
             payload: {
               property: 'curriculum',
-              data: { name: response.name },
+              data: {name: response.name},
             },
           });
           setSyllabusLoading(false);
@@ -666,7 +672,7 @@ const Dashboard = (props: DashboardProps) => {
         const lessons = response?.lessons.items
           .map((t: any) => {
             let index = response?.universalLessonsSeq?.indexOf(t.id);
-            return { ...t, index };
+            return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
@@ -719,7 +725,7 @@ const Dashboard = (props: DashboardProps) => {
       setActiveRoomName(name);
       dispatch({
         type: 'UPDATE_ACTIVEROOM',
-        payload: { roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus },
+        payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus},
       });
 
       history.push(`/dashboard/${route}/${id}`);
@@ -765,6 +771,13 @@ const Dashboard = (props: DashboardProps) => {
       <div className="h-full overflow-y-auto">
         {/*<FloatingSideMenu />*/}
         <Noticebar inputContext={'global'} />
+        <div className="absolute z-100 w-6 right-1 top-0.5">
+          <span
+            className="w-auto cursor-pointer"
+            onClick={() => setOpenWalkThroughModal(true)}>
+            <BsFillInfoCircleFill className={`h-5 w-5 ${theme.textColor[themeColor]}`} />
+          </span>
+        </div>
         <Suspense
           fallback={
             <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -814,8 +827,8 @@ const Dashboard = (props: DashboardProps) => {
               userData.role === 'TR' ||
               userData.role === 'FLW' ||
               userData.role === 'BLD') && (
-                <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
-              )}
+              <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
+            )}
 
             <Route
               exact
@@ -841,7 +854,16 @@ const Dashboard = (props: DashboardProps) => {
               )}
             />
 
-            <Route path={`${match.url}/anthology`} render={() => <Anthology studentAuthID={stateUser.authId} studentID={stateUser.id} studentEmail={stateUser.email} />} />
+            <Route
+              path={`${match.url}/anthology`}
+              render={() => (
+                <Anthology
+                  studentAuthID={stateUser.authId}
+                  studentID={stateUser.id}
+                  studentEmail={stateUser.email}
+                />
+              )}
+            />
 
             <Route
               path={`${match.url}/noticeboard`}
@@ -901,6 +923,10 @@ const Dashboard = (props: DashboardProps) => {
             </UniversalLessonBuilderProvider>
           </Switch>
         </Suspense>
+        <InformationalWalkThrough
+          open={openWalkThroughModal}
+          onCancel={() => setOpenWalkThroughModal(false)}
+        />
       </div>
       {/* </ResizablePanels> */}
     </div>
