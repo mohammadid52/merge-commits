@@ -263,17 +263,23 @@ const UploadAttachment = ({
   syllabusLessonID,
   roomID,
 }: IUploadAttachmentProps) => {
-  const {
-    userLanguage,
-    state: {
-      user,
-      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-    },
-  } = useContext(GlobalContext);
+
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const user = gContext.state.user;
+  const userLanguage = gContext.userLanguage;
+  // const {
+  //   userLanguage,
+  //   state: {
+  //     user,
+  //     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+  //   },
+  // } = useContext(GlobalContext);
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+
   const isStudent = user.role === 'ST';
   const inputOther = useRef(null);
 
@@ -359,6 +365,16 @@ const UploadAttachment = ({
 
   const [uploading, setUploading] = useState(false);
 
+  const getSizeInBytesInt = (size: number): number => {
+    const inKB = size / 1024;
+    const inMB = inKB / 1024;
+    if (inMB < 1) {
+      return parseInt(inKB.toFixed(2));
+    } else {
+      return parseInt(inMB.toFixed(2));
+    }
+  };
+
   const onUploadAllFiles = async () => {
     setUploading(true);
     try {
@@ -371,6 +387,7 @@ const UploadAttachment = ({
           ...map(filesUploading, (file: any) => ({
             fileName: file.fileName,
             fileKey: file.fileKey,
+            fileSize: getSizeInBytesInt(file.file?.size),
           })),
         ],
         lessonPageID: lessonPageID,

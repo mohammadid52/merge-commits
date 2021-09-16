@@ -357,14 +357,16 @@ const AttachmentBlock = ({
 
   const [uploading, setUploading] = useState(false);
 
-  /**
-   * This Function will store all image data to createPersonFiles table
-   *
-   * @Mohammad - The issue is with the PersonFiles type in api.schema.graphql
-   * - Only 1 personAuthId/personEmail can upload 1 file per lesson
-   * - If the same person wants to upload a second file and register it in the table
-   * personFiles, there is a graphQl error
-   */
+  const getSizeInBytesInt = (size: number): number => {
+    const inKB = size / 1024;
+    const inMB = inKB / 1024;
+    if (inMB < 1) {
+      return parseInt(inKB.toFixed(2));
+    } else {
+      return parseInt(inMB.toFixed(2));
+    }
+  };
+
   const onUploadAllFiles = async () => {
     setUploading(true);
     try {
@@ -374,6 +376,7 @@ const AttachmentBlock = ({
         files: map(filesUploading, (file: any) => ({
           fileName: file.fileName,
           fileKey: file.fileKey,
+          fileSize: getSizeInBytesInt(file.file?.size),
         })),
         lessonPageID: roomInfo?.activeLessonId,
         lessonID: roomInfo?.activeLessonId,
@@ -387,7 +390,7 @@ const AttachmentBlock = ({
       );
       resetAll();
     } catch (error) {
-      console.error('@uploadFileDataToTable: ', error.message);
+      console.error('@uploadFileDataToTable: ', error);
     } finally {
       setUploading(false);
     }
