@@ -157,7 +157,7 @@ const AddContentDialog = ({
   const userInterfaceContent = [
     {
       name: 'Notes ⭐',
-      type: FORM_TYPES.NOTES,
+      type: 'notes-form',
       subtitle: 'Interactive notes for students',
       icon: CgNotes,
       iconForeground: 'text-blue-700',

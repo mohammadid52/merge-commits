@@ -1,5 +1,5 @@
 import Loader from '@atoms/Loader';
-import {FormControlProps} from '@UlbBlocks/FormBlock';
+import {GlobalContext} from '@contexts/GlobalContext';
 import useScript from '@customHooks/useScript';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
@@ -8,21 +8,54 @@ import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {map} from 'lodash';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
-interface INoteBlock extends FormControlProps {
+interface INoteBlock {
   onChange: (e: any) => void;
+  getValue?: (domID: string) => string;
   disabled?: boolean;
+  value: {class?: string; value?: string; id: string}[];
+  isStudent?: boolean;
+  isInLesson?: boolean;
 }
 
-const NotesBlock = ({value: notesList}: any) => {
+const NotesBlock = ({
+  value: notesList,
+
+  getValue,
+  disabled,
+  isInLesson,
+  isStudent,
+}: INoteBlock) => {
   gsap.registerPlugin(InertiaPlugin, Draggable);
   gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
+  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+
   const status = useScript(
     'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
   );
+
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
+  const onChange = (e: any) => {
+    const {id, value} = e.target;
+    if (isInLesson) {
+      handleUpdateStudentData(id, [value]);
+    }
+  };
 
   if (status === 'ready') {
     wait(200).then(() => {
@@ -51,30 +84,23 @@ const NotesBlock = ({value: notesList}: any) => {
       }
 
       //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
-      gsap.set($container, {
-        height: gridRows * gridHeight + 1,
-        width: gridColumns * gridWidth + 1,
-      });
+      // gsap.set($container, {
+      //   height: gridRows * gridHeight + 1,
+      //   width: gridColumns * gridWidth + 1,
+      // });
       gsap.set('._sticky', {
         width: gridWidth,
 
         height: gridHeight,
       });
 
-      if (notesList && notesList.length > 0) {
-        notesList.forEach((note: {id: any}, idx: number) => {
-          gsap.set(`#${note.id}`, {
-            left: gridWidth * idx,
+      if (jQuery.ready) {
+        notesList.forEach((note: {id: any}) => {
+          $(`#${note.id}`).on('click', (e) => {
+            e.target.focus();
           });
         });
       }
-
-      notesList.forEach((note: {id: any}) => {
-        $(`#${note.id}`).on('click', (e) => {
-          e.target.focus();
-        });
-      });
-
       Draggable.create('._sticky', {
         bounds: $container,
         edgeResistance: 0.065,
@@ -103,10 +129,20 @@ const NotesBlock = ({value: notesList}: any) => {
     );
   } else
     return (
-      <div id="" className="sticky-container">
+      <div id="container" className="sticky-container blackboard">
         {notesList &&
           notesList.length > 0 &&
-          map(notesList, (note) => <Note key={note.id} note={note} />)}
+          map(notesList, (note) => (
+            <Note
+              onChange={onChange}
+              getValue={getValue}
+              disabled={disabled}
+              isInLesson={isInLesson}
+              isStudent={isStudent}
+              key={note.id}
+              note={note}
+            />
+          ))}
       </div>
     );
 };

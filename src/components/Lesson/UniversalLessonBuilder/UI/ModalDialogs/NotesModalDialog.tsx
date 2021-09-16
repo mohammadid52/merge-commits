@@ -1,20 +1,18 @@
 import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import Selector from '@components/Atoms/Form/Selector';
+import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 import {IOnChange} from '@interfaces/index';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import {map, remove, update} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import useDictionary from '@customHooks/dictionary';
-import {GlobalContext} from '@contexts/GlobalContext';
-import ColorPicker from '@components/Lesson/UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
+import {map, remove, update} from 'lodash';
+import {v4 as uuidv4} from 'uuid';
+import React, {useContext, useEffect, useState} from 'react';
 
 interface NoteModalProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -48,7 +46,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     }
   }, [inputObj]);
 
-  const initialValues = {id: nanoid(6), noteText: '', bgColor: 'yellow', error: ''};
+  const initialValues = {id: uuidv4(), noteText: '', bgColor: 'yellow', error: ''};
   const [fields, setFields] = useState([{...initialValues}]);
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -79,7 +77,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges(true);
 
     const randomColor = colorList[randomIdx].name;
-    const newNoteField = {...initialValues, bgColor: randomColor, id: nanoid(6)};
+    const newNoteField = {...initialValues, bgColor: randomColor, id: uuidv4()};
     setFields([...fields, newNoteField]);
   };
 
@@ -116,8 +114,6 @@ const NotesModalDialog = (props: NoteModalProps) => {
     }
   };
 
-  const [colorPicker, setColorPicker] = useState<boolean>(false);
-
   const {curTab, setCurTab, helpers} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
@@ -129,70 +125,14 @@ const NotesModalDialog = (props: NoteModalProps) => {
           <div>
             <div className="flex flex-col">
               {map(fields, (singleNoteData, idx) => (
-                <div
+                <SingleNote
+                  onFieldUpdate={onFieldUpdate}
+                  onChange={onChange}
                   key={singleNoteData.id}
-                  className="flex flex-col items-center justify-start mb-4 gap-x-4">
-                  <div className="mb-2">
-                    <FormInput
-                      label={'Add note text'}
-                      onChange={(e) => onChange(e, idx)}
-                      error={singleNoteData.error}
-                      name={'noteText'}
-                      value={singleNoteData.noteText}
-                      placeHolder={'Note text'}
-                    />
-                  </div>
-
-                  <div className="flex items-end justify-between">
-                    <div className="relative w-1/4 h-full">
-                      <label
-                        htmlFor={'bgColor'}
-                        className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-                        Select background color
-                      </label>
-                      <button
-                        onClick={() => setColorPicker(!colorPicker)}
-                        className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                        <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                          {singleNoteData.bgColor?.split('-')[0]}{' '}
-                        </span>
-
-                        <span
-                          className={`h-4 block w-4 bg-gradient-to-t from-${singleNoteData.bgColor}-500 to-${singleNoteData.bgColor}-300 rounded-full `}></span>
-                      </button>
-                      {colorPicker && (
-                        <ColorPicker
-                          isMainPage
-                          customColors={{
-                            colors: [
-                              {label: 'Red', value: 'red'},
-                              {label: 'Red', value: 'green'},
-                              {label: 'Red', value: 'blue'},
-                              {label: 'Red', value: 'yellow'},
-                              {label: 'Red', value: 'indigo'},
-                              {label: 'Red', value: 'purple'},
-                            ],
-                            values: [{label: 500, value: 500}],
-                          }}
-                          callbackColor={(pickedColor) => {
-                            setColorPicker(false);
-                            onFieldUpdate('bgColor', pickedColor.split('-')[0], idx);
-                          }}
-                          styleString={{top: '100%'}}
-                        />
-                      )}
-                    </div>
-                    {idx !== 0 && (
-                      <div className="w-auto">
-                        <button
-                          onClick={() => removeItemFromList(singleNoteData.id)}
-                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                  removeItemFromList={removeItemFromList}
+                  singleNoteData={singleNoteData}
+                  idx={idx}
+                />
               ))}
             </div>
             <Buttons

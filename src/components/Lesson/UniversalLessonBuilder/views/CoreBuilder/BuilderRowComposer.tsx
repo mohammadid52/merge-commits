@@ -217,7 +217,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                 }`}
                                                 id={`${
                                                   content.type === 'notes-form'
-                                                    ? 'container'
+                                                    ? ''
                                                     : content.id
                                                 }`}>
                                                 {composePartContent(

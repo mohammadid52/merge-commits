@@ -560,7 +560,11 @@ export const FormBlock = ({
     return (
       <NotesBlock
         value={modifiyValues}
-
+        onChange={onChange}
+        getValue={getDataValue}
+        isInLesson={isInLesson}
+        isStudent={isStudent}
+        disabled={mode === 'building'}
         // onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
         // value={isInLesson ? getValue(inputID) : value}
       />
