@@ -48,8 +48,6 @@ export const onChangePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -112,6 +110,9 @@ export const onChangePersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -182,8 +183,6 @@ export const onChangePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -298,6 +297,9 @@ export const onChangeStudentData = /* GraphQL */ `
         data {
           nextToken
         }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -330,8 +332,6 @@ export const onChangeStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -443,6 +443,15 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -457,8 +466,37 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -568,6 +606,17 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
           createdAt
           updatedAt
         }
@@ -720,8 +769,6 @@ export const onChangeRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -846,8 +893,6 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
-      spotlightDate
-      spotlightUser
       createdAt
       updatedAt
     }
@@ -893,8 +938,6 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         nextToken
       }
-      spotlightDate
-      spotlightUser
       createdAt
       updatedAt
     }
@@ -940,8 +983,6 @@ export const onDeletePerson = /* GraphQL */ `
         }
         nextToken
       }
-      spotlightDate
-      spotlightUser
       createdAt
       updatedAt
     }
@@ -1493,8 +1534,6 @@ export const onCreateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -1576,8 +1615,6 @@ export const onUpdateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -1659,8 +1696,6 @@ export const onDeleteStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -1803,8 +1838,6 @@ export const onCreateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -1986,8 +2019,6 @@ export const onUpdateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2169,8 +2200,6 @@ export const onDeleteRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2322,8 +2351,6 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -2363,8 +2390,6 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2442,8 +2467,6 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -2483,8 +2506,6 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2562,8 +2583,6 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -2603,8 +2622,6 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2685,8 +2702,6 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -2757,8 +2772,6 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -2851,8 +2864,6 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -2923,8 +2934,6 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -3017,8 +3026,6 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -3089,8 +3096,6 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -3186,8 +3191,6 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -3254,8 +3257,6 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -3337,8 +3338,6 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -3405,8 +3404,6 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -3488,8 +3485,6 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -3556,8 +3551,6 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -3927,8 +3920,6 @@ export const onCreateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -4007,8 +3998,6 @@ export const onUpdateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -4087,8 +4076,6 @@ export const onDeleteClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -4994,6 +4981,270 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
     }
   }
 `;
+export const onCreateArtist = /* GraphQL */ `
+  subscription OnCreateArtist {
+    onCreateArtist {
+      id
+      images
+      name
+      type
+      bio
+      quotes {
+        id
+        source
+        text
+      }
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArtist = /* GraphQL */ `
+  subscription OnUpdateArtist {
+    onUpdateArtist {
+      id
+      images
+      name
+      type
+      bio
+      quotes {
+        id
+        source
+        text
+      }
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArtist = /* GraphQL */ `
+  subscription OnDeleteArtist {
+    onDeleteArtist {
+      id
+      images
+      name
+      type
+      bio
+      quotes {
+        id
+        source
+        text
+      }
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDoFirst = /* GraphQL */ `
+  subscription OnCreateDoFirst {
+    onCreateDoFirst {
+      id
+      type
+      required
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoFirst = /* GraphQL */ `
+  subscription OnUpdateDoFirst {
+    onUpdateDoFirst {
+      id
+      type
+      required
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoFirst = /* GraphQL */ `
+  subscription OnDeleteDoFirst {
+    onDeleteDoFirst {
+      id
+      type
+      required
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDoFirstQuestion = /* GraphQL */ `
+  subscription OnCreateDoFirstQuestion {
+    onCreateDoFirstQuestion {
+      id
+      doFirstID
+      questionID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        published
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoFirstQuestion = /* GraphQL */ `
+  subscription OnUpdateDoFirstQuestion {
+    onUpdateDoFirstQuestion {
+      id
+      doFirstID
+      questionID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        published
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoFirstQuestion = /* GraphQL */ `
+  subscription OnDeleteDoFirstQuestion {
+    onDeleteDoFirstQuestion {
+      id
+      doFirstID
+      questionID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        published
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateWarmUp = /* GraphQL */ `
   subscription OnCreateWarmUp {
     onCreateWarmUp {
@@ -5131,6 +5382,117 @@ export const onDeleteWarmUp = /* GraphQL */ `
           id
           text
         }
+      }
+      breakdown {
+        included
+        reflectionQuestions
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCoreLesson = /* GraphQL */ `
+  subscription OnCreateCoreLesson {
+    onCreateCoreLesson {
+      id
+      title
+      label
+      stage
+      type
+      language
+      SELTypes
+      instructions {
+        video
+        link
+        text
+      }
+      content {
+        video
+        link
+        title
+        artist
+        text
+      }
+      tools {
+        id
+        name
+        color
+        icon
+      }
+      breakdown {
+        included
+        reflectionQuestions
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCoreLesson = /* GraphQL */ `
+  subscription OnUpdateCoreLesson {
+    onUpdateCoreLesson {
+      id
+      title
+      label
+      stage
+      type
+      language
+      SELTypes
+      instructions {
+        video
+        link
+        text
+      }
+      content {
+        video
+        link
+        title
+        artist
+        text
+      }
+      tools {
+        id
+        name
+        color
+        icon
+      }
+      breakdown {
+        included
+        reflectionQuestions
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCoreLesson = /* GraphQL */ `
+  subscription OnDeleteCoreLesson {
+    onDeleteCoreLesson {
+      id
+      title
+      label
+      stage
+      type
+      language
+      SELTypes
+      instructions {
+        video
+        link
+        text
+      }
+      content {
+        video
+        link
+        title
+        artist
+        text
+      }
+      tools {
+        id
+        name
+        color
+        icon
       }
       breakdown {
         included
@@ -6401,8 +6763,6 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -6446,8 +6806,6 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -6491,11 +6849,48 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const onCreateCourse = /* GraphQL */ `
+  subscription OnCreateCourse {
+    onCreateCourse {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCourse = /* GraphQL */ `
+  subscription OnUpdateCourse {
+    onUpdateCourse {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCourse = /* GraphQL */ `
+  subscription OnDeleteCourse {
+    onDeleteCourse {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
       updatedAt
     }
   }
@@ -6527,6 +6922,23 @@ export const onCreateLesson = /* GraphQL */ `
       }
       grades
       artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
       language
       SELStructure
       keywords {
@@ -6556,8 +6968,78 @@ export const onCreateLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       activityId
       activity {
         id
@@ -6697,6 +7179,23 @@ export const onUpdateLesson = /* GraphQL */ `
       }
       grades
       artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
       language
       SELStructure
       keywords {
@@ -6726,8 +7225,78 @@ export const onUpdateLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       activityId
       activity {
         id
@@ -6867,6 +7436,23 @@ export const onDeleteLesson = /* GraphQL */ `
       }
       grades
       artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
       language
       SELStructure
       keywords {
@@ -6896,8 +7482,78 @@ export const onDeleteLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
       activityId
       activity {
         id
@@ -7033,6 +7689,15 @@ export const onCreateLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7047,8 +7712,37 @@ export const onCreateLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7163,6 +7857,15 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7177,8 +7880,37 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7293,6 +8025,15 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7307,8 +8048,37 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7424,6 +8194,15 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7438,8 +8217,37 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7554,6 +8362,15 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7568,8 +8385,37 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7684,6 +8530,15 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7698,8 +8553,37 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7820,6 +8704,15 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7834,8 +8727,37 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -7935,6 +8857,15 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -7949,8 +8880,37 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -8050,6 +9010,15 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -8064,8 +9033,37 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -8275,6 +9273,15 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -8289,8 +9296,37 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -8400,6 +9436,17 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
           createdAt
           updatedAt
         }
@@ -8436,6 +9483,15 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -8450,8 +9506,37 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -8566,6 +9651,17 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         }
         nextToken
       }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -8597,6 +9693,15 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
         language
         SELStructure
         keywords {
@@ -8611,8 +9716,37 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
         warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
         activityId
         activity {
           id
@@ -8722,6 +9856,17 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
           createdAt
           updatedAt
         }
@@ -8766,8 +9911,6 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -8817,8 +9960,6 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -8868,8 +10009,6 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -8920,8 +10059,6 @@ export const onCreateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -8992,6 +10129,9 @@ export const onCreateQuestionData = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -9037,8 +10177,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -9109,6 +10247,9 @@ export const onUpdateQuestionData = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -9154,8 +10295,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -9226,6 +10365,9 @@ export const onDeleteQuestionData = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -9289,8 +10431,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9357,8 +10497,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9446,8 +10584,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9514,8 +10650,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9603,8 +10737,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9671,8 +10803,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9698,6 +10828,243 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           endDate
           createdAt
           updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          instructionsTitle
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
+          institutionID
+          duration
+          resources
+          notes
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          instructionsTitle
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
+          institutionID
+          duration
+          resources
+          notes
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          instructionsTitle
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
+          institutionID
+          duration
+          resources
+          notes
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
         }
         createdAt
         updatedAt
@@ -9745,8 +11112,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -9809,6 +11174,9 @@ export const onCreatePersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -9879,8 +11247,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -9963,8 +11329,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -10027,6 +11391,9 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -10097,8 +11464,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -10181,8 +11546,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -10245,6 +11608,9 @@ export const onDeletePersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -10315,8 +11681,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -10412,8 +11776,6 @@ export const onCreateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -10473,8 +11835,6 @@ export const onUpdateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -10534,8 +11894,6 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -10746,8 +12104,6 @@ export const onCreateAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -10994,8 +12350,6 @@ export const onUpdateAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -11242,8 +12596,6 @@ export const onDeleteAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
-          spotlightDate
-          spotlightUser
           createdAt
           updatedAt
         }
@@ -12506,8 +13858,6 @@ export const onCreateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12538,8 +13888,6 @@ export const onCreateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12584,8 +13932,6 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12616,8 +13962,6 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12662,8 +14006,6 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12694,8 +14036,6 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12736,8 +14076,6 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12782,8 +14120,6 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12828,8 +14164,6 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
-        spotlightDate
-        spotlightUser
         createdAt
         updatedAt
       }
@@ -12909,240 +14243,6 @@ export const onDeletePersonFiles = /* GraphQL */ `
         fileSize
       }
       lessonPageID
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCommunity = /* GraphQL */ `
-  subscription OnCreateCommunity {
-    onCreateCommunity {
-      id
-      cardName
-      cardDate
-      summary
-      cardImageLink
-      startTime
-      endTime
-      location
-      geoLocation
-      additionalLinks
-      additionalInfo
-      personAuthID
-      personEmail
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightDate
-        spotlightUser
-        createdAt
-        updatedAt
-      }
-      chat {
-        items {
-          id
-          communityId
-          personAuthID
-          personEmail
-          msg
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCommunity = /* GraphQL */ `
-  subscription OnUpdateCommunity {
-    onUpdateCommunity {
-      id
-      cardName
-      cardDate
-      summary
-      cardImageLink
-      startTime
-      endTime
-      location
-      geoLocation
-      additionalLinks
-      additionalInfo
-      personAuthID
-      personEmail
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightDate
-        spotlightUser
-        createdAt
-        updatedAt
-      }
-      chat {
-        items {
-          id
-          communityId
-          personAuthID
-          personEmail
-          msg
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCommunity = /* GraphQL */ `
-  subscription OnDeleteCommunity {
-    onDeleteCommunity {
-      id
-      cardName
-      cardDate
-      summary
-      cardImageLink
-      startTime
-      endTime
-      location
-      geoLocation
-      additionalLinks
-      additionalInfo
-      personAuthID
-      personEmail
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightDate
-        spotlightUser
-        createdAt
-        updatedAt
-      }
-      chat {
-        items {
-          id
-          communityId
-          personAuthID
-          personEmail
-          msg
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCommunityChat = /* GraphQL */ `
-  subscription OnCreateCommunityChat {
-    onCreateCommunityChat {
-      id
-      communityId
-      personAuthID
-      personEmail
-      msg
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCommunityChat = /* GraphQL */ `
-  subscription OnUpdateCommunityChat {
-    onUpdateCommunityChat {
-      id
-      communityId
-      personAuthID
-      personEmail
-      msg
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCommunityChat = /* GraphQL */ `
-  subscription OnDeleteCommunityChat {
-    onDeleteCommunityChat {
-      id
-      communityId
-      personAuthID
-      personEmail
-      msg
       createdAt
       updatedAt
     }
