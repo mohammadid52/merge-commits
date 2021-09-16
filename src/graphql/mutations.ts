@@ -13312,6 +13312,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13333,6 +13334,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13393,6 +13395,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13414,6 +13417,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13474,6 +13478,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13495,6 +13500,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -14827,8 +14833,6 @@ export const createPersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14836,6 +14840,12 @@ export const createPersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14850,8 +14860,6 @@ export const updatePersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14859,6 +14867,12 @@ export const updatePersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
       createdAt
       updatedAt
     }
@@ -14873,8 +14887,6 @@ export const deletePersonFiles = /* GraphQL */ `
       id
       personAuthID
       personEmail
-      fileName
-      fileKey
       uploadedAt
       feedbacks
       shared
@@ -14882,6 +14894,12 @@ export const deletePersonFiles = /* GraphQL */ `
       syllabusLessonID
       lessonType
       roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
       createdAt
       updatedAt
     }
