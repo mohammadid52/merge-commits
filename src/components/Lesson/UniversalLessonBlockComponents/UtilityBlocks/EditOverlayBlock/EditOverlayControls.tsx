@@ -294,10 +294,10 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   return (
     <div
       id="editControlsWrapper"
-      style={{...iconPos}}
-      className={`absolute flex flex-row items-center bg-transparent rounded-lg ${
-        overlayVisible ? 'z-100' : 'z-10'
-      } h-auto w-auto ${isComponent ? componentAlignmentToggleClass : ''}`}>
+      style={{...iconPos, zIndex: overlayVisible ? 2000 : 10}}
+      className={`absolute flex flex-row items-center bg-transparent rounded-lg  h-auto w-auto ${
+        isComponent ? componentAlignmentToggleClass : ''
+      }`}>
       {!previewMode && (
         <ClickAwayListener
           onClickAway={() => {

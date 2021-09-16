@@ -102,7 +102,9 @@ const LessonRowComposer = () => {
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
-                            id={content.id}>
+                            id={`${
+                              content.type === 'notes-form' ? 'container' : content.id
+                            }`}>
                             {composePartContent(
                               content.id,
                               content.type,

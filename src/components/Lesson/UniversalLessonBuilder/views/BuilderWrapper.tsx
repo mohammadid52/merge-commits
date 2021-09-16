@@ -103,8 +103,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   // This state handles all the modal components
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: true,
-    type: 'notes-input',
+    show: false,
+    type: '',
   });
 
   useEffect(() => {
@@ -377,7 +377,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
       case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
-      case FORM_TYPES.NOTES:
+      case 'notes-form':
         return <NotesModalDialog {...commonProps} />;
       case FORM_TYPES.JUMBOTRON:
         return (
@@ -502,7 +502,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
         return 'Review Slider Component';
-      case FORM_TYPES.NOTES:
+      case 'notes-form':
         return 'Notes Component';
       case FORM_TYPES.WRITING_EXERCISE:
       case 'writing-exercise-form-default':

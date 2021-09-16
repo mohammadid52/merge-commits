@@ -8,7 +8,10 @@ interface ColorPickerProps {
   isPagePart?: boolean;
   isMainPage?: boolean;
   styleString?: {[key: string]: string};
-
+  customColors?: {
+    colors: ColorObject[];
+    values: ColorObject[];
+  };
   noneLabel?: string;
   onNoneClick?: () => void;
 }
@@ -27,6 +30,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     isMainPage,
     isPagePart,
     styleString,
+    customColors = null,
   } = props;
 
   const availableColors: ColorObject[] = [
@@ -51,12 +55,15 @@ const ColorPicker = (props: ColorPickerProps) => {
     {value: 900, label: 900},
   ];
 
+  const dynamicColors = customColors ? customColors.colors : availableColors;
+  const dynamicValues = customColors ? customColors.values : colorCodes;
+
   const colorGrid = () =>
-    availableColors.map((color: ColorObject, idx: number) => {
+    dynamicColors.map((color: ColorObject, idx: number) => {
       return (
         <div key={`${color.value}_${idx}`} className={`w-auto h-auto my-1`}>
-          <div className={`grid grid-cols-10`}>
-            {colorCodes.map((code: ColorObject, idx2: number) => {
+          <div className={`${customColors ? 'flex ' : 'grid grid-cols-10'} `}>
+            {dynamicValues.map((code: ColorObject, idx2: number) => {
               return (
                 <div
                   key={`${color.value}_${code.value}_${idx2}`}
@@ -104,7 +111,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         style={styles.svgTransform}>
         <FaSortUp size="40" />
       </div>
-      <div className={`bg-white my-3 rounded-lg p-4`}>
+      <div className={`bg-white shadow-lg  my-3 rounded-lg p-4`}>
         <div className="flex items-center justify-between">
           <p className={`text-black w-auto text-2xl`}>Select a color</p>
           {noneLabel && (
@@ -116,8 +123,8 @@ const ColorPicker = (props: ColorPickerProps) => {
             </Buttons>
           )}
         </div>
-        <div className={`my-4`}>
-          {availableColors.length > 0 && colorCodes.length > 0 ? colorGrid() : null}
+        <div className={`my-4 ${customColors ? 'flex items-center' : ''}`}>
+          {dynamicColors.length > 0 && dynamicValues.length > 0 ? colorGrid() : null}
         </div>
       </div>
     </div>

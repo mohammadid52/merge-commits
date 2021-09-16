@@ -11,9 +11,12 @@ import CustomDatePicker from './FormBlock/DatePicker';
 import ReviewSliderBlock from './ReviewSliderBlock';
 import WritingExerciseBlock from './FormBlock/WritingExerciseBlock';
 import AttachmentBlock from './FormBlock/AttachmentBlock';
+import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import {map} from 'lodash';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
+  type?: string;
   numbered?: boolean;
   value?: {id: string; type: string; label: string; value: string}[];
 }
@@ -150,7 +153,13 @@ const SelectOne = ({
     </div>
   );
 };
-export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
+export const FormBlock = ({
+  id,
+  mode,
+  numbered,
+  type: formType,
+  value,
+}: FormBlockProps) => {
   const {
     lessonState,
     lessonDispatch,
@@ -536,10 +545,27 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             />
           </div>
         );
+
       default:
         return <p>No valid form input type</p>;
     }
   };
+
+  if (formType === 'notes-form') {
+    const modifiyValues = map(value, (v: any) => ({
+      class: v.class,
+      id: v.id,
+      value: v.value,
+    }));
+    return (
+      <NotesBlock
+        value={modifiyValues}
+
+        // onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+        // value={isInLesson ? getValue(inputID) : value}
+      />
+    );
+  }
 
   return (
     <>
