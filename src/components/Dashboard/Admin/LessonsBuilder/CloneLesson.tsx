@@ -3,7 +3,7 @@ import {map} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import {UniversalLesson} from '../../../../API';
+import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
@@ -41,6 +41,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
     const replaceAllExistingIds: any = {
       ...cloneLesson,
       id: uuidv4(),
+      //@ts-ignore
       title: `${cloneLesson.title} Cloned`,
       lessonPlan: map(cloneLesson.lessonPlan, (page) => ({
         ...page,
@@ -145,13 +146,19 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Title</dt>
                 <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
-                  {cloneLesson.title || '--'}
+                  {
+                    //@ts-ignore
+                    cloneLesson.title || '--'
+                  }
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Type</dt>
                 <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
-                  {cloneLesson.type || '--'}
+                  {
+                    //@ts-ignore
+                    cloneLesson.type || '--'
+                  }
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
