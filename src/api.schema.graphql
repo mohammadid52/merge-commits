@@ -1047,6 +1047,7 @@ type UniversalpageContent {
   partType: String
   class: String
   partContent: [UniversalPartContent]
+  showIfAsync:Boolean
 }
 
 type UniversalPartContent {
@@ -1227,6 +1228,7 @@ type PersonFiles @model @key(fields: ["id"]) {
 type File {
   fileName: String!
   fileKey: String!
+  fileSize: Int!
 }
 
 
