@@ -1228,7 +1228,7 @@ type PersonFiles @model @key(fields: ["id"]) {
 type File {
   fileName: String!
   fileKey: String!
-  fileSize: Int!
+  fileSize: Int
 }
 
 
@@ -1281,4 +1281,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
-}
+} 
