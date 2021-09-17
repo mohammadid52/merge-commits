@@ -11876,6 +11876,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -11897,6 +11898,7 @@ export const createUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -11957,6 +11959,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -11978,6 +11981,7 @@ export const updateUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -12038,6 +12042,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -12059,6 +12064,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -13419,6 +13425,7 @@ export const createPersonFiles = /* GraphQL */ `
       files {
         fileName
         fileKey
+        fileSize
       }
       lessonPageID
       createdAt
@@ -13445,6 +13452,7 @@ export const updatePersonFiles = /* GraphQL */ `
       files {
         fileName
         fileKey
+        fileSize
       }
       lessonPageID
       createdAt
@@ -13471,6 +13479,7 @@ export const deletePersonFiles = /* GraphQL */ `
       files {
         fileName
         fileKey
+        fileSize
       }
       lessonPageID
       createdAt
