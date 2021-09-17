@@ -551,7 +551,7 @@ export const FormBlock = ({
     }
   };
 
-  if (formType === 'notes-form') {
+  if (formType === 'notes-form' && !isStudent) {
     const modifiyValues = map(value, (v: any) => ({
       class: v.class,
       id: v.id,

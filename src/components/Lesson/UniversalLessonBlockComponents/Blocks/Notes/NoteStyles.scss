@@ -8,33 +8,40 @@
 }
 
 .sticky-container {
-  font-family: 'Patrick Hand', cursive;
   ._sticky {
+    & textarea {
+      font-family: 'Patrick Hand', cursive;
+      background: transparent;
+      border: transparent;
+      user-select: text !important;
+      display: inline-block;
+      box-sizing: border-box;
+      font-size: 24px;
+      overflow: scroll;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      // pseudo-elements
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &:focus {
+        cursor: text !important;
+        outline: none;
+        box-shadow: none;
+      }
+
+      &::first-line {
+        position: relative;
+        font-weight: bold;
+      }
+    }
+    box-shadow: 6px 7px 12px -5px rgba(0, 0, 0, 0.75);
     position: relative;
     max-width: 520px;
     max-height: 250px;
-    user-select: text !important;
-    border: transparent;
-    display: inline-block;
     margin: 10px;
-    box-sizing: border-box;
-    box-shadow: 6px 7px 12px -5px rgba(0, 0, 0, 0.75);
-    font-size: 24px;
-    overflow: scroll;
-    // pseudo-elements
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &:focus {
-      cursor: text !important;
-      outline: none;
-    }
-
-    &::first-line {
-      position: relative;
-      font-weight: bold;
-    }
   }
 }
 

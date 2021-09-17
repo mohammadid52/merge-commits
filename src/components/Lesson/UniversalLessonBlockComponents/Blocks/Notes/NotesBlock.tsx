@@ -1,25 +1,24 @@
 import Loader from '@atoms/Loader';
-import {GlobalContext} from '@contexts/GlobalContext';
 import useScript from '@customHooks/useScript';
+import {setState} from '@interfaces/index';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import {map} from 'lodash';
-import React, {memo, useContext, useState} from 'react';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {map, remove} from 'lodash';
+import React, {memo, useState} from 'react';
 
 interface INoteBlock {
-  getValue?: (domID: string) => string;
   disabled?: boolean;
+  grid?: {cols: number; rows: number};
   value: {class?: string; value?: string; id: string}[];
 }
 
 const NotesBlock = ({
   value: notesList,
+  grid: {cols = 4, rows = 2},
 
   disabled,
 }: INoteBlock) => {
@@ -27,62 +26,17 @@ const NotesBlock = ({
     'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
   );
   gsap.registerPlugin(InertiaPlugin, Draggable);
-  gsap.ticker.fps(60);
+  // gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
-  const {
-    lessonState,
-    lessonDispatch,
-    state: {user},
-  } = useContext(GlobalContext);
-
-  const isStudent = user.role === 'ST';
-  const isInLesson = useInLessonCheck();
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDataValue = (domID: string) => {
-    return getStudentDataValue(domID);
-  };
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
-  const onChange = (e: any) => {
-    const {id, value} = e.target;
-    if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
-    }
-  };
-
   if (status === 'ready') {
-    wait(200).then(() => {
+    wait(50).then(() => {
       setLoading(false);
       var $container = $('#container'),
         gridWidth = 250,
         gridHeight = 250,
-        gridRows = 2,
-        gridColumns = 4,
+        gridRows = rows,
+        gridColumns = cols,
         i,
         x,
         y;
@@ -102,10 +56,7 @@ const NotesBlock = ({
       }
 
       //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
-      // gsap.set($container, {
-      //   height: gridRows * gridHeight + 1,
-      //   width: gridColumns * gridWidth + 1,
-      // });
+
       gsap.set('._sticky', {
         width: gridWidth,
 
@@ -114,16 +65,19 @@ const NotesBlock = ({
 
       if (jQuery.ready) {
         notesList.forEach((note: {id: any}) => {
-          $(`#${note.id}`).on('click', (e) => {
+          $(`#${note.id} #note`).on('click', (e) => {
             e.target.focus();
           });
         });
       }
+
       Draggable.create('._sticky', {
         bounds: $container,
         edgeResistance: 0.065,
+        throwProps: true,
         type: 'x,y',
         inertia: true,
+
         // @ts-ignore
         autoScroll: true,
 
@@ -139,6 +93,13 @@ const NotesBlock = ({
     });
   }
 
+  const [localNotes, setLocalNotes] = useState([...notesList]);
+
+  const onNoteDelete = (noteId: string) => {
+    remove(localNotes, (note) => note.id === noteId);
+    setLocalNotes([...localNotes]);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center overflow-hidden justify-center min-h-32">
@@ -148,18 +109,10 @@ const NotesBlock = ({
   } else
     return (
       <div id="container" className="sticky-container blackboard">
-        {notesList &&
-          notesList.length > 0 &&
-          map(notesList, (note) => (
-            <Note
-              onChange={onChange}
-              getValue={getDataValue}
-              disabled={disabled}
-              isInLesson={isInLesson}
-              isStudent={isStudent}
-              key={note.id}
-              note={note}
-            />
+        {localNotes &&
+          localNotes.length > 0 &&
+          map(localNotes, (note) => (
+            <Note onNoteDelete={onNoteDelete} key={note.id} note={note} />
           ))}
       </div>
     );

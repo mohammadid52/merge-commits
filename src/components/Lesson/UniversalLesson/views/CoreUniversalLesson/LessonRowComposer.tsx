@@ -1,5 +1,6 @@
-import {filter, forEach, map, reject} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import NotesFab from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
+import {filter} from 'lodash';
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {
   PagePart,
@@ -22,18 +23,21 @@ const LessonRowComposer = () => {
 
   const [currentLesson, setCurrentLesson] = useState<any>();
 
-  const downloadables =
+  const getSeparateData = (id: string) =>
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? filter(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
+      ? filter(activePageData.pageContent, (f) => f.id.includes(id))
       : [];
 
-  const getRemovedDownloadablesFromlist = () => {
+  const notes = getSeparateData('notes-container');
+  const downloadables = getSeparateData('downloadable-files');
+
+  const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
       ? activePageData.pageContent.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
-            if (!b.type.includes('Download')) {
+            if (!b.type.includes('Download') && !b.type.includes('notes-form')) {
               objArray.push(b);
             }
           });
@@ -42,9 +46,11 @@ const LessonRowComposer = () => {
       : [];
 
     return removeDownloadablesFromlist;
-  };
+  }, [activePageData]);
 
-  const removeDownloadablesFromlist = getRemovedDownloadablesFromlist();
+  const removeDownloadablesFromlist = useMemo(() => getRemovedDownloadablesFromlist(), [
+    activePageData,
+  ]);
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
@@ -60,6 +66,7 @@ const LessonRowComposer = () => {
   }, [lessonPage]);
 
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+  const [showNotesModal, setShowNotesModal] = useState(false);
 
   useEffect(() => {
     const PAGES = lessonState.lessonData.lessonPlan;
@@ -102,9 +109,7 @@ const LessonRowComposer = () => {
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
-                            id={`${
-                              content.type === 'notes-form' ? 'container' : content.id
-                            }`}>
+                            id={`${content.type === 'notes-form' ? '' : content.id}`}>
                             {composePartContent(
                               content.id,
                               content.type,
@@ -128,14 +133,28 @@ const LessonRowComposer = () => {
 
       {user.role === 'ST' && (
         <>
-          {downloadables && downloadables.length > 0 && (
-            <Downloadables
-              downloadables={downloadables}
-              showDownloadMenu={showDownloadMenu}
-              setShowDownloadMenu={setShowDownloadMenu}
-            />
-          )}
-
+          <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
+            {notes && notes.length > 0 && (
+              <div id="fab-download">
+                <NotesFab
+                  notes={notes}
+                  darkMode={currentLesson?.darkMode || true}
+                  pageTitle={activePageData.title}
+                  showNotesModal={showNotesModal}
+                  setShowNotesModal={setShowNotesModal}
+                />
+              </div>
+            )}
+            {downloadables && downloadables.length > 0 && (
+              <div id="fab-notes">
+                <Downloadables
+                  downloadables={downloadables}
+                  showDownloadMenu={showDownloadMenu}
+                  setShowDownloadMenu={setShowDownloadMenu}
+                />
+              </div>
+            )}
+          </div>
           <LessonModule currentLesson={currentLesson} />
         </>
       )}

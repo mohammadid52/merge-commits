@@ -105,11 +105,29 @@ const NotesModalDialog = (props: NoteModalProps) => {
   };
 
   const onSubmit = async () => {
+    const parentKey = 'notes-container';
     if (isEditingMode) {
-      const updatedList = updateBlockContentULBHandler('', '', `notes-form`, notesList);
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        `notes-form`,
+        notesList,
+        0,
+        '',
+        parentKey
+      );
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewBlockULBHandler('', '', `notes-form`, notesList);
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        `notes-form`,
+        notesList,
+        0,
+        '',
+
+        parentKey
+      );
       await addToDB(updatedList);
     }
   };
