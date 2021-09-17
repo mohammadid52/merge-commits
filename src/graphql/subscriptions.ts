@@ -48,6 +48,8 @@ export const onChangePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -180,6 +182,8 @@ export const onChangePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -326,6 +330,8 @@ export const onChangeStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -714,6 +720,8 @@ export const onChangeRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -838,6 +846,8 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightUser
+      spotlightDate
       createdAt
       updatedAt
     }
@@ -883,6 +893,8 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightUser
+      spotlightDate
       createdAt
       updatedAt
     }
@@ -928,6 +940,8 @@ export const onDeletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      spotlightUser
+      spotlightDate
       createdAt
       updatedAt
     }
@@ -1479,6 +1493,8 @@ export const onCreateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -1560,6 +1576,8 @@ export const onUpdateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -1641,6 +1659,8 @@ export const onDeleteStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -1783,6 +1803,8 @@ export const onCreateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -1964,6 +1986,8 @@ export const onUpdateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2145,6 +2169,8 @@ export const onDeleteRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2296,6 +2322,8 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -2335,6 +2363,8 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2412,6 +2442,8 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -2451,6 +2483,8 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2528,6 +2562,8 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -2567,6 +2603,8 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2647,6 +2685,8 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -2717,6 +2757,8 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2809,6 +2851,8 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -2879,6 +2923,8 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -2971,6 +3017,8 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -3041,6 +3089,8 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -3136,6 +3186,8 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -3202,6 +3254,8 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -3283,6 +3337,8 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -3349,6 +3405,8 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -3430,6 +3488,8 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -3496,6 +3556,8 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -3865,6 +3927,8 @@ export const onCreateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -3943,6 +4007,8 @@ export const onUpdateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -4021,6 +4087,8 @@ export const onDeleteClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -6333,6 +6401,8 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -6376,6 +6446,8 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -6419,6 +6491,8 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -8692,6 +8766,8 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -8741,6 +8817,8 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -8790,6 +8868,8 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -8840,6 +8920,8 @@ export const onCreateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -8955,6 +9037,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -9070,6 +9154,8 @@ export const onDeleteQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -9203,6 +9289,8 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9269,6 +9357,8 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9356,6 +9446,8 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9422,6 +9514,8 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9509,6 +9603,8 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9575,6 +9671,8 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9647,6 +9745,8 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -9779,6 +9879,8 @@ export const onCreatePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -9861,6 +9963,8 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -9993,6 +10097,8 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -10075,6 +10181,8 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -10207,6 +10315,8 @@ export const onDeletePersonLocation = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -10302,6 +10412,8 @@ export const onCreateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -10361,6 +10473,8 @@ export const onUpdateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -10420,6 +10534,8 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -10630,6 +10746,8 @@ export const onCreateAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -10876,6 +10994,8 @@ export const onUpdateAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -11122,6 +11242,8 @@ export const onDeleteAttendance = /* GraphQL */ `
           onDemand
           sentiments
           passcode
+          spotlightUser
+          spotlightDate
           createdAt
           updatedAt
         }
@@ -12378,6 +12500,8 @@ export const onCreateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12408,6 +12532,8 @@ export const onCreateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12452,6 +12578,8 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12482,6 +12610,8 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12526,6 +12656,8 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12556,6 +12688,8 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12596,6 +12730,8 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12640,6 +12776,8 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12684,6 +12822,8 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12808,6 +12948,8 @@ export const onCreateCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12871,6 +13013,8 @@ export const onUpdateCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
@@ -12934,6 +13078,8 @@ export const onDeleteCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
         createdAt
         updatedAt
       }
