@@ -49,6 +49,7 @@ const UploadCard = ({
   // ###################### INDIVIDUAL FILE DELETION ##################### //
   // ##################################################################### //
 
+  const [deleting, setDeleting] = useState<boolean>(false);
   const [deleteFileKey, setdeleteFileKey] = useState<string>('');
 
   // ~~~~~~~~~~ TOGGLE & FUNCTIONS ~~~~~~~~~ //
@@ -69,8 +70,7 @@ const UploadCard = ({
         return acc;
       }
     }, []);
-    // console.log('contentObj.files -', contentObj.files);
-    // console.log('newFiles - ', newFiles);
+    setDeleting(true);
     try {
       await deleteImage(deleteFileKey);
       await updatePersonFiles(newFiles);
@@ -78,7 +78,7 @@ const UploadCard = ({
     } catch (e) {
       console.error('@handleConfirmDelete - ', e);
     } finally {
-      //
+      setDeleting(false);
     }
   };
 
@@ -211,9 +211,11 @@ const UploadCard = ({
                     fileIdx={fileIdx}
                     fileName={file.fileName}
                     fileKey={file.fileKey}
+                    fileSize={file.fileSize}
                     deleteFileKey={deleteFileKey}
                     handleToggleDelete={handleToggleDelete}
                     handleConfirmDelete={handleConfirmDelete}
+                    deleting={deleting}
                   />
                 ))
               : null}
