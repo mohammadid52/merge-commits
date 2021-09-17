@@ -1,4 +1,3 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 import {Transition} from '@headlessui/react';
 import {removeExtension} from '@utilities/functions';
@@ -9,19 +8,18 @@ import React, {useCallback, useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import {BiImageAdd} from 'react-icons/bi';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import * as mutations from '../../../../../graphql/mutations';
-import {getLocalStorageData} from '../../../../../utilities/localStorage';
-import Modal from '../../../../Atoms/Modal';
-import {UPLOAD_KEYS} from '../../../constants';
-import {FormControlProps} from '../FormBlock';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {UPLOAD_KEYS} from '../../../Lesson/constants';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import Buttons from '@components/Atoms/Buttons';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../../graphql/mutations';
+
+// ##################################################################### //
+// ############################ POPUP MODAL ############################ //
+// ##################################################################### //
 
 interface IFile {
   _status: 'progress' | 'failed' | 'success' | 'other';
@@ -242,39 +240,53 @@ const File = ({
   );
 };
 
-const AttachmentBlock = ({
-  inputID,
-  label,
-  value,
-  numbered,
-  index,
-  required,
-  id,
-}: FormControlProps) => {
-  const {
-    lessonState,
-    userLanguage,
-    state: {
-      user,
-      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-    },
-  } = useContext(GlobalContext);
+// ##################################################################### //
+// ######################## UPLOAD FUNCTIONALITY ####################### //
+// ##################################################################### //
 
-  const lessonType = lessonState?.lessonData?.type;
+interface IUploadAttachmentProps {
+  personFilesID?: string;
+  updateLoadedFilesList?: (personFilesID: string, filesArray: any[]) => void;
+  filesArray?: any[];
+  lessonPageID?: string;
+  lessonID?: string;
+  syllabusLessonID?: string;
+  roomID?: string;
+}
+
+const UploadAttachment = ({
+  personFilesID,
+  updateLoadedFilesList,
+  filesArray,
+  lessonPageID,
+  lessonID,
+  syllabusLessonID,
+  roomID,
+}: IUploadAttachmentProps) => {
+
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const user = gContext.state.user;
+  const userLanguage = gContext.userLanguage;
+  // const {
+  //   userLanguage,
+  //   state: {
+  //     user,
+  //     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+  //   },
+  // } = useContext(GlobalContext);
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+
   const isStudent = user.role === 'ST';
-  const isInLesson = useInLessonCheck();
   const inputOther = useRef(null);
 
   const openFilesExplorer = () => inputOther.current.click();
   // For Attachments - 31
 
   const fileIcon = getAsset('general', 'file');
-
-  const match: any = useRouteMatch();
 
   const deletImageFromS3 = (key: string) => {
     // Remove image from bucket
@@ -347,13 +359,9 @@ const AttachmentBlock = ({
     });
   };
 
-  const lessonId = match.params?.lessonID;
-
-  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonId);
+  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonID);
 
   const {authId, email} = user;
-
-  const roomInfo = getLocalStorageData('room_info');
 
   const [uploading, setUploading] = useState(false);
 
@@ -371,26 +379,29 @@ const AttachmentBlock = ({
     setUploading(true);
     try {
       const payload = {
+        id: personFilesID,
         personAuthID: authId,
         personEmail: email,
-        files: map(filesUploading, (file: any) => ({
-          fileName: file.fileName,
-          fileKey: file.fileKey,
-          fileSize: getSizeInBytesInt(file.file?.size),
-        })),
-        lessonPageID: roomInfo?.activeLessonId,
-        lessonID: roomInfo?.activeLessonId,
-        syllabusLessonID: roomInfo?.activeSyllabus,
-        lessonType: lessonType,
-        roomID: roomInfo?.id,
+        files: [
+          ...filesArray,
+          ...map(filesUploading, (file: any) => ({
+            fileName: file.fileName,
+            fileKey: file.fileKey,
+            fileSize: getSizeInBytesInt(file.file?.size),
+          })),
+        ],
+        lessonPageID: lessonPageID,
+        lessonID: lessonID,
+        syllabusLessonID: syllabusLessonID,
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createPersonFiles, {input: payload})
+        graphqlOperation(mutations.updatePersonFiles, {input: payload})
       );
+      await updateLoadedFilesList(personFilesID, payload.files);
       resetAll();
     } catch (error) {
-      console.error('@uploadFileDataToTable: ', error);
+      console.error('@uploadFileDataToTable: ', error.message);
     } finally {
       setUploading(false);
     }
@@ -461,128 +472,91 @@ const AttachmentBlock = ({
     }
   };
 
-  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
-    <span className="text-red-500"> {isRequired ? '*' : null}</span>
-  );
-
-  const [showModal, setShowModal] = useState(false);
-
   const updateFilename = (id: string, filename: string) => {
     const idx = findIndex(filesUploading, (f) => f.id === id);
     update(filesUploading[idx], `fileName`, () => filename);
     setFilesUploading([...filesUploading]);
   };
 
-  const closeAction = () => setShowModal(false);
-
   const resetAll = () => {
-    closeAction();
     setUploading(false);
     setFilesUploading([]);
   };
 
   return (
     <>
-      {showModal && (
-        <Modal
-          title={label}
-          showHeader
-          showFooter={false}
-          closeAction={closeAction}
-          closeOnBackdrop={false}>
-          <div className="px-6 min-w-256 min-h-72">
-            <h4 className="text-lg text-gray-600 font-medium">{value}</h4>
-            <div
-              {...getRootProps()}
-              className={`border-${
-                isDragActive ? 'blue' : 'gray'
-              }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
-              <input
-                {...getInputProps()}
-                ref={inputOther}
-                onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
-                type="file"
-                className="hidden"
-              />
-              <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
-              {isDragActive ? (
-                <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                  Drop the files here
-                </p>
-              ) : (
-                <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                  Drag 'n' drop your files here, or{' '}
-                  <span
-                    onClick={isInLesson ? openFilesExplorer : noop}
-                    className="text-blue-500 cursor-pointer">
-                    browse
-                  </span>
-                </p>
-              )}
-            </div>
-            <Transition
-              show={filesUploading.length > 0}
-              enter="transition-opacity duration-500"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity duration-500"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              className="mt-4 flex flex-col  gap-y-6">
-              {map(filesUploading, (file: IFile) => (
-                <File
-                  fileKey={file.fileKey}
-                  updateFilename={updateFilename}
-                  file={file.file}
-                  id={file.id}
-                  deleteImage={deleteImage}
-                  _status={file._status}
-                  progress={file.progress}
-                  fileName={file.fileName}
-                />
-              ))}
-            </Transition>
+      <div className="w-full h-full">
+        <h4 className="text-lg text-gray-600 font-medium">Upload Additional Files</h4>
+        <div
+          {...getRootProps()}
+          className={`border-${
+            isDragActive ? 'blue' : 'gray'
+          }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
+          <input
+            {...getInputProps()}
+            ref={inputOther}
+            onChange={true && isStudent ? handleFileSelection : () => {}}
+            type="file"
+            className="hidden"
+          />
+          <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
+          {isDragActive ? (
+            <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
+              Drop the files here
+            </p>
+          ) : (
+            <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
+              Drag 'n' drop your files here, or{' '}
+              <span
+                onClick={true ? openFilesExplorer : noop}
+                className="text-blue-500 cursor-pointer">
+                browse
+              </span>
+            </p>
+          )}
+        </div>
+        <Transition
+          show={filesUploading.length > 0}
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-500"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          className="mt-4 flex flex-col  gap-y-6">
+          {map(filesUploading, (file: IFile) => (
+            <File
+              fileKey={file.fileKey}
+              updateFilename={updateFilename}
+              file={file.file}
+              id={file.id}
+              deleteImage={deleteImage}
+              _status={file._status}
+              progress={file.progress}
+              fileName={file.fileName}
+            />
+          ))}
+        </Transition>
 
-            <div className="flex mt-8 justify-center px-6 pb-4">
-              <div className="flex justify-end">
-                <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                  onClick={resetAll}
-                  disabled={uploading}
-                  transparent
-                />
-                <Buttons
-                  disabled={uploading}
-                  btnClass="py-1 px-8 text-xs ml-2"
-                  label={uploading ? 'Uploading' : 'Upload'}
-                  onClick={onUploadAllFiles}
-                />
-              </div>
-            </div>
+        <div className="flex mt-8 justify-center px-6 pb-4">
+          <div className="flex justify-end">
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+              onClick={resetAll}
+              disabled={uploading}
+              transparent
+            />
+            <Buttons
+              disabled={uploading}
+              btnClass="py-1 px-8 text-xs ml-2"
+              label={uploading ? 'Uploading' : 'Upload'}
+              onClick={onUploadAllFiles}
+            />
           </div>
-        </Modal>
-      )}
-      <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
-        </label>
-        <div className="mt-2">
-          <span
-            role="button"
-            tabIndex={-1}
-            onClick={isInLesson ? () => setShowModal(true) : noop}
-            className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
-            } flex items-center justify-center ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
-            <BiImageAdd className={`w-auto mr-2`} />
-            Upload Attachments
-          </span>
         </div>
       </div>
     </>
   );
 };
-export default AttachmentBlock;
+export default React.memo(UploadAttachment);

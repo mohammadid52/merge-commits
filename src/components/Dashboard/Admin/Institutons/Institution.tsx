@@ -1,13 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {FaEdit} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import {useHistory} from 'react-router-dom';
 import {Switch, Route, useRouteMatch} from 'react-router-dom';
-
-import * as queries from '../../../../graphql/queries';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
@@ -17,7 +13,6 @@ import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {goBackBreadCrumb} from '../../../../utilities/functions';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -165,22 +160,6 @@ const Institution = (props: InstitutionProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="Institute Information" />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            btnClass="mr-4"
-            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
-            Icon={IoArrowUndoCircleOutline}
-          />
-          {currentPath !== 'edit' ? (
-            <Buttons
-              btnClass="mr-4 px-6"
-              label="Edit"
-              onClick={() => history.push(`${match.url}/edit?id=${urlQueryParams.id}`)}
-              Icon={FaEdit}
-            />
-          ) : null}
-        </div> */}
       </div>
       <PageWrapper>
         <Switch>

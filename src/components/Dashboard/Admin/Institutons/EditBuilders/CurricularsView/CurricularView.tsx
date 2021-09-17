@@ -109,6 +109,11 @@ const CurricularView = (props: CurricularViewProps) => {
       last: false,
     },
     {
+      title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`,
+      last: false,
+    },
+    {
       title: curricularData?.name,
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
         'id'
@@ -147,6 +152,14 @@ const CurricularView = (props: CurricularViewProps) => {
       content: <CheckpointList curricularId={currID} institutionId={institutionId} />,
     },
   ];
+
+  useEffect(() => {
+    const tab = params.get('tab');
+
+    if (tab) {
+      tabProps.setTabsData({...tabProps.tabsData, instCurr: parseInt(tab)});
+    }
+  }, [params.get('tab')]);
 
   const updateTab = (tab: number) => {
     tabProps.setTabsData({...tabProps.tabsData, instCurr: tab});
@@ -247,8 +260,8 @@ const CurricularView = (props: CurricularViewProps) => {
   }, [designersId]);
 
   const closeCurricularModal = () => {
-    setCurricularModal(false)
-  }
+    setCurricularModal(false);
+  };
 
   const {name, institute, description, objectives, languages} = curricularData;
   return (

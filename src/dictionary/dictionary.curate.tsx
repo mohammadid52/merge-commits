@@ -75,6 +75,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_INFO: 'Organization Info',
     INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Cohort Creation',
+    CURRICULUM: 'Curriculum',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Class Creation',
     CLASSROOMS: 'Classrooms',
@@ -114,6 +115,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_INFO: 'TBD',
     INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
+    CURRICULUM: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
     CLASSROOMS: 'TBD',
@@ -305,6 +307,7 @@ const anthologyDict: any = {
       A: 'Journal',
       B: 'Session Work',
       C: 'Session Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Edit',
@@ -314,6 +317,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancel',
       DELETE: 'Delete',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
   ES: {
@@ -324,6 +328,7 @@ const anthologyDict: any = {
       A: 'Diario',
       B: 'Cohort Work',
       C: 'Cohort Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Editar',
@@ -333,6 +338,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
 };

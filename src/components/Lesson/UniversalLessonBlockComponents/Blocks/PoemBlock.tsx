@@ -15,7 +15,7 @@ interface PoemBlockProps extends FormControlProps {
 
 const PoemBlock = (props: PoemBlockProps) => {
   const {id, inputID, onChange, value, disabled, classString} = props;
-  console.log('🚀 ~ file: PoemBlock.tsx ~ line 20 ~ PoemBlock ~ props', props);
+  // console.log('🚀 ~ file: PoemBlock.tsx ~ line 20 ~ PoemBlock ~ props', props);
 
   const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);

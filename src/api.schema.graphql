@@ -53,6 +53,8 @@ type Person
   sentiments: [String]
   passcode: String
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
+  spotlightUser: Boolean
+  spotlightDate: AWSDate
 }
 
 type Institution @model @key(fields: ["id"]) {
@@ -410,16 +412,6 @@ type AdditionalContent {
   links: [Link]
 }
 
-type Artist @model {
-  id: ID!
-  images: [String!]
-  name: String!
-  type: String!
-  bio: [String!]!
-  quotes: [Quote!]!
-  additionalContent: AdditionalContent
-}
-
 type StudentInfo {
   id: String
   firstName: String
@@ -433,23 +425,6 @@ type DisplayData {
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
-}
-
-type DoFirst @model {
-  id: ID!
-  type: String!
-  required: Boolean!
-  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
-}
-
-type DoFirstQuestion
-  @model(queries: null)
-  @key(name: "byDoFirst", fields: ["doFirstID", "questionID"]) {
-  id: ID!
-  doFirstID: ID!
-  questionID: ID!
-  doFirst: DoFirst @connection(fields: ["doFirstID"])
-  question: Question @connection(fields: ["questionID"])
 }
 
 type Instructions {
@@ -513,20 +488,6 @@ type Tool {
   name: String!
   color: String!
   icon: String!
-}
-
-type CoreLesson @model {
-  id: ID!
-  title: String!
-  label: String!
-  stage: String!
-  type: String!
-  language: Language!
-  SELTypes: [ID!]
-  instructions: Instructions!
-  content: Content!
-  tools: [Tool!]!
-  breakdown: Breakdown!
 }
 
 type Activity @model {
@@ -675,14 +636,6 @@ type RoomMsgs
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
 }
 
-type Course @model {
-  id: ID!
-  name: String!
-  type: String
-  startDate: AWSDate
-  duration: Int
-}
-
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String!
@@ -692,8 +645,7 @@ type Lesson @model @key(fields: ["id"]) {
   instructionsTitle: String
   theme: Theme
   grades: [Int]
-  artistID: ID!
-  artist: Artist @connection(fields: ["artistID"])
+  artistID: ID
   language: [Language!]
   SELStructure: String
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
@@ -703,12 +655,9 @@ type Lesson @model @key(fields: ["id"]) {
   designers: [String]
   objectives: [String]
   checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
-  doFirstID: ID!
-  doFirst: DoFirst @connection(fields: ["doFirstID"])
-  warmUpId: ID!
-  warmUp: WarmUp @connection(fields: ["warmUpId"])
-  coreLessonId: ID!
-  coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
+  doFirstID: ID
+  warmUpId: ID
+  coreLessonId: ID
   activityId: ID!
   activity: Activity @connection(fields: ["activityId"])
   assessmentID: ID!
@@ -800,7 +749,6 @@ type SyllabusLesson
   startDate: AWSDate
   endDate: AWSDate
   data: [StudentData] @connection(keyName: "bySyllabusLesson", fields: ["id"])
-  feedback: [Feedback] @connection(fields: ["id"])
 }
 
 type StudentData
@@ -880,14 +828,6 @@ type QuestionDataStudentData
   studentData: StudentData @connection(fields: ["studentDataID"])
   questionDataID: ID!
   questionData: QuestionData @connection(fields: ["questionDataID"])
-}
-
-type Feedback @model {
-  id: ID!
-  syllabusLessonID: ID!
-  liked: String
-  comment: String
-  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
 
 type Theme {
@@ -1047,6 +987,7 @@ type UniversalpageContent {
   partType: String
   class: String
   partContent: [UniversalPartContent]
+  showIfAsync:Boolean
 }
 
 type UniversalPartContent {
@@ -1227,9 +1168,36 @@ type PersonFiles @model @key(fields: ["id"]) {
 type File {
   fileName: String!
   fileKey: String!
+  fileSize: Int
 }
 
+type Community @model @key(fields: ["id"]) {
+  id: ID!
+  cardName: String,
+  cardDate: AWSDate,
+  summary: String,
+  cardImageLink: String,
+  startTime: AWSDateTime,
+  endTime: AWSDateTime,
+  location: String,
+  geoLocation: String
+  additionalLinks: [String],
+  additionalInfo: String,
+  personAuthID: String!
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+}
 
+type CommunityChat @model 
+@key(name: "chatByCommunity", fields: ["communityId"]) {
+  id: ID!
+  communityId: ID!
+  personAuthID: String!
+  personEmail: String!
+  msg: String
+  createdAt: AWSDateTime
+}
 
 type Subscription {
   onChangePersonLocation(
@@ -1279,4 +1247,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
-}
+} 

@@ -2,7 +2,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {UniversalLessonStudentData} from '../../API';
+import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
@@ -462,6 +462,7 @@ const LessonApp = () => {
     const extraPagesArray = lessonPlanPages.reduce(
       (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
         const findInStudentDataRecords = studentDataRecords.find(
+          //@ts-ignore
           (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
         );
         if (findInStudentDataRecords === undefined) {
@@ -475,6 +476,7 @@ const LessonApp = () => {
     const currentLessonRecords = studentDataRecords.reduce(
       (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
         const isStudentDataFromLesson = lessonPlanPages.find(
+          //@ts-ignore
           (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
         );
         if (isStudentDataFromLesson !== undefined) {

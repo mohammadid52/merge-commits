@@ -17,25 +17,6 @@ const Rooms = (props: Rooms) => {
   const [rooms, setRooms] = useState(null);
   const [loadingRooms, setLoadingRooms] = useState(false);
 
-  // const fetchRooms = async () => {
-  //   setLoadingRooms(true);
-  //   let rooms: any = await API.graphql(
-  //     graphqlOperation(customQueries.getChatRooms, {
-  //       email: state.user.email,
-  //       authId: state.user.authId,
-  //     })
-  //   );
-  //   console.log('chatrooms query - ', rooms);
-  //   let classes = rooms.data.getPerson?.classes?.items || [];
-  //   let chatRooms: any = [];
-  //   classes.map((cls: any, i: any) => {
-  //     let rooms = cls.class.rooms?.items;
-  //     chatRooms = chatRooms.concat(rooms);
-  //   });
-  //   setRooms(chatRooms);
-  //   setLoadingRooms(false);
-  // };
-
   useEffect(() => {
     const roomsFromContext = state.roomData.rooms;
     const roomsFromLocal = getLocalStorageData('room_list');
@@ -52,25 +33,15 @@ const Rooms = (props: Rooms) => {
         }
       }
     }
-
-    // fetchRooms();
   }, [state.roomData.rooms, lessonState.loaded]);
 
-  const showLoader = () => {
+  const showMsg = (msg: string) => {
     return (
       <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
-        Loading Rooms...
+        {msg}
       </div>
     );
-  };
-
-  const showNoRooms = () => {
-    return (
-      <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
-        You are not part of any room. Please contact admin.
-      </div>
-    );
-  };
+  }
 
   const listRooms = () => {
     return (
@@ -107,7 +78,7 @@ const Rooms = (props: Rooms) => {
 
   const renderRooms = () => {
     if (Array.isArray(rooms) && !rooms.length) {
-      return showNoRooms();
+      return showMsg('You are not part of any room. Please contact admin.');
     }
     if (Array.isArray(rooms) && rooms.length) {
       return listRooms();
@@ -116,7 +87,7 @@ const Rooms = (props: Rooms) => {
 
   return (
     <>
-      {loadingRooms && showLoader()}
+      {loadingRooms && showMsg('Loading Rooms...')}
       {!loadingRooms && renderRooms()}
     </>
   );

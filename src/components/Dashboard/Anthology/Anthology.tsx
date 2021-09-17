@@ -1,47 +1,54 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEdit, FaSpinner} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
-
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-
-import HeroBanner from '../../Header/HeroBanner';
-import AnthologyContent from './AnthologyContent';
+import {Auth} from '@aws-amplify/auth';
+import {nanoid} from 'nanoid';
+import {FaSpinner} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib';
 import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customQueries from '../../../customGraphql/customQueries';
+import useDictionary from '../../../customHooks/dictionary';
+import usePrevious from '../../../customHooks/previousProps';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import {
-  StudentExerciseData,
   UniversalJournalData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {nanoid} from 'nanoid';
-import {Auth} from '@aws-amplify/auth';
-import {useParams} from 'react-router-dom';
-
-import TabView from './TabView';
-import RoomView from './RoomView';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {IconContext} from 'react-icons/lib';
-import usePrevious from '../../../customHooks/previousProps';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import Modal from '../../Atoms/Modal';
-import FormInput from '../../Atoms/Form/FormInput';
 import Buttons from '../../Atoms/Buttons';
+import FormInput from '../../Atoms/Form/FormInput';
+import Modal from '../../Atoms/Modal';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import HeroBanner from '../../Header/HeroBanner';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import RoomView from './RoomView';
+import TabView from './TabView';
 
-export type ViewEditMode = {
+// ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
+
+export interface IAnthologyProps {
+  studentID?: string;
+  studentAuthID?: string;
+  studentEmail?: string;
+}
+export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
   option?: number;
   recordID?: string;
-};
+}
 
-const Anthology = () => {
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) => {
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const userLanguage = gContext.userLanguage;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  // other
   const {anthologyDict} = useDictionary(clientKey);
-  const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
@@ -80,13 +87,13 @@ const Anthology = () => {
   const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
 
   const getStudentData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
+    // const user = await Auth.currentAuthenticatedUser();
+    // const studentAuthId = user.username;
 
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId},
+          studentAuthID: {eq: studentAuthID},
           hasExerciseData: {eq: true},
         },
       };
@@ -186,9 +193,9 @@ const Anthology = () => {
   // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
   const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
     id: '',
-    studentID: state.user.authId,
-    studentAuthID: state.user.authId,
-    studentEmail: state.user.studentEmail,
+    studentID: studentAuthID,
+    studentAuthID: studentAuthID,
+    studentEmail: studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
     shared: false,

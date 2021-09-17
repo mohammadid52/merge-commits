@@ -4,6 +4,7 @@ import Auth from '@aws-amplify/auth';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import moment, {Moment} from 'moment';
+import {BsFillInfoCircleFill} from 'react-icons/bs';
 
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
@@ -13,7 +14,7 @@ import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import usePrevious from '../../customHooks/previousProps';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import { frequencyMapping } from '../../utilities/staticData';
+import {frequencyMapping} from '../../utilities/staticData';
 
 import ErrorBoundary from '../Error/ErrorBoundary';
 import EmojiFeedback from '../General/EmojiFeedback';
@@ -29,6 +30,8 @@ import HomeForTeachers from './Home/HomeForTeachers';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
+import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import {getAsset} from '../../assets';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -79,14 +82,22 @@ export interface ClassroomControlProps extends DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const stateUser = gContext.state.user;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+
   const {updateAuthState} = props;
-  const {state, dispatch} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
   const getRoomData = getLocalStorageData('room_info');
 
+  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
@@ -760,6 +771,13 @@ const Dashboard = (props: DashboardProps) => {
       <div className="h-full overflow-y-auto">
         {/*<FloatingSideMenu />*/}
         <Noticebar inputContext={'global'} />
+        <div className="absolute z-100 w-6 right-1 top-0.5">
+          <span
+            className="w-auto cursor-pointer"
+            onClick={() => setOpenWalkThroughModal(true)}>
+            <BsFillInfoCircleFill className={`h-5 w-5 ${theme.textColor[themeColor]}`} />
+          </span>
+        </div>
         <Suspense
           fallback={
             <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -836,7 +854,16 @@ const Dashboard = (props: DashboardProps) => {
               )}
             />
 
-            <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+            <Route
+              path={`${match.url}/anthology`}
+              render={() => (
+                <Anthology
+                  studentAuthID={stateUser.authId}
+                  studentID={stateUser.id}
+                  studentEmail={stateUser.email}
+                />
+              )}
+            />
 
             <Route
               path={`${match.url}/noticeboard`}
@@ -896,6 +923,10 @@ const Dashboard = (props: DashboardProps) => {
             </UniversalLessonBuilderProvider>
           </Switch>
         </Suspense>
+        <InformationalWalkThrough
+          open={openWalkThroughModal}
+          onCancel={() => setOpenWalkThroughModal(false)}
+        />
       </div>
       {/* </ResizablePanels> */}
     </div>
