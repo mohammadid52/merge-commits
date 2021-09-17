@@ -53,8 +53,8 @@ type Person
   sentiments: [String]
   passcode: String
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
-  spotlightDate: AWSDate,
   spotlightUser: Boolean
+  spotlightDate: AWSDate
 }
 
 type Institution @model @key(fields: ["id"]) {
