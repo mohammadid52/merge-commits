@@ -188,7 +188,8 @@ const UploadCard = ({
   // ##################################################################### //
 
   return (
-    <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
+    <>
+      {/* <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}> */}
       <div
         id={`anthology_${subSection}${idx}`}
         className={`flex flex-col ${
@@ -203,10 +204,11 @@ const UploadCard = ({
           </p>
         </div>
         <div className="flow-root mt-6">
-          <ul role="list" className="-my-5 divide-y divide-gray-200">
+          <ul role="list" className="divide-y divide-gray-200">
             {contentObj && contentObj?.files.length > 0
-              ? contentObj.files.map((file: any) => (
+              ? contentObj.files.map((file: any, fileIdx: number) => (
                   <FileListItem
+                    fileIdx={fileIdx}
                     fileName={file.fileName}
                     fileKey={file.fileKey}
                     deleteFileKey={deleteFileKey}
@@ -315,7 +317,8 @@ const UploadCard = ({
           )}
         </div>
       </div>
-    </ContentCard>
+      {/* </ContentCard> */}
+    </>
   );
 };
 

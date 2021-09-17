@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '@customGraphql/customQueries';
+import ContentCard from '@components/Atoms/ContentCard';
 
 interface IContentLessonWrapper {
   children?: React.ReactNode;
@@ -19,20 +20,32 @@ const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
         graphqlOperation(customQueries.getUniversalLessonMinimum, {id: lessonID})
       );
       // existing student rows
-      const response = minimumLessonInfo.data;
-      console.log('getMinimumLessonInfo - ', response);
+      const response = minimumLessonInfo.data.getUniversalLesson;
+      if (response !== null) {
+        setWrapperTitle(response?.title);
+      } else {
+        setWrapperTitle('Lesson does not exist');
+      }
     } catch (e) {
       console.error('getMinimumLessonInfo - ', e);
     } finally {
     }
   };
 
+  useEffect(() => {
+    getMinimumLessonInfo();
+  }, [lessonID]);
+
   return (
-    <section>
-      <h2>{wrapperTitle}</h2>
+    <ContentCard hasBackground={false}>
+      <div className="px-6 mt-6">
+        <h2 className="border-b-2 border-gray-200 w-auto font-medium flex items-center text-lg 2xl:text-2xl  text-black text-left">
+          Lesson: {wrapperTitle}
+        </h2>
+      </div>
       {children}
-    </section>
+    </ContentCard>
   );
 };
 
-export default ContentLessonWrapper;
+export default React.memo(ContentLessonWrapper);

@@ -4,6 +4,7 @@ import {AiOutlineFile} from 'react-icons/ai';
 import {getImageFromS3} from '../../../../utilities/services';
 
 interface IFileListItem {
+  fileIdx: number;
   fileName: string;
   fileKey: string;
   deleteFileKey: string;
@@ -12,6 +13,7 @@ interface IFileListItem {
 }
 
 const FileListItem = ({
+  fileIdx,
   fileName,
   fileKey,
   deleteFileKey,
@@ -50,16 +52,21 @@ const FileListItem = ({
   // ##################################################################### //
 
   return (
-    <li className="py-4">
+    <li
+      className={`pr-4 mb-2 border-b-0 border-gray-200 ${
+        fileIdx % 2 === 0 ? 'bg-gray-50' : ''
+      }`}>
       <div className="flex items-center space-x-4">
-        <div className="w-16 h-16 overflow-hidden">
-          {isImage(fileName) ? (
-            <img src={imageUrl} alt={fileName} />
-          ) : (
-            <IconContext.Provider value={{size: '48px', color: 'darkgrey'}}>
-              <AiOutlineFile />
-            </IconContext.Provider>
-          )}
+        <div className="p-2 flex flex-shrink-0 min-w-16 w-16 h-16">
+          <span className="rounded-full shadow  bg-gray-400 overflow-hidden">
+            {isImage(fileName) ? (
+              <img src={imageUrl} alt={fileName} />
+            ) : (
+              <IconContext.Provider value={{size: '48px', color: 'darkgrey'}}>
+                <AiOutlineFile />
+              </IconContext.Provider>
+            )}
+          </span>
         </div>
         <div className="w-full">
           <p className="text-sm font-medium text-gray-900 truncate">{fileName}</p>

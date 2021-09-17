@@ -6,7 +6,7 @@ import * as queries from '../../../graphql/queries';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabParentProps} from './TabView';
 import SingleUpload from './UploadsTab/UploadCard';
-import ContentLessonWrapper from './Wrapper/UploadLessonWrapper';
+import ContentLessonWrapper from './Wrapper/ContentLessonWrapper';
 
 const LIMIT = 100;
 
@@ -112,18 +112,21 @@ const UploadsTab = ({
 
   // ~~~ FILTER LOADED FILES BY LESSON ID ~~ //
 
-  const filterFilesListByLessonID = useCallback(
-    (lessonID: string, allFiles: any[]) => {
-      return allFiles.reduce((acc: any[], file: any) => {
-        if (file.lessonID === lessonID) {
-          return [...acc, file];
-        } else {
-          return acc;
-        }
-      }, []);
-    },
-    [allPersonLessonFiles]
-  );
+  const filterFilesListByLessonID = (lessonID: string, allFiles: any[]) => {
+    const output = allFiles.reduce((acc: any[], file: any) => {
+      // console.log('lessonID - ', lessonID);
+      // console.log('file.lessonID - ', file.lessonID);
+      // console.log('ile.lessonID === lessonID - ', file.lessonID === lessonID);
+
+      if (file.lessonID === lessonID) {
+        return [...acc, file];
+      } else {
+        return acc;
+      }
+    }, []);
+    console.log('output - ', output);
+    return output;
+  };
 
   // ##################################################################### //
   // ######################## TOGGLE EDITING CARDS ####################### //
@@ -166,91 +169,66 @@ const UploadsTab = ({
 
   return (
     <>
-      {/* {allPersonLessonFiles && allPersonLessonFiles.length > 0
-        ? allPersonLessonFiles.map((lessonFileObj: any, idx: number) => {
-            return (
-              <EmptyViewWrapper
-                key={`lessonfilecard_${idx}`}
-                wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-                timedRevealInt={idx + 1}
-                fallbackContents={
-                  <IconContext.Provider
-                    value={{
-                      size: '1.2rem',
-                      style: {},
-                      className: `relative mr-4 animate-spin ${themeColor}`,
-                    }}>
-                    <FaSpinner />
-                  </IconContext.Provider>
-                }>
-                <SingleUpload
-                  idx={idx}
-                  mainSection={mainSection}
-                  subSection={subSection}
-                  onCancel={onCancel}
-                  updateLoadedFilesList={updateLoadedFilesList}
-                  handleEdit={() => handleEdit(lessonFileObj.id)}
-                  handleSave={handleSave}
-                  handleDelete={() => handleDelete(lessonFileObj.id)}
-                  handleConfirm={handleConfirm}
-                  handleCancel={handleCancel}
-                  editID={editID}
-                  editMode={editMode}
-                  contentLen={allPersonLessonFiles?.length}
-                  contentObj={lessonFileObj}
-                  personEmail={personEmail}
-                  personAuthID={personAuthID}
-                />
-              </EmptyViewWrapper>
-            );
-          })
-        : null} */}
-      {filteredLessonIds && filteredLessonIds.length > 0
-        ? filteredLessonIds.map((idString: string) => {
-            <ContentLessonWrapper lessonID={idString}>
-              {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
-                filterFilesListByLessonID(idString, allPersonLessonFiles).map(
-                  (lessonFileObj: any, idx: number) => {
-                    return (
-                      <EmptyViewWrapper
-                        key={`lessonfilecard_${idx}`}
-                        wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-                        timedRevealInt={idx + 1}
-                        fallbackContents={
-                          <IconContext.Provider
-                            value={{
-                              size: '1.2rem',
-                              style: {},
-                              className: `relative mr-4 animate-spin ${themeColor}`,
-                            }}>
-                            <FaSpinner />
-                          </IconContext.Provider>
-                        }>
-                        <SingleUpload
-                          idx={idx}
-                          mainSection={mainSection}
-                          subSection={subSection}
-                          onCancel={onCancel}
-                          updateLoadedFilesList={updateLoadedFilesList}
-                          handleEdit={() => handleEdit(lessonFileObj.id)}
-                          handleSave={handleSave}
-                          handleDelete={() => handleDelete(lessonFileObj.id)}
-                          handleConfirm={handleConfirm}
-                          handleCancel={handleCancel}
-                          editID={editID}
-                          editMode={editMode}
-                          contentLen={allPersonLessonFiles?.length}
-                          contentObj={lessonFileObj}
-                          personEmail={personEmail}
-                          personAuthID={personAuthID}
-                        />
-                      </EmptyViewWrapper>
-                    );
-                  }
-                )}
-            </ContentLessonWrapper>;
-          })
-        : null}
+      <EmptyViewWrapper
+        wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+        revealContents={filteredLessonIds && filteredLessonIds.length > 0}
+        fallbackContents={
+          <IconContext.Provider
+            value={{
+              size: '1.2rem',
+              style: {},
+              className: `relative mr-4 animate-spin ${themeColor}`,
+            }}>
+            <FaSpinner />
+          </IconContext.Provider>
+        }>
+        {filteredLessonIds && filteredLessonIds.length > 0
+          ? filteredLessonIds.map((idString: string) => (
+              <ContentLessonWrapper lessonID={idString}>
+                {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
+                  filterFilesListByLessonID(idString, allPersonLessonFiles).map(
+                    (lessonFileObj: any, idx: number) => {
+                      return (
+                        <EmptyViewWrapper
+                          key={`lessonfilecard_${idx}`}
+                          wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+                          timedRevealInt={idx + 1}
+                          fallbackContents={
+                            <IconContext.Provider
+                              value={{
+                                size: '1.2rem',
+                                style: {},
+                                className: `relative mr-4 animate-spin ${themeColor}`,
+                              }}>
+                              <FaSpinner />
+                            </IconContext.Provider>
+                          }>
+                          <SingleUpload
+                            idx={idx}
+                            mainSection={mainSection}
+                            subSection={subSection}
+                            onCancel={onCancel}
+                            updateLoadedFilesList={updateLoadedFilesList}
+                            handleEdit={() => handleEdit(lessonFileObj.id)}
+                            handleSave={handleSave}
+                            handleDelete={() => handleDelete(lessonFileObj.id)}
+                            handleConfirm={handleConfirm}
+                            handleCancel={handleCancel}
+                            editID={editID}
+                            editMode={editMode}
+                            contentLen={allPersonLessonFiles?.length}
+                            contentObj={lessonFileObj}
+                            personEmail={personEmail}
+                            personAuthID={personAuthID}
+                          />
+                        </EmptyViewWrapper>
+                      );
+                    }
+                  )}
+              </ContentLessonWrapper>
+            ))
+          : null}
+      </EmptyViewWrapper>
     </>
   );
 };

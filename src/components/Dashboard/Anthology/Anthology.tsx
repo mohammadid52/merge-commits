@@ -1,7 +1,7 @@
+import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib';
 import {getAsset} from '../../../assets';
