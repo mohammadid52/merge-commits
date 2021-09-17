@@ -8,34 +8,52 @@ import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {map} from 'lodash';
-import React, {useContext, useState} from 'react';
+import React, {memo, useContext, useState} from 'react';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
 interface INoteBlock {
-  onChange: (e: any) => void;
   getValue?: (domID: string) => string;
   disabled?: boolean;
   value: {class?: string; value?: string; id: string}[];
-  isStudent?: boolean;
-  isInLesson?: boolean;
 }
 
 const NotesBlock = ({
   value: notesList,
 
-  getValue,
   disabled,
-  isInLesson,
-  isStudent,
 }: INoteBlock) => {
+  const status = useScript(
+    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
+  );
   gsap.registerPlugin(InertiaPlugin, Draggable);
   gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
-  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {
+    lessonState,
+    lessonDispatch,
+    state: {user},
+  } = useContext(GlobalContext);
 
-  const status = useScript(
-    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
-  );
+  const isStudent = user.role === 'ST';
+  const isInLesson = useInLessonCheck();
+
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
+    if (getInput !== undefined) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
+
+  const getDataValue = (domID: string) => {
+    return getStudentDataValue(domID);
+  };
 
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
@@ -135,7 +153,7 @@ const NotesBlock = ({
           map(notesList, (note) => (
             <Note
               onChange={onChange}
-              getValue={getValue}
+              getValue={getDataValue}
               disabled={disabled}
               isInLesson={isInLesson}
               isStudent={isStudent}
@@ -147,4 +165,4 @@ const NotesBlock = ({
     );
 };
 
-export default NotesBlock;
+export default memo(NotesBlock);
