@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useState } from 'react';
 import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {BsCircleFill, BsFillCaretDownFill, BsFillCaretRightFill} from 'react-icons/bs';
 import {Transition} from '@headlessui/react';
