@@ -75,7 +75,13 @@ const TabView = ({
   allUniversalJournalData,
   setAllUniversalJournalData,
 }: ITabViewProps) => {
-  const {state, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const userLanguage = gContext.userLanguage;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {anthologyDict} = useDictionary(clientKey);
 

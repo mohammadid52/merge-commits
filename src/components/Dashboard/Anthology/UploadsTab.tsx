@@ -1,11 +1,12 @@
 import {API, graphqlOperation} from '@aws-amplify/api';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import * as queries from '../../../graphql/queries';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabParentProps} from './TabView';
 import SingleUpload from './UploadsTab/UploadCard';
+import ContentLessonWrapper from './Wrapper/UploadLessonWrapper';
 
 const LIMIT = 100;
 
@@ -42,8 +43,8 @@ const UploadsTab = ({
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
 
-  const [personLessonFilesLoaded, setPersonLessonFilesLoaded] = useState<boolean>(false);
   const [allPersonLessonFiles, setAllPersonLessonFiles] = useState<any[]>([]);
+  const [filteredLessonIds, setFilteredLessonIds] = useState<string[]>([]);
 
   const listPersonLessonFiles = useCallback(async () => {
     try {
@@ -61,16 +62,23 @@ const UploadsTab = ({
       const personLessonFilesRows = personLessonFiles.data.listPersonFiless.items;
 
       if (personLessonFilesRows?.length > 0) {
-        // console.log('anthology - personLessonFiles exist ', personLessonFilesRows);
-
         setAllPersonLessonFiles(personLessonFilesRows);
+        const filterUniqueLessonIds = personLessonFilesRows.reduce(
+          (acc: string[], fileRow: any) => {
+            if (acc.includes(fileRow.lessonID)) {
+              return acc;
+            } else {
+              return [...acc, fileRow.lessonID];
+            }
+          },
+          []
+        );
+        setFilteredLessonIds(filterUniqueLessonIds);
       } else {
         console.log('anthology - NO personLessonFiles');
       }
-      setPersonLessonFilesLoaded(true);
     } catch (e) {
       console.error('error listing personLessonFilesa - ', e);
-      setPersonLessonFilesLoaded(true);
     } finally {
     }
   }, [personAuthID, sectionRoomID]);
@@ -101,6 +109,21 @@ const UploadsTab = ({
     });
     setAllPersonLessonFiles(updated);
   };
+
+  // ~~~ FILTER LOADED FILES BY LESSON ID ~~ //
+
+  const filterFilesListByLessonID = useCallback(
+    (lessonID: string, allFiles: any[]) => {
+      return allFiles.reduce((acc: any[], file: any) => {
+        if (file.lessonID === lessonID) {
+          return [...acc, file];
+        } else {
+          return acc;
+        }
+      }, []);
+    },
+    [allPersonLessonFiles]
+  );
 
   // ##################################################################### //
   // ######################## TOGGLE EDITING CARDS ####################### //
@@ -143,7 +166,7 @@ const UploadsTab = ({
 
   return (
     <>
-      {allPersonLessonFiles && allPersonLessonFiles.length > 0
+      {/* {allPersonLessonFiles && allPersonLessonFiles.length > 0
         ? allPersonLessonFiles.map((lessonFileObj: any, idx: number) => {
             return (
               <EmptyViewWrapper
@@ -180,6 +203,52 @@ const UploadsTab = ({
                 />
               </EmptyViewWrapper>
             );
+          })
+        : null} */}
+      {filteredLessonIds && filteredLessonIds.length > 0
+        ? filteredLessonIds.map((idString: string) => {
+            <ContentLessonWrapper lessonID={idString}>
+              {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
+                filterFilesListByLessonID(idString, allPersonLessonFiles).map(
+                  (lessonFileObj: any, idx: number) => {
+                    return (
+                      <EmptyViewWrapper
+                        key={`lessonfilecard_${idx}`}
+                        wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+                        timedRevealInt={idx + 1}
+                        fallbackContents={
+                          <IconContext.Provider
+                            value={{
+                              size: '1.2rem',
+                              style: {},
+                              className: `relative mr-4 animate-spin ${themeColor}`,
+                            }}>
+                            <FaSpinner />
+                          </IconContext.Provider>
+                        }>
+                        <SingleUpload
+                          idx={idx}
+                          mainSection={mainSection}
+                          subSection={subSection}
+                          onCancel={onCancel}
+                          updateLoadedFilesList={updateLoadedFilesList}
+                          handleEdit={() => handleEdit(lessonFileObj.id)}
+                          handleSave={handleSave}
+                          handleDelete={() => handleDelete(lessonFileObj.id)}
+                          handleConfirm={handleConfirm}
+                          handleCancel={handleCancel}
+                          editID={editID}
+                          editMode={editMode}
+                          contentLen={allPersonLessonFiles?.length}
+                          contentObj={lessonFileObj}
+                          personEmail={personEmail}
+                          personAuthID={personAuthID}
+                        />
+                      </EmptyViewWrapper>
+                    );
+                  }
+                )}
+            </ContentLessonWrapper>;
           })
         : null}
     </>

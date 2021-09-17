@@ -2103,6 +2103,20 @@ export const getUniversalLesson = /* GraphQL */ `
   }
 `;
 
+export const getUniversalLessonMinimum = /* GraphQL */ `
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      title
+      lessonPlan {
+        id
+        title
+        label
+      }
+    }
+  }
+`;
+
 export const listInstitutions = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
