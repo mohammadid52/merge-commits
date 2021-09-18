@@ -45,6 +45,23 @@ const UploadCard = ({
   const [showComments, setShowComments] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState<boolean>(false);
 
+  const toggleDialog = (option: string) => {
+    switch (option) {
+      case 'comments':
+        if (showUploadDialog) {
+          setShowUploadDialog(false);
+        }
+        setShowComments(!showComments);
+        break;
+      case 'uploads':
+        if (showComments) {
+          setShowComments(false);
+        }
+        setShowUploadDialog(!showUploadDialog);
+        break;
+    }
+  };
+
   // ##################################################################### //
   // ###################### INDIVIDUAL FILE DELETION ##################### //
   // ##################################################################### //
@@ -226,68 +243,39 @@ const UploadCard = ({
          *  section:  VIEW/EDIT BUTTON
          */}
         <div className={`flex pt-2 flex-col  mt-2`}>
-          {editID === contentObj.id ? (
-            <div className="flex items-center">
-              <Buttons
-                onClick={() => {
-                  handleCancel();
-                }}
-                label={anthologyDict[userLanguage].ACTIONS.CANCEL}
-                transparent
-                btnClass="mr-2"
-              />
-
-              <Buttons
-                onClick={() => handleSave()}
-                label={anthologyDict[userLanguage].ACTIONS.SAVE}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div className="w-auto flex items-center justify-start">
-                <div
-                  className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                  onClick={() => handleEdit()}>
-                  {anthologyDict[userLanguage].ACTIONS.EDIT}
-                </div>
-
-                <div
-                  className={`${theme.btn[themeColor]} w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2 flex flex-row`}
-                  onClick={() => setShowUploadDialog(!showUploadDialog)}>
-                  <BiImageAdd className={`w-auto mr-2`} />
-                  {anthologyDict[userLanguage].ACTIONS.UPLOAD}
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="w-auto flex items-center justify-start">
+              <div
+                className={`${theme.btn[themeColor]} w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 flex flex-row`}
+                onClick={() => toggleDialog('uploads')}>
+                <BiImageAdd className={`w-auto mr-2`} />
+                {anthologyDict[userLanguage].ACTIONS.UPLOAD}
               </div>
-
-              {/**
-               *  section:  FEEDBACK
-               */}
-              {subSection === 'Uploads' ? (
-                <div
-                  onClick={() => setShowComments(!showComments)}
-                  className={`${
-                    feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
-                  } ${
-                    loadingComments ? 'flex items-center justify-between' : ''
-                  }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                  <p>
-                    {loadingComments
-                      ? 'Loading Comments . . .'
-                      : feedbackData.length > 0
-                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                      : 'Leave Feedback'}
-                  </p>
-                  {/* {!loadingComments && (
-                    <span className="w-auto ml-4 w-auto">
-                      <Loader color="#fff" />
-                    </span>
-                  )} */}
-                </div>
-              ) : null}
             </div>
-          )}
 
-          {showUploadDialog && (
+            {/**
+             *  section:  FEEDBACK
+             */}
+            {subSection === 'Uploads' ? (
+              <div
+                onClick={() => toggleDialog('comments')}
+                className={`${
+                  feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
+                } ${
+                  loadingComments ? 'flex items-center justify-between' : ''
+                }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+                <p>
+                  {loadingComments
+                    ? 'Loading Comments . . .'
+                    : feedbackData.length > 0
+                    ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                    : 'Leave Feedback'}
+                </p>
+              </div>
+            ) : null}
+          </div>
+
+          {showUploadDialog && !showComments && (
             <UploadAttachment
               personFilesID={contentObj.id}
               updateLoadedFilesList={updateLoadedFilesList}
@@ -296,10 +284,11 @@ const UploadCard = ({
               lessonID={contentObj.lessonID}
               syllabusLessonID={contentObj.syllabusLessonID}
               roomID={contentObj.roomID}
+              toggleDialog={() => toggleDialog('uploads')}
             />
           )}
 
-          {showComments && (
+          {showComments && !showUploadDialog && (
             <div className="border-t-0 border-gray-200 mt-4">
               <FeedbacksUploads
                 key={contentObj.id}
@@ -314,6 +303,7 @@ const UploadCard = ({
                 setFileObject={setFileObject}
                 personEmail={personEmail}
                 personAuthID={personAuthID}
+                toggleDialog={() => toggleDialog('comments')}
               />
             </div>
           )}

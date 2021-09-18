@@ -84,35 +84,32 @@ const FileListItem = ({
           </p>
         </div>
 
-        <div className="w-auto mx-2">
+        <div className="w-auto flex flex-row">
           {fileKey === deleteFileKey ? (
             <>
-              {!deleting && (
-                <a
-                  onClick={() => handleToggleDelete(fileKey)}
-                  className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400">
-                  Cancel
-                </a>
-              )}
-
+              <a
+                onClick={() => handleToggleDelete(fileKey)}
+                className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400">
+                Cancel
+              </a>
               <a
                 onClick={() => handleConfirmDelete()}
-                className="bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400">
+                className="ml-2 bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400">
                 {!deleting ? 'Confirm' : 'Deleting...'}
               </a>
             </>
           ) : (
-            <a
-              onClick={() => handleToggleDelete(fileKey)}
-              className="bg-indigo-100 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-              Delete
-            </a>
+            <>
+              <a
+                onClick={() => handleToggleDelete(fileKey)}
+                className="bg-indigo-100 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                Delete
+              </a>
+              <a className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                View
+              </a>
+            </>
           )}
-        </div>
-        <div className="w-auto">
-          <a className="cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-            View
-          </a>
         </div>
       </div>
     </li>
