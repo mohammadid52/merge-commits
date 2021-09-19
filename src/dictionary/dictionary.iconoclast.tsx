@@ -287,6 +287,7 @@ const anthologyDict: any = {
       A: 'Journal',
       B: 'Class Work',
       C: 'Class Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Edit',
@@ -296,6 +297,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancel',
       DELETE: 'Delete',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
   ES: {
@@ -306,6 +308,7 @@ const anthologyDict: any = {
       A: 'Diario',
       B: 'trabajo en clase',
       C: 'Apuntes de clase',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Editar',
@@ -315,6 +318,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
 };

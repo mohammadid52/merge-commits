@@ -1,15 +1,14 @@
-import React, {useContext, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {Auth} from '@aws-amplify/auth';
-import {validate} from 'json-schema';
-import {FaKey} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {useHistory, NavLink} from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { Auth } from '@aws-amplify/auth';
+import { FaKey } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useHistory, NavLink } from 'react-router-dom';
 
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
@@ -22,15 +21,15 @@ interface ChangePasswordProps {
 }
 
 const ChangePassword = (props: ChangePasswordProps) => {
-  const {updateAuthState} = props;
+  const { updateAuthState } = props;
   const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [passMatchToggle, setPassMatchToggle] = useState(false);
   const [cookies, , removeCookie] = useCookies();
   const history = useHistory();
 
-  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
-  const {dashboardProfileDict} = useDictionary(clientKey);
+  const { userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
+  const { dashboardProfileDict } = useDictionary(clientKey);
   const dictionary = dashboardProfileDict[userLanguage];
 
   const [warningModal, setWarningModal] = useState({
@@ -38,7 +37,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
     message: dictionary['CHANGE_PASSWORD']['WARN_MSG'],
   });
 
-  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
     message: '',
@@ -63,7 +62,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
         email: state.user.email,
         lastLoggedOut: new Date().toISOString(),
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
       await Auth.signOut();
       updateAuthState(false);
       history.push('/forgot-password');
@@ -161,8 +160,8 @@ const ChangePassword = (props: ChangePasswordProps) => {
     });
   };
 
-  const handleChange = (e: {target: {id: any; value: any}}) => {
-    const {id, value} = e.target;
+  const handleChange = (e: { target: { id: any; value: any } }) => {
+    const { id, value } = e.target;
     setInput((input) => {
       return {
         ...input,
@@ -203,12 +202,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -217,7 +216,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="absolute left-1 w-auto mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -246,12 +245,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -260,7 +259,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="w-auto absolute left-1 mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -288,12 +287,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
+                        value={{ size: '1rem', style: { width: 'auto' } }}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -302,7 +301,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="w-auto absolute left-1">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
+                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>

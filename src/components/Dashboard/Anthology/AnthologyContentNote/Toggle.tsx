@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {ContentCardProps} from '../AnthologyContent';
 import * as mutations from '../../../../graphql/mutations';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {ITabViewProps} from '../TabView';
 
-interface IToggleProps extends ContentCardProps {
+interface IToggleProps extends ITabViewProps {
   toggled?: boolean;
   label?: string;
   addToJournalUpdateQueue?: (journalObj: any) => void;

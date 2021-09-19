@@ -31,7 +31,7 @@ import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import { getAsset } from '../../assets';
+import {getAsset} from '../../assets';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -82,8 +82,14 @@ export interface ClassroomControlProps extends DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const stateUser = gContext.state.user;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+
   const {updateAuthState} = props;
-  const {clientKey, state, theme, dispatch} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const match = useRouteMatch();
   const history = useHistory();
@@ -848,7 +854,16 @@ const Dashboard = (props: DashboardProps) => {
               )}
             />
 
-            <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+            <Route
+              path={`${match.url}/anthology`}
+              render={() => (
+                <Anthology
+                  studentAuthID={stateUser.authId}
+                  studentID={stateUser.id}
+                  studentEmail={stateUser.email}
+                />
+              )}
+            />
 
             <Route
               path={`${match.url}/noticeboard`}
