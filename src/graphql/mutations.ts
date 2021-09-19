@@ -105,15 +105,6 @@ export const batchAddLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -128,37 +119,8 @@ export const batchAddLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -275,15 +237,6 @@ export const batchDeleteLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -298,37 +251,8 @@ export const batchDeleteLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -4752,297 +4676,6 @@ export const deleteRoomCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createArtist = /* GraphQL */ `
-  mutation CreateArtist(
-    $input: CreateArtistInput!
-    $condition: ModelArtistConditionInput
-  ) {
-    createArtist(input: $input, condition: $condition) {
-      id
-      images
-      name
-      type
-      bio
-      quotes {
-        id
-        source
-        text
-      }
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateArtist = /* GraphQL */ `
-  mutation UpdateArtist(
-    $input: UpdateArtistInput!
-    $condition: ModelArtistConditionInput
-  ) {
-    updateArtist(input: $input, condition: $condition) {
-      id
-      images
-      name
-      type
-      bio
-      quotes {
-        id
-        source
-        text
-      }
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteArtist = /* GraphQL */ `
-  mutation DeleteArtist(
-    $input: DeleteArtistInput!
-    $condition: ModelArtistConditionInput
-  ) {
-    deleteArtist(input: $input, condition: $condition) {
-      id
-      images
-      name
-      type
-      bio
-      quotes {
-        id
-        source
-        text
-      }
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createDoFirst = /* GraphQL */ `
-  mutation CreateDoFirst(
-    $input: CreateDoFirstInput!
-    $condition: ModelDoFirstConditionInput
-  ) {
-    createDoFirst(input: $input, condition: $condition) {
-      id
-      type
-      required
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateDoFirst = /* GraphQL */ `
-  mutation UpdateDoFirst(
-    $input: UpdateDoFirstInput!
-    $condition: ModelDoFirstConditionInput
-  ) {
-    updateDoFirst(input: $input, condition: $condition) {
-      id
-      type
-      required
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteDoFirst = /* GraphQL */ `
-  mutation DeleteDoFirst(
-    $input: DeleteDoFirstInput!
-    $condition: ModelDoFirstConditionInput
-  ) {
-    deleteDoFirst(input: $input, condition: $condition) {
-      id
-      type
-      required
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createDoFirstQuestion = /* GraphQL */ `
-  mutation CreateDoFirstQuestion(
-    $input: CreateDoFirstQuestionInput!
-    $condition: ModelDoFirstQuestionConditionInput
-  ) {
-    createDoFirstQuestion(input: $input, condition: $condition) {
-      id
-      doFirstID
-      questionID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateDoFirstQuestion = /* GraphQL */ `
-  mutation UpdateDoFirstQuestion(
-    $input: UpdateDoFirstQuestionInput!
-    $condition: ModelDoFirstQuestionConditionInput
-  ) {
-    updateDoFirstQuestion(input: $input, condition: $condition) {
-      id
-      doFirstID
-      questionID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteDoFirstQuestion = /* GraphQL */ `
-  mutation DeleteDoFirstQuestion(
-    $input: DeleteDoFirstQuestionInput!
-    $condition: ModelDoFirstQuestionConditionInput
-  ) {
-    deleteDoFirstQuestion(input: $input, condition: $condition) {
-      id
-      doFirstID
-      questionID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createWarmUp = /* GraphQL */ `
   mutation CreateWarmUp(
     $input: CreateWarmUpInput!
@@ -5189,126 +4822,6 @@ export const deleteWarmUp = /* GraphQL */ `
           id
           text
         }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createCoreLesson = /* GraphQL */ `
-  mutation CreateCoreLesson(
-    $input: CreateCoreLessonInput!
-    $condition: ModelCoreLessonConditionInput
-  ) {
-    createCoreLesson(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      content {
-        video
-        link
-        title
-        artist
-        text
-      }
-      tools {
-        id
-        name
-        color
-        icon
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCoreLesson = /* GraphQL */ `
-  mutation UpdateCoreLesson(
-    $input: UpdateCoreLessonInput!
-    $condition: ModelCoreLessonConditionInput
-  ) {
-    updateCoreLesson(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      content {
-        video
-        link
-        title
-        artist
-        text
-      }
-      tools {
-        id
-        name
-        color
-        icon
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCoreLesson = /* GraphQL */ `
-  mutation DeleteCoreLesson(
-    $input: DeleteCoreLessonInput!
-    $condition: ModelCoreLessonConditionInput
-  ) {
-    deleteCoreLesson(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      content {
-        video
-        link
-        title
-        artist
-        text
-      }
-      tools {
-        id
-        name
-        color
-        icon
       }
       breakdown {
         included
@@ -6786,54 +6299,6 @@ export const deleteRoomMsgs = /* GraphQL */ `
     }
   }
 `;
-export const createCourse = /* GraphQL */ `
-  mutation CreateCourse(
-    $input: CreateCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    createCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCourse = /* GraphQL */ `
-  mutation UpdateCourse(
-    $input: UpdateCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    updateCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCourse = /* GraphQL */ `
-  mutation DeleteCourse(
-    $input: DeleteCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    deleteCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createLesson = /* GraphQL */ `
   mutation CreateLesson(
     $input: CreateLessonInput!
@@ -6864,23 +6329,6 @@ export const createLesson = /* GraphQL */ `
       }
       grades
       artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
       language
       SELStructure
       keywords {
@@ -6910,78 +6358,8 @@ export const createLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       activityId
       activity {
         id
@@ -7124,23 +6502,6 @@ export const updateLesson = /* GraphQL */ `
       }
       grades
       artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
       language
       SELStructure
       keywords {
@@ -7170,78 +6531,8 @@ export const updateLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       activityId
       activity {
         id
@@ -7384,23 +6675,6 @@ export const deleteLesson = /* GraphQL */ `
       }
       grades
       artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
       language
       SELStructure
       keywords {
@@ -7430,78 +6704,8 @@ export const deleteLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       activityId
       activity {
         id
@@ -7640,15 +6844,6 @@ export const createLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -7663,37 +6858,8 @@ export const createLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -7811,15 +6977,6 @@ export const updateLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -7834,37 +6991,8 @@ export const updateLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -7982,15 +7110,6 @@ export const deleteLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8005,37 +7124,8 @@ export const deleteLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8154,15 +7244,6 @@ export const createLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8177,37 +7258,8 @@ export const createLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8325,15 +7377,6 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8348,37 +7391,8 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8496,15 +7510,6 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8519,37 +7524,8 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8673,15 +7649,6 @@ export const createLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8696,37 +7663,8 @@ export const createLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8829,15 +7767,6 @@ export const updateLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -8852,37 +7781,8 @@ export const updateLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -8985,15 +7885,6 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -9008,37 +7899,8 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -9260,15 +8122,6 @@ export const createSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -9283,37 +8136,8 @@ export const createSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -9423,17 +8247,6 @@ export const createSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          syllabusLessonID
-          liked
-          comment
           createdAt
           updatedAt
         }
@@ -9473,15 +8286,6 @@ export const updateSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -9496,37 +8300,8 @@ export const updateSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -9636,17 +8411,6 @@ export const updateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          syllabusLessonID
-          liked
-          comment
           createdAt
           updatedAt
         }
@@ -9686,15 +8450,6 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -9709,37 +8464,8 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -9849,17 +8575,6 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          syllabusLessonID
-          liked
-          comment
           createdAt
           updatedAt
         }
@@ -9941,9 +8656,6 @@ export const createStudentData = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -10138,9 +8850,6 @@ export const updateStudentData = /* GraphQL */ `
         data {
           nextToken
         }
-        feedback {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10331,9 +9040,6 @@ export const deleteStudentData = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -10729,9 +9435,6 @@ export const createQuestionData = /* GraphQL */ `
         data {
           nextToken
         }
-        feedback {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10852,9 +9555,6 @@ export const updateQuestionData = /* GraphQL */ `
         data {
           nextToken
         }
-        feedback {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10973,9 +9673,6 @@ export const deleteQuestionData = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -11435,28 +10132,28 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          otherResponse
         }
-        lessonPlan {
+        syllabusLesson {
           id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -11571,9 +10268,6 @@ export const createPersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -11797,9 +10491,6 @@ export const updatePersonLocation = /* GraphQL */ `
         data {
           nextToken
         }
-        feedback {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -12019,9 +10710,6 @@ export const deletePersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt

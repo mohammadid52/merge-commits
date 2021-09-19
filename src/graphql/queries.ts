@@ -2224,103 +2224,6 @@ export const listRoomCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getArtist = /* GraphQL */ `
-  query GetArtist($id: ID!) {
-    getArtist(id: $id) {
-      id
-      images
-      name
-      type
-      bio
-      quotes {
-        id
-        source
-        text
-      }
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listArtists = /* GraphQL */ `
-  query ListArtists(
-    $filter: ModelArtistFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listArtists(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getDoFirst = /* GraphQL */ `
-  query GetDoFirst($id: ID!) {
-    getDoFirst(id: $id) {
-      id
-      type
-      required
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listDoFirsts = /* GraphQL */ `
-  query ListDoFirsts(
-    $filter: ModelDoFirstFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listDoFirsts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getWarmUp = /* GraphQL */ `
   query GetWarmUp($id: ID!) {
     getWarmUp(id: $id) {
@@ -2396,87 +2299,6 @@ export const listWarmUps = /* GraphQL */ `
           titleExample
           textExample
           listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCoreLesson = /* GraphQL */ `
-  query GetCoreLesson($id: ID!) {
-    getCoreLesson(id: $id) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      content {
-        video
-        link
-        title
-        artist
-        text
-      }
-      tools {
-        id
-        name
-        color
-        icon
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCoreLessons = /* GraphQL */ `
-  query ListCoreLessons(
-    $filter: ModelCoreLessonFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCoreLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
         }
         breakdown {
           included
@@ -3097,39 +2919,6 @@ export const listRoomMsgss = /* GraphQL */ `
     }
   }
 `;
-export const getCourse = /* GraphQL */ `
-  query GetCourse($id: ID!) {
-    getCourse(id: $id) {
-      id
-      name
-      type
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCourses = /* GraphQL */ `
-  query ListCourses(
-    $filter: ModelCourseFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        type
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getLesson = /* GraphQL */ `
   query GetLesson($id: ID!) {
     getLesson(id: $id) {
@@ -3157,23 +2946,6 @@ export const getLesson = /* GraphQL */ `
       }
       grades
       artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
       language
       SELStructure
       keywords {
@@ -3203,78 +2975,8 @@ export const getLesson = /* GraphQL */ `
         nextToken
       }
       doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
       activityId
       activity {
         id
@@ -3419,15 +3121,6 @@ export const listLessons = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -3442,37 +3135,8 @@ export const listLessons = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -3564,15 +3228,6 @@ export const getLessonRubrics = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -3587,37 +3242,8 @@ export const getLessonRubrics = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -3872,15 +3498,6 @@ export const getSyllabusLesson = /* GraphQL */ `
         }
         grades
         artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
         language
         SELStructure
         keywords {
@@ -3895,37 +3512,8 @@ export const getSyllabusLesson = /* GraphQL */ `
           nextToken
         }
         doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
         warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
         activityId
         activity {
           id
@@ -4040,17 +3628,6 @@ export const getSyllabusLesson = /* GraphQL */ `
         }
         nextToken
       }
-      feedback {
-        items {
-          id
-          syllabusLessonID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -4122,9 +3699,6 @@ export const listSyllabusLessons = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -4202,9 +3776,6 @@ export const getStudentData = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
@@ -4651,9 +4222,6 @@ export const getQuestionData = /* GraphQL */ `
         data {
           nextToken
         }
-        feedback {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -4712,119 +4280,6 @@ export const listQuestionDatas = /* GraphQL */ `
           response
           otherResponse
         }
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getFeedback = /* GraphQL */ `
-  query GetFeedback($id: ID!) {
-    getFeedback(id: $id) {
-      id
-      syllabusLessonID
-      liked
-      comment
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listFeedbacks = /* GraphQL */ `
-  query ListFeedbacks(
-    $filter: ModelFeedbackFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        syllabusLessonID
-        liked
-        comment
         syllabusLesson {
           id
           syllabusID
@@ -4949,9 +4404,6 @@ export const getPersonLocation = /* GraphQL */ `
         startDate
         endDate
         data {
-          nextToken
-        }
-        feedback {
           nextToken
         }
         createdAt
