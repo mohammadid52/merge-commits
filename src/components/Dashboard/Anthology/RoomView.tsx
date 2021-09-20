@@ -1,3 +1,6 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '@customGraphql/customQueries';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import React, {useContext, useEffect, useState, useMemo, useCallback, memo} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import usePrevious from '../../../customHooks/previousProps';
@@ -14,6 +17,7 @@ interface IRoomViewProps {
     roomIdString: string,
     roomName?: string
   ) => void;
+  isTeacher?: boolean;
 }
 
 const RoomView = ({
@@ -22,6 +26,7 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
+  isTeacher,
 }: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
@@ -29,23 +34,77 @@ const RoomView = ({
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
   // ##################################################################### //
 
+  // TODO: fetch list of rooms
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
+
+  const getMultipleRooms = async (idList: string[]) => {
+    const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
+
+    try {
+      const roomsList: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsNotebook, {
+          filter: {
+            ...compoundQuery,
+          },
+        })
+      );
+      const responseData = roomsList.data.listRooms.items;
+      const curriculumMap = responseData.map(async (roomObj: any) => {
+        const curriculumFull: any = await API.graphql(
+          graphqlOperation(customQueries.getCurriculumNotebook, {
+            id: roomObj.curricula?.items[0]?.curriculumID,
+          })
+        );
+        const curriculumData = curriculumFull.data.getCurriculum;
+
+        return {
+          ...roomObj,
+          curricula: {
+            ...roomObj.curricula,
+            items: [
+              {
+                ...roomObj.curricula?.items[0],
+                name: curriculumData?.name,
+                image: curriculumData?.image,
+                summary: curriculumData?.summary,
+                description: curriculumData?.description,
+              },
+            ],
+          },
+        };
+      });
+      Promise.all(curriculumMap)
+        .then((responseArray: any[]) => {
+          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
+          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
+          setFilteredRooms(responseArray);
+        })
+        .then((_: void) => {
+          console.log('loaded');
+          setLoaded(true);
+        });
+    } catch (e) {
+      console.error('getMultipleRooms - ', e);
+    }
+  };
 
   useEffect(() => {
     if (roomIdList.length > 0) {
-      if (state.roomData.rooms.length > 0) {
-        const reducedRooms = roomIdList.reduce((acc: any[], roomID: string) => {
-          const searchForRoom = state.roomData.rooms.find(
-            (roomObj: any) => roomObj.id === roomID
-          );
-          if (searchForRoom) {
-            return [...acc, searchForRoom];
-          } else {
-            return acc;
-          }
-        }, []);
-        setFilteredRooms(reducedRooms);
-      }
+      getMultipleRooms(roomIdList);
+      // if (state.roomData.rooms.length > 0) {
+      //   const reducedRooms = roomIdList.reduce((acc: any[], roomID: string) => {
+      //     const searchForRoom = state.roomData.rooms.find(
+      //       (roomObj: any) => roomObj.id === roomID
+      //     );
+      //     if (searchForRoom) {
+      //       return [...acc, searchForRoom];
+      //     } else {
+      //       return acc;
+      //     }
+      //   }, []);
+      //   setFilteredRooms(reducedRooms);
+      // }
     }
   }, [roomIdList]);
 
@@ -64,48 +123,38 @@ const RoomView = ({
 
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
-  const mapNotebookRoomCards = useCallback(async () => {
-    const mapped =
-      filteredRooms && filteredRooms.length > 0
-        ? Promise.all(
-            filteredRooms.map(async (item, idx: number) => {
-              const {curricula} = item;
-              const bannerImage = await (curricula?.items[0]?.curriculum.image
-                ? getImageURL(curricula?.items[0]?.curriculum.image)
-                : null);
-              const curriculumName = curricula?.items[0]?.curriculum.name;
+  const mapNotebookRoomCards = () => {
+    const mapped = filteredRooms.map(async (item, idx: number) => {
+      const {curricula} = item;
+      const bannerImage = await (curricula?.items[0]?.image
+        ? getImageURL(curricula?.items[0]?.image)
+        : null);
+      const curriculumName = curricula?.items[0]?.name;
+      // console.log('curricula - ', curricula);
 
-              return (
-                <RoomViewCard
-                  key={`notebook-${idx}`}
-                  roomID={item.id}
-                  roomName={item.name}
-                  mainSection={mainSection}
-                  sectionRoomID={sectionRoomID}
-                  curriculumName={curriculumName}
-                  handleSectionSelect={handleSectionSelect}
-                  bannerImage={bannerImage}
-                  type={`Class Notebook`}
-                />
-              );
-            })
-          )
-        : null;
+      return (
+        <RoomViewCard
+          key={`notebook-${idx}`}
+          roomID={item.id}
+          roomName={item.name}
+          mainSection={mainSection}
+          sectionRoomID={sectionRoomID}
+          curriculumName={curriculumName}
+          handleSectionSelect={handleSectionSelect}
+          bannerImage={bannerImage}
+          type={`Class Notebook`}
+        />
+      );
+    });
 
-    return await mapped;
-  }, [filteredRooms, sectionRoomID]);
-
-  const roomsRef = usePrevious(filteredRooms);
-  const sectionIDRef = usePrevious(sectionRoomID);
+    Promise.all(mapped).then((output: any) => setMappedNotebookRoomCards(output));
+  };
 
   useEffect(() => {
-    if (sectionRoomID !== sectionIDRef || filteredRooms !== roomsRef) {
-      const mappedCardsOutput = mapNotebookRoomCards();
-      mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
-    } else {
-      console.log('avoided resetting statea to same');
+    if (loaded && filteredRooms.length > 0) {
+      mapNotebookRoomCards();
     }
-  }, [filteredRooms, sectionRoomID]);
+  }, [filteredRooms, loaded]);
 
   return (
     <>
