@@ -15,7 +15,7 @@ import ThemeModal from '@components/Molecules/ThemeModal';
 
 interface INoteBlock {
   disabled?: boolean;
-  grid?: {cols: number; rows: number};
+  grid?: {cols?: number; rows?: number};
   value: {class?: string; value?: string; id: string}[];
   currentLesson?: UniversalLesson;
 }
@@ -41,8 +41,8 @@ const NotesBlock = ({
       var $container = $('#container'),
         gridWidth = 250,
         gridHeight = 250,
-        gridRows = rows,
-        gridColumns = cols,
+        gridRows = rows || 2,
+        gridColumns = cols || 4,
         i,
         x,
         y;

@@ -557,7 +557,13 @@ export const FormBlock = ({
       id: v.id,
       value: v.value,
     }));
-    return <NotesBlock value={modifiyValues} disabled={mode === 'building'} />;
+    return (
+      <NotesBlock
+        grid={{cols: 4, rows: 3}}
+        value={modifiyValues}
+        disabled={mode === 'building'}
+      />
+    );
   }
 
   return (

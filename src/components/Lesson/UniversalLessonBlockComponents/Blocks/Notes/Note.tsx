@@ -84,14 +84,16 @@ const Note = ({note, setShowEditModal, setShowDeleteModal}: INoteBlock) => {
           onChange={isInLesson && isStudent ? (e) => onChange(e, note.id) : noop}
           value={isInLesson ? getDataValue(note.id) : note.value}
         />
-        <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
-          <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
-            <AiOutlineEdit className="text-base text-white" />
-          </button>
-          <button onClick={() => onDeleteBtnClick(note.id)} className="w-auto">
-            <BiTrashAlt className="text-lg text-white" />
-          </button>
-        </span>
+        {isInLesson && isStudent && (
+          <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
+            <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
+              <AiOutlineEdit className="text-base text-white" />
+            </button>
+            <button onClick={() => onDeleteBtnClick(note.id)} className="w-auto">
+              <BiTrashAlt className="text-lg text-white" />
+            </button>
+          </span>
+        )}
       </div>
     </>
   );
