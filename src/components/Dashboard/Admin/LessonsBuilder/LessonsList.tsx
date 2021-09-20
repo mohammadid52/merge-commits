@@ -1,4 +1,5 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {useQuery} from '@customHooks/urlParam';
 import {find} from 'lodash';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
@@ -24,6 +25,7 @@ import LessonsListRow from './LessonsListRow';
 const LessonsList = () => {
   const match = useRouteMatch();
   const history = useHistory();
+  const params = useQuery(location.search);
 
   const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -139,8 +141,16 @@ const LessonsList = () => {
 
   const getLessonsList = async () => {
     try {
+      let condition = {};
+      if (params.get('institutionId')) {
+        condition = {
+          filter: {
+            institutionID: {eq: params.get('institutionId')},
+          },
+        };
+      }
       const fetchUList: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessons)
+        graphqlOperation(customQueries.listUniversalLessons, condition)
       );
       if (!fetchUList) {
         throw new Error('fail!');
@@ -153,7 +163,6 @@ const LessonsList = () => {
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
-
         setTotalPages(
           isTeacher
             ? totalListPages * pageCount === filteredList.length
@@ -402,7 +411,7 @@ const LessonsList = () => {
                   <Fragment>
                     <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
                       {' '}
-                      {paginationPage(userLanguage, currentPage + 1, totalPages)}
+                      {paginationPage(userLanguage, currentPage, totalPages)}
                     </span>
                     <Pagination
                       currentPage={currentPage + 1}

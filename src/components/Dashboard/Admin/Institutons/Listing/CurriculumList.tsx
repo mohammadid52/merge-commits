@@ -33,30 +33,31 @@ const CurriculumList = (props: CurriculumListProps) => {
   };
 
   return (
-    <div className="pt-8 flex m-auto justify-center">
+    <div className="pt-8 flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {instName ? instName.toUpperCase() : 'INSTITUTE'} CURRICULA
-          </h3>
           {curricular.items && curricular.items.length > 0 ? (
             <Fragment>
-              <div className="flex justify-end w-full m-auto ">
+              <div className="flex justify-between w-full m-auto">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+                  {instName ? instName.toUpperCase() : 'INSTITUTE'} CURRICULA
+                </h3>
                 <AddButton
-                  className="mx-4"
                   label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewCurricular}
                 />
               </div>
-              <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculam[userLanguage]['NO']}</span>
-                </div>
-                <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculam[userLanguage]['ACTION']}</span>
+              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueCurriculam[userLanguage]['NO']}</span>
+                  </div>
+                  <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 flex justify-end text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">{InstitueCurriculam[userLanguage]['ACTION']}</span>
+                  </div>
                 </div>
               </div>
 
@@ -64,7 +65,9 @@ const CurriculumList = (props: CurriculumListProps) => {
                 {curricular.items.map((item, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                    className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                      index % 2 !== 0 ? 'bg-gray-50' : ''
+                    }`}>
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                       {index + 1}.
                     </div>
@@ -72,7 +75,7 @@ const CurriculumList = (props: CurriculumListProps) => {
                       {item.name ? item.name : ''}
                     </div>
                     <span
-                      className={`w-3/10 h-6 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
+                      className={`w-3/10 h-6 flex justify-end items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentCurricular(item.id)}>
                       <Tooltip text="View curriculam details" placement="left">
                         {InstitueCurriculam[userLanguage]['VIEW']}

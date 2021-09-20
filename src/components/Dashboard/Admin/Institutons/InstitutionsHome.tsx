@@ -24,7 +24,7 @@ import InstitutionLookup from './InstitutionLookup';
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
-  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
+  const [tabsData, setTabsData] = useState({inst: 'general_information', instCurr: 0});
   const tabProps = {tabsData, setTabsData};
   // TODO: Need to setup route saperately if required,
   // currently everything is tied to institutions.

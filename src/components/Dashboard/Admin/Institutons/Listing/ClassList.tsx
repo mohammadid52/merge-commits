@@ -30,25 +30,26 @@ const ClassList = (props: ClassListProps) => {
   };
 
   return (
-    <div className="pt-8 flex m-auto justify-center">
+    <div className="pt-8 flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 text-center pb-4">
-            {`${instName} classes` || Institute_class[userLanguage]['TITLE']}
-          </h3>
+          
 
           {classes.items && classes.items.length > 0 ? (
             <Fragment>
-              <div className="flex justify-end w-full m-auto ">
+              <div className="flex justify-between w-full m-auto">
+                <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 w-auto">
+                  {`${instName} classes` || Institute_class[userLanguage]['TITLE']}
+                </h3>
                 <AddButton
-                  className="mx-4"
                   label={Institute_class[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewClass}
                 />
               </div>
 
-              <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                <div className="w-1/10 px-8 py-3  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -57,15 +58,15 @@ const ClassList = (props: ClassListProps) => {
                 {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Active Students</span>
                     </div> */}
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{Institute_class[userLanguage]['ACTION']}</span>
-                </div>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-end">
+                  <span className="w-auto">{Institute_class[userLanguage]['ACTION']}</span>
+                </div></div>
               </div>
               <div className="w-full m-auto max-h-88 overflow-y-auto">
                 {classes.items.map((item, index) => (
                   <div
                     key={index}
-                    className="flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-gray-200">
+                    className={`flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-gray-200 ${index % 2 !== 0 ? 'bg-gray-50':''}`}>
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                       {index + 1}.
                     </div>
@@ -74,7 +75,7 @@ const ClassList = (props: ClassListProps) => {
                       {item.name ? item.name : ''}
                     </div>
                     <span
-                      className={`w-3/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
+                      className={`w-3/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]} justify-end`}
                       onClick={() =>
                         history.push(
                           `/dashboard/manage-institutions/class-edit?id=${item.id}`

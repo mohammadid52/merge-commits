@@ -748,6 +748,7 @@ module.exports = {
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
     textColor: ['dark', 'responsive', 'hover', 'focus'],
+    transitionProperty: ['hover', 'focus'],
   },
   // for slide over
 

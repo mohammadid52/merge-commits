@@ -912,6 +912,8 @@ const Institute_info: any = {
       CLASSES: 'Cohorts',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classes',
+      GENERAL_INFORMATION: 'General Information',
+      LESSONS: 'Lessons',
     },
   },
   ES: {
@@ -927,6 +929,8 @@ const Institute_info: any = {
       CLASSES: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
+      GENERAL_INFORMATION: 'TBD',
+      LESSONS: 'TBD',
     },
   },
 };

@@ -68,14 +68,9 @@ const RoomsList = (props: RoomListProps) => {
   }, []);
 
   return (
-    <div className="pt-8 flex m-auto justify-center">
+    <div className="pt-8 flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">
-            {instName ? instName.toUpperCase() : 'INSTITUTE'}{' '}
-            {InstitueRomms[userLanguage]['TITLE']}
-          </h3>
-
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
               <div className="w-5/10">
@@ -87,34 +82,39 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           ) : roomList.length > 0 ? (
             <Fragment>
-              <div className="flex justify-end">
+              <div className="flex justify-between">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+                  {instName ? instName.toUpperCase() : 'INSTITUTE'}{' '}
+                  {InstitueRomms[userLanguage]['TITLE']}
+                </h3>
                 <AddButton
-                  className="mx-4"
                   label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>
 
-              <div className="flex justify-between w-full mt-8 px-2 py-2 border-b-0 border-gray-200">
-                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['NO']}</span>
-                </div>
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
-                </div>
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
-                </div>
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
-                </div>
+              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                <div className="flex justify-between bg-gray-50 pl-4 pr-6 py-2 whitespace-nowrap">
+                  <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['NO']}</span>
+                  </div>
+                  <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
+                  </div>
+                  <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
+                  </div>
+                  <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
+                  </div>
 
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
-                </div>
+                  <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
+                  </div>
 
-                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['ACTION']}</span>
+                  <div className="w-1/10 px-4 py-2 bg-gray-50 flex justify-end text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">{InstitueRomms[userLanguage]['ACTION']}</span>
+                  </div>
                 </div>
               </div>
 
@@ -122,7 +122,9 @@ const RoomsList = (props: RoomListProps) => {
                 {roomList.map((item: any, i: number) => (
                   <div
                     key={i}
-                    className="flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200">
+                    className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 ${
+                      i % 2 !== 0 ? 'bg-gray-50' : ''
+                    }`}>
                     <div className="flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                       {i + 1}.
                     </div>
@@ -143,7 +145,7 @@ const RoomsList = (props: RoomListProps) => {
                         .join(',')}
                     </div>
                     <span
-                      className={`w-1/10 h-6 flex px-4 items-center justify-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex px-4 items-center justify-end cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
                       <Tooltip text="Click to edit class" placement="left">
                         {InstitueRomms[userLanguage]['EDIT']}

@@ -303,13 +303,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="pb-8 flex m-auto justify-center">
+    <div className="pb-8 flex m-auto justify-center p-8">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
-            {instName?.toUpperCase()} {dictionary['TITLE']}
-          </h3>
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+              {instName?.toUpperCase()} {dictionary['TITLE']}
+            </h3>
             {!showAddSection ? (
               <AddButton
                 className="ml-4 py-1"
@@ -345,21 +345,23 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             <>
               {activeStaffList?.length > 0 ? (
                 <Fragment>
-                  <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-gray-200">
-                    <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NO']}</span>
-                    </div>
-                    <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NAME']}</span>
-                    </div>
-                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ROLE']}</span>
-                    </div>
-                    <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['STATUS']}</span>
-                    </div>
-                    <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ACTION']}</span>
+                  <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                    <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
+                      <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['NO']}</span>
+                      </div>
+                      <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['NAME']}</span>
+                      </div>
+                      <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['ROLE']}</span>
+                      </div>
+                      <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['STATUS']}</span>
+                      </div>
+                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['ACTION']}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -381,7 +383,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                     {...provided.dragHandleProps}>
                                     <div
                                       key={index}
-                                      className="flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200">
+                                      className={`flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200 ${index % 2 !== 0 ? 'bg-gray-50':''}`}>
                                       <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                         {index + 1}.
                                       </div>

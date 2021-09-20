@@ -156,7 +156,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     setStatusEdit('');
   };
   return (
-    <div className="pt-8 flex m-auto justify-center">
+    <div className="pt-8 flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
@@ -178,18 +178,20 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
 
           {partners && partners.length > 0 ? (
             <Fragment>
-              <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.NO}</span>
-                </div>
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.SERVICE}</span>
-                </div>
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.STATUS}</span>
-                </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.ACTION}</span>
+              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.NO}</span>
+                  </div>
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.SERVICE}</span>
+                  </div>
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.STATUS}</span>
+                  </div>
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.ACTION}</span>
+                  </div>
                 </div>
               </div>
 
