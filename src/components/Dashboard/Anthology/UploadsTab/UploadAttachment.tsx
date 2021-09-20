@@ -180,9 +180,6 @@ const File = ({
         </div>
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
-            {/* <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
-              <IoClose className="text-red-500" />
-            </div> */}
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
               <div
                 onClick={() => setShowMenu(!showMenu)}
@@ -252,6 +249,7 @@ interface IUploadAttachmentProps {
   lessonID?: string;
   syllabusLessonID?: string;
   roomID?: string;
+  toggleDialog?: () => void;
 }
 
 const UploadAttachment = ({
@@ -262,23 +260,12 @@ const UploadAttachment = ({
   lessonID,
   syllabusLessonID,
   roomID,
+  toggleDialog,
 }: IUploadAttachmentProps) => {
-
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
   const user = gContext.state.user;
   const userLanguage = gContext.userLanguage;
-  // const {
-  //   userLanguage,
-  //   state: {
-  //     user,
-  //     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-  //   },
-  // } = useContext(GlobalContext);
-
-  // ##################################################################### //
-  // ######################## STUDENT DATA CONTEXT ####################### //
-  // ##################################################################### //
 
   const isStudent = user.role === 'ST';
   const inputOther = useRef(null);
@@ -403,7 +390,7 @@ const UploadAttachment = ({
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error.message);
     } finally {
-      setUploading(false);
+      // setUploading(false);
     }
   };
 
@@ -481,11 +468,12 @@ const UploadAttachment = ({
   const resetAll = () => {
     setUploading(false);
     setFilesUploading([]);
+    toggleDialog();
   };
 
   return (
     <>
-      <div className="w-full h-full">
+      <div className="w-full h-full border-t-0 border-gray-200">
         <h4 className="text-lg text-gray-600 font-medium">Upload Additional Files</h4>
         <div
           {...getRootProps()}
@@ -548,9 +536,9 @@ const UploadAttachment = ({
               transparent
             />
             <Buttons
-              disabled={uploading}
+              disabled={uploading || filesUploading.length === 0}
               btnClass="py-1 px-8 text-xs ml-2"
-              label={uploading ? 'Uploading' : 'Upload'}
+              label={uploading ? 'Uploading...' : 'Save'}
               onClick={onUploadAllFiles}
             />
           </div>

@@ -23,6 +23,7 @@ import HeroBanner from '../../Header/HeroBanner';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import RoomView from './RoomView';
 import TabView from './TabView';
+import {useHistory} from 'react-router-dom';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -51,6 +52,7 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+  const history = useHistory();
 
   // ##################################################################### //
   // ########################### INITIALIZATION ########################## //
@@ -557,6 +559,12 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
     }
   };
 
+  // ~~~~~~~~~~~ FORGOT CODE LINK ~~~~~~~~~~ //
+
+  const goToForgot = () => {
+    history.push('/dashboard/profile/passcode');
+  };
+
   // ~~~~~~~~~ STANDARD ROOM SELECT ~~~~~~~~ //
   const handleSectionSelect = (
     section: string,
@@ -593,9 +601,11 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
+              title={`This Notebook is Passcode Protected`}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
+              scrollHidden={true}
               closeAction={() => setShowPasscodeEntry(false)}>
               <FormInput
                 value={passcodeInput}
@@ -620,6 +630,11 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
                 btnClass="w-full px-6 py-4 my-2"
                 onClick={handlePrivateSectionAccess}
               />
+              <p
+                onClick={() => goToForgot()}
+                className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
+                Forgot Passcode?
+              </p>
             </Modal>
           </div>
         )}

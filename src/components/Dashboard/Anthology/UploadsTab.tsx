@@ -43,6 +43,7 @@ const UploadsTab = ({
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
 
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [allPersonLessonFiles, setAllPersonLessonFiles] = useState<any[]>([]);
   const [filteredLessonIds, setFilteredLessonIds] = useState<string[]>([]);
 
@@ -74,11 +75,14 @@ const UploadsTab = ({
           []
         );
         setFilteredLessonIds(filterUniqueLessonIds);
+        setLoaded(true);
       } else {
         console.log('anthology - NO personLessonFiles');
+        setLoaded(true);
       }
     } catch (e) {
       console.error('error listing personLessonFilesa - ', e);
+      setLoaded(true);
     } finally {
     }
   }, [personAuthID, sectionRoomID]);
@@ -171,7 +175,7 @@ const UploadsTab = ({
     <>
       <EmptyViewWrapper
         wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-        revealContents={filteredLessonIds && filteredLessonIds.length > 0}
+        revealContents={loaded}
         fallbackContents={
           <IconContext.Provider
             value={{
@@ -182,52 +186,58 @@ const UploadsTab = ({
             <FaSpinner />
           </IconContext.Provider>
         }>
-        {filteredLessonIds && filteredLessonIds.length > 0
-          ? filteredLessonIds.map((idString: string) => (
-              <ContentLessonWrapper lessonID={idString}>
-                {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
-                  filterFilesListByLessonID(idString, allPersonLessonFiles).map(
-                    (lessonFileObj: any, idx: number) => {
-                      return (
-                        <EmptyViewWrapper
-                          key={`lessonfilecard_${idx}`}
-                          wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-                          timedRevealInt={idx + 1}
-                          fallbackContents={
-                            <IconContext.Provider
-                              value={{
-                                size: '1.2rem',
-                                style: {},
-                                className: `relative mr-4 animate-spin ${themeColor}`,
-                              }}>
-                              <FaSpinner />
-                            </IconContext.Provider>
-                          }>
-                          <SingleUpload
-                            idx={idx}
-                            mainSection={mainSection}
-                            subSection={subSection}
-                            onCancel={onCancel}
-                            updateLoadedFilesList={updateLoadedFilesList}
-                            handleEdit={() => handleEdit(lessonFileObj.id)}
-                            handleSave={handleSave}
-                            handleDelete={() => handleDelete(lessonFileObj.id)}
-                            handleConfirm={handleConfirm}
-                            handleCancel={handleCancel}
-                            editID={editID}
-                            editMode={editMode}
-                            contentLen={allPersonLessonFiles?.length}
-                            contentObj={lessonFileObj}
-                            personEmail={personEmail}
-                            personAuthID={personAuthID}
-                          />
-                        </EmptyViewWrapper>
-                      );
-                    }
-                  )}
-              </ContentLessonWrapper>
-            ))
-          : null}
+        {filteredLessonIds && filteredLessonIds.length > 0 ? (
+          filteredLessonIds.map((idString: string) => (
+            <ContentLessonWrapper lessonID={idString}>
+              {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
+                filterFilesListByLessonID(idString, allPersonLessonFiles).map(
+                  (lessonFileObj: any, idx: number) => {
+                    return (
+                      <EmptyViewWrapper
+                        key={`lessonfilecard_${idx}`}
+                        wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
+                        timedRevealInt={idx + 1}
+                        fallbackContents={
+                          <IconContext.Provider
+                            value={{
+                              size: '1.2rem',
+                              style: {},
+                              className: `relative mr-4 animate-spin ${themeColor}`,
+                            }}>
+                            <FaSpinner />
+                          </IconContext.Provider>
+                        }>
+                        <SingleUpload
+                          idx={idx}
+                          mainSection={mainSection}
+                          subSection={subSection}
+                          onCancel={onCancel}
+                          updateLoadedFilesList={updateLoadedFilesList}
+                          handleEdit={() => handleEdit(lessonFileObj.id)}
+                          handleSave={handleSave}
+                          handleDelete={() => handleDelete(lessonFileObj.id)}
+                          handleConfirm={handleConfirm}
+                          handleCancel={handleCancel}
+                          editID={editID}
+                          editMode={editMode}
+                          contentLen={allPersonLessonFiles?.length}
+                          contentObj={lessonFileObj}
+                          personEmail={personEmail}
+                          personAuthID={personAuthID}
+                        />
+                      </EmptyViewWrapper>
+                    );
+                  }
+                )}
+            </ContentLessonWrapper>
+          ))
+        ) : (
+          <div className="p-12 flex flex-center items-center">
+            <p className="text-center text-lg text-gray-500">
+              No content for {subSection} section
+            </p>
+          </div>
+        )}
       </EmptyViewWrapper>
     </>
   );
