@@ -52,13 +52,13 @@ const ClassList = (props: ClassListProps) => {
                 <div className="w-1/10 px-8 py-3  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['CLASSNAME']}</span>
                 </div>
                 {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Active Students</span>
                     </div> */}
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-end">
+                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{Institute_class[userLanguage]['ACTION']}</span>
                 </div></div>
               </div>
@@ -71,11 +71,11 @@ const ClassList = (props: ClassListProps) => {
                       {index + 1}.
                     </div>
 
-                    <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                    <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.name ? item.name : ''}
                     </div>
                     <span
-                      className={`w-3/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]} justify-end`}
+                      className={`w-1/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
                       onClick={() =>
                         history.push(
                           `/dashboard/manage-institutions/class-edit?id=${item.id}`

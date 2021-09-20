@@ -15,7 +15,7 @@ import {
   stringToHslColor,
 } from '../../../../utilities/strings';
 import Tooltip from '../../../Atoms/Tooltip';
-import Tabs, { ITabElements } from '@atoms/Tabs';
+import Tabs, {ITabElements} from '@atoms/Tabs';
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
 import ClassList from './Listing/ClassList';
 import CurriculumList from './Listing/CurriculumList';
@@ -23,6 +23,7 @@ import RoomsList from './Listing/RoomsList';
 import ServiceProviders from './Listing/ServiceProviders';
 import StaffBuilder from './Listing/StaffBuilder';
 import GeneralInformation from './GeneralInformation';
+import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -58,17 +59,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
 
-  const tabs:ITabElements[] = [
+  const tabs: ITabElements[] = [
     {
       title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
-      key:'general_information',
-      content: (
-        <GeneralInformation instituteInfo={institute} />
-      ),
+      key: 'general_information',
+      content: <GeneralInformation instituteInfo={institute} />,
     },
     {
       title: Institute_info[userLanguage]['TABS']['STAFF'],
-      key:'staff',
+      key: 'staff',
       content: (
         <StaffBuilder
           serviceProviders={institute.serviceProviders}
@@ -79,7 +78,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     },
     {
       title: Institute_info[userLanguage]['TABS']['CLASSES'],
-      key:'class',
+      key: 'class',
       content: (
         <ClassList
           classes={institute?.classes}
@@ -90,7 +89,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     },
     {
       title: Institute_info[userLanguage]['TABS']['CURRICULAR'],
-      key:'curricular',
+      key: 'curricular',
       content: (
         <CurriculumList
           curricular={instProps?.institute?.curricula}
@@ -101,7 +100,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     },
     {
       title: Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER'],
-      key:'service_provider',
+      key: 'service_provider',
       content: (
         <ServiceProviders
           serviceProviders={institute.serviceProviders}
@@ -113,21 +112,28 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     },
     {
       title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
-      key:'class_room',
+      key: 'class_room',
       content: <RoomsList instId={institute?.id} instName={institute?.name} />,
     },
     {
       title: Institute_info[userLanguage]['TABS']['LESSONS'],
-      key:'lessons',
+      key: 'lessons',
+      content: (
+        <div className="p-8">
+          <LessonsList isInInstitution title={`${institute?.name} lessons`} instId={institute?.id} />
+        </div>
+      ),
     },
   ];
 
   const updateTab = (tab: string) => {
-    if(tab === 'lessons'){
-      history.push(`/dashboard/lesson-builder?institutionId=${institute?.id}`)
-    }else{
-      tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    }
+    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+
+    // if(tab === 'lessons'){
+    //   history.push(`/dashboard/lesson-builder?institutionId=${institute?.id}&from=institution`)
+    // }else{
+    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    // }
   };
 
   useEffect(() => {
@@ -152,13 +158,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     website,
     isServiceProvider,
   } = instProps?.institute;
-  const activeTabContent = tabs.find(({key}:any) => key === tabProps.tabsData.inst)
+  const activeTabContent = tabs.find(({key}: any) => key === tabProps.tabsData.inst);
 
   return (
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex items-center justify-center">
+        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center">
           <div className="w-auto p-4 mr-4 flex flex-col text-center flex-shrink-0">
             {image ? (
               imageUrl ? (
@@ -209,14 +215,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   />
                 </span>
               </Tooltip>
-                
             </div>
           </div>
-          
+
           <div className="">
             <div className="bg-white border-l-0 border-gray-200 mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <Tabs 
+                <Tabs
                   tabsData={tabs}
                   activeTab={tabProps.tabsData.inst}
                   updateTab={updateTab}
@@ -225,9 +230,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   {Institute_info[userLanguage]['TITLE']}
                   </h3> */}
               </div>
-              <div className="overflow-hidden">
-                {activeTabContent?.content}
-                </div>
+              <div className="overflow-hidden">{activeTabContent?.content}</div>
             </div>
           </div>
         </div>

@@ -89,7 +89,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
               btnClass="mr-4 mt-4"
               onClick={() =>
                 history.push(
-                  `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`
+                  `/dashboard/manage-institutions/institution?id=${institutionId}&tab=curricular`
                 )
               }
             />

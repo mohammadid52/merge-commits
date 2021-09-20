@@ -112,7 +112,7 @@ const RoomsList = (props: RoomListProps) => {
                     <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
                   </div>
 
-                  <div className="w-1/10 px-4 py-2 bg-gray-50 flex justify-end text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1/10 px-4 py-2 bg-gray-50 flex text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">{InstitueRomms[userLanguage]['ACTION']}</span>
                   </div>
                 </div>
@@ -145,7 +145,7 @@ const RoomsList = (props: RoomListProps) => {
                         .join(',')}
                     </div>
                     <span
-                      className={`w-1/10 h-6 flex px-4 items-center justify-end cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex px-4 items-center text-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
                       <Tooltip text="Click to edit class" placement="left">
                         {InstitueRomms[userLanguage]['EDIT']}

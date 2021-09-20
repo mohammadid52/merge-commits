@@ -68,7 +68,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     {title: roomData?.institute?.name, goBack: true, last: false},
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
-      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
+      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=class_room`,
       last: false,
     },
     {

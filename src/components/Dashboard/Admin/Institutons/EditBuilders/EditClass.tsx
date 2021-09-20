@@ -96,7 +96,7 @@ const EditClass = (props: EditClassProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSES'],
-      url: `/dashboard/manage-institutions/institution?id=${classData.institute?.id}&tab=1`,
+      url: `/dashboard/manage-institutions/institution?id=${classData.institute?.id}&tab=class`,
       last: false,
     },
     {

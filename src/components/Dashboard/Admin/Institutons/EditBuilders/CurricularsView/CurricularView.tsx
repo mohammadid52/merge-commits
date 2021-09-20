@@ -110,7 +110,7 @@ const CurricularView = (props: CurricularViewProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`,
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=curricular`,
       last: false,
     },
     {

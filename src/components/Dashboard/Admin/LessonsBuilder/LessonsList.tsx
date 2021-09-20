@@ -4,6 +4,7 @@ import {find} from 'lodash';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoMdAddCircleOutline} from 'react-icons/io';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
@@ -22,7 +23,13 @@ import CloneLesson from './CloneLesson';
 import LessonListLoader from './LessonListLoader';
 import LessonsListRow from './LessonsListRow';
 
-const LessonsList = () => {
+interface LessonListProps {
+  isInInstitution?: boolean; // props for managing lesson tab inside institution
+  title?: string;
+  instId?: string;
+}
+
+const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
@@ -116,7 +123,7 @@ const LessonsList = () => {
   };
 
   const buildLesson = () => {
-    history.push(`${match.url}/lesson/add`);
+    history.push('/dashboard/lesson-builder/lesson/add');
   };
 
   const getFilteredList = (data: [{designers: string[]}], target: string) => {
@@ -142,10 +149,10 @@ const LessonsList = () => {
   const getLessonsList = async () => {
     try {
       let condition = {};
-      if (params.get('institutionId')) {
+      if (instId) {
         condition = {
           filter: {
-            institutionID: {eq: params.get('institutionId')},
+            institutionID: {eq: instId},
           },
         };
       }
@@ -297,50 +304,68 @@ const LessonsList = () => {
           />
         )}
         {/* Header section */}
-        <BreadCrums items={breadCrumsList} />
+        {!isInInstitution && <BreadCrums items={breadCrumsList} />}
         <div className="flex justify-between">
-          <SectionTitle
-            title={LessonsListDict[userLanguage]['TITLE']}
-            subtitle={LessonsListDict[userLanguage]['SUBTITLE']}
-          />
-          <div className="flex justify-end py-4 mb-4">
+          {isInInstitution ? (
+            <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 w-auto">
+              {title}
+            </h3>
+          ) : (
+            <SectionTitle
+              title={LessonsListDict[userLanguage]['TITLE']}
+              subtitle={LessonsListDict[userLanguage]['SUBTITLE']}
+            />
+          )}
+          <div className={`flex justify-end ${isInInstitution ? 'w-auto' : 'py-4 mb-4'}`}>
             <SearchInput
               value={searchInput.value}
               onChange={setSearch}
               onKeyDown={searchLessonsFromList}
               closeAction={removeSearchAction}
-              style="mr-4 w-full"
+              style={`mr-4 ${isInInstitution ? 'w-auto' : 'w-full'}`}
             />
-            <Selector
-              placeholder={LessonsListDict[userLanguage]['SORTBY']}
-              list={sortByList}
-              selectedItem={sortingType.name}
-              onChange={setSortingValue}
-              btnClass="rounded-r-none  border-r-none "
-              arrowHidden={true}
-            />
-            <button
-              className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-              onClick={toggleSortDimention}>
-              <IconContext.Provider
-                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-              </IconContext.Provider>
-            </button>
+            {!isInInstitution && (
+              <>
+                <Selector
+                  placeholder={LessonsListDict[userLanguage]['SORTBY']}
+                  list={sortByList}
+                  selectedItem={sortingType.name}
+                  onChange={setSortingValue}
+                  btnClass="rounded-r-none  border-r-none "
+                  arrowHidden={true}
+                />
+                <button
+                  className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                  onClick={toggleSortDimention}>
+                  <IconContext.Provider
+                    value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                    {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
+                  </IconContext.Provider>
+                </button>
+              </>
+            )}
             <Buttons
               label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
               onClick={buildLesson}
-              btnClass="mr-4 w-full"
+              btnClass={isInInstitution ? '' : 'mr-4 w-full'}
               Icon={IoMdAddCircleOutline}
             />
+            {params.get('from') ? (
+              <Buttons
+                label="Go back"
+                btnClass="mr-4"
+                onClick={() => history.goBack()}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            ) : null}
           </div>
         </div>
 
         {/* List / Table */}
         <div className="flex flex-col">
           <div className="-my-2 py-2">
-            <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
-              <div className="h-8/10 px-4">
+            <div className={`${isInInstitution ? '' : 'white_back px-8'} py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
+              <div className={`h-8/10 ${isInInstitution ? '' : 'px-4'}`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
