@@ -52,7 +52,6 @@ const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
                   <span className="relative inline-flex rounded-full h-4 w-4 bg-purple-500"></span>
                 </span>
               )}
-
               {tab.title}
             </button>
           ))}

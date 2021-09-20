@@ -421,6 +421,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       }
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
+                      zebraStripping={isInInstitution}
                     />
                   ))
                 ) : (
