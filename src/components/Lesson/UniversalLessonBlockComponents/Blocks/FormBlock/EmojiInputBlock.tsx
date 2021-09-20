@@ -1,12 +1,10 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
+import EmojiPicker from 'emoji-picker-react';
+import noop from 'lodash/noop';
 import React, {useContext, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import EmojiPicker from 'emoji-picker-react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {StudentPageInput} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
-import noop from 'lodash/noop';
 const EmojiInput = ({
   id,
   inputID,

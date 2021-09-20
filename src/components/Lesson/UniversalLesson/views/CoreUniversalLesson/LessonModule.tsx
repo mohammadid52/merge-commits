@@ -304,9 +304,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                 <>
                   {currentLesson?.objectives[0] ? (
                     <div>
-                      <p className="text-gray-400 font-medium text-lg leading-3">
+                      <div className="text-gray-400 font-medium text-lg leading-3">
                         {ReactHtmlParser(currentLesson?.objectives[0])}
-                      </p>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center min-h-32">

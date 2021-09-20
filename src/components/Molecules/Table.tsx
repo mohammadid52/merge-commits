@@ -37,6 +37,7 @@ const Table = ({
                 <tr>
                   {map(headers, (header) => (
                     <th
+                      key={header}
                       scope="col"
                       className={`${
                         config?.headers?.textColor || 'text-gray-500'
@@ -49,7 +50,7 @@ const Table = ({
               <tbody className="max-h-88 overflow-y-auto dark-scroll">
                 {dataList.map((item, idx) => (
                   <tr
-                    key={item.id}
+                    key={idx}
                     className={` ${
                       config?.dataList?.bgColor
                         ? config?.dataList?.bgColor
@@ -61,6 +62,7 @@ const Table = ({
                     }`}>
                     {map(headers, (header) => (
                       <td
+                        key={item.id + '-' + header}
                         className={`${
                           config?.dataList?.textColor || 'text-gray-500'
                         } px-6 py-4  whitespace-nowrap text-sm`}>

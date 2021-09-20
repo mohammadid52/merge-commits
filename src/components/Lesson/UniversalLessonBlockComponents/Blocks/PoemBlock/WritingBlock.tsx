@@ -1,13 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {nanoid} from 'nanoid';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlinePlus} from 'react-icons/ai';
-import {
-  StudentPageInput,
-  PartContentSub,
-  Options,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {
+  Options,
+  PartContentSub,
+  StudentPageInput,
+} from '../../../../../interfaces/UniversalLessonInterfaces';
 
 interface WritingBlockProps {
   id?: string;
@@ -82,7 +80,7 @@ const WritingBlock = (props: WritingBlockProps) => {
             value={selectedLS.text}
             onChange={(e) => setSelectedLS({...selectedLS, text: e.target.value})}
             className={`bg-gray-200 dark:bg-charcoal block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-md`}>
-            <option value={''} disabled selected>
+            <option value={''} disabled>
               Select a line starter
             </option>
             {linestarters.map((line: Options, idx2: number) => (

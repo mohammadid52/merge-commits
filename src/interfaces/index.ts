@@ -4,4 +4,6 @@ export type setState = {
   number: React.Dispatch<React.SetStateAction<number>>;
 };
 
+export type IOnChange = React.ChangeEvent<HTMLInputElement>;
+
 export type children = React.ReactNode;

@@ -11,6 +11,7 @@ export const FORM_TYPES = {
   POEM: 'poem-input',
   KEYWORDS: 'keywords',
   JUMBOTRON: 'jumbotron',
+  NOTES: 'notes-input',
   CUSTOM_VIDEO: 'custom_video',
   DOWNLOAD: 'Download',
   VIDEO: 'video',

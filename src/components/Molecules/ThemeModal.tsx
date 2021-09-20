@@ -10,6 +10,8 @@ interface IModal {
   header?: string;
   subHeader?: string;
   dark?: boolean;
+  max?: {w?: number; h?: number};
+  overflowClass?: string;
 }
 
 const ThemeModal = ({
@@ -19,12 +21,14 @@ const ThemeModal = ({
   children,
   header,
   dark = true,
+  overflowClass = 'overflow-y-auto overflow-x-hidden',
+  max = {w: 256, h: 256},
 }: IModal) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed z-100 w-auto inset-0 overflow-y-auto"
+        className={`fixed z-100 w-auto inset-0 overflow-y-auto`}
         onClose={setOpen}>
         <div className="w-auto flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -55,9 +59,9 @@ const ThemeModal = ({
             <div
               className={`${
                 dark ? 'bg-gray-800 ' : 'bg-white'
-              } w-auto border-0 border-gray-${
-                dark ? '600' : '200'
-              } max-w-256 inline-block align-bottom  rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6`}>
+              } w-auto border-0 border-gray-${dark ? '600' : '200'} max-w-${
+                max.w
+              } inline-block align-bottom  rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6`}>
               <div className="w-auto hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
@@ -83,9 +87,9 @@ const ThemeModal = ({
                 </div>
               )}
               <div
-                className={`p-2 ${
-                  dark ? 'dark-scroll' : ''
-                } max-h-256 overflow-y-auto overflow-hidden`}>
+                className={`p-2 ${dark ? 'dark-scroll' : ''} max-h-${
+                  max.h
+                } ${overflowClass}`}>
                 {children}
               </div>
             </div>
