@@ -1,6 +1,7 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import slice from 'lodash/slice';
@@ -1533,27 +1534,15 @@ const User = () => {
             )}
           </AnimatedContainer>
           <AnimatedContainer show={onNotebookTab}>
-            {onNotebookTab &&
-              (loading ? (
-                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="">
-                    <Loader color="rgba(107, 114, 128, 1)" />
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      {'Loading Notebook Data'}
-                    </p>
-                  </div>
-                </div>
-              ) : studentData && studentData.length > 0 ? (
-                studentData.map((item: any) => <StudentData item={item} />)
-              ) : (
-                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="">
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      {'No Notebook Data Found'}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            {onNotebookTab && (
+              <Anthology
+                isTeacher={isTeacher}
+                studentID={user.id}
+                studentAuthID={user.authId}
+                studentName={user.firstName}
+                studentEmail={user.email}
+              />
+            )}
           </AnimatedContainer>
 
           {curTab === 'Timeline' && (
