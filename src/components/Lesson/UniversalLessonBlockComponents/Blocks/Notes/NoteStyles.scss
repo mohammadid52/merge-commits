@@ -7,6 +7,33 @@
   position: relative;
 }
 
+.preview-note {
+  font-family: 'Patrick Hand', cursive;
+  border: transparent;
+  user-select: text !important;
+  display: inline-block;
+  box-sizing: border-box;
+  font-size: 24px;
+  overflow: scroll;
+  height: 250px;
+  width: 250px;
+  padding: 0;
+  box-shadow: 6px 7px 12px -5px rgba(0, 0, 0, 0.75);
+  position: relative;
+  margin: 10px;
+  padding: 25px;
+
+  // pseudo-elements
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &::first-line {
+    position: relative;
+    font-weight: bold;
+  }
+}
+
 .sticky-container {
   ._sticky {
     & textarea {

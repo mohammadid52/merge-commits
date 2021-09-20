@@ -137,6 +137,7 @@ const LessonRowComposer = () => {
             {notes && notes.length > 0 && (
               <div id="fab-download">
                 <NotesFab
+                  currentLesson={currentLesson}
                   notes={notes}
                   darkMode={currentLesson?.darkMode || true}
                   pageTitle={activePageData.title}
