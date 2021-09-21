@@ -1917,9 +1917,9 @@ export const listUniversalLessonsForInstitution = /* GraphQL */ `
           id
           title
           label
-          pageContent{
+          pageContent {
             id
-            partContent{
+            partContent {
               id
             }
           }
@@ -2137,6 +2137,7 @@ export const listInstitutions = /* GraphQL */ `
         name
         type
         district
+        address
         address
         addressLine2
         city
@@ -4114,6 +4115,47 @@ export const getScheduleDetails = /* GraphQL */ `
   }
 `;
 
+export const listRoomsNotebook = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        activeSyllabus
+        curricula {
+          items {
+            id
+            roomID
+            curriculumID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCurriculumNotebook = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
+    }
+  }
+`;
+
 export const getBasicDetailsOfInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
@@ -4179,11 +4221,7 @@ export const getInstitutionCurriculums = /* GraphQL */ `
 `;
 
 export const listRoomsBasicDetails = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id

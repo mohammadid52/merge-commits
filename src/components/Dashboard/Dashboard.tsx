@@ -858,9 +858,10 @@ const Dashboard = (props: DashboardProps) => {
               path={`${match.url}/anthology`}
               render={() => (
                 <Anthology
-                  studentAuthID={stateUser.authId}
-                  studentID={stateUser.id}
-                  studentEmail={stateUser.email}
+                  studentAuthID={stateUser?.authId}
+                  studentID={stateUser?.id}
+                  studentEmail={stateUser?.email}
+                  studentName={stateUser?.name}
                 />
               )}
             />
