@@ -24,6 +24,7 @@ import ServiceProviders from './Listing/ServiceProviders';
 import StaffBuilder from './Listing/StaffBuilder';
 import GeneralInformation from './GeneralInformation';
 import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList';
+import Csv from '@components/Dashboard/Csv/Csv';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -63,7 +64,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     {
       title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
       key: 'general_information',
-      content: <GeneralInformation instituteInfo={institute} />,
+      content: (
+        <>
+          <GeneralInformation instituteInfo={institute} />
+          <ServiceProviders
+            serviceProviders={institute.serviceProviders}
+            instId={institute?.id}
+            updateServiceProviders={instProps.updateServiceProviders}
+            instName={institute?.name}
+          />
+        </>
+      ),
     },
     {
       title: Institute_info[userLanguage]['TABS']['STAFF'],
@@ -120,13 +131,28 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       key: 'lessons',
       content: (
         <div className="p-8">
-          <LessonsList isInInstitution title={`${institute?.name} lessons`} instId={institute?.id} />
+          <LessonsList
+            isInInstitution
+            title={`${institute?.name} lessons`}
+            instId={institute?.id}
+          />
+        </div>
+      ),
+    },
+    {
+      title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
+      key: 'research_and_analytics',
+      content: (
+        <div className="p-8">
+          <Csv />
         </div>
       ),
     },
   ];
 
   const updateTab = (tab: string) => {
+    console.log(tab, 'inside updateTab');
+
     tabProps.setTabsData({...tabProps.tabsData, inst: tab});
 
     // if(tab === 'lessons'){
@@ -164,8 +190,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center">
-          <div className="w-auto p-4 mr-4 flex flex-col text-center flex-shrink-0">
+        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center md:justify-start">
+          <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
             {image ? (
               imageUrl ? (
                 <img
@@ -220,7 +246,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
           <div className="">
             <div className="bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 2xl:px-6">
                 <Tabs
                   tabsData={tabs}
                   activeTab={tabProps.tabsData.inst}
@@ -234,17 +260,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             </div>
           </div>
         </div>
-        {instProps?.institute?.id && (
+        {/* {instProps?.institute?.id && (
           <div className="overflow-hidden sm:rounded-lg">
             <div className="">
-              {/* <UnderlinedTabs
+              <UnderlinedTabs
                 tabs={tabs}
                 activeTab={tabProps.tabsData.inst}
                 updateTab={updateTab}
-              /> */}
+              />
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

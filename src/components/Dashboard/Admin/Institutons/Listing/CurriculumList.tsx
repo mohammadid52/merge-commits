@@ -33,14 +33,14 @@ const CurriculumList = (props: CurriculumListProps) => {
   };
 
   return (
-    <div className="pt-8 flex m-auto justify-center p-4">
+    <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
         <PageWrapper defaultClass="">
           {curricular.items && curricular.items.length > 0 ? (
             <Fragment>
               <div className="flex justify-between w-full m-auto">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
-                  {instName ? instName.toUpperCase() : 'INSTITUTE'} CURRICULA
+                  Courses
                 </h3>
                 <AddButton
                   label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}

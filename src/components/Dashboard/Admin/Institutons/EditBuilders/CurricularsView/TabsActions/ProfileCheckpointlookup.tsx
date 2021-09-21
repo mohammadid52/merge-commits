@@ -86,7 +86,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     const currentCheckList = [...allCheckpointList];
     const newList = currentCheckList.filter((item) => {
       // Search on title for match.
-      return item.title?.toLowerCase().includes(searchInput);
+      return item.title?.toLowerCase().includes(searchInput.toLowerCase());
     });
     setFilteredList(newList);
   };

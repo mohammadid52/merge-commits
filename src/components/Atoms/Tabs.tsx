@@ -165,11 +165,13 @@ const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
             onClick={updateTab}
           />
           <button
-            // onClick={() => {
-            //   updateTab(tab.key);
-            // }}
+            onClick={() => {
+              updateTab('research_and_analytics');
+            }}
             className={`px-3 relative ${
               theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
+            } ${
+              activeTab === 'research_and_analytics' ? 'bg-indigo-300 text-indigo-700' : ''
             } py-2 cursor-pointer font-medium hover:bg-indigo-300 hover:text-indigo-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-500`}>
             Research & Analytics
           </button>

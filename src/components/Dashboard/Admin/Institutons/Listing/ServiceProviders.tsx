@@ -156,13 +156,13 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     setStatusEdit('');
   };
   return (
-    <div className="pt-8 flex m-auto justify-center p-4">
+    <div className="flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {instName?.toUpperCase()} {dictionary.TITLE}
+          <h3 className="text-base border-b-0 border-gray-200 leading-6 font-medium text-gray-500">
+            {dictionary.SERVICE}
           </h3>
-          <div className="flex items-center w-6/10 m-auto px-2 mb-8">
+          <div className="flex items-center w-6/10 m-auto px-2 my-8">
             <Selector
               selectedItem={newServPro.value}
               list={availableServiceProviders}

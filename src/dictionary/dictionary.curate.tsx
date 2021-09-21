@@ -914,6 +914,7 @@ const Institute_info: any = {
       CLASSROOMS: 'Classes',
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lessons',
+      RESEARCH_AND_ANALYTICS: 'Research & Analytics'
     },
   },
   ES: {
@@ -931,6 +932,7 @@ const Institute_info: any = {
       CLASSROOMS: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
+      RESEARCH_AND_ANALYTICS: 'TBD'
     },
   },
 };
