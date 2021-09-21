@@ -1,5 +1,4 @@
 import Buttons from '@atoms/Buttons';
-import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -8,11 +7,12 @@ import {IOnChange} from '@interfaces/index';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {map, remove, update} from 'lodash';
-import {v4 as uuidv4} from 'uuid';
 import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
 
 interface NoteModalProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -116,6 +116,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
         '',
         parentKey
       );
+
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
@@ -128,6 +129,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
 
         parentKey
       );
+
       await addToDB(updatedList);
     }
   };
@@ -179,13 +181,13 @@ const NotesModalDialog = (props: NoteModalProps) => {
       </AnimatedContainer>
       <AnimatedContainer show={onPreviewTab}>
         {onPreviewTab && (
-          <div>
+          <div className="">
             <PreviewLayout
               notAvailable={
                 notesList.length === 0 ? 'Please add notes to see preview' : false
               }>
               {/* @ts-ignore */}
-              <NotesBlock value={notesList} />
+              <NotesBlock grid={{cols: 2, rows: 2}} value={notesList} />
             </PreviewLayout>
           </div>
         )}
