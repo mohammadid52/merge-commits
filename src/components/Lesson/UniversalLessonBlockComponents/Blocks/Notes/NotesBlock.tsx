@@ -12,6 +12,10 @@ import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import ThemeModal from '@components/Molecules/ThemeModal';
+import {BiSave} from 'react-icons/bi';
+import {FiFilePlus} from 'react-icons/fi';
+import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {v4 as uuidv4} from 'uuid';
 
 interface INoteBlock {
   grid?: {cols?: number; rows?: number};
@@ -111,7 +115,8 @@ const NotesBlock = ({
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
 
   const onNoteDelete = () => {
-    const note: any = currentNote;
+    const note: any =
+      showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
     remove(localNotes, (_note) => _note.id === note.id);
     setLocalNotes([...localNotes]);
 
@@ -154,6 +159,64 @@ const NotesBlock = ({
 
     updateLesson();
   };
+
+  const onAddNewNote = () => {
+    const newNoteObj = {
+      ...localNotes[0],
+      id: uuidv4(),
+      class: 'yellow',
+      value: '',
+      type: FORM_TYPES.NOTES,
+    };
+    localNotes.push(newNoteObj);
+    setLocalNotes([...localNotes]);
+    const note = localNotes[0];
+    const updateLesson = async () => {
+      const currentPageIdx = lessonState.currentPage;
+      if (currentLesson) {
+        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
+
+        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+
+        const partContent = pageContent[pagePartIdx].partContent;
+        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        let valueArr = partContent[partContentIdx].value;
+
+        const updated = update(
+          currentLocalLesson,
+          `lessonPlan[${currentPageIdx}].pageContent[${pagePartIdx}].partContent[
+          ${partContentIdx}
+        ].value`,
+          () => {
+            valueArr.push({
+              type: FORM_TYPES.NOTES,
+              value: '',
+              class: 'yellow',
+              id: newNoteObj.id,
+            });
+
+            return valueArr;
+          }
+        );
+
+        setCurrentLocalLesson({...currentLocalLesson});
+
+        try {
+          const input = {
+            id: updated.id,
+            lessonPlan: [...updated.lessonPlan],
+          };
+
+          await updateLessonPageToDB(input);
+        } catch (error) {
+          console.error('@onNoteAdd - NotesBlock.tsx', error);
+        }
+      }
+    };
+
+    updateLesson();
+  };
+
   const onNoteEdit = () => {
     const note: any = currentNote;
 
@@ -323,20 +386,36 @@ const NotesBlock = ({
             </div>
           </div>
         </ThemeModal>
-        <div id="container" className="sticky-container blackboard">
-          {localNotes &&
-            localNotes.length > 0 &&
-            map(localNotes, (note) => (
-              <Note
-                setShowEditModal={setShowEditModal}
-                setShowDeleteModal={setShowDeleteModal}
-                key={note.id}
-                note={note}
-              />
-            ))}
+        <div className="relative flex items-start space-x-4">
+          <div id="container" className="sticky-container blackboard">
+            {localNotes &&
+              localNotes.length > 0 &&
+              map(localNotes, (note) => (
+                <Note
+                  setShowEditModal={setShowEditModal}
+                  setShowDeleteModal={setShowDeleteModal}
+                  key={note.id}
+                  note={note}
+                />
+              ))}
+          </div>
+
+          <div className="w-auto space-y-4 flex items-center flex-col justify-center">
+            <button
+              onClick={onAddNewNote}
+              title="Add new note"
+              className="w-auto text-red-600 hover:text-red-500 transition-all">
+              <FiFilePlus className="h-10 w-10 " />
+            </button>
+            <button
+              title="Save to class notes"
+              className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
+              <BiSave className="h-10 w-10 " />
+            </button>
+          </div>
         </div>
       </>
     );
 };
 
-export default NotesBlock;
+export default React.memo(NotesBlock);

@@ -8,6 +8,7 @@ import {lessonReducer} from '../reducers/LessonReducer';
 import {lessonState as lessonStateObject} from '../state/LessonState';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
 import {lessonControlState} from '../state/LessonControlState';
+import {createContainer} from 'react-tracked';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -151,6 +152,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
    * state,dispatch --> Used in dashboard etc.
    * lessonState, lessonStateDispatch --> Used in lesson state
    */
+
   const [state, dispatch] = useReducer(globalReducer, globalState);
   const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
   const [controlState, controlDispatch] = useReducer(

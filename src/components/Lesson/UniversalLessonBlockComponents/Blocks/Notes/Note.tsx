@@ -7,6 +7,44 @@ import React, {useContext, useMemo} from 'react';
 import {AiOutlineEdit} from 'react-icons/ai';
 import {BiTrashAlt} from 'react-icons/bi';
 
+const InnerNote = React.memo(
+  ({
+    note,
+    isInLesson,
+    isStudent,
+    getDataValue,
+    bgColor,
+    onDeleteBtnClick,
+    onEditBtnClick,
+    onChange,
+  }: any) => {
+    let angle = useMemo(() => randomNumber(-3, 3), []);
+
+    return (
+      <div
+        id={note.id}
+        style={{transform: 'rotate(' + angle + 'deg)'}}
+        className={`_sticky group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>
+        <textarea
+          id={'note'}
+          onChange={isInLesson && isStudent ? (e) => onChange(e, note.id) : noop}
+          value={isInLesson ? getDataValue(note.id) : note.value}
+        />
+        {isInLesson && isStudent && (
+          <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
+            <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
+              <AiOutlineEdit className="text-base text-white" />
+            </button>
+            <button onClick={() => onDeleteBtnClick(note.id)} className="w-auto">
+              <BiTrashAlt className="text-lg text-white" />
+            </button>
+          </span>
+        )}
+      </div>
+    );
+  }
+);
+
 interface INoteBlock {
   note: {class?: string; value?: string; id: string};
 
@@ -17,8 +55,6 @@ interface INoteBlock {
 }
 
 const Note = ({note, setShowEditModal, setShowDeleteModal}: INoteBlock) => {
-  let angle = useMemo(() => randomNumber(-3, 3), []);
-
   const {
     lessonState,
     lessonDispatch,
@@ -74,28 +110,16 @@ const Note = ({note, setShowEditModal, setShowDeleteModal}: INoteBlock) => {
   };
 
   return (
-    <>
-      <div
-        id={note.id}
-        style={{transform: 'rotate(' + angle + 'deg)'}}
-        className={`_sticky group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>
-        <textarea
-          id={'note'}
-          onChange={isInLesson && isStudent ? (e) => onChange(e, note.id) : noop}
-          value={isInLesson ? getDataValue(note.id) : note.value}
-        />
-        {isInLesson && isStudent && (
-          <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
-            <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
-              <AiOutlineEdit className="text-base text-white" />
-            </button>
-            <button onClick={() => onDeleteBtnClick(note.id)} className="w-auto">
-              <BiTrashAlt className="text-lg text-white" />
-            </button>
-          </span>
-        )}
-      </div>
-    </>
+    <InnerNote
+      onChange={onChange}
+      bgColor={bgColor}
+      isInLesson={isInLesson}
+      isStudent={isStudent}
+      getDataValue={getDataValue}
+      onDeleteBtnClick={onDeleteBtnClick}
+      onEditBtnClick={onEditBtnClick}
+      note={note}
+    />
   );
 };
 

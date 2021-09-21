@@ -14,11 +14,10 @@ import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuild
 import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
-  const {
-    state: {user, lessonPage = {}},
+  const gContext = useContext(GlobalContext);
 
-    lessonState,
-  } = useContext(GlobalContext);
+  const gState = gContext.state;
+  const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   const [currentLesson, setCurrentLesson] = useState<any>();
@@ -69,6 +68,7 @@ const LessonRowComposer = () => {
   const [showNotesModal, setShowNotesModal] = useState(false);
 
   useEffect(() => {
+    const lessonState = gContext.lessonState;
     const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
       const CURRENT_PAGE = lessonState.currentPage;
@@ -78,7 +78,7 @@ const LessonRowComposer = () => {
     if (lessonState.lessonData) {
       setCurrentLesson(lessonState.lessonData);
     }
-  }, [lessonState.lessonData, lessonState.currentPage]);
+  }, [gContext.lessonState.lessonData, gContext.lessonState.currentPage]);
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
@@ -156,7 +156,7 @@ const LessonRowComposer = () => {
               </div>
             )}
           </div>
-          <LessonModule currentLesson={currentLesson} />
+          {/* <LessonModule currentLesson={currentLesson} /> */}
         </>
       )}
     </div>
