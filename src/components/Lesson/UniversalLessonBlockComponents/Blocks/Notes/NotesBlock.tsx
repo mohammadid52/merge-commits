@@ -1,110 +1,153 @@
 import Loader from '@atoms/Loader';
-import useScript from '@customHooks/useScript';
+import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import ThemeModal from '@components/Molecules/ThemeModal';
+import {GlobalContext} from '@contexts/GlobalContext';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {find, findIndex, map, noop, remove, update} from 'lodash';
-import React, {memo, useContext, useEffect, useState} from 'react';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import ThemeModal from '@components/Molecules/ThemeModal';
+import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
-import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {v4 as uuidv4} from 'uuid';
 
+const genSticky = (
+  {rows, cols}: {rows?: number; cols?: number},
+
+  cb?: any
+) => {
+  wait(50).then(() => {
+    var $container = $('#container'),
+      gridWidth = 250,
+      gridHeight = 250,
+      gridRows = rows || 2,
+      gridColumns = cols || 4,
+      i,
+      x,
+      y;
+    //loop through and create the grid (a div for each cell). Feel free to tweak the variables above
+    for (i = 0; i < gridRows * gridColumns; i++) {
+      y = Math.floor(i / gridColumns) * gridHeight;
+      x = (i * gridWidth) % (gridColumns * gridWidth);
+      $('<span/>')
+        .css({
+          position: 'absolute',
+          width: gridWidth - 1,
+          height: gridHeight - 1,
+          top: y,
+          left: x,
+        })
+        .prependTo($container);
+    }
+
+    //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
+
+    gsap.set('._sticky', {
+      width: gridWidth,
+
+      height: gridHeight,
+    });
+
+    Draggable.create('._sticky', {
+      bounds: $container,
+      edgeResistance: 0.065,
+      throwProps: true,
+      type: 'x,y',
+      inertia: true,
+
+      // @ts-ignore
+      autoScroll: true,
+
+      snap: {
+        x: function (endValue) {
+          const landOnGrid = false;
+          return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
+        },
+        y: function (endValue) {
+          const landOnGrid = false;
+
+          return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
+        },
+      },
+    });
+
+    if (cb && typeof cb === 'function') {
+      cb();
+    }
+  });
+};
 interface INoteBlock {
+  showNotesModal?: boolean;
   grid?: {cols?: number; rows?: number};
   value: {class?: string; value?: string; id: string}[];
-  currentLesson?: UniversalLesson | null;
 }
 
-const NotesBlock = ({
-  value: notesList,
-  grid: {cols = 4, rows = 2},
-  currentLesson = null,
-}: INoteBlock) => {
-  const {lessonState} = useContext(GlobalContext);
+const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
+  const {lessonState, lessonDispatch} = useContext(GlobalContext);
 
-  const status = useScript(
-    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
-  );
+  const currentLesson: any = lessonState.lessonData;
+
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
+  const updateContext = () => {
+    localNotes &&
+      localNotes.length > 0 &&
+      localNotes.forEach((note) => {
+        handleUpdateStudentData(note.id, [note.value.toString()]);
+      });
+  };
+  const [valuesInit, setValuesInit] = useState(false);
+  const [localNotes, setLocalNotes] = useState([]);
+
+  useEffect(() => {
+    if (!valuesInit && localNotes && localNotes.length > 0) {
+      const updatedValues = localNotes.map((note) => {
+        return {
+          ...note,
+          value: getDataValue(note.id).toString(),
+        };
+      });
+
+      setLocalNotes([...updatedValues]);
+      setValuesInit(true);
+    }
+  }, [valuesInit, localNotes]);
+
+  useEffect(() => {
+    if (!showNotesModal) {
+      const subscription = updateContext();
+      return () => subscription;
+    }
+  }, [showNotesModal]);
+
   gsap.registerPlugin(InertiaPlugin, Draggable);
   // gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
-  if (status === 'ready') {
-    wait(50).then(() => {
+  const [isContainerRendered, setIsContainerRendered] = useState(false);
+
+  useEffect(() => {
+    if (!isContainerRendered) {
+      setLoading(true);
+      genSticky(grid, () => setIsContainerRendered(true));
       setLoading(false);
-      var $container = $('#container'),
-        gridWidth = 250,
-        gridHeight = 250,
-        gridRows = rows || 2,
-        gridColumns = cols || 4,
-        i,
-        x,
-        y;
-      //loop through and create the grid (a div for each cell). Feel free to tweak the variables above
-      for (i = 0; i < gridRows * gridColumns; i++) {
-        y = Math.floor(i / gridColumns) * gridHeight;
-        x = (i * gridWidth) % (gridColumns * gridWidth);
-        $('<span/>')
-          .css({
-            position: 'absolute',
-            width: gridWidth - 1,
-            height: gridHeight - 1,
-            top: y,
-            left: x,
-          })
-          .prependTo($container);
-      }
-
-      //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
-
-      gsap.set('._sticky', {
-        width: gridWidth,
-
-        height: gridHeight,
-      });
-
-      if (jQuery.ready) {
-        notesList.forEach((note: {id: any}) => {
-          $(`#${note.id} #note`).on('click', (e) => {
-            e.target.focus();
-          });
-        });
-      }
-
-      Draggable.create('._sticky', {
-        bounds: $container,
-        edgeResistance: 0.065,
-        throwProps: true,
-        type: 'x,y',
-        inertia: true,
-
-        // @ts-ignore
-        autoScroll: true,
-
-        snap: {
-          x: function (endValue) {
-            const landOnGrid = false;
-            return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
-          },
-          y: function (endValue) {
-            const landOnGrid = false;
-
-            return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
-          },
-        },
-      });
-    });
-  }
-
-  const [localNotes, setLocalNotes] = useState([]);
+    }
+  }, [isContainerRendered]);
 
   useEffect(() => {
     if (notesList && notesList.length > 0) {
@@ -112,24 +155,55 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
+  if (jQuery.ready) {
+    localNotes &&
+      localNotes.length > 0 &&
+      localNotes.forEach((note: {id: any}) => {
+        $(`#${note.id} #note`).on('click', (e) => {
+          e.target.focus();
+        });
+      });
+  }
+
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: any) => inputObj.domID === domID)
+      : undefined;
+    if (getInput !== undefined) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
+
+  const getDataValue = (domID: string): string => getStudentDataValue(domID);
+
+  const [uninitializedInputs, setUninitializedInputs] = useState([]);
+
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
 
   const onNoteDelete = () => {
     const note: any =
       showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
+    setShowDeleteModal({...showDeleteModal, show: false});
+
     remove(localNotes, (_note) => _note.id === note.id);
     setLocalNotes([...localNotes]);
 
     const updateLesson = async () => {
       const currentPageIdx = lessonState.currentPage;
       if (currentLesson) {
-        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
-        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+        const pageContent: any = currentLesson.lessonPlan[currentPageIdx].pageContent;
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
         const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
         const valueArr = partContent[partContentIdx].value;
 
-        remove(valueArr, (d) => d.id === note.id);
+        remove(valueArr, (d: any) => d.id === note.id);
 
         update(
           currentLocalLesson,
@@ -161,6 +235,7 @@ const NotesBlock = ({
   };
 
   const onAddNewNote = () => {
+    setIsContainerRendered(false);
     const newNoteObj = {
       ...localNotes[0],
       id: uuidv4(),
@@ -176,11 +251,24 @@ const NotesBlock = ({
       if (currentLesson) {
         const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
 
-        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
 
         const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
         let valueArr = partContent[partContentIdx].value;
+
+        const newNote = {
+          type: FORM_TYPES.NOTES,
+          value: '',
+          class: 'yellow',
+          id: newNoteObj.id,
+        };
+
+        uninitializedInputs.push(newNoteObj);
+        setUninitializedInputs([...uninitializedInputs]);
 
         const updated = update(
           currentLocalLesson,
@@ -188,13 +276,7 @@ const NotesBlock = ({
           ${partContentIdx}
         ].value`,
           () => {
-            valueArr.push({
-              type: FORM_TYPES.NOTES,
-              value: '',
-              class: 'yellow',
-              id: newNoteObj.id,
-            });
-
+            valueArr.push(newNote);
             return valueArr;
           }
         );
@@ -218,6 +300,8 @@ const NotesBlock = ({
   };
 
   const onNoteEdit = () => {
+    setShowEditModal({...showEditModal, show: false});
+
     const note: any = currentNote;
 
     const noteIdx = findIndex(localNotes, (d: any) => d.id === note.id);
@@ -230,11 +314,16 @@ const NotesBlock = ({
       if (currentLesson) {
         const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
 
-        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
 
         const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
+
         let valueArr = partContent[partContentIdx].value;
+
         const noteIdx = findIndex(valueArr, (d: any) => d.id === note.id);
 
         const updated = update(
@@ -244,13 +333,11 @@ const NotesBlock = ({
         ].value`,
           () => {
             valueArr[noteIdx].class = currentSelectedColor;
-
             return valueArr;
           }
         );
 
         setCurrentLocalLesson({...currentLocalLesson});
-        modalBtns.edit.cancel();
 
         try {
           const input = {
@@ -271,11 +358,19 @@ const NotesBlock = ({
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState({show: false, id: ''});
+
   const [showEditModal, setShowEditModal] = useState({show: false, id: '', value: ''});
+
   const currentNote =
     showEditModal.id && find(localNotes, (d) => d.id === showEditModal.id);
 
   const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
+
+  const updateText = (e: any, noteId: string, idx: number) => {
+    update(localNotes[idx], `value`, () => e.target.value);
+    setLocalNotes([...localNotes]);
+    // handleUpdateStudentData(noteId, [e.target.value]);
+  };
 
   useEffect(() => {
     if (currentNote.class && !currentSelectedColor) {
@@ -390,11 +485,14 @@ const NotesBlock = ({
           <div id="container" className="sticky-container blackboard">
             {localNotes &&
               localNotes.length > 0 &&
-              map(localNotes, (note) => (
+              map(localNotes, (note, idx) => (
                 <Note
+                  getDataValue={getDataValue}
+                  updateText={updateText}
                   setShowEditModal={setShowEditModal}
                   setShowDeleteModal={setShowDeleteModal}
                   key={note.id}
+                  idx={idx}
                   note={note}
                 />
               ))}

@@ -1,14 +1,13 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import {globalReducer} from '../reducers/GlobalReducer';
-import {globalState} from '../state/GlobalState';
-import {getClientKey} from '../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useEffect, useReducer} from 'react';
 import * as mutations from '../graphql/mutations';
-import {lessonReducer} from '../reducers/LessonReducer';
-import {lessonState as lessonStateObject} from '../state/LessonState';
+import {globalReducer} from '../reducers/GlobalReducer';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
+import {lessonReducer} from '../reducers/LessonReducer';
+import {globalState} from '../state/GlobalState';
 import {lessonControlState} from '../state/LessonControlState';
-import {createContainer} from 'react-tracked';
+import {lessonState as lessonStateObject} from '../state/LessonState';
+import {getClientKey} from '../utilities/strings';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',

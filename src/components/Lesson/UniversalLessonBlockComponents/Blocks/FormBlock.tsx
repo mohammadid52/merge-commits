@@ -6,13 +6,16 @@ import WritingExerciseBlock from '@components/Lesson/UniversalLessonBlockCompone
 import ReviewSliderBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {
+  StudentPageInput,
+  UniversalLessonPage,
+} from '@interfaces/UniversalLessonInterfaces';
 import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
-import {map, noop} from 'lodash';
-import React, {useContext, useMemo} from 'react';
+import {filter, forEach, map, noop} from 'lodash';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
@@ -20,6 +23,7 @@ import EmojiInput from './FormBlock/EmojiInputBlock';
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
   type?: string;
+  pagePartId?: string;
   numbered?: boolean;
   value?: {id: string; type: string; label: string; value: string}[];
 }
@@ -46,6 +50,7 @@ export const FormBlock = ({
   numbered,
   type: formType,
   value,
+  pagePartId,
 }: FormBlockProps) => {
   const {
     lessonState,
@@ -60,6 +65,7 @@ export const FormBlock = ({
 
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+  const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -79,6 +85,15 @@ export const FormBlock = ({
       },
     });
   };
+
+  useEffect(() => {
+    const PAGES = lessonState.lessonData.lessonPlan;
+    if (PAGES) {
+      const CURRENT_PAGE = lessonState.currentPage;
+      const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
+      setActivePageData(ACTIVE_PAGE_DATA);
+    }
+  }, [lessonState.lessonData, lessonState.currentPage]);
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
@@ -297,21 +312,17 @@ export const FormBlock = ({
     }
   };
 
-  // if (formType === 'notes-form') {
-  //   const modifiyValues = useMemo(
-  //     () =>
-  //       map(value, (v: any) => ({
-  //         class: v.class,
-  //         id: v.id,
-  //         value: v.value,
-  //       })),
-  //     [value]
-  //   );
+  if (formType === 'notes-form' && !isStudent) {
+    const modifiyValues = map(value, (v: any, idx: number) => ({
+      class: v.class,
+      pagePartId: pagePartId,
+      partContentId: id,
+      id: v.id,
+      value: v.value,
+    }));
 
-  //   return useMemo(() => <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />, [
-  //     modifiyValues,
-  //   ]);
-  // }
+    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+  }
 
   return (
     <>

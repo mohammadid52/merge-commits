@@ -50,7 +50,7 @@ const NotesFab = ({
           setOpen={setShowNotesModal}>
           <div className="p-4 relative 4">
             <NotesBlock
-              currentLesson={currentLesson}
+              showNotesModal={showNotesModal}
               grid={{cols: 3, rows: 3}}
               value={allNotes}
             />

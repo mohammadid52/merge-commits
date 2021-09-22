@@ -27,8 +27,8 @@ const LessonRowComposer = () => {
       ? filter(activePageData.pageContent, (f) => f.id.includes(id))
       : [];
 
-  const notes = getSeparateData('notes-container');
   const downloadables = getSeparateData('downloadable-files');
+  const notes = getSeparateData('notes-container');
 
   const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
