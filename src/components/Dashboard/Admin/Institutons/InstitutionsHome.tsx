@@ -9,6 +9,7 @@ import RoomBuilder from './Builders/RoomBuilder';
 import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
 import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
 import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
 import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
@@ -55,6 +56,15 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         <Route
           path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />} // Create new curricular
+        />
+        <Route
+          path={`${match.url}/institution/:institutionId/course-builder`}
+          exact
+          render={() => <CourseBuilder />} // Create new course
+        />
+        <Route
+          path={`${match.url}/institution/:institutionId/course-builder/:courseId`}
+          render={() => <CourseBuilder />} // Create new course
         />
         <Route
           path={`${match.url}/institution/room-creation`}

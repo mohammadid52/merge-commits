@@ -1287,6 +1287,85 @@ const classBuilderdict: any = {
   },
 };
 
+const CourseBuilderdict: any = {
+  EN: {
+    TITLE: 'Create New Curriculum',
+    SUBTITLE: 'Add new curriculum to the list',
+    HEADING: 'CURRICULUM INFORMATION',
+    NAME: 'Curriculum Name',
+    LANGUAGE: 'Select Language',
+    DESIGNER: 'Select Designers',
+    TYPE: 'Select Type',
+    SUMMARY: 'Summary',
+    DESCRIPTION: 'Description',
+    OBJECT: 'Objective',
+    ADD_NEW_UNIT: 'New Unit',
+    SELECT_UNIT: 'Select Unit',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSONS: 'Lessons',
+      OBJECTIVES: 'Objective',
+      UNIT_NAME: 'Unit Name',
+      ACTION: 'Actions',
+    },
+    MESSAGES: {
+      error: {
+        save: 'Unable to save new curriculum please try again later.',
+        fetch: 'Unable to fetch institution list pleas try later.',
+        designerlist: 'Error while fetching Designers list Please try again later.',
+        process: 'Error while processing please Try again later.',
+        invalid:
+          'Invalid path please go back to institution selection page to select your institute.',
+      },
+      validation: {
+        name: 'Curricular name is required please enter name.',
+        institute: 'Please select an institute to add curricular.',
+        curricular: 'This curricular name is already exist, please add another name.',
+      },
+      success: {
+        save: 'New curriculum has been saved.',
+      },
+    },
+    BUTTON: {
+      SAVE: 'Save',
+      SAVING: 'Saving...',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    SUBTITLE: 'TBD',
+    HEADING: 'TBD',
+    NAME: 'TBD',
+    LANGUAGE: 'TBD',
+    DESIGNER: 'TBD',
+    TYPE: 'TBD',
+    SUMMARY: 'TBD',
+    DESCRIPTION: 'TBD',
+    OBJECT: 'TBD',
+    messages: {
+      error: {
+        save: 'TBD',
+        fetch: 'TBD',
+        designerlist: 'TBD',
+        process: 'TBD',
+        invalid: 'TBD',
+      },
+      validation: {
+        name: 'TBD',
+        institute: 'TBD',
+        curricular: 'TBD',
+      },
+      success: {
+        save: 'TBD',
+      },
+    },
+    BUTTON: {
+      SAVE: 'TBD',
+      SAVING: 'TBD',
+    },
+  },
+};
+
 const CurricularBuilderdict: any = {
   EN: {
     TITLE: 'Create New Curriculum',
@@ -3651,6 +3730,7 @@ export {
   InstitueCurriculam,
   InstitueRomms,
   classBuilderdict,
+  CourseBuilderdict,
   CurricularBuilderdict,
   RoomBuilderdict,
   EditCurriculardict,

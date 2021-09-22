@@ -24,12 +24,12 @@ const CurriculumList = (props: CurriculumListProps) => {
 
   const createNewCurricular = () => {
     history.push(
-      `/dashboard/manage-institutions/institution/curricular-creation?id=${instId}`
+      `/dashboard/manage-institutions/institution/${instId}/course-builder`
     );
   };
 
   const editCurrentCurricular = (id: string) => {
-    history.push(`/dashboard/manage-institutions/${instId}/curricular?id=${id}`);
+    history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`);
   };
 
   return (
