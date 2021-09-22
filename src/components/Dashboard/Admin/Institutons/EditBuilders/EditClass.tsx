@@ -588,6 +588,9 @@ const EditClass = (props: EditClassProps) => {
                   searchStatus={searching}
                   searchCallback={setSearching}
                   imageFromS3={false}
+                  creatable
+                  creatableLabel={'Add students from register to class'}
+                  onCreate={() => history.push('/dashboard/registration')}
                 />
               </div>
             </div>

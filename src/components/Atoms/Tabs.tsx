@@ -98,6 +98,10 @@ const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
                   title: 'Staff',
                   key: 'staff',
                 },
+                {
+                  title: 'Register',
+                  key: 'register',
+                },
               ],
             }}
             activeTab={activeTab}

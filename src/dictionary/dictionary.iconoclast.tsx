@@ -52,16 +52,16 @@ const BreadcrumsTitles: any = {
     INSTITUTION_INFO: 'Institute Info',
     INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
-    CURRICULARBUILDER: 'New Curriculum',
-    CURRICULUM: 'Curriculum',
+    CURRICULARBUILDER: 'New Course',
+    CURRICULUM: 'Course',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
     CLASSROOM: 'Classroom',
     CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
-    EDITCURRICULUM: 'Edit Curriculm',
+    EDITCURRICULUM: 'Edit Course',
     EDITCLASSROOM: 'Edit Classroom',
-    CURRICULUMBUILDER: 'Curriculum Builder',
+    CURRICULUMBUILDER: 'Course Builder',
     LEARINGOBJECTIVE: 'Add Learning objective',
     AddMeasurement: 'Add Measurement',
     AddCheckpint: 'Add Checkpoint',
@@ -1092,7 +1092,7 @@ const InstitueCurriculam: any = {
     NAME: 'Curricular Name',
     ACTION: 'Actions',
     VIEW: 'View',
-    INFO: 'This institute does not have any curriculum. Please create a new curriculum.',
+    INFO: 'This institute does not have any course. Please create a new course.',
   },
   ES: {
     TITLE: 'TBD',
@@ -1222,10 +1222,10 @@ const classBuilderdict: any = {
 
 const CourseBuilderdict: any = {
   EN: {
-    TITLE: 'Create New Curriculum',
-    SUBTITLE: 'Add new curriculum to the list',
-    HEADING: 'CURRICULUM INFORMATION',
-    NAME: 'Curriculum Name',
+    TITLE: 'Create New Course',
+    SUBTITLE: 'Add new course to the list',
+    HEADING: 'COURSE INFORMATION',
+    NAME: 'Course Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
     TYPE: 'Select Type',
@@ -1243,7 +1243,7 @@ const CourseBuilderdict: any = {
     },
     MESSAGES: {
       ERROR: {
-        save: 'Unable to save new curriculum please try again later.',
+        save: 'Unable to save new course please try again later.',
         fetch: 'Unable to fetch institution list pleas try later.',
         designerlist: 'Error while fetching Designers list Please try again later.',
         process: 'Error while processing please Try again later.',
@@ -1257,8 +1257,8 @@ const CourseBuilderdict: any = {
         curricular: 'This curricular name is already exist, please add another name.',
       },
       success: {
-        save: 'New curriculum has been saved.',
-      },
+        save: 'New Course has been saved.',
+      }
     },
     BUTTON: {
       SAVE: 'Save',
@@ -1302,10 +1302,10 @@ const CourseBuilderdict: any = {
 
 const CurricularBuilderdict: any = {
   EN: {
-    TITLE: 'Create New Curriculum',
-    SUBTITLE: 'Add new curriculum to the list',
-    HEADING: 'CURRICULUM INFORMATION',
-    NAME: 'Curriculum Name',
+    TITLE: 'Create New Course',
+    SUBTITLE: 'Add new course to the list',
+    HEADING: 'COURSE INFORMATION',
+    NAME: 'Course Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
     TYPE: 'Select Type',
@@ -1314,7 +1314,7 @@ const CurricularBuilderdict: any = {
     OBJECT: 'Objective',
     messages: {
       error: {
-        save: 'Unable to save new curriculum please try again later.',
+        save: 'Unable to save new course please try again later.',
         fetch: 'Unable to fetch institution list pleas try later.',
         designerlist: 'Error while fetching Designers list Please try again later.',
         process: 'Error while processing please Try again later.',
@@ -1327,7 +1327,7 @@ const CurricularBuilderdict: any = {
         curricular: 'This curricular name is already exist, please add another name.',
       },
       success: {
-        save: 'New curriculum has been saved.',
+        save: 'New course has been saved.',
       },
     },
     BUTTON: {
@@ -1382,8 +1382,8 @@ const RoomBuilderdict: any = {
     CO_TEACHER_PLACEHOLDER: 'Select Co-Teachers',
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
-    CURRICULUM_LABEL: 'Curriculum',
-    CURRICULUM_PLACEHOLDER: 'Select Curriculum',
+    CURRICULUM_LABEL: 'Course',
+    CURRICULUM_PLACEHOLDER: 'Select Course',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     BUTTON: {
@@ -1471,10 +1471,10 @@ const RoomBuilderdict: any = {
 
 const EditCurriculardict: any = {
   EN: {
-    TITLE: 'Edit Curriculum',
-    SUBTITLE: 'Update curriculum information',
+    TITLE: 'Edit Course',
+    SUBTITLE: 'Update course information',
     HEADING: 'CURRICULAR INFORMATION',
-    NAME: 'Curriculum Name',
+    NAME: 'Course Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
     TYPE: 'Select Type',
@@ -1539,8 +1539,8 @@ const RoomEDITdict: any = {
     CO_TEACHER_PLACEHOLDER: 'Select Co-teacher',
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
-    CURRICULUM_LABEL: 'Curriculum',
-    CURRICULUM_PLACEHOLDER: 'Select Curriculum',
+    CURRICULUM_LABEL: 'Course',
+    CURRICULUM_PLACEHOLDER: 'Select Course',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     CONFERENCE_CALL_LINK_LABEL: 'Conference link',
@@ -1751,10 +1751,10 @@ const CourseScheduleDict: any = {
 
 const curricularviewdict: any = {
   EN: {
-    TITLE: 'Curriculum Builder',
-    SUBTITLE: 'Build curriculum, units and lesson plans here',
+    TITLE: 'Course Builder',
+    SUBTITLE: 'Build course, units and lesson plans here',
     HEADING: 'GENERAL INFORMATION',
-    NAME: 'Curriculum Name',
+    NAME: 'Course Name',
     OWNER: 'Institution Owner',
     DESCRIPTION: 'Description',
     DESIGNER: 'Designers',
@@ -1827,7 +1827,7 @@ const LEARINGOBJECTIVEDICT: any = {
 
 const SYLLABUS: any = {
   EN: {
-    TITLE: 'CURRICULUM UNITS',
+    TITLE: 'COURSE UNITS',
     NO: 'No.',
     NAME: 'Unit Name',
     ACTION: 'Actions',
@@ -2151,7 +2151,7 @@ const SyllabusDict: any = {
 const AddSyllabusDict: any = {
   EN: {
     title: 'Unit Builder',
-    subtitle: 'Create curriculum units here.',
+    subtitle: 'Create course units here.',
     heading: 'UNIT INFORMATION',
     unitname: 'Unit Name',
     designer: 'Select Designers',
@@ -3452,7 +3452,7 @@ const UnitLookupDict: any = {
     NOTE:
       'NOTE: Please select Curricular and then units to add current lesson to that unit.',
     NO: 'No.',
-    CURRICULUMNAME: 'Curriculum Name',
+    CURRICULUMNAME: 'Course Name',
     UNITNAME: 'Unit Name',
     STATUS: 'Status',
     ACTION: 'Action',

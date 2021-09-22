@@ -152,14 +152,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   const updateTab = (tab: string) => {
     console.log(tab, 'inside updateTab');
-
-    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-
-    // if(tab === 'lessons'){
-    //   history.push(`/dashboard/lesson-builder?institutionId=${institute?.id}&from=institution`)
-    // }else{
-    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    // }
+    
+    if(tab === 'register'){
+      history.push(`/dashboard/register`)
+    }else{
+      tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    }
   };
 
   useEffect(() => {

@@ -161,7 +161,7 @@ const Institution = (props: InstitutionProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Institute Information" />
       </div>
-      <PageWrapper>
+      <PageWrapper wrapClass="overflow-x-auto">
         <Switch>
           <Route
             path={`${match.url}/edit`}
