@@ -154,7 +154,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     console.log(tab, 'inside updateTab');
 
     if (tab === 'register') {
-      history.push(`/dashboard/register`);
+      history.push(`/dashboard/registration`);
     } else if (tab === 'unit') {
       // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
     } else {
