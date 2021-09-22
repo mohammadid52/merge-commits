@@ -100,7 +100,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     },
     {
       title: Institute_info[userLanguage]['TABS']['CURRICULAR'],
-      key: 'curricular',
+      key: 'course',
       content: (
         <CurriculumList
           curricular={instProps?.institute?.curricula}
@@ -144,7 +144,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       key: 'research_and_analytics',
       content: (
         <div className="p-8">
-          <Csv />
+          <Csv institutionId={institute?.id} />
         </div>
       ),
     },
@@ -152,10 +152,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   const updateTab = (tab: string) => {
     console.log(tab, 'inside updateTab');
-    
-    if(tab === 'register'){
-      history.push(`/dashboard/register`)
-    }else{
+
+    if (tab === 'register') {
+      history.push(`/dashboard/register`);
+    } else if (tab === 'unit') {
+      // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
+    } else {
       tabProps.setTabsData({...tabProps.tabsData, inst: tab});
     }
   };

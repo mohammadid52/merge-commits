@@ -76,6 +76,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Cohort Creation',
     CURRICULUM: 'Course',
+    COURSES: 'Courses',
     CURRICULARBUILDER: 'New Course',
     CLASSROOM_CREATION: 'Class Creation',
     CLASSROOMS: 'Classrooms',
@@ -116,6 +117,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
     CURRICULUM: 'TBD',
+    COURSES: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
     CLASSROOMS: 'TBD',
@@ -1124,10 +1126,10 @@ const InstitueCurriculam: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
-      ADD: 'New Curricular',
+      ADD: 'New Course',
     },
     NO: 'No.',
-    NAME: 'Curricular Name',
+    NAME: 'Course Name',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO:
@@ -1287,9 +1289,9 @@ const CourseBuilderdict: any = {
           'Invalid path please go back to institution selection page to select your institute.',
       },
       validation: {
-        name: 'Curricular name is required please enter name.',
-        institute: 'Please select an institute to add curricular.',
-        curricular: 'This curricular name is already exist, please add another name.',
+        name: 'Course name is required please enter name.',
+        institute: 'Please select an institute to add course.',
+        curricular: 'This course name is already exist, please add another name.',
       },
       success: {
         save: 'New Course has been saved.',
@@ -1356,9 +1358,9 @@ const CurricularBuilderdict: any = {
           'Invalid path please go back to organization selection page to select your organization.',
       },
       validation: {
-        name: 'Curricular name is required please enter name.',
-        organization: 'Please select an organization to add curricular.',
-        curricular: 'This curricular name is already exist, please add another name.',
+        name: 'Course name is required please enter name.',
+        organization: 'Please select an organization to add course.',
+        curricular: 'This course name is already exist, please add another name.',
       },
       success: {
         save: 'New course has been saved.',
@@ -1429,9 +1431,9 @@ const RoomBuilderdict: any = {
         teacherlist: 'Unable to fetch teachers list. Please try again later.',
         createclass: 'Please create cohort first for your organization.',
         classlist: 'Unable to fetch cohort list. Please try again later.',
-        curricular: 'Unable to fetch curricular list. Please try again later.',
+        curricular: 'Unable to fetch course list. Please try again later.',
         process: 'Error while processing please Try again later.',
-        classroomadd: 'Error while adding Class curricular. Please try again later.',
+        classroomadd: 'Error while adding Class course. Please try again later.',
         ecreateclass: 'Error while creating Class. Please try again later.',
         invalid:
           'Invalid path please go back to organization selection page to select your organization.',
@@ -1511,14 +1513,14 @@ const EditCurriculardict: any = {
     OBJECTIVE: 'Objective',
     messages: {
       fetcherr: 'Error while fetching Developers list Please try again later.',
-      curricularchange: 'Curricular changes has been saved.',
-      updateerror: 'Error while updating curricular data please try later.',
+      curricularchange: 'Course changes has been saved.',
+      updateerror: 'Error while updating course data please try later.',
       unablefetch: 'Unable to fetch organization list pleas try later.',
       processerr: 'Error while processing please Try again later.',
-      namerequired: 'Curricular name is required please enter name.',
-      selectinstitute: 'Please select an organization to add curricular.',
-      nameexist: 'This curricular name is already exist, please add another name.',
-      fetchinger: 'Error while fetching curricular data,please try again later.',
+      namerequired: 'Course name is required please enter name.',
+      selectinstitute: 'Please select an organization to add course.',
+      nameexist: 'This course name is already exist, please add another name.',
+      fetchinger: 'Error while fetching course data,please try again later.',
     },
     BUTTON: {
       SAVE: 'Save',
@@ -1587,7 +1589,7 @@ const RoomEDITdict: any = {
       addclassfirst:
         'Please add cohort first for the selected organization or select another organization.',
       unableclass: 'Unable to fetch cohort list. Please try again later.',
-      unablecurricular: 'Unable to fetch curricular list. Please try again later.',
+      unablecurricular: 'Unable to fetch course list. Please try again later.',
       errorprocess: 'Error while processing please Try again later.',
       classroomrequired: 'Class name is required please enter name.',
       selectinstitute: 'Please select an organization to add Class.',
@@ -1597,7 +1599,7 @@ const RoomEDITdict: any = {
       oneclass: 'One Class can allow max. 30 participants.',
       alreadyexist: 'This Class name is already exist, please add another name.',
       classupdate: 'Class details has been updated.',
-      errupdating: 'Error while updating Class curricular. Please try that later.',
+      errupdating: 'Error while updating Class course. Please try that later.',
       errprocess: 'Error while processing. Please try again later.',
       errupdatingclass: 'Error while updating Class details. Please try again later.',
       errfetch: 'Error while fetching Class data, please try again later.',
@@ -1798,8 +1800,8 @@ const curricularviewdict: any = {
 
 const CHECKPOINTSDICT: any = {
   EN: {
-    TITLE: 'Demographics & Information (Curricular)',
-    INFO: 'This curricular does not have any checkpoints yet. Please create a new one.',
+    TITLE: 'Demographics & Information (Course)',
+    INFO: 'This course does not have any checkpoints yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADDEXISTING: 'Add Existing Checkpoint',
@@ -1820,7 +1822,7 @@ const CHECKPOINTSDICT: any = {
 const LEARINGOBJECTIVEDICT: any = {
   EN: {
     TITLE: 'OBJECTIVES',
-    INFO: 'This curricular does not have any objectives yet. Please create a new one.',
+    INFO: 'This course does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADD: 'Add Learning Objective',
@@ -1843,7 +1845,7 @@ const SYLLABUS: any = {
     NAME: 'Module Name',
     ACTION: 'Actions',
     EDIT: 'edit',
-    INFO: 'This curricular does not have any modules yet. Please create a new one.',
+    INFO: 'This course does not have any modules yet. Please create a new one.',
     FETCH: 'Fetching details...',
     ADDNEW: 'Add new Module',
   },
@@ -2002,7 +2004,7 @@ const SelectPreviousQuestionDict: any = {
 const AddMeasurementDict: any = {
   EN: {
     title: 'Add Measurement',
-    subtitle: 'Add new measurement to curricular.',
+    subtitle: 'Add new measurement to course.',
     heading: 'MEASUREMENT INFORMATION',
     mlabel: 'Measurement Name',
     selecttopic: 'Select Topic',
@@ -2047,7 +2049,7 @@ const AddMeasurementDict: any = {
 const AddProfileCheckpointDict: any = {
   EN: {
     title: 'Add Checkpoint',
-    subtitle: 'Add new checkpoint to curricular.',
+    subtitle: 'Add new checkpoint to course.',
     heading: 'ADD NEW CHECKPOINT',
     label: 'Title',
     checkpointlabel: 'Checkpoint Label',
@@ -2207,7 +2209,7 @@ const AddSyllabusDict: any = {
 const AddTopicDict: any = {
   EN: {
     title: 'Add Topic',
-    subtitle: 'Add new topic to the curricular.',
+    subtitle: 'Add new topic to the course.',
     heading: 'TOPIC INFORMATION',
     topicname: 'Topic Name',
     learningobj: 'Select objective',
@@ -2244,7 +2246,7 @@ const AddTopicDict: any = {
 const EditLearningObjectiveDict: any = {
   EN: {
     title: 'Edit objective',
-    subtitle: 'Edit curricular objective.',
+    subtitle: 'Edit course objective.',
     heading: 'OBJECTIVE INFORMATION',
     learningname: 'Objective Name',
     description: 'Description',
@@ -2277,7 +2279,7 @@ const EditLearningObjectiveDict: any = {
 const EditMeasurementDict: any = {
   EN: {
     title: 'Edit Measurement',
-    subtitle: 'Edit curricular measurement.',
+    subtitle: 'Edit course measurement.',
     heading: 'MEASUREMENT INFORMATION',
     labelmeasur: 'Measurement Name',
     seltopic: 'Select Topic',
@@ -2324,7 +2326,7 @@ const EditMeasurementDict: any = {
 const EditProfileCheckpointDict: any = {
   EN: {
     title: 'Add Checkpoint',
-    subtitle: 'Add new checkpoint to curricular.',
+    subtitle: 'Add new checkpoint to course.',
     heading: 'ADD NEW CHECKPOINT',
     ltitle: 'Title',
     checklabel: 'Checkpoint Label',
@@ -2458,7 +2460,7 @@ const EditSyllabusDict: any = {
 const EditTopicDict: any = {
   EN: {
     title: 'Edit Topic',
-    subtitle: 'Edit curricular topic.',
+    subtitle: 'Edit course topic.',
     heading: 'TOPIC INFORMATION',
     topicname: 'Topic Name',
     selectlearning: 'Select objective',
@@ -2505,7 +2507,7 @@ const EditTopicDict: any = {
 const ProfileCheckpointlookupDict: any = {
   EN: {
     title: 'Select Checkpoint',
-    subtitle: 'Select checkpoint for curricular.',
+    subtitle: 'Select checkpoint for course.',
     heading: 'CHECKPOINT LISTS',
     selectcheckpoint: 'Checkpoints Selected',
     selection: 'Selection',
@@ -3378,13 +3380,13 @@ const UnitLookupDict: any = {
   EN: {
     HEADING: 'Assign Module',
     NOTE:
-      'NOTE: Please select Curricular and then modules to add current session to that module.',
+      'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
     UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This session is not added to any curricular or modules.',
+    NOTADDED: ' This session is not added to any course or modules.',
 
     MESSAGES: {
       ADDED: 'Session added successfully.',

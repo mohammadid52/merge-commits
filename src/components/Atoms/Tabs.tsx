@@ -45,7 +45,7 @@ const DropDownMenu = ({activeTab, menu, onClick}: any) => {
             leave="transition ease-in duration-75"
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
-            <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer">
+            <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10">
               <div className="px-1 py-1 shadow-lg">
                 {menu.children.map((item: any, index: number) => (
                   <Menu.Item key={index} onClick={() => onClick(item.key)}>
@@ -114,10 +114,11 @@ const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
               children: [
                 {
                   title: 'Courses',
-                  key: 'curricular',
+                  key: 'course',
                 },
                 {
                   title: 'Units',
+                  key:'unit'
                 },
                 {
                   title: 'Lessons',

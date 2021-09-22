@@ -11,9 +11,11 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
 import {orderBy, uniqBy} from 'lodash';
 
-interface Csv {}
+interface ICsvProps {
+  institutionId?: string;
+}
 
-const Csv = (props: Csv) => {
+const Csv = ({institutionId}: ICsvProps) => {
   const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
   const {CsvDict} = useDictionary(clientKey);
   const [institutions, setInstitutions] = useState([]);
@@ -113,6 +115,59 @@ const Csv = (props: Csv) => {
     });
     setInstitutions(institutions);
     setInstitutionsLoading(false);
+  };
+
+  const getBasicInstitutionInfo = async (institutionId: string) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionBasicInfo, {
+          id: institutionId
+        })
+      );
+      setSelectedInst({
+        id: institutionId,
+        name: result?.data?.getInstitution.name,
+        value: result?.data?.getInstitution.name,
+      });
+    } catch (error) {
+      
+    }
+  };
+
+  useEffect(() => {
+    if (institutionId) {
+      getBasicInstitutionInfo(institutionId);
+      fetchClassRooms();
+    }
+  }, [institutionId]);
+
+  const fetchClassRooms = async () => {
+    setClassRoomLoading(true);
+    let instCRs: any = [];
+
+    let classrooms: any = await API.graphql(
+      graphqlOperation(customQueries.getInstClassRooms, {
+        id: institutionId,
+      })
+    );
+    classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+    classrooms = classrooms.map((cr: any) => {
+      let curriculum =
+        cr.curricula?.items && Array.isArray(cr.curricula?.items)
+          ? cr.curricula?.items[0].curriculum
+          : null;
+      instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+      return {
+        id: cr.id,
+        name: cr.name,
+        value: cr.name,
+        class: {...cr.class},
+        curriculum,
+      };
+    });
+    setClassRoomsList(classrooms);
+    setInstClassRooms(instCRs);
+    setClassRoomLoading(false);
   };
 
   const onInstSelect = async (id: string, name: string, value: string) => {
@@ -307,7 +362,7 @@ const Csv = (props: Csv) => {
       let checkpoints = surveyQuestions?.data?.getLesson?.checkpoints?.items;
       const questions: any = [];
       let cCheckpoints: any = [];
-      checkpoints.map((cp: any) => {
+      checkpoints?.map((cp: any) => {
         cCheckpoints.push(cp.checkpointID);
         let ques = cp?.checkpoint?.questions?.items;
         ques.map((q: any) => {

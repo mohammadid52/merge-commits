@@ -54,6 +54,7 @@ const CourseBuilder = () => {
   const [courseData, setCourseData] = useState<any>({
     institution: {
       id: institutionId,
+      name: ''
     },
   });
 
@@ -71,6 +72,10 @@ const CourseBuilder = () => {
   useEffect(() => {
     fetchCourseData();
   }, [courseId]);
+
+  useEffect(() => {
+    getBasicInstitutionInfo();
+  }, [institutionId]);
 
   const fetchCourseData = async () => {
     if (courseId) {
@@ -102,6 +107,21 @@ const CourseBuilder = () => {
     }
   };
 
+  const getBasicInstitutionInfo = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(customQueries.getInstitutionBasicInfo, {
+        id: institutionId
+      })
+    );
+    setCourseData((prevData:any) => ({
+      ...prevData,
+      institution: {
+        ...prevData.institution,
+        name: result?.data?.getInstitution.name,
+      }
+    }));
+  };
+
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
@@ -112,6 +132,11 @@ const CourseBuilder = () => {
     {
       title: courseData?.institution?.name || 'loading...',
       url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['COURSES'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=course`,
       last: false,
     },
     {
