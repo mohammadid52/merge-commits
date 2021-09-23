@@ -159,7 +159,7 @@ const Institution = (props: InstitutionProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Institute Information" />
+        <SectionTitle title={`${institutionData.name} Dashboard`} />
       </div>
       <PageWrapper wrapClass="overflow-x-auto">
         <Switch>

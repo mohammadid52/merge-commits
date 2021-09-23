@@ -1,6 +1,7 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {SiGoogleclassroom} from 'react-icons/si';
 
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -68,7 +69,7 @@ const RoomsList = (props: RoomListProps) => {
   }, []);
 
   return (
-    <div className="pt-8 flex m-auto justify-center p-4">
+    <div className="flex m-auto justify-center p-4 pt-0 pl-12">
       <div className="">
         <PageWrapper defaultClass="">
           {loading ? (
@@ -82,18 +83,22 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           ) : roomList.length > 0 ? (
             <Fragment>
-              <div className="flex justify-between">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
-                  {instName ? instName.toUpperCase() : 'INSTITUTE'}{' '}
-                  {InstitueRomms[userLanguage]['TITLE']}
-                </h3>
+              <div className="flex justify-between items-center">
+                <div className="flex w-auto">
+                  <span className="w-auto inline-flex items-center mr-2">
+                    <SiGoogleclassroom className="w-6 h-6" />
+                  </span>
+                  <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
+                    {InstitueRomms[userLanguage]['TITLE']}
+                  </h3>
+                </div>
                 <AddButton
                   label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>
 
-              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+              <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                 <div className="flex justify-between bg-gray-50 pl-4 pr-6 py-2 whitespace-nowrap">
                   <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{InstitueRomms[userLanguage]['NO']}</span>
@@ -113,7 +118,9 @@ const RoomsList = (props: RoomListProps) => {
                   </div>
 
                   <div className="w-1/10 px-4 py-2 bg-gray-50 flex text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{InstitueRomms[userLanguage]['ACTION']}</span>
+                    <span className="w-auto">
+                      {InstitueRomms[userLanguage]['ACTION']}
+                    </span>
                   </div>
                 </div>
               </div>

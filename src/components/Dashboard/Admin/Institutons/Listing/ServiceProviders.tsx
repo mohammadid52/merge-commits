@@ -32,15 +32,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const dictionary = spBuilderDict[userLanguage];
 
   const {instId, serviceProviders, instName} = props;
-  const existingPartners = serviceProviders.items.map((item: any) => {
-    return {
-      id: item.id,
-      status: item.status,
-      partner: {...item.providerInstitution},
-    };
-  });
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
-  const [partners, setPartners] = useState(existingPartners);
+  const [partners, setPartners] = useState<any>([]);
   const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
     show: false,
     item: {},
@@ -48,6 +41,16 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
+
+  useEffect(() => {
+    if (serviceProviders.items?.length) {
+      setPartners(serviceProviders.items.map((item: any) => ({
+          id: item.id,
+          status: item.status,
+          partner: {...item.providerInstitution},
+      })))
+    }
+  },[serviceProviders])
 
   const onServProChange = (val: string, name: string, id: string) => {
     setNewServPro({
@@ -144,7 +147,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           input: {id, status},
         })
       );
-      const updatedPartners = partners.map((sp) => {
+      const updatedPartners = partners.map((sp:any) => {
         if (sp.id === id) {
           sp.status = status;
         }
@@ -155,11 +158,12 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     }
     setStatusEdit('');
   };
+
   return (
     <div className="flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-base border-b-0 border-gray-200 leading-6 font-medium text-gray-500">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
             {dictionary.SERVICE}
           </h3>
           <div className="flex items-center w-6/10 m-auto px-2 my-8">
@@ -196,7 +200,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
               </div>
 
               <div className="w-full m-auto max-h-88 overflow-y-auto">
-                {partners.map((item, index) => (
+                {partners.map((item:any, index:number) => (
                   <div
                     key={index}
                     className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">

@@ -66,7 +66,7 @@ const initialState: newUserInput = {
   group: '',
 };
 
-const Registration = () => {
+const Registration = ({isInInstitute}: any) => {
   const history = useHistory();
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
   const [institutions, setInstitutions] = useState([]);
@@ -163,7 +163,7 @@ const Registration = () => {
           studentAuthID: authId,
           studentEmail: newUserInputs.email,
           status: 'Active',
-          group: newUserInputs.group
+          group: newUserInputs.group,
         };
         let newStudent: any = await API.graphql(
           graphqlOperation(customMutations.createClassStudent, {input})
@@ -366,29 +366,45 @@ const Registration = () => {
   }, []);
 
   return (
-    <div className="w-full h-full mt-4 p-12">
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle
-          title={RegistrationDict[userLanguage]['title']}
-          subtitle={RegistrationDict[userLanguage]['subtitle']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            btnClass="mr-4"
-            onClick={history.goBack}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div>
+    <div className={`w-full h-full ${isInInstitute ? 'py-8 px-12' : 'mt-4 p-12'}`}>
+      {isInInstitute ? (
+        <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
+          {RegistrationDict[userLanguage]['title']}
+        </h3>
+      ) : (
+        <>
+          <BreadCrums items={breadCrumsList} />
+          <div className="flex justify-between">
+            <SectionTitle
+              title={RegistrationDict[userLanguage]['title']}
+              subtitle={RegistrationDict[userLanguage]['subtitle']}
+            />
+            <div className="flex justify-end py-4 mb-4 w-5/10">
+              <Buttons
+                label="Go Back"
+                btnClass="mr-4"
+                onClick={history.goBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
-      <div className="test w-full bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
+      <div
+        className={`${
+          !isInInstitute
+            ? 'test border-2 border-gray-300 rounded bg-gray-200 shadow-elem-light px-12 py-8'
+            : ''
+        } w-full flex flex-col`}>
         <div className="">
           <div className="w-full md:flex flex-col mb-8">
-            <div className="h-full w-full bg-white shadow-5 my-4 sm:rounded-lg">
+            <div
+              className={`h-full w-full ${
+                !isInInstitute ? 'bg-white shadow-5' : ''
+              } my-4 sm:rounded-lg`}>
               <form>
-                <div className="h-full px-4 pb-5 pt-2 sm:px-6">
+                <div className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pb-5 pt-2`}>
                   <div className="text-red-500 pb-2 text-right">
                     * {RegistrationDict[userLanguage]['requiredfield']}
                   </div>

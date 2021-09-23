@@ -12,10 +12,11 @@ export interface ITabElements {
 interface ITabsProps {
   tabsData: ITabElements[];
   activeTab: string;
+  tabWithNumbers?:boolean;
   updateTab: (tab: string) => void;
 }
 
-const DropDownMenu = ({activeTab, menu, onClick}: any) => {
+const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -29,8 +30,8 @@ const DropDownMenu = ({activeTab, menu, onClick}: any) => {
                   : ''
               } hover:bg-indigo-300 hover:text-indigo-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-              } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-500`}>
-              {menu.title}
+              } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
+              {customTitle || menu.title}
               <ChevronDownIcon
                 className="w-5 h-5 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                 aria-hidden="true"
@@ -63,7 +64,7 @@ const DropDownMenu = ({activeTab, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
+const Tabs = ({tabsData, tabWithNumbers ,activeTab, updateTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -85,101 +86,28 @@ const Tabs = ({tabsData, activeTab, updateTab}: ITabsProps) => {
       </div>
       <div className="hidden sm:block">
         <nav className="flex user__profile-tabs space-x-3" aria-label="Tabs">
-          <DropDownMenu
-            menu={{
-              title: 'Institution Manager',
-              key: 'institution',
-              children: [
-                {
-                  title: 'General Information',
-                  key: 'general_information',
-                },
-                {
-                  title: 'Staff',
-                  key: 'staff',
-                },
-                {
-                  title: 'Register',
-                  key: 'register',
-                },
-              ],
-            }}
-            activeTab={activeTab}
-            onClick={updateTab}
-          />
-          <DropDownMenu
-            menu={{
-              title: 'Course Manager',
-              key: 'course',
-              children: [
-                {
-                  title: 'Courses',
-                  key: 'course',
-                },
-                {
-                  title: 'Units',
-                  key:'unit'
-                },
-                {
-                  title: 'Lessons',
-                  key: 'lessons',
-                },
-                {
-                  title: 'Game Changers ',
-                },
-              ],
-            }}
-            activeTab={activeTab}
-            onClick={updateTab}
-          />
-          <DropDownMenu
-            menu={{
-              title: 'Class Manager',
-              key: 'class',
-              children: [
-                {
-                  title: 'Classes',
-                  key: 'class',
-                },
-                {
-                  title: 'Classrooms',
-                  key: 'class_room',
-                },
-              ],
-            }}
-            activeTab={activeTab}
-            onClick={updateTab}
-          />
-          <DropDownMenu
-            menu={{
-              title: 'Community Manager',
-              key: 'community',
-              children: [
-                {
-                  title: 'New Person Spotlight',
-                },
-                {
-                  title: 'Announcements & Events',
-                },
-                {
-                  title: 'Front Page',
-                },
-              ],
-            }}
-            activeTab={activeTab}
-            onClick={updateTab}
-          />
-          <button
-            onClick={() => {
-              updateTab('research_and_analytics');
-            }}
-            className={`px-3 relative ${
-              theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-            } ${
-              activeTab === 'research_and_analytics' ? 'bg-indigo-300 text-indigo-700' : ''
-            } py-2 cursor-pointer font-medium hover:bg-indigo-300 hover:text-indigo-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-500`}>
-            Research & Analytics
-          </button>
+          {tabsData.map((menu:any, index:number) =>
+            menu.type === 'dropdown' ? (
+              <DropDownMenu
+                menu={menu}
+                customTitle={`${index + 1}. ${menu.title}`}
+                activeTab={activeTab}
+                onClick={updateTab}
+              />
+            ) : (
+              <button
+                onClick={() => {
+                  updateTab(menu.key);
+                }}
+                className={`px-3 relative ${
+                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
+                } ${
+                  activeTab === menu.key ? 'bg-indigo-300 text-indigo-700' : ''
+                } py-2 cursor-pointer font-medium hover:bg-indigo-300 hover:text-indigo-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
+                {tabWithNumbers ? index+1 : ''} {menu.title}
+              </button>
+            )
+          )}
           {/* {tabsData.map((tab: ITabElements) => (
             <button
               key={tab.title}

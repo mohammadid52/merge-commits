@@ -1,7 +1,9 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {FaChalkboardTeacher, FaGraduationCap, FaHandshake, FaHotel} from 'react-icons/fa';
 import {HiPencil} from 'react-icons/hi';
-import {IoPeople} from 'react-icons/io5';
+import {BsEnvelope} from 'react-icons/bs';
+import {FiPhone} from 'react-icons/fi';
+import {IoIosGlobe} from 'react-icons/io';
+import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -25,6 +27,7 @@ import StaffBuilder from './Listing/StaffBuilder';
 import GeneralInformation from './GeneralInformation';
 import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList';
 import Csv from '@components/Dashboard/Csv/Csv';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -60,84 +63,86 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
 
-  const tabs: ITabElements[] = [
+  const headerMenusForInstitution = [
     {
-      title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
-      key: 'general_information',
-      content: (
-        <>
-          <GeneralInformation instituteInfo={institute} />
-          <ServiceProviders
-            serviceProviders={institute.serviceProviders}
-            instId={institute?.id}
-            updateServiceProviders={instProps.updateServiceProviders}
-            instName={institute?.name}
-          />
-        </>
-      ),
+      title: 'Institution Manager',
+      key: 'institution',
+      type: 'dropdown',
+      children: [
+        {
+          title: 'General Information',
+          key: 'general_information',
+        },
+        {
+          title: Institute_info[userLanguage]['TABS']['STAFF'],
+          key: 'staff',
+        },
+        {
+          title: 'Register',
+          key: 'register',
+        },
+      ],
     },
     {
-      title: Institute_info[userLanguage]['TABS']['STAFF'],
-      key: 'staff',
-      content: (
-        <StaffBuilder
-          serviceProviders={institute.serviceProviders}
-          instituteId={instProps?.institute?.id}
-          instName={institute?.name}
-        />
-      ),
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['CLASSES'],
-      key: 'class',
-      content: (
-        <ClassList
-          classes={institute?.classes}
-          instId={institute?.id}
-          instName={institute?.name}
-        />
-      ),
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['CURRICULAR'],
+      title: 'Course Manager',
       key: 'course',
-      content: (
-        <CurriculumList
-          curricular={instProps?.institute?.curricula}
-          instId={institute?.id}
-          instName={institute?.name}
-        />
-      ),
+      type: 'dropdown',
+      children: [
+        {
+          title: 'Courses',
+          key: 'course',
+        },
+        {
+          title: 'Units',
+          key: 'unit',
+        },
+        {
+          title: Institute_info[userLanguage]['TABS']['LESSONS'],
+          key: 'lessons',
+        },
+        {
+          title: 'Game Changers ',
+        },
+      ],
     },
     {
-      title: Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER'],
-      key: 'service_provider',
-      content: (
-        <ServiceProviders
-          serviceProviders={institute.serviceProviders}
-          instId={institute?.id}
-          updateServiceProviders={instProps.updateServiceProviders}
-          instName={institute?.name}
-        />
-      ),
+      title: 'Class Manager',
+      key: 'class',
+      type: 'dropdown',
+      children: [
+        {
+          title: Institute_info[userLanguage]['TABS']['CLASSES'],
+          key: 'class',
+          content: (
+            <ClassList
+              classes={institute?.classes}
+              instId={institute?.id}
+              instName={institute?.name}
+            />
+          ),
+        },
+        {
+          title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
+          key: 'class_room',
+          content: <RoomsList instId={institute?.id} instName={institute?.name} />,
+        },
+      ],
     },
     {
-      title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
-      key: 'class_room',
-      content: <RoomsList instId={institute?.id} instName={institute?.name} />,
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['LESSONS'],
-      key: 'lessons',
-      content: (
-        <div className="p-8">
-          <LessonsList
-            isInInstitution
-            title={`${institute?.name} lessons`}
-            instId={institute?.id}
-          />
-        </div>
-      ),
+      title: 'Community Manager',
+      key: 'community',
+      type: 'dropdown',
+      children: [
+        {
+          title: 'New Person Spotlight',
+        },
+        {
+          title: 'Announcements & Events',
+        },
+        {
+          title: 'Front Page',
+        },
+      ],
     },
     {
       title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
@@ -151,15 +156,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   ];
 
   const updateTab = (tab: string) => {
-    console.log(tab, 'inside updateTab');
+    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
 
-    if (tab === 'register') {
-      history.push(`/dashboard/registration`);
-    } else if (tab === 'unit') {
-      // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
-    } else {
-      tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    }
+    // if (tab === 'register') {
+    //   history.push(`/dashboard/registration`);
+    // } else if (tab === 'unit') {
+    //   // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
+    // } else {
+    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    // }
   };
 
   useEffect(() => {
@@ -169,6 +174,66 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     }
     getUrl();
   }, [instProps?.institute.image]);
+
+  const renderElementBySelectedMenu = () => {
+    switch (tabProps.tabsData.inst) {
+      case 'general_information':
+        return (
+          <ServiceProviders
+            serviceProviders={institute.serviceProviders}
+            instId={institute?.id}
+            updateServiceProviders={instProps.updateServiceProviders}
+            instName={institute?.name}
+          />
+        );
+      case 'staff':
+        return (
+          <StaffBuilder
+            serviceProviders={institute.serviceProviders}
+            instituteId={instProps?.institute?.id}
+            instName={institute?.name}
+          />
+        );
+      case 'register':
+        return <Registration isInInstitute />;
+      case 'course':
+        return (
+          <CurriculumList
+            curricular={instProps?.institute?.curricula}
+            instId={institute?.id}
+            instName={institute?.name}
+          />
+        );
+      case 'lessons':
+        return (
+          <div className="p-8">
+            <LessonsList
+              isInInstitution
+              title={`${institute?.name} lessons`}
+              instId={institute?.id}
+            />
+          </div>
+        );
+      case 'class':
+        return (
+          <ClassList
+            classes={institute?.classes}
+            instId={institute?.id}
+            instName={institute?.name}
+          />
+        );
+      case 'class_room':
+        return <RoomsList instId={institute?.id} instName={institute?.name} />;
+      case 'research_and_analytics':
+        return (
+          <div className="p-8">
+            <Csv institutionId={institute?.id} />
+          </div>
+        );
+      default:
+        break;
+    }
+  };
 
   const {
     id,
@@ -184,63 +249,117 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     website,
     isServiceProvider,
   } = instProps?.institute;
-  const activeTabContent = tabs.find(({key}: any) => key === tabProps.tabsData.inst);
-
   return (
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
         <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center md:justify-start">
-          <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
-            {image ? (
-              imageUrl ? (
-                <img
-                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                  src={imageUrl}
-                />
+          <div className="w-auto">
+            <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
+              {image ? (
+                imageUrl ? (
+                  <img
+                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                    src={imageUrl}
+                  />
+                ) : (
+                  <div
+                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
+                  />
+                )
               ) : (
                 <div
-                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
-                />
-              )
-            ) : (
-              <div
-                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                <div
-                  className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
-                  style={{
-                    /*  stylelint-disable */
-                    background: `${
-                      name
-                        ? stringToHslColor(
-                            getInitialsFromString(name)[0] +
-                              ' ' +
-                              getInitialsFromString(name)[1]
-                          )
-                        : null
-                    }`,
-                    textShadow: '0.2rem 0.2rem 3px #423939b3',
-                  }}>
-                  {name &&
-                    initials(
-                      getInitialsFromString(name)[0],
-                      getInitialsFromString(name)[1]
-                    )}
+                  className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                  <div
+                    className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                    style={{
+                      /*  stylelint-disable */
+                      background: `${
+                        name
+                          ? stringToHslColor(
+                              getInitialsFromString(name)[0] +
+                                ' ' +
+                                getInitialsFromString(name)[1]
+                            )
+                          : null
+                      }`,
+                      textShadow: '0.2rem 0.2rem 3px #423939b3',
+                    }}>
+                    {name &&
+                      initials(
+                        getInitialsFromString(name)[0],
+                        getInitialsFromString(name)[1]
+                      )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
-              <p>{name ? name : ''}</p>
-              <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
-                <span
-                  className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
-                  <HiPencil
-                    className="w-6 h-6 pl-2"
-                    onClick={() => history.push(`${match.url}/edit?id=${id}`)}
-                  />
+              <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
+                <p>{name ? name : ''}</p>
+                <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
+                  <span
+                    className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
+                    <HiPencil
+                      className="w-6 h-6 pl-2"
+                      onClick={() => history.push(`${match.url}/edit?id=${id}`)}
+                    />
+                  </span>
+                </Tooltip>
+              </div>
+            </div>
+            <div className="mt-5">
+              <div className="flex mt-2">
+                <span className="w-auto mr-2">
+                  <BsEnvelope className="w-6 h-6" />
                 </span>
-              </Tooltip>
+                <span className="w-auto">
+                  {address && (
+                    <Fragment>
+                      {address + ', '} <br />
+                    </Fragment>
+                  )}
+                  {addressLine2 && (
+                    <Fragment>
+                      {addressLine2 + ', '} <br />
+                    </Fragment>
+                  )}
+                  {[city, state].filter(Boolean).join(', ')}
+                  {city && state && <br />}
+                  {zip && zip}
+                </span>
+              </div>
+              <div className="flex mt-2">
+                <span className="w-auto mr-2">
+                  <FiPhone className="w-6 h-6" />
+                </span>
+                <span className="w-auto">{phone ? formatPhoneNumber(phone) : '-'}</span>
+              </div>
+              <div className="flex mt-2">
+                <span className="w-auto mr-2">
+                  {isServiceProvider ? (
+                    <BiCheckboxChecked className="w-6 h-6" />
+                  ) : (
+                    <BiCheckbox className="w-6 h-6" />
+                  )}
+                </span>
+                <span className="w-auto">
+                  {Institute_info[userLanguage]['SERVICE_PROVIDER']}
+                </span>
+              </div>
+              <div className="flex mt-2">
+                <span className="w-auto mr-2">
+                  <IoIosGlobe className="w-6 h-6" />
+                </span>
+                <span className="w-auto">
+                  {website ? (
+                    <a href={website} target="_blank">
+                      {getHostNameFromUrl(website)}
+                    </a>
+                  ) : (
+                    '-'
+                  )}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -248,15 +367,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             <div className="bg-white border-l-0 border-gray-200 mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 2xl:px-6">
                 <Tabs
-                  tabsData={tabs}
+                  tabsData={headerMenusForInstitution}
                   activeTab={tabProps.tabsData.inst}
                   updateTab={updateTab}
+                  tabWithNumbers
                 />
                 {/* <h3 className="text-lg flex items-center leading-6 font-medium text-gray-900">
                   {Institute_info[userLanguage]['TITLE']}
                   </h3> */}
               </div>
-              <div className="overflow-hidden">{activeTabContent?.content}</div>
+              <div className="overflow-hidden">{renderElementBySelectedMenu()}</div>
             </div>
           </div>
         </div>
