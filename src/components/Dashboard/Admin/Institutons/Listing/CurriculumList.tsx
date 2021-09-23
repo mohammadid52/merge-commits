@@ -88,8 +88,8 @@ const CurriculumList = (props: CurriculumListProps) => {
           ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
-                <Buttons
-                  btnClass="mx-4"
+                <AddButton
+                  className="mx-4"
                   label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewCurricular}
                 />

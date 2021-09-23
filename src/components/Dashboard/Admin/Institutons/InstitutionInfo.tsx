@@ -376,7 +376,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   {Institute_info[userLanguage]['TITLE']}
                   </h3> */}
               </div>
-              <div className="overflow-hidden">{renderElementBySelectedMenu()}</div>
+              <div className="overflow-hidden min-h-80">{renderElementBySelectedMenu()}</div>
             </div>
           </div>
         </div>
