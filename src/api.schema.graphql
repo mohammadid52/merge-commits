@@ -962,6 +962,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   smallGroupSize: Int
   smallGroupOption: String
   studentMaterials: String
+  targetAudience: String 
 }
 
 type UniversalLessonPlan {
@@ -1247,4 +1248,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
-} 
+}

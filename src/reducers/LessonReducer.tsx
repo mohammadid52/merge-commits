@@ -145,6 +145,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         subscription: action.payload.subscription,
       };
     case 'SET_ROOM_SUBSCRIPTION_DATA':
+      console.log('SET_ROOM_SUBSCRIPTION_DATA - ', action.payload);
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {

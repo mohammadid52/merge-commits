@@ -11155,6 +11155,7 @@ export const createAttendance = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -11406,6 +11407,7 @@ export const updateAttendance = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -11657,6 +11659,7 @@ export const deleteAttendance = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -11912,6 +11915,7 @@ export const createUniversalLesson = /* GraphQL */ `
       smallGroupSize
       smallGroupOption
       studentMaterials
+      targetAudience
       createdAt
       updatedAt
     }
@@ -11995,6 +11999,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       smallGroupSize
       smallGroupOption
       studentMaterials
+      targetAudience
       createdAt
       updatedAt
     }
@@ -12078,6 +12083,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
       smallGroupSize
       smallGroupOption
       studentMaterials
+      targetAudience
       createdAt
       updatedAt
     }
@@ -12484,6 +12490,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -12609,6 +12616,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -12734,6 +12742,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -12834,6 +12843,7 @@ export const createUniversalLessonFeedback = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
@@ -12911,6 +12921,7 @@ export const updateUniversalLessonFeedback = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
@@ -12988,6 +12999,7 @@ export const deleteUniversalLessonFeedback = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }

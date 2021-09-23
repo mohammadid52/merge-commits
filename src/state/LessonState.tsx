@@ -44,7 +44,7 @@ export const lessonState: lessonStateType = {
   studentData: [[]],
   exerciseData: [[]],
   viewing: false,
-  displayData: [],
+  displayData: [''],
   saveCount: 0,
   firstSave: true,
   subscription: {},

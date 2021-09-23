@@ -4892,6 +4892,7 @@ export const getAttendance = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -5084,6 +5085,7 @@ export const listAttendances = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
@@ -5243,6 +5245,7 @@ export const getUniversalLesson = /* GraphQL */ `
       smallGroupSize
       smallGroupOption
       studentMaterials
+      targetAudience
       createdAt
       updatedAt
     }
@@ -5322,6 +5325,7 @@ export const listUniversalLessons = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -5621,6 +5625,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupSize
         smallGroupOption
         studentMaterials
+        targetAudience
         createdAt
         updatedAt
       }
@@ -5722,6 +5727,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
@@ -5795,6 +5801,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
@@ -6738,6 +6745,7 @@ export const attendanceByStudent = /* GraphQL */ `
           smallGroupSize
           smallGroupOption
           studentMaterials
+          targetAudience
           createdAt
           updatedAt
         }
