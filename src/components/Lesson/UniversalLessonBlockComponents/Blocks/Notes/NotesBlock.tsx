@@ -14,17 +14,15 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import ThemeModal from '@components/Molecules/ThemeModal';
 
 interface INoteBlock {
-  disabled?: boolean;
-  grid?: {cols: number; rows: number};
+  grid?: {cols?: number; rows?: number};
   value: {class?: string; value?: string; id: string}[];
-  currentLesson?: UniversalLesson;
+  currentLesson?: UniversalLesson | null;
 }
 
 const NotesBlock = ({
   value: notesList,
   grid: {cols = 4, rows = 2},
-  currentLesson,
-  disabled,
+  currentLesson = null,
 }: INoteBlock) => {
   const {lessonState} = useContext(GlobalContext);
 
@@ -41,8 +39,8 @@ const NotesBlock = ({
       var $container = $('#container'),
         gridWidth = 250,
         gridHeight = 250,
-        gridRows = rows,
-        gridColumns = cols,
+        gridRows = rows || 2,
+        gridColumns = cols || 4,
         i,
         x,
         y;
@@ -89,17 +87,26 @@ const NotesBlock = ({
 
         snap: {
           x: function (endValue) {
-            return true ? Math.round(endValue / gridWidth) * gridWidth : endValue;
+            const landOnGrid = false;
+            return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
           },
           y: function (endValue) {
-            return true ? Math.round(endValue / gridHeight) * gridHeight : endValue;
+            const landOnGrid = false;
+
+            return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
           },
         },
       });
     });
   }
 
-  const [localNotes, setLocalNotes] = useState([...notesList]);
+  const [localNotes, setLocalNotes] = useState([]);
+
+  useEffect(() => {
+    if (notesList && notesList.length > 0) {
+      setLocalNotes([...notesList]);
+    }
+  }, [notesList]);
 
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
 
@@ -332,4 +339,4 @@ const NotesBlock = ({
     );
 };
 
-export default memo(NotesBlock);
+export default NotesBlock;

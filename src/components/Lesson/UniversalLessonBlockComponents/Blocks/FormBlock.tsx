@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
@@ -552,12 +552,17 @@ export const FormBlock = ({
   };
 
   if (formType === 'notes-form' && !isStudent) {
-    const modifiyValues = map(value, (v: any) => ({
-      class: v.class,
-      id: v.id,
-      value: v.value,
-    }));
-    return <NotesBlock value={modifiyValues} disabled={mode === 'building'} />;
+    const modifiyValues = useMemo(
+      () =>
+        map(value, (v: any) => ({
+          class: v.class,
+          id: v.id,
+          value: v.value,
+        })),
+      [value]
+    );
+
+    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   }
 
   return (

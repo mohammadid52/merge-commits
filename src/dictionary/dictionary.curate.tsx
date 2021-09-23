@@ -303,7 +303,7 @@ const dashboardProfileDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE_CONTAINER: 'Your Notebooks',
-    TITLE: 'Journal',
+    TITLE: 'Notebooks',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
