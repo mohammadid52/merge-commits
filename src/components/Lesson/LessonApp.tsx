@@ -26,7 +26,14 @@ import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const user = gContext.state.user;
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const theme = gContext.theme;
+
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
@@ -107,7 +114,6 @@ const LessonApp = () => {
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
   const getSyllabusLesson = async (lessonID?: string) => {
-    // lessonID will be undefined for testing
     try {
       const universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
@@ -129,17 +135,13 @@ const LessonApp = () => {
       );
     }
     return () => {
-      const leaveRoom = leaveRoomLocation();
+      const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
       Promise.resolve(leaveRoom).then((_: void) => {
         if (subscription) {
           subscription.unsubscribe();
         }
         lessonDispatch({type: 'CLEANUP'});
       });
-      // if (subscription) {
-      //   subscription.unsubscribe();
-      // }
-      // lessonDispatch({type: 'CLEANUP'});
     };
   }, []);
 
@@ -665,6 +667,9 @@ const LessonApp = () => {
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
+  const [cleared, setCleared] = useState(false);
+  const [created, setCreated] = useState(false);
+
   const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
   const previousLocation = usePrevious(personLocationObj);
 
@@ -675,47 +680,53 @@ const LessonApp = () => {
     }
   }, [personLocationObj]);
 
+  const initializeLocation = async () => {
+    if (!cleared) {
+      await leaveRoomLocation(user.authId, user.email);
+    }
+    if (cleared && !created) {
+      await createPersonLocation();
+    }
+    console.log('initialized location...');
+  };
+
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
 
-  const getPersonLocation = async () => {
-    const {lessonID} = urlParams;
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
+  // const getPersonLocation = async () => {
+  //   const user = await Auth.currentAuthenticatedUser();
+  //   const studentAuthId = user.username;
+  //   const email = user.attributes.email;
 
-    let input = {
-      personAuthID: {eq: studentAuthId},
-      personEmail: email,
-    };
+  //   let input = {
+  //     personAuthID: {eq: studentAuthId},
+  //     personEmail: email,
+  //   };
 
-    try {
-      let userLocations: any = await API.graphql(
-        graphqlOperation(customQueries.listPersonLocations, input)
-      );
+  //   try {
+  //     let userLocations: any = await API.graphql(
+  //       graphqlOperation(customQueries.listPersonLocations, input)
+  //     );
 
-      const responseItems = userLocations.data.listPersonLocations.items;
-      // console.log('getPersonLocation - ', responseItems);
+  //     const responseItems = userLocations.data.listPersonLocations.items;
+  //     console.log('getPersonLocation - ', responseItems);
 
-      if (responseItems.length > 0) {
-        await leaveRoomLocation();
-        await createPersonLocation();
-      } else {
-        await createPersonLocation();
-      }
-    } finally {
-      // console.log('personLocation setup!');
-    }
-  };
+  //     if (responseItems.length > 0 && previousLocation === undefined) {
+  //       // await leaveRoomLocation(studentAuthId, email);
+  //       // await createPersonLocation();
+  //     } else {
+  //       // await createPersonLocation();
+  //     }
+  //   } finally {
+  //     // console.log('personLocation setup!');
+  //   }
+  // };
 
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
 
     const newLocation = {
-      personAuthID: studentAuthId,
-      personEmail: email,
+      personAuthID: user?.authId,
+      personEmail: user?.email,
       syllabusLessonID: getRoomData.activeSyllabus,
       lessonID: lessonID,
       roomID: getRoomData.id,
@@ -734,15 +745,14 @@ const LessonApp = () => {
       setPersonLocationObj(newLocationObj);
     } catch (e) {
       // console.error('createPersonLocation - ', e);
+    } finally {
+      setCreated(true);
     }
   };
 
   useEffect(() => {
     if (personLocationObj === undefined) {
-      const fetchLocation = getPersonLocation();
-      Promise.resolve(fetchLocation).then((_: any) => {
-        console.log('...initialized location');
-      });
+      initializeLocation();
     }
   }, [lessonState.lessonData.id]);
 
@@ -768,20 +778,20 @@ const LessonApp = () => {
     }
   };
 
-  const leaveRoomLocation = async () => {
-    const storedLocation = getLocalStorageData('person_location');
+  const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
       const deletePersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
-            personEmail: storedLocation.personEmail,
-            personAuthID: storedLocation.personAuthID,
+            personEmail: inputEmail,
+            personAuthID: inputAuthId,
           },
         })
       );
-      // console.log('left room...', storedLocation);
     } catch (e) {
-      // console.error('error deleting location record - ', e);
+      console.error('error deleting location record - ', e);
+    } finally {
+      setCleared(true);
     }
   };
 
