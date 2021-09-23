@@ -36,17 +36,28 @@ const NotesModalDialog = (props: NoteModalProps) => {
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setIsEditingMode(true);
-      const modifiedFields = map(inputObj, (d) => ({
-        ...d,
-        noteText: d.value,
-        bgColor: d.class,
-        error: '',
-      }));
+      const modifiedFields = map(inputObj, (d) => {
+        const bgColor = d.class?.split(' ')[0];
+        const size = d.class?.split(' ')[1];
+        return {
+          ...d,
+          noteText: d.value,
+          bgColor: bgColor,
+          size: size,
+          error: '',
+        };
+      });
       setFields([...modifiedFields]);
     }
   }, [inputObj]);
 
-  const initialValues = {id: uuidv4(), noteText: '', bgColor: 'yellow', error: ''};
+  const initialValues = {
+    id: uuidv4(),
+    noteText: '',
+    bgColor: 'yellow',
+    size: 'medium',
+    error: '',
+  };
   const [fields, setFields] = useState([{...initialValues}]);
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -89,7 +100,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
   const notesList = map(fields, (f) => ({
     type: FORM_TYPES.NOTES,
     value: f.noteText,
-    class: f.bgColor,
+    class: `${f.bgColor} ${f.size}`,
     id: f.id,
   }));
 

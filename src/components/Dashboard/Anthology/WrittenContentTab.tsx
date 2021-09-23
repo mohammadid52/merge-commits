@@ -1,25 +1,20 @@
-import React, {useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import ContentCard from '../../Atoms/ContentCard';
-import {ViewEditMode} from './Anthology';
-import FormInput from '../../Atoms/Form/FormInput';
-
-import useDictionary from '../../../customHooks/dictionary';
-import RichTextEditor from '../../Atoms/RichTextEditor';
-import Buttons from '../../Atoms/Buttons';
-
-import SingleNote from './WrittenContentTab/SingleNote';
-import {
-  UniversalJournalData,
-  UniversalLessonStudentData,
-} from '../../../interfaces/UniversalLessonInterfaces';
-import {dateFromServer} from '../../../utilities/time';
-import Toggle from './AnthologyContentNote/Toggle';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
-import EmptyViewWrapper from './EmptyViewWrapper';
 import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
+import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {dateFromServer} from '../../../utilities/time';
+import Buttons from '../../Atoms/Buttons';
+import ContentCard from '../../Atoms/ContentCard';
+import FormInput from '../../Atoms/Form/FormInput';
+import RichTextEditor from '../../Atoms/RichTextEditor';
+import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
+import SingleNote from './WrittenContentTab/SingleNote';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {
@@ -51,6 +46,9 @@ const WrittenContentTab = (props: ITabViewProps) => {
   // ############################### VIEWS ############################### //
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
+    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const filtered = filter(contentObj?.entryData, (ed) => ed && ed.type === 'content');
+
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
@@ -87,8 +85,19 @@ const WrittenContentTab = (props: ITabViewProps) => {
               {organized.header?.input ? organized.header.input : `No title`}
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
-              {contentObj ? (
-                <p
+              {notesExist ? (
+                <div className="space-y-2">
+                  {map(filtered, (note) => (
+                    <div
+                      className="font-normal border-b-0 border-gray-300"
+                      dangerouslySetInnerHTML={{
+                        __html: note?.input ? note.input : 'No content...',
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : contentObj ? (
+                <div
                   className="font-normal"
                   dangerouslySetInnerHTML={{
                     __html: organized.content?.input
@@ -163,6 +172,9 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
+    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const filtered = filter(contentObj?.entryData, (ed) => ed && ed.type === 'content');
+
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
@@ -199,10 +211,23 @@ const WrittenContentTab = (props: ITabViewProps) => {
         </div>
 
         <div className={`mt-2 mb-2`}>
-          <RichTextEditor
-            initialValue={organized.content.input}
-            onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
-          />
+          {notesExist ? (
+            <div>
+              {map(filtered, (note, idx) => (
+                <RichTextEditor
+                  initialValue={note.input}
+                  onChange={(htmlContent) =>
+                    updateJournalContent(htmlContent, 'content', idx)
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+            <RichTextEditor
+              initialValue={organized.content.input}
+              onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
+            />
+          )}
         </div>
       </>
     );

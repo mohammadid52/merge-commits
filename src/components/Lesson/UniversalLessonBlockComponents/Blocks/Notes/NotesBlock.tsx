@@ -1,7 +1,9 @@
 import Loader from '@atoms/Loader';
+import Selector from '@components/Atoms/Form/Selector';
 import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import ThemeModal from '@components/Molecules/ThemeModal';
 import {GlobalContext} from '@contexts/GlobalContext';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
@@ -46,11 +48,11 @@ const genSticky = (
 
     //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
 
-    gsap.set('._sticky', {
-      width: gridWidth,
+    // gsap.set('._sticky', {
+    //   width: gridWidth,
 
-      height: gridHeight,
-    });
+    //   height: gridHeight,
+    // });
 
     Draggable.create('._sticky', {
       bounds: $container,
@@ -82,58 +84,48 @@ const genSticky = (
 };
 interface INoteBlock {
   showNotesModal?: boolean;
+  notesInitialized?: boolean;
   grid?: {cols?: number; rows?: number};
-  value: {class?: string; value?: string; id: string}[];
+  value: any[];
+  addNew?: (newNoteObj: any) => void;
+  notesData?: any;
+  updateJournalData?: any;
+  setNotesData?: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
-  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+const genSize = (size: string) => {
+  switch (size) {
+    case 'small':
+      return 'h-40 w-40 text-sm';
+    case 'medium':
+      return 'h-60 w-60 text-base';
+    case 'large':
+      return 'h-72 w-72 text-lg';
+    default:
+      return 'h-60 w-60';
+  }
+};
+
+const NotesBlock = ({
+  value: notesList,
+  notesData,
+  setNotesData,
+  addNew,
+  notesInitialized,
+  showNotesModal,
+  grid,
+  updateJournalData,
+}: INoteBlock) => {
+  const {
+    lessonState,
+    state: {user},
+  } = useContext(GlobalContext);
+  const isStudent = user.role === 'ST';
+  const isInLesson = useInLessonCheck();
 
   const currentLesson: any = lessonState.lessonData;
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
-  const updateContext = () => {
-    localNotes &&
-      localNotes.length > 0 &&
-      localNotes.forEach((note) => {
-        handleUpdateStudentData(note.id, [note.value.toString()]);
-      });
-  };
-  const [valuesInit, setValuesInit] = useState(false);
   const [localNotes, setLocalNotes] = useState([]);
-
-  useEffect(() => {
-    if (!valuesInit && localNotes && localNotes.length > 0) {
-      const updatedValues = localNotes.map((note) => {
-        return {
-          ...note,
-          value: getDataValue(note.id).toString(),
-        };
-      });
-
-      setLocalNotes([...updatedValues]);
-      setValuesInit(true);
-    }
-  }, [valuesInit, localNotes]);
-
-  useEffect(() => {
-    if (!showNotesModal) {
-      const subscription = updateContext();
-      return () => subscription;
-    }
-  }, [showNotesModal]);
 
   gsap.registerPlugin(InertiaPlugin, Draggable);
   // gsap.ticker.fps(60);
@@ -159,37 +151,53 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
     localNotes &&
       localNotes.length > 0 &&
       localNotes.forEach((note: {id: any}) => {
-        $(`#${note.id} #note`).on('click', (e) => {
-          e.target.focus();
-        });
+        if (note) {
+          $(`#${note.id} #note`).on('click', (e) => {
+            e.target.focus();
+          });
+        }
       });
   }
 
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: any) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
+  const [notesChanged, setNotesChanged] = useState<boolean>(false);
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+
+  const handleSetMenuState = async (data?: any) => {
+    if (notesChanged) {
+      setSaveInProgress(true);
+      await updateJournalData(data);
+      setNotesChanged(false);
+      setSaveInProgress(false);
     }
   };
 
-  const getDataValue = (domID: string): string => getStudentDataValue(domID);
+  const updateNotesContent = (html: string, noteId: string) => {
+    const idx = findIndex(notesData.entryData, ['domID', noteId]);
 
-  const [uninitializedInputs, setUninitializedInputs] = useState([]);
+    update(notesData, `entryData[${idx}].input`, () => html);
+    setNotesData({...notesData});
+    if (!notesChanged) setNotesChanged(true);
+  };
+
+  const updateText = (e: any, noteId: string, idx: number) => {
+    notesInitialized ? updateNotesContent(e.target.value, noteId) : noop;
+    // handleUpdateStudentData(noteId, [e.target.value]);
+  };
 
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
 
-  const onNoteDelete = () => {
+  const onNoteDelete = async () => {
     const note: any =
       showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
+    setNotesChanged(true);
     setShowDeleteModal({...showDeleteModal, show: false});
 
-    remove(localNotes, (_note) => _note.id === note.id);
-    setLocalNotes([...localNotes]);
+    // remove(localNotes, (_note) => _note.id === note.id);
+    // setLocalNotes([...localNotes]);
+
+    remove(notesData.entryData, ['domID', note.id]);
+    setNotesData({...notesData});
+    handleSetMenuState(null);
 
     const updateLesson = async () => {
       const currentPageIdx = lessonState.currentPage;
@@ -230,11 +238,11 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
         }
       }
     };
-
     updateLesson();
   };
 
   const onAddNewNote = () => {
+    setNotesChanged(true);
     setIsContainerRendered(false);
     const newNoteObj = {
       ...localNotes[0],
@@ -243,9 +251,11 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
       value: '',
       type: FORM_TYPES.NOTES,
     };
+    addNew({domID: newNoteObj.id, type: 'content', input: ''});
     localNotes.push(newNoteObj);
     setLocalNotes([...localNotes]);
     const note = localNotes[0];
+    handleSetMenuState(notesData.entryData);
     const updateLesson = async () => {
       const currentPageIdx = lessonState.currentPage;
       if (currentLesson) {
@@ -263,12 +273,9 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
         const newNote = {
           type: FORM_TYPES.NOTES,
           value: '',
-          class: 'yellow',
+          class: 'yellow medium',
           id: newNoteObj.id,
         };
-
-        uninitializedInputs.push(newNoteObj);
-        setUninitializedInputs([...uninitializedInputs]);
 
         const updated = update(
           currentLocalLesson,
@@ -306,7 +313,11 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
 
     const noteIdx = findIndex(localNotes, (d: any) => d.id === note.id);
 
-    update(localNotes[noteIdx], `class`, () => currentSelectedColor);
+    update(
+      localNotes[noteIdx],
+      `class`,
+      () => `${currentSelectedColor} ${currentSelectedSize}`
+    );
     setLocalNotes([...localNotes]);
 
     const updateLesson = async () => {
@@ -332,7 +343,7 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
           ${partContentIdx}
         ].value`,
           () => {
-            valueArr[noteIdx].class = currentSelectedColor;
+            valueArr[noteIdx].class = `${currentSelectedColor} ${currentSelectedSize}`;
             return valueArr;
           }
         );
@@ -365,18 +376,20 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
     showEditModal.id && find(localNotes, (d) => d.id === showEditModal.id);
 
   const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
-
-  const updateText = (e: any, noteId: string, idx: number) => {
-    update(localNotes[idx], `value`, () => e.target.value);
-    setLocalNotes([...localNotes]);
-    // handleUpdateStudentData(noteId, [e.target.value]);
-  };
+  const [currentSelectedSize, setCurrentSelectedSize] = useState(null);
 
   useEffect(() => {
-    if (currentNote.class && !currentSelectedColor) {
-      setCurrentSelectedColor(currentNote.class);
+    if (currentNote.class) {
+      const bgColor = currentNote.class?.split(' ')[0] || 'yellow';
+      const size = currentNote.class?.split(' ')[1] || 'medium';
+      if (!currentSelectedColor) {
+        setCurrentSelectedColor(bgColor);
+      }
+      if (!currentSelectedSize) {
+        setCurrentSelectedSize(size);
+      }
     }
-  }, [currentNote.class, currentSelectedColor]);
+  }, [currentNote.class, currentSelectedColor, currentSelectedSize]);
 
   const modalBtns = {
     delete: {
@@ -443,7 +456,9 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
             {currentNote && (
               <textarea
                 onChange={noop}
-                className={`preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
+                className={`${genSize(
+                  currentSelectedSize
+                )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
                 id={'note'}
                 value={showEditModal?.value}
               />
@@ -465,6 +480,24 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
               ))}
             </div>
 
+            <div className="mb-4">
+              <label
+                htmlFor={'size'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-400">
+                Select size
+              </label>
+              <Selector
+                placeholder="Select size"
+                selectedItem={currentSelectedSize}
+                onChange={(_, name) => setCurrentSelectedSize(name)}
+                list={[
+                  {id: 0, name: 'small'},
+                  {id: 1, name: 'medium'},
+                  {id: 2, name: 'large'},
+                ]}
+              />
+            </div>
+
             <div className="flex  space-x-4 items-center justify-end">
               <button
                 onClick={modalBtns.edit.cancel}
@@ -473,9 +506,12 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
                 Cancel
               </button>
               <button
+                disabled={saveInProgress}
                 onClick={modalBtns.edit.save}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 ">
+                className={`${
+                  saveInProgress ? 'opacity-50' : 'opacity-100'
+                } w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 `}>
                 Save
               </button>
             </div>
@@ -485,32 +521,38 @@ const NotesBlock = ({value: notesList, showNotesModal, grid}: INoteBlock) => {
           <div id="container" className="sticky-container blackboard">
             {localNotes &&
               localNotes.length > 0 &&
-              map(localNotes, (note, idx) => (
-                <Note
-                  getDataValue={getDataValue}
-                  updateText={updateText}
-                  setShowEditModal={setShowEditModal}
-                  setShowDeleteModal={setShowDeleteModal}
-                  key={note.id}
-                  idx={idx}
-                  note={note}
-                />
-              ))}
+              map(localNotes, (note, idx) => {
+                if (note) {
+                  return (
+                    <Note
+                      updateText={updateText}
+                      setShowEditModal={setShowEditModal}
+                      setShowDeleteModal={setShowDeleteModal}
+                      key={note?.id}
+                      idx={idx}
+                      note={note}
+                    />
+                  );
+                }
+              })}
           </div>
 
-          <div className="w-auto space-y-4 flex items-center flex-col justify-center">
-            <button
-              onClick={onAddNewNote}
-              title="Add new note"
-              className="w-auto text-red-600 hover:text-red-500 transition-all">
-              <FiFilePlus className="h-10 w-10 " />
-            </button>
-            <button
-              title="Save to class notes"
-              className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
-              <BiSave className="h-10 w-10 " />
-            </button>
-          </div>
+          {isInLesson && isStudent && (
+            <div className="w-auto space-y-4 flex items-center flex-col justify-center">
+              <button
+                onClick={onAddNewNote}
+                title="Add new note"
+                className="w-auto text-red-600 hover:text-red-500 transition-all">
+                <FiFilePlus className="h-10 w-10 " />
+              </button>
+              <button
+                onClick={() => handleSetMenuState(null)}
+                title="Save to class notes"
+                className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
+                <BiSave className="h-10 w-10 " />
+              </button>
+            </div>
+          )}
         </div>
       </>
     );
