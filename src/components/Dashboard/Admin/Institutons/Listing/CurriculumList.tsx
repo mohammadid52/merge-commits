@@ -38,7 +38,7 @@ const CurriculumList = (props: CurriculumListProps) => {
         <PageWrapper defaultClass="">
           {curricular.items && curricular.items.length > 0 ? (
             <Fragment>
-              <div className="flex justify-between w-full m-auto">
+              <div className="flex justify-between items-center w-full m-auto">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
                   Courses
                 </h3>
@@ -47,7 +47,7 @@ const CurriculumList = (props: CurriculumListProps) => {
                   onClick={createNewCurricular}
                 />
               </div>
-              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+              <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                 <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                   <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{InstitueCurriculam[userLanguage]['NO']}</span>

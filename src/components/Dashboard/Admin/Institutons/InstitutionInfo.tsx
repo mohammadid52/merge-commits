@@ -70,16 +70,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       type: 'dropdown',
       children: [
         {
-          title: 'General Information',
-          key: 'general_information',
-        },
-        {
           title: Institute_info[userLanguage]['TABS']['STAFF'],
           key: 'staff',
         },
         {
           title: 'Register',
           key: 'register',
+        },
+        {
+          title: Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER'],
+          key: 'service_provider',
         },
       ],
     },
@@ -177,7 +177,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   const renderElementBySelectedMenu = () => {
     switch (tabProps.tabsData.inst) {
-      case 'general_information':
+      case 'service_provider':
         return (
           <ServiceProviders
             serviceProviders={institute.serviceProviders}
@@ -309,10 +309,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             </div>
             <div className="mt-5">
               <div className="flex mt-2">
-                <span className="w-auto mr-2">
-                  <BsEnvelope className="w-6 h-6" />
+                <span className="w-auto mr-2 mt-0.5">
+                  <BsEnvelope className="w-4 h-4 text-gray-500" />
                 </span>
-                <span className="w-auto">
+                <span className="w-auto text-gray-500">
                   {address && (
                     <Fragment>
                       {address + ', '} <br />
@@ -328,32 +328,32 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   {zip && zip}
                 </span>
               </div>
-              <div className="flex mt-2">
+              <div className="flex mt-2 items-center">
                 <span className="w-auto mr-2">
-                  <FiPhone className="w-6 h-6" />
+                  <FiPhone className="w-4 h-4 text-gray-500" />
                 </span>
-                <span className="w-auto">{phone ? formatPhoneNumber(phone) : '-'}</span>
+                <span className="w-auto text-gray-500">{phone ? formatPhoneNumber(phone) : '-'}</span>
               </div>
-              <div className="flex mt-2">
+              <div className="flex mt-2 items-center">
                 <span className="w-auto mr-2">
                   {isServiceProvider ? (
-                    <BiCheckboxChecked className="w-6 h-6" />
+                    <BiCheckboxChecked className="w-4 h-4 text-gray-500" />
                   ) : (
-                    <BiCheckbox className="w-6 h-6" />
+                    <BiCheckbox className="w-4 h-4 text-gray-500" />
                   )}
                 </span>
-                <span className="w-auto">
+                <span className="w-auto text-gray-500">
                   {Institute_info[userLanguage]['SERVICE_PROVIDER']}
                 </span>
               </div>
-              <div className="flex mt-2">
+              <div className="flex mt-2 items-center">
                 <span className="w-auto mr-2">
-                  <IoIosGlobe className="w-6 h-6" />
+                  <IoIosGlobe className="w-4 h-4 text-gray-500" />
                 </span>
-                <span className="w-auto">
+                <span className="w-auto text-gray-500">
                   {website ? (
-                    <a href={website} target="_blank">
-                      {getHostNameFromUrl(website)}
+                    <a href={website} target="_blank" className={`hover:${theme.textColor[themeColor]}`}>
+                      {Institute_info[userLanguage]['WEBSITE']}
                     </a>
                   ) : (
                     '-'

@@ -139,7 +139,7 @@ const Institution = (props: InstitutionProps) => {
 
   useEffect(() => {
     const {tab} = urlQueryParams;
-    props.tabProps.setTabsData({...props.tabProps.tabsData, inst: tab || 'general_information'});
+    props.tabProps.setTabsData({...props.tabProps.tabsData, inst: tab || 'staff'});
   }, [urlQueryParams.tab]);
 
   const updateServiceProviders = (item: any) => {

@@ -869,7 +869,7 @@ const Institute_info: any = {
     ADDRESS: 'Address',
     CONTACT: 'Contact No',
     INSTITUTION_TYPE: 'Institution Type',
-    WEBSITE: 'Website',
+    WEBSITE: 'Visit Their Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',

@@ -30,16 +30,14 @@ const ClassList = (props: ClassListProps) => {
   };
 
   return (
-    <div className="pt-8 flex m-auto justify-center p-4">
+    <div className="pt-0 flex m-auto justify-center p-4">
       <div className="">
         <PageWrapper defaultClass="">
-          
-
           {classes.items && classes.items.length > 0 ? (
             <Fragment>
-              <div className="flex justify-between w-full m-auto">
-                <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 w-auto">
-                  {`${instName} classes` || Institute_class[userLanguage]['TITLE']}
+              <div className="flex justify-between items-center w-full m-auto">
+                <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
+                  {Institute_class[userLanguage]['TITLE']}
                 </h3>
                 <AddButton
                   label={Institute_class[userLanguage]['BUTTON']['ADD']}
@@ -47,7 +45,7 @@ const ClassList = (props: ClassListProps) => {
                 />
               </div>
 
-              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+              <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                 <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                 <div className="w-1/10 px-8 py-3  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['NO']}</span>

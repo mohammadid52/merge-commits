@@ -267,8 +267,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   useEffect(() => {
-    fetchStaffData();
-  }, []);
+    if(instituteId){
+      fetchStaffData();
+    }
+  }, [instituteId]);
 
   const onStaffStatusChange = async (
     status: string,
