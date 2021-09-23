@@ -51,8 +51,8 @@ const ClassRoster = ({
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
-  const [sharedStudent, setSharedStudent] = useState<string[]>(['']);
-  const [viewedStudent, setViewedStudent] = useState<string>('');
+  const viewedStudent = lessonState?.studentViewing;
+  const sharedStudent = lessonState?.displayData;
 
   let subscription: any;
 
@@ -65,7 +65,6 @@ const ClassRoster = ({
       if (subscription) {
         subscription.unsubscribe();
       }
-      setViewedStudent('');
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
@@ -233,12 +232,6 @@ const ClassRoster = ({
     ) {
       console.log('reset reset...');
 
-      if (viewedStudent !== '') {
-        setViewedStudent('');
-      }
-      if (sharedStudent !== ['']) {
-        setSharedStudent(['']);
-      }
       if (lessonState.studentViewing !== '' || lessonState.displayData[0] !== '') {
         lessonDispatch({
           type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -256,53 +249,41 @@ const ClassRoster = ({
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
-  const handleViewStudentData = async (e: any) => {
-    const {id} = e.target;
+  const handleViewStudentData = async (idStr: string) => {
 
-    if (lessonState.studentViewing === id) {
+    if (lessonState.studentViewing === idStr) {
       await resetViewAndShare();
     } else {
-      setViewedStudent(id);
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: id},
+        payload: {id: getRoomData.id, studentViewing: idStr},
       });
-      setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: idStr});
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: idStr});
     }
   };
 
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
-  const handleShareStudentData = async (e: any) => {
-    const t = e.target as HTMLElement;
-    const studentID = t.getAttribute('data-studentID');
-
-    console.log('handleShareStudentData - ', studentID);
+  const handleShareStudentData = async (idStr: string) => {
 
     if (
       lessonState.displayData &&
       lessonState.displayData?.length > 0 &&
-      lessonState.displayData[0] === studentID
+      lessonState.displayData[0] === idStr
     ) {
       await resetViewAndShare();
     } else {
-      setSharedStudent([studentID]);
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, displayData: [studentID]},
+        payload: {id: getRoomData.id, displayData: [idStr]},
       });
-      setLocalStorageData('room_info', {...getRoomData, displayData: [studentID]});
-      await handleRoomUpdate({id: getRoomData.id, displayData: [studentID]});
+      setLocalStorageData('room_info', {...getRoomData, displayData: [idStr]});
+      await handleRoomUpdate({id: getRoomData.id, displayData: [idStr]});
     }
   };
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
-  useEffect(() => {
-    if (lessonState.studentViewing === '' && viewedStudent !== '') {
-      setViewedStudent('');
-    }
-  }, [lessonState.studentViewing]);
 
   const handleManualRefresh = () => {
     if (loading === false) {
@@ -377,13 +358,11 @@ const ClassRoster = ({
                 role={student.person.role}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
+                handleResetViewAndShare={resetViewAndShare}
                 handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
-                handleQuitShare={handleQuitShare}
-                handleQuitViewing={handleQuitViewing}
                 viewedStudent={viewedStudent}
-                setViewedStudent={setViewedStudent}
-                isSameStudentShared={isSameStudentShared}
+                sharedStudent={sharedStudent[0]}
                 handlePageChange={handlePageChange}
               />
             ))
@@ -413,19 +392,17 @@ const ClassRoster = ({
                 role={student.person.role}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
+                handleResetViewAndShare={resetViewAndShare}
                 handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
-                handleQuitShare={handleQuitShare}
-                handleQuitViewing={handleQuitViewing}
                 viewedStudent={viewedStudent}
-                setViewedStudent={setViewedStudent}
-                isSameStudentShared={isSameStudentShared}
+                sharedStudent={sharedStudent[0]}
               />
             ))
           : null}
       </div>
     </div>
   );
-};
+};;
 
 export default ClassRoster;

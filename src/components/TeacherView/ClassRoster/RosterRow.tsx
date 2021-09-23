@@ -11,42 +11,41 @@ interface RosterRowProps {
   role: string;
   currentLocation: string;
   lessonProgress: string;
-  handleViewStudentData?: (e: any) => Promise<void>;
-  handleShareStudentData?: (e: any) => void;
-  handleQuitShare: () => void;
-  handleQuitViewing: () => void;
-  isSameStudentShared: boolean;
+  handleResetViewAndShare?: () => void;
+  handleViewStudentData?: (id: string) => void;
+  handleShareStudentData?: (id: string) => void;
   viewedStudent: string;
-  setViewedStudent: React.Dispatch<React.SetStateAction<string>>;
+  sharedStudent: string;
   handlePageChange?: any;
 }
 
-const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
-  const {
-    number,
-    id,
-    active,
-    firstName,
-    lastName,
-    preferredName,
-    currentLocation,
-    handleViewStudentData,
-    handleShareStudentData,
-    handleQuitShare,
-    viewedStudent,
-    handlePageChange,
-  } = props;
+const RosterRow: React.FC<RosterRowProps> = ({
+  number,
+  id,
+  active,
+  firstName,
+  lastName,
+  preferredName,
+  currentLocation,
+  handleResetViewAndShare,
+  handleViewStudentData,
+  handleShareStudentData,
+  viewedStudent,
+  sharedStudent,
+  handlePageChange,
+}: RosterRowProps) => {
+  // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
+
+  // ##################################################################### //
+  // ########################### SHARING CHECKS ########################## //
+  // ##################################################################### //
 
   const anyoneIsShared = lessonState.displayData[0] !== '';
 
   const studentIsShared = () => {
-    if (anyoneIsShared) {
-      return lessonState.displayData[0] === id;
-    } else {
-      return false;
-    }
+    return sharedStudent === id;
   };
 
   const studentIsViewed = () => {
@@ -58,12 +57,16 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     const button = t.hasAttribute('aria-label');
 
     if (!button) {
-      handleViewStudentData(e);
+      handleViewStudentData(id);
       if (!studentIsViewed()) {
         handlePageChange(parseInt(currentLocation));
       }
     }
   };
+
+  // ##################################################################### //
+  // ######################### VISUAL LOGIC ETC. ######################### //
+  // ##################################################################### //
 
   const getPageLabel = (locationIndex: string) => {
     if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
@@ -77,6 +80,10 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
   const activeHoverClass = 'hover:font-semibold cursor-pointer';
   const inactiveTextClass = 'text-dark-gray text-opacity-20';
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div
@@ -127,7 +134,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
             className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={handleShareStudentData}>
+            onClick={() => handleShareStudentData(id)}>
             <span id={`${id}`}>Unshare</span>
           </div>
         ) : (
@@ -152,7 +159,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
             active && activeHoverClass
           }`}
-          onClick={handleShareStudentData}>
+          onClick={() => handleShareStudentData(id)}>
           <span className="pointer-events-none">Share</span>
         </div>
       )}
