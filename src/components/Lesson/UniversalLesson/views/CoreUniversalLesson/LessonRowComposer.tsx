@@ -156,7 +156,7 @@ const LessonRowComposer = () => {
               </div>
             )}
           </div>
-          {/* <LessonModule currentLesson={currentLesson} /> */}
+          <LessonModule currentLesson={currentLesson} />
         </>
       )}
     </div>
