@@ -54,7 +54,13 @@ const composePartContent = (
   } else if (type.includes('paragraph')) {
     return <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />;
   } else if (type.includes('form')) {
-    return <FormBlock numbered={type === 'form-numbered'} {...commonBlockProps} />;
+    return (
+      <FormBlock
+        pagePartId={pagePartId}
+        numbered={type === 'form-numbered'}
+        {...commonBlockProps}
+      />
+    );
   } else if (type.includes('image')) {
     return <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />;
   } else if (type.includes('custom_video')) {

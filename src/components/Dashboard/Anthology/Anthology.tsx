@@ -25,6 +25,7 @@ import RoomView from './RoomView';
 import TabView from './TabView';
 import {useHistory} from 'react-router-dom';
 import {userInfo} from 'os';
+import update from 'lodash/update';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -362,19 +363,24 @@ const Anthology = ({
     });
   };
 
-  const updateJournalDataContent = (html: string, targetType: string) => {
-    const updatedNotesData = {
-      ...journalEntryData,
-      entryData: journalEntryData.entryData.map((entryObj: any) => {
-        if (entryObj.type === targetType) {
-          return {...entryObj, input: html};
-        } else {
-          return entryObj;
-        }
-      }),
-    };
-    // console.log('input - ', html);
-    setJournalEntryData(updatedNotesData);
+  const updateJournalDataContent = (html: string, targetType: string, idx?: number) => {
+    if (idx !== undefined) {
+      update(journalEntryData, `entryData[${idx}].input`, () => html);
+      setJournalEntryData({...journalEntryData});
+    } else {
+      const updatedNotesData = {
+        ...journalEntryData,
+        entryData: journalEntryData.entryData.map((entryObj: any) => {
+          if (entryObj.type === targetType) {
+            return {...entryObj, input: html};
+          } else {
+            return entryObj;
+          }
+        }),
+      };
+      // console.log('input - ', html);
+      setJournalEntryData(updatedNotesData);
+    }
   };
 
   // ##################################################################### //

@@ -1,6 +1,9 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import Buttons from '@components/Atoms/Buttons';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
+import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {removeExtension} from '@utilities/functions';
 import {getImageFromS3Static} from '@utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
@@ -14,14 +17,10 @@ import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {useQuery} from '../../../../../customHooks/urlParam';
 import * as mutations from '../../../../../graphql/mutations';
 import {getLocalStorageData} from '../../../../../utilities/localStorage';
 import Modal from '../../../../Atoms/Modal';
 import {UPLOAD_KEYS} from '../../../constants';
-import {FormControlProps} from '../FormBlock';
-import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
-import Buttons from '@components/Atoms/Buttons';
 
 interface IFile {
   _status: 'progress' | 'failed' | 'success' | 'other';
@@ -250,7 +249,7 @@ const AttachmentBlock = ({
   index,
   required,
   id,
-}: FormControlProps) => {
+}: IFormBlockProps) => {
   const {
     lessonState,
     userLanguage,
@@ -585,4 +584,4 @@ const AttachmentBlock = ({
     </>
   );
 };
-export default AttachmentBlock;
+export default React.memo(AttachmentBlock);

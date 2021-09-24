@@ -1,106 +1,145 @@
 import Loader from '@atoms/Loader';
-import useScript from '@customHooks/useScript';
+import Selector from '@components/Atoms/Form/Selector';
+import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import ThemeModal from '@components/Molecules/ThemeModal';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {find, findIndex, map, noop, remove, update} from 'lodash';
-import React, {memo, useContext, useEffect, useState} from 'react';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import ThemeModal from '@components/Molecules/ThemeModal';
+import React, {useContext, useEffect, useState} from 'react';
+import {BiSave} from 'react-icons/bi';
+import {FiFilePlus} from 'react-icons/fi';
+import {v4 as uuidv4} from 'uuid';
 
+const genSticky = (
+  {rows, cols}: {rows?: number; cols?: number},
+
+  cb?: any
+) => {
+  wait(50).then(() => {
+    var $container = $('#container'),
+      gridWidth = 250,
+      gridHeight = 250,
+      gridRows = rows || 2,
+      gridColumns = cols || 4,
+      i,
+      x,
+      y;
+    //loop through and create the grid (a div for each cell). Feel free to tweak the variables above
+    for (i = 0; i < gridRows * gridColumns; i++) {
+      y = Math.floor(i / gridColumns) * gridHeight;
+      x = (i * gridWidth) % (gridColumns * gridWidth);
+      $('<span/>')
+        .css({
+          position: 'absolute',
+          width: gridWidth - 1,
+          height: gridHeight - 1,
+          top: y,
+          left: x,
+        })
+        .prependTo($container);
+    }
+
+    //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
+
+    // gsap.set('._sticky', {
+    //   width: gridWidth,
+
+    //   height: gridHeight,
+    // });
+
+    Draggable.create('._sticky', {
+      bounds: $container,
+      edgeResistance: 0.065,
+      throwProps: true,
+      type: 'x,y',
+      inertia: true,
+
+      // @ts-ignore
+      autoScroll: true,
+
+      snap: {
+        x: function (endValue) {
+          const landOnGrid = false;
+          return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
+        },
+        y: function (endValue) {
+          const landOnGrid = false;
+
+          return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
+        },
+      },
+    });
+
+    if (cb && typeof cb === 'function') {
+      cb();
+    }
+  });
+};
 interface INoteBlock {
+  showNotesModal?: boolean;
+  notesInitialized?: boolean;
   grid?: {cols?: number; rows?: number};
-  value: {class?: string; value?: string; id: string}[];
-  currentLesson?: UniversalLesson | null;
+  value: any[];
+  addNew?: (newNoteObj: any) => void;
+  notesData?: any;
+  updateJournalData?: any;
+  setNotesData?: React.Dispatch<React.SetStateAction<any>>;
 }
+
+const genSize = (size: string) => {
+  switch (size) {
+    case 'small':
+      return 'h-40 w-40 text-sm';
+    case 'medium':
+      return 'h-60 w-60 text-base';
+    case 'large':
+      return 'h-72 w-72 text-lg';
+    default:
+      return 'h-60 w-60';
+  }
+};
 
 const NotesBlock = ({
   value: notesList,
-  grid: {cols = 4, rows = 2},
-  currentLesson = null,
+  notesData,
+  setNotesData,
+  addNew,
+  notesInitialized,
+  showNotesModal,
+  grid,
+  updateJournalData,
 }: INoteBlock) => {
-  const {lessonState} = useContext(GlobalContext);
+  const {
+    lessonState,
+    state: {user},
+  } = useContext(GlobalContext);
+  const isStudent = user.role === 'ST';
+  const isInLesson = useInLessonCheck();
 
-  const status = useScript(
-    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
-  );
+  const currentLesson: any = lessonState.lessonData;
+
+  const [localNotes, setLocalNotes] = useState([]);
+
   gsap.registerPlugin(InertiaPlugin, Draggable);
   // gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
-  if (status === 'ready') {
-    wait(50).then(() => {
+  const [isContainerRendered, setIsContainerRendered] = useState(false);
+
+  useEffect(() => {
+    if (!isContainerRendered) {
+      setLoading(true);
+      genSticky(grid, () => setIsContainerRendered(true));
       setLoading(false);
-      var $container = $('#container'),
-        gridWidth = 250,
-        gridHeight = 250,
-        gridRows = rows || 2,
-        gridColumns = cols || 4,
-        i,
-        x,
-        y;
-      //loop through and create the grid (a div for each cell). Feel free to tweak the variables above
-      for (i = 0; i < gridRows * gridColumns; i++) {
-        y = Math.floor(i / gridColumns) * gridHeight;
-        x = (i * gridWidth) % (gridColumns * gridWidth);
-        $('<span/>')
-          .css({
-            position: 'absolute',
-            width: gridWidth - 1,
-            height: gridHeight - 1,
-            top: y,
-            left: x,
-          })
-          .prependTo($container);
-      }
-
-      //set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
-
-      gsap.set('._sticky', {
-        width: gridWidth,
-
-        height: gridHeight,
-      });
-
-      if (jQuery.ready) {
-        notesList.forEach((note: {id: any}) => {
-          $(`#${note.id} #note`).on('click', (e) => {
-            e.target.focus();
-          });
-        });
-      }
-
-      Draggable.create('._sticky', {
-        bounds: $container,
-        edgeResistance: 0.065,
-        throwProps: true,
-        type: 'x,y',
-        inertia: true,
-
-        // @ts-ignore
-        autoScroll: true,
-
-        snap: {
-          x: function (endValue) {
-            const landOnGrid = false;
-            return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
-          },
-          y: function (endValue) {
-            const landOnGrid = false;
-
-            return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
-          },
-        },
-      });
-    });
-  }
-
-  const [localNotes, setLocalNotes] = useState([]);
+    }
+  }, [isContainerRendered]);
 
   useEffect(() => {
     if (notesList && notesList.length > 0) {
@@ -108,23 +147,71 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
+  if (jQuery.ready) {
+    localNotes &&
+      localNotes.length > 0 &&
+      localNotes.forEach((note: {id: any}) => {
+        if (note) {
+          $(`#${note.id} #note`).on('click', (e) => {
+            e.target.focus();
+          });
+        }
+      });
+  }
+
+  const [notesChanged, setNotesChanged] = useState<boolean>(false);
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+
+  const handleSetMenuState = async (data?: any) => {
+    if (notesChanged) {
+      setSaveInProgress(true);
+      await updateJournalData(data);
+      setNotesChanged(false);
+      setSaveInProgress(false);
+    }
+  };
+
+  const updateNotesContent = (html: string, noteId: string) => {
+    const idx = findIndex(notesData.entryData, ['domID', noteId]);
+
+    update(notesData, `entryData[${idx}].input`, () => html);
+    setNotesData({...notesData});
+    if (!notesChanged) setNotesChanged(true);
+  };
+
+  const updateText = (e: any, noteId: string, idx: number) => {
+    notesInitialized ? updateNotesContent(e.target.value, noteId) : noop;
+    // handleUpdateStudentData(noteId, [e.target.value]);
+  };
+
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
 
-  const onNoteDelete = () => {
-    const note: any = currentNote;
-    remove(localNotes, (_note) => _note.id === note.id);
-    setLocalNotes([...localNotes]);
+  const onNoteDelete = async () => {
+    const note: any =
+      showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
+    setNotesChanged(true);
+    setShowDeleteModal({...showDeleteModal, show: false});
+
+    // remove(localNotes, (_note) => _note.id === note.id);
+    // setLocalNotes([...localNotes]);
+
+    remove(notesData.entryData, ['domID', note.id]);
+    setNotesData({...notesData});
+    handleSetMenuState(null);
 
     const updateLesson = async () => {
       const currentPageIdx = lessonState.currentPage;
       if (currentLesson) {
-        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
-        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+        const pageContent: any = currentLesson.lessonPlan[currentPageIdx].pageContent;
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
         const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
         const valueArr = partContent[partContentIdx].value;
 
-        remove(valueArr, (d) => d.id === note.id);
+        remove(valueArr, (d: any) => d.id === note.id);
 
         update(
           currentLocalLesson,
@@ -151,15 +238,86 @@ const NotesBlock = ({
         }
       }
     };
+    updateLesson();
+  };
+
+  const onAddNewNote = () => {
+    setNotesChanged(true);
+    setIsContainerRendered(false);
+    const newNoteObj = {
+      ...localNotes[0],
+      id: uuidv4(),
+      class: 'yellow',
+      value: '',
+      type: FORM_TYPES.NOTES,
+    };
+    addNew({domID: newNoteObj.id, type: 'content', input: ''});
+    localNotes.push(newNoteObj);
+    setLocalNotes([...localNotes]);
+    const note = localNotes[0];
+    handleSetMenuState(notesData.entryData);
+    const updateLesson = async () => {
+      const currentPageIdx = lessonState.currentPage;
+      if (currentLesson) {
+        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
+
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
+
+        const partContent = pageContent[pagePartIdx].partContent;
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
+        let valueArr = partContent[partContentIdx].value;
+
+        const newNote = {
+          type: FORM_TYPES.NOTES,
+          value: '',
+          class: 'yellow medium',
+          id: newNoteObj.id,
+        };
+
+        const updated = update(
+          currentLocalLesson,
+          `lessonPlan[${currentPageIdx}].pageContent[${pagePartIdx}].partContent[
+          ${partContentIdx}
+        ].value`,
+          () => {
+            valueArr.push(newNote);
+            return valueArr;
+          }
+        );
+
+        setCurrentLocalLesson({...currentLocalLesson});
+
+        try {
+          const input = {
+            id: updated.id,
+            lessonPlan: [...updated.lessonPlan],
+          };
+
+          await updateLessonPageToDB(input);
+        } catch (error) {
+          console.error('@onNoteAdd - NotesBlock.tsx', error);
+        }
+      }
+    };
 
     updateLesson();
   };
+
   const onNoteEdit = () => {
+    setShowEditModal({...showEditModal, show: false});
+
     const note: any = currentNote;
 
     const noteIdx = findIndex(localNotes, (d: any) => d.id === note.id);
 
-    update(localNotes[noteIdx], `class`, () => currentSelectedColor);
+    update(
+      localNotes[noteIdx],
+      `class`,
+      () => `${currentSelectedColor} ${currentSelectedSize}`
+    );
     setLocalNotes([...localNotes]);
 
     const updateLesson = async () => {
@@ -167,11 +325,16 @@ const NotesBlock = ({
       if (currentLesson) {
         const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
 
-        const pagePartIdx = findIndex(pageContent, (d) => d.id === note.pagePartId);
+        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
 
         const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(partContent, (d) => d.id === note.partContentId);
+        const partContentIdx = findIndex(
+          partContent,
+          (d: any) => d.id === note.partContentId
+        );
+
         let valueArr = partContent[partContentIdx].value;
+
         const noteIdx = findIndex(valueArr, (d: any) => d.id === note.id);
 
         const updated = update(
@@ -180,14 +343,12 @@ const NotesBlock = ({
           ${partContentIdx}
         ].value`,
           () => {
-            valueArr[noteIdx].class = currentSelectedColor;
-
+            valueArr[noteIdx].class = `${currentSelectedColor} ${currentSelectedSize}`;
             return valueArr;
           }
         );
 
         setCurrentLocalLesson({...currentLocalLesson});
-        modalBtns.edit.cancel();
 
         try {
           const input = {
@@ -208,17 +369,27 @@ const NotesBlock = ({
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState({show: false, id: ''});
+
   const [showEditModal, setShowEditModal] = useState({show: false, id: '', value: ''});
+
   const currentNote =
     showEditModal.id && find(localNotes, (d) => d.id === showEditModal.id);
 
   const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
+  const [currentSelectedSize, setCurrentSelectedSize] = useState(null);
 
   useEffect(() => {
-    if (currentNote.class && !currentSelectedColor) {
-      setCurrentSelectedColor(currentNote.class);
+    if (currentNote.class) {
+      const bgColor = currentNote.class?.split(' ')[0] || 'yellow';
+      const size = currentNote.class?.split(' ')[1] || 'medium';
+      if (!currentSelectedColor) {
+        setCurrentSelectedColor(bgColor);
+      }
+      if (!currentSelectedSize) {
+        setCurrentSelectedSize(size);
+      }
     }
-  }, [currentNote.class, currentSelectedColor]);
+  }, [currentNote.class, currentSelectedColor, currentSelectedSize]);
 
   const modalBtns = {
     delete: {
@@ -285,7 +456,9 @@ const NotesBlock = ({
             {currentNote && (
               <textarea
                 onChange={noop}
-                className={`preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
+                className={`${genSize(
+                  currentSelectedSize
+                )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
                 id={'note'}
                 value={showEditModal?.value}
               />
@@ -307,6 +480,24 @@ const NotesBlock = ({
               ))}
             </div>
 
+            <div className="mb-4">
+              <label
+                htmlFor={'size'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-400">
+                Select size
+              </label>
+              <Selector
+                placeholder="Select size"
+                selectedItem={currentSelectedSize}
+                onChange={(_, name) => setCurrentSelectedSize(name)}
+                list={[
+                  {id: 0, name: 'small'},
+                  {id: 1, name: 'medium'},
+                  {id: 2, name: 'large'},
+                ]}
+              />
+            </div>
+
             <div className="flex  space-x-4 items-center justify-end">
               <button
                 onClick={modalBtns.edit.cancel}
@@ -315,28 +506,56 @@ const NotesBlock = ({
                 Cancel
               </button>
               <button
+                disabled={saveInProgress}
                 onClick={modalBtns.edit.save}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 ">
+                className={`${
+                  saveInProgress ? 'opacity-50' : 'opacity-100'
+                } w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 `}>
                 Save
               </button>
             </div>
           </div>
         </ThemeModal>
-        <div id="container" className="sticky-container blackboard">
-          {localNotes &&
-            localNotes.length > 0 &&
-            map(localNotes, (note) => (
-              <Note
-                setShowEditModal={setShowEditModal}
-                setShowDeleteModal={setShowDeleteModal}
-                key={note.id}
-                note={note}
-              />
-            ))}
+        <div className="relative flex items-start space-x-4">
+          <div id="container" className="sticky-container blackboard">
+            {localNotes &&
+              localNotes.length > 0 &&
+              map(localNotes, (note, idx) => {
+                if (note) {
+                  return (
+                    <Note
+                      updateText={updateText}
+                      setShowEditModal={setShowEditModal}
+                      setShowDeleteModal={setShowDeleteModal}
+                      key={note?.id}
+                      idx={idx}
+                      note={note}
+                    />
+                  );
+                }
+              })}
+          </div>
+
+          {isInLesson && isStudent && (
+            <div className="w-auto space-y-4 flex items-center flex-col justify-center">
+              <button
+                onClick={onAddNewNote}
+                title="Add new note"
+                className="w-auto text-red-600 hover:text-red-500 transition-all">
+                <FiFilePlus className="h-10 w-10 " />
+              </button>
+              <button
+                onClick={() => handleSetMenuState(null)}
+                title="Save to class notes"
+                className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
+                <BiSave className="h-10 w-10 " />
+              </button>
+            </div>
+          )}
         </div>
       </>
     );
 };
 
-export default NotesBlock;
+export default React.memo(NotesBlock);
