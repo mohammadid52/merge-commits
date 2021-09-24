@@ -28,6 +28,7 @@ import GeneralInformation from './GeneralInformation';
 import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList';
 import Csv from '@components/Dashboard/Csv/Csv';
 import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import UserLookup from '../UserManagement/UserLookup';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -59,7 +60,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage, state:{user}} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
   console.log(institute, 'institute in InstitutionInfo');
@@ -74,15 +75,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           title: Institute_info[userLanguage]['TABS']['STAFF'],
           key: 'staff',
         },
-        {
+        user.role !== 'BLD' ? {
           title: 'User registry',
           key: 'user_registry',
-        },
-        {
+        } : null,
+        user.role !== 'BLD' ? {
           title: 'Register New User',
           key: 'register',
-        },
-      ],
+        } : null,
+      ].filter(Boolean),
     },
     {
       title: 'Course Manager',
@@ -157,15 +158,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   ];
 
   const updateTab = (tab: string) => {
-    // tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
 
-    if (tab === 'user_registry') {
-      history.push(`/dashboard/manage-users`);
-    } else if (tab === 'unit') {
-      // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
-    } else {
-      tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    }
+    // if (tab === 'user_registry') {
+    //   history.push(`/dashboard/manage-users`);
+    // } else if (tab === 'unit') {
+    //   // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
+    // } else {
+    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    // }
   };
 
   useEffect(() => {
@@ -195,6 +196,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             instName={institute?.name}
           />
         );
+      case 'user_registry':
+        return <UserLookup isInInstitute />
       case 'register':
         return <Registration isInInstitute />;
       case 'course':
@@ -309,12 +312,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             </div>
             {institute.id && (
-              <div className="mt-5">
+              <div className="mt-5 px-4 mr-2 2xl:mr-4">
                 <div className="flex mt-2">
                   <span className="w-auto mr-2 mt-0.5">
-                    <BsEnvelope className="w-4 h-4 text-gray-500" />
+                    <BsEnvelope className="w-4 h-4 text-gray-600" />
                   </span>
-                  <span className="w-auto text-gray-500">
+                  <span className="w-auto text-gray-600">
                     {address && (
                       <Fragment>
                         {address + ', '} <br />
@@ -333,29 +336,29 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </div>
                 <div className="flex mt-2 items-center">
                   <span className="w-auto mr-2">
-                    <FiPhone className="w-4 h-4 text-gray-500" />
+                    <FiPhone className="w-4 h-4 text-gray-600" />
                   </span>
-                  <span className="w-auto text-gray-500">
+                  <span className="w-auto text-gray-600">
                     {phone ? formatPhoneNumber(phone) : '-'}
                   </span>
                 </div>
                 <div className="flex mt-2 items-center">
                   <span className="w-auto mr-2">
                     {isServiceProvider ? (
-                      <BiCheckboxChecked className="w-4 h-4 text-gray-500" />
+                      <BiCheckboxChecked className="w-4 h-4 text-gray-600" />
                     ) : (
-                      <BiCheckbox className="w-4 h-4 text-gray-500" />
+                      <BiCheckbox className="w-4 h-4 text-gray-600" />
                     )}
                   </span>
-                  <span className="w-auto text-gray-500">
+                  <span className="w-auto text-gray-600">
                     {Institute_info[userLanguage]['SERVICE_PROVIDER']}
                   </span>
                 </div>
                 <div className="flex mt-2 items-center">
                   <span className="w-auto mr-2">
-                    <IoIosGlobe className="w-4 h-4 text-gray-500" />
+                    <IoIosGlobe className="w-4 h-4 text-gray-600" />
                   </span>
-                  <span className="w-auto text-gray-500">
+                  <span className="w-auto text-gray-600">
                     {website ? (
                       <a
                         href={website}

@@ -28,7 +28,7 @@ const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
                 open || menu.children.filter((item: any) => item.key === activeTab).length
                   ? 'bg-indigo-300 text-indigo-700'
                   : ''
-              } hover:bg-indigo-300 hover:text-indigo-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+              } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
               } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
               {customTitle || menu.title}

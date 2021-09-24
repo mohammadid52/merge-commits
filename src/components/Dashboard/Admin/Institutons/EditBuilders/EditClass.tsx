@@ -77,7 +77,7 @@ const EditClass = (props: EditClassProps) => {
     action: () => {},
   });
 
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const {clientKey, userLanguage, state:{user}, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {editClassDict, BreadcrumsTitles} = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
@@ -652,7 +652,7 @@ const EditClass = (props: EditClassProps) => {
                         </div>
                         <div
                           className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer"
-                          onClick={() => movetoStudentProfile(item.student.id)}>
+                          onClick={() => user.role !== 'BLD' ? movetoStudentProfile(item.student.id) : null}>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
                               <img

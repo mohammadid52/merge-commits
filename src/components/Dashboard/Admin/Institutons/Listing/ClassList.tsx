@@ -30,7 +30,7 @@ const ClassList = (props: ClassListProps) => {
   };
 
   return (
-    <div className="pt-0 flex m-auto justify-center p-4">
+    <div className="pt-0 flex m-auto justify-center p-4 px-12">
       <div className="">
         <PageWrapper defaultClass="">
           {classes.items && classes.items.length > 0 ? (
