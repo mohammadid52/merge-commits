@@ -12,7 +12,6 @@ interface TopMenuControlProps {
   handleComplete?: () => void;
   handleLessonButton?: () => void;
   handleQuitViewing: () => void;
-  handleShareStudentData: () => void;
   handleQuitShare: () => void;
   handleClick: () => void;
   handleHomePopup: () => void;
@@ -30,7 +29,6 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
     handleOpen,
     handleComplete,
     handleLessonButton,
-
     handleClick,
     handleHomePopup,
     handlePageChange,

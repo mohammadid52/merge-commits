@@ -1,6 +1,7 @@
 import FormInput from '@atoms/Form/FormInput';
 import React, {useState} from 'react';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
+import Selector from '@components/Atoms/Form/Selector';
 
 const SingleNote = ({
   singleNoteData,
@@ -25,45 +26,65 @@ const SingleNote = ({
         />
       </div>
 
-      <div className="flex items-end justify-between">
-        <div className="relative w-1/4 h-full">
-          <label
-            htmlFor={'bgColor'}
-            className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-            Select background color
-          </label>
-          <button
-            onClick={() => setColorPicker(!colorPicker)}
-            className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-            <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-              {singleNoteData.bgColor?.split('-')[0]}{' '}
-            </span>
+      <div className="flex items-end space-x-4 justify-between">
+        <div className="relative h-full w-auto flex items-center space-x-4">
+          <div className="w-auto">
+            <label
+              htmlFor={'bgColor'}
+              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              Select background color
+            </label>
+            <button
+              onClick={() => setColorPicker(!colorPicker)}
+              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                {singleNoteData.bgColor?.split('-')[0]}{' '}
+              </span>
 
-            <span
-              className={`h-4 block w-4 bg-gradient-to-t from-${singleNoteData.bgColor}-500 to-${singleNoteData.bgColor}-300 rounded-full `}></span>
-          </button>
-          {colorPicker && (
-            <ColorPicker
-              isMainPage
-              customColors={{
-                colors: [
-                  {label: 'Red', value: 'red'},
-                  {label: 'Red', value: 'green'},
-                  {label: 'Red', value: 'blue'},
-                  {label: 'Red', value: 'yellow'},
-                  {label: 'Red', value: 'indigo'},
-                  {label: 'Red', value: 'purple'},
-                ],
-                values: [{label: 500, value: 500}],
-              }}
-              callbackColor={(pickedColor) => {
-                setColorPicker(false);
-                onFieldUpdate('bgColor', pickedColor.split('-')[0], idx);
-              }}
-              styleString={{top: '100%'}}
+              <span
+                className={`h-4 block w-4 bg-gradient-to-t from-${singleNoteData.bgColor}-500 to-${singleNoteData.bgColor}-300 rounded-full `}></span>
+            </button>
+            {colorPicker && (
+              <ColorPicker
+                isMainPage
+                customColors={{
+                  colors: [
+                    {label: 'Red', value: 'red'},
+                    {label: 'Red', value: 'green'},
+                    {label: 'Red', value: 'blue'},
+                    {label: 'Red', value: 'yellow'},
+                    {label: 'Red', value: 'indigo'},
+                    {label: 'Red', value: 'purple'},
+                  ],
+                  values: [{label: 500, value: 500}],
+                }}
+                callbackColor={(pickedColor) => {
+                  setColorPicker(false);
+                  onFieldUpdate('bgColor', pickedColor.split('-')[0], idx);
+                }}
+                styleString={{top: '100%'}}
+              />
+            )}
+          </div>
+          <div className="w-auto">
+            <label
+              htmlFor={'size'}
+              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              Select size
+            </label>
+            <Selector
+              placeholder="Select size"
+              selectedItem={singleNoteData.size}
+              onChange={(_, name) => onFieldUpdate('size', name, idx)}
+              list={[
+                {id: 0, name: 'small'},
+                {id: 1, name: 'medium'},
+                {id: 2, name: 'large'},
+              ]}
             />
-          )}
+          </div>
         </div>
+
         {idx !== 0 && (
           <div className="w-auto">
             <button

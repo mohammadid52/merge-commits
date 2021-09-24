@@ -10,9 +10,7 @@ import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import RosterRow from './ClassRoster/RosterRow';
 
-interface classRosterProps {
-  handleUpdateSyllabusLesson: () => Promise<void>;
-  handleShareStudentData: () => Promise<void>;
+interface IClassRosterProps {
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
@@ -20,20 +18,22 @@ interface classRosterProps {
   handleRoomUpdate?: (payload: any) => void;
 }
 
-const ClassRoster = (props: classRosterProps) => {
-  // Essentials
-  const {
-    handleShareStudentData,
-    isSameStudentShared,
-    handleQuitShare,
-    handleQuitViewing,
-    handlePageChange,
-    handleRoomUpdate,
-  } = props;
-  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(
-    GlobalContext
-  );
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+const ClassRoster = ({
+  isSameStudentShared,
+  handleQuitShare,
+  handleQuitViewing,
+  handlePageChange,
+  handleRoomUpdate,
+}: IClassRosterProps) => {
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const controlState = gContext.controlState;
+  const controlDispatch = gContext.controlDispatch;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const {lessonPlannerDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
@@ -41,14 +41,17 @@ const ClassRoster = (props: classRosterProps) => {
   // ##################################################################### //
   // ########################### LOADING STATE ########################### //
   // ##################################################################### //
+
   const [loading, setLoading] = useState<boolean>(false);
 
   // ##################################################################### //
   // ############################ ALL STUDENTS ########################### //
   // ##################################################################### //
+
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
+  const [sharedStudent, setSharedStudent] = useState<string[]>(['']);
   const [viewedStudent, setViewedStudent] = useState<string>('');
 
   let subscription: any;
@@ -67,7 +70,11 @@ const ClassRoster = (props: classRosterProps) => {
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
       });
-      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+      setLocalStorageData('room_info', {
+        ...getRoomData,
+        studentViewing: '',
+        displayData: [''],
+      });
     };
   }, []);
 
@@ -218,17 +225,42 @@ const ClassRoster = (props: classRosterProps) => {
   // ##################################################################### //
   // ########################### FUNCTIONALITY ########################### //
   // ##################################################################### //
-  const handleSelect = async (e: any) => {
+
+  const resetViewAndShare = async () => {
+    if (
+      lessonState.studentViewing !== '' ||
+      typeof lessonState.displayData[0] !== 'undefined'
+    ) {
+      console.log('reset reset...');
+
+      if (viewedStudent !== '') {
+        setViewedStudent('');
+      }
+      if (sharedStudent !== ['']) {
+        setSharedStudent(['']);
+      }
+      if (lessonState.studentViewing !== '' || lessonState.displayData[0] !== '') {
+        lessonDispatch({
+          type: 'SET_ROOM_SUBSCRIPTION_DATA',
+          payload: {id: getRoomData.id, studentViewing: '', displayData: ['']},
+        });
+      }
+      setLocalStorageData('room_info', {
+        ...getRoomData,
+        studentViewing: '',
+        displayData: [''],
+      });
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: '', displayData: ['']});
+    }
+  };
+
+  // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
+
+  const handleViewStudentData = async (e: any) => {
     const {id} = e.target;
 
     if (lessonState.studentViewing === id) {
-      setViewedStudent('');
-      lessonDispatch({
-        type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: ''},
-      });
-      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+      await resetViewAndShare();
     } else {
       setViewedStudent(id);
       lessonDispatch({
@@ -237,6 +269,31 @@ const ClassRoster = (props: classRosterProps) => {
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
       await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
+    }
+  };
+
+  // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
+
+  const handleShareStudentData = async (e: any) => {
+    const t = e.target as HTMLElement;
+    const studentID = t.getAttribute('data-studentID');
+
+    console.log('handleShareStudentData - ', studentID);
+
+    if (
+      lessonState.displayData &&
+      lessonState.displayData?.length > 0 &&
+      lessonState.displayData[0] === studentID
+    ) {
+      await resetViewAndShare();
+    } else {
+      setSharedStudent([studentID]);
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, displayData: [studentID]},
+      });
+      setLocalStorageData('room_info', {...getRoomData, displayData: [studentID]});
+      await handleRoomUpdate({id: getRoomData.id, displayData: [studentID]});
     }
   };
 
@@ -261,6 +318,10 @@ const ClassRoster = (props: classRosterProps) => {
       return student;
     }
   });
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div
@@ -306,8 +367,7 @@ const ClassRoster = (props: classRosterProps) => {
         {controlState.roster.length > 0
           ? controlState.roster.map((student: any, key: number) => (
               <RosterRow
-                key={key}
-                keyProp={key}
+                key={`rosterrow_${key}`}
                 number={key}
                 id={student.personAuthID}
                 active={true}
@@ -317,7 +377,7 @@ const ClassRoster = (props: classRosterProps) => {
                 role={student.person.role}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
-                handleSelect={handleSelect}
+                handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
                 handleQuitShare={handleQuitShare}
                 handleQuitViewing={handleQuitViewing}
@@ -343,8 +403,7 @@ const ClassRoster = (props: classRosterProps) => {
         {inactiveStudents.length > 0
           ? inactiveStudents.map((student: any, key: number) => (
               <RosterRow
-                key={key}
-                keyProp={key}
+                key={`rosterrow_${key}`}
                 number={key}
                 id={student.personAuthID}
                 active={false}
@@ -354,7 +413,7 @@ const ClassRoster = (props: classRosterProps) => {
                 role={student.person.role}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
-                handleSelect={handleSelect}
+                handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
                 handleQuitShare={handleQuitShare}
                 handleQuitViewing={handleQuitViewing}

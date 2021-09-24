@@ -1,40 +1,69 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
+import {GlobalContext} from '@contexts/GlobalContext';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
+import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import EmojiPicker from 'emoji-picker-react';
 import noop from 'lodash/noop';
 import React, {useContext, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {FormControlProps} from '../FormBlock';
+
 const EmojiInput = ({
   id,
   inputID,
   label,
   value,
-  isInLesson,
+
   numbered,
   index,
-  handleUpdateStudentData,
-  getStudentDataValue,
+
   required,
-}: FormControlProps) => {
+}: IFormBlockProps) => {
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const gState = gContext.state;
   const {
-    lessonState,
-    lessonDispatch,
-    theme,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
-  } = useContext(GlobalContext);
+    user,
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+  } = gState;
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  const isStudent = user.role === 'ST';
+  const isInLesson = useInLessonCheck();
 
-  // const [fields, setFields] = useState<any>({});
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
+    if (getInput !== undefined) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
+
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    // console.log('onChange - id - value - ', id, ' - ', value);
-    // setFields({...fields, [id]: value});
+
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
     }
   };
+
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
 
   /**
    * Task:
@@ -83,8 +112,8 @@ const EmojiInput = ({
           }`}
           name="emoji"
           type="text"
-          onChange={isInLesson ? (e) => onChange(e) : noop}
-          value={isInLesson ? getStudentDataValue(inputID) : value}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+          value={isInLesson && isStudent ? getStudentDataValue(inputID) : value}
         />
         {showEmojiSelector && (
           <ClickAwayListener onClickAway={() => setShowEmojiSelector(false)}>
