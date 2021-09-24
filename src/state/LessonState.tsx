@@ -20,7 +20,7 @@ export interface lessonStateType {
   studentData?: [StudentPageInput[]];
   exerciseData?: [StudentExerciseData[]];
   viewing?: boolean;
-  displayData?: string[];
+  displayData?: {studentAuthID?: string; lessonPageID?: string}[];
   saveCount?: number;
   firstSave?: boolean;
   subscription?: any;
@@ -44,7 +44,7 @@ export const lessonState: lessonStateType = {
   studentData: [[]],
   exerciseData: [[]],
   viewing: false,
-  displayData: [''],
+  displayData: [{studentAuthID: '', lessonPageID: ''}],
   saveCount: 0,
   firstSave: true,
   subscription: {},

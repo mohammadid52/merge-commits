@@ -362,57 +362,13 @@ const LessonControl = () => {
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
-  // useEffect(() => {
-
-  // }, [state.displayData, state.studentViewing]);
-
-  // ~ SHARE A VIEWED STUDENT'S DATA LOGIC ~ //
-  // const handleShareStudentData = async () => {
-  // if (state.studentViewing.studentInfo) {
-  //   let displayData = {
-  //     breakdownComponent: state.studentViewing.studentInfo.currentLocation
-  //       ? state.studentViewing.studentInfo.currentLocation
-  //       : state.studentViewing.studentInfo.lessonProgress,
-  //     studentInfo: {
-  //       id: state.studentViewing.studentInfo.student.id,
-  //       firstName: state.studentViewing.studentInfo.student.firstName,
-  //       preferredName: state.studentViewing.studentInfo.student.preferredName
-  //         ? state.studentViewing.studentInfo.student.preferredName
-  //         : null,
-  //       lastName: state.studentViewing.studentInfo.student.lastName,
-  //     },
-  //     warmUpData: state.studentViewing.studentInfo.warmupData
-  //       ? state.studentViewing.studentInfo.warmupData
-  //       : null,
-  //     corelessonData: state.studentViewing.studentInfo.corelessonData
-  //       ? state.studentViewing.studentInfo.corelessonData
-  //       : null,
-  //     activityData: state.studentViewing.studentInfo.activityData
-  //       ? state.studentViewing.studentInfo.activityData
-  //       : null,
-  //   };
-  //   // console.log('display data: ', displayData);
-  //   dispatch({
-  //     type: 'SET_SHARE_MODE',
-  //     payload: state.studentViewing.studentInfo.currentLocation
-  //       ? state.studentViewing.studentInfo.currentLocation
-  //       : state.studentViewing.studentInfo.lessonProgress,
-  //   });
-  //   dispatch({type: 'SET_DISPLAY_DATA', payload: displayData});
-  // }
-  // };
 
   // ##################################################################### //
   // ################### CLASSROOM AND PLANNER CONTROL ################### //
   // ##################################################################### //
-  const handleOpen = async () => {
-    // await handleOpenPlanner();
-    //   dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
-  };
+  const handleOpen = async () => {};
 
   const handleComplete = async () => {
-    //   await handleCompletePlanner();
-    //   dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
     handleHome();
   };
 

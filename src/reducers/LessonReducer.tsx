@@ -36,7 +36,7 @@ export type LessonActions =
         createdAt?: string;
         currentPage?: number | null;
         disabledPages?: string[] | any;
-        displayData?: UniversalLessonStudentData[] | null;
+        displayData?: {studentAuthID?: string, lessonPageID?: string}[];
         id: string;
         studentViewing?: string | '';
         updatedAt?: string;
@@ -93,10 +93,6 @@ export type LessonActions =
   | {
       type: 'COMPLETE_STUDENT_UPDATE';
       payload: any;
-    }
-  | {
-      type: 'SET_DISPLAY_DATA';
-      payload: UniversalLessonStudentData;
     }
   | {
       type: 'SET_CURRENT_PAGE';
@@ -319,8 +315,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         universalStudentDataID: resetDataIdArray,
         updated: false,
       };
-    case 'SET_DISPLAY_DATA':
-      return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {
         ...state,

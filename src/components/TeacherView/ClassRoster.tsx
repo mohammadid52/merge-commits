@@ -52,7 +52,7 @@ const ClassRoster = ({
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
   const viewedStudent = lessonState?.studentViewing;
-  const sharedStudent = lessonState?.displayData;
+  const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
   let subscription: any;
 
@@ -72,7 +72,7 @@ const ClassRoster = ({
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [''],
+        displayData: [{studentAuthID: '', lessonPageID: ''}],
       });
     };
   }, []);
@@ -228,29 +228,39 @@ const ClassRoster = ({
   const resetViewAndShare = async () => {
     if (
       lessonState.studentViewing !== '' ||
-      typeof lessonState.displayData[0] !== 'undefined'
+      lessonState.displayData[0].studentAuthID !== ''
     ) {
       console.log('reset reset...');
 
-      if (lessonState.studentViewing !== '' || lessonState.displayData[0] !== '') {
+      if (
+        lessonState.studentViewing !== '' ||
+        lessonState.displayData[0].studentAuthID !== ''
+      ) {
         lessonDispatch({
           type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          payload: {id: getRoomData.id, studentViewing: '', displayData: ['']},
+          payload: {
+            id: getRoomData.id,
+            studentViewing: '',
+            displayData: [{studentAuthID: '', lessonPageID: ''}],
+          },
         });
       }
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [''],
+        displayData: [{studentAuthID: '', lessonPageID: ''}],
       });
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: '', displayData: ['']});
+      await handleRoomUpdate({
+        id: getRoomData.id,
+        studentViewing: '',
+        displayData: [{studentAuthID: '', lessonPageID: ''}],
+      });
     }
   };
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
   const handleViewStudentData = async (idStr: string) => {
-
     if (lessonState.studentViewing === idStr) {
       await resetViewAndShare();
     } else {
@@ -265,21 +275,29 @@ const ClassRoster = ({
 
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
-  const handleShareStudentData = async (idStr: string) => {
-
+  const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
     if (
-      lessonState.displayData &&
-      lessonState.displayData?.length > 0 &&
-      lessonState.displayData[0] === idStr
+      // lessonState.displayData &&
+      // lessonState.displayData?.length > 0 &&
+      lessonState.displayData[0].studentAuthID === idStr
     ) {
       await resetViewAndShare();
     } else {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, displayData: [idStr]},
+        payload: {
+          id: getRoomData.id,
+          displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+        },
       });
-      setLocalStorageData('room_info', {...getRoomData, displayData: [idStr]});
-      await handleRoomUpdate({id: getRoomData.id, displayData: [idStr]});
+      setLocalStorageData('room_info', {
+        ...getRoomData,
+        displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+      });
+      await handleRoomUpdate({
+        id: getRoomData.id,
+        displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+      });
     }
   };
 

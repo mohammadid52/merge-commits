@@ -13,7 +13,7 @@ interface RosterRowProps {
   lessonProgress: string;
   handleResetViewAndShare?: () => void;
   handleViewStudentData?: (id: string) => void;
-  handleShareStudentData?: (id: string) => void;
+  handleShareStudentData?: (idStr: string, pageIdStr: string) => void;
   viewedStudent: string;
   sharedStudent: string;
   handlePageChange?: any;
@@ -42,7 +42,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ########################### SHARING CHECKS ########################## //
   // ##################################################################### //
 
-  const anyoneIsShared = lessonState.displayData[0] !== '';
+  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
 
   const studentIsShared = () => {
     return sharedStudent === id;
@@ -74,6 +74,16 @@ const RosterRow: React.FC<RosterRowProps> = ({
         return 'n/a';
       } else {
         return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+      }
+    }
+  };
+
+  const getPageID = (locationIndex: string) => {
+    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+      if (locationIndex === '') {
+        return 'n/a';
+      } else {
+        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.id;
       }
     }
   };
@@ -134,7 +144,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
             className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={() => handleShareStudentData(id)}>
+            onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
             <span id={`${id}`}>Unshare</span>
           </div>
         ) : (
@@ -159,7 +169,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
           className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
             active && activeHoverClass
           }`}
-          onClick={() => handleShareStudentData(id)}>
+          onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
           <span className="pointer-events-none">Share</span>
         </div>
       )}
