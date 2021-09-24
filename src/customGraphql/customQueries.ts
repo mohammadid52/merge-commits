@@ -680,7 +680,10 @@ export const listRooms = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
       }
       nextToken
@@ -860,7 +863,10 @@ export const getRoomSetup = /* GraphQL */ `
       ClosedPages
       disabledPages
       studentViewing
-      displayData
+      displayData {
+        studentAuthID
+        lessonPageID
+      }
       currentPage
       completedLessons {
         lessonID
@@ -956,7 +962,10 @@ export const listRoomsDashboard = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
         createdAt
         updatedAt
