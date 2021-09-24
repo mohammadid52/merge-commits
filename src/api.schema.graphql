@@ -134,7 +134,7 @@ type Room
   curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   activeLessonId: String
   ClosedPages: [String]
-  disabledPages: [String]
+  disabledPages: [StudentSharing]
   studentViewing: String
   displayData: [String]
   currentPage: String
@@ -145,6 +145,11 @@ type Room
   weekDay: String
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
+}
+
+type StudentSharing {
+  studentAuthID: String
+  lessonPageID: String
 }
 
 type ClassroomGroupStudents
@@ -1243,7 +1248,6 @@ input CreateLessonRubricsInput {
 input DeleteLessonRubricsInput {
   id: ID!
 }
-
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
