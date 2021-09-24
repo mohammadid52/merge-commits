@@ -434,16 +434,16 @@ const staffBuilderDict: any = {
 const spBuilderDict: any = {
   EN: {
     TITLE: 'SERVICE PROVIDERS',
-    ADD_PLACEHOLDER: 'Add a new service provider',
+    ADD_PLACEHOLDER: 'Add a new service vendor',
     ADD_BUTTON: 'ADD',
     NO: 'NO.',
-    SERVICE: 'Service Providers',
+    SERVICE: 'Service Vendors',
     STATUS: 'Status',
     ACTION: 'Actions',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO:
-      'This institute does not have any service provider. Please add new service provider.',
+      'This institute does not have any service vendor. Please add new service vendor.',
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
@@ -907,7 +907,7 @@ const InstitutionEditDict: any = {
     INFO: 'Click the circle above to update institution image.',
 
     FORM: {
-      TITLE: 'Edit Information',
+      TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Institution Type',
       NAME_INPUT_LABEL: 'Institution Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
@@ -919,7 +919,8 @@ const InstitutionEditDict: any = {
       STATE_LABEL: 'State',
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
-      SERVICEPROVIDER_LABEL: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'School',
@@ -936,6 +937,7 @@ const InstitutionEditDict: any = {
       namerequired: 'Institute name is required.',
       typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update institute details. Please try again later.',
+      saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
       imgeerr: 'Unable to update image changes. Please try again later.',
@@ -987,7 +989,7 @@ const InstitutionAddDict: any = {
     TITLE: 'Add Institution',
     SUBTITLE: 'Add new institution to the list',
     FORM: {
-      TITLE: 'Institute Information',
+      TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Institution Type',
       NAME_INPUT_LABEL: 'Institution Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
@@ -1000,8 +1002,10 @@ const InstitutionAddDict: any = {
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
       state: 'Select state',
-      SERVICEPROVIDER_LABEL: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
     },
+    SERVICE_VENDORS: 'Service Vendors',
     INSTITUTION_TYPE: {
       SCHOOL: 'School',
       AFTERSCHOOL: 'After School',
@@ -1015,6 +1019,7 @@ const InstitutionAddDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
       adderr: 'Unable to add new institute. Please try again later.',
     },

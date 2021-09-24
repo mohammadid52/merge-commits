@@ -169,6 +169,7 @@ const Institution = (props: InstitutionProps) => {
               <InstitutionEdit
                 institute={institutionData}
                 toggleUpdateState={toggleUpdateState}
+                updateServiceProviders={updateServiceProviders}
               />
             )}
           />

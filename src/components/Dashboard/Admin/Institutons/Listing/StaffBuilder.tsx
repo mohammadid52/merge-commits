@@ -305,12 +305,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="pb-8 flex m-auto justify-center p-8">
+    <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
         <PageWrapper defaultClass="">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
-              {instName?.toUpperCase()} {dictionary['TITLE']}
+              {dictionary['TITLE']}
             </h3>
             {!showAddSection ? (
               <AddButton
@@ -347,7 +347,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             <>
               {activeStaffList?.length > 0 ? (
                 <Fragment>
-                  <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                  <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                     <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
                       <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                         <span>{dictionary['NO']}</span>

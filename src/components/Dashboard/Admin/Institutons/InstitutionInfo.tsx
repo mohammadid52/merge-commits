@@ -62,6 +62,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
+  console.log(institute, 'institute in InstitutionInfo');
 
   const headerMenusForInstitution = [
     {
@@ -74,12 +75,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           key: 'staff',
         },
         {
-          title: 'Register',
-          key: 'register',
+          title: 'User registry',
+          key: 'user_registry',
         },
         {
-          title: Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER'],
-          key: 'service_provider',
+          title: 'Register New User',
+          key: 'register',
         },
       ],
     },
@@ -156,15 +157,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   ];
 
   const updateTab = (tab: string) => {
-    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    // tabProps.setTabsData({...tabProps.tabsData, inst: tab});
 
-    // if (tab === 'register') {
-    //   history.push(`/dashboard/registration`);
-    // } else if (tab === 'unit') {
-    //   // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
-    // } else {
-    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    // }
+    if (tab === 'user_registry') {
+      history.push(`/dashboard/manage-users`);
+    } else if (tab === 'unit') {
+      // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
+    } else {
+      tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+    }
   };
 
   useEffect(() => {
@@ -307,60 +308,68 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </Tooltip>
               </div>
             </div>
-            <div className="mt-5">
-              <div className="flex mt-2">
-                <span className="w-auto mr-2 mt-0.5">
-                  <BsEnvelope className="w-4 h-4 text-gray-500" />
-                </span>
-                <span className="w-auto text-gray-500">
-                  {address && (
-                    <Fragment>
-                      {address + ', '} <br />
-                    </Fragment>
-                  )}
-                  {addressLine2 && (
-                    <Fragment>
-                      {addressLine2 + ', '} <br />
-                    </Fragment>
-                  )}
-                  {[city, state].filter(Boolean).join(', ')}
-                  {city && state && <br />}
-                  {zip && zip}
-                </span>
+            {institute.id && (
+              <div className="mt-5">
+                <div className="flex mt-2">
+                  <span className="w-auto mr-2 mt-0.5">
+                    <BsEnvelope className="w-4 h-4 text-gray-500" />
+                  </span>
+                  <span className="w-auto text-gray-500">
+                    {address && (
+                      <Fragment>
+                        {address + ', '} <br />
+                      </Fragment>
+                    )}
+                    {addressLine2 && (
+                      <Fragment>
+                        {addressLine2 + ', '} <br />
+                      </Fragment>
+                    )}
+                    {[city, state].filter(Boolean).join(', ')}
+                    {city && state && <br />}
+                    {zip && zip}
+                    {!(address || addressLine2 || city || state || zip) ? '-' : ''}
+                  </span>
+                </div>
+                <div className="flex mt-2 items-center">
+                  <span className="w-auto mr-2">
+                    <FiPhone className="w-4 h-4 text-gray-500" />
+                  </span>
+                  <span className="w-auto text-gray-500">
+                    {phone ? formatPhoneNumber(phone) : '-'}
+                  </span>
+                </div>
+                <div className="flex mt-2 items-center">
+                  <span className="w-auto mr-2">
+                    {isServiceProvider ? (
+                      <BiCheckboxChecked className="w-4 h-4 text-gray-500" />
+                    ) : (
+                      <BiCheckbox className="w-4 h-4 text-gray-500" />
+                    )}
+                  </span>
+                  <span className="w-auto text-gray-500">
+                    {Institute_info[userLanguage]['SERVICE_PROVIDER']}
+                  </span>
+                </div>
+                <div className="flex mt-2 items-center">
+                  <span className="w-auto mr-2">
+                    <IoIosGlobe className="w-4 h-4 text-gray-500" />
+                  </span>
+                  <span className="w-auto text-gray-500">
+                    {website ? (
+                      <a
+                        href={website}
+                        target="_blank"
+                        className={`hover:${theme.textColor[themeColor]}`}>
+                        {Institute_info[userLanguage]['WEBSITE']}
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </span>
+                </div>
               </div>
-              <div className="flex mt-2 items-center">
-                <span className="w-auto mr-2">
-                  <FiPhone className="w-4 h-4 text-gray-500" />
-                </span>
-                <span className="w-auto text-gray-500">{phone ? formatPhoneNumber(phone) : '-'}</span>
-              </div>
-              <div className="flex mt-2 items-center">
-                <span className="w-auto mr-2">
-                  {isServiceProvider ? (
-                    <BiCheckboxChecked className="w-4 h-4 text-gray-500" />
-                  ) : (
-                    <BiCheckbox className="w-4 h-4 text-gray-500" />
-                  )}
-                </span>
-                <span className="w-auto text-gray-500">
-                  {Institute_info[userLanguage]['SERVICE_PROVIDER']}
-                </span>
-              </div>
-              <div className="flex mt-2 items-center">
-                <span className="w-auto mr-2">
-                  <IoIosGlobe className="w-4 h-4 text-gray-500" />
-                </span>
-                <span className="w-auto text-gray-500">
-                  {website ? (
-                    <a href={website} target="_blank" className={`hover:${theme.textColor[themeColor]}`}>
-                      {Institute_info[userLanguage]['WEBSITE']}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </span>
-              </div>
-            </div>
+            )}
           </div>
 
           <div className="">
@@ -376,7 +385,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   {Institute_info[userLanguage]['TITLE']}
                   </h3> */}
               </div>
-              <div className="overflow-hidden min-h-80">{renderElementBySelectedMenu()}</div>
+              <div className="overflow-hidden min-h-80">
+                {renderElementBySelectedMenu()}
+              </div>
             </div>
           </div>
         </div>

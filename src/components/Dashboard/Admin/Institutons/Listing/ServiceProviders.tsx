@@ -43,14 +43,18 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const [updateStatus, setUpdateStatus] = useState(false);
 
   useEffect(() => {
-    if (serviceProviders.items?.length) {
-      setPartners(serviceProviders.items.map((item: any) => ({
+    console.log(serviceProviders,'serviceProviders');
+    
+    if (!partners.length && serviceProviders.items?.filter((item) => item.id).length) {
+      setPartners(
+        serviceProviders.items.map((item: any) => ({
           id: item.id,
           status: item.status,
           partner: {...item.providerInstitution},
-      })))
+        }))
+      );
     }
-  },[serviceProviders])
+  }, [serviceProviders]);
 
   const onServProChange = (val: string, name: string, id: string) => {
     setNewServPro({
@@ -116,6 +120,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           ...partners,
           {id: item.id, status: 'Active', partner: {...item.providerInstitution}},
         ];
+
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
           (item: any) => item.id !== newServPro.id
         );
@@ -147,7 +152,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           input: {id, status},
         })
       );
-      const updatedPartners = partners.map((sp:any) => {
+      const updatedPartners = partners.map((sp: any) => {
         if (sp.id === id) {
           sp.status = status;
         }
@@ -159,13 +164,18 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     setStatusEdit('');
   };
 
+  console.log(partners, 'partners++++++++');
+
   return (
-    <div className="flex m-auto justify-center p-4">
+    <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
-            {dictionary.SERVICE}
-          </h3>
+        <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
+          {/* TITLE */}
+          <div className="w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              {dictionary.SERVICE}
+            </h3>
+          </div>
           <div className="flex items-center w-6/10 m-auto px-2 my-8">
             <Selector
               selectedItem={newServPro.value}
@@ -180,8 +190,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
             />
           </div>
 
-          {partners && partners.length > 0 ? (
-            <Fragment>
+          {partners?.length ? (
+            <div className="px-4 pb-4">
               <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
                 <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                   <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -200,7 +210,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
               </div>
 
               <div className="w-full m-auto max-h-88 overflow-y-auto">
-                {partners.map((item:any, index:number) => (
+                {partners.map((item: any, index: number) => (
                   <div
                     key={index}
                     className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
@@ -256,13 +266,13 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                   </div>
                 ))}
               </div>
-            </Fragment>
+            </div>
           ) : (
             <div className="text-center p-16">
               <p> {dictionary.INFO}</p>
             </div>
           )}
-        </PageWrapper>
+        </div>
       </div>
     </div>
   );

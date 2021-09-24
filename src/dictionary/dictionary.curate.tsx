@@ -450,16 +450,16 @@ const staffBuilderDict: any = {
 const spBuilderDict: any = {
   EN: {
     TITLE: 'SERVICE PROVIDERS',
-    ADD_PLACEHOLDER: 'Add a new service provider',
+    ADD_PLACEHOLDER: 'Add a new service vendor',
     ADD_BUTTON: 'ADD',
     NO: 'NO.',
-    SERVICE: 'Service Providers',
+    SERVICE: 'Service Vendors',
     STATUS: 'Status',
     ACTION: 'Actions',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO:
-      'This organization does not have any service provider. Please add new service provider.',
+      'This organization does not have any service vendor. Please add new service vendor.',
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
@@ -944,7 +944,7 @@ const InstitutionEditDict: any = {
     INFO: 'Click the circle above to update organization image.',
 
     FORM: {
-      TITLE: 'Edit Information',
+      TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Organization Type',
       NAME_INPUT_LABEL: 'Organization Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
@@ -956,7 +956,8 @@ const InstitutionEditDict: any = {
       STATE_LABEL: 'State',
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
-      SERVICEPROVIDER_LABEL: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'Congregations',
@@ -973,6 +974,7 @@ const InstitutionEditDict: any = {
       namerequired: 'Organization name is required.',
       typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update organization details. Please try again later.',
+      saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting organization image.',
       imgeerr: 'Unable to update image changes. Please try again later.',
@@ -1024,7 +1026,7 @@ const InstitutionAddDict: any = {
     TITLE: 'Add Organization',
     SUBTITLE: 'Add new organization to the list',
     FORM: {
-      TITLE: 'Organization Information',
+      TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Organization Type',
       NAME_INPUT_LABEL: 'Organization Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Project Curate',
@@ -1037,8 +1039,10 @@ const InstitutionAddDict: any = {
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
       state: 'Select state',
-      SERVICEPROVIDER_LABEL: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
     },
+    SERVICE_VENDORS: 'Service Vendors',
     INSTITUTION_TYPE: {
       SCHOOL: 'Congregations',
       AFTERSCHOOL: 'Foundations',
@@ -1054,6 +1058,7 @@ const InstitutionAddDict: any = {
       namerequired: 'Organization name is required.',
       uploaderr: 'Unable to upload image. Please try again later. ',
       adderr: 'Unable to add new organization. Please try again later.',
+      saveMsg: 'Institution details saved successfully',
     },
   },
   ES: {

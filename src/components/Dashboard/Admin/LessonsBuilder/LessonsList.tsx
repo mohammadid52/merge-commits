@@ -305,9 +305,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         )}
         {/* Header section */}
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
-        <div className="flex justify-between">
+        <div className={`flex justify-between ${isInInstitution ? 'items-center' : ''}`}>
           {isInInstitution ? (
-            <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 w-auto">
+            <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
               {title}
             </h3>
           ) : (

@@ -520,7 +520,7 @@ const spBuilderDict: any = {
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO:
-      'This institute does not have any service provider. Please add new service provider.',
+      'This institute does not have any service vendor. Please add new service vendor.',
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
