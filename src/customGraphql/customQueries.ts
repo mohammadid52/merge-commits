@@ -24,7 +24,10 @@ export const getDashboardData = /* GraphQL */ `
                 ClosedPages
                 disabledPages
                 studentViewing
-                displayData
+                displayData {
+                  studentAuthID
+                  lessonPageID
+                }
                 currentPage
                 teacher {
                   firstName
