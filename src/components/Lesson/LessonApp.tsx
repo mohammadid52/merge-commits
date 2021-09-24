@@ -670,56 +670,56 @@ const LessonApp = () => {
   const [cleared, setCleared] = useState(false);
   const [created, setCreated] = useState(false);
 
-  const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
+  const [personLocationObj, setPersonLocationObj] = useState<any>({
+    id: '',
+    personAuthID: '',
+    personEmail: '',
+    lessonID: '',
+    syllabusLessonID: '',
+    roomID: '',
+    currentLocation: '',
+    lessonProgress: '',
+  });
   const previousLocation = usePrevious(personLocationObj);
 
+  // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
   useEffect(() => {
-    if (personLocationObj && personLocationObj.id) {
-      updatePersonLocation(personLocationObj);
-      setLocalStorageData('person_location', personLocationObj);
+    if (personLocationObj.id === '') {
+      initializeLocation();
     }
-  }, [personLocationObj]);
+  }, [lessonState.lessonData.id]);
+
+  // useEffect(() => {
+  //   if (personLocationObj.id !== '') {
+  //     updatePersonLocation(personLocationObj);
+  //     setLocalStorageData('person_location', personLocationObj);
+  //   }
+  // }, [personLocationObj]);
+
+  // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (created && lessonState.currentPage >= 0) {
+      const pageChangeLocation = {
+        ...personLocationObj,
+        currentLocation: lessonState.currentPage,
+        lessonProgress: lessonState.lessonProgress,
+      };
+      setPersonLocationObj(pageChangeLocation);
+      updatePersonLocation(pageChangeLocation);
+      setLocalStorageData('person_location', pageChangeLocation);
+    }
+  }, [created, lessonState.currentPage]);
 
   const initializeLocation = async () => {
-    if (!cleared) {
+    if (!cleared && !created) {
       await leaveRoomLocation(user.authId, user.email);
-    }
-    if (cleared && !created) {
+      console.log('CLEARED location...');
       await createPersonLocation();
+      console.log('CREATED location...');
     }
-    console.log('initialized location...');
   };
 
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
-
-  // const getPersonLocation = async () => {
-  //   const user = await Auth.currentAuthenticatedUser();
-  //   const studentAuthId = user.username;
-  //   const email = user.attributes.email;
-
-  //   let input = {
-  //     personAuthID: {eq: studentAuthId},
-  //     personEmail: email,
-  //   };
-
-  //   try {
-  //     let userLocations: any = await API.graphql(
-  //       graphqlOperation(customQueries.listPersonLocations, input)
-  //     );
-
-  //     const responseItems = userLocations.data.listPersonLocations.items;
-  //     console.log('getPersonLocation - ', responseItems);
-
-  //     if (responseItems.length > 0 && previousLocation === undefined) {
-  //       // await leaveRoomLocation(studentAuthId, email);
-  //       // await createPersonLocation();
-  //     } else {
-  //       // await createPersonLocation();
-  //     }
-  //   } finally {
-  //     // console.log('personLocation setup!');
-  //   }
-  // };
 
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;
@@ -743,18 +743,13 @@ const LessonApp = () => {
         id: response.id,
       };
       setPersonLocationObj(newLocationObj);
+      setLocalStorageData('person_location', newLocationObj);
     } catch (e) {
       // console.error('createPersonLocation - ', e);
     } finally {
       setCreated(true);
     }
   };
-
-  useEffect(() => {
-    if (personLocationObj === undefined) {
-      initializeLocation();
-    }
-  }, [lessonState.lessonData.id]);
 
   // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
 
@@ -773,6 +768,7 @@ const LessonApp = () => {
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
       );
+      setLocalStorageData('person_location', locationUpdateProps);
     } catch (e) {
       console.error('updatePersonLocation - ', e);
     }
@@ -794,16 +790,6 @@ const LessonApp = () => {
       setCleared(true);
     }
   };
-
-  useEffect(() => {
-    if (personLocationObj && personLocationObj.id && lessonState.currentPage >= 0) {
-      setPersonLocationObj({
-        ...personLocationObj,
-        currentLocation: lessonState.currentPage,
-        lessonProgress: lessonState.lessonProgress,
-      });
-    }
-  }, [lessonState.currentPage]);
 
   // ##################################################################### //
   // ######################### NAVIGATION CONTROL ######################## //
