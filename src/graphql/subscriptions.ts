@@ -200,12 +200,12 @@ export const onChangePersonLocation = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -773,12 +773,12 @@ export const onChangeRoom = /* GraphQL */ `
       }
       activeLessonId
       ClosedPages
-      disabledPages {
+      disabledPages
+      studentViewing
+      displayData {
         studentAuthID
         lessonPageID
       }
-      studentViewing
-      displayData
       currentPage
       completedLessons {
         lessonID
@@ -1015,8 +1015,8 @@ export const onCreateInstitution = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -1135,8 +1135,8 @@ export const onUpdateInstitution = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -1255,8 +1255,8 @@ export const onDeleteInstitution = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -1856,12 +1856,12 @@ export const onCreateRoom = /* GraphQL */ `
       }
       activeLessonId
       ClosedPages
-      disabledPages {
+      disabledPages
+      studentViewing
+      displayData {
         studentAuthID
         lessonPageID
       }
-      studentViewing
-      displayData
       currentPage
       completedLessons {
         lessonID
@@ -2042,12 +2042,12 @@ export const onUpdateRoom = /* GraphQL */ `
       }
       activeLessonId
       ClosedPages
-      disabledPages {
+      disabledPages
+      studentViewing
+      displayData {
         studentAuthID
         lessonPageID
       }
-      studentViewing
-      displayData
       currentPage
       completedLessons {
         lessonID
@@ -2228,12 +2228,12 @@ export const onDeleteRoom = /* GraphQL */ `
       }
       activeLessonId
       ClosedPages
-      disabledPages {
+      disabledPages
+      studentViewing
+      displayData {
         studentAuthID
         lessonPageID
       }
-      studentViewing
-      displayData
       currentPage
       completedLessons {
         lessonID
@@ -2296,8 +2296,8 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -2415,8 +2415,8 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -2534,8 +2534,8 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -2712,12 +2712,12 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -2881,12 +2881,12 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -3050,12 +3050,12 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -3222,12 +3222,12 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -3376,12 +3376,12 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -3530,12 +3530,12 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -3659,8 +3659,8 @@ export const onCreateClass = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -3755,8 +3755,8 @@ export const onUpdateClass = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -3851,8 +3851,8 @@ export const onDeleteClass = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          disabledPages
           studentViewing
-          displayData
           currentPage
           activeLessons
           weekDay
@@ -9921,12 +9921,12 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -10142,12 +10142,12 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -10363,12 +10363,12 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -10798,12 +10798,12 @@ export const onCreateAttendance = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -11050,12 +11050,12 @@ export const onUpdateAttendance = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
@@ -11302,12 +11302,12 @@ export const onDeleteAttendance = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
-        disabledPages {
+        disabledPages
+        studentViewing
+        displayData {
           studentAuthID
           lessonPageID
         }
-        studentViewing
-        displayData
         currentPage
         completedLessons {
           lessonID
