@@ -380,7 +380,7 @@ const ClassRoster = ({
                 handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
                 viewedStudent={viewedStudent}
-                sharedStudent={sharedStudent[0]}
+                sharedStudent={sharedStudent}
                 handlePageChange={handlePageChange}
               />
             ))
@@ -414,7 +414,7 @@ const ClassRoster = ({
                 handleViewStudentData={handleViewStudentData}
                 handleShareStudentData={handleShareStudentData}
                 viewedStudent={viewedStudent}
-                sharedStudent={sharedStudent[0]}
+                sharedStudent={sharedStudent}
               />
             ))
           : null}

@@ -427,13 +427,13 @@ module.exports = {
         },
         activation: {
           '0%': {
-            boxShadow: '0 0 0 0 #00488AC7',
+            borderBottom: '0px solid #00488AC7',
           },
           '50%': {
-            boxShadow: '0 0 8px 4px #488AC7',
+            borderBottom: '4px solid #00488AC7',
           },
           '100%': {
-            boxShadow: '0 0 0 0 #00488AC7',
+            borderBottom: '0px solid #00488AC7',
           },
         },
         slideUp: {
