@@ -1,12 +1,12 @@
 import NotesFab from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import {filter} from 'lodash';
 import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+} from '@interfaces/UniversalLessonInterfaces';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';

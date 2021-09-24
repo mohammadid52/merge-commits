@@ -87,7 +87,8 @@ interface INoteBlock {
   notesInitialized?: boolean;
   grid?: {cols?: number; rows?: number};
   value: any[];
-  addNew?: (newNoteObj: any) => void;
+  addNew?: (newNoteObj: any, notesData?: any) => void;
+  saveData?: (notesData: any) => void;
   notesData?: any;
   updateJournalData?: any;
   setNotesData?: React.Dispatch<React.SetStateAction<any>>;
@@ -113,7 +114,7 @@ const NotesBlock = ({
   addNew,
   notesInitialized,
   showNotesModal,
-  grid,
+  grid,saveData,
   updateJournalData,
 }: INoteBlock) => {
   const {
@@ -163,13 +164,12 @@ const NotesBlock = ({
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const handleSetMenuState = async (data?: any) => {
-    if (notesChanged) {
-      setSaveInProgress(true);
-      await updateJournalData(data);
-      setNotesChanged(false);
-      setSaveInProgress(false);
-    }
+    // if (notesChanged) {
+
+    await updateJournalData(data);
+    setNotesChanged(false);
   };
+  // };
 
   const updateNotesContent = (html: string, noteId: string) => {
     const idx = findIndex(notesData.entryData, ['domID', noteId]);
@@ -247,67 +247,26 @@ const NotesBlock = ({
     const newNoteObj = {
       ...localNotes[0],
       id: uuidv4(),
-      class: 'yellow',
+      class: 'yellow medium',
       value: '',
       type: FORM_TYPES.NOTES,
     };
-    addNew({domID: newNoteObj.id, type: 'content', input: ''});
     localNotes.push(newNoteObj);
     setLocalNotes([...localNotes]);
-    const note = localNotes[0];
-    handleSetMenuState(notesData.entryData);
-    const updateLesson = async () => {
-      const currentPageIdx = lessonState.currentPage;
-      if (currentLesson) {
-        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
 
-        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
-
-        const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(
-          partContent,
-          (d: any) => d.id === note.partContentId
-        );
-        let valueArr = partContent[partContentIdx].value;
-
-        const newNote = {
-          type: FORM_TYPES.NOTES,
-          value: '',
-          class: 'yellow medium',
-          id: newNoteObj.id,
-        };
-
-        const updated = update(
-          currentLocalLesson,
-          `lessonPlan[${currentPageIdx}].pageContent[${pagePartIdx}].partContent[
-          ${partContentIdx}
-        ].value`,
-          () => {
-            valueArr.push(newNote);
-            return valueArr;
-          }
-        );
-
-        setCurrentLocalLesson({...currentLocalLesson});
-
-        try {
-          const input = {
-            id: updated.id,
-            lessonPlan: [...updated.lessonPlan],
-          };
-
-          await updateLessonPageToDB(input);
-        } catch (error) {
-          console.error('@onNoteAdd - NotesBlock.tsx', error);
-        }
-      }
-    };
-
-    updateLesson();
+    addNew(
+      {
+        domID: newNoteObj.id,
+        type: 'content-custom || yellow medium',
+        input: '',
+      },
+      notesData
+    );
   };
 
-  const onNoteEdit = () => {
+  const onNoteEdit = async () => {
     setShowEditModal({...showEditModal, show: false});
+    setNotesChanged(true);
 
     const note: any = currentNote;
 
@@ -320,52 +279,19 @@ const NotesBlock = ({
     );
     setLocalNotes([...localNotes]);
 
-    const updateLesson = async () => {
-      const currentPageIdx = lessonState.currentPage;
-      if (currentLesson) {
-        const pageContent = currentLesson.lessonPlan[currentPageIdx].pageContent;
+    const idx = findIndex(notesData.entryData, ['domID', note.id]);
 
-        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
+    update(
+      notesData,
+      `entryData[${idx}].type`,
+      () => `content-custom || ${currentSelectedColor} ${currentSelectedSize}`
+    );
 
-        const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(
-          partContent,
-          (d: any) => d.id === note.partContentId
-        );
+    setNotesData({...notesData});
+    await updateJournalData();
 
-        let valueArr = partContent[partContentIdx].value;
-
-        const noteIdx = findIndex(valueArr, (d: any) => d.id === note.id);
-
-        const updated = update(
-          currentLocalLesson,
-          `lessonPlan[${currentPageIdx}].pageContent[${pagePartIdx}].partContent[
-          ${partContentIdx}
-        ].value`,
-          () => {
-            valueArr[noteIdx].class = `${currentSelectedColor} ${currentSelectedSize}`;
-            return valueArr;
-          }
-        );
-
-        setCurrentLocalLesson({...currentLocalLesson});
-
-        try {
-          const input = {
-            id: updated.id,
-            lessonPlan: [...updated.lessonPlan],
-          };
-
-          await updateLessonPageToDB(input);
-        } catch (error) {
-          console.error('@onNoteEdit - NotesBlock.tsx', error);
-        } finally {
-          setCurrentSelectedColor(null);
-        }
-      }
-    };
-
-    updateLesson();
+    setCurrentSelectedColor(null);
+    setCurrentSelectedSize(null);
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState({show: false, id: ''});
@@ -525,6 +451,7 @@ const NotesBlock = ({
                 if (note) {
                   return (
                     <Note
+                      custom={note.custom}
                       updateText={updateText}
                       setShowEditModal={setShowEditModal}
                       setShowDeleteModal={setShowDeleteModal}
@@ -546,11 +473,18 @@ const NotesBlock = ({
                 <FiFilePlus className="h-10 w-10 " />
               </button>
               <button
-                onClick={() => handleSetMenuState(null)}
+                onClick={() => {
+                  setSaveInProgress(true);
+                  if (notesChanged) {
+                    saveData(notesData);
+                  }
+                  setSaveInProgress(false);
+                }}
                 title="Save to class notes"
                 className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
                 <BiSave className="h-10 w-10 " />
               </button>
+              {saveInProgress && <Loader className="text-gray-500 text-base" />}
             </div>
           )}
         </div>
