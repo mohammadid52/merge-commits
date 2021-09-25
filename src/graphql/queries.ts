@@ -5693,6 +5693,7 @@ export const getUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -5714,6 +5715,7 @@ export const getUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -6616,6 +6618,7 @@ export const getPersonFiles = /* GraphQL */ `
       files {
         fileName
         fileKey
+        fileSize
       }
       lessonPageID
       createdAt
@@ -6652,6 +6655,7 @@ export const listPersonFiless = /* GraphQL */ `
         files {
           fileName
           fileKey
+          fileSize
         }
         lessonPageID
         createdAt
