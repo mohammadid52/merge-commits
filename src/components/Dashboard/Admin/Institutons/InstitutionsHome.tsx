@@ -1,43 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-
-// Instituttion
-import InstitutionLookup from './InstitutionLookup';
-import Institution from './Institution';
-import InstitutionAdd from './InstitutionAdd';
-
+import React, {useContext, useEffect, useState} from 'react';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {DashboardProps} from '../../Dashboard';
 // Institute info tabs.
 import ClassBuilder from './Builders/ClassBuilder';
-import RoomBuilder from './Builders/RoomBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
-import EditClass from './EditBuilders/EditClass';
-import EditCurricular from './EditBuilders/EditCurricular';
-import EditRoom from './EditBuilders/EditRoom';
-import CurricularView from './EditBuilders/CurricularsView/CurricularView';
-
-// Curricular tabs.
-import AddTopic from './EditBuilders/CurricularsView/TabsActions/AddTopic';
-import AddMeasurement from './EditBuilders/CurricularsView/TabsActions/AddMeasurement';
-import AddSyllabus from './EditBuilders/CurricularsView/TabsActions/AddSyllabus';
-import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
-import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
-import EditSyllabus from './EditBuilders/CurricularsView/TabsActions/EditSyllabus';
-import AddLearningObjective from './EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
-import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
-import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
-import { DashboardProps } from '../../Dashboard';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import RoomBuilder from './Builders/RoomBuilder';
 import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
+import CurricularView from './EditBuilders/CurricularsView/CurricularView';
+import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
+import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
+import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
+import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
+import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import EditClass from './EditBuilders/EditClass';
+import Institution from './Institution';
+import InstitutionAdd from './InstitutionAdd';
+// Instituttion
+import InstitutionLookup from './InstitutionLookup';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const { setCurrentPage } = props;
-  const { state, dispatch } = useContext(GlobalContext);
+  const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
-  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 });
-  const tabProps = { tabsData, setTabsData };
+  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
+  const tabProps = {tabsData, setTabsData};
   // TODO: Need to setup route saperately if required,
   // currently everything is tied to institutions.
   // so curricular can be open after selecting any specific institute only.
@@ -45,7 +33,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'manage-institutions' } });
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
   }, [state.user.role]);
 
   return (
@@ -70,7 +58,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         <Route
           path={`${match.url}/institution/room-creation`}
-          render={() => <RoomBuilder />} // Create new room
+          render={() => <ClassRoomBuilder />} // Create new room
         />
         <Route
           path={`${match.url}/institution`}

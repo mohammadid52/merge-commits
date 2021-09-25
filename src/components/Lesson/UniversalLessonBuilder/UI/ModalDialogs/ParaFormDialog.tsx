@@ -8,7 +8,6 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import {v4 as uuidv4} from 'uuid';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import {isEmpty} from '@aws-amplify/core';
-import htmlToDraft from 'html-to-draftjs';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -64,7 +63,6 @@ const ParaModalComponent = ({
       ]);
       await addToDB(updatedList);
     }
-    // close modal after saving
 
     // clear fields
     setFields({paragraph: '', paragraphHtml: ''});

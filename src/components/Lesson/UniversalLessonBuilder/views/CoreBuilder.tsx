@@ -1,30 +1,29 @@
-import React, {useContext, Fragment, useEffect, useRef, useState} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {Transition} from '@headlessui/react';
+import {find, findLastIndex, map, remove} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineCheck, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {IconType} from 'react-icons/lib';
 import {useHistory} from 'react-router';
-import {Dialog, Transition} from '@headlessui/react';
-import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
-import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
+import {v4 as uuidv4} from 'uuid';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {v4 as uuidv4} from 'uuid';
-import Toolbar from '../UI/UIComponents/Toolbar';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import Storage from '@aws-amplify/storage';
-import {filter, find, findLastIndex, forEach, map, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
-import useDictionary from '../../../../customHooks/dictionary';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
-import {useQuery} from '../../../../customHooks/urlParam';
-import {IconType} from 'react-icons/lib';
+import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
-import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import Downloadables from '../UI/UIComponents/Downloadables';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
+import Toolbar from '../UI/UIComponents/Toolbar';
+import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -82,34 +81,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     pushUserToThisId,
     previewMode,
     setPreviewMode,
+    savingStatus,
   } = useULBContext();
-  const {
-    clientKey,
-    userLanguage,
-    state: {user, lessonPage: {themeBackgroundColor = ''} = {}},
-  } = useContext(GlobalContext);
-
-  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
-    (page: UniversalLessonPage) => page.id === selectedPageID
-  );
-
-  const downloadables =
-    selectedPageID &&
-    selectedPageDetails &&
-    selectedPageDetails.pageContent &&
-    selectedPageDetails.pageContent.length > 0
-      ? filter(selectedPageDetails.pageContent, (f) =>
-          f.id.includes('downloadable-files')
-        )
-      : [];
+  const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {
     state: {
-      lessonPage: {
-        theme = 'dark',
-        themeSecBackgroundColor = 'bg-gray-700',
-        themeTextColor = '',
-      } = {},
+      lessonPage: {themeSecBackgroundColor = 'bg-gray-700', themeTextColor = ''} = {},
     },
   } = useContext(GlobalContext);
 
@@ -137,7 +115,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     text = '',
     tooltip = '',
     invert = false,
-    color = 'text-white',
   }: {
     onClick?: () => void;
     icon?: IconType;
@@ -381,6 +358,48 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
+        {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
+        <div className="fixed z-100 bottom-3 right-5  w-auto ">
+          <Transition
+            appear
+            show={savingStatus !== 'initial'}
+            enter="transform transition ease-in-out duration-300"
+            enterFrom="translate-x-full"
+            enterTo="translate-x-0"
+            leave="transform transition ease-in-out duration-300"
+            leaveFrom="translate-x-0"
+            leaveTo="translate-x-full"
+            className=" rounded-md shadow bg-gray-800 border-gray-700 border-0">
+            <div className="py-3 px-5">
+              {savingStatus === 'loading' && (
+                <div className={`flex items-center justify-center w-auto`}>
+                  <Loader className="text-gray-500 mr-2 w-auto" />
+                  <p className="text-white font-medium w-auto tracking-wide text-sm">
+                    Saving changes
+                  </p>
+                </div>
+              )}
+              {savingStatus === 'loaded' && (
+                <div className={`flex items-center justify-center`}>
+                  <p className="text-white font-medium tracking-wide text-sm">
+                    Changes saved
+                  </p>
+                  <AiOutlineCheck className="text-green-500 ml-2 w-auto" />
+                </div>
+              )}
+              {savingStatus === 'failed' && (
+                <div className={`flex items-center justify-center`}>
+                  <p className="text-red-500 font-medium tracking-wide text-sm">
+                    Something went wrong
+                  </p>
+                </div>
+              )}
+            </div>
+          </Transition>
+        </div>
+
+        {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
+
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           <div
@@ -416,7 +435,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               // if anyone is making a component out of it .
               // PLEASE replace this with that component
               // :)
-              <div className="border border-gray-300 shadow rounded-md p-4 max-w-sm w-full mx-auto mt-12">
+              <div className="p-4 max-w-sm w-full mx-auto mt-12">
                 <div className="animate-pulse space-y-8 flex flex-col">
                   <div className="flex-1 space-y-4 py-1">
                     <div className="h-4 bg-gray-400 rounded w-3/4"></div>

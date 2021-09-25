@@ -1,29 +1,27 @@
-import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation} from 'react-router-dom';
-import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
-import * as mutations from '../../../../../graphql/mutations';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
+import {IoClose} from 'react-icons/io5';
+import {useHistory, useLocation} from 'react-router-dom';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import useDictionary from '../../../../../customHooks/dictionary';
+import * as mutations from '../../../../../graphql/mutations';
+import * as queries from '../../../../../graphql/queries';
+import {getImageFromS3} from '../../../../../utilities/services';
 import {
-  stringToHslColor,
   getInitialsFromString,
   initials,
+  stringToHslColor,
 } from '../../../../../utilities/strings';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {goBackBreadCrumb} from '../../../../../utilities/functions';
+import BreadCrums from '../../../../Atoms/BreadCrums';
+import Buttons from '../../../../Atoms/Buttons';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
+import FormInput from '../../../../Atoms/Form/FormInput';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
+import PageWrapper from '../../../../Atoms/PageWrapper';
+import SectionTitle from '../../../../Atoms/SectionTitle';
 
 interface ClassBuilderProps {}
 
@@ -49,7 +47,6 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [searching, setSearching] = useState<boolean>(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
 
-  const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
   const [loading, setIsLoading] = useState(false);
@@ -104,12 +101,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
         id: params.get('id'),
       })
-    );   
+    );
     setClassData((prevData) => ({
       ...prevData,
       instituteName: result?.data?.getInstitution.name,
     }));
-  }
+  };
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);

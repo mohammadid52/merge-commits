@@ -1891,6 +1891,45 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
   }
 `;
 
+export const listUniversalLessonsForInstitution = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        lessonPlan {
+          id
+          title
+          label
+          pageContent{
+            id
+            partContent{
+              id
+            }
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getUniversalSyllabus = /* GraphQL */ `
   query GetUniversalSyllabus($id: ID!) {
     getUniversalSyllabus(id: $id) {
@@ -2010,6 +2049,7 @@ export const getUniversalLesson = /* GraphQL */ `
       summaryTitle
       duration
       resources
+      studentMaterials
       notes
       darkMode
       cardImage
@@ -3847,11 +3887,7 @@ export const listClassroomGroupss = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listClassroomGroupss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classRoomID
@@ -3926,7 +3962,7 @@ export const getClassroomSyllabus = /* GraphQL */ `
           lessons {
             items {
               id
-              lesson{
+              lesson {
                 duration
                 title
               }
@@ -3942,6 +3978,237 @@ export const getClassroomSyllabus = /* GraphQL */ `
       universalSyllabusSeq
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getCurriculumForClasses = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
+      designers
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          lessons {
+            items {
+              id
+              lesson {
+                duration
+                title
+              }
+            }
+          }
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getScheduleDetails = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      startDate
+      endDate
+      startTime
+      endTime
+      frequency
+      weekDay
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
+    }
+  }
+`;
+
+export const getBasicDetailsOfInstitution = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      address
+      image
+    }
+  }
+`;
+
+export const GetInstitutionClasses = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getInstitutionCurriculums = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      curricula {
+        items {
+          id
+          image
+          institutionID
+          name
+          type
+          languages
+          description
+          designers
+          objectives
+          summary
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const listRoomsBasicDetails = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

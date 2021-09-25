@@ -1,17 +1,15 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoIosKeypad } from 'react-icons/io';
-import { RiArrowRightLine } from 'react-icons/ri';
-
-import SearchInput from '../../../../../Atoms/Form/SearchInput';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import Buttons from '../../../../../Atoms/Buttons';
-
-import * as queries from '../../../../../../graphql/queries';
-import { getLanguageString, getTypeString } from '../../../../../../utilities/strings';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {IoIosKeypad} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {RiArrowRightLine} from 'react-icons/ri';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import * as queries from '../../../../../../graphql/queries';
+import {getLanguageString, getTypeString} from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import SearchInput from '../../../../../Atoms/Form/SearchInput';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void;
@@ -24,15 +22,23 @@ interface QuestionLookupProps {
 }
 
 const QuestionLookup = (props: QuestionLookupProps) => {
-  const { changeStep, onSave, selecteList, setUnsavedChanges, goBackToPreviousStep, lessonName, lessonType } = props;
+  const {
+    changeStep,
+    onSave,
+    selecteList,
+    setUnsavedChanges,
+    goBackToPreviousStep,
+    lessonName,
+    lessonType,
+  } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const { clientKey, userLanguage } = useContext(GlobalContext);
-  const { QuestionLookupDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {QuestionLookupDict} = useDictionary(clientKey);
 
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find((id) => id === questId);
@@ -60,14 +66,18 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     setSearchInput('');
   };
   const onQuestionSave = () => {
-    const selectedQuestionsList = [...allQuestionsList].filter((item) => selectedQuestionIds.includes(item.id));
+    const selectedQuestionsList = [...allQuestionsList].filter((item) =>
+      selectedQuestionIds.includes(item.id)
+    );
     onSave(selectedQuestionsList);
   };
 
   const fetchQuestionsList = async () => {
     try {
       setLoading(true);
-      const fetchQuestionsData: any = await API.graphql(graphqlOperation(queries.listQuestions));
+      const fetchQuestionsData: any = await API.graphql(
+        graphqlOperation(queries.listQuestions)
+      );
       if (!fetchQuestionsData) {
         setError(true);
         throw new Error('fail!');
@@ -99,19 +109,21 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     <Fragment>
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
-          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+          <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
             <IoIosKeypad />
           </IconContext.Provider>
         </span>
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>
-            {lessonType === 'survey' ? 'Survey' : 'Assessment'} {QuestionLookupDict[userLanguage]['BUILDER']} -{' '}
-            {lessonName}
+          <span
+            className="w-auto flex-shrink-0 cursor-pointer"
+            onClick={() => changeStep('SelectedCheckPointsList')}>
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'}{' '}
+            {QuestionLookupDict[userLanguage]['BUILDER']} - {lessonName}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
@@ -119,7 +131,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
             {QuestionLookupDict[userLanguage]['CHECKPOINT']}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>

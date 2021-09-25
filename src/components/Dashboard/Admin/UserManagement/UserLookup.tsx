@@ -419,20 +419,18 @@ const UserLookup = () => {
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   {UserLookupDict[userLanguage]['action']}
                 </div>
-                {
-                  state.user.role !== 'ST' ?
-                    <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      {UserLookupDict[userLanguage]['action']}
-                    </div> : null
-                }
-
+                {state.user.role !== 'ST' ? (
+                  <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {UserLookupDict[userLanguage]['action']}
+                  </div>
+                ) : null}
               </div>
               {loading ? (
-                Array(3)
+                Array(10)
                   .fill(' ')
                   .map((_: any, index: number) => (
                     <Fragment key={index}>
-                      <UserListLoader />
+                      <UserListLoader userRole={state.user.role} />
                     </Fragment>
                   ))
               ) : userList.length > 0 ? (

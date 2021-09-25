@@ -1,6 +1,4 @@
-import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {MdKeyboardArrowUp} from 'react-icons/md';
+import React, {useState} from 'react';
 import Selector from './Form/Selector';
 
 interface CountProps {
@@ -9,7 +7,6 @@ interface CountProps {
 }
 const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   const {pageSize, setPageSize} = countProps;
-  const {theme} = useContext(GlobalContext);
 
   // ------------------------------------ FOR CUSTOM SELECTOR --------------------------------
   const list = [

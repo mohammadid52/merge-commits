@@ -113,7 +113,7 @@ type Room
   teacherAuthID: String!
   teacherEmail: String!
   name: String!
-  maxPersons: Int!
+  maxPersons: Int
   filters: [String]
   location: String
   startDate: AWSDate
@@ -1021,6 +1021,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   groupType: String
   smallGroupSize: Int
   smallGroupOption: String
+  studentMaterials: String
 }
 
 type UniversalLessonPlan {
@@ -1046,6 +1047,7 @@ type UniversalpageContent {
   partType: String
   class: String
   partContent: [UniversalPartContent]
+  showIfAsync:Boolean
 }
 
 type UniversalPartContent {
@@ -1207,6 +1209,29 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   responseText: String
   backstory: String
 }
+
+type PersonFiles @model @key(fields: ["id"]) {
+  id: ID!
+  personAuthID: String!
+  personEmail: String!
+  uploadedAt: AWSDateTime
+  feedbacks: [String]
+  shared: Boolean
+  lessonID: ID
+  syllabusLessonID: String
+  lessonType: String
+  roomID: String
+  files: [File]
+  lessonPageID: ID
+}
+
+type File {
+  fileName: String!
+  fileKey: String!
+  fileSize: Int!
+}
+
+
 
 type Subscription {
   onChangePersonLocation(

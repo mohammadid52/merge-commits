@@ -1,13 +1,27 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+
+    "lib": ["dom", "dom.iterable", "esnext"],
+
     "outDir": "build",
-    "baseUrl": "./src/index",
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@contexts/*": ["contexts/*"],
+      "@customGraphql/*": ["customGraphql/*"],
+      "@customHooks/*": ["customHooks/*"],
+      "@graphql/*": ["graphql/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@style/*": ["style/*"],
+      "@utilities/*": ["utilities/*"],
+      "@atoms/*": ["components/Atoms/*"],
+      "@molecules/*": ["components/Molecules/*"],
+      "@uiComponents/*": ["components/Lesson/UniversalLessonBuilder/UI/UIComponents/*"],
+      "@UlbUI/*": ["components/Lesson/UniversalLessonBuilder/UI/*"],
+      "@UlbBlocks/*": ["components/Lesson/UniversalLessonBlockComponents/Blocks/*"],
+      "@dictionary/*": ["dictionary/*"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,12 +36,5 @@
     "jsx": "react"
   },
   "include": ["./src/**/*"],
-  "exclude": [
-      "build",
-      "bin",
-      "routes",
-      "public",
-      "node-modules",
-      "src/aws-exports.js"
-  ]
+  "exclude": ["build", "bin", "routes", "public", "node-modules", "src/aws-exports.js"]
 }

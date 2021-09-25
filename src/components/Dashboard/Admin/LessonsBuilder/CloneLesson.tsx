@@ -1,16 +1,16 @@
-import {find, initial, map} from 'lodash';
-import React, {useContext, useState} from 'react';
-import {UniversalLesson} from '../../../../API';
-import {v4 as uuidv4} from 'uuid';
-import {getAsset} from '../../../../assets';
-import Modal from '../../../Atoms/Modal';
-import Buttons from '../../../Atoms/Buttons';
-import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../../../graphql/mutations';
+import {map} from 'lodash';
+import React, {useContext, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
+import {v4 as uuidv4} from 'uuid';
+import {UniversalLesson} from '../../../../API';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
+import * as mutations from '../../../../graphql/mutations';
 import {wait} from '../../../../utilities/functions';
+import Buttons from '../../../Atoms/Buttons';
+import Modal from '../../../Atoms/Modal';
 
 interface Props {
   getCloneLessonDetails?: () => UniversalLesson;
@@ -36,7 +36,6 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
     /**
      * This object will replace all the existing ids with new ones
      * hope this works 😼
-     * Please don't change anything 👏
      */
 
     const replaceAllExistingIds: any = {

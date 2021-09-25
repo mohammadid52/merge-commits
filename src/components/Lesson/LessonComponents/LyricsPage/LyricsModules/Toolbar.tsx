@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {FaEraser, FaHighlighter} from 'react-icons/fa';
 import {LessonContext} from '../../../../../contexts/LessonContext';

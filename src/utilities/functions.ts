@@ -39,3 +39,13 @@ export const removeExtension = (filename: string) => {
   if (lastDotPosition === -1) return filename;
   else return filename.substr(0, lastDotPosition);
 };
+
+export const eclipse = (text: string, len: number): string => {
+  if (text) {
+    if (text.length <= len) {
+      return text;
+    } else {
+      return `${text.substring(0, len)}...`;
+    }
+  }
+};

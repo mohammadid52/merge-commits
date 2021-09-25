@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { getAsset } from '../../assets';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {getAsset} from '../../assets';
+import {GlobalContext} from '../../contexts/GlobalContext';
 import Tooltip from './Tooltip';
 
 export interface IStepElementInterface {
@@ -21,9 +21,10 @@ export interface IStepComponentInterface {
 }
 
 const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInterface) => {
-  const {theme, clientKey} = useContext(GlobalContext);
+  const context = useContext(GlobalContext);
+  const {clientKey, theme} = context || {};
   const themeColor = getAsset(clientKey, 'themeClassName');
-  
+
   const renderStepElement = (
     {description, disabled, isComplete, title, stepValue}: any,
     index: number
@@ -72,9 +73,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
             <span className="mt-0.5 ml-4 min-w-0 w-auto flex flex-col">
               <span
                 className={`text-xs font-semibold ${
-                  stepValue === activeStep
-                    ? theme.textColor[themeColor]
-                    : ''
+                  stepValue === activeStep ? theme.textColor[themeColor] : ''
                 } tracking-wide uppercase`}>
                 {title}
               </span>
@@ -118,7 +117,10 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
                 !step.disabled ? handleTabSwitch(step.stepValue || step.title) : null
               }>
               {step.disabled ? (
-                <Tooltip additionalClass="h-full" text={step.tooltipText} placement={step.tooltipPlacement || 'top'}>
+                <Tooltip
+                  additionalClass="h-full"
+                  text={step.tooltipText}
+                  placement={step.tooltipPlacement || 'top'}>
                   {renderStepElement(step, index)}
                 </Tooltip>
               ) : (

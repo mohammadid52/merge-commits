@@ -1,4 +1,5 @@
 const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   context: path.join(__dirname, './'),
@@ -13,9 +14,18 @@ module.exports = {
     usedExports: true,
   },
   resolve: {
+    plugins: [
+      new TsconfigPathsPlugin({
+        /* options: see below */
+      }),
+    ],
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
     mainFields: ['module', 'main'],
-    modules: [path.resolve('./src'), path.resolve('./frontend'), path.resolve('./node_modules')],
+    modules: [
+      path.resolve('./src'),
+      path.resolve('./frontend'),
+      path.resolve('./node_modules'),
+    ],
   },
   module: {
     rules: [
@@ -117,5 +127,4 @@ module.exports = {
       },
     ],
   },
-  
 };

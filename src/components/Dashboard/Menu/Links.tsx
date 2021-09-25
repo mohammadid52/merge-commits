@@ -1,19 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-// Iconz
-import {IoMdDisc} from 'react-icons/io';
-import {FaAppleAlt} from 'react-icons/fa';
-import {AiOutlineUsergroupAdd, AiOutlineBook} from 'react-icons/ai';
-import {HiOutlineOfficeBuilding} from 'react-icons/hi';
-import {IoIosPeople, IoMdBuild} from 'react-icons/io';
-import {IoBarChart, IoBookOutline} from 'react-icons/io5';
-import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
-import {IoIosHome} from 'react-icons/io';
-
-import useDictionary from '../../../customHooks/dictionary';
-import {getAsset} from '../../../assets';
 import {findIndex} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineBook, AiOutlineUsergroupAdd} from 'react-icons/ai';
+import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
+import {FaAppleAlt} from 'react-icons/fa';
+import {HiOutlineOfficeBuilding} from 'react-icons/hi';
+// Iconz
+import {IoIosHome, IoIosPeople, IoMdBuild, IoMdDisc} from 'react-icons/io';
+import {IoBarChart, IoBookOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
 
 type LinkObject = {
   name: string;
@@ -154,32 +151,36 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Institutions',
               path: 'manage-institutions',
             },
-            role !== 'BLD' ? {
-              title: sideBarLinksDict[userLanguage].PEOPLE,
-              name: sideBarLinksDict[userLanguage].PEOPLE,
-              label: 'People',
-              path: 'manage-users',
-              subMenuItems: [{title: 'Add New Person', path: 'registration'}],
-            } : null,
-            role !== 'BLD' ? {
-              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              label: 'Lesson Planner',
-              path: '',
-              subMenuItems:
-                state.roomData.rooms.length &&
-                state.roomData.rooms.map((room: Room, i: number) => {
-                  return {
-                    title: room.name,
-                    active:
-                      room.id === state.activeRoom &&
-                      state.currentPage === 'lesson-planner',
-                    path: room.id,
-                    onClick: (e: any) =>
-                      handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
-                  };
-                }),
-            } : null,
+            role !== 'BLD'
+              ? {
+                  title: sideBarLinksDict[userLanguage].PEOPLE,
+                  name: sideBarLinksDict[userLanguage].PEOPLE,
+                  label: 'People',
+                  path: 'manage-users',
+                  subMenuItems: [{title: 'Add New Person', path: 'registration'}],
+                }
+              : null,
+            role !== 'BLD'
+              ? {
+                  title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+                  name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+                  label: 'Lesson Planner',
+                  path: '',
+                  subMenuItems:
+                    state.roomData.rooms.length &&
+                    state.roomData.rooms.map((room: Room, i: number) => {
+                      return {
+                        title: room.name,
+                        active:
+                          room.id === state.activeRoom &&
+                          state.currentPage === 'lesson-planner',
+                        path: room.id,
+                        onClick: (e: any) =>
+                          handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
+                      };
+                    }),
+                }
+              : null,
             // {
             //   title: sideBarLinksDict[userLanguage].NOTICEBOARD,
             //   name: sideBarLinksDict[userLanguage].NOTICEBOARD,
@@ -492,6 +493,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                         return (
                           <div key={`${d.path}_key`} className="custom_tooltip_container">
                             <a
+                              title={d.title}
                               id={d.path}
                               style={{paddingLeft: '3.5rem'}}
                               onClick={(e) => {
@@ -503,7 +505,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                                 activeLink
                                   ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
                                   : 'border-transparent'
-                              } group sidenav_sub_item block flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
+                              } group sidenav_sub_item  flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
                               <span className="sidenav_sub_icon_wrapper">
                                 <IoMdDisc
                                   className={

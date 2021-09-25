@@ -63,7 +63,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    */
   const {
     isTeacher,
-    handleSetTitle,
+
     checkpointType,
     checkpointsItems,
     fromClosing,
@@ -92,8 +92,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    */
   const [status, setStatus] = useState('');
   const [input, setInput] = useState<ResponseObject[]>();
-
-  const isLesson = state.data.lesson.type === 'lesson';
 
   /**
    * USEEFFECT 1 - ON CHECKPOINT MOUNT
