@@ -411,6 +411,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       ed?.type?.includes('content-custom')
     );
 
+    let strippedString = (str: string) =>
+      str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
     const mapFixedData = fixedFilteredData.map((m) => {
       // @ts-ignore
       const note = find(allNotes, ['id', m.domID]);
@@ -420,7 +422,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           id: m.domID,
           class: note?.class,
           // @ts-ignore
-          value: ReactHtmlParser(m.input),
+          value: strippedString(m.input.toString()),
           pagePartId: note?.pagePartId,
           partContentId: note?.partContentId,
           custom: false,
@@ -433,7 +435,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       return {
         id: m.domID,
         class: className,
-        value: ReactHtmlParser(m.input),
+        value: strippedString(m.input.toString()),
         custom: true,
       };
     });

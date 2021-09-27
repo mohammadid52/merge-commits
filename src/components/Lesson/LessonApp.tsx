@@ -841,7 +841,7 @@ const LessonApp = () => {
           </p>
         </div>
 
-        <div className="fixed z-50">
+        <div className="fixed " style={{zIndex: 5000}}>
           <LessonHeaderBar
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
