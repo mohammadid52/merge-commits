@@ -47,7 +47,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
     const notesExist = contentObj.entryData[0].domID.includes('notes_form');
-    const filtered = filter(contentObj?.entryData, (ed) => ed && ed.type === 'content');
+    const filtered = filter(
+      contentObj?.entryData,
+      (ed) => ed && ed.type.includes('content')
+    );
 
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
@@ -86,11 +89,11 @@ const WrittenContentTab = (props: ITabViewProps) => {
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
               {notesExist ? (
-                <div className="space-y-2">
+                <div className="space-y-4">
                   {map(filtered, (note) => (
                     <div
                       key={note.domID}
-                      className="font-normal border-b-0 border-gray-300"
+                      className="font-normal "
                       dangerouslySetInnerHTML={{
                         __html: note?.input ? note.input : 'No content...',
                       }}
@@ -173,8 +176,15 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
+    console.log(
+      '🚀 ~ file: WrittenContentTab.tsx ~ line 179 ~ editModeView ~ contentObj',
+      contentObj.entryData
+    );
     const notesExist = contentObj.entryData[0].domID.includes('notes_form');
-    const filtered = filter(contentObj?.entryData, (ed) => ed && ed.type === 'content');
+    const filtered = filter(
+      contentObj?.entryData,
+      (ed) => ed && ed.type.includes('content')
+    );
 
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
@@ -200,15 +210,29 @@ const WrittenContentTab = (props: ITabViewProps) => {
           </p>
         </div>
         <div className={`mb-2`}>
-          <FormInput
-            id={organized.header.domID}
-            label={`Title`}
-            onChange={handleInputFieldUpdate}
-            value={organized.header.input}
-            placeHolder={
-              organized.header.input ? organized.header.input : `Please add title...`
-            }
-          />
+          {notesExist ? (
+            <FormInput
+              id={contentObj.entryData[0].domID}
+              label={`Title`}
+              onChange={handleInputFieldUpdate}
+              value={contentObj.entryData[0].input}
+              placeHolder={
+                contentObj.entryData[0].input
+                  ? contentObj.entryData[0].input
+                  : `Please add title...`
+              }
+            />
+          ) : (
+            <FormInput
+              id={organized.header.domID}
+              label={`Title`}
+              onChange={handleInputFieldUpdate}
+              value={organized.header.input}
+              placeHolder={
+                organized.header.input ? organized.header.input : `Please add title...`
+              }
+            />
+          )}
         </div>
 
         <div className={`mt-2 mb-2`}>
@@ -219,7 +243,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   key={idx}
                   initialValue={note.input}
                   onChange={(htmlContent) =>
-                    updateJournalContent(htmlContent, 'content', idx)
+                    updateJournalContent(htmlContent, 'content', idx + 1)
                   }
                 />
               ))}

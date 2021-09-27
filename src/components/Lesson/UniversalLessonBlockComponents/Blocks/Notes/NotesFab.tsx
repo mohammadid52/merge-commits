@@ -2,6 +2,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
 import Loader from '@components/Atoms/Loader';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import {GlobalContext} from '@contexts/GlobalContext';
 import * as mutations from '@graphql/mutations';
 import * as queries from '@graphql/queries';
 import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
@@ -10,7 +11,7 @@ import {find, findIndex, map} from 'lodash';
 import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import {useParams} from 'react-router';
 
@@ -56,6 +57,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     return res;
   };
 
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+
   const allNotes = mapNotesTogether();
 
   const urlParams: any = useParams();
@@ -96,7 +100,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       {
         domID: `title_notes_form_${nanoid(4)}`,
         type: 'header',
-        input: '',
+        input: `Sticky notes - ${lessonState?.lessonData?.title}`,
       },
       ..._notesdata,
     ];
