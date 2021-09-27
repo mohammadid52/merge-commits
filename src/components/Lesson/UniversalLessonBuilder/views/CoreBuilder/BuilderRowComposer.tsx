@@ -27,7 +27,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   } = props;
   const [editedID, setEditedID] = useState<string>('');
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {userlessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const handleEditBlockToggle = (dataID: string) => {
@@ -229,7 +229,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                   pagePart.id,
                                                   mode,
                                                   updateBlockContentULBHandler,
-                                                  idx2
+                                                  idx2,
+                                                  undefined, // notesData
+                                                  false // isStudent
                                                 )}
                                               </div>
                                             </div>

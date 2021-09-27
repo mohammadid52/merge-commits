@@ -1,24 +1,23 @@
-import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import ThemeModal from '@components/Molecules/ThemeModal';
-import {setState} from '@interfaces/index';
-import {
-  UniversalJournalData,
-  UniversalLesson,
-} from '@interfaces/UniversalLessonInterfaces';
-import forEach from 'lodash/forEach';
-import React, {useContext, useEffect, useState} from 'react';
-import {CgNotes} from 'react-icons/cg';
-import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {getLocalStorageData} from '@utilities/localStorage';
-import {useParams} from 'react-router';
-import * as queries from '@graphql/queries';
-import * as mutations from '@graphql/mutations';
-import {nanoid} from 'nanoid';
+import {Auth} from '@aws-amplify/auth';
+import Loader from '@components/Atoms/Loader';
+import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
+import * as mutations from '@graphql/mutations';
+import * as queries from '@graphql/queries';
+import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData} from '@utilities/localStorage';
 import {find, findIndex, map} from 'lodash';
 import filter from 'lodash/filter';
+import forEach from 'lodash/forEach';
+import {nanoid} from 'nanoid';
+import React, {useContext, useEffect, useState} from 'react';
 import ReactHtmlParser from 'react-html-parser';
+import {useParams} from 'react-router';
+
+/** --- Guide
+ *   1. Check if notes-form is included in journal data or not
+ */
 
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
@@ -41,21 +40,7 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
   ],
 };
 
-const NotesFab = ({
-  showNotesModal,
-  setShowNotesModal,
-  notes,
-  darkMode,
-  currentLesson,
-  pageTitle,
-}: {
-  showNotesModal: boolean;
-  setShowNotesModal: setState['boolean'];
-  notes: any[];
-  darkMode?: boolean;
-  pageTitle?: string;
-  currentLesson?: UniversalLesson;
-}) => {
+const NotesContainer = ({notes}: {notes: any[]}) => {
   const mapNotesTogether = () => {
     let res: any[] = [];
     forEach(notes, (d) => {
@@ -72,7 +57,11 @@ const NotesFab = ({
     return res;
   };
 
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+
   const allNotes = mapNotesTogether();
+
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
 
@@ -88,7 +77,7 @@ const NotesFab = ({
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-    // const id = '43bce83b-64c5-4b72-afa4-2030697f7a91';
+    // const id = '6641f563-3940-4bd3-a9a4-7838355dc320';
     // deleteUJD(id);
   }, [notesInitialized]);
 
@@ -100,16 +89,18 @@ const NotesFab = ({
     const studentAuthId = user.username;
     const email = user.attributes.email;
 
-    const _notesdata = map(allNotes, (note) => ({
+    let _notesdata: any[] = [];
+    _notesdata = map(allNotes, (note) => ({
       domID: note.id,
       type: 'content',
       input: note.value || '',
     }));
+
     const entryData = [
       {
         domID: `title_notes_form_${nanoid(4)}`,
         type: 'header',
-        input: '',
+        input: `Sticky notes - ${lessonState?.lessonData?.title}`,
       },
       ..._notesdata,
     ];
@@ -137,17 +128,12 @@ const NotesFab = ({
     }
   };
 
-  const updateJournalData = async (newNoteObj?: any) => {
+  const addNewNote = async (newNote: any, notesData: any) => {
     let oldEntryData = [...notesData.entryData];
-    if (newNoteObj) {
-      if (typeof newNoteObj === 'object') {
-        notesData.entryData.push(newNoteObj);
-        oldEntryData.push(newNoteObj);
-      }
-      if (Array.isArray(newNoteObj)) {
-        oldEntryData = [...newNoteObj];
-      }
-    }
+
+    oldEntryData.push(newNote);
+    setNotesData({...notesData, entryData: [...oldEntryData]});
+
     try {
       const input = {
         id: notesData.id,
@@ -162,6 +148,17 @@ const NotesFab = ({
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
+
+      setNotesData({
+        id: updateJournalData.id,
+        studentID: updateJournalData.studentID,
+        studentAuthID: updateJournalData.studentAuthID,
+        studentEmail: updateJournalData.studentEmail,
+        feedbacks: updateJournalData.feedbacks,
+        entryData: input.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      });
     } catch (e) {
       console.error('error updating journal data - ', e);
     } finally {
@@ -170,6 +167,148 @@ const NotesFab = ({
       // if (saveInProgress) setSaveInProgress(false);
     }
   };
+
+  const saveData = async (_notesData?: any, cb?: any, cb2?: any) => {
+    if (cb) {
+      cb();
+    }
+    try {
+      const input = {
+        id: _notesData.id,
+        studentID: _notesData.studentID,
+        studentAuthID: _notesData.studentAuthID,
+        studentEmail: _notesData.studentEmail,
+        entryData: _notesData.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      };
+
+      const updatedJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+      if (updatedJournalData && updatedJournalData.entryData) {
+        setNotesData((prev) => ({
+          ...prev,
+          entryData: input.entryData,
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (cb2) {
+        cb2();
+      }
+    }
+  };
+
+  const updateNotesJournalChange = async (newNotesArr: any[], notesData?: any) => {
+    const mapCustomData = newNotesArr.map((m) => ({
+      domID: m.id,
+      type: 'content',
+      input: m.value,
+    }));
+
+    try {
+      const input = {
+        id: notesData.id,
+        studentID: notesData.studentID,
+        studentAuthID: notesData.studentAuthID,
+        studentEmail: notesData.studentEmail,
+        entryData: [...notesData.entryData, ...mapCustomData],
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      };
+
+      const _updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+
+      setNotesData({
+        id: _updateJournalData.id,
+        studentID: _updateJournalData.studentID,
+        studentAuthID: _updateJournalData.studentAuthID,
+        studentEmail: _updateJournalData.studentEmail,
+        feedbacks: _updateJournalData.feedbacks,
+        entryData: input.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      });
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      console.log('updated journal data...');
+      // if (notesChanged) setNotesChanged(false);
+      // if (saveInProgress) setSaveInProgress(false);
+    }
+  };
+
+  const updateJournalData = async (newNoteObj?: any, other?: any) => {
+    const _notesData = other?.notesData || notesData;
+
+    let oldEntryData = [..._notesData.entryData];
+    if (other === undefined) {
+      if (newNoteObj) {
+        if (typeof newNoteObj === 'object') {
+          _notesData.entryData.push(newNoteObj);
+          oldEntryData.push(newNoteObj);
+        }
+        if (Array.isArray(newNoteObj)) {
+          oldEntryData = [...newNoteObj];
+        }
+      }
+    } else {
+      const newList: any[] = filter(
+        other.allNotes,
+        (d) => !find(other.filteredNotes, ['domID', d.id])
+      );
+
+      if (newList && newList.length > 0) {
+        const newModifiedList = map(newList, (note) => ({
+          domID: note.id,
+          type: 'content',
+          input: null,
+        }));
+
+        oldEntryData = [...other?.existingList, ...newModifiedList];
+      }
+    }
+
+    try {
+      const input = {
+        id: _notesData.id,
+        studentID: _notesData.studentID,
+        studentAuthID: _notesData.studentAuthID,
+        studentEmail: _notesData.studentEmail,
+        entryData: [..._notesData.entryData],
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      };
+
+      const _updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+
+      setNotesData({
+        id: _updateJournalData.id,
+        studentID: _updateJournalData.studentID,
+        studentAuthID: _updateJournalData.studentAuthID,
+        studentEmail: _updateJournalData.studentEmail,
+        feedbacks: _updateJournalData.feedbacks,
+        entryData: input.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      });
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      console.log('updated journal data...');
+      // if (notesChanged) setNotesChanged(false);
+      // if (saveInProgress) setSaveInProgress(false);
+    }
+  };
+
+  const getUniq = (_obj: {type: string; domID: any | string}) =>
+    _obj && _obj.type === 'content' && find(allNotes, ['id', _obj.domID]);
 
   const getOrCreateJournalData = async () => {
     const {lessonID} = urlParams;
@@ -196,8 +335,18 @@ const NotesFab = ({
       );
 
       const isNotesFormCreated = notesFormIndex > -1;
+      const existJournalEntry = isNotesFormCreated ? notesDataRows[notesFormIndex] : [];
+
+      const filterOldNotes = filter(existJournalEntry.entryData, (d) => getUniq(d));
+      const filterNewNotes = filter(
+        allNotes,
+        (_obj) => _obj && !find(existJournalEntry.entryData, ['domID', _obj.id])
+      );
+
+      const changesInNotesLen = filterOldNotes.length < allNotes.length;
 
       if (!isNotesFormCreated) {
+        // this section condition works perfectly fine
         const newJournalEntry = await createJournalData();
 
         setNotesData({
@@ -223,6 +372,16 @@ const NotesFab = ({
           roomID: getRoomData.id,
           syllabusLessonID: getRoomData.activeSyllabus,
         });
+        // ----- Skip this part for while -----
+        if (changesInNotesLen && filterNewNotes.length > 0) {
+          updateNotesJournalChange(filterNewNotes, existJournalEntry);
+          // updateNotesJournalChange(undefined, {
+          //   allNotes,
+          //   filteredNotes: filterOldNotes,
+          //   existingList: existJournalEntry.entryData,
+          //   notesData: existJournalEntry,
+          // });
+        }
       }
     } catch (e) {
       console.error('error getting or creating journal data - ', e);
@@ -231,56 +390,75 @@ const NotesFab = ({
     }
   };
 
-  const filtered = filter(notesData?.entryData, (ed) => ed && ed.type === 'content');
-  const mapData = filtered.map((m, idx) => {
-    const note = find(allNotes, ['id', m.domID]);
-    if (note && m) {
+  if (notesInitialized) {
+    const fixedFilteredData = filter(notesData?.entryData, (ed) => getUniq(ed));
+
+    /**
+     * Working case
+     * const entryData = [{domID:1},{domID:2}]
+     * const allNotes = [{id:1}, {id:2}]
+     *  -- Everything works with this
+     *
+     * Failing case
+     * const entryData = [{domID:1}, {domID:2}]
+     * const allNotes = [{id:1}]
+     *  -- Teacher removed one note from lesson
+     *  -- but it is still present in entryData
+     *
+     */
+
+    const fixedCustomData = filter(notesData?.entryData, (ed) =>
+      ed?.type?.includes('content-custom')
+    );
+
+    let strippedString = (str: string) =>
+      str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
+    const mapFixedData = fixedFilteredData.map((m) => {
+      // @ts-ignore
+      const note = find(allNotes, ['id', m.domID]);
+      if (note && m) {
+        return {
+          // @ts-ignore
+          id: m.domID,
+          class: note?.class,
+          // @ts-ignore
+          value: strippedString(m.input.toString()),
+          pagePartId: note?.pagePartId,
+          partContentId: note?.partContentId,
+          custom: false,
+        };
+      }
+    });
+
+    const mapCustomData = fixedCustomData.map((m) => {
+      const className = m.type.split(' || ')[1];
       return {
         id: m.domID,
-        class: note?.class,
-        value: ReactHtmlParser(m.input),
-        pagePartId: note?.pagePartId,
-        partContentId: note?.partContentId,
+        class: className,
+        value: strippedString(m.input.toString()),
+        custom: true,
       };
-    }
-  });
+    });
 
-  const onAddNewNote = (newNoteObj: any) => {
-    updateJournalData({...newNoteObj});
-  };
+    const collectedNotes = [...mapFixedData, ...mapCustomData];
 
-  return (
-    <div className="flex relative items-center justify-center overflow-hidden">
-      {mapData.length > 0 && (
-        <ThemeModal
-          dark={darkMode}
-          overflowClass={'overflow-hidden'}
-          header={`${pageTitle} - Notes`}
-          open={showNotesModal}
-          setOpen={setShowNotesModal}>
-          <div className="p-4 relative 4">
-            <NotesBlock
-              addNew={onAddNewNote}
-              showNotesModal={showNotesModal}
-              grid={{cols: 3, rows: 3}}
-              value={mapData}
-              notesData={notesData}
-              setNotesData={setNotesData}
-              updateJournalData={updateJournalData}
-              notesInitialized={notesInitialized}
-            />
-          </div>
-        </ThemeModal>
-      )}
-
-      <div
-        title={`All notes ${allNotes.length > 0 ? `(${allNotes.length})` : ''}`}
-        onClick={() => setShowNotesModal(!showNotesModal)}
-        className="flex items-center relative justify-center h-12 w-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full cursor-pointer iconoclast:bg-500 curate:bg-500">
-        <CgNotes className="text-lg lg:text-xl text-white" />
+    return (
+      <div className="flex relative items-center justify-center">
+        {collectedNotes.length > 0 && (
+          <NotesBlock
+            addNew={addNewNote}
+            grid={{cols: 3, rows: 3}}
+            value={collectedNotes}
+            notesData={notesData}
+            setNotesData={setNotesData}
+            saveData={saveData}
+            updateJournalData={updateJournalData}
+            notesInitialized={notesInitialized}
+          />
+        )}
       </div>
-    </div>
-  );
+    );
+  } else return <Loader withText="Loading notes" />;
 };
 
-export default NotesFab;
+export default NotesContainer;

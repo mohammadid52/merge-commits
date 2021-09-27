@@ -36,7 +36,7 @@ const InnerNote = React.memo(
     note,
     isInLesson,
     isStudent,
-
+    custom,
     bgColor,
     onDeleteBtnClick,
     onEditBtnClick,
@@ -62,7 +62,7 @@ const InnerNote = React.memo(
           // value={isInLesson ? getDataValue(note.id) : note.value}
           value={note.value}
         />
-        {isInLesson && isStudent && (
+        {custom && isInLesson && isStudent && (
           <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
             <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
               <AiOutlineEdit className="text-base text-white" />
@@ -78,6 +78,7 @@ const InnerNote = React.memo(
 );
 
 interface INoteBlock {
+  custom?: boolean;
   note: {class?: string; value?: string; id: string};
   getDataValue?: any;
   setShowDeleteModal?: React.Dispatch<React.SetStateAction<{show: boolean; id: string}>>;
@@ -97,6 +98,7 @@ const Note = ({
   idx,
   updateText,
   uninitialized,
+  custom = false,
 }: INoteBlock) => {
   const isStudent = true;
   const isInLesson = useInLessonCheck();
@@ -124,6 +126,7 @@ const Note = ({
       idx={idx}
       isInLesson={isInLesson}
       isStudent={isStudent}
+      custom={custom}
       onDeleteBtnClick={onDeleteBtnClick}
       onEditBtnClick={onEditBtnClick}
       note={note}
