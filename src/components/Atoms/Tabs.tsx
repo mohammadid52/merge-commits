@@ -12,20 +12,20 @@ export interface ITabElements {
 interface ITabsProps {
   tabsData: ITabElements[];
   activeTab: string;
-  tabWithNumbers?:boolean;
-  updateTab: (tab: string) => void;
+  tabWithNumbers?: boolean;
+  updateTab: (tab: any) => void;
 }
 
-const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
+const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative inline-block text-left" key={index}>
       {({open}) => (
         <>
           <div>
             <Menu.Button
               className={`${
-                open || menu.children.filter((item: any) => item.key === activeTab).length
+                open || menu.children.filter((item: any) => item.active).length
                   ? 'bg-indigo-300 text-indigo-700'
                   : ''
               } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
@@ -49,7 +49,7 @@ const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
             <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10">
               <div className="px-1 py-1 shadow-lg">
                 {menu.children.map((item: any) => (
-                  <Menu.Item key={item.title} onClick={() => onClick(item.key)}>
+                  <Menu.Item key={item.title} onClick={() => onClick(item)}>
                     <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
                       {item.title}
                     </div>
@@ -64,7 +64,9 @@ const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, tabWithNumbers ,activeTab, updateTab}: ITabsProps) => {
+const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
+  console.log(tabsData,'tabsData');
+  
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -86,25 +88,27 @@ const Tabs = ({tabsData, tabWithNumbers ,activeTab, updateTab}: ITabsProps) => {
       </div>
       <div className="hidden sm:block">
         <nav className="flex user__profile-tabs space-x-3" aria-label="Tabs">
-          {tabsData.map((menu:any, index:number) =>
+          {tabsData.map((menu: any, index: number) =>
             menu.type === 'dropdown' ? (
               <DropDownMenu
                 menu={menu}
                 customTitle={`${index + 1}. ${menu.title}`}
                 activeTab={activeTab}
                 onClick={updateTab}
+                index={index}
               />
             ) : (
               <button
+                key={index}
                 onClick={() => {
-                  updateTab(menu.key);
+                  updateTab(menu);
                 }}
                 className={`px-3 relative ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } ${
                   activeTab === menu.key ? 'bg-indigo-300 text-indigo-700' : ''
                 } py-2 cursor-pointer font-medium hover:bg-indigo-300 hover:text-indigo-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
-                {tabWithNumbers ? index+1 : ''} {menu.title}
+                {tabWithNumbers ? index + 1 : ''} {menu.title}
               </button>
             )
           )}

@@ -23,7 +23,7 @@ import EmojiFeedback from '../General/EmojiFeedback';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import Noticebar from '../Noticebar/Noticebar';
-import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import Csv from './Csv/Csv';
@@ -925,7 +925,7 @@ const Dashboard = (props: DashboardProps) => {
                         <Redirect to={`${match.url}/manage-institutions`} />
                       ) : (
                         <Redirect
-                          to={`${match.url}/manage-institutions/institution?id=${state.user.associateInstitute[0].institution.id}`}
+                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}`}
                         />
                       );
                     }

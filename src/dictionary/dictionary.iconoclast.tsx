@@ -1067,6 +1067,7 @@ const InstitutionAddDict: any = {
 
 const InstitutionBuilderDict: any = {
   EN: {
+    GENERAL_INFORMATION: 'General Information',
     INFOA: 'Click circle to manage your avatar.',
     INFO: 'Click the circle above to update institution image.',
     TITLE: 'Add Institution',

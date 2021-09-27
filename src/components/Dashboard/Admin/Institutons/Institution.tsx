@@ -3,7 +3,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import {useHistory} from 'react-router-dom';
-import {Switch, Route, useRouteMatch} from 'react-router-dom';
+import {Switch, Route, useParams, useRouteMatch} from 'react-router-dom';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import InstitutionInfo from './InstitutionInfo';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -78,9 +78,11 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
+  const {institutionId}: any = useParams();
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles} = useDictionary(clientKey);
+console.log(institutionId,'institutionIdinstitutionId');
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -94,7 +96,7 @@ const Institution = (props: InstitutionProps) => {
       url:
         currentPath !== 'edit'
           ? `${location.pathname}${location.search}`
-          : `/dashboard/manage-institutions/institution?id=${urlQueryParams.id}`,
+          : `/dashboard/manage-institutions/institution/${institutionId}`,
       last: currentPath !== 'edit',
     },
     currentPath === 'edit'
@@ -111,15 +113,15 @@ const Institution = (props: InstitutionProps) => {
   };
   async function getInstitutionData() {
     try {
-      if (urlQueryParams.id) {
+      if (institutionId) {
         setFetchingDetails(true);
         const fetchInstitutionData: any = await API.graphql(
           /**
            * Below query will get the 'id' parameter from the url
-           * DO NOT change the ' urlQueryParams.id ' unless you also change the url
+           * DO NOT change the ' institutionId ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, {id: urlQueryParams.id})
+          graphqlOperation(customQueries.GetInstitutionDetails, {id: institutionId})
         );
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
@@ -128,7 +130,7 @@ const Institution = (props: InstitutionProps) => {
         }
         setFetchingDetails(false);
       } else {
-        history.push('/dashboard/manage-institutions');
+        // history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
       console.error(error);
@@ -156,6 +158,9 @@ const Institution = (props: InstitutionProps) => {
     }
   }, [isNewUpdate]);
 
+  console.log("inside institution");
+  
+
   return (
     <div className={`w-full h-full`}>
       {/* Section Header */}
@@ -165,8 +170,9 @@ const Institution = (props: InstitutionProps) => {
       </div>
       <PageWrapper wrapClass="overflow-x-auto">
         <Switch>
-          <Route
+          {/* <Route
             path={`${match.url}/edit`}
+            exact
             render={() => (
               <InstitutionBuilder
                 institute={institutionData}
@@ -175,7 +181,7 @@ const Institution = (props: InstitutionProps) => {
                 updateServiceProviders={updateServiceProviders}
               />
             )}
-          />
+          /> */}
           <Route
             path={`${match.url}/`}
             render={() => (

@@ -4,7 +4,8 @@ import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {IoIosGlobe} from 'react-icons/io';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useHistory, useParams, useRouteMatch} from 'react-router-dom';
+
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
@@ -29,6 +30,8 @@ import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList'
 import Csv from '@components/Dashboard/Csv/Csv';
 import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 import UserLookup from '../UserManagement/UserLookup';
+import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
+import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -60,10 +63,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
-  const {theme, clientKey, userLanguage, state:{user}} = useContext(GlobalContext);
+  const {
+    theme,
+    clientKey,
+    userLanguage,
+    state: {user},
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
-  console.log(institute, 'institute in InstitutionInfo');
+  console.log(institute, 'institute in InstitutionInfo', useParams());
 
   const headerMenusForInstitution = [
     {
@@ -72,17 +80,33 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       type: 'dropdown',
       children: [
         {
+          title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
+          key: 'general_information',
+          redirectionUrl: `${match.url}/edit`,
+          active: location.pathname.indexOf('edit') > -1,
+        },
+        {
           title: Institute_info[userLanguage]['TABS']['STAFF'],
           key: 'staff',
+          redirectionUrl: `${match.url}/staff`,
+          active: location.pathname.indexOf('staff') > -1,
         },
-        user.role !== 'BLD' ? {
-          title: 'User registry',
-          key: 'user_registry',
-        } : null,
-        user.role !== 'BLD' ? {
-          title: 'Register New User',
-          key: 'register',
-        } : null,
+        user.role !== 'BLD'
+          ? {
+              title: 'User registry',
+              key: 'user_registry',
+              redirectionUrl: `/dashboard/register`,
+              active: location.pathname.indexOf('register') > -1,
+            }
+          : null,
+        user.role !== 'BLD'
+          ? {
+              title: 'Register New User',
+              key: 'register',
+              redirectionUrl: `/dashboard/manage-users`,
+              active: location.pathname.indexOf('manage-users') > -1,
+            }
+          : null,
       ].filter(Boolean),
     },
     {
@@ -93,6 +117,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {
           title: 'Courses',
           key: 'course',
+          redirectionUrl: `${match.url}/courses`,
+          active: location.pathname.indexOf('course') > -1,
         },
         {
           title: 'Units',
@@ -115,18 +141,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {
           title: Institute_info[userLanguage]['TABS']['CLASSES'],
           key: 'class',
-          content: (
-            <ClassList
-              classes={institute?.classes}
-              instId={institute?.id}
-              instName={institute?.name}
-            />
-          ),
+          redirectionUrl: `${match.url}/class`,
+          active: location.pathname.indexOf('class') > -1,
         },
         {
           title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
           key: 'class_room',
-          content: <RoomsList instId={institute?.id} instName={institute?.name} />,
+          redirectionUrl: `${match.url}/class-rooms`,
+          active: location.pathname.indexOf('class-rooms') > -1,
         },
       ],
     },
@@ -149,16 +171,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     {
       title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
-      content: (
-        <div className="p-8">
-          <Csv institutionId={institute?.id} />
-        </div>
-      ),
+      redirectionUrl: `${match.url}/research-and-analytics`,
     },
   ];
 
-  const updateTab = (tab: string) => {
-    tabProps.setTabsData({...tabProps.tabsData, inst: tab});
+  const updateTab = ({key, redirectionUrl}: any) => {
+    tabProps.setTabsData({...tabProps.tabsData, inst: key});
+    if (redirectionUrl) {
+      history.push(redirectionUrl);
+    }
 
     // if (tab === 'user_registry') {
     //   history.push(`/dashboard/manage-users`);
@@ -197,7 +218,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           />
         );
       case 'user_registry':
-        return <UserLookup isInInstitute />
+        return <UserLookup isInInstitute />;
       case 'register':
         return <Registration isInInstitute />;
       case 'course':
@@ -253,6 +274,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     website,
     isServiceProvider,
   } = instProps?.institute;
+  console.log('institution infor rendered');
+
   return (
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
@@ -389,11 +412,79 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   </h3> */}
               </div>
               <div className="overflow-hidden min-h-80">
-                {renderElementBySelectedMenu()}
+                {/* {renderElementBySelectedMenu()} */}
+                <Switch>
+                  <Route
+                    path={`${match.url}/edit`}
+                    exact
+                    render={() => (
+                      <InstitutionBuilder
+                        institute={instProps.institute}
+                        updateServiceProviders={instProps.updateServiceProviders}
+                        tabProps={instProps.tabProps}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/class`}
+                    exact
+                    render={() => (
+                      <ClassList
+                        classes={institute?.classes}
+                        instId={institute?.id}
+                        instName={institute?.name}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/class-rooms`}
+                    exact
+                    render={() => (
+                      <RoomsList instId={institute?.id} instName={institute?.name} />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/courses`}
+                    exact
+                    render={() => (
+                      <CurriculumList
+                        curricular={instProps?.institute?.curricula}
+                        instId={institute?.id}
+                        instName={institute?.name}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/research-and-analytics`}
+                    exact
+                    render={() => <Csv institutionId={institute?.id} />}
+                  />
+                  <Route
+                    path={`${match.url}/staff`}
+                    exact
+                    render={() => (
+                      <StaffBuilder
+                        serviceProviders={institute.serviceProviders}
+                        instituteId={instProps?.institute?.id}
+                        instName={institute?.name}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/course-builder`}
+                    exact
+                    render={() => <CourseBuilder />} // Create new course
+                  />
+                  <Route
+                    path={`${match.url}/course-builder/:courseId`}
+                    render={() => <CourseBuilder />} // Create new course
+                  />
+                </Switch>
               </div>
             </div>
           </div>
         </div>
+
         {/* {instProps?.institute?.id && (
           <div className="overflow-hidden sm:rounded-lg">
             <div className="">

@@ -561,7 +561,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const Table = () => {
     return (
-      <div className="flex flex-col ">
+      <div className="flex flex-col px-8">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
             <div className="shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -634,7 +634,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full p-8">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">

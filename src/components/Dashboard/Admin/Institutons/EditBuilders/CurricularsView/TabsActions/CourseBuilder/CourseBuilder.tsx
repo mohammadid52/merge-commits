@@ -21,6 +21,8 @@ import LessonPlanManager from './UnitManager';
 import UnitFormComponent from './CourseFormComponent';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
+import Buttons from '@components/Atoms/Buttons';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 
 interface IUIMessages {
   show: boolean;
@@ -35,9 +37,10 @@ const CourseBuilder = () => {
   const urlParams: any = useParams();
   console.log(urlParams, 'urlParams');
 
-  const {courseId, institutionId} = urlParams;
+  const {courseId} = urlParams;
   const params = useQuery(location.search);
   const step = params.get('step');
+  const institutionId = params.get('id');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, CourseBuilderdict} = useDictionary(clientKey);
@@ -131,12 +134,12 @@ const CourseBuilder = () => {
     },
     {
       title: courseData?.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['COURSES'],
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=course`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
       last: false,
     },
     {
@@ -217,25 +220,25 @@ const CourseBuilder = () => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums
+      {/* <BreadCrums
         items={breadCrumsList}
         // unsavedChanges={unsavedChanges}
         // toggleModal={toggleUnSaveModal}
-      />
-      <div className="flex justify-between">
+      /> */}
+      <div className="flex justify-between px-8">
         <SectionTitle title={'Course Builder'} />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+        <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
-            onClick={gobackToLessonsList}
+            onClick={() => null}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div> */}
+        </div>
       </div>
 
       {/* Body */}
-      <PageWrapper>
+      {/* <PageWrapper> */}
         <div className="w-full m-auto">
           <StepComponent
             steps={steps}
@@ -259,7 +262,7 @@ const CourseBuilder = () => {
             )}
           </div>
         </div>
-      </PageWrapper>
+      {/* </PageWrapper> */}
     </div>
   );
 };

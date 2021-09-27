@@ -184,24 +184,26 @@ const InstitutionBuilder = ({institute, loading}: any) => {
     }
   };
 
+  const isEditPage = location.pathname.indexOf("edit") > -1;
+
   return (
-    <div className="w-full h-full p-4">
+    <div className={`w-full h-full ${isEditPage ? 'px-0' : ''} p-4`}>
       {/* Section Header */}
-      <BreadCrums items={breadCrumbsList} />
-      <div className="flex justify-between">
+      {!isEditPage && <BreadCrums items={breadCrumbsList} />}
+      <div className="flex justify-between px-8">
         <SectionTitle
-          title={InstitutionBuilderDict[userLanguage]['TITLE']}
-          subtitle={InstitutionBuilderDict[userLanguage]['SUBTITLE']}
+          title={isEditPage ? InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION'] : InstitutionBuilderDict[userLanguage]['TITLE']}
+          // subtitle={InstitutionBuilderDict[userLanguage]['SUBTITLE']}
         />
       </div>
-      <PageWrapper>
+      <PageWrapper defaultClass={isEditPage ? "px-0" : "px-4 white_back"}>
         <div className="w-full m-auto">
           <StepComponent
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
           />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+          <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-8`}>
             {loading ? (
               <div className="h-100 flex justify-center items-center">
                 <div className="w-5/10">

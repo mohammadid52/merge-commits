@@ -36,6 +36,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
   }, [state.user.role]);
+console.log(match,'matchmatch');
 
   return (
     <div className={`w-full h-full px-2 py-8 md:p-8 flex justify-center`}>
@@ -57,21 +58,21 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />} // Create new curricular
         />
-        <Route
+        {/* <Route
           path={`${match.url}/institution/:institutionId/course-builder`}
           exact
           render={() => <CourseBuilder />} // Create new course
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/institution/:institutionId/course-builder/:courseId`}
           render={() => <CourseBuilder />} // Create new course
-        />
+        /> */}
         <Route
           path={`${match.url}/institution/room-creation`}
           render={() => <ClassRoomBuilder />} // Create new room
         />
         <Route
-          path={`${match.url}/institution`}
+          path={`${match.url}/institution/:institutionId`}
           render={() => <Institution tabProps={tabProps} />} // Institution info page
         />
         <Route
