@@ -864,15 +864,15 @@ const Dashboard = (props: DashboardProps) => {
   return (
     <>
       <div className="w-full bg-white">
-        <div className="flex justify-between items-center">
-          <div className="w-auto ml-5">
+        <div className="flex justify-end items-center">
+          {/* <div className="w-auto ml-5">
             <img
               onClick={handleLink}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
             />
-          </div>
+          </div> */}
           <DropDownMenu />
         </div>
       </div>
