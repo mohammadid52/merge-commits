@@ -14,13 +14,6 @@ import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import useStudentDataValue from '@customHooks/studentDataValue';
 
-type SelectObject = {
-  id?: string | number;
-  anchor: string;
-  focus: string;
-  color: string;
-  content: Array<{id: string | number; text: string}>;
-};
 
 interface HighlighterBlockProps extends RowWrapperProps {
   id?: string;
@@ -37,7 +30,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     clientKey,
     state: {user, lessonPage: {theme = 'dark'} = {}},
     lessonState,
-    lessonDispatch,
   } = useContext(GlobalContext);
 
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -46,11 +38,9 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const switchContext = isInLesson ? undefined : useULBContext();
   const previewMode = isInLesson ? false : switchContext.previewMode;
 
-  const {getDataValue} = useStudentDataValue();
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
-  const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
 
   // ##################################################################### //
   // ########################## ULB FUNCTIONS ? ########################## //
@@ -102,7 +92,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   useEffect(() => {
     if (editorState !== '') {
       if (getDataValue(id)[0] === '' && isStudent) {
-        handleUpdateStudentData(id, [editorState]);
+        setDataValue(id, [editorState]);
       }
     }
   }, [editorState]);
@@ -119,20 +109,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     }
   }, [lessonState.studentData]);
 
-  // ~~~~~~~~~~~ UPDATE FUNCTION ~~~~~~~~~~~ //
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
   const features: string[] = ['colorPicker', 'remove', 'inline'];
 
   return (
@@ -145,11 +121,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         customStyle
         dark={theme === 'dark'}
         initialValue={isInLesson && isStudent ? getDataValue(id)[0] : editorState}
-        onChange={
-          isInLesson && isStudent
-            ? (html) => handleUpdateStudentData(id, [html])
-            : () => {}
-        }
+        onChange={isInLesson && isStudent ? (html) => setDataValue(id, [html]) : () => {}}
       />
       {!isInLesson && !previewMode && (
         <div className="w-auto flex items-center justify-end mt-4">

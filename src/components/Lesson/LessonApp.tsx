@@ -1,12 +1,10 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {Auth} from '@aws-amplify/auth';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import usePrevious from '../../customHooks/previousProps';
 import * as mutations from '../../graphql/mutations';
 import {
   PagePart,
@@ -536,18 +534,16 @@ const LessonApp = () => {
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getOrCreateStudentData = async () => {
     const syllabusID = getRoomData.activeSyllabus;
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
 
     // console.log('getOrCreateData - user - ', user);
 
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId},
+          studentAuthID: {eq: user.authId},
           lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: syllabusID},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id},
         },
       };
 
@@ -571,8 +567,8 @@ const LessonApp = () => {
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
-          studentAuthId,
-          email
+          user.authId,
+          user.email
         );
         const newRecords = await Promise.all(createNewRecords);
         lessonDispatch({
@@ -585,8 +581,8 @@ const LessonApp = () => {
         const createExtraRecords = await loopCreateStudentData(
           extraPages,
           lessonID,
-          studentAuthId,
-          email
+          user.authId,
+          user.email
         );
         const extraRecords = await Promise.all(createExtraRecords);
         const combinedRecords = [...extraRecords, ...currentStudentData];
@@ -695,11 +691,19 @@ const LessonApp = () => {
     }
   };
 
+  const clearShareData = () => {
+    lessonDispatch({type: 'UNLOAD_STUDENT_SHARE_DATA'});
+  };
+
   useEffect(() => {
     const sharedAuthID = displayData[0].studentAuthID;
     const sharedPageID = displayData[0].lessonPageID;
     if (displayData[0].studentAuthID && displayData[0].studentAuthID !== '') {
       getSharedStudentData(sharedAuthID, sharedPageID);
+    } else {
+      if (lessonState.sharedData && lessonState.sharedData.length > 0) {
+        clearShareData();
+      }
     }
   }, [displayData]);
 

@@ -182,14 +182,14 @@ const LessonControl = () => {
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
-    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
     try {
       const listFilter = {
         filter: {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: syllabusID},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id},
         },
       };
       const studentData: any = await API.graphql(

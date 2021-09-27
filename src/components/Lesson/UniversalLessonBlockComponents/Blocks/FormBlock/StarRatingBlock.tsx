@@ -3,35 +3,29 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {FormControlProps} from '../FormBlock';
-
-interface StarRatingBlockProps {
-  id?: string;
-  inputID?: string;
-  label?: string;
-}
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 const StarRatingBlock = ({
   id,
   inputID,
   label,
-  value,
   numbered,
   index,
   required,
-  isInLesson,
-  handleUpdateStudentData,
-  getStudentDataValue,
 }: FormControlProps) => {
-  const [isRated, setIsRated] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(0);
   const [whichStarHovered, setWhichStarHovered] = useState<number>(0);
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = ''} = {}},
     lessonState,
   } = useContext(GlobalContext);
 
+  const {getDataValue, setDataValue} = useStudentDataValue();
+
+  const [isRated, setIsRated] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>(0);
+
   useEffect(() => {
-    const getTheRating = getStudentDataValue(inputID)[0];
+    const getTheRating = getDataValue(inputID)[0];
     if (getTheRating) {
       setRating(parseInt(getTheRating));
     }
@@ -56,7 +50,7 @@ const StarRatingBlock = ({
 
     if (ratings.includes(t.id)) {
       setIsRated(true);
-      handleUpdateStudentData(inputID, [t.id]);
+      setDataValue(inputID, [t.id]);
     }
   };
 

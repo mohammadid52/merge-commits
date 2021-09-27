@@ -9,9 +9,6 @@ import React, {useContext} from 'react';
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
   const {
-    lessonState,
-    lessonDispatch,
-
     state: {
       user,
       lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
@@ -23,30 +20,15 @@ const TextBlock = (props: IFormBlockProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const {getDataValue} = useStudentDataValue();
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
-  const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
 
   const onChange = (e: any) => {
     if (isInLesson) {
       const {id, value} = e.target;
 
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 

@@ -9,8 +9,6 @@ const TextAreaBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
 
   const gContext = useContext(GlobalContext);
-  const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
   const gState = gContext.state;
   const {
     user,
@@ -20,26 +18,13 @@ const TextAreaBlock = (props: IFormBlockProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const {getDataValue} = useStudentDataValue();
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 

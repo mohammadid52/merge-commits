@@ -16,8 +16,8 @@ interface DatePickerProps {
   lessonPageTheme?: string;
   themePlaceholderColor?: string;
   disabled: boolean;
-  handleUpdateStudentData: any;
-  value: string;
+  setDataValue: any;
+  value: any;
   onChange: (e: any) => void;
 }
 
@@ -29,10 +29,8 @@ const CustomDatePicker = (props: DatePickerProps) => {
     themeTextColor,
     lessonPageTheme,
     themePlaceholderColor,
-
     value,
-    handleUpdateStudentData,
-
+    setDataValue,
     onChange,
   } = props;
 
@@ -57,7 +55,7 @@ const CustomDatePicker = (props: DatePickerProps) => {
         <Tooltip placement="bottom" text="Clear date">
           <div
             onClick={() => {
-              handleUpdateStudentData(inputID, ['']);
+              setDataValue(inputID, ['']);
             }}
             className="h-6 cursor-pointer w-6 bg-blue-500 text-white flex items-center justify-center rounded-full">
             <IoClose />
@@ -83,26 +81,13 @@ const DatePicker = (props: IFormBlockProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const {getDataValue} = useStudentDataValue();
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
   const themePlaceholderColor =
@@ -115,7 +100,7 @@ const DatePicker = (props: IFormBlockProps) => {
 
       <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
         <CustomDatePicker
-          handleUpdateStudentData={handleUpdateStudentData}
+          setDataValue={setDataValue}
           id={inputID}
           inputID={inputID}
           mode={mode}

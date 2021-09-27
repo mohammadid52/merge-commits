@@ -87,6 +87,10 @@ export type LessonActions =
       payload: any;
     }
   | {
+      type: 'UNLOAD_STUDENT_SHARE_DATA';
+      payload?: any;
+    }
+  | {
       type: 'SET_UPDATE_STATUS';
       payload: {pageIdx: number};
     }
@@ -238,6 +242,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         loaded: false,
         universalStudentDataID: [],
         studentData: [],
+      };
+    case 'UNLOAD_STUDENT_SHARE_DATA':
+      return {
+        ...state,
+        sharedData: [],
       };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;

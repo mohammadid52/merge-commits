@@ -55,14 +55,12 @@ export const FormBlock = ({
 }: FormBlockProps) => {
   const {
     lessonState,
-    lessonDispatch,
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
   } = useContext(GlobalContext);
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
-  
-  const {getDataValue} = useStudentDataValue();
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
   const PAGES = lessonState.lessonData.lessonPlan;
@@ -76,19 +74,6 @@ export const FormBlock = ({
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
   useEffect(() => {
     if (PAGES) {
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
@@ -100,7 +85,7 @@ export const FormBlock = ({
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 
@@ -193,9 +178,7 @@ export const FormBlock = ({
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
-            handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : () => {}
-            }
+            handleUpdateStudentData={isStudent && isInLesson ? setDataValue : () => {}}
             getStudentDataValue={getValue}
           />
         );
@@ -298,7 +281,7 @@ export const FormBlock = ({
                 v.value,
                 v.options,
                 isInLesson,
-                handleUpdateStudentData,
+                setDataValue,
                 getDataValue,
                 numbered,
                 `${i + 1}.`,
