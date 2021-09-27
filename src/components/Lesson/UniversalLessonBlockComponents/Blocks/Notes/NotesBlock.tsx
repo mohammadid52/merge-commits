@@ -163,6 +163,13 @@ const NotesBlock = ({
   const [notesChanged, setNotesChanged] = useState<boolean>(false);
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
+  const onUnload = () => {
+    if (notesChanged) {
+      return 'You have unsaved changes on this page.';
+    }
+  };
+  window.onbeforeunload = onUnload;
+
   const handleSetMenuState = async (data?: any) => {
     // if (notesChanged) {
 
@@ -486,7 +493,7 @@ const NotesBlock = ({
                       );
                     }
                   }}
-                  title="Save to class notes"
+                  title="Save to Notebook"
                   className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
                   <BiSave className="h-10 w-10 " />
                 </button>
