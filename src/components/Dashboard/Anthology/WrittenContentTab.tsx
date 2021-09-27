@@ -89,6 +89,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                 <div className="space-y-2">
                   {map(filtered, (note) => (
                     <div
+                      key={note.domID}
                       className="font-normal border-b-0 border-gray-300"
                       dangerouslySetInnerHTML={{
                         __html: note?.input ? note.input : 'No content...',
@@ -215,6 +216,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
             <div>
               {map(filtered, (note, idx) => (
                 <RichTextEditor
+                  key={idx}
                   initialValue={note.input}
                   onChange={(htmlContent) =>
                     updateJournalContent(htmlContent, 'content', idx)

@@ -3,6 +3,7 @@ import AttachmentBlock from '@components/Lesson/UniversalLessonBlockComponents/B
 import OptionBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
 import StarRatingBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
 import WritingExerciseBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
+import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import ReviewSliderBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
@@ -14,8 +15,8 @@ import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
-import {filter, forEach, map, noop} from 'lodash';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {filter, map, noop} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
@@ -67,9 +68,15 @@ export const FormBlock = ({
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
+  const notes =
+    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
+      ? filter(activePageData.pageContent, (f) => f.id.includes('notes-container'))
+      : [];
+
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
@@ -311,18 +318,6 @@ export const FormBlock = ({
         return <p>No valid form input type</p>;
     }
   };
-
-  if (formType === 'notes-form' && !isStudent) {
-    const modifiyValues = map(value, (v: any, idx: number) => ({
-      class: v.class,
-      pagePartId: pagePartId,
-      partContentId: id,
-      id: v.id,
-      value: v.value,
-    }));
-
-    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
-  }
 
   return (
     <>

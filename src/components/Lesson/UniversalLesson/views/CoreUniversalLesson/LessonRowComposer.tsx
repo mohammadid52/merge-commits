@@ -1,12 +1,11 @@
-import NotesFab from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
-import {filter} from 'lodash';
-import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
 } from '@interfaces/UniversalLessonInterfaces';
+import {filter} from 'lodash';
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
@@ -36,7 +35,8 @@ const LessonRowComposer = () => {
       ? activePageData.pageContent.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
-            if (!b.type.includes('Download') && !b.type.includes('notes-form')) {
+            //  && !b.type.includes('notes-form')
+            if (!b.type.includes('Download')) {
               objArray.push(b);
             }
           });
@@ -65,7 +65,6 @@ const LessonRowComposer = () => {
   }, [lessonPage]);
 
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-  const [showNotesModal, setShowNotesModal] = useState(false);
 
   useEffect(() => {
     const lessonState = gContext.lessonState;
@@ -117,7 +116,11 @@ const LessonRowComposer = () => {
                               `pp_${idx}_pc_${idx2}`,
                               content.class,
                               pagePart.id,
-                              'lesson'
+                              'lesson',
+                              undefined, // function related to builder
+                              undefined, // position number related to builder
+                              content.type === 'notes-form' ? notes : [],
+                              true // isStudent
                             )}
                           </div>
                         </div>
@@ -134,10 +137,9 @@ const LessonRowComposer = () => {
       {user.role === 'ST' && (
         <>
           <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
-            {notes && notes.length > 0 && (
+            {/* {notes && notes.length > 0 && (
               <div id="fab-download">
-                <NotesFab
-                  currentLesson={currentLesson}
+                <NotesContainer
                   notes={notes}
                   darkMode={currentLesson?.darkMode || true}
                   pageTitle={activePageData.title}
@@ -145,7 +147,7 @@ const LessonRowComposer = () => {
                   setShowNotesModal={setShowNotesModal}
                 />
               </div>
-            )}
+            )} */}
             {downloadables && downloadables.length > 0 && (
               <div id="fab-notes">
                 <Downloadables
