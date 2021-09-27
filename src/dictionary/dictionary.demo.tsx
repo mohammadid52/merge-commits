@@ -1129,6 +1129,89 @@ const InstitutionAddDict: any = {
   },
 };
 
+const InstitutionBuilderDict: any = {
+  EN: {
+    INFOA: 'Click circle to manage your avatar.',
+    INFO: 'Click the circle above to update institution image.',
+    TITLE: 'Add Institution',
+    SUBTITLE: 'Add new institution to the list',
+    FORM: {
+      TITLE: 'General Information and Vendor Management',
+      INSTITUTION_TYPE: 'Institution Type',
+      NAME_INPUT_LABEL: 'Institution Name',
+      NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
+      WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
+      WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
+      ADDRESS_INPUT_LABEL: 'Address line 1',
+      ADDRESS2_INPUT_LABEL: 'Address line 2',
+      CITY_LABEL: 'City',
+      STATE_LABEL: 'State',
+      ZIP_LABEL: 'Zip',
+      PHONE_LABEL: 'Phone',
+      state: 'Select state',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
+    },
+    SERVICE_VENDORS: 'Service Vendors',
+    INSTITUTION_TYPE: {
+      SCHOOL: 'School',
+      AFTERSCHOOL: 'After School',
+      DAYCAMP: 'Day Camp',
+      SUMMERCAMP: 'Summer Camp',
+      C3: '501C3',
+    },
+    BUTTON: {
+      CANCEL: 'Cancel',
+      SAVE: 'Save',
+    },
+    messages: {
+      namerequired: 'Institute name is required.',
+      saveMsg: 'Institution details saved successfully',
+      uploaderr: 'Unable to upload image. Please try again later. ',
+      adderr: 'Unable to add new institute. Please try again later.',
+    },
+  },
+  ES: {
+    INFOA: 'TBD',
+    INFO: 'TBD',
+    TITLE: 'TBD',
+    SUBTITLE: 'TBD',
+
+    FORM: {
+      TITLE: 'TBD',
+      INSTITUTION_TYPE: 'TBD',
+      NAME_INPUT_LABEL: 'TBD',
+      NAME_INPUT_PLACEHOLDER: 'TBD',
+      WEBSITE_INPUT_LABEL: 'TBD',
+      WEBSITE_INPUT_PLACEHOLDER: 'TBD',
+      ADDRESS_INPUT_LABEL: 'TBD',
+      ADDRESS2_INPUT_LABEL: 'TBD',
+      CITY_LABEL: 'TBD',
+      STATE_LABEL: 'TBD',
+      ZIP_LABEL: 'TBD',
+      PHONE_LABEL: 'TBD',
+      state: 'TBD',
+      SERVICEPROVIDER_LABEL: 'TBD',
+    },
+    INSTITUTION_TYPE: {
+      SCHOOL: 'TBD',
+      AFTERSCHOOL: 'TBD',
+      DAYCAMP: 'TBD',
+      SUMMERCAMP: 'TBD',
+      C3: 'TBD',
+    },
+    BUTTON: {
+      CANCEL: 'TBD',
+      SAVE: 'TBD',
+    },
+    messages: {
+      namerequired: 'TBD',
+      uploaderr: 'TBD',
+      adderr: 'TBD',
+    },
+  },
+};
+
 const Institute_class: any = {
   EN: {
     TITLE: 'INSTITUTE CLASSES',
@@ -3726,6 +3809,7 @@ export {
   Institute_info,
   InstitutionEditDict,
   InstitutionAddDict,
+  InstitutionBuilderDict,
   Institute_class,
   InstitueCurriculam,
   InstitueRomms,

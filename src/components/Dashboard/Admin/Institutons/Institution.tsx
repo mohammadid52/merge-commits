@@ -6,13 +6,12 @@ import {useHistory} from 'react-router-dom';
 import {Switch, Route, useRouteMatch} from 'react-router-dom';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import InstitutionInfo from './InstitutionInfo';
-import InstitutionEdit from './InstitutionEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
-import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -49,6 +48,7 @@ export interface InstitutionInfo {
  * with data from the API
  */
 const Institution = (props: InstitutionProps) => {
+  const [fetchingDetails, setFetchingDetails] = useState(false);
   const [institutionData, setInstitutionData] = useState({
     id: '',
     name: '',
@@ -112,6 +112,7 @@ const Institution = (props: InstitutionProps) => {
   async function getInstitutionData() {
     try {
       if (urlQueryParams.id) {
+        setFetchingDetails(true);
         const fetchInstitutionData: any = await API.graphql(
           /**
            * Below query will get the 'id' parameter from the url
@@ -125,6 +126,7 @@ const Institution = (props: InstitutionProps) => {
         } else {
           setInstitutionData(fetchInstitutionData.data.getInstitution);
         }
+        setFetchingDetails(false);
       } else {
         history.push('/dashboard/manage-institutions');
       }
@@ -166,8 +168,9 @@ const Institution = (props: InstitutionProps) => {
           <Route
             path={`${match.url}/edit`}
             render={() => (
-              <InstitutionEdit
+              <InstitutionBuilder
                 institute={institutionData}
+                loading={fetchingDetails}
                 toggleUpdateState={toggleUpdateState}
                 updateServiceProviders={updateServiceProviders}
               />

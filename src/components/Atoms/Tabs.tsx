@@ -48,8 +48,8 @@ const DropDownMenu = ({activeTab, customTitle, menu, onClick}: any) => {
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10">
               <div className="px-1 py-1 shadow-lg">
-                {menu.children.map((item: any, index: number) => (
-                  <Menu.Item key={index} onClick={() => onClick(item.key)}>
+                {menu.children.map((item: any) => (
+                  <Menu.Item key={item.title} onClick={() => onClick(item.key)}>
                     <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
                       {item.title}
                     </div>
