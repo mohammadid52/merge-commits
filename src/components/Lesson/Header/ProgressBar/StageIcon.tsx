@@ -80,7 +80,14 @@ const StageIcon = ({
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <span className="flex-shrink-0">{label}</span>
+            <p className="flex-shrink-0">
+              {label}
+              {isShared && (
+                <IconContext.Provider value={{size: '16px', color: 'white', className: 'absolute mt-2'}}>
+                  <RiLiveLine />
+                </IconContext.Provider>
+              )}
+            </p>
           </a>
         </div>
       );
@@ -113,7 +120,14 @@ const StageIcon = ({
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <span className="flex-shrink-0">{label}</span>
+            <p className="flex-shrink-0">
+              {label}
+              {isShared && (
+                <IconContext.Provider value={{size: '16px', color: 'white', className: 'absolute mt-2'}}>
+                  <RiLiveLine />
+                </IconContext.Provider>
+              )}
+            </p>
           </a>
         </div>
       );
@@ -146,7 +160,12 @@ const StageIcon = ({
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <span className="flex-shrink-0">{label}</span>
+            <p className="flex-shrink-0">{label}
+              {isShared && (<span className="absolute">
+                <IconContext.Provider value={{ size: '16px', color: 'white', className: 'absolute mt-2' }}>
+                  <RiLiveLine />
+                </IconContext.Provider>
+            </span>)}</p>
           </a>
         </div>
       );

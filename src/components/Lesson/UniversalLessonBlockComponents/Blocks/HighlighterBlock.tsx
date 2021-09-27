@@ -12,6 +12,7 @@ import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
 import {useEffect} from 'react';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 type SelectObject = {
   id?: string | number;
@@ -38,11 +39,18 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     lessonState,
     lessonDispatch,
   } = useContext(GlobalContext);
+
   const themeColor = getAsset(clientKey, 'themeClassName');
   const isInLesson = useInLessonCheck();
 
   const switchContext = isInLesson ? undefined : useULBContext();
   const previewMode = isInLesson ? false : switchContext.previewMode;
+
+  const {getDataValue} = useStudentDataValue();
+
+  // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
 
   // ##################################################################### //
   // ########################## ULB FUNCTIONS ? ########################## //
@@ -93,7 +101,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   // ~~ INIT STUDENT DATA HIGHLIGHTED TEXT ~ //
   useEffect(() => {
     if (editorState !== '') {
-      if (getStudentDataValue(id)[0] === '' && isStudent) {
+      if (getDataValue(id)[0] === '' && isStudent) {
         handleUpdateStudentData(id, [editorState]);
       }
     }
@@ -102,7 +110,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
   useEffect(() => {
     if (isInLesson && !isStudent) {
-      const incomingStudentVal = getStudentDataValue(id)[0];
+      const incomingStudentVal = getDataValue(id)[0];
       if (incomingStudentVal !== '') {
         setEditorState(incomingStudentVal);
       } else {
@@ -125,30 +133,8 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     });
   };
 
-  // ~~~~~~~~~~~~~ GET FUNCTION ~~~~~~~~~~~~ //
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput) {
-      return getInput?.input;
-    } else {
-      return [''];
-    }
-  };
-
   const features: string[] = ['colorPicker', 'remove', 'inline'];
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', function (e) {
-  //     var confirmationMessage =
-  //       'It looks like you have been editing something. ' +
-  //       'If you leave before saving, your changes will be lost.';
 
-  //     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-  //     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-  //   });
-  // },[]);
   return (
     <div className={`p-4`}>
       <CustomRichTextEditor
@@ -158,7 +144,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         rounded
         customStyle
         dark={theme === 'dark'}
-        initialValue={isInLesson && isStudent ? getStudentDataValue(id)[0] : editorState}
+        initialValue={isInLesson && isStudent ? getDataValue(id)[0] : editorState}
         onChange={
           isInLesson && isStudent
             ? (html) => handleUpdateStudentData(id, [html])
@@ -173,19 +159,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
           />
         </div>
       )}
-      {/* {!isInLesson && !previewMode && (
-        <span className="w-auto relative inline-flex rounded-md shadow-sm">
-          <button
-            type="button"
-            className="w-auto inline-flex items-center px-4 py-2 border-0  text-base leading-6 font-medium rounded-md transition ease-in-out duration-150 ">
-            Save
-          </button>
-          <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full iconoclast:bg-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 iconoclast:bg-main"></span>
-          </span>
-        </span>
-      )} */}
     </div>
   );
 };

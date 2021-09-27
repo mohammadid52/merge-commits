@@ -428,12 +428,15 @@ module.exports = {
         activation: {
           '0%': {
             borderBottom: '0px solid #00488AC7',
+            borderTop: '0px solid #00488AC7',
           },
           '50%': {
             borderBottom: '4px solid #00488AC7',
+            borderTop: '4px solid #00488AC7',
           },
           '100%': {
             borderBottom: '0px solid #00488AC7',
+            borderTop: '0px solid #00488AC7',
           },
         },
         slideUp: {

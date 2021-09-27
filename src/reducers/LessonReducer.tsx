@@ -36,7 +36,7 @@ export type LessonActions =
         createdAt?: string;
         currentPage?: number | null;
         disabledPages?: string[] | any;
-        displayData?: {studentAuthID?: string, lessonPageID?: string}[];
+        displayData?: {studentAuthID?: string; lessonPageID?: string}[];
         id: string;
         studentViewing?: string | '';
         updatedAt?: string;
@@ -73,6 +73,10 @@ export type LessonActions =
         stDataIdx: number;
         subData: StudentPageInput[];
       };
+    }
+  | {
+      type: 'LOAD_STUDENT_SHARE_DATA';
+      payload: any;
     }
   | {
       type: 'UPDATE_PERSON_LOCATION';
@@ -112,7 +116,7 @@ export type LessonActions =
     }
   | {
       type: 'CLEANUP';
-      payload: any;
+      payload?: any;
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
@@ -209,8 +213,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
               }
             })
           : [];
-      // console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
-      // console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
       if (newStudentData.length > 0) {
         return {
           ...state,
@@ -219,6 +221,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       } else {
         return state;
       }
+    case 'LOAD_STUDENT_SHARE_DATA':
+      return {
+        ...state,
+        sharedData: action.payload,
+      };
     case 'UPDATE_PERSON_LOCATION':
       return {
         ...state,

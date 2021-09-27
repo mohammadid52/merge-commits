@@ -1,7 +1,6 @@
 import {
   StudentExerciseData,
   StudentPageInput,
-  UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
@@ -21,6 +20,7 @@ export interface lessonStateType {
   exerciseData?: [StudentExerciseData[]];
   viewing?: boolean;
   displayData?: {studentAuthID?: string; lessonPageID?: string}[];
+  sharedData?: any[];
   saveCount?: number;
   firstSave?: boolean;
   subscription?: any;
@@ -45,6 +45,7 @@ export const lessonState: lessonStateType = {
   exerciseData: [[]],
   viewing: false,
   displayData: [{studentAuthID: '', lessonPageID: ''}],
+  sharedData: [],
   saveCount: 0,
   firstSave: true,
   subscription: {},

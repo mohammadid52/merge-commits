@@ -6,6 +6,7 @@ import {IoClose} from 'react-icons/io5';
 import Tooltip from '@atoms/Tooltip';
 import RequiredMark from '@atoms/RequiredMark';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 interface DatePickerProps {
   id: string;
@@ -82,6 +83,8 @@ const DatePicker = (props: IFormBlockProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
+  const {getDataValue} = useStudentDataValue();
+
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
       type: 'UPDATE_STUDENT_DATA',
@@ -93,22 +96,6 @@ const DatePicker = (props: IFormBlockProps) => {
         },
       },
     });
-  };
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDataValue = (domID: string) => {
-    return getStudentDataValue(domID);
   };
 
   const onChange = (e: any) => {

@@ -28,9 +28,9 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 const LessonApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const state = gContext.state;
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
+  const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
 
@@ -38,6 +38,7 @@ const LessonApp = () => {
   const match = useRouteMatch();
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
+  const {lessonID} = urlParams;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -534,7 +535,6 @@ const LessonApp = () => {
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getOrCreateStudentData = async () => {
-    const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus;
     const user = await Auth.currentAuthenticatedUser();
     const studentAuthId = user.username;
@@ -664,11 +664,53 @@ const LessonApp = () => {
   }, [lessonState.studentData]);
 
   // ##################################################################### //
+  // ############### GET OTHER STUDENT SHARED DATA RECORDS ############### //
+  // ##################################################################### //
+
+  const getSharedStudentData = async (inputAuthID: string, inputPageID: string) => {
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: inputAuthID},
+          lessonID: {eq: lessonID},
+          lessonPageID: {eq: inputPageID},
+          roomID: {eq: getRoomData.id},
+        },
+      };
+
+      const studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+      );
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      console.log('studentDataRows[0] - ', studentDataRows[0]);
+
+      if (studentDataRows.length > 0) {
+        lessonDispatch({
+          type: 'LOAD_STUDENT_SHARE_DATA',
+          payload: [...studentDataRows[0].pageData],
+        });
+      }
+    } catch (e) {
+      console.error('getSharedStudentData - ', e);
+    }
+  };
+
+  useEffect(() => {
+    const sharedAuthID = displayData[0].studentAuthID;
+    const sharedPageID = displayData[0].lessonPageID;
+    if (displayData[0].studentAuthID && displayData[0].studentAuthID !== '') {
+      getSharedStudentData(sharedAuthID, sharedPageID);
+    }
+  }, [displayData]);
+
+  // ##################################################################### //
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
   const [cleared, setCleared] = useState(false);
   const [created, setCreated] = useState(false);
+
+  const getLocationData = getLocalStorageData('person_location');
 
   const [personLocationObj, setPersonLocationObj] = useState<any>({
     id: '',
@@ -680,7 +722,7 @@ const LessonApp = () => {
     currentLocation: '',
     lessonProgress: '',
   });
-  const previousLocation = usePrevious(personLocationObj);
+  // const previousLocation = usePrevious(personLocationObj);
 
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
   useEffect(() => {
@@ -689,18 +731,11 @@ const LessonApp = () => {
     }
   }, [lessonState.lessonData.id]);
 
-  // useEffect(() => {
-  //   if (personLocationObj.id !== '') {
-  //     updatePersonLocation(personLocationObj);
-  //     setLocalStorageData('person_location', personLocationObj);
-  //   }
-  // }, [personLocationObj]);
-
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
   useEffect(() => {
     if (created && lessonState.currentPage >= 0) {
       const pageChangeLocation = {
-        ...personLocationObj,
+        ...getLocationData,
         currentLocation: lessonState.currentPage,
         lessonProgress: lessonState.lessonProgress,
       };

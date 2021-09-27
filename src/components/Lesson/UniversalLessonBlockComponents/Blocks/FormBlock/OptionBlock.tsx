@@ -4,6 +4,7 @@ import RequiredMark from '@components/Atoms/RequiredMark';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 const SelectMany = ({
   onChange,
@@ -153,6 +154,8 @@ const OptionBlock = (props: IOptionProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
+  const {getDataValue} = useStudentDataValue();
+
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
       type: 'UPDATE_STUDENT_DATA',
@@ -166,18 +169,6 @@ const OptionBlock = (props: IOptionProps) => {
     });
   };
 
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
   // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
@@ -186,7 +177,7 @@ const OptionBlock = (props: IOptionProps) => {
     classString: string
   ) => {
     if (values && Array.isArray(values)) {
-      const studentDataValue = getStudentDataValue(inputID) || [];
+      const studentDataValue = getDataValue(inputID) || [];
       let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
       const getCheckValue = (id: string): boolean => studentDataValue.includes(id);

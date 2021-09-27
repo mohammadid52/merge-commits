@@ -6,6 +6,7 @@ import WritingExerciseBlock from '@components/Lesson/UniversalLessonBlockCompone
 import ReviewSliderBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {
   StudentPageInput,
   UniversalLessonPage,
@@ -55,16 +56,18 @@ export const FormBlock = ({
   const {
     lessonState,
     lessonDispatch,
-    controlState,
-    theme,
-    state: {
-      user,
-      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-    },
+    state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
   } = useContext(GlobalContext);
-
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+
+  
+  const {getDataValue} = useStudentDataValue();
+
+  // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
+
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   // ##################################################################### //
@@ -87,54 +90,11 @@ export const FormBlock = ({
   };
 
   useEffect(() => {
-    const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
-      const CURRENT_PAGE = lessonState.currentPage;
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDisplayDataStudentValue = (domID: string) => {
-    const viewingStudentData = lessonState.displayData.reduce((acc: any, obj: any) => {
-      if (obj.studentAuthId === controlState.studentViewing) {
-        return obj.studentData;
-      } else {
-        return acc;
-      }
-    }, []);
-    const pageData = viewingStudentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDataValue = (domID: string) => {
-    return getStudentDataValue(domID);
-    // const isDisplayData = lessonState.displayData.length > 0;
-    // if (!isDisplayData) {
-    //   return getStudentDataValue(domID);
-    // } else {
-    //   return getDisplayDataStudentValue(domID);
-    // }
-  };
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
@@ -313,7 +273,7 @@ export const FormBlock = ({
   };
 
   if (formType === 'notes-form' && !isStudent) {
-    const modifiyValues = map(value, (v: any, idx: number) => ({
+    const modifiyValues = map(value, (v: any) => ({
       class: v.class,
       pagePartId: pagePartId,
       partContentId: id,

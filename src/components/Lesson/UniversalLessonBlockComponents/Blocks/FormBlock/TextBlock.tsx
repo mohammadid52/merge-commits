@@ -1,6 +1,7 @@
 import RequiredMark from '@components/Atoms/RequiredMark';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
@@ -18,8 +19,15 @@ const TextBlock = (props: IFormBlockProps) => {
   } = useContext(GlobalContext);
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
+
+  const {getDataValue} = useStudentDataValue();
+
+  // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
 
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
@@ -32,18 +40,6 @@ const TextBlock = (props: IFormBlockProps) => {
         },
       },
     });
-  };
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
   };
 
   const onChange = (e: any) => {
@@ -68,7 +64,7 @@ const TextBlock = (props: IFormBlockProps) => {
         name={'text'}
         type={'text'}
         onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-        value={isInLesson ? getStudentDataValue(inputID) : value}
+        value={isInLesson ? getDataValue(inputID) : value}
       />
     </div>
   );
