@@ -1,4 +1,8 @@
-import React from 'react';
+import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
+import {GlobalContext} from '@contexts/GlobalContext';
+import map from 'lodash/map';
+import React, {useContext} from 'react';
 import {DIVIDER, FORM_TYPES, TABLE} from '../UniversalLessonBuilder/UI/common/constants';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
@@ -24,7 +28,9 @@ const composePartContent = (
   pagePartId: string,
   mode?: 'building' | 'viewing' | 'lesson',
   updateBlockContentULBHandler?: any,
-  position?: number
+  position?: number,
+  notesData?: any,
+  isStudent: boolean = true
 ): JSX.Element => {
   const commonBlockProps = {
     classString,
@@ -53,7 +59,7 @@ const composePartContent = (
     return <HeaderBlock {...commonBlockProps} />;
   } else if (type.includes('paragraph')) {
     return <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />;
-  } else if (type.includes('form')) {
+  } else if (type.includes('form') && type !== 'notes-form') {
     return (
       <FormBlock
         pagePartId={pagePartId}
@@ -75,6 +81,25 @@ const composePartContent = (
     return <TableBlock classString={classString} value={value} />;
   } else if (type === FORM_TYPES.DOWNLOAD) {
     return <DownloadBlock value={value} />;
+  } else if (type === 'notes-form' && isStudent) {
+    return (
+      notesData &&
+      notesData.length > 0 && (
+        <div id="fab-download">
+          <NotesContainer notes={notesData} />
+        </div>
+      )
+    );
+  } else if (type === 'notes-form' && !isStudent) {
+    const modifiyValues = map(value, (v: any, idx: number) => ({
+      class: v.class,
+      pagePartId: pagePartId,
+      partContentId: id,
+      id: v.id,
+      value: v.value,
+    }));
+
+    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

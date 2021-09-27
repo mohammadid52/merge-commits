@@ -83,12 +83,11 @@ const genSticky = (
   });
 };
 interface INoteBlock {
-  showNotesModal?: boolean;
   notesInitialized?: boolean;
   grid?: {cols?: number; rows?: number};
   value: any[];
   addNew?: (newNoteObj: any, notesData?: any) => void;
-  saveData?: (notesData: any) => void;
+  saveData?: (notesData: any, cb?: any, cb2?: any) => void;
   notesData?: any;
   updateJournalData?: any;
   setNotesData?: React.Dispatch<React.SetStateAction<any>>;
@@ -113,8 +112,9 @@ const NotesBlock = ({
   setNotesData,
   addNew,
   notesInitialized,
-  showNotesModal,
-  grid,saveData,
+
+  grid,
+  saveData,
   updateJournalData,
 }: INoteBlock) => {
   const {
@@ -268,7 +268,7 @@ const NotesBlock = ({
     setShowEditModal({...showEditModal, show: false});
     setNotesChanged(true);
 
-    const note: any = currentNote;
+    const note = find(localNotes, (d) => d.id === showEditModal.id);
 
     const noteIdx = findIndex(localNotes, (d: any) => d.id === note.id);
 
@@ -298,24 +298,24 @@ const NotesBlock = ({
 
   const [showEditModal, setShowEditModal] = useState({show: false, id: '', value: ''});
 
-  const currentNote =
-    showEditModal.id && find(localNotes, (d) => d.id === showEditModal.id);
-
   const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
   const [currentSelectedSize, setCurrentSelectedSize] = useState(null);
 
   useEffect(() => {
-    if (currentNote.class) {
-      const bgColor = currentNote.class?.split(' ')[0] || 'yellow';
-      const size = currentNote.class?.split(' ')[1] || 'medium';
-      if (!currentSelectedColor) {
-        setCurrentSelectedColor(bgColor);
-      }
-      if (!currentSelectedSize) {
-        setCurrentSelectedSize(size);
+    if (showEditModal && showEditModal.id) {
+      const currentNote = find(localNotes, (d) => d.id === showEditModal.id);
+      if (currentNote.class) {
+        const bgColor = currentNote.class?.split(' ')[0] || 'yellow';
+        const size = currentNote.class?.split(' ')[1] || 'medium';
+        if (!currentSelectedColor) {
+          setCurrentSelectedColor(bgColor);
+        }
+        if (!currentSelectedSize) {
+          setCurrentSelectedSize(size);
+        }
       }
     }
-  }, [currentNote.class, currentSelectedColor, currentSelectedSize]);
+  }, [currentSelectedColor, currentSelectedSize, showEditModal.id]);
 
   const modalBtns = {
     delete: {
@@ -379,7 +379,7 @@ const NotesBlock = ({
           open={showEditModal.show}
           setOpen={modalBtns.edit.cancel}>
           <div className="flex items-center flex-col justify-center">
-            {currentNote && (
+            {
               <textarea
                 onChange={noop}
                 className={`${genSize(
@@ -388,7 +388,7 @@ const NotesBlock = ({
                 id={'note'}
                 value={showEditModal?.value}
               />
-            )}
+            }
 
             <div className="border-0 p-2 py-3 my-4 flex items-center justify-around border-gray-200 dark:border-gray-700 rounded-lg ">
               {map(colorList, (color) => (
@@ -472,19 +472,26 @@ const NotesBlock = ({
                 className="w-auto text-red-600 hover:text-red-500 transition-all">
                 <FiFilePlus className="h-10 w-10 " />
               </button>
-              <button
-                onClick={() => {
-                  setSaveInProgress(true);
-                  if (notesChanged) {
-                    saveData(notesData);
-                  }
-                  setSaveInProgress(false);
-                }}
-                title="Save to class notes"
-                className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
-                <BiSave className="h-10 w-10 " />
-              </button>
-              {saveInProgress && <Loader className="text-gray-500 text-base" />}
+              {!saveInProgress && (
+                <button
+                  onClick={() => {
+                    if (notesChanged) {
+                      saveData(
+                        notesData,
+                        () => setSaveInProgress(true),
+                        () => {
+                          setNotesChanged(false);
+                          setSaveInProgress(false);
+                        }
+                      );
+                    }
+                  }}
+                  title="Save to class notes"
+                  className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
+                  <BiSave className="h-10 w-10 " />
+                </button>
+              )}
+              {saveInProgress && <Loader className="text-yellow-500 text-base" />}
             </div>
           )}
         </div>
