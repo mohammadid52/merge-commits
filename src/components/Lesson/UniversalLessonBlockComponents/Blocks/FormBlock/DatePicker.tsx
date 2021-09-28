@@ -6,6 +6,7 @@ import {IoClose} from 'react-icons/io5';
 import Tooltip from '@atoms/Tooltip';
 import RequiredMark from '@atoms/RequiredMark';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 interface DatePickerProps {
   id: string;
@@ -15,8 +16,8 @@ interface DatePickerProps {
   lessonPageTheme?: string;
   themePlaceholderColor?: string;
   disabled: boolean;
-  handleUpdateStudentData: any;
-  value: string;
+  setDataValue: any;
+  value: any;
   onChange: (e: any) => void;
 }
 
@@ -28,10 +29,8 @@ const CustomDatePicker = (props: DatePickerProps) => {
     themeTextColor,
     lessonPageTheme,
     themePlaceholderColor,
-
     value,
-    handleUpdateStudentData,
-
+    setDataValue,
     onChange,
   } = props;
 
@@ -56,7 +55,7 @@ const CustomDatePicker = (props: DatePickerProps) => {
         <Tooltip placement="bottom" text="Clear date">
           <div
             onClick={() => {
-              handleUpdateStudentData(inputID, ['']);
+              setDataValue(inputID, ['']);
             }}
             className="h-6 cursor-pointer w-6 bg-blue-500 text-white flex items-center justify-center rounded-full">
             <IoClose />
@@ -82,40 +81,13 @@ const DatePicker = (props: IFormBlockProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDataValue = (domID: string) => {
-    return getStudentDataValue(domID);
-  };
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
   const themePlaceholderColor =
@@ -128,7 +100,7 @@ const DatePicker = (props: IFormBlockProps) => {
 
       <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
         <CustomDatePicker
-          handleUpdateStudentData={handleUpdateStudentData}
+          setDataValue={setDataValue}
           id={inputID}
           inputID={inputID}
           mode={mode}

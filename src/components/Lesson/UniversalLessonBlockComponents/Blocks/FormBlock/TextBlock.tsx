@@ -1,6 +1,7 @@
 import RequiredMark from '@components/Atoms/RequiredMark';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
@@ -8,9 +9,6 @@ import React, {useContext} from 'react';
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
   const {
-    lessonState,
-    lessonDispatch,
-
     state: {
       user,
       lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
@@ -18,39 +16,19 @@ const TextBlock = (props: IFormBlockProps) => {
   } = useContext(GlobalContext);
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
+  // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
 
   const onChange = (e: any) => {
     if (isInLesson) {
       const {id, value} = e.target;
 
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 
@@ -68,7 +46,7 @@ const TextBlock = (props: IFormBlockProps) => {
         name={'text'}
         type={'text'}
         onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-        value={isInLesson ? getStudentDataValue(inputID) : value}
+        value={isInLesson ? getDataValue(inputID) : value}
       />
     </div>
   );

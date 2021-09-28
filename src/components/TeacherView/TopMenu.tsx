@@ -35,8 +35,12 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
     setQuickRegister,
   } = props;
 
-  const {lessonState, controlState} = useContext(GlobalContext);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const controlState = gContext.controlState;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const {lessonPlannerDict} = useDictionary(clientKey);
 
   const getRoomData = getLocalStorageData('room_info');
@@ -60,16 +64,6 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
           {`${getRoomData.name ? getRoomData.name : ''}`}
         </p>
-
-        {/* <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity
-            </p> */}
-
-        {/* <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
-              {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}
-            </p>*/}
-
         <p className="text-xs">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
           {lessonState.lessonData?.duration}{' '}

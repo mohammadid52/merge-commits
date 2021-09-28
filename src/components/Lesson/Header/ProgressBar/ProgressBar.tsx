@@ -13,10 +13,14 @@ interface IProgressBarProps {
 }
 
 const ProgressBar = ({handleHome}: IProgressBarProps) => {
-  const {lessonState} = useContext(GlobalContext);
-  // const [clickable, setClickable] = useState<number>();
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
 
   const PAGES = lessonState.lessonData.lessonPlan;
+
+  // ~~~~~~~~~ WHICH PAGE IS SHAred ~~~~~~~~ //
+
+  const sharedPageID = lessonState.displayData[0].lessonPageID;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
@@ -88,7 +92,6 @@ const ProgressBar = ({handleHome}: IProgressBarProps) => {
                 id={page.id}
                 enabled={page.disabled !== true}
                 open={page.open !== false}
-                // active={page.active !== false}
                 active={key === lessonState?.currentPage}
                 label={page.label}
                 clickable={
@@ -96,6 +99,7 @@ const ProgressBar = ({handleHome}: IProgressBarProps) => {
                   ((nextRequiredIdx !== null ? key <= nextRequiredIdx : true) &&
                     page.open !== false)
                 }
+                isShared={sharedPageID === page.id}
               />
             );
           })}

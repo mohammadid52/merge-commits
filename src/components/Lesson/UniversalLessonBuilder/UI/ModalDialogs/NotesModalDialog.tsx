@@ -162,6 +162,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
                   key={singleNoteData.id}
                   removeItemFromList={removeItemFromList}
                   singleNoteData={singleNoteData}
+                  isEditingMode={isEditingMode}
                   idx={idx}
                 />
               ))}

@@ -9,6 +9,7 @@ const SingleNote = ({
   removeItemFromList,
   onChange,
   onFieldUpdate,
+  isEditingMode,
 }: any) => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   return (

@@ -278,12 +278,13 @@ const FloatingSideMenu = () => {
     <div>
       <div className={`relative`}>
         <div
+          style={{zIndex: 3000}}
           className={`
                relative
                w-0
                h-full
               ${menuOpenLevel === 3 ? 'mx-auto' : `ml-auto ${scrollbarMarginRight}`}
-              flex flex-row flex-1 z-100`}>
+              flex flex-row flex-1`}>
           <div
             className={`
               fixed

@@ -55,6 +55,7 @@ type Person
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
+  superAdmin: Boolean
 }
 
 type Institution @model @key(fields: ["id"]) {
@@ -134,9 +135,9 @@ type Room
   curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   activeLessonId: String
   ClosedPages: [String]
-  disabledPages: [StudentSharing]
+  disabledPages: [String]
   studentViewing: String
-  displayData: [String]
+  displayData: [StudentSharing]
   currentPage: String
   completedLessons: [CompleteLesson]
   activeLessons: [String]
@@ -1077,6 +1078,7 @@ type StudentPageInput {
 
 type partInput {
   domID: String
+  options:[String]
   input: [String]
   comments: [InputComment]
 }
@@ -1248,6 +1250,7 @@ input CreateLessonRubricsInput {
 input DeleteLessonRubricsInput {
   id: ID!
 }
+
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]

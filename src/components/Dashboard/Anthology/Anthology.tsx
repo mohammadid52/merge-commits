@@ -459,6 +459,7 @@ const Anthology = ({
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();
           await updateStudentData();
+          await updateJournalData();
         } else if (viewEditMode.mode === '') {
           await handleResetJournalEntry();
         }

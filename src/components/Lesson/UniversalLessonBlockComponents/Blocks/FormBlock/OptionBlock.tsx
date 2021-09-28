@@ -4,6 +4,7 @@ import RequiredMark from '@components/Atoms/RequiredMark';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 const SelectMany = ({
   onChange,
@@ -153,87 +154,64 @@ const OptionBlock = (props: IOptionProps) => {
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
+    const {getDataValue, setDataValue} = useStudentDataValue();
 
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
+    // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
+    const generateCheckbox = (
+      values: {label: string; text: string; id: string}[],
+      selectMany: boolean,
+      inputID: string,
+      classString: string
+    ) => {
+      if (values && Array.isArray(values)) {
+        const studentDataValue = getDataValue(inputID) || [];
+        let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
-  // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
-  const generateCheckbox = (
-    values: {label: string; text: string; id: string}[],
-    selectMany: boolean,
-    inputID: string,
-    classString: string
-  ) => {
-    if (values && Array.isArray(values)) {
-      const studentDataValue = getStudentDataValue(inputID) || [];
-      let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
-
-      const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
-      const onChange = (e: any) => {
-        const {id} = e.target;
-        if (isInLesson) {
-          if (selectMany) {
-            if (selectedOptionList.includes(id)) {
-              selectedOptionList = selectedOptionList.filter((d) => d !== id);
+        const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
+        const onChange = (e: any) => {
+          const {id} = e.target;
+          if (isInLesson) {
+            if (selectMany) {
+              if (selectedOptionList.includes(id)) {
+                selectedOptionList = selectedOptionList.filter((d) => d !== id);
+              } else {
+                selectedOptionList.push(id);
+              }
             } else {
-              selectedOptionList.push(id);
+              selectedOptionList[0] = id;
             }
-          } else {
-            selectedOptionList[0] = id;
+            setDataValue(inputID, [...selectedOptionList]);
           }
-          handleUpdateStudentData(inputID, [...selectedOptionList]);
-        }
-      };
-      return (
-        <div>
-          {selectMany ? (
-            <SelectMany
-              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-              } px-4 rounded-xl ${classString}`}
-              onChange={isStudent && isInLesson ? onChange : () => {}}
-              key={`question_${id}`}
-              getCheckValue={getCheckValue}
-              value={values}
-            />
-          ) : (
-            <SelectOne
-              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-              } px-4 rounded-xl ${classString}`}
-              onChange={isStudent && isInLesson ? onChange : () => {}}
-              key={`question_${id}`}
-              isStudent={isStudent}
-              getCheckValue={getCheckValue}
-              isInLesson={isInLesson}
-              value={values}
-            />
-          )}
-        </div>
-      );
-    }
-  };
+        };
+        return (
+          <div>
+            {selectMany ? (
+              <SelectMany
+                classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
+                  lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+                } px-4 rounded-xl ${classString}`}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
+                key={`question_${id}`}
+                getCheckValue={getCheckValue}
+                value={values}
+              />
+            ) : (
+              <SelectOne
+                classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
+                  lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+                } px-4 rounded-xl ${classString}`}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
+                key={`question_${id}`}
+                isStudent={isStudent}
+                getCheckValue={getCheckValue}
+                isInLesson={isInLesson}
+                value={values}
+              />
+            )}
+          </div>
+        );
+      }
+    };
 
   return (
     <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>

@@ -1,6 +1,7 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import EmojiPicker from 'emoji-picker-react';
 import noop from 'lodash/noop';
@@ -19,47 +20,22 @@ const EmojiInput = ({
   required,
 }: IFormBlockProps) => {
   const gContext = useContext(GlobalContext);
-  const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
   const gState = gContext.state;
   const {
     user,
     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
   } = gState;
 
+  const {getDataValue, setDataValue} = useStudentDataValue();
+
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 
@@ -67,7 +43,7 @@ const EmojiInput = ({
 
   /**
    * Task:
-   *  - On updating the input field, the data must be set with -> handleUpdateStudentData(inputID, [e.target.value]);
+   *  - On updating the input field, the data must be set with -> setDataValue(inputID, [e.target.value]);
    *  - The useEffect is listening for a change in this array, we then use -> setTextValue() to
    *  set the internal state of this component
    *  - This data flow is necessary
@@ -84,10 +60,10 @@ const EmojiInput = ({
 
   const onEmojiSelect = (e: any) => {
     try {
-      const studentDataValue = getStudentDataValue(inputID);
+      const studentDataValue = getDataValue(inputID);
       const textWithEmoji = studentDataValue[0].concat(`${e.emoji} `);
 
-      handleUpdateStudentData(inputID, [textWithEmoji]);
+      setDataValue(inputID, [textWithEmoji]);
       setShowEmojiSelector(false);
     } catch (error) {
       setShowEmojiSelector(false);
@@ -113,7 +89,7 @@ const EmojiInput = ({
           name="emoji"
           type="text"
           onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-          value={isInLesson && isStudent ? getStudentDataValue(inputID) : value}
+          value={isInLesson && isStudent ? getDataValue(inputID) : value}
         />
         {showEmojiSelector && (
           <ClickAwayListener onClickAway={() => setShowEmojiSelector(false)}>
