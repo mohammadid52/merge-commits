@@ -607,6 +607,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
       lessonProgress
       pageData {
         domID
+        options
         input
         comments {
           commentBy
@@ -11706,6 +11707,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
       lessonProgress
       pageData {
         domID
+        options
         input
         comments {
           commentBy
@@ -11743,6 +11745,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
       lessonProgress
       pageData {
         domID
+        options
         input
         comments {
           commentBy
@@ -11780,6 +11783,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
       lessonProgress
       pageData {
         domID
+        options
         input
         comments {
           commentBy
