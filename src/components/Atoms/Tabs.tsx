@@ -77,8 +77,8 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           defaultValue={activeTab}>
-          {tabsData.map((tab: ITabElements) => (
-            <option className="transition-all" key={tab.title}>
+          {tabsData.map((tab: ITabElements, index:number) => (
+            <option className="transition-all" key={index}>
               {tab.title}
             </option>
           ))}

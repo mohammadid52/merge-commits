@@ -199,13 +199,13 @@ const InstitutionBuilder = ({institute, loading, postInfoUpdate}: InstitutionBui
     <div className={`w-full h-full ${isEditPage ? 'px-0' : ''} p-4`}>
       {/* Section Header */}
       {!isEditPage && <BreadCrums items={breadCrumbsList} />}
-      <div className="flex justify-between px-8">
+      <div className={"flex justify-between px-8"}>
         <SectionTitle
           title={isEditPage ? InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION'] : InstitutionBuilderDict[userLanguage]['TITLE']}
           // subtitle={InstitutionBuilderDict[userLanguage]['SUBTITLE']}
         />
       </div>
-      <PageWrapper defaultClass={isEditPage ? "px-0" : "px-4 white_back"}>
+      <PageWrapper defaultClass={isEditPage ? "px-0 -mt-8" : "px-4 white_back"}>
         <div className="w-full m-auto">
           <StepComponent
             steps={steps}

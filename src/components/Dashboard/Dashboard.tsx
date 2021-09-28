@@ -37,7 +37,7 @@ import {getAsset} from '../../assets';
 import {AiOutlineUser} from 'react-icons/ai';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
-import {stringToHslColor} from '@utilities/strings';
+import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getImageFromS3Static} from '@utilities/services';
 import {FiUser} from 'react-icons/fi';
 
@@ -784,12 +784,10 @@ const Dashboard = (props: DashboardProps) => {
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
                 <div className="w-auto inline-flex items-center">
-                  <div
-                    style={{width: 48, height: 48, minWidth: 48, minHeight: 48}}
-                    className="">
+                  <div className="w-12 h-12">
                     {state.user.image ? (
                       <img
-                        className="inline-block rounded"
+                        className="inline-block rounded-full border-2 border-gray-400"
                         style={{width: 48, height: 48}}
                         src={getImageFromS3Static(state.user.image)}
                         alt=""
@@ -813,7 +811,7 @@ const Dashboard = (props: DashboardProps) => {
                     )}
                   </div>
 
-                  <span>{[state.user.firstName, state.user.lastName].join(' ')}</span>
+                  {/* <span>{[state.user.firstName, state.user.lastName].join(' ')}</span> */}
                   <ChevronDownIcon
                     className="w-12 h-12 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                     aria-hidden="true"
@@ -829,8 +827,16 @@ const Dashboard = (props: DashboardProps) => {
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-20">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
                 <div className="px-1 py-1 shadow-lg">
+                  <Menu.Item key={'role'}>
+                    <div className="p-4 border-b-0 border-gray-400">
+                      <span>
+                        {[state.user.firstName, state.user.lastName].join(' ')} (
+                        {getUserRoleString(state.user.role)})
+                      </span>
+                    </div>
+                  </Menu.Item>
                   <Menu.Item key={'profile'}>
                     <div
                       onClick={() => history.push('/dashboard/profile')}
@@ -844,7 +850,7 @@ const Dashboard = (props: DashboardProps) => {
                             }}>
                             <FiUser className="cursor-pointer" />
                           </IconContext.Provider>
-                          <p className="text-sm ml-2 font-medium">Profile</p>
+                          <p className="text-sm ml-2 font-medium">Edit Profile</p>
                         </div>
                       </div>
                     </div>
@@ -864,15 +870,15 @@ const Dashboard = (props: DashboardProps) => {
   return (
     <>
       <div className="w-full bg-white">
-        <div className="flex justify-end items-center">
-          {/* <div className="w-auto ml-5">
+        <div className="flex justify-between items-center">
+          <div className="w-auto ml-5">
             <img
               onClick={handleLink}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
             />
-          </div> */}
+          </div>
           <DropDownMenu />
         </div>
       </div>
@@ -1063,14 +1069,16 @@ const Dashboard = (props: DashboardProps) => {
         {/* </ResizablePanels> */}
       </div>
       <div className="w-full flex justify-center items-center bg-gray-900">
-            {/* <NavLink to="/dashboard"> */}
-            <img
-              className="h-16 px-4 py-2"
-              src={getAsset(clientKey, 'main_logo')}
-              alt="Logo"
-            />
-            {/* </NavLink> */}
-          </div>
+        {/* <DropDownMenu /> */}
+
+        {/* <NavLink to="/dashboard"> */}
+        {/* <img
+          className="h-16 px-4 py-2"
+          src={getAsset(clientKey, 'main_logo')}
+          alt="Logo"
+        /> */}
+        {/* </NavLink> */}
+      </div>
     </>
   );
 };
