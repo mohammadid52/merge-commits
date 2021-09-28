@@ -1,3 +1,4 @@
+import useStudentDataValue from '@customHooks/studentDataValue';
 import React, {useContext, useState} from 'react';
 import {AiOutlinePlus} from 'react-icons/ai';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -14,26 +15,19 @@ interface WritingBlockProps {
   setPoemInput?: React.Dispatch<React.SetStateAction<StudentPageInput[]>>;
   setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
   saveAndEdit?: boolean;
-  handleUpdateStudentData?: (domID: string, input: string[]) => void;
   setSaveAndEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   fields?: {poemHtml: string; poemText: string};
   setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-  const {
-    id,
-
-    linestarters,
-
-    setFields,
-    fields,
-    handleUpdateStudentData,
-  } = props;
+  const {id, linestarters, setFields, fields} = props;
 
   const {
     state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
+
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   const onAddClick = () => {
     let concatenatedValue;
@@ -44,7 +38,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     setFields({...fields, poemText: concatenatedValue});
-    handleUpdateStudentData(id, [concatenatedValue]);
+    setDataValue(id, [concatenatedValue]);
   };
 
   const [selectedLS, setSelectedLS] = useState({
@@ -54,27 +48,6 @@ const WritingBlock = (props: WritingBlockProps) => {
   return (
     <div className="w-full flex items-center space-x-4">
       <div className={`w-full flex flex-col   rounded-lg`}>
-        {/* MAP THE LINE PROMPTS */}
-        {/* {poemInput.map((inputObj: StudentPageInput, idx: number) => (
-   
-          <div key={`${inputObj.domID}`}>
-            <select
-              id={`${inputObj.domID}`}
-              value={selectedLS.text}
-              onChange={(e) => setSelectedLS({...selectedLS, text: e.target.value})}
-              name={`${inputObj.domID}`}
-              className={`bg-gray-200 dark:bg-charcoal block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-md`}>
-              <option value={''} disabled selected>
-                Select a line starter
-              </option>
-              {linestarters.map((line: Options, idx2: number) => (
-                <option value={line.text} key={`line_${idx}_${idx2}`}>
-                  {line.text}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))} */}
         <div>
           <select
             value={selectedLS.text}

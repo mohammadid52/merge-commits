@@ -7,6 +7,7 @@ import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Bl
 import ReviewSliderBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {
   StudentPageInput,
   UniversalLessonPage,
@@ -55,17 +56,17 @@ export const FormBlock = ({
 }: FormBlockProps) => {
   const {
     lessonState,
-    lessonDispatch,
-    controlState,
-    theme,
-    state: {
-      user,
-      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-    },
+    state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
   } = useContext(GlobalContext);
-
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+
+  const {getDataValue, setDataValue} = useStudentDataValue();
+
+  // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
+
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   const notes =
@@ -80,74 +81,18 @@ export const FormBlock = ({
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
-
   useEffect(() => {
-    const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
-      const CURRENT_PAGE = lessonState.currentPage;
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
-  const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDisplayDataStudentValue = (domID: string) => {
-    const viewingStudentData = lessonState.displayData.reduce((acc: any, obj: any) => {
-      if (obj.studentAuthId === controlState.studentViewing) {
-        return obj.studentData;
-      } else {
-        return acc;
-      }
-    }, []);
-    const pageData = viewingStudentData[lessonState.currentPage];
-    const getInput = pageData
-      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
-      : undefined;
-    if (getInput !== undefined) {
-      return getInput.input;
-    } else {
-      return [''];
-    }
-  };
-
-  const getDataValue = (domID: string) => {
-    return getStudentDataValue(domID);
-    // const isDisplayData = lessonState.displayData.length > 0;
-    // if (!isDisplayData) {
-    //   return getStudentDataValue(domID);
-    // } else {
-    //   return getDisplayDataStudentValue(domID);
-    // }
-  };
-
   const onChange = (e: any) => {
     const {id, value} = e.target;
 
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 
@@ -240,9 +185,7 @@ export const FormBlock = ({
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
-            handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : () => {}
-            }
+            handleUpdateStudentData={isStudent && isInLesson ? setDataValue : () => {}}
             getStudentDataValue={getValue}
           />
         );
@@ -319,6 +262,18 @@ export const FormBlock = ({
     }
   };
 
+  if (formType === 'notes-form' && !isStudent) {
+    const modifiyValues = map(value, (v: any) => ({
+      class: v.class,
+      pagePartId: pagePartId,
+      partContentId: id,
+      id: v.id,
+      value: v.value,
+    }));
+
+    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+  }
+
   return (
     <>
       {value &&
@@ -333,7 +288,7 @@ export const FormBlock = ({
                 v.value,
                 v.options,
                 isInLesson,
-                handleUpdateStudentData,
+                setDataValue,
                 getDataValue,
                 numbered,
                 `${i + 1}.`,

@@ -5390,6 +5390,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       lessonProgress
       pageData {
         domID
+        options
         input
         comments {
           commentBy
@@ -5440,6 +5441,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         lessonProgress
         pageData {
           domID
+          options
           input
         }
         hasExerciseData

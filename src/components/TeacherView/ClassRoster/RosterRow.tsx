@@ -1,4 +1,5 @@
-import React, {useContext, useState} from 'react';
+import {PersonalizeEvents} from 'aws-sdk';
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
 interface RosterRowProps {
@@ -11,42 +12,53 @@ interface RosterRowProps {
   role: string;
   currentLocation: string;
   lessonProgress: string;
-  handleViewStudentData?: (e: any) => Promise<void>;
-  handleShareStudentData?: (e: any) => void;
-  handleQuitShare: () => void;
-  handleQuitViewing: () => void;
-  isSameStudentShared: boolean;
+  handleResetViewAndShare?: () => void;
+  handleViewStudentData?: (id: string) => void;
+  handleShareStudentData?: (idStr: string, pageIdStr: string) => void;
   viewedStudent: string;
-  setViewedStudent: React.Dispatch<React.SetStateAction<string>>;
+  sharedStudent: string;
   handlePageChange?: any;
 }
 
-const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
-  const {
-    number,
-    id,
-    active,
-    firstName,
-    lastName,
-    preferredName,
-    currentLocation,
-    handleViewStudentData,
-    handleShareStudentData,
-    handleQuitShare,
-    viewedStudent,
-    handlePageChange,
-  } = props;
+const RosterRow: React.FC<RosterRowProps> = ({
+  number,
+  id,
+  active,
+  firstName,
+  lastName,
+  preferredName,
+  currentLocation,
+  handleResetViewAndShare,
+  handleViewStudentData,
+  handleShareStudentData,
+  viewedStudent,
+  sharedStudent,
+  handlePageChange,
+}: RosterRowProps) => {
+  // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
+  const controlState = gContext.controlState;
 
-  const anyoneIsShared = lessonState.displayData[0] !== '';
+  // ##################################################################### //
+  // ########################### SHARING CHECKS ########################## //
+  // ##################################################################### //
 
-  const studentIsShared = () => {
-    if (anyoneIsShared) {
-      return lessonState.displayData[0] === id;
+  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+
+  const studentIsInLesson = () => {
+    const findInRoster = controlState.roster.find(
+      (rosterStudent: any) => rosterStudent.personAuthID === id
+    );
+    if (typeof findInRoster !== 'undefined') {
+      return true;
     } else {
       return false;
     }
+  };
+
+  const studentIsShared = () => {
+    return sharedStudent === id;
   };
 
   const studentIsViewed = () => {
@@ -58,12 +70,28 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     const button = t.hasAttribute('aria-label');
 
     if (!button) {
-      handleViewStudentData(e);
+      handleViewStudentData(id);
       if (!studentIsViewed()) {
         handlePageChange(parseInt(currentLocation));
       }
     }
   };
+
+  /*************************************
+   * FREEZE PAGE LOCATION WHEN CURRENT *
+   *  USER IS SHAREDSTUDENT.THIS WILL  *
+   *      PREVENT LABEL SWITCHING      *
+   *************************************/
+  const [frozenPage, setFrozenPage] = useState<string>('');
+  useEffect(() => {
+    if (!studentIsShared()) {
+      setFrozenPage(getPageLabel(currentLocation));
+    }
+  }, [currentLocation]);
+
+  // ##################################################################### //
+  // ######################### VISUAL LOGIC ETC. ######################### //
+  // ##################################################################### //
 
   const getPageLabel = (locationIndex: string) => {
     if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
@@ -75,19 +103,33 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     }
   };
 
+  const getPageID = (locationIndex: string) => {
+    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+      if (locationIndex === '') {
+        return 'n/a';
+      } else {
+        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.id;
+      }
+    }
+  };
+
   const activeHoverClass = 'hover:font-semibold cursor-pointer';
   const inactiveTextClass = 'text-dark-gray text-opacity-20';
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div
       id={`${id}`}
-      // onMouseDown={active ? handleRowSelection : undefined}
       draggable={false}
       className={`w-full flex h-10 py-2 pl-2 pr-1 
                     ${active && activeHoverClass} 
                     ${!active && inactiveTextClass}
-                    ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
-                    ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
+                    ${number % 2 === 0 ? 'bg-white bg-opacity-20' : ''} 
+                    ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : ''}
+                    ${studentIsShared() ? 'border-2 border-red-500' : ''}
                     `}>
       {/* STUDENT NAME */}
       <div
@@ -111,51 +153,53 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
             active && activeHoverClass
           }`}>
           <div id={id} draggable={false} className={`pointer-events-none`}>
-            {getPageLabel(currentLocation)}
+            {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
           </div>
         </div>
       </div>
 
       {/* MR SHARE BUTTON */}
-      {anyoneIsShared ? (
-        studentIsShared() ? (
-          // UNSHARE CURRENTLY SHARED STUDENT
-          <div
-            aria-label={`asd`}
-            id={`${id}`}
-            draggable={false}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
-              active && activeHoverClass
-            }`}
-            onClick={handleShareStudentData}>
-            <span id={`${id}`}>Unshare</span>
-          </div>
+      {studentIsInLesson() ? (
+        anyoneIsShared ? (
+          studentIsShared() ? (
+            // UNSHARE CURRENTLY SHARED STUDENT
+            <div
+              aria-label={`asd`}
+              id={`${id}`}
+              draggable={false}
+              className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
+                active && activeHoverClass
+              }`}
+              onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+              <span id={`${id}`}>Unshare</span>
+            </div>
+          ) : (
+            // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+            <div
+              id={`${id}`}
+              data-studentID={id}
+              draggable={false}
+              className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+                active && activeHoverClass
+              }`}
+              onClick={() => {}}>
+              <span className="pointer-events-none">Share</span>
+            </div>
+          )
         ) : (
-          // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+          // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
           <div
             id={`${id}`}
             data-studentID={id}
             draggable={false}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={() => {}}>
+            onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
             <span className="pointer-events-none">Share</span>
           </div>
         )
-      ) : (
-        // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
-        <div
-          id={`${id}`}
-          data-studentID={id}
-          draggable={false}
-          className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
-            active && activeHoverClass
-          }`}
-          onClick={handleShareStudentData}>
-          <span className="pointer-events-none">Share</span>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

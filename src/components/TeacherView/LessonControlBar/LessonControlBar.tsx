@@ -9,13 +9,15 @@ interface LessonControlBarProps {
   handlePageChange: any;
 }
 
-const LessonControlBar: React.FC<LessonControlBarProps> = (
-  props: LessonControlBarProps
-) => {
-  const {handlePageChange} = props;
-  const {lessonState} = useContext(GlobalContext);
+const LessonControlBar: React.FC<LessonControlBarProps> = ({
+  handlePageChange,
+}: LessonControlBarProps) => {
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
   const PAGES = lessonState.lessonData.lessonPlan;
 
+  // ~~~~~~~~~~~~~~ MENU STATE ~~~~~~~~~~~~~ //
   const [menuOpen, setMenuOpen] = useState<null | string>(null);
   const handleOpenMenu = (stage: string) => {
     if (menuOpen === stage) {
@@ -24,11 +26,24 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
     return setMenuOpen(stage);
   };
 
+  // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
+  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+
   return (
     <nav
-      className="bg-white border-b h-16 lg:h-12 border-gray-200 flex"
+      className="relative bg-white border-b h-16 lg:h-12 border-gray-200 flex"
       aria-label="Breadcrumb">
-      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto">
+      {anyoneIsShared && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 disabled z-50">
+          <p className="text-center font-bold text-sm">
+            Disabled when sharing is active!
+          </p>
+        </div>
+      )}
+      <ol
+        className={`max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto ${
+          anyoneIsShared ? 'z-40' : ''
+        }`}>
         <li className="flex w-auto">
           <div className="flex items-center">
             <a href="#" className="text-gray-600">

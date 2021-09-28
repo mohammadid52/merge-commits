@@ -1,3 +1,4 @@
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {noop} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -14,10 +15,17 @@ interface WritingExerciseProps extends FormControlProps {
   options?: Options[] | null;
 }
 
-const WritingExerciseBlock = (props: WritingExerciseProps) => {
-  const {inputID, id, label, options, onChange, title, value, disabled} = props;
-
-  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
+const WritingExerciseBlock = ({
+  inputID,
+  id,
+  label,
+  options,
+  onChange,
+  title,
+  value,
+  disabled,
+}: WritingExerciseProps) => {
+  const {state} = useContext(GlobalContext);
 
   const [fields, setFields] = useState({
     poemHtml: '',
@@ -30,18 +38,7 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
   const isStudent = state.user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
+  const {setDataValue} = useStudentDataValue();
 
   return (
     <div
@@ -75,9 +72,6 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
                 linestarters={options}
                 fields={fields}
                 setFields={setFields}
-                handleUpdateStudentData={
-                  isInLesson && isStudent ? handleUpdateStudentData : noop
-                }
               />
             ) : null}
           </div>
@@ -86,9 +80,6 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
             setFields={setFields}
             fields={fields}
             poemWriting={value}
-            handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : noop
-            }
           />
         </div>
       )}

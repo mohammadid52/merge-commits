@@ -36,7 +36,7 @@ export type LessonActions =
         createdAt?: string;
         currentPage?: number | null;
         disabledPages?: string[] | any;
-        displayData?: UniversalLessonStudentData[] | null;
+        displayData?: {studentAuthID?: string; lessonPageID?: string}[];
         id: string;
         studentViewing?: string | '';
         updatedAt?: string;
@@ -75,12 +75,20 @@ export type LessonActions =
       };
     }
   | {
+      type: 'LOAD_STUDENT_SHARE_DATA';
+      payload: any;
+    }
+  | {
       type: 'UPDATE_PERSON_LOCATION';
       payload: any;
     }
   | {
       type: 'UNLOAD_STUDENT_DATA';
       payload: any;
+    }
+  | {
+      type: 'UNLOAD_STUDENT_SHARE_DATA';
+      payload?: any;
     }
   | {
       type: 'SET_UPDATE_STATUS';
@@ -93,10 +101,6 @@ export type LessonActions =
   | {
       type: 'COMPLETE_STUDENT_UPDATE';
       payload: any;
-    }
-  | {
-      type: 'SET_DISPLAY_DATA';
-      payload: UniversalLessonStudentData;
     }
   | {
       type: 'SET_CURRENT_PAGE';
@@ -116,7 +120,7 @@ export type LessonActions =
     }
   | {
       type: 'CLEANUP';
-      payload: any;
+      payload?: any;
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
@@ -213,8 +217,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
               }
             })
           : [];
-      // console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
-      // console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
       if (newStudentData.length > 0) {
         return {
           ...state,
@@ -223,6 +225,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       } else {
         return state;
       }
+    case 'LOAD_STUDENT_SHARE_DATA':
+      return {
+        ...state,
+        sharedData: action.payload,
+      };
     case 'UPDATE_PERSON_LOCATION':
       return {
         ...state,
@@ -235,6 +242,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         loaded: false,
         universalStudentDataID: [],
         studentData: [],
+      };
+    case 'UNLOAD_STUDENT_SHARE_DATA':
+      return {
+        ...state,
+        sharedData: [],
       };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;
@@ -319,8 +331,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         universalStudentDataID: resetDataIdArray,
         updated: false,
       };
-    case 'SET_DISPLAY_DATA':
-      return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {
         ...state,

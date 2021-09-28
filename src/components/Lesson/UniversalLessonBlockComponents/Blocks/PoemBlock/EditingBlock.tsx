@@ -1,3 +1,4 @@
+import useStudentDataValue from '@customHooks/studentDataValue';
 import React from 'react';
 
 interface EditingBlockProps {
@@ -5,14 +6,13 @@ interface EditingBlockProps {
   setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
   poemWriting?: string;
   fields?: {poemHtml: string; poemText: string};
-  handleUpdateStudentData?: (domID: string, input: string[]) => void;
 }
 
-const EditingBlock = (props: EditingBlockProps) => {
-  const {id, poemWriting, handleUpdateStudentData, fields, setFields} = props;
+const EditingBlock = ({id, poemWriting, fields, setFields}: EditingBlockProps) => {
+  const {setDataValue} = useStudentDataValue();
 
   const onChange = (e: any) => {
-    handleUpdateStudentData(id, [e.target.value]);
+    setDataValue(id, [e.target.value]);
     setFields({...fields, poemText: e.target.value});
   };
 
