@@ -320,12 +320,15 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         filter: {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
-          type: {eq: 'class-note'},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id},
         },
       };
 
       const notesData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
+        graphqlOperation(queries.listUniversalJournalDatas, {
+          filter: {...listFilter.filter, type: {eq: 'class-note'}},
+        })
       );
 
       const notesDataRows = notesData.data.listUniversalJournalDatas.items;

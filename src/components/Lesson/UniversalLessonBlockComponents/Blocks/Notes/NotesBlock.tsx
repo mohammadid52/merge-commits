@@ -4,6 +4,7 @@ import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/co
 import ThemeModal from '@components/Molecules/ThemeModal';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
@@ -133,6 +134,7 @@ const NotesBlock = ({
   const [loading, setLoading] = useState(true);
 
   const [isContainerRendered, setIsContainerRendered] = useState(false);
+  const {setDataValue} = useStudentDataValue();
 
   useEffect(() => {
     if (!isContainerRendered) {
@@ -188,7 +190,7 @@ const NotesBlock = ({
 
   const updateText = (e: any, noteId: string, idx: number) => {
     notesInitialized ? updateNotesContent(e.target.value, noteId) : noop;
-    // handleUpdateStudentData(noteId, [e.target.value]);
+    setDataValue(noteId, [e.target.value]);
   };
 
   const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);

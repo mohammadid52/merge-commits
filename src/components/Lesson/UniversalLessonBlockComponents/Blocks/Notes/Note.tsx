@@ -1,4 +1,5 @@
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {randomNumber} from '@utilities/functions';
 import noop from 'lodash/noop';
 import React, {useMemo} from 'react';
@@ -46,6 +47,7 @@ const InnerNote = React.memo(
   }: any) => {
     let angle = useMemo(() => randomNumber(-3, 3), []);
 
+    const {getDataValue} = useStudentDataValue();
     return (
       <div
         id={note.id}
@@ -60,7 +62,7 @@ const InnerNote = React.memo(
             isInLesson && isStudent ? (e: any) => updateText(e, note.id, idx) : noop
           }
           // value={isInLesson ? getDataValue(note.id) : note.value}
-          value={note.value}
+          value={getDataValue(note.id) || note.value}
         />
         {custom && isInLesson && isStudent && (
           <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
