@@ -94,6 +94,7 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
                 activeTab={activeTab}
                 onClick={updateTab}
                 index={index}
+                key={index}
               />
             ) : (
               <button

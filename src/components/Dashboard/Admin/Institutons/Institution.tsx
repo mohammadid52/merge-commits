@@ -17,6 +17,7 @@ import {getAsset} from '../../../../assets';
 
 import InstitutionInfo from './InstitutionInfo';
 import HeroBanner from '@components/Header/HeroBanner';
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -85,11 +86,12 @@ const Institution = (props: InstitutionProps) => {
   const urlQueryParams = queryString.parse(location.search);
   const {institutionId}: any = useParams();
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey,theme, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
-  const breadCrumsList = [
+  const breadCrumbsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
@@ -173,15 +175,18 @@ const Institution = (props: InstitutionProps) => {
 
   return (
     <div className={`w-full h-full`}>
-      <div>
-        <HeroBanner imgUrl={bannerImage} title={'Admin'} />
+      <div className="relative">
+        <HeroBanner imgUrl={bannerImage} title={`${institutionData.name} Dashboard`} />
+        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-1000`}>
+          <BreadcrumbsWithBanner items={breadCrumbsList} />
+        </div>
       </div>
       <div className="px-2 py-8 md:p-8">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
+      {/* <BreadCrums items={breadCrumbsList} /> */}
+      {/* <div className="flex justify-between">
         <SectionTitle title={`${institutionData.name} Dashboard`} />
-      </div>
+      </div> */}
       <PageWrapper wrapClass="overflow-x-auto">
         <Switch>
           {/* <Route
