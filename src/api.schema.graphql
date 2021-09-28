@@ -1078,6 +1078,7 @@ type StudentPageInput {
 
 type partInput {
   domID: String
+  options:[String]
   input: [String]
   comments: [InputComment]
 }
