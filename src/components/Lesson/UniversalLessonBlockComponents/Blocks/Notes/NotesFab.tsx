@@ -5,14 +5,16 @@ import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks
 import {GlobalContext} from '@contexts/GlobalContext';
 import * as mutations from '@graphql/mutations';
 import * as queries from '@graphql/queries';
-import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
+import {
+  UniversalJournalData,
+  UniversalLessonPage,
+} from '@interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {find, findIndex, map} from 'lodash';
 import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
-import ReactHtmlParser from 'react-html-parser';
 import {useParams} from 'react-router';
 
 /** --- Guide
@@ -59,6 +61,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+
+  const {user} = lessonState;
 
   const allNotes = mapNotesTogether();
 
@@ -128,6 +133,103 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     }
   };
 
+  // ~~~~~~~~~~ UPDATE DB RECORDS ~~~~~~~~~~ //
+  const updateStudentData = async (newNote: any) => {
+    return lessonState.universalStudentDataID.reduce(
+      async (p: any, currentIdObj: any, idx: number) => {
+        if (currentIdObj.update) {
+          let list = lessonState.studentData[currentIdObj.pageIdx];
+          list.push(newNote);
+          let data = {
+            id: currentIdObj.id,
+            pageData: [...list],
+            hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
+            exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
+            roomID: getRoomData.id,
+          };
+
+          try {
+            let updatedStudentData: any = await API.graphql(
+              graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
+            );
+            console.log('updateStudentData - timer - ', data);
+          } catch (e) {
+            console.error('update universal student data - ', encodeURI);
+          } finally {
+            if (idx === lessonState.universalStudentDataID.length - 1) {
+              return Promise.resolve();
+            }
+          }
+        }
+      },
+      Promise.resolve()
+    );
+  };
+
+  const loopCreateStudentData = async (
+    lessonPages: any[],
+    lessonID: string,
+    authId: string,
+    email: string
+  ) => {
+    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
+      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
+      );
+      const input = {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        lessonPageID: lessonPage.id,
+        studentID: authId,
+        studentAuthID: authId,
+        studentEmail: email,
+        roomID: getRoomData.id,
+        currentLocation: indexOfPage,
+        lessonProgress: '0',
+        pageData: lessonState.studentData[indexOfPage],
+        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
+        exerciseData: lessonState.exerciseData[indexOfPage],
+      };
+
+      const newStudentData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalLessonStudentData, {
+          input,
+        })
+      );
+      const returnedData = newStudentData.data.createUniversalLessonStudentData;
+      return returnedData;
+    });
+    return createdRecords;
+  };
+
+  const PAGES = lessonState?.lessonData?.lessonPlan;
+
+  const studentDataIdArray = (studentDataArray: any[]) => {
+    const idArr = studentDataArray
+      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+          (lessonPlanPage: UniversalLessonPage) =>
+            lessonPlanPage.id === studentDataIdObj.lessonPageID
+        );
+        const idObj = {
+          id: studentDataIdObj.id,
+          pageIdx: indexOfPage,
+          lessonPageID: studentDataIdObj.lessonPageID,
+          update: false,
+        };
+        return [...acc, idObj];
+      }, [])
+      .sort((dataID1: any, dataID2: any) => {
+        if (dataID1.pageIdx < dataID2.pageIdx) {
+          return -1;
+        }
+        if (dataID1.pageIdx > dataID2.pageIdx) {
+          return 1;
+        }
+      });
+    return idArr;
+  };
+
   const addNewNote = async (newNote: any, notesData: any) => {
     let oldEntryData = [...notesData.entryData];
 
@@ -145,6 +247,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus,
       };
 
+      updateStudentData({domID: newNote.domID, input: ['']});
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
@@ -302,8 +405,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       console.error('error updating journal data - ', e);
     } finally {
       console.log('updated journal data...');
-      // if (notesChanged) setNotesChanged(false);
-      // if (saveInProgress) setSaveInProgress(false);
     }
   };
 
@@ -378,12 +479,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         // ----- Skip this part for while -----
         if (changesInNotesLen && filterNewNotes.length > 0) {
           updateNotesJournalChange(filterNewNotes, existJournalEntry);
-          // updateNotesJournalChange(undefined, {
-          //   allNotes,
-          //   filteredNotes: filterOldNotes,
-          //   existingList: existJournalEntry.entryData,
-          //   notesData: existJournalEntry,
-          // });
         }
       }
     } catch (e) {
