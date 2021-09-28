@@ -64,9 +64,7 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
-  console.log(tabsData,'tabsData');
-  
+const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {  
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">

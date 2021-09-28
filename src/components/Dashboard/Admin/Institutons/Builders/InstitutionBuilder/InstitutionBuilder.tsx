@@ -14,6 +14,14 @@ import * as customQueries from '@customGraphql/customQueries';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
 
+interface InstitutionBuilderProps{
+  institute?: any;
+  loading?: boolean;
+  postInfoUpdate?: (data:any) => void;
+  toggleUpdateState?: () => void;
+  updateServiceProviders?: Function;
+}
+
 export interface InstitutionInfo {
   id: string;
   name: string;
@@ -39,7 +47,7 @@ export interface InstitutionInfo {
   };
 }
 
-const InstitutionBuilder = ({institute, loading}: any) => {
+const InstitutionBuilder = ({institute, loading, postInfoUpdate}: InstitutionBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -151,6 +159,7 @@ const InstitutionBuilder = ({institute, loading}: any) => {
       ...prevData,
       ...data,
     }));
+    postInfoUpdate(data);
   };
 
   const updateServiceProviders = (item: any) => {

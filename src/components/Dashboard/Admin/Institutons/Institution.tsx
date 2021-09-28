@@ -4,14 +4,19 @@ import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import {useHistory} from 'react-router-dom';
 import {Switch, Route, useParams, useRouteMatch} from 'react-router-dom';
-import * as customQueries from '../../../../customGraphql/customQueries';
+
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from '@contexts/GlobalContext';
+
+import BreadCrums from '@atoms/BreadCrums';
+import SectionTitle from '@atoms/SectionTitle';
+import PageWrapper from '@atoms/PageWrapper';
+
+import {getAsset} from '../../../../assets';
+
 import InstitutionInfo from './InstitutionInfo';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
+import HeroBanner from '@components/Header/HeroBanner';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -82,7 +87,7 @@ const Institution = (props: InstitutionProps) => {
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles} = useDictionary(clientKey);
-console.log(institutionId,'institutionIdinstitutionId');
+  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -111,6 +116,14 @@ console.log(institutionId,'institutionIdinstitutionId');
   const toggleUpdateState = () => {
     setISNewUpdate(!isNewUpdate);
   };
+
+  const postInfoUpdate = (data: any) => {
+    setInstitutionData((prevData) => ({
+      ...prevData,
+      ...data,
+    }));
+  };
+
   async function getInstitutionData() {
     try {
       if (institutionId) {
@@ -158,11 +171,12 @@ console.log(institutionId,'institutionIdinstitutionId');
     }
   }, [isNewUpdate]);
 
-  console.log("inside institution");
-  
-
   return (
     <div className={`w-full h-full`}>
+      <div>
+        <HeroBanner imgUrl={bannerImage} title={'Admin'} />
+      </div>
+      <div className="px-2 py-8 md:p-8">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
@@ -187,14 +201,17 @@ console.log(institutionId,'institutionIdinstitutionId');
             render={() => (
               <InstitutionInfo
                 institute={institutionData}
-                updateServiceProviders={updateServiceProviders}
+                loading={fetchingDetails}
+                postInfoUpdate={postInfoUpdate}
                 tabProps={props.tabProps}
+                toggleUpdateState={toggleUpdateState}
+                updateServiceProviders={updateServiceProviders}
               />
             )}
           />
         </Switch>
       </PageWrapper>
-    </div>
+    </div></div>
   );
 };
 

@@ -276,7 +276,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     name,
     type,
     website,
-    image,
     address,
     addressLine2,
     city,
@@ -284,10 +283,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     zip,
     phone,
     isServiceProvider,
-    serviceProviders,
   } = instituteData;
-
-  console.log(id, 'id before return');
 
   return (
     <div className="w-full h-full p-4">
@@ -295,7 +291,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       {/* Body */}
       <div className="h-9/10 flex flex-col md:flex-row">
         {/* Profile section */}
-        <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+        {!id && <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
           {imageUrl ? (
             <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
               {!imageLoading ? (
@@ -344,7 +340,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           <p className="text-gray-600 my-4">
             {InstitutionBuilderDict[userLanguage]['INFOA']}
           </p>
-        </div>
+        </div>}
 
         <div className={`h-full w-full pt-2`}>
           {/* FORM submit tag */}

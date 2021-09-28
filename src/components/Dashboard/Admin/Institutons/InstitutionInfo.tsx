@@ -1,14 +1,17 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {HiPencil} from 'react-icons/hi';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {IoIosGlobe} from 'react-icons/io';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {Route, Switch, useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {AiOutlineCamera} from 'react-icons/ai';
+import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import Storage from '@aws-amplify/storage';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import * as customMutations from '@customGraphql/customMutations';
 import {getImageFromS3} from '../../../../utilities/services';
 import {
   formatPhoneNumber,
@@ -19,7 +22,7 @@ import {
 } from '../../../../utilities/strings';
 import Tooltip from '../../../Atoms/Tooltip';
 import Tabs, {ITabElements} from '@atoms/Tabs';
-import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
+import DroppableMedia from '@molecules/DroppableMedia';
 import ClassList from './Listing/ClassList';
 import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
@@ -32,11 +35,16 @@ import Registration from '@components/Dashboard/Admin/UserManagement/Registratio
 import UserLookup from '../UserManagement/UserLookup';
 import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
+import Loader from '@components/Atoms/Loader';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
+  loading: boolean;
   updateServiceProviders: Function;
   tabProps?: any;
+  toggleUpdateState?: () => void;
+  postInfoUpdate?: (data: any) => void;
 }
 interface InstInfo {
   id: string;
@@ -63,6 +71,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
+  const [upImage, setUpImage] = useState(null);
+  const [fileObj, setFileObj] = useState({});
+  const [imageLoading, setImageLoading] = useState(false);
+  const [s3Image, setS3Image] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
   const {
     theme,
     clientKey,
@@ -71,7 +84,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
-  console.log(institute, 'institute in InstitutionInfo', useParams());
+  const mediaRef = useRef(null);
 
   const headerMenusForInstitution = [
     {
@@ -191,12 +204,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   };
 
   useEffect(() => {
-    async function getUrl() {
-      const imageUrl: any = await getImageFromS3(instProps?.institute.image);
-      setImageUrl(imageUrl);
-    }
     getUrl();
   }, [instProps?.institute.image]);
+
+  async function getUrl() {
+    const imageUrl: any = await getImageFromS3(instProps?.institute.image);
+    setImageUrl(imageUrl);
+  }
 
   const renderElementBySelectedMenu = () => {
     switch (tabProps.tabsData.inst) {
@@ -260,6 +274,51 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     }
   };
 
+  const toggleCropper = () => {
+    setShowCropper(!showCropper);
+  };
+
+  const saveCroppedImage = async (image: string) => {
+    setImageLoading(true);
+    toggleCropper();
+    await uploadImageToS3(image ? image : fileObj, institute.id, 'image/jpeg');
+    const input = {
+      id: institute.id,
+      image: `instituteImages/institute_image_${institute.id}`,
+    };
+    await API.graphql(
+      graphqlOperation(customMutations.updateInstitution, {input: input})
+    );
+    await getUrl()
+    toggleCropper();
+    setImageLoading(false);
+  };
+
+  const uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
+
+    return new Promise((resolve, reject) => {
+      Storage.put(`instituteImages/institute_image_${id}`, file, {
+        contentType: type,
+        ContentEncoding: 'base64',
+      })
+        .then((result) => {
+          console.log('File successfully uploaded to s3', result);
+          resolve(true);
+        })
+        .catch((err) => {
+          // setError({
+          //   show: true,
+          //   errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr'],
+          // });
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
+
+  const handleImageClick = () => mediaRef?.current?.click();
+
   const {
     id,
     name,
@@ -274,7 +333,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     website,
     isServiceProvider,
   } = instProps?.institute;
-  console.log('institution infor rendered');
 
   return (
     <div>
@@ -283,47 +341,82 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center md:justify-start">
           <div className="w-auto">
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
-              {image ? (
+              {imageLoading ? (
+                <div
+                  className={`w-20 h-20 md:w-40 md:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
+                  <Loader />
+                </div>
+              ) : image ? (
                 imageUrl ? (
-                  <img
-                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                    src={imageUrl}
-                  />
+                  <div className="relative">
+                    <DroppableMedia
+                      mediaRef={mediaRef}
+                      setImage={(img: any, file: any) => {
+                        setUpImage(img);
+                        setFileObj(file);
+                      }}
+                      toggleCropper={toggleCropper}>
+                      <img
+                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        src={imageUrl}
+                      />
+                    </DroppableMedia>
+                    <div
+                      className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                      onClick={handleImageClick}>
+                      <AiOutlineCamera className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
                 ) : (
                   <div
-                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
+                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
                   />
                 )
               ) : (
-                <div
-                  className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                <div className="relative">
+                  <DroppableMedia
+                    mediaRef={mediaRef}
+                    setImage={(img: any, file: any) => {
+                      setUpImage(img);
+                      setFileObj(file);
+                    }}
+                    toggleCropper={toggleCropper}>
+                    <div
+                      className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
+                      <div
+                        className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                        style={{
+                          /*  stylelint-disable */
+                          background: `${
+                            name
+                              ? stringToHslColor(
+                                  getInitialsFromString(name)[0] +
+                                    ' ' +
+                                    getInitialsFromString(name)[1]
+                                )
+                              : null
+                          }`,
+                          textShadow: '0.2rem 0.2rem 3px #423939b3',
+                        }}>
+                        {name &&
+                          initials(
+                            getInitialsFromString(name)[0],
+                            getInitialsFromString(name)[1]
+                          )}
+                      </div>
+                    </div>
+                  </DroppableMedia>
                   <div
-                    className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
-                    style={{
-                      /*  stylelint-disable */
-                      background: `${
-                        name
-                          ? stringToHslColor(
-                              getInitialsFromString(name)[0] +
-                                ' ' +
-                                getInitialsFromString(name)[1]
-                            )
-                          : null
-                      }`,
-                      textShadow: '0.2rem 0.2rem 3px #423939b3',
-                    }}>
-                    {name &&
-                      initials(
-                        getInitialsFromString(name)[0],
-                        getInitialsFromString(name)[1]
-                      )}
+                    className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                    onClick={handleImageClick}>
+                    <AiOutlineCamera className="w-6 h-6 text-white" />
                   </div>
                 </div>
               )}
 
               <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
                 <p>{name ? name : ''}</p>
-                <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
+                {/* <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                   <span
                     className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
                     <HiPencil
@@ -331,7 +424,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       onClick={() => history.push(`${match.url}/edit?id=${id}`)}
                     />
                   </span>
-                </Tooltip>
+                </Tooltip> */}
               </div>
             </div>
             {institute.id && (
@@ -420,8 +513,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     render={() => (
                       <InstitutionBuilder
                         institute={instProps.institute}
+                        loading={instProps.loading}
+                        postInfoUpdate={instProps.postInfoUpdate}
                         updateServiceProviders={instProps.updateServiceProviders}
-                        tabProps={instProps.tabProps}
+                        toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )}
                   />
@@ -484,7 +579,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             </div>
           </div>
         </div>
-
+        {showCropper && (
+          <ProfileCropModal
+            upImg={upImage}
+            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            closeAction={toggleCropper}
+          />
+        )}
         {/* {instProps?.institute?.id && (
           <div className="overflow-hidden sm:rounded-lg">
             <div className="">

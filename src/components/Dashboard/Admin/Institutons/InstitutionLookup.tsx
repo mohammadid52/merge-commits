@@ -258,7 +258,7 @@ const InstitutionLookup: React.FC = () => {
   // }
   {
     return (
-      <div className={`w-full h-full`}>
+      <div className={`w-full h-full px-2 py-8 md:p-8`}>
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">

@@ -36,10 +36,9 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
   }, [state.user.role]);
-console.log(match,'matchmatch');
 
   return (
-    <div className={`w-full h-full px-2 py-8 md:p-8 flex justify-center`}>
+    <div className={`w-full h-full flex justify-center`}>
       <Switch>
         <Route
           exact
