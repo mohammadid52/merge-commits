@@ -751,7 +751,8 @@ const LessonApp = () => {
       setPersonLocationObj(pageChangeLocation);
       updatePersonLocation(pageChangeLocation);
       setLocalStorageData('person_location', pageChangeLocation);
-      window.scrollTo(0, 0);
+      //@ts-ignore
+      topLessonRef?.current?.scrollIntoView();
     }
   }, [created, lessonState.currentPage]);
 
@@ -882,7 +883,7 @@ const LessonApp = () => {
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
-        <div className="relative top-6 lesson-body-container">
+        <div className="relative top-6 lesson-body-container" ref={topLessonRef}>
           {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
               <LessonPageLoader />
