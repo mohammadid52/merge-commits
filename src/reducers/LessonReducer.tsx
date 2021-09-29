@@ -1,3 +1,4 @@
+import {update} from 'lodash';
 import {
   StudentExerciseData,
   StudentPageInput,
@@ -121,6 +122,10 @@ export type LessonActions =
   | {
       type: 'CLEANUP';
       payload?: any;
+    }
+  | {
+      type: 'ADD_NEW_INPUT';
+      payload?: any;
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
@@ -191,6 +196,16 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         requiredInputs: requiredInputs,
         studentData: studentData,
         exerciseData: exerciseData,
+      };
+    case 'ADD_NEW_INPUT':
+      let oldStudentData = [...state.studentData];
+      const _newInput = {domID: action.payload.domID, input: action.payload.input};
+      const currentPageStudentData = [...oldStudentData[state.currentPage], _newInput];
+
+      oldStudentData[state.currentPage] = currentPageStudentData;
+      return {
+        ...state,
+        studentData: oldStudentData,
       };
     case 'LOAD_STUDENT_DATA':
       return {

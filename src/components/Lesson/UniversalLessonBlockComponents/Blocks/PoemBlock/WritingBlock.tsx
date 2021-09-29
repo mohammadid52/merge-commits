@@ -32,9 +32,9 @@ const WritingBlock = (props: WritingBlockProps) => {
   const onAddClick = () => {
     let concatenatedValue;
     if (fields.poemText.charAt(fields.poemText.length - 1) === ' ') {
-      concatenatedValue = fields.poemText.concat(selectedLS.text);
+      concatenatedValue = fields.poemText.concat(`\n ${selectedLS.text}`);
     } else {
-      concatenatedValue = fields.poemText.concat(` ${selectedLS.text}`);
+      concatenatedValue = fields.poemText.concat(`\n ${selectedLS.text}`);
     }
 
     setFields({...fields, poemText: concatenatedValue});
