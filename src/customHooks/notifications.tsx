@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData} from '@utilities/localStorage';
 
 // ##################################################################### //
@@ -59,6 +59,10 @@ const useLessonNotifications = () => {
   const lessonPlan = lessonState.lessonData.lessonPlan;
   const lessonDispatch = gContext.lessonDispatch;
 
+  // ~~~~~~~~~~~~~ ROUTER STUFF ~~~~~~~~~~~~ //
+  const history = useHistory();
+  const match = useRouteMatch();
+
   // ~~~~~~~~~~~~~~ FUNCTIONS ~~~~~~~~~~~~~~ //
   const getPageIdx = (pageID: string) => {
     if (lessonPlan) {
@@ -73,12 +77,9 @@ const useLessonNotifications = () => {
   };
 
   const getPageLabel = (pageIdx: number) => {
-    if (lessonPlan) {
-      if (!pageIdx) {
-        return null;
-      } else {
-        return lessonPlan[pageIdx]?.label;
-      }
+    lessonPlan && console.log('getPageLabel - ', lessonPlan[pageIdx]?.label);
+    if (lessonPlan && pageIdx) {
+      return lessonPlan[pageIdx]?.label;
     } else {
       return null;
     }
@@ -87,12 +88,15 @@ const useLessonNotifications = () => {
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
     const findStudent = studentList.find(
-      (studentObj: any) => studentObj.student.id === authID
+      (studentObj: any) => studentObj.student.authId === authID
     )?.student;
-    if (findStudent) {
+    // const authids = studentList.reduce((acc: string[], val: any) => {
+    //   return [...acc, val.student.authId];
+    // }, []);
+    // console.log('authID - ', authID);
+    // console.log('student auth ids - ', authids);
+    if (findStudent && authID) {
       return findStudent.firstName + ' ' + findStudent.lastName;
-    } else {
-      return null;
     }
   };
 
@@ -124,30 +128,36 @@ const useLessonNotifications = () => {
         label: 'Teacher is sharing a page',
         message: `${getPageLabel(
           getPageIdx(lessonState.displayData[0].lessonPageID)
-        )} by ${getSharedStudenName(lessonState.displayData.studentAuthID)}`,
+        )} by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'alert',
         cta: 'Go There Now',
       },
       action: () => {
-        console.log(
-          'shared page - ',
-          getPageLabel(getPageIdx(lessonState.displayData[0].lessonPageID))
+        history.push(
+          `${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`
         );
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: getPageIdx(lessonState.displayData[0].lessonPageID),
+        });
       },
     },
     {
       check: iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing your page',
-        message: getPageLabel(getPageIdx(lessonState.displayData[0].lessonPageID)),
+        message: `"${getPageLabel(getPageIdx(lessonState.displayData[0].lessonPageID))}"`,
         type: 'alert',
         cta: 'Go There Now',
       },
       action: () => {
-        console.log(
-          'shared page - ',
-          getPageLabel(getPageIdx(lessonState.displayData[0].lessonPageID))
+        history.push(
+          `${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`
         );
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: getPageIdx(lessonState.displayData[0].lessonPageID),
+        });
       },
     },
     {
@@ -165,8 +175,8 @@ const useLessonNotifications = () => {
     {
       check: thisPageIsShared && !iAmShared,
       notification: {
-        label: 'Teacher is sharing this page',
-        message: `by ${getSharedStudenName(lessonState.displayData[0].studentAuthID)}`,
+        label: 'You are viewing this page',
+        message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'info',
         cta: '',
       },

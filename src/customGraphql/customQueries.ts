@@ -72,6 +72,7 @@ export const getDashboardData = /* GraphQL */ `
             students {
               items {
                 student {
+                  authId
                   firstName
                   lastName
                   image
@@ -183,6 +184,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           students {
             items {
               student {
+                authId
                 firstName
                 lastName
                 image
