@@ -1,3 +1,4 @@
+import {setLocalStorageData} from '@utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {getAsset} from '../../../assets';
@@ -202,7 +203,9 @@ const Home = (props: ClassroomControlProps) => {
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
-      setStudentsList(await studentsListWithImages);
+      const studentList = await studentsListWithImages;
+      setStudentsList(studentList);
+      setLocalStorageData('student_list', studentList);
       setCoTeachersList(await coTeacherListWithImages);
     };
     if (homeData && homeData.length > 0) {

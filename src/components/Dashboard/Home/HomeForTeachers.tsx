@@ -1,3 +1,4 @@
+import {setLocalStorageData} from '@utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {getAsset} from '../../../assets';
@@ -30,13 +31,7 @@ export interface ModifiedListProps {
 }
 
 const HomeForTeachers = (props: ClassroomControlProps) => {
-  const {
-    homeData,
-    handleRoomSelection,
-    isTeacher,
-    activeRoomInfo,
-    setActiveRoomInfo,
-  } = props;
+  const {homeData, handleRoomSelection} = props;
 
   const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
@@ -126,7 +121,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const teacherListWithImages = async () => {
     let data: any[] = await Promise.all(
-      getTeacherList.map(async (teacherObj: any, idx: number) => {
+      getTeacherList.map(async (teacherObj: any) => {
         return {
           ...teacherObj,
           image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null),
@@ -139,7 +134,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const coTeacherListWithImages = async () => {
     let data: any[] = await Promise.all(
-      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
+      getCoTeacherList().map(async (teacherObj: any) => {
         return {
           ...teacherObj,
           image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null),
@@ -152,7 +147,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const studentsListWithImages = async () => {
     const data = await Promise.all(
-      getStudentsList().map(async (studentObj: any, idx: number) => {
+      getStudentsList().map(async (studentObj: any) => {
         return {
           ...studentObj,
           student: {
@@ -165,11 +160,11 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       })
     );
     setStudentsList(data);
+    setLocalStorageData('student_list', data);
   };
 
   const getClassList = (): any => {
     let modifiedClassList: any[] = [];
-    let uniqIds: string[] = [];
 
     homeData &&
       homeData.length > 0 &&

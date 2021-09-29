@@ -10,7 +10,6 @@ import isEmpty from 'lodash/isEmpty';
 import MessageGroupWrapper from './MessageGroupWrapper';
 import MessageWrapper from './MessageWrapper';
 import {Simulate} from 'react-dom/test-utils';
-import load = Simulate.load;
 
 interface RoomChatProps {
   selectedRoom: any;
@@ -18,8 +17,8 @@ interface RoomChatProps {
 }
 
 const RoomChat = (props: RoomChatProps) => {
-  const {selectedRoom, focusSection} = props;
-  const {state, dispatch} = useContext(GlobalContext);
+  const {selectedRoom} = props;
+  const {state} = useContext(GlobalContext);
   const [msgs, setMsgs] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +33,6 @@ const RoomChat = (props: RoomChatProps) => {
 
   const fetchRoomChat = async () => {
     setLoading(true);
-    let yesterday = getDate(1);
     let lastWeek = getDate(8);
     let msgs: any = await API.graphql(
       graphqlOperation(customQueries.messagesByRoomId, {
@@ -274,11 +272,6 @@ const RoomChat = (props: RoomChatProps) => {
     } catch (err) {
       console.log('could not delete the msg');
     }
-  };
-
-  const editMsg = (message: any) => {
-    setIsEdit(message.id);
-    setMsg(message.body);
   };
 
   useEffect(() => {

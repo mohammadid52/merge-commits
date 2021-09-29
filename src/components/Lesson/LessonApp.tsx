@@ -1,5 +1,5 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
@@ -47,6 +47,11 @@ const LessonApp = () => {
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
+  /**
+   * FOR SCROLL TO TOP
+   */
+  const topLessonRef = useRef();
+
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
@@ -87,7 +92,7 @@ const LessonApp = () => {
   // ----------- 3 ---------- //
 
   const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
-    console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
+    // console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
     setLocalStorageData('room_info', {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
@@ -129,9 +134,9 @@ const LessonApp = () => {
     const {lessonID} = urlParams;
     if (lessonID) {
       lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) =>
-        console.log('Lesson Mount - ', 'Lesson fetched!')
-      );
+      getSyllabusLesson(lessonID).then((_: void) => {
+        // console.log('Lesson Mount - ', 'Lesson fetched!')
+      });
     }
     return () => {
       const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
@@ -678,7 +683,7 @@ const LessonApp = () => {
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      console.log('studentDataRows[0] - ', studentDataRows[0]);
+      // console.log('studentDataRows[0] - ', studentDataRows[0]);
 
       if (studentDataRows.length > 0) {
         lessonDispatch({
@@ -746,15 +751,16 @@ const LessonApp = () => {
       setPersonLocationObj(pageChangeLocation);
       updatePersonLocation(pageChangeLocation);
       setLocalStorageData('person_location', pageChangeLocation);
+      window.scrollTo(0, 0);
     }
   }, [created, lessonState.currentPage]);
 
   const initializeLocation = async () => {
     if (!cleared && !created) {
       await leaveRoomLocation(user.authId, user.email);
-      console.log('CLEARED location...');
+      // console.log('CLEARED location...');
       await createPersonLocation();
-      console.log('CREATED location...');
+      // console.log('CREATED location...');
     }
   };
 

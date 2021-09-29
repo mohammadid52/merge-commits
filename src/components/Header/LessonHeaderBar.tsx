@@ -15,9 +15,13 @@ const LessonHeaderBar = ({
   setisAtEnd,
   handleRequiredNotification,
 }: LessonHeaderBarProps) => {
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const theme = gContext.theme;
+
   const history = useHistory();
   const initializeTimer = useStudentTimer();
-  const {lessonState, theme} = useContext(GlobalContext);
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
