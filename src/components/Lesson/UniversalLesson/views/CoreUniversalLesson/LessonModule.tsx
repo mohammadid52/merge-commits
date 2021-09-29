@@ -304,7 +304,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                 <>
                   {currentLesson?.objectives[0] ? (
                     <div>
-                      <div className="text-gray-400 font-medium text-lg leading-3">
+                      <div
+                        style={{color: 'rgba(203, 213, 224, 1) !important'}}
+                        className="text-gray-400 font-medium text-lg leading-3">
                         {ReactHtmlParser(currentLesson?.objectives[0])}
                       </div>
                     </div>
