@@ -11,7 +11,7 @@ import {wait} from '@utilities/functions';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import {find, findIndex, map, noop, remove, update} from 'lodash';
+import {find, findIndex, map, noop, random, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
@@ -60,9 +60,7 @@ const genSticky = (
       throwProps: true,
       type: 'x,y',
       inertia: true,
-      onDragEnd: (e) => {
-        console.log(e);
-      },
+      onDragEnd: (e) => {},
       // @ts-ignore
       autoScroll: true,
 
@@ -151,25 +149,33 @@ const NotesBlock = ({
   }, [notesList]);
 
   if (jQuery.ready) {
-    localNotes &&
-      localNotes.length > 0 &&
+    if (localNotes && localNotes.length > 0) {
       localNotes.forEach((note: {id: any}, idx: number) => {
         if (note) {
-          console.log(
-            '🚀 ~ file: NotesBlock.tsx ~ line 157 ~ localNotes.forEach ~ note',
-            note.id
-          );
           const id = `#${note.id} #note-${note.id}`;
 
           $(id).on('click', (e) => {
             e.target.focus();
           });
-
-          setTimeout(() => {
-            gsap.set(`#${note.id}`, {x: 100 * idx + 1, ease: 'power.out'});
-          }, 1000);
         }
       });
+
+      try {
+        localNotes.forEach((note: {id: any; class: string}, idx: number) => {
+          const doc = $(`#${note.id}`);
+          // const pos = note?.class?.split(' || ')[];
+          const xRandom = random(0, 10);
+          const yRandom = random(0, 20);
+          // const [x = xRandom, y = yRandom] = pos?.split(' ') || ['100', '200'];
+
+          gsap.set(doc, {
+            left: 250 * idx,
+          });
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
   const [notesChanged, setNotesChanged] = useState<boolean>(false);

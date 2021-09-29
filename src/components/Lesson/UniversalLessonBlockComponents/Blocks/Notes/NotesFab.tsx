@@ -5,13 +5,12 @@ import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks
 import {GlobalContext} from '@contexts/GlobalContext';
 import * as mutations from '@graphql/mutations';
 import * as queries from '@graphql/queries';
-import {
-  UniversalJournalData,
-  UniversalLessonPage,
-} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData} from '@utilities/localStorage';
-import {find, findIndex, map} from 'lodash';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
+import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
@@ -503,7 +502,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     });
 
     const mapCustomData = fixedCustomData.map((m) => {
-      const className = m.type.split(' || ')[1];
+      let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
 
       return {
