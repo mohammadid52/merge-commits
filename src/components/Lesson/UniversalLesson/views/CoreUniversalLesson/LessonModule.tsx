@@ -236,7 +236,9 @@ const EvidenceTab = ({
           className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
           leaveTo="opacity-0">
           {checkedEvidence.map((evidence: any) => (
-            <div className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
+            <div
+              key={evidence.id}
+              className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
               <AiFillCheckCircle className="mr-2 w-auto text-green-500" />
               <p className="text-gray-900 dark:text-white  w-auto">{evidence.name}</p>
             </div>
@@ -304,7 +306,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                 <>
                   {currentLesson?.objectives[0] ? (
                     <div>
-                      <div className="text-gray-400 font-medium text-lg leading-3">
+                      <div
+                        style={{color: 'rgba(203, 213, 224, 1) !important'}}
+                        className="text-gray-400 font-medium text-lg leading-3">
                         {ReactHtmlParser(currentLesson?.objectives[0])}
                       </div>
                     </div>

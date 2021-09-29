@@ -57,7 +57,7 @@ const InnerNote = React.memo(
         )}  group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>
         <textarea
           style={{fontSize: `${genFontSize(size)}px`}}
-          id={'note'}
+          id={`note-${note.id}`}
           onChange={
             isInLesson && isStudent ? (e: any) => updateText(e, note.id, idx) : noop
           }
@@ -105,8 +105,8 @@ const Note = ({
   const isStudent = true;
   const isInLesson = useInLessonCheck();
 
-  const bgColor = note.class.split(' ')[0] || 'yellow';
-  const size = note.class.split(' ')[1] || 'medium';
+  const bgColor = note?.class?.split(' ')[0] || 'yellow';
+  const size = note?.class?.split(' ')[1] || 'medium';
 
   // Just show delete modal
   const onDeleteBtnClick = (noteId: string) => {
