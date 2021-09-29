@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import differenceBy from 'lodash/differenceBy';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
@@ -10,35 +8,29 @@ import {useQuery} from '../../../../../../customHooks/urlParam';
 
 import * as queries from '../../../../../../graphql/queries';
 import * as mutation from '../../../../../../graphql/mutations';
-import SectionTitle from '../../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../../Atoms/BreadCrums';
-import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../Atoms/Form/Selector';
 import {getFilterORArray} from '../../../../../../utilities/strings';
-import SelectorWithAvatar from '../../../../../Atoms/Form/SelectorWithAvatar';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../../../../utilities/services';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
 import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepComponent';
-import ClassRoomDetails from './ClassRoomDetails';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
-import UnitPlanner from './UnitPlanner/UnitPlanner';
 import ClassRoomForm from './ClassRoomForm';
 import CourseSchedule from './CourseSchedule';
+import {BsArrowLeft} from 'react-icons/bs';
 
-interface ClassRoomBuilderProps {}
+interface ClassRoomBuilderProps {
+  instId: string;
+  toggleUpdateState: () => void;
+}
 
 const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
-  const {} = props;
+  const {instId, toggleUpdateState} = props;
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
+  const {roomId}: any = useParams();
   const params = useQuery(location.search);
   const step = params.get('step');
 
@@ -61,7 +53,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
 
-  const {BreadcrumsTitles, RoomEDITdict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -83,7 +75,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     match.url.search('room-edit') > -1
       ? {
           title: roomData.name || BreadcrumsTitles[userLanguage]['LOADING'],
-          url: `/dashboard/room-edit?id=${params.get('id')}`,
+          url: `/dashboard/room-edit?id=${roomId}`,
           last: true,
         }
       : {
@@ -410,7 +402,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
         setUnsavedChanges(false);
         history.push(
-          `/dashboard/manage-institutions/institution?id=${roomData?.institute?.id}&tab=class_room`
+          `/dashboard/manage-institutions/institution/${roomData?.institute?.id}/class-rooms`
         );
       } catch {
         setMessages({
@@ -486,7 +478,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
 
   const fetchRoomDetails = async () => {
     const isRoomEditPage = match.url.search('room-edit') > -1;
-    const roomId = params.get('id');
     if (isRoomEditPage) {
       if (roomId) {
         try {
@@ -557,7 +548,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       setRoomData({
         ...roomData,
         institute: {
-          id: params.get('id'),
+          id: instId,
           name: '',
           value: '',
         },
@@ -566,7 +557,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   };
 
   const fetchOtherList = async () => {
-    const instId = roomData?.institute?.id;
     const items: any = await getInstituteInfo(instId);
     const serviceProviders = items.map((item: any) => item.providerID);
     const allInstiId = [...serviceProviders, instId];
@@ -598,7 +588,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   }, []);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?id=${params.get('id')}&step=${step}`;
+    const redirectionUrl = `${match.url}?id=${instId}&step=${step}`;
     history.push(redirectionUrl);
   };
 
@@ -627,7 +617,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
-        return <ClassRoomForm />;
+        return <ClassRoomForm instId={instId}/>;
       case 'unit-planner':
         return <CourseSchedule roomData={roomData} />;
       case 'class-dynamics':
@@ -638,12 +628,12 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   return (
     <div className="">
       {/* Section Header */}
-      <BreadCrums
+      {/* <BreadCrums
         unsavedChanges={unsavedChanges}
         toggleModal={toggleModal}
         items={breadCrumsList}
-      />
-      <div className="flex justify-between">
+      /> */}
+      {/* <div className="flex justify-between">
         <SectionTitle
           title={RoomEDITdict[userLanguage]['TITLE']}
           subtitle={RoomEDITdict[userLanguage]['SUBTITLE']}
@@ -658,10 +648,25 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             />
           </div>
         ) : null}
+      </div> */}
+      <div className="px-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}
+        </h3>
+        <div
+          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() =>
+            history.push(`/dashboard/manage-institutions/institution/${instId}/class-rooms`)
+          }>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
+        </div>
       </div>
 
       {/* Body section */}
-      <PageWrapper>
+      <div className="">
         <div className="w-full m-auto">
           <StepComponent
             steps={steps}
@@ -669,7 +674,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             handleTabSwitch={handleTabSwitch}
           />
           <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
-            {currentStepComp(activeStep)}
+            <div className="border-0 border-t-none border-gray-200">
+              {currentStepComp(activeStep)}
+            </div>
           </div>
         </div>
         {messages.show ? (
@@ -687,7 +694,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             message={warnModal.message}
           />
         )}
-      </PageWrapper>
+      </div>
     </div>
   );
 };

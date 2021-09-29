@@ -25,7 +25,7 @@ const ClassList = (props: ClassListProps) => {
 
   const createNewClass = () => {
     history.push(
-      `/dashboard/manage-institutions/institution/class-creation?id=${instId}`
+      `/dashboard/manage-institutions/institution/${instId}/class-creation`
     );
   };
 
@@ -76,7 +76,7 @@ const ClassList = (props: ClassListProps) => {
                       className={`w-1/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
                       onClick={() =>
                         history.push(
-                          `/dashboard/manage-institutions/class-edit?id=${item.id}`
+                          `/dashboard/manage-institutions/institution/${instId}/class-edit/${item.id}`
                         )
                       }>
                       <Tooltip text="Click to edit class" placement="left">

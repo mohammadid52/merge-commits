@@ -182,7 +182,7 @@ const UnitBuilder = () => {
     },
     {
       title: curriculumData.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false,
     },
     {

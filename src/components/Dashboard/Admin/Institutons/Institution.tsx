@@ -54,9 +54,10 @@ export interface InstitutionInfo {
  * with data from the API
  */
 const Institution = (props: InstitutionProps) => {
+  const {institutionId}: any = useParams();
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [institutionData, setInstitutionData] = useState({
-    id: '',
+    id: institutionId,
     name: '',
     institutionTypeId: '',
     institutionType: null,
@@ -84,7 +85,6 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const {institutionId}: any = useParams();
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey,theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -103,7 +103,7 @@ const Institution = (props: InstitutionProps) => {
       url:
         currentPath !== 'edit'
           ? `${location.pathname}${location.search}`
-          : `/dashboard/manage-institutions/institution/${institutionId}`,
+          : `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: currentPath !== 'edit',
     },
     currentPath === 'edit'
@@ -116,7 +116,7 @@ const Institution = (props: InstitutionProps) => {
   ].filter(Boolean);
 
   const toggleUpdateState = () => {
-    setISNewUpdate(!isNewUpdate);
+    setISNewUpdate(prevNewUpdate => !prevNewUpdate);
   };
 
   const postInfoUpdate = (data: any) => {
@@ -144,6 +144,7 @@ const Institution = (props: InstitutionProps) => {
           setInstitutionData(fetchInstitutionData.data.getInstitution);
         }
         setFetchingDetails(false);
+        setISNewUpdate(false);
       } else {
         // history.push('/dashboard/manage-institutions');
       }

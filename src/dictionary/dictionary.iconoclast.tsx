@@ -146,6 +146,7 @@ const dashboardProfileDict: any = {
       ROLE: 'Role',
       PASSWORD: 'Password',
       PASSCODE: 'Journal Passcode',
+      SUPER_ADMIN: 'Super Admin'
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -2705,6 +2706,7 @@ const UserEditDict: any = {
       cancel: 'Cancel',
     },
     ondemand: 'On-Demand',
+    SUPER_ADMIN: 'Super Admin'
   },
   ES: {
     heading: 'TBD',
@@ -2718,6 +2720,7 @@ const UserEditDict: any = {
       cancel: 'TBD',
     },
     ondemand: 'TBD',
+    SUPER_ADMIN: 'TBD'
   },
 };
 
@@ -2732,6 +2735,7 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
+    SUPER_ADMIN: 'Super Admin'
   },
   ES: {
     heading: 'TBD',
@@ -3883,6 +3887,15 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const CommonlyUsedDict:any = {
+  EN:{
+    BACK_TO_LIST: 'Back to list'
+  },
+  ES:{
+    BACK_TO_LIST: 'Back to list'
+  }
+}
+
 const General: any = {
   EN: {
     SENTIMENT: {
@@ -4003,4 +4016,5 @@ export {
   EditQuestionModalDict,
   UniversalBuilderDict,
   LearningEvidenceDict,
+  CommonlyUsedDict
 };

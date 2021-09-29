@@ -524,7 +524,7 @@ const EditRoom = (props: EditRoomProps) => {
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
         setUnsavedChanges(false);
         history.push(
-          `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=class_room`
+          `/dashboard/manage-institutions/institution/${roomData.institute?.id}/class-rooms`
         );
       } catch {
         setMessages({

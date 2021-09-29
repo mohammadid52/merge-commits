@@ -49,10 +49,10 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/add`}
           render={() => <InstitutionBuilder />} // Create New institution.
         />
-        <Route
+        {/* <Route
           path={`${match.url}/institution/class-creation`}
           render={() => <ClassBuilder />} // Create new class
-        />
+        /> */}
         <Route
           path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />} // Create new curricular
@@ -66,22 +66,22 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/institution/:institutionId/course-builder/:courseId`}
           render={() => <CourseBuilder />} // Create new course
         /> */}
-        <Route
+        {/* <Route
           path={`${match.url}/institution/room-creation`}
           render={() => <ClassRoomBuilder />} // Create new room
-        />
+        /> */}
         <Route
           path={`${match.url}/institution/:institutionId`}
           render={() => <Institution tabProps={tabProps} />} // Institution info page
         />
-        <Route
+        {/* <Route
           path={`${match.url}/class-edit`}
           render={() => <EditClass />} // Edit current class
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/room-edit`}
           render={() => <ClassRoomBuilder />} // Edit current room.
-        />
+        /> */}
         {/* <Route
           path={`${match.url}/:institutionId/curricular/edit`}
           render={() => <EditCurricular />} // Edit current curricular

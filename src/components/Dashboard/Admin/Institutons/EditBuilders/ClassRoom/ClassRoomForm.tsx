@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
@@ -21,18 +21,21 @@ import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 
-interface EditRoomProps {}
+interface ClassRoomFormProps {
+  instId: string
+}
 
-const ClassRoomForm = (props: EditRoomProps) => {
+const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
+  const {roomId}: any = useParams();
 
   const initialData = {
     id: '',
     name: '',
-    institute: {id: '', name: '', value: ''},
+    institute: {id: instId, name: '', value: ''},
     teacher: {id: '', name: '', value: ''},
     coTeachers: [{}],
     classRoom: {id: '', name: '', value: ''},
@@ -224,9 +227,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
         })
       );
       const listStaffs = list.data.listStaffs.items;
-      if (!isMounted) {
-        return;
-      }
+      // if (!isMounted) {
+      //   return;
+      // }
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -256,7 +259,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
           image: item.staffMember?.image,
         }));
-
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
         const filteredArray = staffList.filter((member: {id: string}) => {
@@ -277,7 +279,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
-    const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -285,9 +286,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
         })
       );
       const listClass = list.data.listClasss?.items;
-      if (!isMounted) {
-        return;
-      }
+      // if (!isMounted) {
+      //   return;
+      // }
       if (listClass.length === 0) {
         setMessages({
           show: true,
@@ -529,7 +530,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
         if (roomData.id) {
           const input = {
             id: roomData.id,
-            institutionID: roomData.institute.id,
+            institutionID: instId,
             classID: roomData.classRoom.id,
             teacherAuthID: teachersList.find(
               (item: any) => item.id === roomData.teacher.id
@@ -560,7 +561,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
           // );
         } else {
           const input = {
-            institutionID: roomData.institute.id,
+            institutionID: instId,
             activeSyllabus: roomData.curricular.id
               ? await getFirstSyllabus(roomData.curricular.id)
               : '',
@@ -585,7 +586,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
           } else {
             setMessages({
               show: true,
-              message: RoomEDITdict[userLanguage]['messages']['success']['newclassroom'],
+              message: RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
               isError: false,
             });
             setRoomData(initialData);
@@ -593,10 +594,11 @@ const ClassRoomForm = (props: EditRoomProps) => {
             setLoading(false);
           }
           history.push(
-            `/dashboard/manage-institutions/room-edit?id=${roomId}&step=unit-planner`
+            `/dashboard/manage-institutions/${instId}/room-edit/${roomId}?step=unit-planner`
           );
         }
-      } catch {
+      } catch{
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
@@ -670,7 +672,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
 
   const fetchRoomDetails = async () => {
     const isRoomEditPage = match.url.search('room-edit') > -1;
-    const roomId = params.get('id');
     if (isRoomEditPage) {
       if (roomId) {
         try {
@@ -756,7 +757,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
   };
 
   const fetchOtherList = async () => {
-    const instId = roomData.institute.id;
     const items: any = await getInstituteInfo(instId);
     const serviceProviders = items.map((item: any) => item.providerID);
     const allInstiId = [...serviceProviders, instId];

@@ -13,11 +13,16 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import * as customQueries from '@customGraphql/customQueries';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
+import {getAsset} from 'assets';
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
+import HeroBanner from '@components/Header/HeroBanner';
+import Buttons from '@components/Atoms/Buttons';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
-interface InstitutionBuilderProps{
+interface InstitutionBuilderProps {
   institute?: any;
   loading?: boolean;
-  postInfoUpdate?: (data:any) => void;
+  postInfoUpdate?: (data: any) => void;
   toggleUpdateState?: () => void;
   updateServiceProviders?: Function;
 }
@@ -47,14 +52,20 @@ export interface InstitutionInfo {
   };
 }
 
-const InstitutionBuilder = ({institute, loading, postInfoUpdate}: InstitutionBuilderProps) => {
+const InstitutionBuilder = ({
+  institute,
+  loading,
+  postInfoUpdate,
+}: InstitutionBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
   const institutionId = params.get('id');
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const {BreadcrumsTitles, InstitutionBuilderDict} = useDictionary(clientKey);
   const [activeStep, setActiveStep] = useState('overview');
   const [institutionInfo, setInstitutionInfo] = useState({
@@ -193,43 +204,74 @@ const InstitutionBuilder = ({institute, loading, postInfoUpdate}: InstitutionBui
     }
   };
 
-  const isEditPage = location.pathname.indexOf("edit") > -1;
+  const isEditPage = location.pathname.indexOf('edit') > -1;
 
   return (
-    <div className={`w-full h-full ${isEditPage ? 'px-0' : ''} p-4`}>
+    <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} py-4 px-0`}>
       {/* Section Header */}
-      {!isEditPage && <BreadCrums items={breadCrumbsList} />}
-      <div className={"flex justify-between px-8"}>
-        <SectionTitle
-          title={isEditPage ? InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION'] : InstitutionBuilderDict[userLanguage]['TITLE']}
-          // subtitle={InstitutionBuilderDict[userLanguage]['SUBTITLE']}
-        />
-      </div>
-      <PageWrapper defaultClass={isEditPage ? "px-0 -mt-8" : "px-4 white_back"}>
-        <div className="w-full m-auto">
-          <StepComponent
-            steps={steps}
-            activeStep={activeStep}
-            handleTabSwitch={handleTabSwitch}
+      {/* {!isEditPage && <BreadCrums items={breadCrumbsList} />} */}
+      {isEditPage ? (
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize py-4 px-12">
+          {InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']}
+        </h3>
+      ) : (
+        <div className="relative">
+          <HeroBanner
+            imgUrl={bannerImage}
+            title={InstitutionBuilderDict[userLanguage]['TITLE']}
           />
-          <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-8`}>
-            {loading ? (
-              <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader />
-                  <p className="mt-2 text-center">
-                    Fetching institution details please wait...
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="border-0 border-t-none border-gray-200">
-                {currentStepComp(activeStep)}
-              </div>
-            )}
+          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-1000`}>
+            <BreadcrumbsWithBanner items={breadCrumbsList} />
           </div>
         </div>
-      </PageWrapper>
+      )}
+      {/* <div className={'flex justify-between px-8'}>
+        <SectionTitle
+          title={
+            isEditPage
+              ? InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']
+              : InstitutionBuilderDict[userLanguage]['TITLE']
+          }
+          // subtitle={InstitutionBuilderDict[userLanguage]['SUBTITLE']}
+        />
+      </div> */}
+      {!isEditPage && (
+        <div className="flex justify-end py-4 mb-4 w-full">
+          <Buttons
+            label="Go back"
+            btnClass="mr-4"
+            onClick={() => null}
+            Icon={IoArrowUndoCircleOutline}
+          />
+        </div>
+      )}
+      <div className="px-4">
+        <PageWrapper defaultClass={isEditPage ? 'px-0 -mt-8' : 'px-4 white_back'}>
+          <div className="w-full m-auto">
+            <StepComponent
+              steps={steps}
+              activeStep={activeStep}
+              handleTabSwitch={handleTabSwitch}
+            />
+            <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-8`}>
+              {loading ? (
+                <div className="h-100 flex justify-center items-center">
+                  <div className="w-5/10">
+                    <Loader />
+                    <p className="mt-2 text-center">
+                      Fetching institution details please wait...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="border-0 border-t-none border-gray-200">
+                  {currentStepComp(activeStep)}
+                </div>
+              )}
+            </div>
+          </div>
+        </PageWrapper>
+      </div>
     </div>
   );
 };

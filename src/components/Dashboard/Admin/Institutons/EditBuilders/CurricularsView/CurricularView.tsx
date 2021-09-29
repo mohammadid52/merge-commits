@@ -105,7 +105,7 @@ const CurricularView = (props: CurricularViewProps) => {
     },
     {
       title: curricularData.institute?.name,
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}`,
       last: false,
     },
     {

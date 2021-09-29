@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 interface DropdownProps {
   label: string;
   items: any;
+  listClassName?: string;
   userInfo: string;
   id: string;
   handleChange: (item: {code: string | boolean; name: string}) => void;
@@ -15,7 +16,16 @@ interface DropdownProps {
 // to use selector component in atom > froms > selector.
 
 const DropdownForm = (props: DropdownProps) => {
-  const {label, items, userInfo, handleChange, id, style, noOptionMessage} = props;
+  const {
+    label,
+    items,
+    listClassName = '',
+    userInfo,
+    handleChange,
+    id,
+    style,
+    noOptionMessage,
+  } = props;
 
   const options = () => {
     if (userInfo === 'ACTIVE') {
@@ -98,7 +108,7 @@ const DropdownForm = (props: DropdownProps) => {
               role="listbox"
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-item-3"
-              className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+              className={`max-h-60 ${listClassName} rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5`}>
               {items.length ? (
                 items.map((item: {code: string; name: string}, key: number) => (
                   <li

@@ -112,7 +112,7 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  const addNewInstituion = () => {
+  const addNewInstitution = () => {
     history.push(`${match.url}/add`);
   };
 
@@ -187,7 +187,7 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  const toggleSortDimention = () => {
+  const toggleSortDimension = () => {
     setSortingType({
       ...sortingType,
       asc: !sortingType.asc,
@@ -284,19 +284,18 @@ const InstitutionLookup: React.FC = () => {
               closeAction={removeSearchAction}
               style="mr-4 w-auto"
             />
-            <div className="w-80">
               <Selector
                 placeholder={InstitutionDict[userLanguage]['SORTBY']}
                 list={sortByList}
                 selectedItem={sortingType.name}
                 onChange={setSortingValue}
                 btnClass="rounded-r-none border-r-none"
+                additionalClass="w-80"
                 arrowHidden={true}
               />
-            </div>
             <button
               className={`w-16 bg-gray-100 mr-4 p-3 border-gray-400 border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-              onClick={toggleSortDimention}>
+              onClick={toggleSortDimension}>
               <IconContext.Provider
                 value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
@@ -304,7 +303,7 @@ const InstitutionLookup: React.FC = () => {
             </button>
             <Buttons
               label={InstitutionDict[userLanguage]['BUTTON']['Add']}
-              onClick={addNewInstituion}
+              onClick={addNewInstitution}
               btnClass="mr-4"
               Icon={IoBusinessSharp}
             />

@@ -813,7 +813,7 @@ const Dashboard = (props: DashboardProps) => {
 
                   {/* <span>{[state.user.firstName, state.user.lastName].join(' ')}</span> */}
                   <ChevronDownIcon
-                    className="w-12 h-12 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+                    className="w-8 h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                     aria-hidden="true"
                   />
                 </div>
@@ -931,7 +931,7 @@ const Dashboard = (props: DashboardProps) => {
                         <Redirect to={`${match.url}/manage-institutions`} />
                       ) : (
                         <Redirect
-                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}`}
+                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`}
                         />
                       );
                     }

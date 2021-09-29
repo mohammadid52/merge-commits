@@ -1,17 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {BsArrowLeft} from 'react-icons/bs';
 
 import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import * as queries from '@graphql/queries';
 import * as customQueries from '@customGraphql/customQueries';
-import {languageList} from '@utilities/staticData';
-import {getImageFromS3} from '@utilities/services';
 
-import BreadCrums from '@atoms/BreadCrums';
-import PageWrapper from '@atoms/PageWrapper';
 import SectionTitle from '@atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
 import Loader from '@atoms/Loader';
@@ -22,7 +19,7 @@ import UnitFormComponent from './CourseFormComponent';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
 import Buttons from '@components/Atoms/Buttons';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
 interface IUIMessages {
   show: boolean;
@@ -31,7 +28,11 @@ interface IUIMessages {
   lessonError?: boolean;
 }
 
-const CourseBuilder = () => {
+interface ICourseBuilderProps {
+  instId: string;
+}
+
+const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
@@ -43,7 +44,9 @@ const CourseBuilder = () => {
   const institutionId = params.get('id');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, CourseBuilderdict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, CommonlyUsedDict, CourseBuilderdict} = useDictionary(
+    clientKey
+  );
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedLessonsList, setSavedLessonsList] = useState([]);
@@ -57,7 +60,7 @@ const CourseBuilder = () => {
   const [courseData, setCourseData] = useState<any>({
     institution: {
       id: institutionId,
-      name: ''
+      name: '',
     },
   });
 
@@ -113,15 +116,15 @@ const CourseBuilder = () => {
   const getBasicInstitutionInfo = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: institutionId
+        id: institutionId,
       })
     );
-    setCourseData((prevData:any) => ({
+    setCourseData((prevData: any) => ({
       ...prevData,
       institution: {
         ...prevData.institution,
         name: result?.data?.getInstitution.name,
-      }
+      },
     }));
   };
 
@@ -134,7 +137,7 @@ const CourseBuilder = () => {
     },
     {
       title: courseData?.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false,
     },
     {
@@ -215,8 +218,6 @@ const CourseBuilder = () => {
     }
   };
 
-  console.log(courseData, 'courseData*********');
-
   return (
     <div className="w-full h-full">
       {/* Section Header */}
@@ -225,43 +226,55 @@ const CourseBuilder = () => {
         // unsavedChanges={unsavedChanges}
         // toggleModal={toggleUnSaveModal}
       /> */}
-      <div className="flex justify-between px-8">
-        <SectionTitle title={'Course Builder'} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+      <div className="px-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {courseData?.name}
+        </h3>
+        <div
+          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() =>
+            history.push(`/dashboard/manage-institutions/institution/${instId}/course`)
+          }>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
+        </div>
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
             onClick={() => null}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body */}
       {/* <PageWrapper> */}
-        <div className="w-full m-auto">
-          <StepComponent
-            steps={steps}
-            activeStep={activeStep}
-            handleTabSwitch={handleTabSwitch}
-          />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
-            {fetchingDetails ? (
-              <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader />
-                  <p className="mt-2 text-center">
-                    Fetching syllabus details please wait...
-                  </p>
-                </div>
+      <div className="w-full m-auto">
+        <StepComponent
+          steps={steps}
+          activeStep={activeStep}
+          handleTabSwitch={handleTabSwitch}
+        />
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+          {fetchingDetails ? (
+            <div className="h-100 flex justify-center items-center">
+              <div className="w-5/10">
+                <Loader />
+                <p className="mt-2 text-center">
+                  Fetching syllabus details please wait...
+                </p>
               </div>
-            ) : (
-              <div className="border-0 border-gray-200 border-t-none py-8">
-                {currentStepComp(activeStep)}
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="border-0 border-gray-200 border-t-none py-8">
+              {currentStepComp(activeStep)}
+            </div>
+          )}
         </div>
+      </div>
       {/* </PageWrapper> */}
     </div>
   );

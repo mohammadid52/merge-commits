@@ -56,7 +56,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         type: 'menu',
         id: 'inst',
         redirectionUrl: selectedInstitution?.institution?.id
-          ? `/dashboard/manage-institutions/institution?id={institutionId}`
+          ? `/dashboard/manage-institutions/institution/{institutionId}/edit`
           : '/dashboard/manage-institutions',
         children: [
           {
@@ -64,14 +64,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/edit`,
           },
           {
             title: 'Staff',
             type: 'list',
             children: [],
             id: 'inst_staff',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=staff`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/staff`,
           },
           {
             title: 'Classes',
@@ -81,7 +81,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Create Class',
                 type: 'list',
                 id: 'inst_classes_create',
-                redirectionUrl: `/dashboard/manage-institutions/institution/class-creation?id={institutionId}`,
+                redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/class-creation`,
               },
               {
                 title: 'Add Student',
@@ -91,13 +91,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               },
             ],
             id: 'inst_classes',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=class`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/class`,
           },
           {
             title: 'Curriculum',
             type: 'menu',
             id: 'inst_curriculum',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=curricular`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/course`,
             children: [
               {
                 title: 'Add Curriculum Information',
@@ -269,7 +269,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Provide service to another organization',
             type: 'list',
             id: 'service_provider_provide_service',
-            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id={institutionId}`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/?id={institutionId}`,
           },
           {
             title: 'Request service from another organization',
@@ -425,7 +425,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `/dashboard/csv`,
           },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/staff`,
       },
     ].filter(Boolean),
   };
@@ -1033,7 +1033,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/staff`
                     )
                   }>
                   1. Add Your Institution's Avatar
@@ -1051,7 +1051,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="w-auto text-base font-bold cursor-pointer"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/edit`
                     )
                   }>
                   2. Enter your Institution's contact information
@@ -1107,7 +1107,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/class-creation?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/class-creation`
                     )
                   }>
                   Create a class for your institution
@@ -1919,7 +1919,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}&tab=service_provider`
+                      `/dashboard/manage-institutions/institution/?id=${selectedInstitution?.institution?.id}&tab=service_provider`
                     )
                   }>
                   Toggle service provider to be true

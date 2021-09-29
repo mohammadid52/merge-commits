@@ -34,11 +34,11 @@ const RoomsList = (props: RoomListProps) => {
     isError: false,
   });
   const createNewRoom = () => {
-    history.push(`/dashboard/manage-institutions/institution/room-creation?id=${instId}`);
+    history.push(`/dashboard/manage-institutions/institution/${instId}/room-creation`);
   };
 
   const editCurrentRoom = (id: string) => {
-    history.push(`/dashboard/manage-institutions/room-edit?id=${id}`);
+    history.push(`/dashboard/manage-institutions/institution/${instId}/room-edit/${id}`);
   };
 
   const fetchRoomList = async () => {

@@ -64,6 +64,15 @@ const BUTTONS: any = {
   },
 };
 
+const CommonlyUsedDict:any = {
+  EN:{
+    BACK_TO_LIST: 'Back to list'
+  },
+  ES:{
+    BACK_TO_LIST: 'Back to list'
+  }
+}
+
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
@@ -3904,5 +3913,6 @@ export {
   LessonsListDict,
   EditQuestionModalDict,
   LearningEvidenceDict,
-  CourseBuilderdict
+  CourseBuilderdict,
+  CommonlyUsedDict
 };

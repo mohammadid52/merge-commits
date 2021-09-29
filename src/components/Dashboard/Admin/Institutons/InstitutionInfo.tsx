@@ -37,6 +37,9 @@ import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuil
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import Loader from '@components/Atoms/Loader';
+import ClassBuilder from './Builders/ClassBuilder';
+import EditClass from './EditBuilders/EditClass';
+import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -96,7 +99,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
           key: 'general_information',
           redirectionUrl: `${match.url}/edit`,
-          active: location.pathname.indexOf('edit') > -1,
+          active: location.pathname.indexOf('/edit') > -1,
         },
         {
           title: Institute_info[userLanguage]['TABS']['STAFF'],
@@ -161,7 +164,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
           key: 'class_room',
           redirectionUrl: `${match.url}/class-rooms`,
-          active: location.pathname.indexOf('class-rooms') > -1,
+          active: location.pathname.indexOf('room') > -1,
         },
       ],
     },
@@ -289,7 +292,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     await API.graphql(
       graphqlOperation(customMutations.updateInstitution, {input: input})
     );
-    await getUrl()
+    await getUrl();
     toggleCropper();
     setImageLoading(false);
   };
@@ -532,11 +535,50 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     )}
                   />
                   <Route
+                    path={`${match.url}/class-creation`}
+                    exact
+                    render={() => (
+                      <ClassBuilder
+                        instId={institute?.id}
+                        toggleUpdateState={instProps.toggleUpdateState}
+                      />
+                    )} // Create new class
+                  />
+                  <Route
+                    path={`${match.url}/class-edit/:classId`}
+                    exact
+                    render={() => (
+                      <EditClass
+                        instId={institute?.id}
+                        toggleUpdateState={instProps.toggleUpdateState}
+                      />
+                    )} // Edit current class
+                  />
+                  <Route
                     path={`${match.url}/class-rooms`}
                     exact
                     render={() => (
                       <RoomsList instId={institute?.id} instName={institute?.name} />
                     )}
+                  />
+                  <Route
+                    path={`${match.url}/room-creation`}
+                    exact
+                    render={() => (
+                      <ClassRoomBuilder
+                        instId={institute?.id}
+                        toggleUpdateState={instProps.toggleUpdateState}
+                      />
+                    )} // Create new room
+                  />
+                  <Route
+                    path={`${match.url}/room-edit/:roomId`}
+                    render={() => (
+                      <ClassRoomBuilder
+                        instId={institute?.id}
+                        toggleUpdateState={instProps.toggleUpdateState}
+                      />
+                    )} // Edit current room.
                   />
                   <Route
                     path={`${match.url}/courses`}
@@ -568,11 +610,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     path={`${match.url}/course-builder`}
                     exact
-                    render={() => <CourseBuilder />} // Create new course
+                    render={() => <CourseBuilder instId={institute?.id} />} // Create new course
                   />
                   <Route
                     path={`${match.url}/course-builder/:courseId`}
-                    render={() => <CourseBuilder />} // Create new course
+                    render={() => <CourseBuilder instId={institute?.id} />} // Create new course
                   />
                 </Switch>
               </div>

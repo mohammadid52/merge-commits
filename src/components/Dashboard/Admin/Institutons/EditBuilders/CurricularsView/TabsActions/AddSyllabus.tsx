@@ -74,7 +74,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false,
     },
     {

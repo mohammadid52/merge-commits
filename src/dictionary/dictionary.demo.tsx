@@ -64,6 +64,15 @@ const BUTTONS: any = {
   },
 };
 
+const CommonlyUsedDict:any = {
+  EN:{
+    BACK_TO_LIST: 'Back to list'
+  },
+  ES:{
+    BACK_TO_LIST: 'Back to list'
+  }
+}
+
 const EditQuestionModalDict: any = {
   EN: {
     TITLE: 'Edit QUESTION',
@@ -3869,4 +3878,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   General,
+  CommonlyUsedDict
 };

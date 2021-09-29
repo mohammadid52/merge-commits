@@ -1,5 +1,5 @@
 import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {HiPencil} from 'react-icons/hi';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -34,16 +34,22 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
+import {BsArrowLeft} from 'react-icons/bs';
+import Loader from '@components/Atoms/Loader';
 
-interface EditClassProps {}
+interface EditClassProps {
+  instId: string;
+  toggleUpdateState: () => void;
+}
 
-const EditClass = (props: EditClassProps) => {
+const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
   const urlParams = useQuery();
   const match = useRouteMatch();
+  const {classId}: any = useParams();
 
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
   const defaultNewMember = {id: '', name: '', value: '', avatar: '', group: ''};
@@ -58,6 +64,7 @@ const EditClass = (props: EditClassProps) => {
 
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
+  const [saving, setSaving] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -77,9 +84,19 @@ const EditClass = (props: EditClassProps) => {
     action: () => {},
   });
 
-  const {clientKey, userLanguage, state:{user}, theme} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {user},
+    theme,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {
+    editClassDict,
+    BreadcrumsTitles,
+    BUTTONS: ButtonDict,
+    CommonlyUsedDict,
+  } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
 
   const breadCrumsList = [
@@ -101,7 +118,7 @@ const EditClass = (props: EditClassProps) => {
     },
     {
       title: classData?.name,
-      url: `${match.url}?id=${urlParams.get('id')}`,
+      url: `${match.url}?id=${classId}`,
       last: true,
     },
   ];
@@ -368,7 +385,6 @@ const EditClass = (props: EditClassProps) => {
   };
 
   useEffect(() => {
-    const classId = urlParams.get('id');
     if (classId) fetchClassData(classId);
     else history.push('/dashboard/manage-institutions');
     // try {
@@ -446,6 +462,7 @@ const EditClass = (props: EditClassProps) => {
   };
 
   const saveClassDetails = async () => {
+    setSaving(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -457,17 +474,20 @@ const EditClass = (props: EditClassProps) => {
         const newClass: any = await API.graphql(
           graphqlOperation(mutations.updateClass, {input: input})
         );
+        toggleUpdateState();
         setMessages({
           show: true,
           message: dictionary.messages.classupdate,
           isError: false,
         });
+        setSaving(false);
       } catch {
         setMessages({
           show: true,
           message: dictionary.messages.unableupdate,
           isError: true,
         });
+        setSaving(false);
       }
     }
   };
@@ -531,100 +551,126 @@ const EditClass = (props: EditClassProps) => {
 
   return (
     <div className="">
-      <BreadCrums items={breadCrumsList} />
+      {/* <BreadCrums items={breadCrumsList} /> */}
 
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+        <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             btnClass=""
             label="Go Back"
             onClick={goBack}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div> */}
+        </div>
+      </div> */}
+      <div className="px-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {dictionary.TITLE}
+        </h3>
+        <div
+          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() =>
+            history.push(`/dashboard/manage-institutions/institution/${instId}/class`)
+          }>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
+        </div>
       </div>
 
-      <PageWrapper>
-        <div className="w-8/10 2xl:w-6/10 px-2 m-auto mb-4">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+      {loading ? (
+        <div className="h-100 flex justify-center items-center">
+          <div className="w-5/10">
+            <Loader />
+            <p className="mt-2 text-center">{dictionary.LOADING}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="px-4 mt-4">
+          <div className="w-8/10 2xl:w-6/10 px-2 m-auto mb-4">
+            {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {dictionary.heading}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="col-span-4">
-              <FormInput
-                value={classData.name}
-                id="className"
-                onChange={onNameChange}
-                name="className"
-                label={dictionary.NAME_INPUT_LABEL}
-                isRequired
+          </h3> */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="col-span-4">
+                <FormInput
+                  value={classData.name}
+                  id="className"
+                  onChange={onNameChange}
+                  name="className"
+                  label={dictionary.NAME_INPUT_LABEL}
+                  isRequired
+                />
+              </div>
+              <Buttons
+                btnClass="mx-2 lg:ml-5 lg:mr-10 py-1 mt-auto"
+                label={
+                  saving
+                    ? ButtonDict[userLanguage]['SAVING']
+                    : ButtonDict[userLanguage]['SAVE']
+                }
+                onClick={saveClassDetails}
+                transparent={!unsavedChanges}
+                disabled={!unsavedChanges || saving}
               />
             </div>
-            <Buttons
-              btnClass="mx-2 lg:ml-5 lg:mr-10 py-1 mt-auto"
-              label="Save"
-              onClick={saveClassDetails}
-              transparent={!unsavedChanges}
-              disabled={!unsavedChanges}
-            />
           </div>
-        </div>
 
-        <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="col-span-2">
-              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                Add students to class
-              </label>
-              <div className="flex items-center justify-between">
-                <SearchSelectorWithAvatar
-                  selectedItem={newMember}
-                  list={searching ? filteredStudents : students}
-                  placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
-                  onChange={onStudentSelect}
-                  fetchStudentList={fetchStudentList}
-                  clearFilteredStudents={clearFilteredStudents}
-                  searchStatus={searching}
-                  searchCallback={setSearching}
-                  imageFromS3={false}
-                  creatable
-                  creatableLabel={'Add students from register to class'}
-                  onCreate={() => history.push('/dashboard/registration')}
-                />
+          <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="col-span-2">
+                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                  Add students to class
+                </label>
+                <div className="flex items-center justify-between">
+                  <SearchSelectorWithAvatar
+                    selectedItem={newMember}
+                    list={searching ? filteredStudents : students}
+                    placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
+                    onChange={onStudentSelect}
+                    fetchStudentList={fetchStudentList}
+                    clearFilteredStudents={clearFilteredStudents}
+                    searchStatus={searching}
+                    searchCallback={setSearching}
+                    imageFromS3={false}
+                    creatable
+                    creatableLabel={'Add students from register to class'}
+                    onCreate={() => history.push('/dashboard/registration')}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="col-span-2">
-              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                {dictionary.GROUP}
-              </label>
-              <div className="flex items-center justify-between">
-                <Selector
-                  selectedItem={newMember?.group}
-                  list={groupOptions}
-                  placeholder={dictionary.GROUP_PLACEHOLDER}
-                  onChange={onGroupChange}
-                  disabled={!newMember?.id}
-                />
+              <div className="col-span-2">
+                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                  {dictionary.GROUP}
+                </label>
+                <div className="flex items-center justify-between">
+                  <Selector
+                    selectedItem={newMember?.group}
+                    list={groupOptions}
+                    placeholder={dictionary.GROUP_PLACEHOLDER}
+                    onChange={onGroupChange}
+                    disabled={!newMember?.id}
+                  />
+                </div>
               </div>
+              <AddButton
+                className="mx-2 lg:ml-5 lg:mr-10 py-1 px-5 mt-auto"
+                label={dictionary.ADD_STUDENT_BUTTON}
+                onClick={addStudentInClass}
+                disabled={adding || !newMember.id}
+              />
             </div>
-            <AddButton
-              className="mx-2 lg:ml-5 lg:mr-10 py-1 px-5 mt-auto"
-              label={dictionary.ADD_STUDENT_BUTTON}
-              onClick={addStudentInClass}
-              disabled={adding || !newMember.id}
-            />
+            <div className="py-2">
+              <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {addMessage?.message}
+              </p>
+            </div>
           </div>
-          <div className="py-2">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {addMessage?.message}
-            </p>
-          </div>
-        </div>
-        {classStudents ? (
-          <Fragment>
-            {!loading ? (
-              classStudents.length ? (
+          {classStudents ? (
+            <Fragment>
+              {classStudents.length ? (
                 <Fragment>
                   <div className="mt-8 w-full lg:w-9/10 m-auto px-2">
                     <div className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
@@ -652,7 +698,11 @@ const EditClass = (props: EditClassProps) => {
                         </div>
                         <div
                           className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer"
-                          onClick={() => user.role !== 'BLD' ? movetoStudentProfile(item.student.id) : null}>
+                          onClick={() =>
+                            user.role !== 'BLD'
+                              ? movetoStudentProfile(item.student.id)
+                              : null
+                          }>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
                               <img
@@ -739,38 +789,37 @@ const EditClass = (props: EditClassProps) => {
                 <div className="py-12 my-12 m-auto text-center">
                   {dictionary.NOSTUDENT}
                 </div>
-              )
-            ) : (
-              <div className="py-12 my-12 m-auto text-center">{dictionary.LOADING}</div>
-            )}
-            {messages.show && (
-              <div className="py-2 m-auto text-center">
-                <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                  {messages.message && messages.message}
-                </p>
-              </div>
-            )}
-            {warnModal.show && (
-              <ModalPopUp
-                closeAction={DiscardChanges}
-                saveAction={saveAndMove}
-                saveLabel="SAVE"
-                cancelLabel="DISCARD"
-                message={warnModal.message}
-              />
-            )}
-            {warnModal2.show && (
-              <ModalPopUp
-                closeAction={closeDeleteModal}
-                saveAction={warnModal2.action}
-                saveLabel="Yes"
-                message={warnModal2.message}
-                loading={deleting}
-              />
-            )}
-          </Fragment>
-        ) : null}
-      </PageWrapper>
+              )}
+              {messages.show && (
+                <div className="py-2 m-auto text-center">
+                  <p
+                    className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                    {messages.message && messages.message}
+                  </p>
+                </div>
+              )}
+              {warnModal.show && (
+                <ModalPopUp
+                  closeAction={DiscardChanges}
+                  saveAction={saveAndMove}
+                  saveLabel="SAVE"
+                  cancelLabel="DISCARD"
+                  message={warnModal.message}
+                />
+              )}
+              {warnModal2.show && (
+                <ModalPopUp
+                  closeAction={closeDeleteModal}
+                  saveAction={warnModal2.action}
+                  saveLabel="Yes"
+                  message={warnModal2.message}
+                  loading={deleting}
+                />
+              )}
+            </Fragment>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 };

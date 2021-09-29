@@ -9,6 +9,7 @@ interface SelectorProps {
   list?: {id: number; name: string | number}[];
   selectedItem?: string;
   btnClass?: string;
+  additionalClass?: string;
   arrowHidden?: boolean;
   placeholder: string;
   onChange: (c: string, n: string, id: string) => void;
@@ -26,6 +27,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     label,
     list,
     selectedItem,
+    additionalClass,
     btnClass,
     disabled,
     arrowHidden,
@@ -80,7 +82,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   }
 
   return (
-    <div className="relative" ref={currentRef}>
+    <div className={`relative ${additionalClass}`} ref={currentRef}>
       {label && (
         <label
           className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
