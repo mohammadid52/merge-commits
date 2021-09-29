@@ -17,10 +17,6 @@ import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 
-/** --- Guide
- *   1. Check if notes-form is included in journal data or not
- */
-
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
   studentID: '',
@@ -61,9 +57,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
-
-  const {user} = lessonState;
 
   const allNotes = mapNotesTogether();
 
@@ -152,7 +145,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
             let updatedStudentData: any = await API.graphql(
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
-            console.log('updateStudentData - timer - ', data);
           } catch (e) {
             console.error('update universal student data - ', encodeURI);
           } finally {
@@ -166,75 +158,11 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     );
   };
 
-  const loopCreateStudentData = async (
-    lessonPages: any[],
-    lessonID: string,
-    authId: string,
-    email: string
-  ) => {
-    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
-      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
-      );
-      const input = {
-        syllabusLessonID: getRoomData.activeSyllabus,
-        lessonID: lessonID,
-        lessonPageID: lessonPage.id,
-        studentID: authId,
-        studentAuthID: authId,
-        studentEmail: email,
-        roomID: getRoomData.id,
-        currentLocation: indexOfPage,
-        lessonProgress: '0',
-        pageData: lessonState.studentData[indexOfPage],
-        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage],
-      };
-
-      const newStudentData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalLessonStudentData, {
-          input,
-        })
-      );
-      const returnedData = newStudentData.data.createUniversalLessonStudentData;
-      return returnedData;
-    });
-    return createdRecords;
-  };
-
-  const PAGES = lessonState?.lessonData?.lessonPlan;
-
-  const studentDataIdArray = (studentDataArray: any[]) => {
-    const idArr = studentDataArray
-      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
-        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-          (lessonPlanPage: UniversalLessonPage) =>
-            lessonPlanPage.id === studentDataIdObj.lessonPageID
-        );
-        const idObj = {
-          id: studentDataIdObj.id,
-          pageIdx: indexOfPage,
-          lessonPageID: studentDataIdObj.lessonPageID,
-          update: false,
-        };
-        return [...acc, idObj];
-      }, [])
-      .sort((dataID1: any, dataID2: any) => {
-        if (dataID1.pageIdx < dataID2.pageIdx) {
-          return -1;
-        }
-        if (dataID1.pageIdx > dataID2.pageIdx) {
-          return 1;
-        }
-      });
-    return idArr;
-  };
-
   const addNewNote = async (newNote: any, notesData: any) => {
     let oldEntryData = [...notesData.entryData];
 
     oldEntryData.push(newNote);
-    setNotesData({...notesData, entryData: [...oldEntryData]});
+    setNotesData((prev) => ({...prev, entryData: [...oldEntryData]}));
 
     try {
       const input = {
@@ -252,12 +180,14 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
 
+      const updatedData = updateJournalData.data.updateUniversalJournalData;
+
       setNotesData({
-        id: updateJournalData.id,
-        studentID: updateJournalData.studentID,
-        studentAuthID: updateJournalData.studentAuthID,
-        studentEmail: updateJournalData.studentEmail,
-        feedbacks: updateJournalData.feedbacks,
+        id: updatedData.id,
+        studentID: updatedData.studentID,
+        studentAuthID: updatedData.studentAuthID,
+        studentEmail: updatedData.studentEmail,
+        feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
         syllabusLessonID: getRoomData.activeSyllabus,
@@ -289,7 +219,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const updatedJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
-      if (updatedJournalData && updatedJournalData.entryData) {
+      const updatedData = updatedJournalData.data.updateUniversalJournalData;
+
+      if (updatedData && updatedData.entryData) {
         setNotesData((prev) => ({
           ...prev,
           entryData: input.entryData,
@@ -325,13 +257,14 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const _updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
+      const updatedData = _updateJournalData.data.updateUniversalJournalData;
 
       setNotesData({
-        id: _updateJournalData.id,
-        studentID: _updateJournalData.studentID,
-        studentAuthID: _updateJournalData.studentAuthID,
-        studentEmail: _updateJournalData.studentEmail,
-        feedbacks: _updateJournalData.feedbacks,
+        id: updatedData.id,
+        studentID: updatedData.studentID,
+        studentAuthID: updatedData.studentAuthID,
+        studentEmail: updatedData.studentEmail,
+        feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
         syllabusLessonID: getRoomData.activeSyllabus,
@@ -342,6 +275,46 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       console.log('updated journal data...');
       // if (notesChanged) setNotesChanged(false);
       // if (saveInProgress) setSaveInProgress(false);
+    }
+  };
+
+  const noteDelete = async (notesData: {
+    id: any;
+    studentID: any;
+    studentAuthID: any;
+    studentEmail: any;
+    entryData: any;
+  }) => {
+    try {
+      const input = {
+        id: notesData.id,
+        studentID: notesData.studentID,
+        studentAuthID: notesData.studentAuthID,
+        studentEmail: notesData.studentEmail,
+        entryData: [...notesData.entryData],
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      };
+
+      const _updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+      const updatedData = _updateJournalData.data.updateUniversalJournalData;
+
+      setNotesData({
+        id: updatedData.id,
+        studentID: updatedData.studentID,
+        studentAuthID: updatedData.studentAuthID,
+        studentEmail: updatedData.studentEmail,
+        feedbacks: updatedData.feedbacks,
+        entryData: input.entryData,
+        roomID: getRoomData.id,
+        syllabusLessonID: getRoomData.activeSyllabus,
+      });
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      console.log('updated journal data...');
     }
   };
 
@@ -390,13 +363,14 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const _updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
+      const updatedData = _updateJournalData.data.updateUniversalJournalData;
 
       setNotesData({
-        id: _updateJournalData.id,
-        studentID: _updateJournalData.studentID,
-        studentAuthID: _updateJournalData.studentAuthID,
-        studentEmail: _updateJournalData.studentEmail,
-        feedbacks: _updateJournalData.feedbacks,
+        id: updatedData.id,
+        studentID: updatedData.studentID,
+        studentAuthID: updatedData.studentAuthID,
+        studentEmail: updatedData.studentEmail,
+        feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
         syllabusLessonID: getRoomData.activeSyllabus,
@@ -530,11 +504,15 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
     const mapCustomData = fixedCustomData.map((m) => {
       const className = m.type.split(' || ')[1];
+      const note = find(allNotes, ['id', m.domID]);
+
       return {
         id: m.domID,
         class: className,
         value: strippedString(m.input.toString()),
         custom: true,
+        pagePartId: note?.pagePartId,
+        partContentId: note?.partContentId,
       };
     });
 
@@ -549,6 +527,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
             value={collectedNotes}
             notesData={notesData}
             setNotesData={setNotesData}
+            noteDelete={noteDelete}
             saveData={saveData}
             updateJournalData={updateJournalData}
             notesInitialized={notesInitialized}

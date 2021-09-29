@@ -8,7 +8,6 @@ import useStudentDataValue from '@customHooks/studentDataValue';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
 import {wait} from '@utilities/functions';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
@@ -61,7 +60,9 @@ const genSticky = (
       throwProps: true,
       type: 'x,y',
       inertia: true,
-
+      onDragEnd: (e) => {
+        console.log(e);
+      },
       // @ts-ignore
       autoScroll: true,
 
@@ -91,6 +92,7 @@ interface INoteBlock {
   saveData?: (notesData: any, cb?: any, cb2?: any) => void;
   notesData?: any;
   updateJournalData?: any;
+  noteDelete?: (notesData: any) => void;
   setNotesData?: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -113,24 +115,22 @@ const NotesBlock = ({
   setNotesData,
   addNew,
   notesInitialized,
-
+  noteDelete,
   grid,
   saveData,
   updateJournalData,
 }: INoteBlock) => {
   const {
-    lessonState,
     state: {user},
+    lessonDispatch,
   } = useContext(GlobalContext);
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const currentLesson: any = lessonState.lessonData;
-
   const [localNotes, setLocalNotes] = useState([]);
 
   gsap.registerPlugin(InertiaPlugin, Draggable);
-  // gsap.ticker.fps(60);
+  gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
   const [isContainerRendered, setIsContainerRendered] = useState(false);
@@ -153,11 +153,21 @@ const NotesBlock = ({
   if (jQuery.ready) {
     localNotes &&
       localNotes.length > 0 &&
-      localNotes.forEach((note: {id: any}) => {
+      localNotes.forEach((note: {id: any}, idx: number) => {
         if (note) {
-          $(`#${note.id} #note`).on('click', (e) => {
+          console.log(
+            '🚀 ~ file: NotesBlock.tsx ~ line 157 ~ localNotes.forEach ~ note',
+            note.id
+          );
+          const id = `#${note.id} #note-${note.id}`;
+
+          $(id).on('click', (e) => {
             e.target.focus();
           });
+
+          setTimeout(() => {
+            gsap.set(`#${note.id}`, {x: 100 * idx + 1, ease: 'power.out'});
+          }, 1000);
         }
       });
   }
@@ -170,15 +180,7 @@ const NotesBlock = ({
       return 'You have unsaved changes on this page.';
     }
   };
-  window.onbeforeunload = onUnload;
-
-  const handleSetMenuState = async (data?: any) => {
-    // if (notesChanged) {
-
-    await updateJournalData(data);
-    setNotesChanged(false);
-  };
-  // };
+  // window.onbeforeunload = onUnload;
 
   const updateNotesContent = (html: string, noteId: string) => {
     const idx = findIndex(notesData.entryData, ['domID', noteId]);
@@ -193,61 +195,18 @@ const NotesBlock = ({
     setDataValue(noteId, [e.target.value]);
   };
 
-  const [currentLocalLesson, setCurrentLocalLesson] = useState(currentLesson);
-
   const onNoteDelete = async () => {
     const note: any =
       showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
+
     setNotesChanged(true);
     setShowDeleteModal({...showDeleteModal, show: false});
 
-    // remove(localNotes, (_note) => _note.id === note.id);
-    // setLocalNotes([...localNotes]);
-
     remove(notesData.entryData, ['domID', note.id]);
+
     setNotesData({...notesData});
-    handleSetMenuState(null);
 
-    const updateLesson = async () => {
-      const currentPageIdx = lessonState.currentPage;
-      if (currentLesson) {
-        const pageContent: any = currentLesson.lessonPlan[currentPageIdx].pageContent;
-        const pagePartIdx = findIndex(pageContent, (d: any) => d.id === note.pagePartId);
-        const partContent = pageContent[pagePartIdx].partContent;
-        const partContentIdx = findIndex(
-          partContent,
-          (d: any) => d.id === note.partContentId
-        );
-        const valueArr = partContent[partContentIdx].value;
-
-        remove(valueArr, (d: any) => d.id === note.id);
-
-        update(
-          currentLocalLesson,
-          `lessonPlan[${currentPageIdx}].pageContent[${pagePartIdx}].partContent[
-          ${partContentIdx}
-        ].value`,
-          () => valueArr
-        );
-
-        setCurrentLocalLesson({...currentLocalLesson});
-
-        try {
-          modalBtns.delete.cancel();
-
-          const input = {
-            id: currentLocalLesson.id,
-            lessonPlan: [...currentLocalLesson.lessonPlan],
-          };
-
-          await updateLessonPageToDB(input);
-        } catch (error) {
-          console.error('@onNoteDelete - NotesBlock.tsx', error);
-        } finally {
-        }
-      }
-    };
-    updateLesson();
+    noteDelete(notesData);
   };
 
   const onAddNewNote = () => {
@@ -271,6 +230,14 @@ const NotesBlock = ({
       },
       notesData
     );
+
+    lessonDispatch({
+      type: 'ADD_NEW_INPUT',
+      payload: {
+        domID: newNoteObj.id,
+        input: [''],
+      },
+    });
   };
 
   const onNoteEdit = async () => {
