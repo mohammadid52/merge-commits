@@ -865,7 +865,8 @@ const LessonApp = () => {
     <>
       <FloatingSideMenu />
       <div
-        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}>
+        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+        ref={topLessonRef}>
         <div
           className={`opacity-${
             showRequiredNotification
@@ -887,7 +888,7 @@ const LessonApp = () => {
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
-        <div className="relative top-6 lesson-body-container" ref={topLessonRef}>
+        <div className="relative top-6 lesson-body-container">
           {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
               <LessonPageLoader />
