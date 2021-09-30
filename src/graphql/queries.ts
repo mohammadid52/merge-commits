@@ -5379,6 +5379,7 @@ export const getAttendance = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -5568,6 +5569,7 @@ export const listAttendances = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -5691,6 +5693,7 @@ export const getUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -5712,6 +5715,7 @@ export const getUniversalLesson = /* GraphQL */ `
           tags
           partType
           class
+          showIfAsync
         }
         activityType
         interactionType
@@ -5724,6 +5728,7 @@ export const getUniversalLesson = /* GraphQL */ `
       groupType
       smallGroupSize
       smallGroupOption
+      studentMaterials
       createdAt
       updatedAt
     }
@@ -5802,6 +5807,7 @@ export const listUniversalLessons = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -6100,6 +6106,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         groupType
         smallGroupSize
         smallGroupOption
+        studentMaterials
         createdAt
         updatedAt
       }
@@ -6200,6 +6207,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -6272,6 +6280,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
@@ -6586,6 +6595,69 @@ export const listPersonSentimentss = /* GraphQL */ `
         time
         responseText
         backstory
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPersonFiles = /* GraphQL */ `
+  query GetPersonFiles($id: ID!) {
+    getPersonFiles(id: $id) {
+      id
+      personAuthID
+      personEmail
+      uploadedAt
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      files {
+        fileName
+        fileKey
+        fileSize
+      }
+      lessonPageID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonFiless = /* GraphQL */ `
+  query ListPersonFiless(
+    $id: ID
+    $filter: ModelPersonFilesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonFiless(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        uploadedAt
+        feedbacks
+        shared
+        lessonID
+        syllabusLessonID
+        lessonType
+        roomID
+        files {
+          fileName
+          fileKey
+          fileSize
+        }
+        lessonPageID
         createdAt
         updatedAt
       }
@@ -6965,6 +7037,7 @@ export const attendanceByStudent = /* GraphQL */ `
           groupType
           smallGroupSize
           smallGroupOption
+          studentMaterials
           createdAt
           updatedAt
         }
