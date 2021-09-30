@@ -683,7 +683,6 @@ const LessonApp = () => {
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      // console.log('studentDataRows[0] - ', studentDataRows[0]);
 
       if (studentDataRows.length > 0) {
         lessonDispatch({
@@ -703,7 +702,12 @@ const LessonApp = () => {
   useEffect(() => {
     const sharedAuthID = displayData[0].studentAuthID;
     const sharedPageID = displayData[0].lessonPageID;
-    if (displayData[0].studentAuthID && displayData[0].studentAuthID !== '') {
+    const isOtherStudent = sharedAuthID !== user.authId;
+    if (
+      displayData[0].studentAuthID &&
+      displayData[0].studentAuthID !== '' &&
+      isOtherStudent
+    ) {
       getSharedStudentData(sharedAuthID, sharedPageID);
     } else {
       if (lessonState.sharedData && lessonState.sharedData.length > 0) {

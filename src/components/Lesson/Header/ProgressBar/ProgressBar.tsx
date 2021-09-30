@@ -74,7 +74,7 @@ const ProgressBar = ({
     <nav
       className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
       aria-label="Breadcrumb">
-      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
         {pages &&
           pages.map((page: UniversalLessonPage, key: number) => {
             // console.table({key: key, nextReq: nextRequiredIdx, pageOpen: page.open});
