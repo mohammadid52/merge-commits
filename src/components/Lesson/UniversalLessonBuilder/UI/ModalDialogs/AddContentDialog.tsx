@@ -155,14 +155,14 @@ const AddContentDialog = ({
     },
   ];
   const userInterfaceContent = [
-    // {
-    //   name: 'Notes ⭐',
-    //   type: 'notes-form',
-    //   subtitle: 'Interactive notes for students',
-    //   icon: CgNotes,
-    //   iconForeground: 'text-blue-700',
-    //   iconBackground: 'bg-blue-100',
-    // },
+    {
+      name: 'Notes ⭐',
+      type: 'notes-form',
+      subtitle: 'Interactive notes for students',
+      icon: CgNotes,
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-100',
+    },
     {
       name: 'Review slider',
       type: FORM_TYPES.REVIEW_SLIDER,
