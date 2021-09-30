@@ -447,7 +447,9 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         '',
         FORM_TYPES.DOWNLOAD,
         _files,
-        0
+        0,
+        '',
+        parentKey
       );
 
       await addToDB(updatedList);

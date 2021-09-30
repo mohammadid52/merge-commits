@@ -24,7 +24,10 @@ export const getDashboardData = /* GraphQL */ `
                 ClosedPages
                 disabledPages
                 studentViewing
-                displayData
+                displayData {
+                  studentAuthID
+                  lessonPageID
+                }
                 currentPage
                 teacher {
                   firstName
@@ -69,6 +72,7 @@ export const getDashboardData = /* GraphQL */ `
             students {
               items {
                 student {
+                  authId
                   firstName
                   lastName
                   image
@@ -180,6 +184,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           students {
             items {
               student {
+                authId
                 firstName
                 lastName
                 image
@@ -228,7 +233,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
         createdAt
         updatedAt
@@ -674,7 +682,10 @@ export const listRooms = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
       }
       nextToken
@@ -854,7 +865,10 @@ export const getRoomSetup = /* GraphQL */ `
       ClosedPages
       disabledPages
       studentViewing
-      displayData
+      displayData {
+        studentAuthID
+        lessonPageID
+      }
       currentPage
       completedLessons {
         lessonID
@@ -950,7 +964,10 @@ export const listRoomsDashboard = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
         createdAt
         updatedAt
@@ -1917,9 +1934,9 @@ export const listUniversalLessonsForInstitution = /* GraphQL */ `
           id
           title
           label
-          pageContent{
+          pageContent {
             id
-            partContent{
+            partContent {
               id
             }
           }
@@ -2103,6 +2120,20 @@ export const getUniversalLesson = /* GraphQL */ `
   }
 `;
 
+export const getUniversalLessonMinimum = /* GraphQL */ `
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      title
+      lessonPlan {
+        id
+        title
+        label
+      }
+    }
+  }
+`;
+
 export const listInstitutions = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
@@ -2123,6 +2154,7 @@ export const listInstitutions = /* GraphQL */ `
         name
         type
         district
+        address
         address
         addressLine2
         city
@@ -4100,6 +4132,47 @@ export const getScheduleDetails = /* GraphQL */ `
   }
 `;
 
+export const listRoomsNotebook = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        activeSyllabus
+        curricula {
+          items {
+            id
+            roomID
+            curriculumID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCurriculumNotebook = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
+    }
+  }
+`;
+
 export const getBasicDetailsOfInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
@@ -4165,11 +4238,7 @@ export const getInstitutionCurriculums = /* GraphQL */ `
 `;
 
 export const listRoomsBasicDetails = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -4204,6 +4273,51 @@ export const listRoomsBasicDetails = /* GraphQL */ `
           reasonComment
           lessonImpact
           adjustment
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getStudentSurveyResponse = /* GraphQL */ `
+  query ListUniversalLessonStudentDatas(
+    $id: ID
+    $filter: ModelUniversalLessonStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        pageData {
+          domID
+          options
+          input
+        }
+        hasExerciseData
+        exerciseData {
+          id
+          feedbacks
+          shared
         }
         createdAt
         updatedAt

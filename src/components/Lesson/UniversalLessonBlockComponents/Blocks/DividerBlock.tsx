@@ -1,10 +1,6 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import React from 'react';
 
-const DividerBlock = ({value, bgWhite}: {value: string; bgWhite?: boolean}) => {
-  const {
-    state: {lessonPage: {theme = 'dark'} = {}},
-  } = useContext(GlobalContext);
+const DividerBlock = ({value, bgWhite}: {value: any; bgWhite?: boolean}) => {
   return (
     <div className="relative my-2">
       <div className="absolute inset-0 flex items-center" aria-hidden="true">

@@ -12,7 +12,6 @@ interface TopMenuControlProps {
   handleComplete?: () => void;
   handleLessonButton?: () => void;
   handleQuitViewing: () => void;
-  handleShareStudentData: () => void;
   handleQuitShare: () => void;
   handleClick: () => void;
   handleHomePopup: () => void;
@@ -30,15 +29,18 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
     handleOpen,
     handleComplete,
     handleLessonButton,
-
     handleClick,
     handleHomePopup,
     handlePageChange,
     setQuickRegister,
   } = props;
 
-  const {lessonState, controlState} = useContext(GlobalContext);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const controlState = gContext.controlState;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const {lessonPlannerDict} = useDictionary(clientKey);
 
   const getRoomData = getLocalStorageData('room_info');
@@ -62,16 +64,6 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
           {`${getRoomData.name ? getRoomData.name : ''}`}
         </p>
-
-        {/* <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity
-            </p> */}
-
-        {/* <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
-              {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}
-            </p>*/}
-
         <p className="text-xs">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
           {lessonState.lessonData?.duration}{' '}

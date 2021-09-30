@@ -5,34 +5,32 @@ import {BsCameraVideoFill} from 'react-icons/bs';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import Storage from '@aws-amplify/storage';
-import * as mutations from '../../../graphql/mutations';
+import * as mutations from '../../../../graphql/mutations';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {AddQuestionModalDict} from '../../../dictionary/dictionary.iconoclast';
-import {getImageFromS3} from '../../../utilities/services';
-import Buttons from '../../Atoms/Buttons';
-import Loader from '../../Atoms/Loader';
-import ModalPopUp from '../../Molecules/ModalPopUp';
-import Feedback from '../Admin/UserManagement/Feedback';
-import Modal from '../../Atoms/Modal';
-import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+import {getImageFromS3} from '../../../../utilities/services';
+import Buttons from '../../../Atoms/Buttons';
+import Loader from '../../../Atoms/Loader';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
+import Feedback from '../../Admin/UserManagement/Feedback';
+import Modal from '../../../Atoms/Modal';
+import {getAsset} from '../../../../assets';
 import {HiEmojiHappy} from 'react-icons/hi';
 import EmojiPicker from 'emoji-picker-react';
 
-const Feedbacks = ({
-  showComments,
-  item,
-  allStudentData,
-  setAllStudentData,
-  allUniversalJournalData,
-  setAllUniversalJournalData,
+const FeedbacksUploads = ({
+  idx,
+  contentObj,
   subSection,
   feedbackData,
   setFeedbackData,
   loadingComments,
-  idx,
+  showComments,
   fileObject,
   setFileObject,
+  personEmail,
+  personAuthID,
 }: any) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
 
@@ -140,71 +138,27 @@ const Feedbacks = ({
   // ################################ CRUD ############################### //
   // ##################################################################### //
 
-  // ~~~~~~~~ DB-UPDATE STUDENT DATA ~~~~~~~ //
+  // ~~~~~~~~ DB-UPDATE UPLOAD ENTRY ~~~~~~~ //
 
-  const updateExerciseFeedback = async (newFeedBackIds: string[]) => {
-    const selectStudentDataRecord = allStudentData.find(
-      (record: any) => record.id === item.recordID
-    );
-
-    const newExerciseFeedback = {
-      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
-        if (exercise.id === item.id) {
-          return {...exercise, feedbacks: newFeedBackIds};
-        } else {
-          return exercise;
-        }
-      }),
-    };
-
-    const mergedStudentData = allStudentData.map((dataRecord: any) => {
-      if (dataRecord.id === selectStudentDataRecord.id) {
-        return {...dataRecord, exerciseData: newExerciseFeedback.exerciseData};
-      } else {
-        return dataRecord;
-      }
-    });
+  const updateUploadsFeedback = async (newFeedBackIds: string[]) => {
+    const updatedContentObj = {...contentObj, feedbacks: newFeedBackIds};
 
     try {
-      const updatedStudentData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+      const updateUploadsData: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonFiles, {
           input: {
-            id: selectStudentDataRecord.id,
-            exerciseData: newExerciseFeedback.exerciseData,
-          },
-        })
-      );
-      setAllStudentData(mergedStudentData);
-    } catch (e) {
-      console.error('error updating exercise feedbacks- ', e);
-    } finally {
-      //
-    }
-  };
-
-  // ~~~~~~~ DB-UPDATE JOURNAL ENTRY ~~~~~~~ //
-
-  const updateJournalFeedback = async (newFeedBackIds: string[]) => {
-    const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
-      if (dataRecord.id === item.id) {
-        return {...dataRecord, feedbacks: newFeedBackIds};
-      } else {
-        return dataRecord;
-      }
-    });
-
-    try {
-      const updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
-          input: {
-            id: item.id,
+            id: contentObj.id,
+            personEmail: personEmail,
+            personAuthID: personAuthID,
             feedbacks: newFeedBackIds,
           },
         })
       );
-      setAllUniversalJournalData(mergedJournalData);
+
+      // TODO: set this to 'setAllPersonLessonFiles'
+      // setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
-      console.error('error updating journal feedbacks - ', e);
+      console.error('error updating uploads feedbacks - ', e);
     } finally {
       //
     }
@@ -228,7 +182,11 @@ const Feedbacks = ({
     }
   };
 
-  const pushCommentToDatabase = async (text: string, item: any, attachments?: any) => {
+  const pushCommentToDatabase = async (
+    text: string,
+    contentObj: any,
+    attachments?: any
+  ) => {
     try {
       let input = {
         email: state.user.email,
@@ -253,41 +211,30 @@ const Feedbacks = ({
       );
 
       const commentData: any = results.data.createAnthologyComment;
-      let newFeedbacks = item.feedbacks || [];
+      let newFeedbacks = contentObj.feedbacks || [];
 
       if (!newFeedbacks.includes(commentData.id)) {
         newFeedbacks.push(commentData.id);
       }
 
-      if (subSection === 'Work') {
-        await updateExerciseFeedback(newFeedbacks);
-      } else {
-        await updateJournalFeedback(newFeedbacks);
-      }
-
-      // const feedbackData: any = results.data.updateStudentData;
-      // onSuccessCB(feedbackData?.anthologyContent?.feedbacks);
+      updateUploadsFeedback(newFeedbacks);
     } catch (error) {
       console.error('error @createAnthologyComment: ', error);
     }
   };
 
-  const deleteCommentFromDatabase = async (id: string, item: any) => {
+  const deleteCommentFromDatabase = async (id: string, contentObj: any) => {
     try {
       const results: any = await API.graphql(
         graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
       );
 
       let newFeedbacks =
-        item.feedbacks.length > 0
-          ? item.feedbacks.filter((feedbackId: string) => feedbackId !== id)
+        contentObj.feedbacks.length > 0
+          ? contentObj.feedbacks.filter((feedbackId: string) => feedbackId !== id)
           : [];
 
-      if (subSection === 'Work') {
-        await updateExerciseFeedback(newFeedbacks);
-      } else {
-        await updateJournalFeedback(newFeedbacks);
-      }
+      updateUploadsFeedback(newFeedbacks);
     } catch (e) {
       console.error('error deleting comment - ', e);
     }
@@ -316,7 +263,7 @@ const Feedbacks = ({
 
       const imageUrl: any = await getImageFromS3(id);
 
-      pushCommentToDatabase(_comment, item, {
+      pushCommentToDatabase(_comment, contentObj, {
         url: imageUrl,
         type,
         filename: _fileObject.name,
@@ -331,7 +278,7 @@ const Feedbacks = ({
       setUploadingAttachment(false);
     } else {
       pushCommentToLocalState(comment);
-      pushCommentToDatabase(comment, item);
+      pushCommentToDatabase(comment, contentObj);
     }
     setFileObject({});
     setComment('');
@@ -348,7 +295,7 @@ const Feedbacks = ({
 
       const filteredData: any = feedbackData.filter((data: any) => data.id !== id);
       setFeedbackData(filteredData); // this is to update local state
-      deleteCommentFromDatabase(id, item);
+      deleteCommentFromDatabase(id, contentObj);
     }
   };
 
@@ -786,4 +733,4 @@ const Feedbacks = ({
   );
 };
 
-export default Feedbacks;
+export default FeedbacksUploads;

@@ -1,12 +1,48 @@
-import React, {useState, useEffect} from 'react';
-import {Editor} from 'react-draft-wysiwyg';
+import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import {EditorState, convertToRaw, ContentState} from 'draft-js';
+import React, {Component, useEffect, useState} from 'react';
+import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {BsPencil} from 'react-icons/bs';
+// @ts-ignore
+import {BlockPicker} from 'react-color';
+
+// const ColorPicker = (props: {
+//   currentState?: any;
+//   expanded?: any;
+//   onExpandEvent?: any;
+//   onChange: any;
+// }) => {
+//   const stopPropagation = (event: {stopPropagation: () => void}) => {
+//     event.stopPropagation();
+//   };
+
+//   const _onChange = (color: {hex: any}) => {
+//     const {onChange} = props;
+//     onChange('color', color.hex);
+//   };
+
+//   const renderModal = () => {
+//     const {color} = props.currentState;
+//     return (
+//       <div onClick={stopPropagation}>
+//         <BlockPicker color={color} onChangeComplete={_onChange} />
+//       </div>
+//     );
+//   };
+
+//   const {expanded, onExpandEvent} = props;
+//   return (
+//     <div aria-haspopup="true" aria-expanded={expanded} aria-label="rdw-color-picker">
+//       <div onClick={onExpandEvent}>
+//         <img src={'https://image.flaticon.com/icons/png/512/1250/1250615.png'} alt="" />
+//       </div>
+//       {expanded ? renderModal() : undefined}
+//     </div>
+//   );
+// };
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -92,6 +128,12 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   }, [initialValue]);
 
   const editorRef = React.useRef();
+
+  const header = $('.rdw-colorpicker-modal-header');
+  setTimeout(() => {
+    header.children('span').eq(1).trigger('click');
+  }, 300);
+  header.css({display: 'none'});
 
   useEffect(() => {
     if (editorRef && editorRef?.current && withStyles) {
@@ -199,7 +241,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         },
         colorPicker: {
           icon: 'https://image.flaticon.com/icons/png/512/1250/1250615.png',
-
           className: ` ${
             customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''
           }  toolItemClassName ${theme} toolbarCustomIcon`,

@@ -22,9 +22,7 @@ import Loader from '../../../Atoms/Loader';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';

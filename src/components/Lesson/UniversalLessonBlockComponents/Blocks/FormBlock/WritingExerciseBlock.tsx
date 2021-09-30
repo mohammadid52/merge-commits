@@ -1,7 +1,4 @@
-import {noop} from 'lodash';
-import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import React, {useState} from 'react';
 import {Options} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
 import EditingBlock from '../PoemBlock/EditingBlock';
@@ -14,34 +11,20 @@ interface WritingExerciseProps extends FormControlProps {
   options?: Options[] | null;
 }
 
-const WritingExerciseBlock = (props: WritingExerciseProps) => {
-  const {inputID, id, label, options, onChange, title, value, disabled} = props;
-
-  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
-
+const WritingExerciseBlock = ({
+  inputID,
+  id,
+  label,
+  options,
+  onChange,
+  title,
+  value,
+  disabled,
+}: WritingExerciseProps) => {
   const [fields, setFields] = useState({
     poemHtml: '',
     poemText: '',
   });
-
-  // ##################################################################### //
-  // ######################## STUDENT DATA CONTEXT ####################### //
-  // ##################################################################### //
-  const isStudent = state.user.role === 'ST';
-  const isInLesson = useInLessonCheck();
-
-  const handleUpdateStudentData = (domID: string, input: string[]) => {
-    lessonDispatch({
-      type: 'UPDATE_STUDENT_DATA',
-      payload: {
-        pageIdx: lessonState.currentPage,
-        data: {
-          domID: domID,
-          input: input,
-        },
-      },
-    });
-  };
 
   return (
     <div
@@ -52,7 +35,7 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
           {label && (
             <>
               <label className={`text-sm text-gray-900 dark:text-white`} htmlFor="label">
-                {label}
+                Title
               </label>
               <input
                 id={inputID}
@@ -61,6 +44,7 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
                 name={'text'}
                 type={'text'}
                 onChange={onChange}
+                placeholder={label}
                 value={value}
               />
             </>
@@ -75,9 +59,6 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
                 linestarters={options}
                 fields={fields}
                 setFields={setFields}
-                handleUpdateStudentData={
-                  isInLesson && isStudent ? handleUpdateStudentData : noop
-                }
               />
             ) : null}
           </div>
@@ -86,9 +67,6 @@ const WritingExerciseBlock = (props: WritingExerciseProps) => {
             setFields={setFields}
             fields={fields}
             poemWriting={value}
-            handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : noop
-            }
           />
         </div>
       )}

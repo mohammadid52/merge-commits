@@ -1,17 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react';
-
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import Buttons from '../../../../Atoms/Buttons';
-
-import {
-  UniversalBuilderDict,
-  EditQuestionModalDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 
 interface IVideoInput {
   url: string;

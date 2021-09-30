@@ -49,3 +49,7 @@ export const eclipse = (text: string, len: number): string => {
     }
   }
 };
+
+export const randomNumber = (min: number, max: number): number => {
+  return Math.random() * (max - min) + min;
+};

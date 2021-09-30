@@ -99,7 +99,7 @@ export interface IContentTypeComponentProps {
     classString?: string,
 
     customPageContentId?: string
-  ) => void;
+  ) => any;
   updateBlockContentULBHandler: (
     targetID: string,
     propertyToTarget: string,
@@ -108,7 +108,7 @@ export interface IContentTypeComponentProps {
     addBlockAtPosition?: number,
     classString?: string,
     customPageContentId?: string
-  ) => void;
+  ) => any;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
 
   askBeforeClose: () => void;

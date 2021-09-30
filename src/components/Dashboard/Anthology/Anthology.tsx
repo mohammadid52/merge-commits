@@ -1,49 +1,68 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEdit, FaSpinner} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
-
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-
-import HeroBanner from '../../Header/HeroBanner';
-import AnthologyContent from './AnthologyContent';
+import {Auth} from '@aws-amplify/auth';
+import {nanoid} from 'nanoid';
+import {FaSpinner} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib';
 import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customQueries from '../../../customGraphql/customQueries';
+import useDictionary from '../../../customHooks/dictionary';
+import usePrevious from '../../../customHooks/previousProps';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import {
-  StudentExerciseData,
   UniversalJournalData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {nanoid} from 'nanoid';
-import {Auth} from '@aws-amplify/auth';
-import {useParams} from 'react-router-dom';
-
-import TabView from './TabView';
-import RoomView from './RoomView';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {IconContext} from 'react-icons/lib';
-import usePrevious from '../../../customHooks/previousProps';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import Modal from '../../Atoms/Modal';
-import FormInput from '../../Atoms/Form/FormInput';
 import Buttons from '../../Atoms/Buttons';
+import FormInput from '../../Atoms/Form/FormInput';
+import Modal from '../../Atoms/Modal';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import HeroBanner from '../../Header/HeroBanner';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import RoomView from './RoomView';
+import TabView from './TabView';
+import {useHistory} from 'react-router-dom';
+import {userInfo} from 'os';
+import update from 'lodash/update';
 
-export type ViewEditMode = {
+// ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
+
+export interface IAnthologyProps {
+  studentID?: string;
+  studentAuthID?: string;
+  studentEmail?: string;
+  studentName?: string;
+  isTeacher?: boolean;
+}
+export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
   option?: number;
   recordID?: string;
-};
+}
 
-const Anthology = () => {
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+const Anthology = ({
+  studentID,
+  studentAuthID,
+  studentEmail,
+  studentName,
+  isTeacher,
+}: IAnthologyProps) => {
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const userLanguage = gContext.userLanguage;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  // other
   const {anthologyDict} = useDictionary(clientKey);
-  const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+  const history = useHistory();
 
   // ##################################################################### //
   // ########################### INITIALIZATION ########################## //
@@ -80,13 +99,13 @@ const Anthology = () => {
   const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
 
   const getStudentData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
+    // const user = await Auth.currentAuthenticatedUser();
+    // const studentAuthId = user.username;
 
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId},
+          studentAuthID: {eq: studentAuthID},
           hasExerciseData: {eq: true},
         },
       };
@@ -186,9 +205,9 @@ const Anthology = () => {
   // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
   const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
     id: '',
-    studentID: state.user.authId,
-    studentAuthID: state.user.authId,
-    studentEmail: state.user.studentEmail,
+    studentID: studentAuthID,
+    studentAuthID: studentAuthID,
+    studentEmail: studentEmail,
     type: 'journal-entry',
     feedbacks: [''],
     shared: false,
@@ -221,9 +240,18 @@ const Anthology = () => {
           studentAuthID: {eq: studentAuthId},
         },
       };
+      const listFilterIfTeacher = {
+        filter: {
+          studentAuthID: {eq: studentAuthID},
+          shared: {eq: 'true'},
+        },
+      };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
+        graphqlOperation(
+          queries.listUniversalJournalDatas,
+          isTeacher ? listFilterIfTeacher : listFilter
+        )
       );
       const journalEntryDataRows = journalEntryData.data.listUniversalJournalDatas.items;
 
@@ -335,19 +363,24 @@ const Anthology = () => {
     });
   };
 
-  const updateJournalDataContent = (html: string, targetType: string) => {
-    const updatedNotesData = {
-      ...journalEntryData,
-      entryData: journalEntryData.entryData.map((entryObj: any) => {
-        if (entryObj.type === targetType) {
-          return {...entryObj, input: html};
-        } else {
-          return entryObj;
-        }
-      }),
-    };
-    // console.log('input - ', html);
-    setJournalEntryData(updatedNotesData);
+  const updateJournalDataContent = (html: string, targetType: string, idx?: number) => {
+    if (idx !== undefined) {
+      update(journalEntryData, `entryData[${idx}].input`, () => html);
+      setJournalEntryData({...journalEntryData});
+    } else {
+      const updatedNotesData = {
+        ...journalEntryData,
+        entryData: journalEntryData.entryData.map((entryObj: any) => {
+          if (entryObj.type === targetType) {
+            return {...entryObj, input: html};
+          } else {
+            return entryObj;
+          }
+        }),
+      };
+      // console.log('input - ', html);
+      setJournalEntryData(updatedNotesData);
+    }
   };
 
   // ##################################################################### //
@@ -426,6 +459,7 @@ const Anthology = () => {
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();
           await updateStudentData();
+          await updateJournalData();
         } else if (viewEditMode.mode === '') {
           await handleResetJournalEntry();
         }
@@ -550,6 +584,12 @@ const Anthology = () => {
     }
   };
 
+  // ~~~~~~~~~~~ FORGOT CODE LINK ~~~~~~~~~~ //
+
+  const goToForgot = () => {
+    history.push('/dashboard/profile/passcode');
+  };
+
   // ~~~~~~~~~ STANDARD ROOM SELECT ~~~~~~~~ //
   const handleSectionSelect = (
     section: string,
@@ -565,30 +605,45 @@ const Anthology = () => {
       setShowPasscodeEntry(false);
       setPasscodeInput('');
       setAccessMessage('');
-    } else if (section === 'Private Notebook') {
+    } else if (section === 'Private Notebook' && !isTeacher) {
       setShowPasscodeEntry(true);
+    } else if (section === 'Private Notebook' && isTeacher) {
+      setMainSection('Private');
+      setSectionRoomID('private');
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage({message: '', textClass: ''});
     }
   };
 
   return (
     <React.Fragment>
-      <div>
-        <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
-      </div>
-      <div className="px-10">
-        <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-          <h2 className={`text-base text-center font-semibold`}>
-            All your work in place
-          </h2>
+      {!isTeacher && (
+        <div>
+          <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
         </div>
+      )}
+      <div className="px-10">
+        {!isTeacher && (
+          <div
+            className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+            <h2 className={`text-base text-center font-semibold`}>
+              All your work in place
+            </h2>
+          </div>
+        )}
 
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
+              title={`This Notebook is Passcode Protected`}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
+              scrollHidden={true}
               closeAction={() => setShowPasscodeEntry(false)}>
               <FormInput
                 value={passcodeInput}
@@ -613,6 +668,11 @@ const Anthology = () => {
                 btnClass="w-full px-6 py-4 my-2"
                 onClick={handlePrivateSectionAccess}
               />
+              <p
+                onClick={() => goToForgot()}
+                className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
+                Forgot Passcode?
+              </p>
             </Modal>
           </div>
         )}
@@ -620,7 +680,11 @@ const Anthology = () => {
         <div className="mx-auto max-w-256">
           <div className="my-8">
             <SectionTitleV3
-              title={anthologyDict[userLanguage]['TITLE_CONTAINER']}
+              title={
+                !isTeacher
+                  ? 'Your ' + anthologyDict[userLanguage]['TITLE']
+                  : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
+              }
               fontSize="xl"
               fontStyle="semibold"
               extraContainerClass="px-6"
@@ -646,6 +710,7 @@ const Anthology = () => {
                 sectionRoomID={sectionRoomID}
                 sectionTitle={sectionTitle}
                 handleSectionSelect={handleSectionSelect}
+                isTeacher={isTeacher}
               />
             </EmptyViewWrapper>
           </div>

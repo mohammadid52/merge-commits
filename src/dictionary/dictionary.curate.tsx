@@ -301,12 +301,13 @@ const dashboardProfileDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE_CONTAINER: 'Your Notebooks',
-    TITLE: 'Journal',
+    TITLE: 'Notebooks',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
       B: 'Session Work',
       C: 'Session Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Edit',
@@ -316,6 +317,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancel',
       DELETE: 'Delete',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
   ES: {
@@ -326,6 +328,7 @@ const anthologyDict: any = {
       A: 'Diario',
       B: 'Cohort Work',
       C: 'Cohort Notes',
+      D: 'Uploads',
     },
     ACTIONS: {
       EDIT: 'Editar',
@@ -335,6 +338,7 @@ const anthologyDict: any = {
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
       CONFIRM: 'Confirm',
+      UPLOAD: 'Upload',
     },
   },
 };

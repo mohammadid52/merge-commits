@@ -992,7 +992,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     );
   };
 
-  console.log(activeSection, 'activeSection+++++++++');
+  // console.log(activeSection, 'activeSection+++++++++');
 
   const stepsOfActiveSection = () => {
     switch (activeSection?.id) {

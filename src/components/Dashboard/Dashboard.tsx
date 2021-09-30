@@ -31,7 +31,8 @@ import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import { getAsset } from '../../assets';
+import {getAsset} from '../../assets';
+import useNotifications from '@customHooks/notifications';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -82,14 +83,21 @@ export interface ClassroomControlProps extends DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const stateUser = gContext.state.user;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+
   const {updateAuthState} = props;
-  const {clientKey, state, theme, dispatch} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
   const getRoomData = getLocalStorageData('room_info');
+  const {notifications} = useNotifications('global');
 
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
@@ -216,7 +224,7 @@ const Dashboard = (props: DashboardProps) => {
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
-      console.log('all student classes - ', arrayOfResponseObjects);
+      // console.log('all student classes - ', arrayOfResponseObjects);
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -243,6 +251,7 @@ const Dashboard = (props: DashboardProps) => {
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
+      // console.log('dashboard data teachers - ', arrayOfResponseObjects);
 
       setHomeDataForTeachers(arrayOfResponseObjects);
     } catch (e) {
@@ -426,7 +435,7 @@ const Dashboard = (props: DashboardProps) => {
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
         } finally {
-          console.log('curriciulum ids - ', curriculumIds);
+          // console.log('curriciulum ids - ', curriculumIds);
         }
       }
     };
@@ -468,12 +477,12 @@ const Dashboard = (props: DashboardProps) => {
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
-      console.log(
-        isOccupied,
-        'isOccupied',
-        iteration,
-        moment(date).add(i, frequency).day()
-      );
+      // console.log(
+      //   isOccupied,
+      //   'isOccupied',
+      //   iteration,
+      //   moment(date).add(i, frequency).day()
+      // );
       if (
         !isOccupied &&
         (scheduleData.frequency !== 'M/W/F' ||
@@ -483,11 +492,11 @@ const Dashboard = (props: DashboardProps) => {
           (scheduleData.frequency === 'Tu/Th' &&
             [2, 4].includes(moment(date).add(i, frequency).day())))
       ) {
-        console.log('inside finalization if');
+        // console.log('inside finalization if');
 
         if (iteration === 1) {
           startDate = new Date(moment(date).add(i, frequency).toDate());
-          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
+          // console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
           estEndDate = new Date(moment(date).add(i, frequency).toDate());
@@ -530,11 +539,11 @@ const Dashboard = (props: DashboardProps) => {
             scheduleDates,
             scheduleData
           );
-          console.log(
-            startDate,
-            estEndDate,
-            'startDate, estEndDate inside calculate schedule'
-          );
+          // console.log(
+          //   startDate,
+          //   estEndDate,
+          //   'startDate, estEndDate inside calculate schedule'
+          // );
 
           item.startDate = startDate;
           item.estEndDate = estEndDate;
@@ -764,7 +773,7 @@ const Dashboard = (props: DashboardProps) => {
 
       <div className="h-full overflow-y-auto">
         {/*<FloatingSideMenu />*/}
-        <Noticebar inputContext={'global'} />
+        <Noticebar notifications={notifications} />
         <div className="absolute z-100 w-6 right-1 top-0.5">
           <span
             className="w-auto cursor-pointer"
@@ -848,7 +857,17 @@ const Dashboard = (props: DashboardProps) => {
               )}
             />
 
-            <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+            <Route
+              path={`${match.url}/anthology`}
+              render={() => (
+                <Anthology
+                  studentAuthID={stateUser?.authId}
+                  studentID={stateUser?.id}
+                  studentEmail={stateUser?.email}
+                  studentName={stateUser?.name}
+                />
+              )}
+            />
 
             <Route
               path={`${match.url}/noticeboard`}

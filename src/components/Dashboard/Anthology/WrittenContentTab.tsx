@@ -1,54 +1,22 @@
-import React, {useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import ContentCard from '../../Atoms/ContentCard';
-import {ViewEditMode} from './Anthology';
-import FormInput from '../../Atoms/Form/FormInput';
-
-import useDictionary from '../../../customHooks/dictionary';
-import RichTextEditor from '../../Atoms/RichTextEditor';
-import Buttons from '../../Atoms/Buttons';
-
-import SingleNote from './AnthologyContentNote';
-import {
-  UniversalJournalData,
-  UniversalLessonStudentData,
-} from '../../../interfaces/UniversalLessonInterfaces';
-import {dateFromServer} from '../../../utilities/time';
-import Toggle from './AnthologyContentNote/Toggle';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
-import EmptyViewWrapper from './EmptyViewWrapper';
 import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
+import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {dateFromServer} from '../../../utilities/time';
+import Buttons from '../../Atoms/Buttons';
+import ContentCard from '../../Atoms/ContentCard';
+import FormInput from '../../Atoms/Form/FormInput';
+import RichTextEditor from '../../Atoms/RichTextEditor';
+import EmptyViewWrapper from './EmptyViewWrapper';
+import {ITabViewProps} from './TabView';
+import SingleNote from './WrittenContentTab/SingleNote';
 
-export interface ContentCardProps {
-  viewEditMode?: ViewEditMode;
-  handleEditToggle?: (
-    editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    dataID: string,
-    option?: number | 0,
-    recordID?: string
-  ) => void;
-  handleEditUpdate?: (e: any) => void;
-  updateJournalContent?: (html: string, targetType: string) => void;
-  mainSection?: string;
-  sectionRoomID?: string;
-  sectionTitle?: string;
-  subSection?: string;
-  setSubSection?: any;
-  tab?: any;
-  setTab?: any;
-  createTemplate?: any;
-  currentContentObj?: UniversalJournalData;
-  content?: UniversalJournalData[];
-  allStudentData?: UniversalLessonStudentData[];
-  setAllStudentData?: any;
-  allExerciseData?: any[];
-  allUniversalJournalData?: UniversalJournalData[];
-  setAllUniversalJournalData?: any;
-  onCancel?: any;
-}
-
-const AnthologyContent = (props: ContentCardProps) => {
+const WrittenContentTab = (props: ITabViewProps) => {
   const {
     viewEditMode,
     handleEditToggle,
@@ -78,6 +46,12 @@ const AnthologyContent = (props: ContentCardProps) => {
   // ############################### VIEWS ############################### //
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
+    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const filtered = filter(
+      contentObj?.entryData,
+      (ed) => ed && ed.type.includes('content')
+    );
+
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
@@ -114,8 +88,20 @@ const AnthologyContent = (props: ContentCardProps) => {
               {organized.header?.input ? organized.header.input : `No title`}
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
-              {contentObj ? (
-                <p
+              {notesExist ? (
+                <div className="space-y-4">
+                  {map(filtered, (note) => (
+                    <div
+                      key={note.domID}
+                      className="font-normal "
+                      dangerouslySetInnerHTML={{
+                        __html: note?.input ? note.input : 'No content...',
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : contentObj ? (
+                <div
                   className="font-normal"
                   dangerouslySetInnerHTML={{
                     __html: organized.content?.input
@@ -190,6 +176,16 @@ const AnthologyContent = (props: ContentCardProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
+    console.log(
+      '🚀 ~ file: WrittenContentTab.tsx ~ line 179 ~ editModeView ~ contentObj',
+      contentObj.entryData
+    );
+    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const filtered = filter(
+      contentObj?.entryData,
+      (ed) => ed && ed.type.includes('content')
+    );
+
     const organized = contentObj.entryData.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
@@ -214,22 +210,50 @@ const AnthologyContent = (props: ContentCardProps) => {
           </p>
         </div>
         <div className={`mb-2`}>
-          <FormInput
-            id={organized.header.domID}
-            label={`Title`}
-            onChange={handleInputFieldUpdate}
-            value={organized.header.input}
-            placeHolder={
-              organized.header.input ? organized.header.input : `Please add title...`
-            }
-          />
+          {notesExist ? (
+            <FormInput
+              id={contentObj.entryData[0].domID}
+              label={`Title`}
+              onChange={handleInputFieldUpdate}
+              value={contentObj.entryData[0].input}
+              placeHolder={
+                contentObj.entryData[0].input
+                  ? contentObj.entryData[0].input
+                  : `Please add title...`
+              }
+            />
+          ) : (
+            <FormInput
+              id={organized.header.domID}
+              label={`Title`}
+              onChange={handleInputFieldUpdate}
+              value={organized.header.input}
+              placeHolder={
+                organized.header.input ? organized.header.input : `Please add title...`
+              }
+            />
+          )}
         </div>
 
         <div className={`mt-2 mb-2`}>
-          <RichTextEditor
-            initialValue={organized.content.input}
-            onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
-          />
+          {notesExist ? (
+            <div>
+              {map(filtered, (note, idx) => (
+                <RichTextEditor
+                  key={idx}
+                  initialValue={note.input}
+                  onChange={(htmlContent) =>
+                    updateJournalContent(htmlContent, 'content', idx + 1)
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+            <RichTextEditor
+              initialValue={organized.content.input}
+              onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
+            />
+          )}
         </div>
       </>
     );
@@ -268,6 +292,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         content.map((contentObj: UniversalJournalData, idx: number) => {
           return (
             <EmptyViewWrapper
+              key={`emptyview_${idx}`}
               wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
               timedRevealInt={idx + 1}
               fallbackContents={
@@ -312,4 +337,4 @@ const AnthologyContent = (props: ContentCardProps) => {
   );
 };
 
-export default React.memo(AnthologyContent);
+export default React.memo(WrittenContentTab);

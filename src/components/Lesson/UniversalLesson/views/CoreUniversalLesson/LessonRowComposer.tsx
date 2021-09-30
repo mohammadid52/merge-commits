@@ -1,11 +1,11 @@
-import {filter, forEach, map, reject} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+} from '@interfaces/UniversalLessonInterfaces';
+import {filter} from 'lodash';
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
@@ -13,26 +13,29 @@ import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuild
 import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
-  const {
-    state: {user, lessonPage = {}},
+  const gContext = useContext(GlobalContext);
 
-    lessonState,
-  } = useContext(GlobalContext);
+  const gState = gContext.state;
+  const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   const [currentLesson, setCurrentLesson] = useState<any>();
 
-  const downloadables =
+  const getSeparateData = (id: string) =>
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? filter(activePageData.pageContent, (f) => f.id.includes('downloadable-files'))
+      ? filter(activePageData.pageContent, (f) => f.id.includes(id))
       : [];
 
-  const getRemovedDownloadablesFromlist = () => {
+  const downloadables = getSeparateData('downloadable-files');
+  const notes = getSeparateData('notes-container');
+
+  const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
       ? activePageData.pageContent.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
+            //  && !b.type.includes('notes-form')
             if (!b.type.includes('Download')) {
               objArray.push(b);
             }
@@ -42,9 +45,11 @@ const LessonRowComposer = () => {
       : [];
 
     return removeDownloadablesFromlist;
-  };
+  }, [activePageData]);
 
-  const removeDownloadablesFromlist = getRemovedDownloadablesFromlist();
+  const removeDownloadablesFromlist = useMemo(() => getRemovedDownloadablesFromlist(), [
+    activePageData,
+  ]);
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
@@ -62,6 +67,7 @@ const LessonRowComposer = () => {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
   useEffect(() => {
+    const lessonState = gContext.lessonState;
     const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
       const CURRENT_PAGE = lessonState.currentPage;
@@ -71,7 +77,7 @@ const LessonRowComposer = () => {
     if (lessonState.lessonData) {
       setCurrentLesson(lessonState.lessonData);
     }
-  }, [lessonState.lessonData, lessonState.currentPage]);
+  }, [gContext.lessonState.lessonData, gContext.lessonState.currentPage]);
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
@@ -102,7 +108,7 @@ const LessonRowComposer = () => {
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
-                            id={content.id}>
+                            id={`${content.type === 'notes-form' ? '' : content.id}`}>
                             {composePartContent(
                               content.id,
                               content.type,
@@ -110,7 +116,11 @@ const LessonRowComposer = () => {
                               `pp_${idx}_pc_${idx2}`,
                               content.class,
                               pagePart.id,
-                              'lesson'
+                              'lesson',
+                              undefined, // function related to builder
+                              undefined, // position number related to builder
+                              content.type === 'notes-form' ? notes : [],
+                              true // isStudent
                             )}
                           </div>
                         </div>
@@ -126,15 +136,29 @@ const LessonRowComposer = () => {
 
       {user.role === 'ST' && (
         <>
-          {downloadables && downloadables.length > 0 && (
-            <Downloadables
-              downloadables={downloadables}
-              showDownloadMenu={showDownloadMenu}
-              setShowDownloadMenu={setShowDownloadMenu}
-            />
-          )}
-
-          <LessonModule currentLesson={currentLesson} />
+          <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
+            {/* {notes && notes.length > 0 && (
+              <div id="fab-download">
+                <NotesContainer
+                  notes={notes}
+                  darkMode={currentLesson?.darkMode || true}
+                  pageTitle={activePageData.title}
+                  showNotesModal={showNotesModal}
+                  setShowNotesModal={setShowNotesModal}
+                />
+              </div>
+            )} */}
+            {downloadables && downloadables.length > 0 && (
+              <div id="fab-notes">
+                <Downloadables
+                  downloadables={downloadables}
+                  showDownloadMenu={showDownloadMenu}
+                  setShowDownloadMenu={setShowDownloadMenu}
+                />
+              </div>
+            )}
+          </div>
+          {/* <LessonModule currentLesson={currentLesson} /> */}
         </>
       )}
     </div>

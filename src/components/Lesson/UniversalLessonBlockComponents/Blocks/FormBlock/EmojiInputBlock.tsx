@@ -1,46 +1,49 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
+import {GlobalContext} from '@contexts/GlobalContext';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
+import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import EmojiPicker from 'emoji-picker-react';
+import noop from 'lodash/noop';
 import React, {useContext, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import EmojiPicker from 'emoji-picker-react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {StudentPageInput} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {FormControlProps} from '../FormBlock';
-import noop from 'lodash/noop';
+
 const EmojiInput = ({
   id,
   inputID,
   label,
   value,
-  isInLesson,
+
   numbered,
   index,
-  handleUpdateStudentData,
-  getStudentDataValue,
+
   required,
-}: FormControlProps) => {
+}: IFormBlockProps) => {
+  const gContext = useContext(GlobalContext);
+  const gState = gContext.state;
   const {
-    lessonState,
-    lessonDispatch,
-    theme,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
-  } = useContext(GlobalContext);
+    user,
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+  } = gState;
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
-  // const [fields, setFields] = useState<any>({});
+  const isStudent = user.role === 'ST';
+  const isInLesson = useInLessonCheck();
+
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    // console.log('onChange - id - value - ', id, ' - ', value);
-    // setFields({...fields, [id]: value});
+
     if (isInLesson) {
-      handleUpdateStudentData(id, [value]);
+      setDataValue(id, [value]);
     }
   };
 
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+
   /**
    * Task:
-   *  - On updating the input field, the data must be set with -> handleUpdateStudentData(inputID, [e.target.value]);
+   *  - On updating the input field, the data must be set with -> setDataValue(inputID, [e.target.value]);
    *  - The useEffect is listening for a change in this array, we then use -> setTextValue() to
    *  set the internal state of this component
    *  - This data flow is necessary
@@ -57,10 +60,10 @@ const EmojiInput = ({
 
   const onEmojiSelect = (e: any) => {
     try {
-      const studentDataValue = getStudentDataValue(inputID);
+      const studentDataValue = getDataValue(inputID);
       const textWithEmoji = studentDataValue[0].concat(`${e.emoji} `);
 
-      handleUpdateStudentData(inputID, [textWithEmoji]);
+      setDataValue(inputID, [textWithEmoji]);
       setShowEmojiSelector(false);
     } catch (error) {
       setShowEmojiSelector(false);
@@ -85,8 +88,8 @@ const EmojiInput = ({
           }`}
           name="emoji"
           type="text"
-          onChange={isInLesson ? (e) => onChange(e) : noop}
-          value={isInLesson ? getStudentDataValue(inputID) : value}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+          value={isInLesson && isStudent ? getDataValue(inputID) : value}
         />
         {showEmojiSelector && (
           <ClickAwayListener onClickAway={() => setShowEmojiSelector(false)}>

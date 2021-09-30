@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   AiOutlineBorderlessTable,
   AiOutlineCalendar,
@@ -12,6 +12,7 @@ import {
 } from 'react-icons/ai';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
+import {CgNotes} from 'react-icons/cg';
 import {
   HiOutlineArrowRight,
   HiOutlineEmojiHappy,
@@ -154,6 +155,14 @@ const AddContentDialog = ({
     },
   ];
   const userInterfaceContent = [
+    // {
+    //   name: 'Notes ⭐',
+    //   type: 'notes-form',
+    //   subtitle: 'Interactive notes for students',
+    //   icon: CgNotes,
+    //   iconForeground: 'text-blue-700',
+    //   iconBackground: 'bg-blue-100',
+    // },
     {
       name: 'Review slider',
       type: FORM_TYPES.REVIEW_SLIDER,
@@ -170,14 +179,14 @@ const AddContentDialog = ({
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-100',
     },
-    {
-      name: 'Linestarter',
-      subtitle: 'Add poem',
-      type: FORM_TYPES.POEM,
-      icon: BsNewspaper,
-      iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
-    },
+    // {
+    //   name: 'Linestarter',
+    //   subtitle: 'Add poem',
+    //   type: FORM_TYPES.POEM,
+    //   icon: BsNewspaper,
+    //   iconForeground: 'text-red-700',
+    //   iconBackground: 'bg-red-100',
+    // },
     {
       name: 'Writing Exercise ⭐',
       subtitle: 'Add Writing Exercise',
@@ -196,8 +205,8 @@ const AddContentDialog = ({
       iconBackground: 'bg-purple-100',
     },
     {
-      name: 'Text',
-      subtitle: 'Add regular question',
+      name: 'Text Responses',
+      subtitle: 'Written answers to questions',
       type: FORM_TYPES.TEXT,
       icon: AiOutlineQuestionCircle,
       iconForeground: 'text-pink-700',
@@ -211,42 +220,34 @@ const AddContentDialog = ({
       iconForeground: 'text-green-700',
       iconBackground: 'bg-green-100',
     },
-    {
-      name: 'Emoji',
-      subtitle: 'Add emoji field',
-      type: FORM_TYPES.EMOJI,
-      icon: HiOutlineEmojiHappy,
-      iconForeground: 'text-blue-700',
-      iconBackground: 'bg-blue-100',
-    },
-    {
-      name: 'Date Picker',
-      subtitle: 'Add date picker field',
-      type: FORM_TYPES.DATE_PICKER,
-      icon: AiOutlineCalendar,
-      iconForeground: 'text-indigo-700',
-      iconBackground: 'bg-indigo-100',
-    },
-    {
-      name: 'Other',
-      subtitle: 'Add other fields',
-      type: 'input',
-      icon: MdInput,
-      iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
-    },
+    // {
+    //   name: 'Emoji',
+    //   subtitle: 'Add emoji field',
+    //   type: FORM_TYPES.EMOJI,
+    //   icon: HiOutlineEmojiHappy,
+    //   iconForeground: 'text-blue-700',
+    //   iconBackground: 'bg-blue-100',
+    // },
+    // {
+    //   name: 'Date Picker',
+    //   subtitle: 'Add date picker field',
+    //   type: FORM_TYPES.DATE_PICKER,
+    //   icon: AiOutlineCalendar,
+    //   iconForeground: 'text-indigo-700',
+    //   iconBackground: 'bg-indigo-100',
+    // },
+    // {
+    //   name: 'Other',
+    //   subtitle: 'Add other fields',
+    //   type: 'input',
+    //   icon: MdInput,
+    //   iconForeground: 'text-red-700',
+    //   iconBackground: 'bg-red-100',
+    // },
   ];
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab] = helpers;
-
-  // const Content = () => {
-  //   return (
-  //     <>
-
-  //     </>
-  //   );
-  // };
 
   return (
     <>

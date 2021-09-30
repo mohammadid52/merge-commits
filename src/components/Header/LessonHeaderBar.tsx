@@ -15,9 +15,13 @@ const LessonHeaderBar = ({
   setisAtEnd,
   handleRequiredNotification,
 }: LessonHeaderBarProps) => {
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const theme = gContext.theme;
+
   const history = useHistory();
   const initializeTimer = useStudentTimer();
-  const {lessonState, theme} = useContext(GlobalContext);
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
@@ -69,7 +73,8 @@ const LessonHeaderBar = ({
 
   return (
     <div
-      className={`z-40 relative center w-full 
+      style={{zIndex: 3000}}
+      className={` relative center w-full 
         h-.7/10 text-gray-200 shadow-2xl
         ${theme.toolbar.bg} `}>
       {/**
