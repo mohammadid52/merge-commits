@@ -11,6 +11,7 @@ interface StageIconProps extends UniversalLessonPage {
   clickable: boolean;
   userAtEnd?: boolean;
   isShared?: boolean;
+  handleRequiredNotification?: () => void;
 }
 
 const StageIcon = ({
@@ -20,7 +21,7 @@ const StageIcon = ({
   active,
   label,
   clickable,
-  isShared,
+  handleRequiredNotification,
 }: StageIconProps) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -60,7 +61,7 @@ const StageIcon = ({
           className={`${recentOpened ? 'animate-activation' : ''} 
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
-          <svg
+          {/* <svg
             className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
@@ -68,33 +69,25 @@ const StageIcon = ({
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
             <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-          </svg>
+          </svg> */}
 
           <a
             className={`
-            ${!active ? 'text-gray-500 ' : null}
             ${
               active
-                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                ? 'font-bold border-b-0 border-indigo-400 text-green-500 hover:text-green-400'
                 : null
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <p className="flex-shrink-0">
-              {label}
-              {isShared && (
-                <IconContext.Provider value={{size: '16px', color: 'white', className: 'absolute mt-2'}}>
-                  <RiLiveLine />
-                </IconContext.Provider>
-              )}
-            </p>
+            <p className="flex-shrink-0">{label}</p>
           </a>
         </div>
       );
     } else if (pageNr < PAGES.length - 1) {
       return (
         <div
-          onClick={clickable ? () => handleLink() : () => {}}
+          onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
@@ -120,21 +113,14 @@ const StageIcon = ({
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <p className="flex-shrink-0">
-              {label}
-              {isShared && (
-                <IconContext.Provider value={{size: '16px', color: 'white', className: 'absolute mt-2'}}>
-                  <RiLiveLine />
-                </IconContext.Provider>
-              )}
-            </p>
+            <p className="flex-shrink-0">{label}</p>
           </a>
         </div>
       );
     } else {
       return (
         <div
-          onClick={clickable ? () => handleLink() : () => {}}
+          onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
@@ -160,19 +146,14 @@ const StageIcon = ({
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
-            <p className="flex-shrink-0">{label}
-              {isShared && (<span className="absolute">
-                <IconContext.Provider value={{ size: '16px', color: 'white', className: 'absolute mt-2' }}>
-                  <RiLiveLine />
-                </IconContext.Provider>
-            </span>)}</p>
+            <p className="flex-shrink-0">{label}</p>
           </a>
         </div>
       );
     }
   };
 
-  return <li className="relative flex w-auto">{<>{stageButtonChoice()}</>}</li>;
+  return <li className={`relative flex w-auto`}>{<>{stageButtonChoice()}</>}</li>;
 };
 
 export default StageIcon;

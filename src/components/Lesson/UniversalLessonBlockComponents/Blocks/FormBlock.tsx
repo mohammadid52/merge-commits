@@ -90,10 +90,7 @@ export const FormBlock = ({
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-
-    if (isInLesson) {
-      setDataValue(id, [value]);
-    }
+    setDataValue(id, [value]);
   };
 
   // ##################################################################### //
