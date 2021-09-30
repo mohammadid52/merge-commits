@@ -44,7 +44,7 @@ export const getPerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
-      superAdmin
+      addedby
       createdAt
       updatedAt
     }
@@ -96,7 +96,7 @@ export const listPersons = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -318,7 +318,7 @@ export const getStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -404,7 +404,7 @@ export const listStaffs = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -533,7 +533,7 @@ export const getRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -695,7 +695,7 @@ export const listRooms = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -810,7 +810,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -852,7 +852,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -916,7 +916,7 @@ export const listClassroomGroupStudentss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -1001,7 +1001,7 @@ export const getClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -1077,7 +1077,7 @@ export const getClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1174,7 +1174,7 @@ export const listClassroomGroupss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -1264,7 +1264,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -1336,7 +1336,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1414,7 +1414,7 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -1637,7 +1637,7 @@ export const getClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1695,7 +1695,7 @@ export const listClassStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2887,7 +2887,7 @@ export const getRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2935,7 +2935,7 @@ export const listRoomMsgss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -3838,7 +3838,7 @@ export const getStudentData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3991,7 +3991,7 @@ export const listStudentDatas = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -4067,7 +4067,7 @@ export const getAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4125,7 +4125,7 @@ export const listAnthologyComments = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -4180,7 +4180,7 @@ export const getQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4300,7 +4300,7 @@ export const listQuestionDatas = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -4374,7 +4374,7 @@ export const getPersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4509,7 +4509,7 @@ export const getPersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -4609,7 +4609,7 @@ export const listPersonLocations = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -4718,7 +4718,7 @@ export const getNoticeboardWidget = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4786,7 +4786,7 @@ export const listNoticeboardWidgets = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -5002,7 +5002,7 @@ export const getAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -5950,7 +5950,7 @@ export const getStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -5983,7 +5983,7 @@ export const getStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6036,7 +6036,7 @@ export const listStudentConnectionss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -6066,7 +6066,7 @@ export const listStudentConnectionss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -6111,7 +6111,7 @@ export const getPersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6170,7 +6170,7 @@ export const listPersonSentimentss = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -6293,7 +6293,7 @@ export const getCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6369,7 +6369,7 @@ export const listCommunitys = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -6460,7 +6460,7 @@ export const userById = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6512,7 +6512,7 @@ export const usersByRole = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6596,7 +6596,7 @@ export const messagesByRoomId = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -6656,7 +6656,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
