@@ -448,12 +448,12 @@ const NotesBlock = ({
 
           {isInLesson && isStudent && (
             <div className="w-auto space-y-4 flex items-center flex-col justify-center">
-              <button
+              {/* <button
                 onClick={onAddNewNote}
                 title="Add new note"
                 className="w-auto text-red-600 hover:text-red-500 transition-all">
                 <FiFilePlus className="h-10 w-10 " />
-              </button>
+              </button> */}
               {!saveInProgress && (
                 <button
                   onClick={() => {
