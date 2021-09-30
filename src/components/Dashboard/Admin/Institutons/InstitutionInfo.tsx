@@ -519,6 +519,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     exact
                     render={() => (
                       <InstitutionBuilder
+                        institutionId={institute?.id}
                         institute={instProps.institute}
                         loading={instProps.loading}
                         postInfoUpdate={instProps.postInfoUpdate}

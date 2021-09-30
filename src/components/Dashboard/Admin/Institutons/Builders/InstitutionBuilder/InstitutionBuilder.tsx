@@ -20,6 +20,7 @@ import Buttons from '@components/Atoms/Buttons';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
 interface InstitutionBuilderProps {
+  institutionId?: string;
   institute?: any;
   loading?: boolean;
   postInfoUpdate?: (data: any) => void;
@@ -53,6 +54,7 @@ export interface InstitutionInfo {
 }
 
 const InstitutionBuilder = ({
+  institutionId,
   institute,
   loading,
   postInfoUpdate,
@@ -61,7 +63,6 @@ const InstitutionBuilder = ({
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
-  const institutionId = params.get('id');
 
   const {clientKey, state:{user}, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
