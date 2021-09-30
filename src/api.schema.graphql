@@ -681,6 +681,7 @@ type Lesson @model @key(fields: ["id"]) {
   duration: Int
   resources: String
   notes: String
+  targetAudience:String
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {

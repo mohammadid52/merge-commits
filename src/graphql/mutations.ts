@@ -183,6 +183,7 @@ export const batchAddLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -315,6 +316,7 @@ export const batchDeleteLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -6519,6 +6521,7 @@ export const createLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -6692,6 +6695,7 @@ export const updateLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -6865,6 +6869,7 @@ export const deleteLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -6973,6 +6978,7 @@ export const createLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7106,6 +7112,7 @@ export const updateLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7239,6 +7246,7 @@ export const deleteLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7373,6 +7381,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7506,6 +7515,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7639,6 +7649,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7778,6 +7789,7 @@ export const createLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7896,6 +7908,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8014,6 +8027,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8251,6 +8265,7 @@ export const createSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8415,6 +8430,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8579,6 +8595,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8687,6 +8704,7 @@ export const createStudentData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -8880,6 +8898,7 @@ export const updateStudentData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9073,6 +9092,7 @@ export const deleteStudentData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9471,6 +9491,7 @@ export const createQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9592,6 +9613,7 @@ export const updateQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9713,6 +9735,7 @@ export const deleteQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -10315,6 +10338,7 @@ export const createPersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -10541,6 +10565,7 @@ export const updatePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -10767,6 +10792,7 @@ export const deletePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
