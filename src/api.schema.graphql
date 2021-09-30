@@ -55,7 +55,7 @@ type Person
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
-  superAdmin: Boolean
+  addedby: String
 }
 
 type Institution @model @key(fields: ["id"]) {
