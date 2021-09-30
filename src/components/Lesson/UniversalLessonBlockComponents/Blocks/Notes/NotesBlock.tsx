@@ -160,21 +160,21 @@ const NotesBlock = ({
         }
       });
 
-      try {
-        localNotes.forEach((note: {id: any; class: string}, idx: number) => {
-          const doc = $(`#${note.id}`);
-          // const pos = note?.class?.split(' || ')[];
-          const xRandom = random(0, 10);
-          const yRandom = random(0, 20);
-          // const [x = xRandom, y = yRandom] = pos?.split(' ') || ['100', '200'];
+      // try {
+      //   localNotes.forEach((note: {id: any; class: string}, idx: number) => {
+      //     const doc = $(`#${note.id}`);
+      //     // const pos = note?.class?.split(' || ')[];
+      //     const xRandom = random(0, 10);
+      //     const yRandom = random(0, 20);
+      //     // const [x = xRandom, y = yRandom] = pos?.split(' ') || ['100', '200'];
 
-          gsap.set(doc, {
-            left: 250 * idx,
-          });
-        });
-      } catch (error) {
-        console.error(error);
-      }
+      //     gsap.set(doc, {
+      //       left: 250 * idx,
+      //     });
+      //   });
+      // } catch (error) {
+      //   console.error(error);
+      // }
     }
   }
 
