@@ -345,17 +345,19 @@ const LessonControl = () => {
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    if (lessonState.studentViewing !== '') {
-      const viewedStudentLocation = controlState.roster.find(
-        (student: any) => student.personAuthID === lessonState.studentViewing
-      )?.currentLocation;
+    if (lessonState.displayData[0].studentAuthID === '') {
+      if (lessonState.studentViewing !== '') {
+        const viewedStudentLocation = controlState.roster.find(
+          (student: any) => student.personAuthID === lessonState.studentViewing
+        )?.currentLocation;
 
-      if (viewedStudentLocation !== '') {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-        history.push(`${match.url}/${viewedStudentLocation}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/0`);
+        if (viewedStudentLocation !== '') {
+          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+          history.push(`${match.url}/${viewedStudentLocation}`);
+        } else {
+          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+          history.push(`${match.url}/0`);
+        }
       }
     }
   }, [controlState.roster, lessonState.studentViewing]);

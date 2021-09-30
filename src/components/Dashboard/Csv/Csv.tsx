@@ -395,6 +395,9 @@ const Csv = ({institutionId}: ICsvProps) => {
         })
       }
       setSurveyQuestions(questions);
+      console.log('syllabusLessonsData', syllabusLessonsData)
+      let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
+      await getStudentsSurveyQuestionsResponse(syllabusLes.syllabusLessonID, lessonId);
       setIsCSVReady(true);
     } catch (err) {
       console.log('list questions error', err);
@@ -512,29 +515,26 @@ const Csv = ({institutionId}: ICsvProps) => {
   
 
   const getStudentsSurveyQuestionsResponse = async (
-    checkpointIds: any,
-    syllabusLessonID: string
+    syllabusLessonID: string,
+    lessonId: String
   ) => {
-    if (checkpointIds.length) {
       let studsEmails = classStudents.map((stu: any) => stu.email);
-      let curriculumData: any = await API.graphql(
-        graphqlOperation(customQueries.getStudentResponse, {
+      let universalLessonStudentData: any = await API.graphql(
+        graphqlOperation(customQueries.getStudentSurveyResponse, {
           filter: {
-            ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-            syllabusLessonID: {eq: syllabusLessonID},
-            ...createFilterToFetchSpecificItemsOnly(studsEmails, 'email'),
-          },
-          limit: 1000,
+            // ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
+            lessonID: { eq: lessonId },
+            // syllabusLessonID: { eq: syllabusLessonID },
+            ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
+          }
         })
       );
-      let studentsAnswersSurveyCheckpointsQuestions =
-        curriculumData?.data?.listQuestionDatas?.items || [];
-      setSCQAnswers(studentsAnswersSurveyCheckpointsQuestions);
-      return studentsAnswersSurveyCheckpointsQuestions;
-    } else {
-      console.log('no checkpoints of the selected survey');
-      return [];
-    }
+      console.log('universalLessonStudentData...', universalLessonStudentData)
+      // let studentsAnswersSurveyCheckpointsQuestions =
+      //   curriculumData?.data?.listQuestionDatas?.items || [];
+      // setSCQAnswers(studentsAnswersSurveyCheckpointsQuestions);
+      // return studentsAnswersSurveyCheckpointsQuestions;
+
   };
 
   const getCSVReady = async () => {

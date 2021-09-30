@@ -40,6 +40,7 @@ import SignOutButton from '@components/Auth/SignOut';
 import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getImageFromS3Static} from '@utilities/services';
 import {FiUser} from 'react-icons/fi';
+import useNotifications from '@customHooks/notifications';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -104,6 +105,7 @@ const Dashboard = (props: DashboardProps) => {
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
   const getRoomData = getLocalStorageData('room_info');
+  const {notifications} = useNotifications('global');
 
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
@@ -230,7 +232,7 @@ const Dashboard = (props: DashboardProps) => {
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
-      console.log('all student classes - ', arrayOfResponseObjects);
+      // console.log('all student classes - ', arrayOfResponseObjects);
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -257,6 +259,7 @@ const Dashboard = (props: DashboardProps) => {
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
+      // console.log('dashboard data teachers - ', arrayOfResponseObjects);
 
       setHomeDataForTeachers(arrayOfResponseObjects);
     } catch (e) {
@@ -440,7 +443,7 @@ const Dashboard = (props: DashboardProps) => {
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
         } finally {
-          console.log('curriciulum ids - ', curriculumIds);
+          // console.log('curriciulum ids - ', curriculumIds);
         }
       }
     };
@@ -482,12 +485,12 @@ const Dashboard = (props: DashboardProps) => {
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
-      console.log(
-        isOccupied,
-        'isOccupied',
-        iteration,
-        moment(date).add(i, frequency).day()
-      );
+      // console.log(
+      //   isOccupied,
+      //   'isOccupied',
+      //   iteration,
+      //   moment(date).add(i, frequency).day()
+      // );
       if (
         !isOccupied &&
         (scheduleData.frequency !== 'M/W/F' ||
@@ -497,11 +500,11 @@ const Dashboard = (props: DashboardProps) => {
           (scheduleData.frequency === 'Tu/Th' &&
             [2, 4].includes(moment(date).add(i, frequency).day())))
       ) {
-        console.log('inside finalization if');
+        // console.log('inside finalization if');
 
         if (iteration === 1) {
           startDate = new Date(moment(date).add(i, frequency).toDate());
-          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
+          // console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
           estEndDate = new Date(moment(date).add(i, frequency).toDate());
@@ -544,11 +547,11 @@ const Dashboard = (props: DashboardProps) => {
             scheduleDates,
             scheduleData
           );
-          console.log(
-            startDate,
-            estEndDate,
-            'startDate, estEndDate inside calculate schedule'
-          );
+          // console.log(
+          //   startDate,
+          //   estEndDate,
+          //   'startDate, estEndDate inside calculate schedule'
+          // );
 
           item.startDate = startDate;
           item.estEndDate = estEndDate;
@@ -897,42 +900,39 @@ const Dashboard = (props: DashboardProps) => {
           handleRoomSelection={handleRoomSelection}
         /> */}
 
-        <div className="h-full overflow-y-auto">
-          {/*<FloatingSideMenu />*/}
-          <Noticebar inputContext={'global'} />
-          <div className="absolute z-100 w-6 right-1 top-0.5">
-            <span
-              className="w-auto cursor-pointer"
-              onClick={() => setOpenWalkThroughModal(true)}>
-              <BsFillInfoCircleFill
-                className={`h-5 w-5 ${theme.textColor[themeColor]}`}
-              />
-            </span>
-          </div>
-          <Suspense
-            fallback={
-              <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
-              </div>
-            }>
-            <Switch>
-              <Route
-                path={`${match.url}`}
-                exact
-                render={() => {
-                  if (userData && userData.role !== '') {
-                    if (userData.role === 'FLW' || userData.role === 'TR') {
-                      return <Redirect to={`${match.url}/home`} />;
-                    } else if (userData.role === 'ST') {
-                      return <Redirect to={`${match.url}/home`} />;
-                    } else {
-                      return !state.user.associateInstitute?.length ||
-                        state.user.associateInstitute?.length > 1 ? (
-                        <Redirect to={`${match.url}/manage-institutions`} />
-                      ) : (
-                        <Redirect
-                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`}
-                        />
+<div className="h-full overflow-y-auto">
+        {/*<FloatingSideMenu />*/}
+        <Noticebar notifications={notifications} />
+        <div className="absolute z-100 w-6 right-1 top-0.5">
+          <span
+            className="w-auto cursor-pointer"
+            onClick={() => setOpenWalkThroughModal(true)}>
+            <BsFillInfoCircleFill className={`h-5 w-5 ${theme.textColor[themeColor]}`} />
+          </span>
+        </div>
+        <Suspense
+          fallback={
+            <div className="min-h-screen w-full flex flex-col justify-center items-center">
+              <ComponentLoading />
+            </div>
+          }>
+          <Switch>
+            <Route
+              path={`${match.url}`}
+              exact
+              render={() => {
+                if (userData && userData.role !== '') {
+                  if (userData.role === 'FLW' || userData.role === 'TR') {
+                    return <Redirect to={`${match.url}/home`} />;
+                  } else if (userData.role === 'ST') {
+                    return <Redirect to={`${match.url}/home`} />;
+                  } else {
+                    return !state.user.associateInstitute?.length ||
+                      state.user.associateInstitute?.length > 1 ? (
+                      <Redirect to={`${match.url}/manage-institutions`} />
+                    ) : (
+                      <Redirect
+                      to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`} />
                       );
                     }
                   } else

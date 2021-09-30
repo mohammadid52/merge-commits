@@ -105,8 +105,8 @@ const Note = ({
   const isStudent = true;
   const isInLesson = useInLessonCheck();
 
-  const bgColor = note.class.split(' ')[0] || 'yellow';
-  const size = note.class.split(' ')[1] || 'medium';
+  const bgColor = note?.class?.split(' ')[0] || 'yellow';
+  const size = note?.class?.split(' ')[1] || 'medium';
 
   // Just show delete modal
   const onDeleteBtnClick = (noteId: string) => {
