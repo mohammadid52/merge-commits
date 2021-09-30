@@ -3110,6 +3110,7 @@ export const getLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -3224,6 +3225,7 @@ export const listLessons = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -3331,6 +3333,7 @@ export const getLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -3403,6 +3406,7 @@ export const listLessonRubricss = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -3601,6 +3605,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -3704,6 +3709,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -3781,6 +3787,7 @@ export const getStudentData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -4230,6 +4237,7 @@ export const getQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -4416,6 +4424,7 @@ export const getPersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
