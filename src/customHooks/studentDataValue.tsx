@@ -24,6 +24,7 @@ const useStudentDataValue = () => {
   const isInLesson = useInLessonCheck();
 
   // ~~~~~~~~~~~~ SHARING STATUS ~~~~~~~~~~~ //
+  const isOtherStudent = lessonState.displayData[0]?.studentAuthID !== user.authId;
   const sharingActive = lessonState.displayData[0]?.studentAuthID !== '';
   const sharedDataFromSamePage =
     PAGES &&
@@ -56,10 +57,10 @@ const useStudentDataValue = () => {
   };
 
   const getDataValue = (domID: string): string[] => {
-    if (sharingActive && sharedDataFromSamePage) {
-      if (isStudent) {
+    if (sharedDataFromSamePage /** */) {
+      if (isStudent && isOtherStudent) {
         return getDisplayDataStudentValue(domID);
-      } else if (isTeacher) {
+      } else if (isTeacher || !isOtherStudent) {
         return getStudentDataValue(domID);
       }
     } else {
@@ -86,7 +87,7 @@ const useStudentDataValue = () => {
   };
 
   const setDataValue = (domID: string, input: string[]) => {
-    if (!sharingActive) {
+    if (!sharingActive || !sharedDataFromSamePage) {
       setStudentDataValue(domID, input);
     }
   };

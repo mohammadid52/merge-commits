@@ -4,9 +4,9 @@ import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {
-  getSessionStorage,
-  removeSessionStorage,
-  setSessionStorage,
+  getSessionStorageData,
+  removeSessionStorageData,
+  setSessionStorageData,
 } from '@utilities/sessionStorage';
 
 // ##################################################################### //
@@ -70,11 +70,13 @@ const useLessonNotifications = () => {
   // ~~~~~~~~~~~~~ ROUTER STUFF ~~~~~~~~~~~~ //
   const history = useHistory();
   const match = useRouteMatch();
-  const getNavigationState = getLocalStorageData('navigation_state');
+  const getNavigationState = getSessionStorageData('navigation_state');
 
+  // ~~~~~~~~ FUNCTIONS - NAVIGATION ~~~~~~~ //
   const navigateAway = () => {
-    setSessionStorage('navigation_state', {
+    setSessionStorageData('navigation_state', {
       fromIdx: lessonState?.currentPage,
+      fromLabel: getPageLabel(lessonState.currentPage),
       fromUrl: `${match.url}/${lessonState.currentPage}`,
     });
     history.push(`${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`);
@@ -90,10 +92,14 @@ const useLessonNotifications = () => {
       type: 'SET_CURRENT_PAGE',
       payload: getNavigationState.fromIdx,
     });
-    removeSessionStorage('navigation_state');
+    removeSessionStorageData('navigation_state');
   };
 
-  // ~~~~~~~~~~~~~~ FUNCTIONS ~~~~~~~~~~~~~~ //
+  const navigateCancel = () => {
+    removeSessionStorageData('navigation_state');
+  };
+
+  // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
   const getPageIdx = (pageID: string) => {
     if (lessonPlan) {
       if (!pageID) {
@@ -107,7 +113,6 @@ const useLessonNotifications = () => {
   };
 
   const getPageLabel = (pageIdx: number) => {
-    lessonPlan && console.log('getPageLabel - ', lessonPlan[pageIdx]?.label);
     if (lessonPlan && pageIdx) {
       return lessonPlan[pageIdx]?.label;
     } else {
@@ -133,7 +138,7 @@ const useLessonNotifications = () => {
     lessonPlan &&
     lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage].id;
   const canNavigateBack =
-    anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
+    !anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -156,9 +161,7 @@ const useLessonNotifications = () => {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing a page',
-        message: `${getPageLabel(
-          getPageIdx(lessonState.displayData[0].lessonPageID)
-        )} by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'alert',
         cta: 'Go There Now',
       },
@@ -185,7 +188,7 @@ const useLessonNotifications = () => {
       check: canNavigateBack,
       notification: {
         label: 'Return to the previous page?',
-        message: `"${getPageLabel(getSessionStorage('navigation_state').fromIdx)}"`,
+        message: ``,
         type: 'alert',
         cta: 'Go Back',
       },
@@ -193,7 +196,7 @@ const useLessonNotifications = () => {
         navigateBack();
       },
       cancel: () => {
-        //
+        navigateCancel();
       },
     },
     {
