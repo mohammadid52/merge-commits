@@ -3,6 +3,11 @@ import {GlobalContext} from '../contexts/GlobalContext';
 import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData} from '@utilities/localStorage';
+import {
+  getSessionStorage,
+  removeSessionStorage,
+  setSessionStorage,
+} from '@utilities/sessionStorage';
 
 // ##################################################################### //
 // ######################## GLOBAL NOTIFICATIONS ####################### //
@@ -28,6 +33,9 @@ const useGlobalNotifications = () => {
       action: () => {
         history.push('/dashboard/profile');
         dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'profile'}});
+      },
+      cancel: () => {
+        //
       },
     },
   ];
@@ -62,6 +70,28 @@ const useLessonNotifications = () => {
   // ~~~~~~~~~~~~~ ROUTER STUFF ~~~~~~~~~~~~ //
   const history = useHistory();
   const match = useRouteMatch();
+  const getNavigationState = getLocalStorageData('navigation_state');
+
+  const navigateAway = () => {
+    setSessionStorage('navigation_state', {
+      fromIdx: lessonState?.currentPage,
+      fromUrl: `${match.url}/${lessonState.currentPage}`,
+    });
+    history.push(`${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`);
+    lessonDispatch({
+      type: 'SET_CURRENT_PAGE',
+      payload: getPageIdx(lessonState.displayData[0].lessonPageID),
+    });
+  };
+
+  const navigateBack = () => {
+    history.push(getNavigationState?.fromUrl);
+    lessonDispatch({
+      type: 'SET_CURRENT_PAGE',
+      payload: getNavigationState.fromIdx,
+    });
+    removeSessionStorage('navigation_state');
+  };
 
   // ~~~~~~~~~~~~~~ FUNCTIONS ~~~~~~~~~~~~~~ //
   const getPageIdx = (pageID: string) => {
@@ -90,11 +120,6 @@ const useLessonNotifications = () => {
     const findStudent = studentList.find(
       (studentObj: any) => studentObj.student.authId === authID
     )?.student;
-    // const authids = studentList.reduce((acc: string[], val: any) => {
-    //   return [...acc, val.student.authId];
-    // }, []);
-    // console.log('authID - ', authID);
-    // console.log('student auth ids - ', authids);
     if (findStudent && authID) {
       return findStudent.firstName + ' ' + findStudent.lastName;
     }
@@ -107,6 +132,8 @@ const useLessonNotifications = () => {
   const thisPageIsShared =
     lessonPlan &&
     lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage].id;
+  const canNavigateBack =
+    anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -121,6 +148,9 @@ const useLessonNotifications = () => {
       action: () => {
         //
       },
+      cancel: () => {
+        //
+      },
     },
     {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
@@ -133,13 +163,7 @@ const useLessonNotifications = () => {
         cta: 'Go There Now',
       },
       action: () => {
-        history.push(
-          `${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`
-        );
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: getPageIdx(lessonState.displayData[0].lessonPageID),
-        });
+        navigateAway();
       },
     },
     {
@@ -151,13 +175,25 @@ const useLessonNotifications = () => {
         cta: 'Go There Now',
       },
       action: () => {
-        history.push(
-          `${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`
-        );
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: getPageIdx(lessonState.displayData[0].lessonPageID),
-        });
+        navigateAway();
+      },
+      cancel: () => {
+        //
+      },
+    },
+    {
+      check: canNavigateBack,
+      notification: {
+        label: 'Return to the previous page?',
+        message: `"${getPageLabel(getSessionStorage('navigation_state').fromIdx)}"`,
+        type: 'alert',
+        cta: 'Go Back',
+      },
+      action: () => {
+        navigateBack();
+      },
+      cancel: () => {
+        //
       },
     },
     {
@@ -171,6 +207,9 @@ const useLessonNotifications = () => {
       action: () => {
         //
       },
+      cancel: () => {
+        //
+      },
     },
     {
       check: thisPageIsShared && !iAmShared,
@@ -181,6 +220,9 @@ const useLessonNotifications = () => {
         cta: '',
       },
       action: () => {
+        //
+      },
+      cancel: () => {
         //
       },
     },

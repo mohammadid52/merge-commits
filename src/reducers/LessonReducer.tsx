@@ -250,7 +250,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         personLocationObj: action.payload,
       };
-
     case 'UNLOAD_STUDENT_DATA':
       return {
         ...state,
