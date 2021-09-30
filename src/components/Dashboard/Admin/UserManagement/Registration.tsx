@@ -66,7 +66,7 @@ const initialState: newUserInput = {
   group: '',
 };
 
-const Registration = ({isInInstitute}: any) => {
+const Registration = ({isInInstitute, instId}: any) => {
   const history = useHistory();
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
   const [institutions, setInstitutions] = useState([]);
@@ -83,12 +83,12 @@ const Registration = ({isInInstitute}: any) => {
 
   const Roles = [
     state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
-    {code: 'ADM', name: 'Admin'},
+    state.user.role === 'SUP' && {code: 'ADM', name: 'Admin'},
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    {code: 'ST', name: 'Student'},
+    state.user.role !== 'SUP' && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -138,6 +138,7 @@ const Registration = ({isInInstitute}: any) => {
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
       language: 'EN',
+      addedby: state.user.authId
     };
 
     try {
@@ -367,6 +368,15 @@ const Registration = ({isInInstitute}: any) => {
     fetchInstitutions();
   }, []);
 
+  useEffect(() => {
+    if (institutionsData.length && instId) {
+      handleInstituteChange({
+        code: instId,
+        name:''
+      })
+    }
+  }, [institutionsData, instId]);
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'py-8 px-12' : 'mt-4 p-12'}`}>
       {isInInstitute ? (
@@ -406,7 +416,8 @@ const Registration = ({isInInstitute}: any) => {
                 !isInInstitute ? 'bg-white shadow-5' : ''
               } my-4 sm:rounded-lg`}>
               <form>
-                <div className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pb-5 pt-2`}>
+                <div
+                  className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pb-5 pt-2`}>
                   <div className="text-red-500 pb-2 text-right">
                     * {RegistrationDict[userLanguage]['requiredfield']}
                   </div>
@@ -470,12 +481,13 @@ const Registration = ({isInInstitute}: any) => {
                         handleChange={handleChangeRole}
                         userInfo={`${newUserInputs.role}`}
                         label="Role"
+                        listClassName="h-28"
                         id="role"
                         items={Roles}
                         value={`${newUserInputs.role}`}
                       />
                     </div>
-                    <div className="sm:col-span-3 p-2">
+                    {/* <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         style={true}
                         handleChange={handleInstituteChange}
@@ -488,7 +500,7 @@ const Registration = ({isInInstitute}: any) => {
                           RegistrationDict[userLanguage].messages.ROLE_NO_OPTION
                         }
                       />
-                    </div>
+                    </div> */}
                     {newUserInputs.role &&
                       newUserInputs.role === 'ST' &&
                       newUserInputs.institution.id && (

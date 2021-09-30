@@ -401,6 +401,8 @@ const staffBuilderDict: any = {
   EN: {
     TITLE: 'STAFF MEMBERS',
     ADD_PLACEHOLDER: 'Add new',
+    ADD_SUPER_ADMIN_PLACEHOLDER: 'Add new Super Admin',
+    ADD_SUPER_ADMIN: 'Existing Super Admin',
     ADD_BUTTON: 'ADD',
     NO: 'No.',
     NAME: 'Name',

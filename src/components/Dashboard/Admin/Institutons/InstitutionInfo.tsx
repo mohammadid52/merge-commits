@@ -587,7 +587,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   />
                   <Route
                     path={`${match.url}/register-user`}
-                    render={() => <Registration isInInstitute />} // Register new user to roo,
+                    render={() => <Registration isInInstitute instId={institute?.id} />} // Register new user to roo,
                   />
                   <Route
                     path={`${match.url}/courses`}

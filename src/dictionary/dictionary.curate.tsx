@@ -426,6 +426,8 @@ const staffBuilderDict: any = {
     TITLE: 'PROJECT TEAM',
     ADD_PLACEHOLDER: 'Add new',
     ADD_BUTTON: 'ADD',
+    ADD_SUPER_ADMIN_PLACEHOLDER: 'Add new Super Admin',
+    ADD_SUPER_ADMIN: 'Existing Super Admin',
     NO: 'No.',
     NAME: 'Name',
     ROLE: 'Role',

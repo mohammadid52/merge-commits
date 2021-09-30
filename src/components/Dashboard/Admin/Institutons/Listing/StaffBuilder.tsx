@@ -49,6 +49,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const history = useHistory();
   const {BUTTONS, staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
+  const [showSuperAdmin, setShowSuperAdmin] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [showAddSection, setShowAddSection] = useState(false);
   const [newMember, setNewMember] = useState({id: '', name: '', value: '', avatar: ''});
@@ -97,14 +98,24 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const getPersonsList = async () => {
+  const redirectToRegistrationPage = () => {
+    history.push(`/dashboard/manage-institutions/institution/${instituteId}/register-user`)
+  }
+
+  const getPersonsList = async (role: string) => {
     try {
+      if(role === 'SUP'){
+        setShowSuperAdmin(true);
+      }else{
+        setShowSuperAdmin(false);
+      }
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter:
-            user.role === 'SUP'
-              ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
-              : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
+          filter: role
+            ? {role: {eq: role}}
+            : user.role === 'SUP'
+            ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
+            : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
       );
@@ -304,14 +315,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setStatusEdit('');
   };
 
-  const showAddStaffSection = async () => {
-    let users = await getPersonsList();
-    const staffMembersIds = activeStaffList.map((item: any) => item.userId);
-    let availableUsersList = users.filter(
-      (item: any) => staffMembersIds.indexOf(item.id) < 0
-    );
-    setAvailableUsers(availableUsersList);
-    setShowAddSection(true);
+  const showAddStaffSection = async (role?: string) => {
+    if(user.role === 'SUP'){
+      redirectToRegistrationPage()
+    }else{
+      let users = await getPersonsList(role);
+      const staffMembersIds = activeStaffList.map((item: any) => item.userId);
+      let availableUsersList = users.filter(
+        (item: any) => staffMembersIds.indexOf(item.id) < 0
+      );
+      setAvailableUsers(availableUsersList);
+      setShowAddSection(true);
+    }
   };
 
   return (
@@ -323,11 +338,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               {dictionary['TITLE']}
             </h3>
             {!showAddSection ? (
-              <AddButton
-                className="ml-4 py-1"
-                label={'New staff member'}
-                onClick={showAddStaffSection}
-              />
+              <div className="w-auto">
+                <AddButton
+                  className="ml-4 py-1"
+                  label={'Staff member'}
+                  onClick={() => showAddStaffSection('')}
+                />
+                {user.role === 'SUP' && <div
+                  className="text-sm text-right text-gray-400 cursor-pointer mt-1"
+                  onClick={() => showAddStaffSection('SUP')}>
+                  + {dictionary.ADD_SUPER_ADMIN}
+                </div>}
+              </div>
             ) : (
               <Buttons
                 btnClass="ml-4 py-1"
@@ -343,7 +365,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                 imageFromS3={false}
                 selectedItem={newMember}
                 list={availableUsers}
-                placeholder={dictionary['ADD_PLACEHOLDER']}
+                placeholder={showSuperAdmin ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER : dictionary['ADD_PLACEHOLDER']}
                 onChange={onChange}
               />
               <Buttons
