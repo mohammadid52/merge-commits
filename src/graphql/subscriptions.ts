@@ -50,7 +50,7 @@ export const onChangePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -92,6 +92,7 @@ export const onChangePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -185,7 +186,7 @@ export const onChangePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -280,6 +281,7 @@ export const onChangeStudentData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -337,7 +339,7 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -526,6 +528,7 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -729,7 +732,7 @@ export const onChangeRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -859,7 +862,7 @@ export const onCreatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
-      superAdmin
+      addedby
       createdAt
       updatedAt
     }
@@ -907,7 +910,7 @@ export const onUpdatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
-      superAdmin
+      addedby
       createdAt
       updatedAt
     }
@@ -955,7 +958,7 @@ export const onDeletePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
-      superAdmin
+      addedby
       createdAt
       updatedAt
     }
@@ -1506,7 +1509,7 @@ export const onCreateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1590,7 +1593,7 @@ export const onUpdateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1674,7 +1677,7 @@ export const onDeleteStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -1819,7 +1822,7 @@ export const onCreateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2006,7 +2009,7 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2193,7 +2196,7 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2349,7 +2352,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2391,7 +2394,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2470,7 +2473,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2512,7 +2515,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2591,7 +2594,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2633,7 +2636,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2716,7 +2719,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2792,7 +2795,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -2887,7 +2890,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -2963,7 +2966,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3058,7 +3061,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -3134,7 +3137,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3232,7 +3235,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -3304,7 +3307,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3388,7 +3391,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -3460,7 +3463,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3544,7 +3547,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -3616,7 +3619,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -3985,7 +3988,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4066,7 +4069,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -4147,7 +4150,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6462,7 +6465,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6508,7 +6511,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6554,7 +6557,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -6727,6 +6730,7 @@ export const onCreateLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -6897,6 +6901,7 @@ export const onUpdateLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -7067,6 +7072,7 @@ export const onDeleteLesson = /* GraphQL */ `
       duration
       resources
       notes
+      targetAudience
       createdAt
       updatedAt
     }
@@ -7172,6 +7178,7 @@ export const onCreateLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7302,6 +7309,7 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7432,6 +7440,7 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7563,6 +7572,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7693,6 +7703,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7823,6 +7834,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -7959,6 +7971,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8074,6 +8087,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8189,6 +8203,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8414,6 +8429,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8575,6 +8591,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8736,6 +8753,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         duration
         resources
         notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -8830,7 +8848,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -8882,7 +8900,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -8934,7 +8952,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -8987,7 +9005,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -9037,6 +9055,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9105,7 +9124,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -9155,6 +9174,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9223,7 +9243,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -9273,6 +9293,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9359,7 +9380,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9428,7 +9449,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9518,7 +9539,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9587,7 +9608,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9677,7 +9698,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9746,7 +9767,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -9821,7 +9842,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -9863,6 +9884,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -9956,7 +9978,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -10044,7 +10066,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -10086,6 +10108,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -10179,7 +10202,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -10267,7 +10290,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -10309,6 +10332,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           duration
           resources
           notes
+          targetAudience
           createdAt
           updatedAt
         }
@@ -10402,7 +10426,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -10503,7 +10527,7 @@ export const onCreateNoticeboardWidget = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -10565,7 +10589,7 @@ export const onUpdateNoticeboardWidget = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -10627,7 +10651,7 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -10841,7 +10865,7 @@ export const onCreateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -11094,7 +11118,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -11347,7 +11371,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
-          superAdmin
+          addedby
           createdAt
           updatedAt
         }
@@ -12627,7 +12651,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12660,7 +12684,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12707,7 +12731,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12740,7 +12764,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12787,7 +12811,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12820,7 +12844,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12863,7 +12887,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12910,7 +12934,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -12957,7 +12981,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -13087,7 +13111,7 @@ export const onCreateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -13153,7 +13177,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }
@@ -13219,7 +13243,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
-        superAdmin
+        addedby
         createdAt
         updatedAt
       }

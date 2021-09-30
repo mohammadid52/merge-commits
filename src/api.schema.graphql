@@ -55,7 +55,7 @@ type Person
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
-  superAdmin: Boolean
+  addedby: String
 }
 
 type Institution @model @key(fields: ["id"]) {
@@ -681,6 +681,7 @@ type Lesson @model @key(fields: ["id"]) {
   duration: Int
   resources: String
   notes: String
+  targetAudience:String
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
