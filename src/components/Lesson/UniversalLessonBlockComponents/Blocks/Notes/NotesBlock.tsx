@@ -16,7 +16,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
 import {v4 as uuidv4} from 'uuid';
-
+import Tooltip from '@atoms/Tooltip';
 const genSticky = (
   {rows, cols}: {rows?: number; cols?: number},
 
@@ -425,6 +425,7 @@ const NotesBlock = ({
             </div>
           </div>
         </ThemeModal>
+
         <div className="relative flex items-start space-x-4">
           <div id="container" className="sticky-container blackboard">
             {localNotes &&
@@ -448,30 +449,34 @@ const NotesBlock = ({
 
           {isInLesson && isStudent && (
             <div className="w-auto space-y-4 flex items-center flex-col justify-center">
-              {/* <button
-                onClick={onAddNewNote}
-                title="Add new note"
-                className="w-auto text-red-600 hover:text-red-500 transition-all">
-                <FiFilePlus className="h-10 w-10 " />
-              </button> */}
-              {!saveInProgress && (
+              <Tooltip text="Add new note">
                 <button
-                  onClick={() => {
-                    if (notesChanged) {
-                      saveData(
-                        notesData,
-                        () => setSaveInProgress(true),
-                        () => {
-                          setNotesChanged(false);
-                          setSaveInProgress(false);
-                        }
-                      );
-                    }
-                  }}
-                  title="Save to Notebook"
-                  className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
-                  <BiSave className="h-10 w-10 " />
+                  disabled={localNotes.length === 15}
+                  onClick={onAddNewNote}
+                  className="w-auto text-red-600 hover:text-red-500 transition-all">
+                  <FiFilePlus className="h-10 w-10 " />
                 </button>
+              </Tooltip>
+
+              {!saveInProgress && (
+                <Tooltip text="Save to Notebook">
+                  <button
+                    onClick={() => {
+                      if (notesChanged) {
+                        saveData(
+                          notesData,
+                          () => setSaveInProgress(true),
+                          () => {
+                            setNotesChanged(false);
+                            setSaveInProgress(false);
+                          }
+                        );
+                      }
+                    }}
+                    className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
+                    <BiSave className="h-10 w-10 " />
+                  </button>
+                </Tooltip>
               )}
               {saveInProgress && <Loader className="text-yellow-500 text-base" />}
             </div>
