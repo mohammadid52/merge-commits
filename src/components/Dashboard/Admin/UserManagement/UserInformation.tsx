@@ -98,7 +98,8 @@ const UserInformation = (props: UserInfoProps) => {
             </a>
             {(state.user.role === 'FLW' ||
               state.user.role === 'TR' ||
-              state.user.role === 'ADM') &&
+              state.user.role === 'ADM' ||
+              state.user.role === 'SUP') &&
               stdCheckpoints.length > 0 &&
               stdCheckpoints.map((checkpoint: any, index: number) => {
                 return (

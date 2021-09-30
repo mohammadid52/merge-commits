@@ -266,7 +266,7 @@ const User = () => {
     }
   }
 
-  const isAdmin = state.user.role === 'ADM';
+  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
   useEffect(() => {
     async function getUrl() {
@@ -1362,7 +1362,7 @@ const User = () => {
   };
 
   const isTeacher =
-    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
+    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM' || state.user.role === 'SUP';
   {
     return (
       <>
@@ -1397,7 +1397,7 @@ const User = () => {
               )}
             </div>
           </div>
-          <AnimatedContainer show={onUserInformationTab}>
+          <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
               <div
                 className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>

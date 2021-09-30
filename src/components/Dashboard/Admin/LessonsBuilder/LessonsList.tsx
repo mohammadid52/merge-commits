@@ -296,7 +296,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
   {
     return (
-      <div className={`w-full h-full`}>
+      <div className={`w-full h-full ${isInInstitution ? 'py-8' : ''}`}>
         {showCloneModal.show && (
           <CloneLesson
             setShowCloneModal={setShowCloneModal}
@@ -305,7 +305,10 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         )}
         {/* Header section */}
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
-        <div className={`flex justify-between ${isInInstitution ? 'items-center' : ''}`}>
+        <div
+          className={`flex justify-between ${
+            isInInstitution ? 'items-center px-12' : ''
+          }`}>
           {isInInstitution ? (
             <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
               {title}
@@ -362,9 +365,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         </div>
 
         {/* List / Table */}
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${isInInstitution ? 'px-12' : ''}`}>
           <div className="-my-2 py-2">
-            <div className={`${isInInstitution ? '' : 'white_back px-8'} py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
+            <div
+              className={`${
+                isInInstitution ? '' : 'white_back px-8'
+              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
               <div className={`h-8/10 ${isInInstitution ? '' : 'px-4'}`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">

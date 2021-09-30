@@ -91,7 +91,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   const headerMenusForInstitution = [
     {
-      title: 'Institution Manager',
+      title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
       key: 'institution',
       type: 'dropdown',
       children: [
@@ -126,7 +126,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       ].filter(Boolean),
     },
     {
-      title: 'Course Manager',
+      title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
       key: 'course',
       type: 'dropdown',
       children: [
@@ -143,6 +143,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {
           title: Institute_info[userLanguage]['TABS']['LESSONS'],
           key: 'lessons',
+          redirectionUrl: `${match.url}/lessons`,
+          active: location.pathname.indexOf('lessons') > -1,
         },
         {
           title: 'Game Changers ',
@@ -150,7 +152,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       ],
     },
     {
-      title: 'Class Manager',
+      title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
       key: 'class',
       type: 'dropdown',
       children: [
@@ -166,10 +168,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           redirectionUrl: `${match.url}/class-rooms`,
           active: location.pathname.indexOf('room') > -1,
         },
-      ],
+        (user.role === 'FLW' || user.role === 'TR') && {
+          title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
+          key: 'roaster',
+          redirectionUrl: `${match.url}/class-rooms`,
+          active: location.pathname.indexOf('room') > -1,
+        }
+      ].filter(Boolean),
     },
     {
-      title: 'Community Manager',
+      title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
       key: 'community',
       type: 'dropdown',
       children: [
@@ -615,6 +623,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     path={`${match.url}/course-builder/:courseId`}
                     render={() => <CourseBuilder instId={institute?.id} />} // Create new course
+                  />
+                  <Route
+                    path={`${match.url}/lessons`}
+                    render={() => <LessonsList
+                      isInInstitution
+                      title={`Lessons`}
+                      instId={institute?.id}
+                    />}
                   />
                 </Switch>
               </div>

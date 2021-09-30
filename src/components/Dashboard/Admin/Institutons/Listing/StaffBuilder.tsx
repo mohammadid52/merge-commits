@@ -68,6 +68,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return 'Builder';
       case 'ADM':
         return 'Admin';
+      case 'SUP':
+        return 'Super Admin';
     }
   };
 

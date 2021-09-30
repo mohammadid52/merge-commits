@@ -63,7 +63,7 @@ const InstitutionBuilder = ({
   const step = params.get('step');
   const institutionId = params.get('id');
 
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, state:{user}, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const {BreadcrumsTitles, InstitutionBuilderDict} = useDictionary(clientKey);
@@ -143,6 +143,13 @@ const InstitutionBuilder = ({
       setActiveStep(step);
     }
   }, [step]);
+
+  useEffect(() => {
+    // For checking Authorized user is trying to access add institution or not
+    if(user.role !== 'SUP' && !institutionId){
+      history.push('/dashboard');
+    }
+  },[institutionId])
 
   const getInstitutionData = async () => {
     try {

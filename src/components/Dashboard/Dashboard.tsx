@@ -184,7 +184,7 @@ const Dashboard = (props: DashboardProps) => {
    */
   useEffect(() => {
     const userRole = state.user.role;
-    if (userRole === 'ADM') {
+    if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
   }, []);
@@ -954,7 +954,8 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
-              {(userData.role === 'ADM' ||
+              {(userData.role === 'SUP' ||
+              userData.role === 'ADM' ||
                 userData.role === 'TR' ||
                 userData.role === 'FLW' ||
                 userData.role === 'BLD') && (

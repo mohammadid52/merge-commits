@@ -284,15 +284,15 @@ const InstitutionLookup: React.FC = () => {
               closeAction={removeSearchAction}
               style="mr-4 w-auto"
             />
-              <Selector
-                placeholder={InstitutionDict[userLanguage]['SORTBY']}
-                list={sortByList}
-                selectedItem={sortingType.name}
-                onChange={setSortingValue}
-                btnClass="rounded-r-none border-r-none"
-                additionalClass="w-80"
-                arrowHidden={true}
-              />
+            <Selector
+              placeholder={InstitutionDict[userLanguage]['SORTBY']}
+              list={sortByList}
+              selectedItem={sortingType.name}
+              onChange={setSortingValue}
+              btnClass="rounded-r-none border-r-none"
+              additionalClass="w-80"
+              arrowHidden={true}
+            />
             <button
               className={`w-16 bg-gray-100 mr-4 p-3 border-gray-400 border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
               onClick={toggleSortDimension}>
@@ -301,12 +301,14 @@ const InstitutionLookup: React.FC = () => {
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
-            <Buttons
-              label={InstitutionDict[userLanguage]['BUTTON']['Add']}
-              onClick={addNewInstitution}
-              btnClass="mr-4"
-              Icon={IoBusinessSharp}
-            />
+            {state.user.role === 'SUP' && (
+              <Buttons
+                label={InstitutionDict[userLanguage]['BUTTON']['Add']}
+                onClick={addNewInstitution}
+                btnClass="mr-4"
+                Icon={IoBusinessSharp}
+              />
+            )}
           </div>
           {/* </div> */}
 

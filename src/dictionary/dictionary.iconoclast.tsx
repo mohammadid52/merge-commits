@@ -875,7 +875,12 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
+      CLASS_MANAGER: 'Class Manager',
+      COURSE_MANAGER: 'Course Manager',
+      COMMUNITY_MANAGER: 'Community Manager',
+      INSTITUTION_MANAGER:'Institution Manager',
       CLASSES: 'Classes',
+      STUDENT_ROASTER: 'Student Roster',
       CURRICULAR: 'Course',
       CLASSROOMS: 'Classrooms',
       GENERAL_INFORMATION: 'General Information',
@@ -896,6 +901,7 @@ const Institute_info: any = {
       CLASSES: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
+      STUDENT_ROASTER: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD'

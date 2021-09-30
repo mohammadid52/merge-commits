@@ -23,13 +23,13 @@ const CurriculumList = (props: CurriculumListProps) => {
   const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
 
   const createNewCurricular = () => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${instId}/course-builder`
-    );
+    history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder`);
   };
 
   const editCurrentCurricular = (id: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`
+    );
   };
 
   return (
@@ -39,7 +39,7 @@ const CurriculumList = (props: CurriculumListProps) => {
           {curricular.items && curricular.items.length > 0 ? (
             <Fragment>
               <div className="flex justify-between items-center w-full m-auto">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+                <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
                   Courses
                 </h3>
                 <AddButton
@@ -56,7 +56,9 @@ const CurriculumList = (props: CurriculumListProps) => {
                     <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
                   </div>
                   <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{InstitueCurriculam[userLanguage]['ACTION']}</span>
+                    <span className="w-auto">
+                      {InstitueCurriculam[userLanguage]['ACTION']}
+                    </span>
                   </div>
                 </div>
               </div>

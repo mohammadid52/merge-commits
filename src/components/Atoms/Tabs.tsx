@@ -19,7 +19,7 @@ interface ITabsProps {
 const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   return (
-    <Menu as="div" className="relative inline-block text-left" key={index}>
+    <Menu as="div" className="relative inline-block text-left">
       {({open}) => (
         <>
           <div>
@@ -48,8 +48,8 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10">
               <div className="px-1 py-1 shadow-lg">
-                {menu.children.map((item: any) => (
-                  <Menu.Item key={item.title} onClick={() => onClick(item)}>
+                {menu.children.map((item: any, menuIndex:number) => (
+                  <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
                     <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
                       {item.title}
                     </div>

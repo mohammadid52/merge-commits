@@ -63,7 +63,7 @@ const List = (props: ListProps) => {
 
     const showResetPasswordOption = (loggedUserRole: any, userRole: any) => {
         let show = false;
-        if (loggedUserRole === 'ADM') {
+        if (loggedUserRole === 'ADM' || loggedUserRole === 'SUP') {
             show = true;
         }
         if (loggedUserRole === 'TR' && userRole === 'ST') {

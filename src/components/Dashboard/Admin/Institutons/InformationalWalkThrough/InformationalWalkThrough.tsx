@@ -36,10 +36,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     show: false,
     message: '',
   });
-  const [loading, setLoading] = useState(role === 'ADM' || role === 'BLD');
+  const [loading, setLoading] = useState(role === 'ADM' || role === "SUP" || role === 'BLD');
   const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
   const [instListLoading, setInstListLoading] = useState(
-    role === 'ADM' || role === 'BLD'
+    role === 'ADM' || role === "SUP" || role === 'BLD'
   );
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
@@ -51,7 +51,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const data: any = {
     title: 'root',
     children: [
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Institution Setup`,
         type: 'menu',
         id: 'inst',
@@ -171,7 +171,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           },
         ],
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Lesson Builder`,
         type: 'menu',
         id: 'lesson_builder',
@@ -260,7 +260,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           },
         ],
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Service Provider`,
         type: 'menu',
         id: 'service_provider',
@@ -280,7 +280,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         ],
         redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=service_provider`,
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Research & Analytics`,
         type: 'list',
         id: 'research_and_analytics',
@@ -519,7 +519,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       );
       setSectionDetailsLoading(false);
     } else {
-      if (role === 'ADM' || role === 'BLD') {
+      if (role === 'ADM' || role === "SUP" || role === 'BLD') {
         setAlertConfig({
           show: true,
           message: 'Please select institution before continuing',
@@ -2093,7 +2093,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                             <HiOutlineRefresh className="w-6 h-6" />
                           </span>
                         ) : (
-                          role === 'ADM' &&
+                          role === 'ADM' || role === "SUP" &&
                           (!associateInstitute?.length ||
                             associateInstitute?.length > 1) && (
                             <Selector

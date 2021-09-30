@@ -77,17 +77,19 @@ const Registration = ({isInInstitute}: any) => {
     type: '',
     message: '',
   });
+
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const {RegistrationDict, BreadcrumsTitles} = useDictionary(clientKey);
+
   const Roles = [
+    state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
     {code: 'ADM', name: 'Admin'},
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
     {code: 'ST', name: 'Student'},
-  ];
-
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {RegistrationDict, BreadcrumsTitles} = useDictionary(clientKey);
+  ].filter(Boolean);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
