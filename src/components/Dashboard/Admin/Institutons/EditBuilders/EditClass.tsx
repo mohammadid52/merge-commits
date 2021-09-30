@@ -697,11 +697,11 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
                           {index + 1}.
                         </div>
                         <div
-                          className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer"
+                          className={`flex w-5/10 items-center px-4 py-2 whitespace-normal ${
+                            user.role !== 'BLD' ? 'cursor-pointer' : ''
+                          } `}
                           onClick={() =>
-                            user.role !== 'BLD'
-                              ? movetoStudentProfile(item.student.id)
-                              : null
+                            user.role !== 'BLD' ? movetoStudentProfile(item.student.id) : null
                           }>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
@@ -731,7 +731,10 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
                           </div>
                           <div className="ml-4">
                             {/* {item.student.name} */}
-                            <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                            <div
+                              className={`${
+                                user.role !== 'BLD' ? 'hover:text-gray-600' : ''
+                              } text-sm leading-5 font-medium text-gray-900`}>
                               {item.student.name}
                             </div>
                             <div className="text-sm leading-5 text-gray-500">

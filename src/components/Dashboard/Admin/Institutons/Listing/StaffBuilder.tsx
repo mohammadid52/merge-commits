@@ -39,7 +39,12 @@ interface StaffBuilderProps {
 
 const StaffBuilder = (props: StaffBuilderProps) => {
   const {instName, instituteId} = props;
-  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    clientKey,
+    state: {user},
+    theme,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const {BUTTONS, staffBuilderDict} = useDictionary(clientKey);
@@ -96,7 +101,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: {role: {ne: 'ST'}},
+          filter:
+            user.role === 'SUP'
+              ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
+              : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
       );
@@ -269,7 +277,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   useEffect(() => {
-    if(instituteId){
+    if (instituteId) {
       fetchStaffData();
     }
   }, [instituteId]);
@@ -387,7 +395,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                     {...provided.dragHandleProps}>
                                     <div
                                       key={index}
-                                      className={`flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200 ${index % 2 !== 0 ? 'bg-gray-50':''}`}>
+                                      className={`flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200 ${
+                                        index % 2 !== 0 ? 'bg-gray-50' : ''
+                                      }`}>
                                       <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                         {index + 1}.
                                       </div>

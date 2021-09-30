@@ -107,22 +107,18 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           redirectionUrl: `${match.url}/staff`,
           active: location.pathname.indexOf('staff') > -1,
         },
-        user.role !== 'BLD'
-          ? {
-              title: 'User registry',
-              key: 'user_registry',
-              redirectionUrl: `/dashboard/register`,
-              active: location.pathname.indexOf('register') > -1,
-            }
-          : null,
-        user.role !== 'BLD'
-          ? {
-              title: 'Register New User',
-              key: 'register',
-              redirectionUrl: `/dashboard/manage-users`,
-              active: location.pathname.indexOf('manage-users') > -1,
-            }
-          : null,
+        {
+          title: 'User registry',
+          key: 'user_registry',
+          redirectionUrl: `/dashboard/register`,
+          active: location.pathname.indexOf('register') > -1,
+        },
+        {
+          title: 'Register New User',
+          key: 'register',
+          redirectionUrl: `${match.url}/register-user`,
+          active: location.pathname.indexOf('register-user') > -1,
+        },
       ].filter(Boolean),
     },
     {
@@ -173,7 +169,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           key: 'roaster',
           redirectionUrl: `${match.url}/class-rooms`,
           active: location.pathname.indexOf('room') > -1,
-        }
+        },
       ].filter(Boolean),
     },
     {
@@ -589,6 +585,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     )} // Edit current room.
                   />
                   <Route
+                    path={`${match.url}/register-user`}
+                    render={() => <Registration isInInstitute />} // Register new user to roo,
+                  />
+                  <Route
                     path={`${match.url}/courses`}
                     exact
                     render={() => (
@@ -626,11 +626,23 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   />
                   <Route
                     path={`${match.url}/lessons`}
-                    render={() => <LessonsList
-                      isInInstitution
-                      title={`Lessons`}
-                      instId={institute?.id}
-                    />}
+                    render={() => (
+                      <LessonsList
+                        isInInstitution
+                        title={`Lessons`}
+                        instId={institute?.id}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/lessons-builder`}
+                    render={() => (
+                      <LessonsList
+                        isInInstitution
+                        title={`Lessons`}
+                        instId={institute?.id}
+                      />
+                    )}
                   />
                 </Switch>
               </div>
