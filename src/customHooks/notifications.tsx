@@ -158,6 +158,21 @@ const useLessonControlNotifications = () => {
         //
       },
     },
+    {
+      check: studentIsShared,
+      notification: {
+        label: 'Sharing student data',
+        message: ` "${getSharedStudenName(lessonState.studentViewing)}"`,
+        type: 'alert',
+        cta: 'Quit Viewing',
+      },
+      action: () => {
+        resetViewAndShare();
+      },
+      cancel: () => {
+        //
+      },
+    },
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
