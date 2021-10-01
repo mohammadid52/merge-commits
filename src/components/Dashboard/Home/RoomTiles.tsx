@@ -85,7 +85,7 @@ const RoomTiles = (props: {
                     const {name, summary, type} = curricula?.items[0]?.curriculum;
                     const roomId = item?.id;
                     const roomName = item?.name;
-                    const {email, firstName, lastName} = teacher;
+                    const {email, firstName, lastName, preferredName} = teacher;
 
                     return (
                       <div
@@ -121,9 +121,9 @@ const RoomTiles = (props: {
                             <a href="#" className="block mt-2">
                               <p className="text-base 2xl:text-lg text-gray-900">
                                 <span className="font-semibold">{name}</span>{' '}
-                                <span className="text-base 2xl:text-lg text-semibold text-gray-900">
+                                {/* <span className="text-base 2xl:text-lg text-semibold text-gray-900">
                                   {isTeacher && `${roomName}`}
-                                </span>
+                                </span> */}
                               </p>
                               <p className="mt-2 text-xs 2xl:text-sm text-gray-800">
                                 {limitDesc(summary, 250)}
@@ -134,7 +134,7 @@ const RoomTiles = (props: {
                             <div className="flex-shrink-0 w-auto">
                               <a>
                                 <span className="sr-only">
-                                  {firstName + ' ' + lastName}
+                                  {(preferredName || firstName) + ' ' + lastName}
                                 </span>
                                 {teacherProfileImg ? (
                                   <img
@@ -153,7 +153,7 @@ const RoomTiles = (props: {
                             <div className="ml-3 w-auto">
                               <p className="text-xs 2xl:text-sm font-medium text-gray-900">
                                 <a className="hover:underline">
-                                  {firstName + ' ' + lastName}
+                                {(preferredName || firstName) + ' ' + lastName}
                                 </a>
                               </p>
                               <p

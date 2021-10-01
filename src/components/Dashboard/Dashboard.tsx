@@ -472,7 +472,7 @@ const Dashboard = (props: DashboardProps) => {
       estEndDate,
       i = 0;
     while (iteration <= Math.ceil(duration)) {
-      const isOccupied = scheduleDates.find(
+      const isOccupied = scheduleDates?.find(
         (ele) =>
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
@@ -513,7 +513,7 @@ const Dashboard = (props: DashboardProps) => {
     let count: number = 0,
       lastOccupiedDate: any = startDate,
       scheduleDates = lessonImpactLog
-        .filter((log: any) => log.adjustment === 'Push')
+        ?.filter((log: any) => log.adjustment === 'Push')
         .map((log: any) => log.impactDate);
 
     return syllabusList.map((syllabus: any) => ({
@@ -595,6 +595,7 @@ const Dashboard = (props: DashboardProps) => {
                 syllabi.find((syllabus: any) => syllabus.id === syllabusID),
               ];
             }, [])
+            .filter((syllabus: any) => syllabus)
             .map((syllabus: any) => ({
               ...syllabus,
               lessons: {

@@ -199,7 +199,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
                 notesList.length === 0 ? 'Please add notes to see preview' : false
               }>
               {/* @ts-ignore */}
-              <NotesBlock grid={{cols: 2, rows: 2}} value={notesList} />
+              <NotesBlock preview grid={{cols: 2, rows: 2}} value={notesList} />
             </PreviewLayout>
           </div>
         )}
