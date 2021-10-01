@@ -23,7 +23,7 @@ const SingleNote = ({
           error={singleNoteData.error}
           name={'noteText'}
           value={singleNoteData.noteText}
-          placeHolder={'Note text'}
+          placeHolder={'Enter your notes text here'}
         />
       </div>
 
@@ -37,7 +37,7 @@ const SingleNote = ({
             </label>
             <button
               onClick={() => setColorPicker(!colorPicker)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              className={`border-0 border-gray-300 w-56 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
               <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
                 {singleNoteData.bgColor?.split('-')[0]}{' '}
               </span>
@@ -74,8 +74,11 @@ const SingleNote = ({
               Select size
             </label>
             <Selector
+              width="w-56"
               placeholder="Select size"
-              selectedItem={singleNoteData.size}
+              selectedItem={
+                singleNoteData.size !== 'undefined' ? singleNoteData.size : 'medium'
+              }
               onChange={(_, name) => onFieldUpdate('size', name, idx)}
               list={[
                 {id: 0, name: 'small'},

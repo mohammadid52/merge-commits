@@ -84,6 +84,7 @@ const genSticky = (
 };
 interface INoteBlock {
   notesInitialized?: boolean;
+  preview?: boolean;
   grid?: {cols?: number; rows?: number};
   value: any[];
   addNew?: (newNoteObj: any, notesData?: any) => void;
@@ -117,6 +118,7 @@ const NotesBlock = ({
   grid,
   saveData,
   updateJournalData,
+  preview = false,
 }: INoteBlock) => {
   const {
     state: {user},
@@ -441,6 +443,7 @@ const NotesBlock = ({
                       key={note?.id}
                       idx={idx}
                       note={note}
+                      preview={preview}
                     />
                   );
                 }
