@@ -123,7 +123,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
 
   const buildLesson = () => {
-    history.push('/dashboard/lesson-builder/lesson/add');
+    history.push(`${match.url}/add`);
   };
 
   const getFilteredList = (data: [{designers: string[]}], target: string) => {
@@ -296,7 +296,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
   {
     return (
-      <div className={`w-full h-full ${isInInstitution ? 'py-8' : ''}`}>
+      <div className={`w-full h-full`}>
         {showCloneModal.show && (
           <CloneLesson
             setShowCloneModal={setShowCloneModal}
@@ -307,11 +307,11 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
         <div
           className={`flex justify-between ${
-            isInInstitution ? 'items-center px-12' : ''
+            isInInstitution ? 'items-center px-8' : ''
           }`}>
           {isInInstitution ? (
             <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
-              {title}
+              {LessonsListDict[userLanguage]['HEADING']}
             </h3>
           ) : (
             <SectionTitle
@@ -365,7 +365,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         </div>
 
         {/* List / Table */}
-        <div className={`flex flex-col ${isInInstitution ? 'px-12' : ''}`}>
+        <div className={`flex flex-col ${isInInstitution ? 'px-8' : ''}`}>
           <div className="-my-2 py-2">
             <div
               className={`${

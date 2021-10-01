@@ -1,4 +1,4 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useRef} from 'react';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
@@ -18,12 +18,44 @@ interface ITabsProps {
 
 const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
+  const buttonRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const timeoutDuration = 200;
+  let timeout: any;
+
+  const openMenu = () => buttonRef?.current.click();
+  const closeMenu = () =>
+    {
+      console.log("close menu called", dropdownRef, dropdownRef?.current, buttonRef)
+      dropdownRef?.current?.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true,
+      })
+    );}
+
+  const onMouseEnter = (closed: boolean = false) => {
+    clearTimeout(timeout);
+    closed && openMenu();
+  };
+  const onMouseLeave = (open: boolean) => {
+    console.log("onMouseLeave", open);
+    
+    open && (timeout = setTimeout(() => closeMenu(), timeoutDuration));
+  };
+  console.log(dropdownRef,'sdfdsfsdfsdf');
+  
   return (
     <Menu as="div" className="relative inline-block text-left">
       {({open}) => (
         <>
-          <div>
+          <div
+            onClick={openMenu}
+            onMouseEnter={() => onMouseEnter(!open)}
+            onMouseLeave={() => onMouseLeave(open)}>
             <Menu.Button
+              ref={buttonRef}
               className={`${
                 open || menu.children.filter((item: any) => item.active).length
                   ? 'bg-indigo-300 text-indigo-700'
@@ -46,9 +78,14 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
             leave="transition ease-in duration-75"
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
-            <Menu.Items className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10">
+            <Menu.Items
+              className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10"
+              ref={dropdownRef}
+              static
+              onMouseEnter={() => onMouseEnter()}
+              onMouseLeave={() => onMouseLeave(open)}>
               <div className="px-1 py-1 shadow-lg">
-                {menu.children.map((item: any, menuIndex:number) => (
+                {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
                     <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
                       {item.title}
@@ -64,7 +101,7 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {  
+const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -77,7 +114,7 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           defaultValue={activeTab}>
-          {tabsData.map((tab: ITabElements, index:number) => (
+          {tabsData.map((tab: ITabElements, index: number) => (
             <option className="transition-all" key={index}>
               {tab.title}
             </option>

@@ -31,7 +31,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     // } else {
     //   history.push(`${match.url}/lesson/view?assessmentId=${id}`);
     // }
-    history.push(`${match.url}/lesson/edit?lessonId=${id}`);
+    history.push(`${match.url}/${id}`);
   };
 
   const {

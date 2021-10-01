@@ -17,6 +17,7 @@ interface LessonPlansListProps {
   lessonId: string;
   loading: boolean;
   universalLessonDetails: {
+    institutionID?: string;
     lessonPlan: UniversalLessonPage[];
   };
 }
@@ -42,21 +43,21 @@ const LessonPlansList = ({
 
   const addNewLessonPlan = () => {
     history.push(
-      `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/lesson-plan`
     );
   };
 
   const editLessonPage = (id: string) => {
     setPreviewMode(false);
     history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 
   const lessonPagePreview = (id: string) => {
     setPreviewMode(true);
     history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

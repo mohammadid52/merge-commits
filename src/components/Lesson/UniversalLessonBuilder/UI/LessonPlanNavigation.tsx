@@ -49,7 +49,7 @@ const LessonPlanNavigation = ({
   const updatePage = (id: string) => {
     setSelectedPageID(id);
     history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

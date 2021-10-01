@@ -3308,7 +3308,9 @@ const AddNewLessonFormDict: any = {
     TYPE: 'Type',
     INSTITUTION: 'Institution',
     SELECTINSTITUTION: 'Select Institution',
+    SELECT_TARGET_AUDIENCE: 'Select Target Audience',
     SELECTLANG: 'Select Language',
+    TARGET_AUDIENCE: 'Target Audience',
     LANGUAGE: 'Language',
     SELECTDESIGNER: 'Select Designers',
     DESIGNER: 'Designers',
@@ -3786,6 +3788,7 @@ const LessonEditDict: any = {
 const LessonsListDict: any = {
   EN: {
     TITLE: 'LESSONS LIST',
+    HEADING: 'Lessons',
     SUBTITLE: 'All Lessons List',
     SORTBY: 'Sort By',
     NO: 'No.',

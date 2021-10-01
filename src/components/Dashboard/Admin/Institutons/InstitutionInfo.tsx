@@ -40,6 +40,9 @@ import Loader from '@components/Atoms/Loader';
 import ClassBuilder from './Builders/ClassBuilder';
 import EditClass from './EditBuilders/EditClass';
 import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
+import LessonBuilder from '../LessonsBuilder/LessonBuilder';
+import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -625,7 +628,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     path={`${match.url}/course-builder/:courseId`}
                     render={() => <CourseBuilder instId={institute?.id} />} // Create new course
                   />
-                  <Route
+                  <UniversalLessonBuilderProvider>
+                    <Route
+                      path={`${match.url}/lessons`}
+                      render={() => <LessonsBuilderHome instId={institute?.id} />}
+                    />
+                  </UniversalLessonBuilderProvider>
+                  {/* <Route
                     path={`${match.url}/lessons`}
                     render={() => (
                       <LessonsList
@@ -638,13 +647,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     path={`${match.url}/lessons-builder`}
                     render={() => (
-                      <LessonsList
+                      <LessonBuilder
                         isInInstitution
                         title={`Lessons`}
                         instId={institute?.id}
                       />
                     )}
-                  />
+                  /> */}
                 </Switch>
               </div>
             </div>

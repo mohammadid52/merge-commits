@@ -2,7 +2,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory, useRouteMatch} from 'react-router';
+import {useHistory, useRouteMatch, useParams} from 'react-router';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../../customGraphql/customQueries';
@@ -86,7 +86,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  const {lessonId}:any = useParams();
   const pageId = params.get('pageId');
   const {state, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
 

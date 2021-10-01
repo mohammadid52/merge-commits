@@ -6,7 +6,12 @@ import * as customMutations from '../../../../../../customGraphql/customMutation
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../../customHooks/urlParam';
 import * as mutations from '../../../../../../graphql/mutations';
-import {languageList, lessonTypeList} from '../../../../../../utilities/staticData';
+import {
+  languageList,
+  lessonTypeList,
+  periodOptions,
+  targetAudienceForIconoclast,
+} from '../../../../../../utilities/staticData';
 import Buttons from '../../../../../Atoms/Buttons';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
@@ -23,7 +28,7 @@ interface AddNewLessonFormProps {
   designersList: InputValueObject[];
   selectedDesigners: InputValueObject[];
   changeLessonType: (type: string) => void;
-  setFormData: (data: InitialData) => void;
+  setFormData: React.Dispatch<React.SetStateAction<InitialData>>;
   setSelectedDesigners: (designer: InputValueObject[]) => void;
   postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
@@ -32,19 +37,6 @@ interface AddNewLessonFormProps {
   setUnsavedChanges: Function;
   fetchStaffByInstitution: (institutionID: string) => void;
 }
-
-const periodOptions = [
-  {id: 1, name: '.25'},
-  {id: 2, name: '.33'},
-  {id: 3, name: '.5'},
-  {id: 4, name: '.66'},
-  {id: 5, name: '.75'},
-  {id: 6, name: '1'},
-  {id: 7, name: '2'},
-  {id: 8, name: '3'},
-  {id: 9, name: '4'},
-  {id: 10, name: '5'},
-];
 
 const Card = ({
   cardTitle,
@@ -120,14 +112,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   };
 
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
-    setFormData({
-      ...formData,
+    setFormData((prevData: InitialData) => ({
+      ...prevData,
       [field]: {
         id: id,
         name: name,
         value: val,
       },
-    });
+    }));
     setUnsavedChanges(true);
 
     setValidation({
@@ -137,6 +129,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     if (field === 'institution') {
       fetchStaffByInstitution(id);
     }
+  };
+
+  const onSelectTargetAudience = (val: string, name: string, id: string) => {
+    setFormData((prevData: InitialData) => ({
+      ...prevData,
+      targetAudience: name,
+    }));
   };
 
   const totalEstTime =
@@ -318,6 +317,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),
             institutionID: formData.institution?.id,
+            targetAudience: formData.targetAudience || null,
             // adding defaults to prevent errors
             duration: Number(formData.duration),
             resources: '',
@@ -353,6 +353,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             studentMaterials: formData.studentMaterials,
             cardCaption: formData.imageCaption,
             duration: Number(formData.duration),
+            targetAudience: formData.targetAudience || null,
           };
           const results: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {input: input})
@@ -415,6 +416,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     imageCaption,
     imagePreviewUrl = '',
     studentSummary = '',
+    targetAudience,
   } = formData;
 
   return (
@@ -477,17 +479,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               <div className="grid grid-cols-2 gap-x-4">
                 <div className="px-0 py-4">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
-                    <span className="text-red-500"> * </span>
+                    {AddNewLessonFormDict[userLanguage]['TARGET_AUDIENCE']}{' '}
                   </label>
                   <Selector
-                    disabled={lessonId !== ''}
-                    selectedItem={institution.name}
-                    placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']}
-                    list={institutionList}
-                    onChange={(val, name, id) =>
-                      onSelectOption(val, name, id, 'institution')
+                    selectedItem={targetAudience}
+                    placeholder={
+                      AddNewLessonFormDict[userLanguage]['SELECT_TARGET_AUDIENCE']
                     }
+                    list={targetAudienceForIconoclast}
+                    onChange={onSelectTargetAudience}
                   />
                   {validation.institution && (
                     <p className="text-red-600 text-sm">{validation.institution}</p>

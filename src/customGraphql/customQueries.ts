@@ -2071,6 +2071,7 @@ export const getUniversalLesson = /* GraphQL */ `
       darkMode
       cardImage
       cardCaption
+      targetAudience
       lessonPlan {
         id
         title

@@ -112,7 +112,7 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
     // add to database
     addExistingPageToDB();
     history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

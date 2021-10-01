@@ -1049,7 +1049,7 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => <QuestionBank />}
               />
 
-              <UniversalLessonBuilderProvider>
+              {/* <UniversalLessonBuilderProvider>
                 <Route
                   path={`${match.url}/lesson-builder`}
                   render={() => <LessonsBuilderHome />}
@@ -1059,7 +1059,7 @@ const Dashboard = (props: DashboardProps) => {
                   path={`${match.url}/universal-lesson-builder`}
                   render={() => <UniversalLessonBuilder />}
                 />
-              </UniversalLessonBuilderProvider>
+              </UniversalLessonBuilderProvider> */}
             </Switch>
           </Suspense>
           <InformationalWalkThrough

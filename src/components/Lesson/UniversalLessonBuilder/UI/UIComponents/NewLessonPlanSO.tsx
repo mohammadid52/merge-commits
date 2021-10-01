@@ -352,7 +352,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
 
           if (data.id && !editMode) {
             history.push(
-              `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+              `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${pageId}`
             );
           }
         }
