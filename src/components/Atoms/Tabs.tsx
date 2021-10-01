@@ -20,32 +20,29 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
-  const timeoutDuration = 200;
+  const timeoutDuration = 100;
   let timeout: any;
 
   const openMenu = () => buttonRef?.current.click();
-  const closeMenu = () =>
-    {
-      console.log("close menu called", dropdownRef, dropdownRef?.current, buttonRef)
-      dropdownRef?.current?.dispatchEvent(
+  const closeMenu = () => {
+    dropdownRef?.current?.dispatchEvent(
       new KeyboardEvent('keydown', {
         key: 'Escape',
         bubbles: true,
         cancelable: true,
       })
-    );}
+    );
+  };
 
   const onMouseEnter = (closed: boolean = false) => {
     clearTimeout(timeout);
     closed && openMenu();
   };
+
   const onMouseLeave = (open: boolean) => {
-    console.log("onMouseLeave", open);
-    
     open && (timeout = setTimeout(() => closeMenu(), timeoutDuration));
   };
-  console.log(dropdownRef,'sdfdsfsdfsdf');
-  
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       {({open}) => (
@@ -80,11 +77,12 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items
               className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-10"
-              ref={dropdownRef}
-              static
-              onMouseEnter={() => onMouseEnter()}
-              onMouseLeave={() => onMouseLeave(open)}>
-              <div className="px-1 py-1 shadow-lg">
+              static>
+              <div
+                className="px-1 py-1 shadow-lg"
+                ref={dropdownRef}
+                onMouseEnter={() => onMouseEnter()}
+                onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
                     <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
