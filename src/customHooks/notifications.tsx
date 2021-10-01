@@ -67,7 +67,6 @@ const useLessonControlNotifications = () => {
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
-  const lessonPlan = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~ LOCAL & SESSION STROAGE ~~~~~~~ //
   const getRoomData = getLocalStorageData('room_info');
@@ -126,11 +125,21 @@ const useLessonControlNotifications = () => {
   };
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
+  const getPageLabel = (pageID: string) => {
+    const localLessonPlan = getLocalStorageData('lesson_plan');
+    const findPage =
+      localLessonPlan && localLessonPlan.find((pageObj: any) => pageObj.id === pageID);
+    if (findPage && pageID) {
+      return findPage.label;
+    }
+  };
+
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
-    const findStudent = studentList.find(
-      (studentObj: any) => studentObj.student.authId === authID
-    )?.student;
+    const findStudent =
+      studentList &&
+      studentList.find((studentObj: any) => studentObj.student.authId === authID)
+        ?.student;
     if (findStudent && authID) {
       return findStudent.firstName + ' ' + findStudent.lastName;
     }
@@ -148,7 +157,7 @@ const useLessonControlNotifications = () => {
       notification: {
         label: 'Viewing student data',
         message: ` "${getSharedStudenName(lessonState.studentViewing)}"`,
-        type: 'alert',
+        type: 'info',
         cta: 'Quit Viewing',
       },
       action: () => {
@@ -162,9 +171,11 @@ const useLessonControlNotifications = () => {
       check: studentIsShared,
       notification: {
         label: 'Sharing student data',
-        message: ` "${getSharedStudenName(lessonState.studentViewing)}"`,
+        message: `"${getPageLabel(
+          lessonState.displayData[0].lessonPageID
+        )}" by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'alert',
-        cta: 'Quit Viewing',
+        cta: 'Quit Sharing',
       },
       action: () => {
         resetViewAndShare();
@@ -209,7 +220,6 @@ const useLessonNotifications = () => {
   const navigateAway = () => {
     setSessionStorageData('navigation_state', {
       fromIdx: lessonState?.currentPage,
-      fromLabel: getPageLabel(lessonState.currentPage),
       fromUrl: `${match.url}/${lessonState.currentPage}`,
     });
     history.push(`${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`);
@@ -234,30 +244,26 @@ const useLessonNotifications = () => {
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
   const getPageIdx = (pageID: string) => {
-    if (lessonPlan) {
-      if (!pageID) {
-        return null;
-      } else {
-        return lessonPlan.findIndex((lessonPage: any) => lessonPage.id === pageID);
-      }
-    } else {
-      return null;
+    const localLessonPlan = getLocalStorageData('lesson_plan');
+    if (localLessonPlan && pageID) {
+      return localLessonPlan.findIndex((lessonPage: any) => lessonPage.id === pageID);
     }
   };
 
-  const getPageLabel = (pageIdx: number) => {
-    if (lessonPlan && pageIdx) {
-      return lessonPlan[pageIdx]?.label;
-    } else {
-      return null;
+  const getPageLabel = (pageID: string) => {
+    const localLessonPlan = getLocalStorageData('lesson_plan');
+    const findPage =
+      localLessonPlan && localLessonPlan.find((pageObj: any) => pageObj.id === pageID);
+    if (findPage && pageID) {
+      return findPage.label;
     }
   };
 
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
-    const findStudent = studentList.find(
-      (studentObj: any) => studentObj.student.authId === authID
-    )?.student;
+    const findStudent =
+      studentList &&
+      studentList.find((studentObj: any) => studentObj.student.authId === authID).student;
     if (findStudent && authID) {
       return findStudent.firstName + ' ' + findStudent.lastName;
     }
@@ -306,7 +312,7 @@ const useLessonNotifications = () => {
       check: iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing your page',
-        message: `"${getPageLabel(getPageIdx(lessonState.displayData[0].lessonPageID))}"`,
+        message: `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`,
         type: 'alert',
         cta: 'Go There Now',
       },

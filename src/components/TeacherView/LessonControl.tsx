@@ -290,6 +290,16 @@ const LessonControl = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
+      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
+        return [
+          ...acc,
+          {
+            id: page.id,
+            label: page.label,
+          },
+        ];
+      }, []);
+      setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);
