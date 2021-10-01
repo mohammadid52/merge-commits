@@ -192,25 +192,29 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           activeRoomInfo?.activeLessons?.includes(lessonData.lessonID)
       )
       .map((item: any) => item.lesson);
-
-    setWarnModal((prevValues) => ({
-      ...prevValues,
-      message: `Do you want to mark ${activeLessonsData
-        .map((lesson: any) => lesson.title)
-        .join(', ')} as completed?`,
-      activeLessonsId: activeLessonsData.map((lesson: any) => lesson.id),
-      show: true,
-    }));
+    const lessonIds = activeLessonsData.map((lesson: any) => lesson.id);
+    if (activeLessonsData) {
+      setWarnModal((prevValues) => ({
+        ...prevValues,
+        message: `Do you want to mark ${activeLessonsData
+          .map((lesson: any) => lesson.title)
+          .join(', ')} as completed?`,
+        activeLessonsId: lessonIds,
+        show: true,
+      }));
+    } else {
+      handleMarkAsCompleteClick(lessonIds);
+    }
   };
 
-  const handleMarkAsCompleteClick = async () => {
+  const handleMarkAsCompleteClick = async (lessonIds: any) => {
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
         input: {
           id: roomID,
           completedLessons: [
             ...(state.roomData.completedLessons || []),
-            ...warnModal.activeLessonsId?.map((lessonID) => ({
+            ...(lessonIds || warnModal.activeLessonsId)?.map((lessonID: any) => ({
               lessonID,
               time: new Date().toISOString(),
             })),
