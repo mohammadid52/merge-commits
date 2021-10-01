@@ -19,6 +19,7 @@ interface SelectorProps {
   label?: string;
   labelTextClass?: string;
   noOptionMessage?: string;
+  width?: string;
   error?: string;
 }
 
@@ -38,6 +39,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     loading = false,
     noOptionMessage = '',
     labelTextClass = 'text-xs',
+    width = 'w-full',
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -102,7 +104,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             disabled || loading ? 'bg-gray-100' : ''
           } flex focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-          }-600 focus:border-transparent  relative items-center cursor-pointer  w-full h-full rounded-md ${
+          }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-md ${
             error.length === 0 ? 'border-gray-300' : 'border-red-300'
           }  border-0 bg-white pl-3 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''

@@ -518,21 +518,27 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const collectedNotes = [...mapFixedData, ...mapCustomData];
 
     return (
-      <div className="flex relative items-center justify-center">
-        {collectedNotes.length > 0 && (
-          <NotesBlock
-            addNew={addNewNote}
-            grid={{cols: 3, rows: 3}}
-            value={collectedNotes}
-            notesData={notesData}
-            setNotesData={setNotesData}
-            noteDelete={noteDelete}
-            saveData={saveData}
-            updateJournalData={updateJournalData}
-            notesInitialized={notesInitialized}
-          />
-        )}
-      </div>
+      <>
+        <div className="text-lg mb-2 text-gray-600">
+          {15 - collectedNotes.length} {collectedNotes.length > 1 ? 'notes' : 'note'}{' '}
+          available
+        </div>
+        <div className="flex relative items-center justify-center">
+          {collectedNotes.length > 0 && (
+            <NotesBlock
+              addNew={addNewNote}
+              grid={{cols: 3, rows: 3}}
+              value={collectedNotes}
+              notesData={notesData}
+              setNotesData={setNotesData}
+              noteDelete={noteDelete}
+              saveData={saveData}
+              updateJournalData={updateJournalData}
+              notesInitialized={notesInitialized}
+            />
+          )}
+        </div>
+      </>
     );
   } else return <Loader withText="Loading notes" />;
 };

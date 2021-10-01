@@ -24,17 +24,17 @@ const WritingBlock = (props: WritingBlockProps) => {
   const {id, linestarters, setFields, fields} = props;
 
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
-  const {getDataValue, setDataValue} = useStudentDataValue();
+  const {setDataValue} = useStudentDataValue();
 
   const onAddClick = () => {
     let concatenatedValue;
-    if (fields.poemText.charAt(fields.poemText.length - 1) === ' ') {
-      concatenatedValue = fields.poemText.concat(`\n ${selectedLS.text}`);
+    if (fields.poemText.length > 0) {
+      concatenatedValue = fields.poemText.concat(`\n${selectedLS.text}`);
     } else {
-      concatenatedValue = fields.poemText.concat(`\n ${selectedLS.text}`);
+      concatenatedValue = fields.poemText.concat(`${selectedLS.text}`);
     }
 
     setFields({...fields, poemText: concatenatedValue});

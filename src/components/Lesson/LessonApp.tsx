@@ -123,6 +123,16 @@ const LessonApp = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
+      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
+        return [
+          ...acc,
+          {
+            id: page.id,
+            label: page.label,
+          },
+        ];
+      }, []);
+      setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
     } catch (e) {
       console.error('error getting lesson - ', lessonID, ' ', e);
@@ -683,7 +693,6 @@ const LessonApp = () => {
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      // console.log('studentDataRows[0] - ', studentDataRows[0]);
 
       if (studentDataRows.length > 0) {
         lessonDispatch({
@@ -703,7 +712,12 @@ const LessonApp = () => {
   useEffect(() => {
     const sharedAuthID = displayData[0].studentAuthID;
     const sharedPageID = displayData[0].lessonPageID;
-    if (displayData[0].studentAuthID && displayData[0].studentAuthID !== '') {
+    const isOtherStudent = sharedAuthID !== user.authId;
+    if (
+      displayData[0].studentAuthID &&
+      displayData[0].studentAuthID !== '' &&
+      isOtherStudent
+    ) {
       getSharedStudentData(sharedAuthID, sharedPageID);
     } else {
       if (lessonState.sharedData && lessonState.sharedData.length > 0) {
@@ -861,7 +875,8 @@ const LessonApp = () => {
     <>
       <FloatingSideMenu />
       <div
-        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}>
+        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+        ref={topLessonRef}>
         <div
           className={`opacity-${
             showRequiredNotification
@@ -883,7 +898,7 @@ const LessonApp = () => {
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
-        <div className="relative top-6 lesson-body-container" ref={topLessonRef}>
+        <div className="relative top-6 lesson-body-container">
           {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
               <LessonPageLoader />

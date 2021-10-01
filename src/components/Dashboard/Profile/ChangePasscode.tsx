@@ -1,31 +1,33 @@
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { Auth } from '@aws-amplify/auth';
-import React, { useContext, useState } from 'react';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { FaKey } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { useHistory } from 'react-router-dom';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {Auth} from '@aws-amplify/auth';
+import React, {useContext, useState} from 'react';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {FaKey} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import FormInput from '../../Atoms/Form/FormInput';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
+import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
 
 interface ChangePasscodeProps {
-  updateAuthState?: Function;
+  fromWhere?: string;
+  handleForgotPasscode?: (success?: boolean) => void;
 }
 
-const ChangePasscode = (props: ChangePasscodeProps) => {
+const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) => {
   const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const history = useHistory();
 
-  const { userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
-  const { dashboardProfileDict } = useDictionary(clientKey);
+  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
+  const {dashboardProfileDict} = useDictionary(clientKey);
 
-  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: '',
@@ -46,9 +48,21 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
     };
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, { input: input })
+        graphqlOperation(customMutations.updatePerson, {input: input})
       );
-      history.goBack();
+
+      if (fromWhere === 'notebook') {
+        setMessage({
+          show: true,
+          type: 'success',
+          message: 'Passcode changed successfully!',
+        });
+        setTimeout(() => {
+          handleForgotPasscode(true);
+        }, 1000);
+      } else {
+        history.goBack();
+      }
     } catch (e) {
       console.error('Error updating passcode - ', e);
     }
@@ -63,16 +77,16 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
       const update = await UpdatePersonPasscode(input.newPasscode);
     } catch (error) {
       console.log('error', error);
-      const errMsg = { show: true, type: 'error' };
+      const errMsg = {show: true, type: 'error'};
       if (!username) {
-        setMessage({ ...errMsg, message: 'Please enter your email' });
+        setMessage({...errMsg, message: 'Please enter your email'});
       } else if (!username.includes('@')) {
         setMessage({
           ...errMsg,
           message: 'Your email is not in the expected email address format',
         });
       } else if (!password) {
-        setMessage({ ...errMsg, message: 'Please enter your password' });
+        setMessage({...errMsg, message: 'Please enter your password'});
       } else {
         manageAuthenticationError(error, false);
       }
@@ -155,8 +169,8 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
     }
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       return {
         ...input,
@@ -178,20 +192,31 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
   };
 
   return (
-    <div className="h-full w-full md:px-4 pt-4">
-      <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-        <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['TITLE']}
-          </h3>
-        </div>
+    <div className={`h-full w-full ${fromWhere !== 'notebook' ? 'md:px-4 pt-4' : ''}`}>
+      <div
+        className={`h-auto bg-white mb-4 ${
+          fromWhere !== 'notebook' ? ' border-l-0 border-gray-200' : ''
+        }`}>
+        {fromWhere !== 'notebook' && (
+          <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['TITLE']}
+            </h3>
+          </div>
+        )}
 
-        <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
+        <div
+          className={`h-full  text-gray-800 ${
+            fromWhere !== 'notebook' ? 'px-4 py-5 sm:px-6' : ''
+          }`}>
           <div className="text-center text-sm">
             {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['INFO']}
           </div>
           <div className="w-full h-auto flex flex-col justify-between items-center my-4">
-            <div className="w-full md:w-1/2 m-1">
+            <div
+              className={`w-full m-1 ${
+                fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
+              }`}>
               <div className="relative">
                 <div className="absolute right-1 w-auto mr-2">
                   <div
@@ -199,12 +224,12 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -213,7 +238,7 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
                 <div className="absolute left-1 w-auto mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -236,7 +261,10 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
               </div>
             </div>
 
-            <div className="w-full md:w-1/2 m-1">
+            <div
+              className={`w-full m-1 ${
+                fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
+              }`}>
               <div className="relative">
                 <div className="absolute right-1 w-auto mr-2">
                   <div
@@ -244,12 +272,12 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -258,7 +286,7 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
                 <div className="w-auto absolute left-1 mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -283,9 +311,14 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
         </div>
       </div>
       <div className="w-full flex justify-center items-center">
-        {message?.show ? (
+        {message?.show && message?.type === 'error' ? (
           <div>
             <ErrorNote note={message?.message} />
+          </div>
+        ) : null}
+        {message?.show && message?.type === 'success' ? (
+          <div>
+            <SuccessMessage note={message?.message} />
           </div>
         ) : null}
       </div>
@@ -294,7 +327,11 @@ const ChangePasscode = (props: ChangePasscodeProps) => {
         <Buttons
           btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
           label={dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['CANCEL']}
-          onClick={() => history.goBack()}
+          onClick={
+            fromWhere !== 'notebook'
+              ? () => history.goBack()
+              : () => handleForgotPasscode()
+          }
           transparent
         />
         <Buttons

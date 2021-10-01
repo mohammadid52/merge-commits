@@ -44,6 +44,7 @@ const InnerNote = React.memo(
     idx,
     updateText,
     size,
+    preview = false,
   }: any) => {
     let angle = useMemo(() => randomNumber(-3, 3), []);
 
@@ -62,7 +63,7 @@ const InnerNote = React.memo(
             isInLesson && isStudent ? (e: any) => updateText(e, note.id, idx) : noop
           }
           // value={isInLesson ? getDataValue(note.id) : note.value}
-          value={getDataValue(note.id) || note.value}
+          value={isInLesson && isStudent ? getDataValue(note.id) : note.value}
         />
         {custom && isInLesson && isStudent && (
           <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
@@ -89,6 +90,7 @@ interface INoteBlock {
   >;
   idx?: number;
   uninitialized?: boolean;
+  preview?: boolean;
   updateText?: (e: any, noteId: string, idx: number) => void;
 }
 
@@ -100,6 +102,7 @@ const Note = ({
   idx,
   updateText,
   uninitialized,
+  preview,
   custom = false,
 }: INoteBlock) => {
   const isStudent = true;
@@ -120,6 +123,7 @@ const Note = ({
 
   return (
     <InnerNote
+      preview={preview}
       getDataValue={getDataValue}
       updateText={updateText}
       uninitialized={uninitialized}

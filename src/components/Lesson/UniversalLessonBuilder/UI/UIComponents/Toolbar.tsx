@@ -1,5 +1,20 @@
+import Info from '@atoms/Alerts/Info';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import Tooltip from '@atoms/Tooltip';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import useOnScreen from '@customHooks/useOnScreen';
 import {Dialog, Transition} from '@headlessui/react';
 import {CheckCircleIcon, XIcon} from '@heroicons/react/outline';
+import {
+  UniversalLesson,
+  UniversalLessonPage,
+} from '@interfaces/UniversalLessonInterfaces';
+import {Tree} from '@uiComponents/TreeView/Tree';
+import {wait} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import {map} from 'lodash';
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
@@ -13,21 +28,6 @@ import {
 import {FiBook} from 'react-icons/fi';
 import {IconType} from 'react-icons/lib';
 import {useHistory} from 'react-router';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useOnScreen from '../../../../../customHooks/useOnScreen';
-import {
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {wait} from '../../../../../utilities/functions';
-import Info from '../../../../Atoms/Alerts/Info';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Tooltip from '../../../../Atoms/Tooltip';
-import {Tree} from '../../UI/UIComponents/TreeView/Tree';
 
 const Button = ({
   onClick,
@@ -161,13 +161,7 @@ const Toolbar = ({
   const history = useHistory();
 
   const {
-    state: {
-      lessonPage: {
-        theme = 'dark',
-        themeSecBackgroundColor = 'bg-gray-700',
-        themeTextColor = '',
-      } = {},
-    },
+    state: {lessonPage: {theme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
   const toolbarRef = useRef();
   const isVisible = useOnScreen(toolbarRef);
@@ -469,7 +463,11 @@ const Toolbar = ({
       <div
         hidden={previewMode}
         ref={toolbarRef}
-        className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200  w-auto p-2`}>
+        className={` ${
+          !toolbarOnTop
+            ? 'opacity-0 -translate-y-12 scale-90'
+            : 'opacity-100 scale-100 translate-y-0'
+        } customShadow transform rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <Container>
             <Button
@@ -526,7 +524,9 @@ const Toolbar = ({
         hidden={previewMode}
         style={{top: '30rem'}}
         className={`${
-          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+          toolbarOnTop
+            ? 'opacity-0 translate-x-12 scale-90'
+            : 'scale-100 opacity-100 translate-x-0'
         } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
         <div
           className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200 w-auto p-2`}>

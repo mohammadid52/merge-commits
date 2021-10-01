@@ -250,7 +250,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
       let cCheckpoints: any = [];
-      console.log('curricularCheckpoints', curricularCheckpoints)
+      // console.log('curricularCheckpoints', curricularCheckpoints)
       curricularCheckpoints.map((cc: any) => {
         cCheckpoints.push(cc.checkpoint.id);
         let questions = cc.checkpoint?.questions?.items || [];
@@ -354,29 +354,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const listQuestions = async (lessonId: string) => {
-    try {
-      // let surveyQuestions: any = await API.graphql(
-      //   graphqlOperation(customQueries.getSurveyQuestions, {
-      //     id: lessonId,
-      //   })
-      // );
-      // let checkpoints = surveyQuestions?.data?.getLesson?.checkpoints?.items;
-      // const questions: any = [];
-      // let cCheckpoints: any = [];
-      // checkpoints.map((cp: any) => {
-      //   cCheckpoints.push(cp.checkpointID);
-      //   let ques = cp?.checkpoint?.questions?.items;
-      //   ques.map((q: any) => {
-      //     questions.push({ question: q.question, checkpointID: cp.checkpointID });
-      //   });
-      // });
-      // setSurveyQuestions(questions);
-      // let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
-      // await getStudentsSurveyQuestionsResponse(
-      //   cCheckpoints,
-      //   syllabusLes.syllabusLessonID
-      // );
-      
+    try {      
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
@@ -385,17 +363,22 @@ const Csv = ({institutionId}: ICsvProps) => {
       let lessonObject = universalLesson.data.getUniversalLesson;
       let questionsListdata = await getQuestionListFromLesson(lessonObject)
       let questionList = questionsListdata.questionList
-      console.log('questionList', questionList)
+      // console.log('questionList', questionList)
       let questions: any = [];
       if (questionList) {
         questionList.map((listItem: any) => {
           listItem.map((item: any) => {
-            questions.push({ question: {id: item.questionId, question: item.questionString}})
+            questions.push({ question: {
+              id: item.questionID, 
+              question: item.questionString,
+              type: item.type,
+              options: item.options,
+            }})
           })
         })
       }
+
       setSurveyQuestions(questions);
-      console.log('syllabusLessonsData', syllabusLessonsData)
       let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
       await getStudentsSurveyQuestionsResponse(syllabusLes.syllabusLessonID, lessonId);
       setIsCSVReady(true);
@@ -529,12 +512,9 @@ const Csv = ({institutionId}: ICsvProps) => {
           }
         })
       );
-      console.log('universalLessonStudentData...', universalLessonStudentData)
-      // let studentsAnswersSurveyCheckpointsQuestions =
-      //   curriculumData?.data?.listQuestionDatas?.items || [];
-      // setSCQAnswers(studentsAnswersSurveyCheckpointsQuestions);
-      // return studentsAnswersSurveyCheckpointsQuestions;
-
+      let studentsAnswersSurveyQuestionsData = universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+      setSCQAnswers(studentsAnswersSurveyQuestionsData);
+      return;
   };
 
   const getCSVReady = async () => {
@@ -545,8 +525,11 @@ const Csv = ({institutionId}: ICsvProps) => {
       let takenSurvey = 0;
       let notTakenSurvey = 0;
       let surveyDates: any = []
+      // creating an array of question Ids and creating a object to store all question options.
+      let surveyQuestionOptions: any = {};
       let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
         qids.push(ques.question.id);
+        surveyQuestionOptions[ques.question.id] = ques.question.options;
         return { label: `${ques.question.question}`, key: `${ques.question.id}` };
       });
   
@@ -580,18 +563,41 @@ const Csv = ({institutionId}: ICsvProps) => {
         let hasTakenSurvey = false;
   
         SCQAnswers.map((ans: any) => {
-          if (ans.person.id === stu.id) {
+          if (ans.studentID === stu.authId) {
             hasTakenSurvey = true;
-            ans.responseObject.map((resp: any) => {
-              if (qids.indexOf(resp.qid) >= 0) {
+            ans.pageData.map((page: any) => {
+              if (qids.indexOf(page.domID) >= 0) {
+
                 surveyAnswerDates.push(ans.updatedAt);
                 surveyDates.push(ans.updatedAt)
-                studentAnswers[resp.qid] =
-                  Array.isArray(resp.response) && resp.response.length
-                    ? resp.response[0]
-                    : '';
+                if (surveyQuestionOptions[page.domID] && Array.isArray(surveyQuestionOptions[page.domID]) && surveyQuestionOptions[page.domID].length) {
+                  if (Array.isArray(page.input) && page.input.length && page.input[0].length) {
+                    let selectedOption = surveyQuestionOptions[page.domID].filter((option: any) => {
+                      return option.id === page.input[0]
+                    });
+                    if (Array.isArray(selectedOption) && selectedOption.length) {
+                      studentAnswers[page.domID] = selectedOption[0].text;
+                    } else {
+                      studentAnswers[page.domID] = '';  
+                    }
+                  } else {
+                    studentAnswers[page.domID] = '';
+                  }
+                } else {
+                  studentAnswers[page.domID] = Array.isArray(page.input) && page.input.length ? page.input[0] : ''; 
+                }
               }
-            });
+            })
+            // ans.responseObject.map((resp: any) => {
+            //   if (qids.indexOf(resp.qid) >= 0) {
+            //     surveyAnswerDates.push(ans.updatedAt);
+            //     surveyDates.push(ans.updatedAt)
+            //     studentAnswers[resp.qid] =
+            //       Array.isArray(resp.response) && resp.response.length
+            //         ? resp.response[0]
+            //         : '';
+            //   }
+            // });
           }
         });
   

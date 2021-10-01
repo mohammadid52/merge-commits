@@ -99,7 +99,7 @@ const composePartContent = (
       value: v.value,
     }));
 
-    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+    return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

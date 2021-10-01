@@ -1,8 +1,4 @@
-import useStudentDataValue from '@customHooks/studentDataValue';
-import {noop} from 'lodash';
-import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import React, {useState} from 'react';
 import {Options} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
 import EditingBlock from '../PoemBlock/EditingBlock';
@@ -25,20 +21,10 @@ const WritingExerciseBlock = ({
   value,
   disabled,
 }: WritingExerciseProps) => {
-  const {state} = useContext(GlobalContext);
-
   const [fields, setFields] = useState({
     poemHtml: '',
     poemText: '',
   });
-
-  // ##################################################################### //
-  // ######################## STUDENT DATA CONTEXT ####################### //
-  // ##################################################################### //
-  const isStudent = state.user.role === 'ST';
-  const isInLesson = useInLessonCheck();
-
-  const {setDataValue} = useStudentDataValue();
 
   return (
     <div
@@ -49,7 +35,7 @@ const WritingExerciseBlock = ({
           {label && (
             <>
               <label className={`text-sm text-gray-900 dark:text-white`} htmlFor="label">
-                {label}
+                Title
               </label>
               <input
                 id={inputID}
@@ -58,6 +44,7 @@ const WritingExerciseBlock = ({
                 name={'text'}
                 type={'text'}
                 onChange={onChange}
+                placeholder={label}
                 value={value}
               />
             </>
