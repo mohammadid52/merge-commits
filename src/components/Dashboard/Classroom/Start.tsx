@@ -193,7 +193,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       )
       .map((item: any) => item.lesson);
     const lessonIds = activeLessonsData.map((lesson: any) => lesson.id);
-    if (activeLessonsData) {
+    if (activeLessonsData?.length) {
       setWarnModal((prevValues) => ({
         ...prevValues,
         message: `Do you want to mark ${activeLessonsData
