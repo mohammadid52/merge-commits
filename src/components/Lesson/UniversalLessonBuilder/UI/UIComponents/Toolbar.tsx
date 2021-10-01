@@ -37,6 +37,7 @@ const Button = ({
   invert = false,
   color = 'text-white',
   tooltipPlacement = 'bottom',
+  top = false,
 }: {
   onClick?: () => void;
   icon?: IconType;
@@ -45,16 +46,20 @@ const Button = ({
   color?: string;
   tooltipPlacement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
   invert?: boolean;
+  top?: boolean;
 }) => {
   return (
-    <Tooltip show={tooltip.length > 0} text={tooltip} placement={tooltipPlacement}>
+    <Tooltip
+      show={!text && tooltip.length > 0}
+      text={tooltip}
+      placement={tooltipPlacement}>
       <button
         onClick={onClick}
         type="button"
         className={`${
           invert ? 'bg-indigo-600' : 'bg-transparent'
-        } ${color} mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-        {Icon && <Icon className="h-5 w-5" aria-hidden="true" />}
+        } ${color} mx-2  w-auto  inline-flex justify-center items-center px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
+        {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
         {text}
       </button>
     </Tooltip>
@@ -120,17 +125,6 @@ const SliderOver = ({
   );
 };
 
-const Divider = ({theme = 'dark'}: any) => (
-  <span
-    style={{width: 1}}
-    className={`h-8 mx-2 ${theme === 'dark' ? 'bg-white' : 'bg-gray-600'} bg-opacity-50 `}
-  />
-);
-
-const Container = ({children}: {children: any}) => (
-  <div className="flex items-center w-auto">{children}</div>
-);
-
 const Toolbar = ({
   deleteLesson,
   setEditMode,
@@ -184,6 +178,7 @@ const Toolbar = ({
    *
    * The wait timers are just to longer the process time. Becuase cloning process is fast
    */
+
   const onCopyCloneAction = (action: string = 'copy') => {
     setStatus('loading');
     wait(2000).then(() => {
@@ -461,62 +456,76 @@ const Toolbar = ({
       </SliderOver>
 
       <div
-        hidden={previewMode}
+        // hidden={previewMode}
         ref={toolbarRef}
+        style={{transform: previewMode ? 'translateX(44rem)' : 'translateX(0rem)'}}
         className={` ${
           !toolbarOnTop
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
-        } customShadow transform rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200  w-auto p-2`}>
+        } customShadow transform ${
+          previewMode ? 'fixed' : ''
+        } rounded-lg toolbar bg-white dark:bg-gray-700 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
-          <Container>
+          <div className="flex items-center w-auto">
             <Button
               onClick={() => setPreviewMode(!previewMode)}
               tooltip="Preview"
+              text="Preview"
+              top
               color={themeTextColor}
               icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
             />
 
-            <Button
-              onClick={() => setShowDataForCopyClone(true)}
-              tooltip="Copy / Clone"
-              color={themeTextColor}
-              icon={AiOutlineCopy}
-            />
+            <div
+              className={`${
+                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-12 '
+              } space-x-12 transition-all transform`}>
+              {!previewMode && (
+                <>
+                  <Button
+                    onClick={() => setShowDataForCopyClone(true)}
+                    tooltip="Copy / Clone"
+                    text="Copy / Clone"
+                    color={themeTextColor}
+                    top
+                    icon={AiOutlineCopy}
+                  />
 
-            <>
-              <Button
-                color={themeTextColor}
-                tooltip="Add New Page"
-                onClick={() => {
-                  setNewLessonPlanShow(true);
-                  setEditMode(false);
-                  setFields({
-                    title: '',
-                    label: '',
-                    instructions: '',
-                    instructionsHtml: '',
-                    description: '', // ignore this field
-                    interactionType: [],
-                    tags: [],
-                    estTime: '1 min',
-                    classwork: true,
-                  });
-                }}
-                icon={AiOutlineFileAdd}
-              />
-              <Divider theme={theme} />
-            </>
-          </Container>
-
-          <Container>
-            <Button
-              color="text-red-500"
-              tooltip="Delete this page"
-              icon={AiOutlineDelete}
-              onClick={deleteLesson}
-            />
-          </Container>
+                  <Button
+                    text="Add New Page"
+                    color={themeTextColor}
+                    top
+                    tooltip="Add New Page"
+                    onClick={() => {
+                      setNewLessonPlanShow(true);
+                      setEditMode(false);
+                      setFields({
+                        title: '',
+                        label: '',
+                        instructions: '',
+                        instructionsHtml: '',
+                        description: '', // ignore this field
+                        interactionType: [],
+                        tags: [],
+                        estTime: '1 min',
+                        classwork: true,
+                      });
+                    }}
+                    icon={AiOutlineFileAdd}
+                  />
+                  <Button
+                    color="text-red-400"
+                    tooltip="Delete this page"
+                    top
+                    text="Delete this page"
+                    icon={AiOutlineDelete}
+                    onClick={deleteLesson}
+                  />
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -530,52 +539,41 @@ const Toolbar = ({
         } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
         <div
           className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200 w-auto p-2`}>
-          <div className="flex items-center flex-col">
-            <div
-              className={`flex items-center flex-col w-auto ${
-                !toolbarOnTop ? 'mb-2' : ''
-              }`}>
-              <Button
-                onClick={() => setPreviewMode(!previewMode)}
-                tooltip="Preview"
-                color={themeTextColor}
-                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
-                tooltipPlacement="left"
-              />
+          <div className="flex items-center flex-col space-y-4">
+            <Button
+              onClick={() => setPreviewMode(!previewMode)}
+              tooltip="Preview"
+              color={themeTextColor}
+              icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+              tooltipPlacement="left"
+            />
 
-              <Button
-                onClick={() => setShowDataForCopyClone(true)}
-                tooltip="Copy / Clone"
-                color={themeTextColor}
-                icon={AiOutlineCopy}
-                tooltipPlacement="left"
-              />
-              <>
-                <Button
-                  color={themeTextColor}
-                  tooltip="Add New Page"
-                  onClick={() => {
-                    setNewLessonPlanShow(true);
-                    setEditMode(false);
-                  }}
-                  icon={AiOutlineFileAdd}
-                  tooltipPlacement="left"
-                />
-              </>
-            </div>
+            <Button
+              onClick={() => setShowDataForCopyClone(true)}
+              tooltip="Copy / Clone"
+              color={themeTextColor}
+              icon={AiOutlineCopy}
+              tooltipPlacement="left"
+            />
 
-            <div
-              className={`flex items-center flex-col w-auto ${
-                !toolbarOnTop ? 'mb-2' : ''
-              }`}>
-              <Button
-                color="text-red-500"
-                tooltip="Delete this page"
-                icon={AiOutlineDelete}
-                onClick={deleteLesson}
-                tooltipPlacement="left"
-              />
-            </div>
+            <Button
+              color={themeTextColor}
+              tooltip="Add New Page"
+              onClick={() => {
+                setNewLessonPlanShow(true);
+                setEditMode(false);
+              }}
+              icon={AiOutlineFileAdd}
+              tooltipPlacement="left"
+            />
+
+            <Button
+              color="text-red-500"
+              tooltip="Delete this page"
+              icon={AiOutlineDelete}
+              onClick={deleteLesson}
+              tooltipPlacement="left"
+            />
           </div>
         </div>
       </div>

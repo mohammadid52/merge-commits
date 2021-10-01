@@ -1,18 +1,17 @@
 import React, {useContext, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
-import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
-import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
-import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {FORM_TYPES} from '../../UI/common/constants';
+} from '@interfaces/UniversalLessonInterfaces';
+import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
+import {AddNewBlock} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
+import {AddNewBlockMini} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
+import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
+import {FORM_TYPES} from '@UlbUI/common/constants';
 import {BuilderRowWrapper} from './BuilderRowWrapper';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
@@ -56,29 +55,20 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   const LastBlock = ({selectedPageDetails}: any) => {
     return !previewMode ? (
-      <EditOverlayBlock
-        mode={mode}
-        key={`pp_addNew`}
-        contentID={`addNewRow`}
-        editedID={editedID}
-        handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
-        createNewBlockULBHandler={createNewBlockULBHandler}
-        updateFromULBHandler={updateFromULBHandler}>
-        <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-          <AddNewBlock
-            idx={selectedPageDetails.pageContent.length - 1}
-            mode={mode}
-            handleModalPopToggle={(dialogToToggle) =>
-              handleModalPopToggle(
-                dialogToToggle,
-                selectedPageDetails.pageContent.length,
-                'pageContent',
-                selectedPageID
-              )
-            }
-          />
-        </BuilderRowWrapper>
-      </EditOverlayBlock>
+      <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+        <AddNewBlock
+          idx={selectedPageDetails.pageContent.length - 1}
+          mode={mode}
+          handleModalPopToggle={(dialogToToggle) =>
+            handleModalPopToggle(
+              dialogToToggle,
+              selectedPageDetails.pageContent.length,
+              'pageContent',
+              selectedPageID
+            )
+          }
+        />
+      </BuilderRowWrapper>
     ) : (
       <div />
     );
@@ -108,13 +98,15 @@ const BuilderRowComposer = (props: RowComposerProps) => {
             // ONE ROW
             <div
               key={`row_pagepart_${idx}`}
-              className={`relative ${
-                selIDForHover?.pageContentID && !selIDForHover?.partContentID
-                  ? `opacity-${
-                      pagePart.id === selIDForHover?.pageContentID ? '100' : '50'
-                    } transition-opacity duration-200`
-                  : ''
-              }`}>
+              className="space-y-8"
+              // className={`relative ${
+              //   selIDForHover?.pageContentID && !selIDForHover?.partContentID
+              //     ? `opacity-${
+              //         pagePart.id === selIDForHover?.pageContentID ? '100' : '50'
+              //       } transition-opacity duration-200`
+              //     : ''
+              // }`}
+            >
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -136,131 +128,93 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
                   {pagePart?.partContent?.length > 0 ? (
-                    <DragDropContext
-                      onDragEnd={(result) =>
-                        handleOnDragEnd(result, pagePart.id, pagePart?.partContent)
-                      }>
-                      <Droppable isDropDisabled={!enableDnD} droppableId="partContent">
-                        {(provided) => {
-                          const partContent = pagePart?.partContent || [];
-                          return (
-                            <ul
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                              className={pagePart.class}>
-                              {partContent.map((content: PartContent, idx2: number) => (
-                                <Draggable
-                                  isDragDisabled={!enableDnD}
-                                  draggableId={`pagePart_tree_${idx}_${idx2}`}
-                                  index={idx2}
-                                  key={`pagePart_tree_${idx}_${idx2}`}>
-                                  {(provided) => {
-                                    return (
-                                      <li
-                                        className={
-                                          selIDForHover?.pageContentID &&
-                                          selIDForHover?.partContentID
-                                            ? `transition-opacity duration-200 opacity-${
-                                                selIDForHover?.partContentID ===
-                                                content.id
-                                                  ? '100'
-                                                  : '50'
-                                              } `
-                                            : ''
-                                        }
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}>
-                                        <EditOverlayBlock
-                                          key={`pp_${idx}_pc_${idx2}`}
-                                          mode={mode}
-                                          classString={content.class}
-                                          contentID={content.id}
-                                          editedID={editedID}
-                                          pageContentID={pagePart.id}
-                                          partContentID={content.id}
-                                          isComponent={true}
-                                          isLast={idx2 === partContent?.length - 1}
-                                          handleEditBlockToggle={() =>
-                                            handleEditBlockToggle(content.id)
-                                          }
-                                          handleEditBlockContent={() => {
-                                            handleEditBlockContent(
-                                              content.type,
-                                              'partContent',
-                                              content.value,
-                                              pagePart.id,
-                                              idx2,
-                                              content.class
-                                            );
-                                          }}
-                                          createNewBlockULBHandler={
-                                            createNewBlockULBHandler
-                                          }
-                                          deleteFromULBHandler={deleteFromULBHandler}
-                                          updateFromULBHandler={updateFromULBHandler}>
-                                          {content.value.length > 0 ? (
-                                            <div
-                                              className={`${paddingForHeader(
-                                                content.type
-                                              )}`}>
-                                              <div
-                                                className={`${
-                                                  content.type === FORM_TYPES.JUMBOTRON ||
-                                                  content.type.includes(
-                                                    'writing-exercise'
-                                                  )
-                                                    ? 'px-4 pt-4'
-                                                    : content.type === 'header'
-                                                    ? ''
-                                                    : content.class
-                                                }`}
-                                                id={`${
-                                                  content.type === 'notes-form'
-                                                    ? ''
-                                                    : content.id
-                                                }`}>
-                                                {composePartContent(
-                                                  content.id,
-                                                  content.type,
-                                                  content.value,
-                                                  `pp_${idx}_pc_${idx2}`,
-                                                  content.class,
-                                                  pagePart.id,
-                                                  mode,
-                                                  updateBlockContentULBHandler,
-                                                  idx2,
-                                                  undefined, // notesData
-                                                  false // isStudent
-                                                )}
-                                              </div>
-                                            </div>
-                                          ) : (
-                                            <AddNewBlock
-                                              idx={-1}
-                                              mode={mode}
-                                              handleModalPopToggle={(dialogToToggle) =>
-                                                handleModalPopToggle(
-                                                  dialogToToggle,
-                                                  idx2,
-                                                  'partContent',
-                                                  pagePart.id
-                                                )
-                                              }
-                                            />
-                                          )}
-                                        </EditOverlayBlock>
-                                      </li>
-                                    );
-                                  }}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </ul>
-                          );
-                        }}
-                      </Droppable>
-                    </DragDropContext>
+                    <ul className={pagePart.class}>
+                      {pagePart.partContent.map((content: PartContent, idx2: number) => (
+                        <li
+                          key={content.id}
+                          // className={
+                          //   selIDForHover?.pageContentID && selIDForHover?.partContentID
+                          //     ? `transition-opacity duration-200 opacity-${
+                          //         selIDForHover?.partContentID === content.id
+                          //           ? '100'
+                          //           : '50'
+                          //       } `
+                          //     : ''
+                          // }
+                        >
+                          <EditOverlayBlock
+                            key={`pp_${idx}_pc_${idx2}`}
+                            mode={mode}
+                            classString={content.class}
+                            contentID={content.id}
+                            editedID={editedID}
+                            pageContentID={pagePart.id}
+                            partContentID={content.id}
+                            isComponent={true}
+                            isLast={idx2 === pagePart.partContent?.length - 1}
+                            handleEditBlockToggle={() =>
+                              handleEditBlockToggle(content.id)
+                            }
+                            handleEditBlockContent={() => {
+                              handleEditBlockContent(
+                                content.type,
+                                'partContent',
+                                content.value,
+                                pagePart.id,
+                                idx2,
+                                content.class
+                              );
+                            }}
+                            createNewBlockULBHandler={createNewBlockULBHandler}
+                            deleteFromULBHandler={deleteFromULBHandler}
+                            updateFromULBHandler={updateFromULBHandler}>
+                            {content.value.length > 0 ? (
+                              <div className={`${paddingForHeader(content.type)}`}>
+                                <div
+                                  className={`${
+                                    content.type === FORM_TYPES.JUMBOTRON ||
+                                    content.type.includes('writing-exercise')
+                                      ? 'px-4 pt-4'
+                                      : content.type === 'header'
+                                      ? ''
+                                      : content.class
+                                  }`}
+                                  id={`${
+                                    content.type === 'notes-form' ? '' : content.id
+                                  }`}>
+                                  {composePartContent(
+                                    content.id,
+                                    content.type,
+                                    content.value,
+                                    `pp_${idx}_pc_${idx2}`,
+                                    content.class,
+                                    pagePart.id,
+                                    mode,
+                                    updateBlockContentULBHandler,
+                                    idx2,
+                                    undefined, // notesData
+                                    false // isStudent
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <AddNewBlock
+                                idx={-1}
+                                mode={mode}
+                                handleModalPopToggle={(dialogToToggle) =>
+                                  handleModalPopToggle(
+                                    dialogToToggle,
+                                    idx2,
+                                    'partContent',
+                                    pagePart.id
+                                  )
+                                }
+                              />
+                            )}
+                          </EditOverlayBlock>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
                     <div
                       style={{minHeight: '60px'}}

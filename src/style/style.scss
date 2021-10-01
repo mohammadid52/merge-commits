@@ -845,17 +845,22 @@
 }
 
 .rowWrapper {
-  &:hover {
-    & #editControlsWrapper {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
   & #editControlsWrapper {
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease-in-out;
+    opacity: 1;
+    visibility: visible;
   }
+  // &:hover {
+  //   & #editControlsWrapper {
+  //     opacity: 1;
+  //     visibility: visible;
+  //   }
+  // }
+
+  // & #editControlsWrapper {
+  //   opacity: 0;
+  //   visibility: hidden;
+  //   transition: all 0.3s ease-in-out;
+  // }
 }
 
 .hierarchy_submenu {

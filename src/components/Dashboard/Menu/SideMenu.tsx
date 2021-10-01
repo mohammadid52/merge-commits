@@ -1,3 +1,4 @@
+import useKeyPress from '@customHooks/useKeyPress';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoIosMenu} from 'react-icons/io';
 import {RiArrowRightSLine} from 'react-icons/ri';
@@ -46,6 +47,15 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
     }
   }, [pathname, mobile]);
 
+  // event listener for '[' press. if pressed expand or collapse sidemenu
+  const bracketsOpenPress = useKeyPress('[');
+
+  useEffect(() => {
+    if (bracketsOpenPress) {
+      setCollapse((prev) => !prev);
+    }
+  }, [bracketsOpenPress]);
+
   return (
     <>
       {collapse && (
@@ -58,7 +68,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
           className={`${
             !collapse ? 'not-collapse' : 'collapse'
           } absolute flex items-center justify-end bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-r-lg top-2 z-100`}>
-          <Tooltip placement="right" text="Show Sidebar">
+          <Tooltip placement="right" text="Expand [">
             <div className="w-auto mr-1">
               <RiArrowRightSLine color="#fff" size={24} />
             </div>
@@ -94,7 +104,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                 />
                 <IoIosMenu
                   onClick={() => setCollapse(!collapse)}
-                  className=" cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
+                  className="cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
                 />
               </div>
               <div className="flex-1 flex flex-col">

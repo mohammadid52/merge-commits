@@ -355,7 +355,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       )}
 
       <div
-        className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
+        id="main-builder-screen"
+        className={`relative dark-scroll grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
         {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
@@ -402,7 +403,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
-          <div
+          {/* <div
             style={{top: '12rem'}}
             className={`${
               !previewMode ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
@@ -416,7 +417,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               color={themeTextColor}
               icon={AiOutlineEyeInvisible}
             />
-          </div>
+          </div> */}
 
           {!fetchingLessonDetails && (
             <Toolbar
