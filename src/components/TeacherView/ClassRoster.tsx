@@ -18,13 +18,7 @@ interface IClassRosterProps {
   handleRoomUpdate?: (payload: any) => void;
 }
 
-const ClassRoster = ({
-  isSameStudentShared,
-  handleQuitShare,
-  handleQuitViewing,
-  handlePageChange,
-  handleRoomUpdate,
-}: IClassRosterProps) => {
+const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -143,6 +137,7 @@ const ClassRoster = ({
           return findStudentInClasslist;
         }
       });
+      console.log('studentsFromThisClass - ', studentsFromThisClass);
       setPersonLocationStudents(studentsFromThisClass);
       controlDispatch({
         type: 'UPDATE_STUDENT_ROSTER',

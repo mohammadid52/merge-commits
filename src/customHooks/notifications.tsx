@@ -138,10 +138,15 @@ const useLessonControlNotifications = () => {
     const studentList = getLocalStorageData('student_list');
     const findStudent =
       studentList &&
-      studentList.find((studentObj: any) => studentObj.student.authId === authID)
-        ?.student;
+      studentList.reduce((acc: any, studentObj: any) => {
+        if (studentObj.student.authId === authID) {
+          return studentObj.student;
+        } else {
+          return acc;
+        }
+      }, {});
     if (findStudent && authID) {
-      return findStudent.firstName + ' ' + findStudent.lastName;
+      return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
   };
 
@@ -263,9 +268,15 @@ const useLessonNotifications = () => {
     const studentList = getLocalStorageData('student_list');
     const findStudent =
       studentList &&
-      studentList.find((studentObj: any) => studentObj.student.authId === authID).student;
+      studentList.reduce((acc: any, studentObj: any) => {
+        if (studentObj.student.authId === authID) {
+          return studentObj.student;
+        } else {
+          return acc;
+        }
+      }, {});
     if (findStudent && authID) {
-      return findStudent.firstName + ' ' + findStudent.lastName;
+      return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
   };
 
