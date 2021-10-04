@@ -69,10 +69,9 @@ const initialState: newUserInput = {
   group: '',
 };
 
-const Registration = ({isInInstitute, instId}: any) => {
+const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutation}: any) => {
   const history = useHistory();
   const params = useQuery(location.search);
-  const from = params.get('from');
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -93,7 +92,7 @@ const Registration = ({isInInstitute, instId}: any) => {
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    state.user.role !== 'SUP' && from !== 'staff' && {code: 'ST', name: 'Student'},
+    state.user.role !== 'SUP' && isInModalPopup && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -178,10 +177,8 @@ const Registration = ({isInInstitute, instId}: any) => {
         );
       }
       handleMessage('success', 'User registered successfully');
-      if (from === 'staff') {
-        history.push(
-          `/dashboard/manage-institutions/institution/${newUserInputs.institution.id}/staff`
-        );
+      if (isInModalPopup) {
+        postMutation();
       }
       setNewUserInputs((prev) => {
         return {
@@ -388,11 +385,13 @@ const Registration = ({isInInstitute, instId}: any) => {
   }, [institutionsData, instId]);
 
   return (
-    <div className={`w-full h-full ${isInInstitute ? 'py-8 px-12' : 'mt-4 p-12'}`}>
+    <div className={`w-full h-full ${isInInstitute ? isInModalPopup ? 'p-4' : 'py-8 px-12' : 'mt-4 p-12'}`}>
       {isInInstitute ? (
-        <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
-          {RegistrationDict[userLanguage]['title']}
-        </h3>
+        !isInModalPopup && (
+          <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
+            {RegistrationDict[userLanguage]['title']}
+          </h3>
+        )
       ) : (
         <>
           <BreadCrums items={breadCrumsList} />
