@@ -61,16 +61,16 @@ const LessonApp = () => {
   // ----------- 1 ---------- //
   //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
 
-  useEffect(() => {
-    if (lessonState.lessonData.id) {
-      lessonDispatch({
-        type: 'SET_SUBSCRIBE_FUNCTION',
-        payload: {
-          subscribeFunc: subscribeToRoom,
-        },
-      });
-    }
-  }, [lessonState.lessonData.id]);
+  // useEffect(() => {
+  //   if (lessonState.lessonData.id) {
+  //     lessonDispatch({
+  //       type: 'SET_SUBSCRIBE_FUNCTION',
+  //       payload: {
+  //         subscribeFunc: subscribeToRoom,
+  //       },
+  //     });
+  //   }
+  // }, [lessonState.lessonData.id]);
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
@@ -117,6 +117,7 @@ const LessonApp = () => {
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
+
   const getSyllabusLesson = async (lessonID?: string) => {
     try {
       const universalLesson: any = await API.graphql(
@@ -142,13 +143,8 @@ const LessonApp = () => {
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) => {
-        // console.log('Lesson Mount - ', 'Lesson fetched!')
-      });
-    }
-    return () => {
+
+    const leaveUnload = () => {
       const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
       Promise.resolve(leaveRoom).then((_: void) => {
         if (subscription) {
@@ -156,6 +152,17 @@ const LessonApp = () => {
         }
         lessonDispatch({type: 'CLEANUP'});
       });
+    };
+
+    if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
+      getSyllabusLesson(lessonID).then((_: void) => {
+        //
+      });
+    }
+
+    return () => {
+      leaveUnload();
     };
   }, []);
 
@@ -771,11 +778,9 @@ const LessonApp = () => {
   }, [created, lessonState.currentPage]);
 
   const initializeLocation = async () => {
-    if (!cleared && !created) {
+    if (/*!cleared &&*/ !created) {
       await leaveRoomLocation(user.authId, user.email);
-      // console.log('CLEARED location...');
       await createPersonLocation();
-      // console.log('CREATED location...');
     }
   };
 
