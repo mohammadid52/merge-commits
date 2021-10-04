@@ -86,7 +86,7 @@ const Institution = (props: InstitutionProps) => {
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
-  const {clientKey,theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
@@ -116,7 +116,7 @@ const Institution = (props: InstitutionProps) => {
   ].filter(Boolean);
 
   const toggleUpdateState = () => {
-    setISNewUpdate(prevNewUpdate => !prevNewUpdate);
+    setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
   };
 
   const postInfoUpdate = (data: any) => {
@@ -155,7 +155,7 @@ const Institution = (props: InstitutionProps) => {
 
   useEffect(() => {
     getInstitutionData();
-  }, []);
+  }, [institutionId]);
 
   useEffect(() => {
     const {tab} = urlQueryParams;
@@ -183,14 +183,14 @@ const Institution = (props: InstitutionProps) => {
         </div>
       </div>
       <div className="px-2 py-8 md:p-8">
-      {/* Section Header */}
-      {/* <BreadCrums items={breadCrumbsList} /> */}
-      {/* <div className="flex justify-between">
+        {/* Section Header */}
+        {/* <BreadCrums items={breadCrumbsList} /> */}
+        {/* <div className="flex justify-between">
         <SectionTitle title={`${institutionData.name} Dashboard`} />
       </div> */}
-      <PageWrapper wrapClass="overflow-x-auto">
-        <Switch>
-          {/* <Route
+        <PageWrapper wrapClass="overflow-x-auto">
+          <Switch>
+            {/* <Route
             path={`${match.url}/edit`}
             exact
             render={() => (
@@ -202,22 +202,23 @@ const Institution = (props: InstitutionProps) => {
               />
             )}
           /> */}
-          <Route
-            path={`${match.url}/`}
-            render={() => (
-              <InstitutionInfo
-                institute={institutionData}
-                loading={fetchingDetails}
-                postInfoUpdate={postInfoUpdate}
-                tabProps={props.tabProps}
-                toggleUpdateState={toggleUpdateState}
-                updateServiceProviders={updateServiceProviders}
-              />
-            )}
-          />
-        </Switch>
-      </PageWrapper>
-    </div></div>
+            <Route
+              path={`${match.url}/`}
+              render={() => (
+                <InstitutionInfo
+                  institute={institutionData}
+                  loading={fetchingDetails}
+                  postInfoUpdate={postInfoUpdate}
+                  tabProps={props.tabProps}
+                  toggleUpdateState={toggleUpdateState}
+                  updateServiceProviders={updateServiceProviders}
+                />
+              )}
+            />
+          </Switch>
+        </PageWrapper>
+      </div>
+    </div>
   );
 };
 

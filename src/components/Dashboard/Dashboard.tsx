@@ -41,6 +41,7 @@ import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getImageFromS3Static} from '@utilities/services';
 import {FiUser} from 'react-icons/fi';
 import useNotifications from '@customHooks/notifications';
+import HeaderMegaMenu from './Menu/HeaderMegaMenu';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -883,6 +884,7 @@ const Dashboard = (props: DashboardProps) => {
               alt="Workflow"
             />
           </div>
+          <HeaderMegaMenu />
           <DropDownMenu />
         </div>
       </div>
@@ -901,39 +903,42 @@ const Dashboard = (props: DashboardProps) => {
           handleRoomSelection={handleRoomSelection}
         /> */}
 
-<div className="h-full overflow-y-auto">
-        {/*<FloatingSideMenu />*/}
-        <Noticebar notifications={notifications} />
-        <div className="absolute z-100 w-6 right-1 top-0.5">
-          <span
-            className="w-auto cursor-pointer"
-            onClick={() => setOpenWalkThroughModal(true)}>
-            <BsFillInfoCircleFill className={`h-5 w-5 ${theme.textColor[themeColor]}`} />
-          </span>
-        </div>
-        <Suspense
-          fallback={
-            <div className="min-h-screen w-full flex flex-col justify-center items-center">
-              <ComponentLoading />
-            </div>
-          }>
-          <Switch>
-            <Route
-              path={`${match.url}`}
-              exact
-              render={() => {
-                if (userData && userData.role !== '') {
-                  if (userData.role === 'FLW' || userData.role === 'TR') {
-                    return <Redirect to={`${match.url}/home`} />;
-                  } else if (userData.role === 'ST') {
-                    return <Redirect to={`${match.url}/home`} />;
-                  } else {
-                    return !state.user.associateInstitute?.length ||
-                      state.user.associateInstitute?.length > 1 ? (
-                      <Redirect to={`${match.url}/manage-institutions`} />
-                    ) : (
-                      <Redirect
-                      to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`} />
+        <div className="h-full overflow-y-auto">
+          {/*<FloatingSideMenu />*/}
+          <Noticebar notifications={notifications} />
+          <div className="absolute z-100 w-6 right-1 top-0.5">
+            <span
+              className="w-auto cursor-pointer"
+              onClick={() => setOpenWalkThroughModal(true)}>
+              <BsFillInfoCircleFill
+                className={`h-5 w-5 ${theme.textColor[themeColor]}`}
+              />
+            </span>
+          </div>
+          <Suspense
+            fallback={
+              <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                <ComponentLoading />
+              </div>
+            }>
+            <Switch>
+              <Route
+                path={`${match.url}`}
+                exact
+                render={() => {
+                  if (userData && userData.role !== '') {
+                    if (userData.role === 'FLW' || userData.role === 'TR') {
+                      return <Redirect to={`${match.url}/home`} />;
+                    } else if (userData.role === 'ST') {
+                      return <Redirect to={`${match.url}/home`} />;
+                    } else {
+                      return !state.user.associateInstitute?.length ||
+                        state.user.associateInstitute?.length > 1 ? (
+                        <Redirect to={`${match.url}/manage-institutions`} />
+                      ) : (
+                        <Redirect
+                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`}
+                        />
                       );
                     }
                   } else
@@ -956,7 +961,7 @@ const Dashboard = (props: DashboardProps) => {
               />
 
               {(userData.role === 'SUP' ||
-              userData.role === 'ADM' ||
+                userData.role === 'ADM' ||
                 userData.role === 'TR' ||
                 userData.role === 'FLW' ||
                 userData.role === 'BLD') && (

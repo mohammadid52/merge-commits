@@ -11,12 +11,11 @@ export interface ITabElements {
 
 interface ITabsProps {
   tabsData: ITabElements[];
-  activeTab: string;
   tabWithNumbers?: boolean;
   updateTab: (tab: any) => void;
 }
 
-const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
+const DropDownMenu = ({customTitle, index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -99,7 +98,7 @@ const DropDownMenu = ({activeTab, customTitle, index, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
+const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -111,7 +110,8 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-          defaultValue={activeTab}>
+          // defaultValue={activeTab}
+          >
           {tabsData.map((tab: ITabElements, index: number) => (
             <option className="transition-all" key={index}>
               {tab.title}
@@ -126,7 +126,6 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
               <DropDownMenu
                 menu={menu}
                 customTitle={`${index + 1}. ${menu.title}`}
-                activeTab={activeTab}
                 onClick={updateTab}
                 index={index}
                 key={index}
@@ -140,7 +139,7 @@ const Tabs = ({tabsData, tabWithNumbers, activeTab, updateTab}: ITabsProps) => {
                 className={`px-3 relative ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } ${
-                  activeTab === menu.key ? 'bg-indigo-300 text-indigo-700' : ''
+                  menu.active ? 'bg-indigo-300 text-indigo-700' : ''
                 } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
                 {tabWithNumbers ? index + 1 : ''}. {menu.title}
               </button>

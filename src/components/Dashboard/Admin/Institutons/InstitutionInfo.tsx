@@ -504,12 +504,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           <div className="">
             <div className="bg-white border-l-0 border-gray-200 mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 2xl:px-6">
-                <Tabs
+                {/* <Tabs
                   tabsData={headerMenusForInstitution}
                   activeTab={tabProps.tabsData.inst}
                   updateTab={updateTab}
                   tabWithNumbers
-                />
+                /> */}
                 {/* <h3 className="text-lg flex items-center leading-6 font-medium text-gray-900">
                   {Institute_info[userLanguage]['TITLE']}
                   </h3> */}
