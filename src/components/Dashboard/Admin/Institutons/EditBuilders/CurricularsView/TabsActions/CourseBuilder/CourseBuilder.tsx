@@ -36,12 +36,10 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
-  console.log(urlParams, 'urlParams');
 
   const {courseId} = urlParams;
   const params = useQuery(location.search);
   const step = params.get('step');
-  const institutionId = params.get('id');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, CommonlyUsedDict, CourseBuilderdict} = useDictionary(
@@ -59,7 +57,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   });
   const [courseData, setCourseData] = useState<any>({
     institution: {
-      id: institutionId,
+      id: instId,
       name: '',
     },
   });
@@ -81,7 +79,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
 
   useEffect(() => {
     getBasicInstitutionInfo();
-  }, [institutionId]);
+  }, [instId]);
 
   const fetchCourseData = async () => {
     if (courseId) {
@@ -116,7 +114,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const getBasicInstitutionInfo = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: institutionId,
+        id: instId,
       })
     );
     setCourseData((prevData: any) => ({
@@ -137,12 +135,12 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     },
     {
       title: courseData?.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+      url: `/dashboard/manage-institutions/institution/${instId}/staff`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['COURSES'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
+      url: `/dashboard/manage-institutions/institution/${instId}/course`,
       last: false,
     },
     {
@@ -191,7 +189,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return (
           <LessonPlanManager
             courseId={courseId}
-            institutionId={institutionId}
+            institutionId={instId}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}
             lessonsIds={lessonsIds}
@@ -200,13 +198,13 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         );
       case 'learning_objectives':
         return (
-          <LearningObjective curricularId={courseId} institutionId={institutionId} />
+          <LearningObjective curricularId={courseId} institutionId={instId} />
         );
       case 'unit_manager':
         return (
           <LessonPlanManager
             courseId={courseId}
-            institutionId={institutionId}
+            institutionId={instId}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}
             lessonsIds={lessonsIds}
@@ -214,7 +212,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           />
         );
       case 'demographics':
-        return <CheckpointList curricularId={courseId} institutionId={institutionId} />;
+        return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }
   };
 
@@ -233,7 +231,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         <div
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
-            history.push(`/dashboard/manage-institutions/institution/${instId}/course`)
+            history.push(`/dashboard/manage-institutions/institution/${instId}/courses`)
           }>
           <span className="w-auto mr-2">
             <BsArrowLeft />

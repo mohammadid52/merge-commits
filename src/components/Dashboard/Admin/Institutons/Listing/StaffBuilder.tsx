@@ -99,14 +99,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const redirectToRegistrationPage = () => {
-    history.push(`/dashboard/manage-institutions/institution/${instituteId}/register-user`)
-  }
+    history.push(
+      `/dashboard/manage-institutions/institution/${instituteId}/register-user`
+    );
+  };
 
   const getPersonsList = async (role: string) => {
     try {
-      if(role === 'SUP'){
+      if (role === 'SUP') {
         setShowSuperAdmin(true);
-      }else{
+      } else {
         setShowSuperAdmin(false);
       }
       const list: any = await API.graphql(
@@ -316,9 +318,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const showAddStaffSection = async (role?: string) => {
-    if(user.role === 'SUP'){
-      redirectToRegistrationPage()
-    }else{
+    if (user.role === 'SUP' && role !== 'SUP') {
+      redirectToRegistrationPage();
+    } else {
       let users = await getPersonsList(role);
       const staffMembersIds = activeStaffList.map((item: any) => item.userId);
       let availableUsersList = users.filter(
@@ -344,11 +346,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   label={'Staff member'}
                   onClick={() => showAddStaffSection('')}
                 />
-                {user.role === 'SUP' && <div
-                  className="text-sm text-right text-gray-400 cursor-pointer mt-1"
-                  onClick={() => showAddStaffSection('SUP')}>
-                  + {dictionary.ADD_SUPER_ADMIN}
-                </div>}
+                {user.role === 'SUP' && (
+                  <div
+                    className="text-sm text-right text-gray-400 cursor-pointer mt-1"
+                    onClick={() => showAddStaffSection('SUP')}>
+                    + {dictionary.ADD_SUPER_ADMIN}
+                  </div>
+                )}
               </div>
             ) : (
               <Buttons
@@ -365,7 +369,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                 imageFromS3={false}
                 selectedItem={newMember}
                 list={availableUsers}
-                placeholder={showSuperAdmin ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER : dictionary['ADD_PLACEHOLDER']}
+                placeholder={
+                  showSuperAdmin
+                    ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
+                    : dictionary['ADD_PLACEHOLDER']
+                }
                 onChange={onChange}
               />
               <Buttons

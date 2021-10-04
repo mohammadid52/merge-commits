@@ -77,7 +77,7 @@ const CurriculumList = (props: CurriculumListProps) => {
                       {item.name ? item.name : ''}
                     </div>
                     <span
-                      className={`w-1/10 h-6 text-left items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentCurricular(item.id)}>
                       <Tooltip text="View curriculam details" placement="left">
                         {InstitueCurriculam[userLanguage]['VIEW']}
