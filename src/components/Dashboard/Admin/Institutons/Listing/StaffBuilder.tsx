@@ -26,10 +26,13 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
-import Loader from '../../../../Atoms/Loader';
-import Tooltip from '../../../../Atoms/Tooltip';
-import Status from '../../../../Atoms/Status';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
+
+import Loader from '@atoms/Loader';
+import Tooltip from '@atoms/Tooltip';
+import Status from '@atoms/Status';
+import AddButton from '@atoms/Buttons/AddButton';
+import Modal from '@atoms/Modal';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -47,9 +50,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const {BUTTONS, staffBuilderDict} = useDictionary(clientKey);
+  const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
   const [showSuperAdmin, setShowSuperAdmin] = useState(false);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [showAddSection, setShowAddSection] = useState(false);
   const [newMember, setNewMember] = useState({id: '', name: '', value: '', avatar: ''});
@@ -264,6 +268,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     history.push(`/dashboard/manage-users/user?id=${profileId}`);
   };
 
+  const postMutation = () => {
+    setShowRegistrationForm(false);
+    fetchStaffData();
+  };
+
   const fetchStaffData = async () => {
     // const staffMembers = await getStaff()
     let [staffLists, sequenceData]: any = await Promise.all([
@@ -319,7 +328,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const showAddStaffSection = async (role?: string) => {
     if (user.role === 'SUP' && role !== 'SUP') {
-      redirectToRegistrationPage();
+      setShowRegistrationForm(true);
     } else {
       let users = await getPersonsList(role);
       const staffMembersIds = activeStaffList.map((item: any) => item.userId);
@@ -545,6 +554,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             </div>
           )}
         </PageWrapper>
+        {showRegistrationForm && (
+          <Modal
+            showHeader={true}
+            title={RegistrationDict[userLanguage]['title']}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={() => setShowRegistrationForm(false)}>
+            <Registration
+              isInInstitute
+              isInModalPopup
+              postMutation={postMutation}
+              instId={instituteId}
+            />
+          </Modal>
+        )}
       </div>
     </div>
   );
