@@ -516,8 +516,7 @@ const LessonControl = () => {
             />
 
             <div
-              className={`
-                          ${fullscreen ? 'h-full' : 'h-full'}
+              className={`${fullscreen ? 'h-full' : 'h-full'}
                           ${theme.bg} 
                           relative w-full  
                           border-t-2 border-black
@@ -534,13 +533,6 @@ const LessonControl = () => {
                       <ComponentLoading />
                     </div>
                   }>
-                  {/**
-                   *
-                   *
-                   * THIS LOADS THE LESSON COMPONENT
-                   *
-                   *
-                   */}
                   <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
                     <CoreUniversalLesson />
                   </ErrorBoundary>
