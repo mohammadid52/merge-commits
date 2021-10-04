@@ -1,4 +1,5 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {access} from 'fs';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -63,6 +64,9 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       if (subscription) {
         subscription.unsubscribe();
       }
+      if (deleteSubscription) {
+        deleteSubscription.unsubscribe();
+      }
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
@@ -83,8 +87,8 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
 
   const subscribeToPersonLocations = () => {
     // @ts-ignore
-    const personLocationSubscription = API.graphql(
-      graphqlOperation(subscriptions.onChangePersonLocation, {
+    const personLocationSub = API.graphql(
+      graphqlOperation(subscriptions.onCreateUpdatePersonLocationItem, {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
         roomID: getRoomData.id,
@@ -92,19 +96,35 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       //@ts-ignore
     ).subscribe({
       next: (locationData: any) => {
-        const updatedStudent = locationData.value.data.onChangePersonLocation;
+        const updatedStudent = locationData.value.data.onCreateUpdatePersonLocationItem;
 
-        console.log('new location: ', updatedStudent);
+        console.log('new create update location: ', updatedStudent);
         setUpdatedStudent(updatedStudent);
       },
     });
-    return personLocationSubscription;
+    return personLocationSub;
   };
 
   // ~~~~~~~~~ SUBSCRIBE :: DELETE ~~~~~~~~~ //
 
   const subscribeToDeletePersonLocations = () => {
-    //
+    // @ts-ignore
+    const personLocationDeleteSub = API.graphql(
+      graphqlOperation(subscriptions.onDeletePersonLocationItem, {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        roomID: getRoomData.id,
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (locationData: any) => {
+        const deletedStudent = locationData.value.data.onDeletePersonLocationItem;
+
+        console.log('deleted location: ', deletedStudent);
+        setDeletedStudent(deletedStudent);
+      },
+    });
+    return personLocationDeleteSub;
   };
 
   // ##################################################################### //
@@ -180,7 +200,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
         payload: {students: studentsFromThisClass},
       });
       subscription = subscribeToPersonLocations();
-      // deleteSubscription = subscribeToDeletePersonLocations();
+      deleteSubscription = subscribeToDeletePersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
     } finally {
@@ -189,10 +209,10 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   };
 
   useEffect(() => {
-    if (lessonState.lessonData.id /*&& controlState.roster.length === 0*/) {
+    if (classStudents.length > 0) {
       getSyllabusLessonStudents();
     }
-  }, [lessonState.lessonData.id]);
+  }, [classStudents]);
 
   // ##################################################################### //
   // ####################### ROSTER UPDATE / DELETE ###################### //
@@ -243,7 +263,22 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       ).length > 0;
 
     if (studentExists) {
-      //
+      const deleteRoster = personLocationStudents.reduce(
+        (rosterAcc: any[], student: any) => {
+          if (student.personAuthID === deleteStudent.personAuthID) {
+            return rosterAcc;
+          } else {
+            return [...rosterAcc, student];
+          }
+        },
+        []
+      );
+      setPersonLocationStudents(deleteRoster);
+      controlDispatch({
+        type: 'UPDATE_STUDENT_ROSTER',
+        payload: {students: deleteRoster},
+      });
+      setUpdatedStudent({});
     } else {
       //
     }
@@ -251,7 +286,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
 
   useEffect(() => {
     if (Object.keys(deletedStudent).length) {
-      //deleteStudentRoster(deletedStudent)
+      deleteStudentRoster(deletedStudent);
     }
   }, [deletedStudent]);
 
