@@ -12,10 +12,13 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Selector from '../../../Atoms/Form/Selector';
-import useDictionary from '../../../../customHooks/dictionary';
+
+import useDictionary from '@customHooks/dictionary';
+import {useQuery} from '@customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {createUserUrl} from '../../../../utilities/urls';
 import {groupOptions} from '../../../../utilities/staticData';
+
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -68,6 +71,8 @@ const initialState: newUserInput = {
 
 const Registration = ({isInInstitute, instId}: any) => {
   const history = useHistory();
+  const params = useQuery(location.search);
+  const from = params.get('from');
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -88,7 +93,7 @@ const Registration = ({isInInstitute, instId}: any) => {
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    state.user.role !== 'SUP' && {code: 'ST', name: 'Student'},
+    state.user.role !== 'SUP' && from !== 'staff' && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -138,7 +143,7 @@ const Registration = ({isInInstitute, instId}: any) => {
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
       language: 'EN',
-      addedby: state.user.authId
+      addedby: state.user.authId,
     };
 
     try {
@@ -173,6 +178,11 @@ const Registration = ({isInInstitute, instId}: any) => {
         );
       }
       handleMessage('success', 'User registered successfully');
+      if (from === 'staff') {
+        history.push(
+          `/dashboard/manage-institutions/institution/${newUserInputs.institution.id}/staff`
+        );
+      }
       setNewUserInputs((prev) => {
         return {
           ...prev,
@@ -372,8 +382,8 @@ const Registration = ({isInInstitute, instId}: any) => {
     if (institutionsData.length && instId) {
       handleInstituteChange({
         code: instId,
-        name:''
-      })
+        name: '',
+      });
     }
   }, [institutionsData, instId]);
 

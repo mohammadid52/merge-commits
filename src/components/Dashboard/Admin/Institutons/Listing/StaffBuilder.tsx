@@ -100,7 +100,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const redirectToRegistrationPage = () => {
     history.push(
-      `/dashboard/manage-institutions/institution/${instituteId}/register-user`
+      `/dashboard/manage-institutions/institution/${instituteId}/register-user?from=staff`
     );
   };
 
