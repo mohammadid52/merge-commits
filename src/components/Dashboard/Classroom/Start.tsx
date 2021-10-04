@@ -270,11 +270,7 @@ const Start: React.FC<StartProps> = ({
       if (type === 'survey' || type === 'assessment') {
         return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
       } else {
-        if (isCompleted) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
-        } else {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
-        }
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
       }
     }
   };
@@ -283,7 +279,9 @@ const Start: React.FC<StartProps> = ({
     if (typeof type !== 'undefined') {
       switch (type) {
         case 'lesson':
-          return isCompleted ? '' : classRoomDict[userLanguage]['LESSON'].toUpperCase();
+          return isCompleted && !isOnDemand
+            ? ''
+            : classRoomDict[userLanguage]['LESSON'].toUpperCase();
         case 'assessment':
           return classRoomDict[userLanguage]['ASSESSMENT'].toUpperCase();
         case 'survey':
@@ -301,7 +299,7 @@ const Start: React.FC<StartProps> = ({
   };
 
   const studentTeacherButtonTheme = () => {
-    if (isCompleted) {
+    if (isCompleted && !isOnDemand) {
       return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
     } else if (isActive || isOnDemand) {
       return theme.btn.lessonStart;
@@ -330,7 +328,7 @@ const Start: React.FC<StartProps> = ({
         }
         disabled={
           loading ||
-          isCompleted ||
+          (isCompleted && !isOnDemand) ||
           (!open && !isTeacher && !isOnDemand) ||
           (!isActive && !isTeacher && !isOnDemand)
         }
