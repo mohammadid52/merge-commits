@@ -489,9 +489,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                     list={targetAudienceForIconoclast}
                     onChange={onSelectTargetAudience}
                   />
-                  {validation.institution && (
-                    <p className="text-red-600 text-sm">{validation.institution}</p>
-                  )}
                 </div>
                 <div className="px-0 py-4">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-1">

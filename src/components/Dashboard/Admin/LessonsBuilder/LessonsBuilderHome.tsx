@@ -12,7 +12,7 @@ import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
 
-interface ILessonBuilderHomeProps{
+interface ILessonBuilderHomeProps {
   instId: string;
 }
 
@@ -94,7 +94,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
           <Route
             exact
             path={`${match.url}`}
-            render={() => <LessonsList isInInstitution/>} // Lessons builder List Home
+            render={() => <LessonsList isInInstitution instId={instId} />} // Lessons builder List Home
           />
           <Route
             exact

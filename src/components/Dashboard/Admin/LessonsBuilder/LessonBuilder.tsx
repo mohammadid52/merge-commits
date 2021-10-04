@@ -84,7 +84,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     notes: '',
     notesHtml: '<p></p>',
     languages: [{id: '1', name: 'English', value: 'EN'}],
-    institution: {id: instId, name: '', value: ''},
+    institution: {id: instId, name: '', value: instId},
     language: [''],
     imageUrl: '',
     imageCaption: '',
@@ -295,6 +295,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   useEffect(() => {
     fetchCurriculum();
   }, [formData?.institution]);
+
+  useEffect(() => {
+    if(instId && !lessonId){
+      fetchStaffByInstitution(instId)
+    }
+  }, [instId, lessonId])
 
   const addCheckpointQuestions = async (
     quesId: string,
