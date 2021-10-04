@@ -263,6 +263,7 @@ const ProfileEdit = (props: UserInfoProps) => {
           onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
           role: state.user.role,
           image: state.user.image,
+          onDemand: state.user.onDemand,
         },
       });
       gobackToPreviousStep();

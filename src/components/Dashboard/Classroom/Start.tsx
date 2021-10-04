@@ -25,21 +25,29 @@ interface StartProps {
   activeRoomInfo?: any;
 }
 
-const Start: React.FC<StartProps> = (props: StartProps) => {
+const Start: React.FC<StartProps> = ({
+  activeRoomInfo,
+  isActive,
+  isCompleted,
+  lessonKey,
+  open,
+  accessible,
+  type,
+  roomID,
+  preview,
+}: StartProps) => {
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const user = gContext.state.user;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const [isMounted, setIsMounted] = useState(false);
-  const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+
   const {classRoomDict} = useDictionary(clientKey);
-  const {
-    activeRoomInfo,
-    isActive,
-    isCompleted,
-    lessonKey,
-    open,
-    accessible,
-    type,
-    roomID,
-    preview,
-  } = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
@@ -49,7 +57,8 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     message: 'Do you want to mark these active lessons as completed?',
   });
 
-  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+  const isTeacher = user.role === 'FLW' || user.role === 'TR';
+  const isOnDemand = user.onDemand;
 
   useEffect(() => {
     setIsMounted(true);
@@ -153,16 +162,13 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         if (!attendanceRecorded) {
           recordAttendance();
         }
-        history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
+        history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);
       }
     }
 
     if (isTeacher) {
-      // if (type === 'survey' || type === 'assessment') {
-      //   toggleEnableDisable();
-      // } else {
       if (isActive) {
         if (!attendanceRecorded) {
           recordAttendance();
@@ -235,11 +241,6 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
-        // if (open) {
-        //   return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
-        // } else {
-        // return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
-        // }
       } else {
         if (isCompleted) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
@@ -249,7 +250,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['TEACH'];
         }
       }
-    } else {
+    } else if (!isTeacher && !isOnDemand) {
       if (type === 'survey' || type === 'assessment') {
         if (isCompleted || isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
@@ -263,6 +264,16 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
+        }
+      }
+    } else {
+      if (type === 'survey' || type === 'assessment') {
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
+      } else {
+        if (isCompleted) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+        } else {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
         }
       }
     }
@@ -290,26 +301,13 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const studentTeacherButtonTheme = () => {
-    // if (type === 'lesson') {
     if (isCompleted) {
       return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
-    } else if (isActive) {
+    } else if (isActive || isOnDemand) {
       return theme.btn.lessonStart;
     } else {
       return theme.btn.iconoclastIndigo;
     }
-    // }
-    // else {
-    //   if (!isTeacher) {
-    //     return theme.btn.surveyStart;
-    //   } else {
-    //     if (open) {
-    //       return theme.btn.surveyStart;
-    //     } else {
-    //       return theme.btn.lessonStart;
-    //     }
-    //   }
-    // }
   };
 
   const onCloseModal = () => {
@@ -331,7 +329,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             : `${firstPart()} ${secondPart()}`
         }
         disabled={
-          loading || (!open && !isTeacher) || (!isTeacher && !isActive) || isCompleted
+          loading ||
+          isCompleted ||
+          (!open && !isTeacher && !isOnDemand) ||
+          (!isActive && !isTeacher && !isOnDemand)
         }
         overrideClass={true}
         btnClass={`rounded 

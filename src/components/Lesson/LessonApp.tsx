@@ -34,27 +34,30 @@ const LessonApp = () => {
 
   const history = useHistory();
   const match = useRouteMatch();
-  const urlParams: any = useParams();
+
+  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
+
   const getRoomData = getLocalStorageData('room_info');
+  const urlParams: any = useParams();
   const {lessonID} = urlParams;
+  const isOnDemand = user.onDemand;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
+
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
-  //  NAVIGATION CONSTANTS
+
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
-  /**
-   * FOR SCROLL TO TOP
-   */
   const topLessonRef = useRef();
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
+
   let subscription: any;
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
@@ -92,7 +95,6 @@ const LessonApp = () => {
   // ----------- 3 ---------- //
 
   const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
-    // console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
     setLocalStorageData('room_info', {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
@@ -184,11 +186,12 @@ const LessonApp = () => {
   };
 
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
       setLessonDataLoaded(true);
-      // Initialize page url and context
       if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
         history.push(`${match.url}/${CURRENT_PAGE}`);
@@ -200,6 +203,7 @@ const LessonApp = () => {
       // Initialize closed pages based on room-configuration
 
       if (
+        !isOnDemand &&
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan.length > 0
       ) {
@@ -752,18 +756,17 @@ const LessonApp = () => {
     currentLocation: '',
     lessonProgress: '',
   });
-  // const previousLocation = usePrevious(personLocationObj);
 
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
   useEffect(() => {
-    if (personLocationObj.id === '') {
+    if (!isOnDemand && personLocationObj.id === '') {
       initializeLocation();
     }
   }, [lessonState.lessonData.id]);
 
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
   useEffect(() => {
-    if (created && lessonState.currentPage >= 0) {
+    if (!isOnDemand && created && lessonState.currentPage >= 0) {
       const pageChangeLocation = {
         ...getLocationData,
         currentLocation: lessonState.currentPage,
@@ -910,7 +913,6 @@ const LessonApp = () => {
             </div>
           ) : (
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
-              {/*{lessonDataLoaded && <Body />}*/}
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
                 <CoreUniversalLesson />
