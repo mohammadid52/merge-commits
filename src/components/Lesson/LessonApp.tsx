@@ -6,6 +6,7 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
+import * as queries from '../../graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -741,6 +742,7 @@ const LessonApp = () => {
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
+  const [getted, setGetted] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [created, setCreated] = useState(false);
 
@@ -781,13 +783,35 @@ const LessonApp = () => {
   }, [created, lessonState.currentPage]);
 
   const initializeLocation = async () => {
-    if (/*!cleared &&*/ !created) {
-      await leaveRoomLocation(user.authId, user.email);
-      await createPersonLocation();
+    if (!getted) {
+      const getLocation = await getPersonLocation();
+
+      if (getLocation === undefined) {
+        await createPersonLocation();
+      } else {
+        await updatePersonLocation(getLocation);
+      }
     }
   };
 
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
+
+  const getPersonLocation = async () => {
+    try {
+      const getUserLocation: any = await API.graphql(
+        graphqlOperation(queries.getPersonLocation, {
+          input: {personAuthID: user?.authId, personEmail: user?.email},
+        })
+      );
+      const response = getUserLocation.data.getPersonLocation;
+
+      return response;
+    } catch (e) {
+      // console.error('createPersonLocation - ', e);
+    } finally {
+      setGetted(true);
+    }
+  };
 
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;

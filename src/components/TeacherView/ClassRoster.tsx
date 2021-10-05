@@ -1,4 +1,6 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import useLessonControls from '@customHooks/lessonControls';
+import usePrevious from '@customHooks/previousProps';
 import {access} from 'fs';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
@@ -42,9 +44,6 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   // ##################################################################### //
   // ############################ ALL STUDENTS ########################### //
   // ##################################################################### //
-
-  const viewedStudent = lessonState?.studentViewing;
-  const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
@@ -193,7 +192,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
           return findStudentInClasslist;
         }
       });
-      console.log('studentsFromThisClass - ', studentsFromThisClass);
+      // console.log('studentsFromThisClass - ', studentsFromThisClass);
       setPersonLocationStudents(studentsFromThisClass);
       controlDispatch({
         type: 'UPDATE_STUDENT_ROSTER',
@@ -207,6 +206,15 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       setLoading(false);
     }
   };
+
+  const inactiveStudents = classStudents.filter((student: any) => {
+    const isInStateRoster = controlState.roster.find(
+      (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
+    );
+    if (isInStateRoster === undefined) {
+      return student;
+    }
+  });
 
   useEffect(() => {
     if (classStudents.length > 0) {
@@ -278,7 +286,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
         type: 'UPDATE_STUDENT_ROSTER',
         payload: {students: deleteRoster},
       });
-      setUpdatedStudent({});
+      setDeletedStudent({});
     } else {
       //
     }
@@ -294,43 +302,15 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   // ########################### FUNCTIONALITY ########################### //
   // ##################################################################### //
 
-  const resetViewAndShare = async () => {
-    if (
-      lessonState.studentViewing !== '' ||
-      lessonState.displayData[0].studentAuthID !== ''
-    ) {
-      console.log('reset reset...');
+  const viewedStudent = lessonState?.studentViewing;
+  const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
-      if (
-        lessonState.studentViewing !== '' ||
-        lessonState.displayData[0].studentAuthID !== ''
-      ) {
-        lessonDispatch({
-          type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          payload: {
-            id: getRoomData.id,
-            studentViewing: '',
-            displayData: [{studentAuthID: '', lessonPageID: ''}],
-          },
-        });
-      }
-      setLocalStorageData('room_info', {
-        ...getRoomData,
-        studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
-      });
-      await handleRoomUpdate({
-        id: getRoomData.id,
-        studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
-      });
-    }
-  };
+  const {resetViewAndShare} = useLessonControls();
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
   const handleViewStudentData = async (idStr: string) => {
-    if (lessonState.studentViewing === idStr) {
+    if (viewedStudent === idStr) {
       await resetViewAndShare();
     } else {
       lessonDispatch({
@@ -345,11 +325,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
-    if (
-      // lessonState.displayData &&
-      // lessonState.displayData?.length > 0 &&
-      lessonState.displayData[0].studentAuthID === idStr
-    ) {
+    if (sharedStudent === idStr) {
       await resetViewAndShare();
     } else {
       lessonDispatch({
@@ -378,14 +354,32 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
     }
   };
 
-  const inactiveStudents = classStudents.filter((student: any) => {
-    const isInStateRoster = controlState.roster.find(
-      (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
-    );
-    if (isInStateRoster === undefined) {
-      return student;
-    }
-  });
+  // ##################################################################### //
+  // ####################### STUDENT SHARING STATE ####################### //
+  // ##################################################################### //
+
+  // //TODO: refactor person find functions (a lot is repeated and can be made into 1 function)
+
+  // const handleStudentDisappear = () => {
+  //   const viewedInOnlineList = personLocationStudents.find(
+  //     (student: any) => student.personAuthID === viewedStudent
+  //   );
+  //   const sharedInOnlineList = personLocationStudents.find(
+  //     (student: any) => student.personAuthID === sharedStudent
+  //   );
+
+  //   if (
+  //     viewedStudent !== '' &&
+  //     viewedInOnlineList === undefined
+  //     /*(sharedStudent !== '' && sharedInOnlineList === undefined)*/
+  //   ) {
+  //     resetViewAndShare();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   handleStudentDisappear();
+  // }, [personLocationStudents]);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
