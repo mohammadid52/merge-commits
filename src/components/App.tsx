@@ -1,16 +1,22 @@
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {BrowserRouter as Router} from 'react-router-dom';
-import {GlobalContextProvider} from '../contexts/GlobalContext';
+import {GlobalContextProvider} from '@contexts/GlobalContext';
 import MainRouter from './AppMainRouter';
+import {OverlayContextProvider} from '@contexts/OverlayContext';
+import {EditStateContextProvider} from '@contexts/EditStateContext';
 
 const App: React.FC = () => {
   return (
     <CookiesProvider>
       <GlobalContextProvider>
-        <Router>
-          <MainRouter />
-        </Router>
+        <OverlayContextProvider>
+          <EditStateContextProvider>
+            <Router>
+              <MainRouter />
+            </Router>
+          </EditStateContextProvider>
+        </OverlayContextProvider>
       </GlobalContextProvider>
     </CookiesProvider>
   );

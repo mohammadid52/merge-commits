@@ -998,6 +998,23 @@
     opacity: 0;
     transition: opacity 0.1s linear, transform 0.3s linear;
   }
+  &:hover .arrow-icon2 {
+    visibility: visible;
+    opacity: 1;
+    &.rotateArrow {
+      transform: translateY(-5px);
+    }
+    transform: translateX(-5px);
+  }
+  & .arrow-icon2 {
+    &.rotateArrow {
+      transform: translateX(-10px);
+    }
+    transform: translateX(-10px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s linear, transform 0.3s linear;
+  }
 }
 
 .customShadow {

@@ -1,15 +1,16 @@
+import Tooltip from '@atoms/Tooltip';
+import SignOutButton from '@components/Auth/SignOut';
+import Links from '@components/Dashboard/Menu/Links';
+import ProfileLink from '@components/Dashboard/Menu/ProfileLink';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import useDeviceDetect from '@customHooks/deviceDetect';
 import useKeyPress from '@customHooks/useKeyPress';
-import React, {useContext, useEffect, useState} from 'react';
+import {getAsset} from 'assets';
+import React, {useContext, useEffect} from 'react';
 import {IoIosMenu} from 'react-icons/io';
 import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory, useLocation} from 'react-router';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDeviceDetect from '../../../customHooks/deviceDetect';
-import Tooltip from '../../Atoms/Tooltip';
-import SignOutButton from '../../Auth/SignOut';
-import Links from './Links';
-import ProfileLink from './ProfileLink';
 
 interface SideMenuProps {
   children?: React.ReactNode;
@@ -34,7 +35,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
   const {dispatch, clientKey} = useContext(GlobalContext);
   const history = useHistory();
   const {pathname} = useLocation();
-  const [collapse, setCollapse] = useState(false);
+  const {collapseSidebarOverlay, setCollapseSidebarOverlay} = useOverlayContext();
 
   const handleLink = (e: React.MouseEvent) => {
     history.push('/dashboard/home');
@@ -43,30 +44,30 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
 
   useEffect(() => {
     if (mobile) {
-      setCollapse(true);
+      setCollapseSidebarOverlay(true);
     }
   }, [pathname, mobile]);
 
-  // event listener for '[' press. if pressed expand or collapse sidemenu
+  // event listener for '[' press. if pressed expand or collapseSidebarOverlay sidemenu
   const bracketsOpenPress = useKeyPress('[');
 
   useEffect(() => {
     if (bracketsOpenPress) {
-      setCollapse((prev) => !prev);
+      setCollapseSidebarOverlay((prev: any) => !prev);
     }
   }, [bracketsOpenPress]);
 
   return (
     <>
-      {collapse && (
+      {collapseSidebarOverlay && (
         <div
           onClick={() => {
-            if (collapse) {
-              setCollapse(false);
+            if (collapseSidebarOverlay) {
+              setCollapseSidebarOverlay(false);
             }
           }}
           className={`${
-            !collapse ? 'not-collapse' : 'collapse'
+            !collapseSidebarOverlay ? 'not-collapse' : 'collapse'
           } absolute flex items-center justify-end bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-r-lg top-2 z-100`}>
           <Tooltip placement="right" text="Expand [">
             <div className="w-auto mr-1">
@@ -76,19 +77,14 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
         </div>
       )}
       <div
-        // onClick={() => {
-        //   if (collapse) {
-        //     setCollapse(false);
-        //   }
-        // }}
         style={{
-          minWidth: collapse ? '0rem' : '16rem',
-          maxWidth: collapse ? '0rem' : '16rem',
+          minWidth: collapseSidebarOverlay ? '0rem' : '16rem',
+          maxWidth: collapseSidebarOverlay ? '0rem' : '16rem',
         }}
         className={`md:flex md:flex-shrink-0 w-60 sidenav bg-charcoal ${
-          collapse && 'cursor-pointer'
+          collapseSidebarOverlay && 'cursor-pointer'
         }`}>
-        {!collapse && (
+        {!collapseSidebarOverlay && (
           <div
             style={{
               minWidth: '16rem',
@@ -103,7 +99,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                   alt="Workflow"
                 />
                 <IoIosMenu
-                  onClick={() => setCollapse(!collapse)}
+                  onClick={() => setCollapseSidebarOverlay(!collapseSidebarOverlay)}
                   className="cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
                 />
               </div>

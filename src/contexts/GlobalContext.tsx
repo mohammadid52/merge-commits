@@ -1,5 +1,5 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import React, {useEffect, useReducer} from 'react';
+import React, {useContext, useEffect, useReducer} from 'react';
 import * as mutations from '../graphql/mutations';
 import {globalReducer} from '../reducers/GlobalReducer';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
@@ -211,3 +211,5 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     </GlobalContext.Provider>
   );
 };
+
+export const useGlobalContext = () => useContext(GlobalContext);

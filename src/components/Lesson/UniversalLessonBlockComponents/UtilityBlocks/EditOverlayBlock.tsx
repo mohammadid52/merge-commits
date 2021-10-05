@@ -49,7 +49,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             : ''
         }
         `}>
-          <EditOverlayControls
+          {/* <EditOverlayControls
             mode={mode}
             contentID={contentID}
             pageContentID={pageContentID}
@@ -65,7 +65,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
-          />
+          /> */}
           <div>{children}</div>
         </div>
       ) : (

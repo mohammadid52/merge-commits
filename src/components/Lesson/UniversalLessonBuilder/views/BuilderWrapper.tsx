@@ -1,7 +1,9 @@
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
+import ContentModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
 import {GlobalContext} from '@contexts/GlobalContext';
+import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {useQuery} from '@customHooks/urlParam';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -92,20 +94,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
 
-  // Modal popIn
-  const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-
-  const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+  const {
+    currentModalDialog,
+    setCurrentModalDialog,
+    addContentModal,
+    setAddContentModal,
+    modalPopVisible,
+    setModalPopVisible,
+  } = useOverlayContext();
 
   // Manage image gallery component
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
-
-  // This state handles all the modal components
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
-  });
 
   useEffect(() => {
     if (isNewPage === 'true') {
@@ -543,7 +543,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
       {addContentModal.show && (
-        <Modal
+        <ContentModal
           showHeader={true}
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
@@ -553,7 +553,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             <>{modalByType(addContentModal.type)}</>
           </div>
           <UnsavedModal />
-        </Modal>
+        </ContentModal>
       )}
 
       {suggestionModal.show && (

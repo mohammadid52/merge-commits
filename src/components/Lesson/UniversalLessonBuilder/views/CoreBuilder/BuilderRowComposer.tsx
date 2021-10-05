@@ -1,4 +1,6 @@
-import React, {useContext, useState} from 'react';
+import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
+import {AddNewBlock} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
+import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -7,11 +9,8 @@ import {
   PartContent,
   UniversalLessonPage,
 } from '@interfaces/UniversalLessonInterfaces';
-import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
-import {AddNewBlock} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
-import {AddNewBlockMini} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
-import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {FORM_TYPES} from '@UlbUI/common/constants';
+import React, {useContext, useState} from 'react';
 import {BuilderRowWrapper} from './BuilderRowWrapper';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
@@ -42,37 +41,13 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const {
     selectedPageID,
     universalLessonDetails,
-    selIDForHover,
     previewMode,
     updateMovableList,
   } = useULBContext();
 
-  const enableDnD = false;
-
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
-
-  const LastBlock = ({selectedPageDetails}: any) => {
-    return !previewMode ? (
-      <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-        <AddNewBlock
-          idx={selectedPageDetails.pageContent.length - 1}
-          mode={mode}
-          handleModalPopToggle={(dialogToToggle) =>
-            handleModalPopToggle(
-              dialogToToggle,
-              selectedPageDetails.pageContent.length,
-              'pageContent',
-              selectedPageID
-            )
-          }
-        />
-      </BuilderRowWrapper>
-    ) : (
-      <div />
-    );
-  };
 
   const handleOnDragEnd = (result: any, pageContentId: string, partContent: any) => {
     if (!result.destination) return;
@@ -98,7 +73,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
             // ONE ROW
             <div
               key={`row_pagepart_${idx}`}
-              className="space-y-8"
               // className={`relative ${
               //   selIDForHover?.pageContentID && !selIDForHover?.partContentID
               //     ? `opacity-${
@@ -168,49 +142,50 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             createNewBlockULBHandler={createNewBlockULBHandler}
                             deleteFromULBHandler={deleteFromULBHandler}
                             updateFromULBHandler={updateFromULBHandler}>
-                            {content.value.length > 0 ? (
-                              <div className={`${paddingForHeader(content.type)}`}>
-                                <div
-                                  className={`${
-                                    content.type === FORM_TYPES.JUMBOTRON ||
-                                    content.type.includes('writing-exercise')
-                                      ? 'px-4 pt-4'
-                                      : content.type === 'header'
-                                      ? ''
-                                      : content.class
-                                  }`}
-                                  id={`${
-                                    content.type === 'notes-form' ? '' : content.id
-                                  }`}>
-                                  {composePartContent(
-                                    content.id,
-                                    content.type,
-                                    content.value,
-                                    `pp_${idx}_pc_${idx2}`,
-                                    content.class,
-                                    pagePart.id,
-                                    mode,
-                                    updateBlockContentULBHandler,
-                                    idx2,
-                                    undefined, // notesData
-                                    false // isStudent
-                                  )}
+                            {
+                              content.value.length > 0 ? (
+                                <div className={`${paddingForHeader(content.type)}`}>
+                                  <div
+                                    className={`${
+                                      content.type === FORM_TYPES.JUMBOTRON ||
+                                      content.type.includes('writing-exercise')
+                                        ? 'px-4 pt-4'
+                                        : content.type === 'header'
+                                        ? ''
+                                        : content.class
+                                    }`}
+                                    id={`${
+                                      content.type === 'notes-form' ? '' : content.id
+                                    }`}>
+                                    {composePartContent(
+                                      content.id,
+                                      content.type,
+                                      content.value,
+                                      `pp_${idx}_pc_${idx2}`,
+                                      content.class,
+                                      pagePart.id,
+                                      mode,
+                                      updateBlockContentULBHandler,
+                                      idx2,
+                                      undefined, // notesData
+                                      false // isStudent
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            ) : (
-                              <AddNewBlock
-                                idx={-1}
-                                mode={mode}
-                                handleModalPopToggle={(dialogToToggle) =>
-                                  handleModalPopToggle(
-                                    dialogToToggle,
-                                    idx2,
-                                    'partContent',
-                                    pagePart.id
-                                  )
-                                }
-                              />
-                            )}
+                              ) : null
+                              // <AddNewBlock
+                              //   idx={-1}
+                              //   mode={mode}
+                              //   handleModalPopToggle={(dialogToToggle) =>
+                              //     handleModalPopToggle(
+                              //       dialogToToggle,
+                              //       idx2,
+                              //       'partContent',
+                              //       pagePart.id
+                              //     )
+                              //   }
+                              // />
+                            }
                           </EditOverlayBlock>
                         </li>
                       ))}
@@ -223,39 +198,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                       <h1 className={`w-auto text-center`}>This block has no content</h1>
                     </div>
                   )}
-
-                  {!previewMode && (
-                    <div className="my-2 grid grid-cols-1">
-                      <AddNewBlockMini
-                        mode={mode}
-                        handleModalPopToggle={(dialogToToggle) =>
-                          handleModalPopToggle(
-                            dialogToToggle,
-                            pagePart?.partContent?.length,
-                            'partContent',
-                            pagePart.id
-                          )
-                        }
-                      />
-                    </div>
-                  )}
                 </BuilderRowWrapper>
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
-              {/* {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
-                <AddNewBlockMini
-                  mode={mode}
-                  idx={idx}
-                  handleModalPopToggle={(dialogToToggle) =>
-                    handleModalPopToggle(dialogToToggle, idx + 1)
-                  }
-                />
-              )} */}
             </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,
+          // <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,
         ]
       ) : (
         <>
@@ -277,11 +227,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
               mode={mode}
               hasContent={false}
               dataIdAttribute={`addNewRow`}>
-              <AddNewBlock
+              {/* <AddNewBlock
                 idx={-1}
                 mode={mode}
                 handleModalPopToggle={handleModalPopToggle}
-              />
+              /> */}
             </BuilderRowWrapper>
           </EditOverlayBlock>
         </>
