@@ -40,9 +40,9 @@ import Loader from '@components/Atoms/Loader';
 import ClassBuilder from './Builders/ClassBuilder';
 import EditClass from './EditBuilders/EditClass';
 import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
-import LessonBuilder from '../LessonsBuilder/LessonBuilder';
 import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
 import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
+import User from '../UserManagement/User';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -113,7 +113,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {
           title: 'User registry',
           key: 'user_registry',
-          redirectionUrl: `/dashboard/register`,
+          redirectionUrl: `${match.url}/person`,
           active: location.pathname.indexOf('register') > -1,
         },
         {
@@ -221,68 +221,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     const imageUrl: any = await getImageFromS3(instProps?.institute.image);
     setImageUrl(imageUrl);
   }
-
-  const renderElementBySelectedMenu = () => {
-    switch (tabProps.tabsData.inst) {
-      case 'service_provider':
-        return (
-          <ServiceProviders
-            serviceProviders={institute.serviceProviders}
-            instId={institute?.id}
-            updateServiceProviders={instProps.updateServiceProviders}
-            instName={institute?.name}
-          />
-        );
-      case 'staff':
-        return (
-          <StaffBuilder
-            serviceProviders={institute.serviceProviders}
-            instituteId={instProps?.institute?.id}
-            instName={institute?.name}
-          />
-        );
-      case 'user_registry':
-        return <UserLookup isInInstitute />;
-      case 'register':
-        return <Registration isInInstitute />;
-      case 'course':
-        return (
-          <CurriculumList
-            curricular={instProps?.institute?.curricula}
-            instId={institute?.id}
-            instName={institute?.name}
-          />
-        );
-      case 'lessons':
-        return (
-          <div className="p-8">
-            <LessonsList
-              isInInstitution
-              title={`${institute?.name} lessons`}
-              instId={institute?.id}
-            />
-          </div>
-        );
-      case 'class':
-        return (
-          <ClassList
-            classes={institute?.classes}
-            instId={institute?.id}
-            instName={institute?.name}
-          />
-        );
-      case 'class_room':
-        return <RoomsList instId={institute?.id} instName={institute?.name} />;
-      case 'research_and_analytics':
-        return (
-          <div className="p-8">
-            <Csv institutionId={institute?.id} />
-          </div>
-        );
-      default:
-        break;
-    }
-  };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
@@ -609,13 +547,24 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     )}
                   />
                   <Route
+                    path={`${match.url}/manage-users`}
+                    exact
+                    render={() => (
+                      <UserLookup instituteId={instProps?.institute?.id} isInInstitute />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/manage-users/:userId`}
+                    render={() => <User instituteId={instProps?.institute?.id} />}
+                  />
+                  <Route
                     path={`${match.url}/course-builder`}
                     exact
                     render={() => <CourseBuilder instId={institute?.id} />} // Create new course
                   />
                   <Route
                     path={`${match.url}/course-builder/:courseId`}
-                    render={() => <CourseBuilder instId={institute?.id} />} // Create new course
+                    render={() => <CourseBuilder instId={institute?.id} />} // Edit course
                   />
                   <UniversalLessonBuilderProvider>
                     <Route
@@ -623,26 +572,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       render={() => <LessonsBuilderHome instId={institute?.id} />}
                     />
                   </UniversalLessonBuilderProvider>
-                  {/* <Route
-                    path={`${match.url}/lessons`}
-                    render={() => (
-                      <LessonsList
-                        isInInstitution
-                        title={`Lessons`}
-                        instId={institute?.id}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/lessons-builder`}
-                    render={() => (
-                      <LessonBuilder
-                        isInInstitution
-                        title={`Lessons`}
-                        instId={institute?.id}
-                      />
-                    )}
-                  /> */}
                 </Switch>
               </div>
             </div>

@@ -4327,3 +4327,20 @@ export const getStudentSurveyResponse = /* GraphQL */ `
     }
   }
 `;
+
+export const listStaffWithBasicInfo = /* GraphQL */ `
+  query ListStaffs(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+      }
+    }
+  }
+`

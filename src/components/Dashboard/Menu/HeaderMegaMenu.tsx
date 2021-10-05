@@ -15,7 +15,7 @@ const HeaderMegaMenu = () => {
   } = useContext(GlobalContext);
   const {Institute_info} = useDictionary(clientKey);
 
-  const baseUrl = `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`;
+  const baseUrl = user.associateInstitute?.length ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}` : '';
 
   const headerMenusForInstitution = [
     {
@@ -38,8 +38,8 @@ const HeaderMegaMenu = () => {
         {
           title: 'User registry',
           key: 'user_registry',
-          redirectionUrl: `/dashboard/register`,
-          active: location.pathname.indexOf('register') > -1,
+          redirectionUrl: `${baseUrl}/manage-users`,
+          active: location.pathname.indexOf('manage-users') > -1,
         },
         {
           title: 'Register New User',

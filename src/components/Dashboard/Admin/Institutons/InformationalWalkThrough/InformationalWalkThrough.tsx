@@ -446,8 +446,6 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       setInstListLoading(false);
     }
     if (!associateInstitute?.length) {
-      console.log("inside iffffffffffffff", role);
-      
       fetchInstListForAdmin();
     }
   }, [associateInstitute]);

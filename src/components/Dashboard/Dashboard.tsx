@@ -1009,10 +1009,10 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
               />
 
-              <Route
+              {/* <Route
                 path={`${match.url}/manage-users`}
                 render={() => <UserManagement />}
-              />
+              /> */}
 
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
 

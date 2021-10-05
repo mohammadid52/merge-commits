@@ -30,6 +30,7 @@ function classNames(...classes: any[]) {
 }
 
 interface UserInfoProps {
+  instituteId?: string;
   user: UserInfo;
   status: string;
   getUserById: (id: string) => void;
@@ -45,6 +46,7 @@ const UserEdit = (props: UserInfoProps) => {
   const match = useRouteMatch();
 
   const {
+    instituteId,
     user,
     status,
     getUserById,
@@ -114,14 +116,14 @@ const UserEdit = (props: UserInfoProps) => {
       setUpdating(false);
       // setStatus('loading');
 
-      history.push(`/dashboard/manage-users/user${location.search}`);
+      history.push(`/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const extractItemFromArray = (responceArray: any[]) => {
-    const answerArray: any = responceArray.map((item: any) => ({
+  const extractItemFromArray = (responseArray: any[]) => {
+    const answerArray: any = responseArray.map((item: any) => ({
       [item['qid']]:
         item?.response?.length > 1
           ? [...selectedMultiOptions(item.response)]

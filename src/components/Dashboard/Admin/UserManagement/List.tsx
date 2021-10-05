@@ -30,7 +30,7 @@ const List = (props: ListProps) => {
 
     const handleLink = (e: any) => {
         const { id } = e.target
-        history.push(`${match.url}/user?id=${id}`)
+        history.push(`${match.url}/${id}`)
     }
 
     const resetPassowrd = async (user: any) => {
@@ -79,7 +79,7 @@ const List = (props: ListProps) => {
                 </div>
             )
         }
-        return null;
+        return <div className="w-2/10" />;
     }
 
     return (
@@ -123,7 +123,7 @@ const List = (props: ListProps) => {
                 <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]}`}>{BUTTONS[userLanguage]['EDIT']}</div>
             </div>
             {
-                state.user.role !== 'ST' ?
+                state.user.role !== 'ST' && state.user.role !== 'BLD' ?
                     showResetPasswordOption(state.user.role, item.role) : null
             }
 

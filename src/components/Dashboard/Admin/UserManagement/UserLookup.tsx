@@ -25,6 +25,7 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 import useDictionary from '../../../../customHooks/dictionary';
 import UserListLoader from './UserListLoader';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 const UserLookup = ({isInInstitute}: any) => {
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -238,6 +239,8 @@ const UserLookup = ({isInInstitute}: any) => {
 
   const fetchAllUsersList = async () => {
     const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+    const isBuilder = state.user.role === 'BLD';
+    const isAdmin = state.user.role === 'ADM';
     const teacherAuthID = state.user.authId;
 
     let authIds: any[] = [];
@@ -269,6 +272,19 @@ const UserLookup = ({isInInstitute}: any) => {
         } finally {
         }
       }
+      if (isTeacher || isBuilder || isAdmin) {
+        const staff: any = await API.graphql(
+          graphqlOperation(customQueries.listStaffWithBasicInfo, {
+            filter: {
+              ...createFilterToFetchSpecificItemsOnly(
+                state.user.associateInstitute.map((item: any) => item.institution.id),
+                'institutionID'
+              ),
+            },
+          })
+        );
+        authIds = staff.data?.listStaffs.items.map((staff: any) => staff.staffAuthID);
+      }
 
       const authIdFilter: any = authIds.map((item: any) => {
         return {
@@ -278,10 +294,10 @@ const UserLookup = ({isInInstitute}: any) => {
         };
       });
 
-      if ((isTeacher && authIdFilter.length > 0) || !isTeacher) {
+      if ((authIdFilter.length && (isTeacher || isBuilder || isAdmin)) || !isTeacher) {
         let users: any;
         let response: any;
-        if (isTeacher) {
+        if (isTeacher || isBuilder) {
           users = await API.graphql(
             graphqlOperation(queries.listPersons, {
               filter: {
@@ -360,19 +376,19 @@ const UserLookup = ({isInInstitute}: any) => {
   // }
 
   return (
-    <div className={`w-full h-full ${isInInstitute ? 'px-12 py-4' : ''}`}>
+    <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
       <div className="flex justify-between items-center">
         {isInInstitute ? (
-          <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">Users</h3>
+          <h3 className="text-lg leading-6 text-gray-600 w-auto">Users</h3>
         ) : (
           <SectionTitle
             title={UserLookupDict[userLanguage]['title']}
             subtitle={UserLookupDict[userLanguage]['subtitle']}
           />
         )}
-        <div className="flex justify-end py-4 mb-4">
+        <div className="flex justify-end mb-4">
           <SearchInput
             value={searchInput.value}
             onChange={setSearch}
@@ -412,7 +428,10 @@ const UserLookup = ({isInInstitute}: any) => {
       {/* List / Table */}
       <div className="flex flex-col">
         <div className="-my-2 py-2">
-          <div className={`${isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'} mb-8 align-middle rounded-lg"`}>
+          <div
+            className={`${
+              isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
+            } mb-8 align-middle rounded-lg"`}>
             <div className={`h-8/10 ${isInInstitute ? '' : 'px-4'}`}>
               <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -427,7 +446,7 @@ const UserLookup = ({isInInstitute}: any) => {
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   {UserLookupDict[userLanguage]['action']}
                 </div>
-                {state.user.role !== 'ST' ? (
+                {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {UserLookupDict[userLanguage]['action']}
                   </div>
