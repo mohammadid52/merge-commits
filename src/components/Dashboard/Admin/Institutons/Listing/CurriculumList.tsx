@@ -1,5 +1,7 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useEffect} from 'react';
 import {useHistory} from 'react-router';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as queries from '@graphql/queries';
 
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -8,6 +10,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
@@ -15,12 +18,64 @@ interface CurriculumListProps {
   instName: string;
 }
 
-const CurriculumList = (props: CurriculumListProps) => {
-  const {curricular, instId, instName} = props;
-  const history = useHistory();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => {
+  // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const clientKey = gContext.clientKey;
+  const theme = gContext.theme;
+  const userLanguage = gContext.userLanguage;
+
   const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const history = useHistory();
+
+  // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
+  // const getUnusedCurriculums = async (curriculumArr: any[]) => {
+  //   const allCurriculums = curriculumArr.reduce((acc: string[], curriculum: any) => {
+  //     return [...acc, curriculum.id];
+  //   }, []);
+  //   if (allCurriculums.length > 0) {
+  //     try {
+  //       const allCurriculumsFilter = createFilterToFetchSpecificItemsOnly(
+  //         allCurriculums,
+  //         'curriculumID'
+  //       );
+
+  //       const allRoomCurriculums: any = await API.graphql(
+  //         graphqlOperation(queries.listRoomCurriculums, {
+  //           filter: {...allCurriculumsFilter},
+  //         })
+  //       );
+
+  //       const responseItems = allRoomCurriculums?.data?.listRoomCurriculums?.items;
+
+  //       const unusedCurriculums = allCurriculums.reduce(
+  //         (unusedAcc: string[], curriculumID: string) => {
+  //           if (
+  //             unusedAcc.indexOf(curriculumID) === -1 &&
+  //             allCurriculums.indexOf(curriculumID) > -1
+  //           ) {
+  //             return unusedAcc;
+  //           } else {
+  //             return [...unusedAcc, curriculumID];
+  //           }
+  //         },
+  //         []
+  //       );
+
+  //       console.log('unused curriculums - ', unusedCurriculums);
+  //     } catch (e) {
+  //       console.error('getUnusedCurriculums() - ', e);
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (curricular) {
+  //     getUnusedCurriculums(curricular.items);
+  //   }
+  // }, [curricular]);
 
   const createNewCurricular = () => {
     history.push(
@@ -32,6 +87,9 @@ const CurriculumList = (props: CurriculumListProps) => {
     history.push(`/dashboard/manage-institutions/${instId}/curricular?id=${id}`);
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
   return (
     <div className="pt-8 flex m-auto justify-center">
       <div className="">
