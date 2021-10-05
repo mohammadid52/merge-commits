@@ -760,6 +760,7 @@ const LessonApp = () => {
   });
 
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
+
   useEffect(() => {
     if (!isOnDemand && personLocationObj.id === '') {
       initializeLocation();
@@ -767,6 +768,7 @@ const LessonApp = () => {
   }, [lessonState.lessonData.id]);
 
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
+
   useEffect(() => {
     if (!isOnDemand && created && lessonState.currentPage >= 0) {
       const pageChangeLocation = {
@@ -786,10 +788,15 @@ const LessonApp = () => {
     if (!getted) {
       const getLocation = await getPersonLocation();
 
-      if (getLocation === undefined) {
+      if (getLocation === undefined || getLocation === null) {
         await createPersonLocation();
       } else {
-        await updatePersonLocation(getLocation);
+        if (getLocation.lessonID === lessonID) {
+          await updatePersonLocation(getLocation);
+        } else {
+          await leaveRoomLocation(user.authId, user.email);
+          await createPersonLocation();
+        }
       }
     }
   };
@@ -800,7 +807,8 @@ const LessonApp = () => {
     try {
       const getUserLocation: any = await API.graphql(
         graphqlOperation(queries.getPersonLocation, {
-          input: {personAuthID: user?.authId, personEmail: user?.email},
+          personEmail: user.email,
+          personAuthID: user.authId,
         })
       );
       const response = getUserLocation.data.getPersonLocation;
