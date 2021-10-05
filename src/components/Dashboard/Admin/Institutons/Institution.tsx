@@ -93,11 +93,11 @@ const Institution = (props: InstitutionProps) => {
 
   const breadCrumbsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
+    // {
+    //   title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+    //   url: '/dashboard/manage-institutions',
+    //   last: false,
+    // },
     {
       title: institutionData.name,
       url:
@@ -178,7 +178,7 @@ const Institution = (props: InstitutionProps) => {
     <div className={`w-full h-full`}>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={`${institutionData.name} Dashboard`} />
-        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-1000`}>
+        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
           <BreadcrumbsWithBanner items={breadCrumbsList} />
         </div>
       </div>

@@ -35,7 +35,7 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {getAsset} from '../../assets';
 import {AiOutlineUser} from 'react-icons/ai';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
+// import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
 import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getImageFromS3Static} from '@utilities/services';
@@ -876,7 +876,7 @@ const Dashboard = (props: DashboardProps) => {
     <>
       <div className="w-full bg-white">
         <div className="flex justify-between items-center">
-          <div className="w-auto ml-5">
+          <div className="w-auto mx-5">
             <img
               onClick={handleLink}
               className="h-12 w-auto cursor-pointer"
@@ -906,7 +906,7 @@ const Dashboard = (props: DashboardProps) => {
         <div className="h-full overflow-y-auto">
           {/*<FloatingSideMenu />*/}
           <Noticebar notifications={notifications} />
-          <div className="absolute z-100 w-6 right-1 top-0.5">
+          {/* <div className="absolute z-100 w-6 right-1 top-0.5">
             <span
               className="w-auto cursor-pointer"
               onClick={() => setOpenWalkThroughModal(true)}>
@@ -914,7 +914,7 @@ const Dashboard = (props: DashboardProps) => {
                 className={`h-5 w-5 ${theme.textColor[themeColor]}`}
               />
             </span>
-          </div>
+          </div> */}
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -1068,10 +1068,10 @@ const Dashboard = (props: DashboardProps) => {
               </UniversalLessonBuilderProvider> */}
             </Switch>
           </Suspense>
-          <InformationalWalkThrough
+          {/* <InformationalWalkThrough
             open={openWalkThroughModal}
             onCancel={() => setOpenWalkThroughModal(false)}
-          />
+          /> */}
         </div>
         {/* </ResizablePanels> */}
       </div>

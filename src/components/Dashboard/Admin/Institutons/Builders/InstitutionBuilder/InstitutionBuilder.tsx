@@ -228,7 +228,7 @@ const InstitutionBuilder = ({
             imgUrl={bannerImage}
             title={InstitutionBuilderDict[userLanguage]['TITLE']}
           />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-1000`}>
+          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
             <BreadcrumbsWithBanner items={breadCrumbsList} />
           </div>
         </div>

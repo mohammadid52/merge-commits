@@ -265,7 +265,7 @@ const InstitutionLookup: React.FC = () => {
         {/* Header section */}
         <div className="relative">
           <HeroBanner imgUrl={bannerImage} title={`Institutions`} />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-1000`}>
+          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
             <BreadcrumbsWithBanner items={breadCrumbsList} />
           </div>
         </div>

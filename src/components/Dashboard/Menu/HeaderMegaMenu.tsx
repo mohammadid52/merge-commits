@@ -120,6 +120,7 @@ const HeaderMegaMenu = () => {
       title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
       redirectionUrl: `${baseUrl}/research-and-analytics`,
+      active: location.pathname.indexOf('research-and-analytics') > -1,
     },
   ];
 

@@ -348,8 +348,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex justify-center md:justify-start">
-          <div className="w-auto">
+        <div className="flex-col md:flex-row flex justify-center md:justify-start">
+          <div className="w-auto border-r-0 border-gray-200">
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
               {imageLoading ? (
                 <div
@@ -438,7 +438,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             </div>
             {institute.id && (
-              <div className="mt-5 px-4 mr-2 2xl:mr-4">
+              <div className="my-5 px-4 mr-2 2xl:mr-4">
                 <div className="flex mt-2">
                   <span className="w-auto mr-2 mt-0.5">
                     <BsEnvelope className="w-4 h-4 text-gray-600" />
@@ -503,17 +503,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
           <div className="">
             <div className="bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 2xl:px-6">
-                {/* <Tabs
-                  tabsData={headerMenusForInstitution}
-                  activeTab={tabProps.tabsData.inst}
-                  updateTab={updateTab}
-                  tabWithNumbers
-                /> */}
-                {/* <h3 className="text-lg flex items-center leading-6 font-medium text-gray-900">
-                  {Institute_info[userLanguage]['TITLE']}
-                  </h3> */}
-              </div>
               <div className="overflow-hidden min-h-80">
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
