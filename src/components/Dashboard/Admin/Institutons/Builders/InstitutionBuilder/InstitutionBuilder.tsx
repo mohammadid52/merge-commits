@@ -215,7 +215,7 @@ const InstitutionBuilder = ({
   const isEditPage = location.pathname.indexOf('edit') > -1;
 
   return (
-    <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} py-4 px-0`}>
+    <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} px-0`}>
       {/* Section Header */}
       {/* {!isEditPage && <BreadCrums items={breadCrumbsList} />} */}
       {isEditPage ? (

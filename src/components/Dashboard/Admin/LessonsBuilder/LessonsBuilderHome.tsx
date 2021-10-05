@@ -88,7 +88,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
 
   return (
     <>
-      <div className={`w-full h-full py-8 flex justify-center`}>
+      <div className={`w-full h-full flex justify-center`}>
         {/*<UniversalLessonBuilderProvider>*/}
         <Switch>
           <Route

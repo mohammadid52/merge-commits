@@ -776,10 +776,10 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   return (
-    <div className="w-full h-full p-8">
+    <div className="w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+          <h3 className="text-lg leading-6 text-gray-600 w-auto">
             {CsvDict[userLanguage]['TITLE']}
           </h3>
           {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
@@ -854,7 +854,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         </button>
       </div>
       <div>
-        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Survey results'} />
+        <SectionTitleV3 title={'Survey results'} />
         {CSVData.length > 0 ? (
           <Table />
         ) : (

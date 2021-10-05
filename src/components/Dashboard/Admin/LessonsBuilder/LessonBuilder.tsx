@@ -799,7 +799,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           </div>
         ) : null}
       </div> */}
-      <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto px-8 pb-8">
+      <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
         {LessonBuilderDict[userLanguage]['TITLE']}
       </h3>
       {/* Body */}

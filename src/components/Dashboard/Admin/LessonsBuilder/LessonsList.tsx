@@ -310,7 +310,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             isInInstitution ? 'items-center px-8' : ''
           }`}>
           {isInInstitution ? (
-            <h3 className="text-sm leading-6 font-bold uppercase text-gray-900 w-auto">
+            <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
               {LessonsListDict[userLanguage]['HEADING']}
             </h3>
           ) : (
