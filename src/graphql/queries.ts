@@ -5602,6 +5602,26 @@ export const getCurriculumUnits = /* GraphQL */ `
     getCurriculumUnits(id: $id) {
       id
       unitId
+      unit {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        createdAt
+        updatedAt
+      }
       curriculumId
       createdAt
       updatedAt
@@ -5622,6 +5642,23 @@ export const listCurriculumUnitss = /* GraphQL */ `
       items {
         id
         unitId
+        unit {
+          id
+          name
+          type
+          institutionID
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
         curriculumId
         createdAt
         updatedAt

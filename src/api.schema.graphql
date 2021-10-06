@@ -1112,6 +1112,7 @@ type UniversalSyllabus
 type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
     id: ID!
     unitId: ID!
+    unit: UniversalSyllabus @connection(fields: ["unitId"]) 
     curriculumId: ID!
 }
 
@@ -1214,13 +1215,21 @@ type CommunityChat @model
 }
 
 type Subscription {
-  onChangePersonLocation(
+  onCreateUpdatePersonLocationItem(
     syllabusLessonID: ID!
     lessonID: ID!
     roomID: ID!
   ): PersonLocation
     @aws_subscribe(
       mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
+    )
+  onDeletePersonLocationItem(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    roomID: ID!
+  ): PersonLocation
+    @aws_subscribe(
+      mutations: ["deletePersonLocation"]
     )
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
