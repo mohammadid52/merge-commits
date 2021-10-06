@@ -1112,6 +1112,7 @@ type UniversalSyllabus
 type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
     id: ID!
     unitId: ID!
+    unit: UniversalSyllabus @connection(fields: ["unitId"]) 
     curriculumId: ID!
 }
 

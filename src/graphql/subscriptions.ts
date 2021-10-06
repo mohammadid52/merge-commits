@@ -12226,6 +12226,26 @@ export const onCreateCurriculumUnits = /* GraphQL */ `
     onCreateCurriculumUnits {
       id
       unitId
+      unit {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        createdAt
+        updatedAt
+      }
       curriculumId
       createdAt
       updatedAt
@@ -12237,6 +12257,26 @@ export const onUpdateCurriculumUnits = /* GraphQL */ `
     onUpdateCurriculumUnits {
       id
       unitId
+      unit {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        createdAt
+        updatedAt
+      }
       curriculumId
       createdAt
       updatedAt
@@ -12248,6 +12288,26 @@ export const onDeleteCurriculumUnits = /* GraphQL */ `
     onDeleteCurriculumUnits {
       id
       unitId
+      unit {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        createdAt
+        updatedAt
+      }
       curriculumId
       createdAt
       updatedAt
