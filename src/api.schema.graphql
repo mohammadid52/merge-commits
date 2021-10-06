@@ -253,11 +253,11 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
-  universalSyllabus: [UniversalSyllabus]
-    @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
   universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
+  universalSyllabus: [curriculumUnits] @connection(keyName: "unitsbyCurriculum", fields: ["id"])
 }
+
 type Topic
   @model
   @key(fields: ["id"])
@@ -1091,8 +1091,7 @@ type InputComment {
 
 type UniversalSyllabus
   @model
-  @key(fields: ["id"])
-  @key(name: "uniSyllabusByCurriculum", fields: ["curriculumID"]) {
+  @key(fields: ["id"]) {
   id: ID!
   name: String!
   type: String
@@ -1102,13 +1101,18 @@ type UniversalSyllabus
   policies: String
   pupose: String
   objectives: String
-  curriculumID: ID!
   languages: [Language]
   lessons: [UniversalSyllabusLesson]
     @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
+}
+
+type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
+    id: ID!
+    unitId: ID!
+    curriculumId: ID!
 }
 
 # Need to add universalStudentData field
