@@ -26,7 +26,12 @@ import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast
 import * as mutations from '../../../../graphql/mutations';
 import * as queries from '../../../../graphql/queries';
 import {getImageFromS3} from '../../../../utilities/services';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getUniqItems,
+  initials,
+  stringToHslColor,
+} from '../../../../utilities/strings';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
@@ -175,6 +180,12 @@ const User = () => {
     },
   ];
 
+  // ##################################################################### //
+  // ######################### PROFILE QUESTIONS ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
+
   const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
@@ -198,12 +209,26 @@ const User = () => {
     );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
+  };
 
-    // questionData.forEach(async (item: any) => {
-    // await API.graphql(
-    //   graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
-    // );
-    // });
+  // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
+
+  const getCheckpointSequences = async (checkpointIDS: string[]) => {
+    if (checkpointIDS && checkpointIDS.length > 0) {
+      try {
+        let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+        let compoundQuery = createFilterToFetchSpecificItemsOnly(modifiedIds, 'id');
+        let getAllCheckpointSequences: any = await API.graphql(
+          graphqlOperation(queries.listCSequencess, {filter: {compoundQuery}})
+        );
+        return getAllCheckpointSequences;
+      } catch (e) {
+        console.error('getCheckpointSequences - ', e);
+        return [];
+      }
+    } else {
+      return [[]];
+    }
   };
 
   async function getUserById(id: string) {
@@ -245,6 +270,10 @@ const User = () => {
 
       sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
+      /***********************
+       *   DEMOGRAPHIC AND   *
+       * PRIVATE CHECKPOINTS *
+       ***********************/
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const demographicCheckpoints = uniqCheckpoints
         .filter((checkpoint: any) => checkpoint.scope !== 'private')
