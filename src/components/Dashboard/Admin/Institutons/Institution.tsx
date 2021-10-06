@@ -88,8 +88,71 @@ const Institution = (props: InstitutionProps) => {
   const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles} = useDictionary(clientKey);
+  const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
+
+  let heroSectionTitle, breadcrumbPathForSection;
+  const {pathname} = location;
+  if (pathname.indexOf('edit') > -1) {
+    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
+    breadcrumbPathForSection = {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
+      last: true,
+    }
+  } else if (pathname.indexOf('staff') > -1) {
+    heroSectionTitle = BreadcrumsTitles[userLanguage].STAFF;
+    breadcrumbPathForSection = {
+      title: BreadcrumsTitles[userLanguage].STAFF,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+      last: true,
+    }
+  } else if (
+    pathname.indexOf('manage-users') > -1 ||
+    pathname.indexOf('register-user') > -1
+  ) {
+    heroSectionTitle = BreadcrumsTitles[userLanguage].USERS;
+    breadcrumbPathForSection = {
+      title: BreadcrumsTitles[userLanguage].USERS,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+      last: true,
+    };
+  } else if (pathname.indexOf('course') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['COURSES'];
+    breadcrumbPathForSection = {
+      title: Institute_info[userLanguage]['TABS']['COURSES'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
+      last: true,
+    }
+  } else if (pathname.indexOf('lessons') > -1) {
+    heroSectionTitle =  Institute_info[userLanguage]['TABS']['LESSONS'];
+    breadcrumbPathForSection = {
+      title: Institute_info[userLanguage]['TABS']['LESSONS'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/lessons`,
+      last: true,
+    }
+  } else if (pathname.indexOf('class') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSES'];
+    breadcrumbPathForSection = {
+      title: Institute_info[userLanguage]['TABS']['CLASSES'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
+      last: true,
+    }
+  } else if (pathname.indexOf('room') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
+    breadcrumbPathForSection = {
+      title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`,
+      last: true,
+    }
+  } else if (pathname.indexOf('research-and-analytics') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'];
+    breadcrumbPathForSection = {
+      title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
+      url: `/dashboard/manage-institutions/institution/${institutionId}/research-and-analytics`,
+      last: true,
+    }
+  }
 
   const breadCrumbsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -104,15 +167,9 @@ const Institution = (props: InstitutionProps) => {
         currentPath !== 'edit'
           ? `${location.pathname}${location.search}`
           : `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: currentPath !== 'edit',
+      last: false,
     },
-    currentPath === 'edit'
-      ? {
-          title: BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'],
-          url: `${location.pathname}${location.search}`,
-          last: true,
-        }
-      : null,
+    breadcrumbPathForSection
   ].filter(Boolean);
 
   const toggleUpdateState = () => {
@@ -177,7 +234,10 @@ const Institution = (props: InstitutionProps) => {
   return (
     <div className={`w-full h-full`}>
       <div className="relative">
-        <HeroBanner imgUrl={bannerImage} title={`${institutionData.name} Dashboard`} />
+        <HeroBanner
+          imgUrl={bannerImage}
+          title={`${institutionData.name}'s ${heroSectionTitle}`}
+        />
         <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
           <BreadcrumbsWithBanner items={breadCrumbsList} />
         </div>

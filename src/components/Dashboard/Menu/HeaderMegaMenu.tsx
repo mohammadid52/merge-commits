@@ -55,7 +55,7 @@ const HeaderMegaMenu = () => {
       type: 'dropdown',
       children: [
         {
-          title: 'Courses',
+          title: Institute_info[userLanguage]['TABS']['COURSES'],
           key: 'course',
           redirectionUrl: `${baseUrl}/courses`,
           active: location.pathname.indexOf('course') > -1,
