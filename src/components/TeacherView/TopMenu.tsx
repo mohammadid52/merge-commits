@@ -10,31 +10,20 @@ interface TopMenuControlProps {
   isSameStudentShared: boolean;
   handleOpen?: () => void;
   handleComplete?: () => void;
-  handleLessonButton?: () => void;
   handleQuitViewing: () => void;
   handleQuitShare: () => void;
-  handleClick: () => void;
+  handleLeavePopup: () => void;
   handleHomePopup: () => void;
   handlePageChange: any;
   setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export type LessonInfoTitleBarProps = Pick<
-  TopMenuControlProps,
-  'handleOpen' | 'handleComplete' | 'handleLessonButton'
->;
-
-const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProps) => {
-  const {
-    handleOpen,
-    handleComplete,
-    handleLessonButton,
-    handleClick,
-    handleHomePopup,
-    handlePageChange,
-    setQuickRegister,
-  } = props;
-
+const TopMenuControl: React.FC<TopMenuControlProps> = ({
+  handleLeavePopup,
+  handleHomePopup,
+  handlePageChange,
+  setQuickRegister,
+}: TopMenuControlProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
@@ -80,11 +69,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         <div
           className={`relative h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b-0 border-gray-400 flex flex-row items-center`}>
           {/* LEFT */}
-          <LessonInfoTitleBar
-            handleOpen={handleOpen}
-            handleComplete={handleComplete}
-            handleLessonButton={handleLessonButton}
-          />
+          <LessonInfoTitleBar />
 
           {/* RIGHT */}
           <div className="relative w-full lg:w-7/10 h-full flex flex-row justify-between items-center pl-2">
@@ -93,7 +78,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
             </div>
 
             <HamburgerMenu
-              handleClick={handleClick}
+              handleLeavePopup={handleLeavePopup}
               setQuickRegister={setQuickRegister}
               handleHomePopup={handleHomePopup}
             />
@@ -103,13 +88,9 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
       {/* for mobile */}
       <div className="block lg:hidden">
         <div className="relative w-full h-full flex flex-row justify-center items-center bg-darker-gray bg-opacity-40">
-          <LessonInfoTitleBar
-            handleOpen={handleOpen}
-            handleComplete={handleComplete}
-            handleLessonButton={handleLessonButton}
-          />
+          <LessonInfoTitleBar />
           <HamburgerMenu
-            handleClick={handleClick}
+            handleLeavePopup={handleLeavePopup}
             setQuickRegister={setQuickRegister}
             handleHomePopup={handleHomePopup}
           />

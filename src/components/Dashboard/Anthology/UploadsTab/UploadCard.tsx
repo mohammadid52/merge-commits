@@ -229,6 +229,7 @@ const UploadCard = ({
                     fileName={file.fileName}
                     fileKey={file.fileKey}
                     fileSize={file.fileSize}
+                    uploadKey={UPLOAD_KEY}
                     deleteFileKey={deleteFileKey}
                     handleToggleDelete={handleToggleDelete}
                     handleConfirmDelete={handleConfirmDelete}

@@ -10,7 +10,6 @@ import {getLocalStorageData} from '../../utilities/localStorage';
 import useStudentTimer from '../../customHooks/timer';
 
 const LessonHeaderBar = ({
-  lessonDataLoaded,
   isAtEnd,
   setisAtEnd,
   handleRequiredNotification,
@@ -21,7 +20,6 @@ const LessonHeaderBar = ({
   const theme = gContext.theme;
 
   const history = useHistory();
-  const initializeTimer = useStudentTimer();
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //

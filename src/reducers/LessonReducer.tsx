@@ -154,7 +154,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         subscription: action.payload.subscription,
       };
     case 'SET_ROOM_SUBSCRIPTION_DATA':
-      console.log('SET_ROOM_SUBSCRIPTION_DATA - ', action.payload);
+      // console.log('SET_ROOM_SUBSCRIPTION_DATA - ', state.currentPage);
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
@@ -172,6 +172,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           ...state.lessonData,
           lessonPlan: mappedClosedPages,
         },
+        currentPage: state.currentPage,
         displayData: action.payload.displayData
           ? action.payload.displayData
           : state.displayData,

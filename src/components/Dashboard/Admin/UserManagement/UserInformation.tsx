@@ -25,8 +25,14 @@ interface UserInfoProps {
   setTab: Function;
 }
 
-const UserInformation = (props: UserInfoProps) => {
-  const {user, status, stdCheckpoints, questionData, tab, setTab} = props;
+const UserInformation = ({
+  user,
+  status,
+  stdCheckpoints,
+  questionData,
+  tab,
+  setTab,
+}: UserInfoProps) => {
   const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
   const {UserInformationDict} = useDictionary(clientKey);
 
