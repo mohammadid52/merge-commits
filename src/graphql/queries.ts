@@ -1775,6 +1775,27 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          institutionID
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -1782,16 +1803,6 @@ export const getCurriculum = /* GraphQL */ `
           type
           typeID
           checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      universalSyllabus {
-        items {
-          id
-          unitId
-          curriculumId
           createdAt
           updatedAt
         }
@@ -1850,11 +1861,11 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -1903,11 +1914,11 @@ export const getTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -2190,11 +2201,11 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -4841,11 +4852,11 @@ export const getAttendance = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -4855,11 +4866,13 @@ export const getAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
         pupose
         objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -5084,11 +5097,13 @@ export const listAttendances = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
           pupose
           objectives
+          curriculumID
           languages
           universalLessonsSeq
           designers
@@ -5523,11 +5538,13 @@ export const getUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
       pupose
       objectives
+      curriculumID
       languages
       lessons {
         items {
@@ -5574,11 +5591,13 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
         pupose
         objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -5586,39 +5605,6 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCurriculumUnits = /* GraphQL */ `
-  query GetCurriculumUnits($id: ID!) {
-    getCurriculumUnits(id: $id) {
-      id
-      unitId
-      curriculumId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCurriculumUnitss = /* GraphQL */ `
-  query ListCurriculumUnitss(
-    $filter: ModelcurriculumUnitsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCurriculumUnitss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        unitId
-        curriculumId
         createdAt
         updatedAt
       }
@@ -6786,11 +6772,13 @@ export const attendanceByStudent = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
           pupose
           objectives
+          curriculumID
           languages
           universalLessonsSeq
           designers
