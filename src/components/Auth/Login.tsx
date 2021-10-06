@@ -101,6 +101,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             associateInstitute:
               instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
               [],
+            onDemand: userInfo?.onDemand,
           },
         });
         const input = {

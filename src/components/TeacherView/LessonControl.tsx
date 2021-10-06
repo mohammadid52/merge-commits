@@ -1,7 +1,9 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import useLessonControls from '@customHooks/lessonControls';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {WASI} from 'wasi';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import useDeviceDetect from '../../customHooks/deviceDetect';
@@ -55,31 +57,10 @@ const LessonControl = () => {
     });
   };
 
-  const {visible, setVisible} = useOutsideAlerter(false);
-  const [quickRegister, setQuickRegister] = useState(false);
-  const [homePopup, setHomePopup] = useState(false);
-  const [lessonButton, setLessonButton] = useState(false);
-
-  const handleClick = () => {
-    setVisible((prevState: any) => !prevState);
-  };
-  const handleHomePopup = () => {
-    setHomePopup((prevState: any) => !prevState);
-  };
-  const handleLessonButton = () => {
-    setLessonButton((prevState: any) => !prevState);
-  };
-  const handleGoToUserManagement = () => {
-    history.push('/dashboard/manage-users');
-  };
-  const handleHome = async () => {
-    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
-    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
-  };
-
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
+
   let subscription: any;
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
@@ -253,17 +234,6 @@ const LessonControl = () => {
     setIsSameStudentShared(false);
   };
 
-  /**
-   * VIEWING A STUDENT
-   *  1. compare new studentViewing ID
-   *  2. if it's not the same as before, and not ''
-   *  3. unsubscribe
-   *  4. mutate the room table
-   *
-   *  --then--
-   *  5. subscribe
-   */
-
   const handleRoomUpdate = async (payload: any) => {
     if (typeof payload === 'object' && Object.keys(payload).length > 0) {
       try {
@@ -353,6 +323,8 @@ const LessonControl = () => {
   // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
 
+  const {resetViewAndShare} = useLessonControls();
+
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
     if (lessonState.displayData[0].studentAuthID === '') {
@@ -361,12 +333,28 @@ const LessonControl = () => {
           (student: any) => student.personAuthID === lessonState.studentViewing
         )?.currentLocation;
 
-        if (viewedStudentLocation !== '') {
+        if (viewedStudentLocation !== undefined) {
           lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
           history.push(`${match.url}/${viewedStudentLocation}`);
         } else {
-          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-          history.push(`${match.url}/0`);
+          lessonDispatch({
+            type: 'SET_CURRENT_PAGE',
+            payload: lessonState?.currentPage ? lessonState.currentPage : 0,
+          });
+          history.push(
+            `${match.url}/${lessonState?.currentPage ? lessonState.currentPage : 0}`
+          );
+
+          /**********************************
+           *   RESET VIEW AND SHARING IF    *
+           *   THE CURRENT VIEWED STUDENT   *
+           * EXITS THE LESSON WHILE TEACHER *
+           *          WAS VIEWING           *
+           **********************************/
+          const reset = resetViewAndShare();
+          Promise.resolve(reset).then((_: void) => {
+            setUserHasLeftPopup(true);
+          });
         }
       }
     }
@@ -378,11 +366,37 @@ const LessonControl = () => {
   // ##################################################################### //
   // ################### CLASSROOM AND PLANNER CONTROL ################### //
   // ##################################################################### //
-  const handleOpen = async () => {};
 
-  const handleComplete = async () => {
-    handleHome();
+  const [quickRegister, setQuickRegister] = useState(false);
+  const [leavePopup, setLeavePopup] = useState(false);
+  const [homePopup, setHomePopup] = useState(false);
+  const [userHasLeftPopup, setUserHasLeftPopup] = useState(false);
+
+  // ~~~~~~~~ TOGGLE POPUP & ACTIONS ~~~~~~~ //
+
+  const handleLeavePopup = () => {
+    setLeavePopup((prevState: any) => !prevState);
   };
+  const handleHomePopup = () => {
+    setHomePopup((prevState: any) => !prevState);
+  };
+  const handleUserHasLeftPopup = () => {
+    setUserHasLeftPopup(!userHasLeftPopup);
+  };
+
+  // ~~~~~~~~~~~ POPUP NAVIGATION ~~~~~~~~~~ //
+
+  const handleGoToUserManagement = () => {
+    history.push('/dashboard/manage-users');
+  };
+  const handleHome = async () => {
+    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
+  };
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
@@ -395,18 +409,18 @@ const LessonControl = () => {
 
         {/* USER MANAGEMENT */}
         <div
-          className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleClick}>
+          className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
+          onClick={handleLeavePopup}>
           <PositiveAlert
             identifier={''}
-            alert={visible}
-            setAlert={setVisible}
+            alert={leavePopup}
+            setAlert={setLeavePopup}
             header="Are you sure you want to leave the Teacher View?"
             button1="Go to student management"
             button2="Cancel"
             svg="question"
             handleButton1={handleGoToUserManagement}
-            handleButton2={() => handleClick}
+            handleButton2={() => handleLeavePopup}
             theme="light"
             fill="screen"
           />
@@ -429,21 +443,16 @@ const LessonControl = () => {
             fill="screen"
           />
         </div>
-        <div
-          className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLessonButton}>
+        {/* USER HAS LEFT NOTIFICATION */}
+        <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
           <PositiveAlert
             identifier={''}
-            alert={lessonButton}
-            setAlert={setLessonButton}
-            header="Are you sure you want to complete this lesson?"
-            button1="Complete lesson"
-            button2="Cancel"
+            alert={userHasLeftPopup}
+            setAlert={setUserHasLeftPopup}
+            header="The student you were viewing has left the room."
+            button1="Close"
             svg="question"
-            handleButton1={() => {
-              handleComplete();
-            }}
-            handleButton2={() => handleLessonButton}
+            handleButton1={handleUserHasLeftPopup}
             theme="light"
             fill="screen"
           />
@@ -453,12 +462,9 @@ const LessonControl = () => {
 
         <TopMenu
           isSameStudentShared={isSameStudentShared}
-          handleOpen={handleOpen}
-          handleComplete={handleComplete}
-          handleLessonButton={handleLessonButton}
           handleQuitViewing={handleQuitViewing}
           handleQuitShare={handleQuitShare}
-          handleClick={handleClick}
+          handleLeavePopup={handleLeavePopup}
           handleHomePopup={handleHomePopup}
           handlePageChange={handlePageChange}
           setQuickRegister={setQuickRegister}
@@ -494,7 +500,7 @@ const LessonControl = () => {
               </div>
 
               <HamburgerMenu
-                handleClick={handleClick}
+                handleLeavePopup={handleLeavePopup}
                 setQuickRegister={setQuickRegister}
                 handleHomePopup={handleHomePopup}
               />
@@ -516,8 +522,7 @@ const LessonControl = () => {
             />
 
             <div
-              className={`
-                          ${fullscreen ? 'h-full' : 'h-full'}
+              className={`${fullscreen ? 'h-full' : 'h-full'}
                           ${theme.bg} 
                           relative w-full  
                           border-t-2 border-black
@@ -534,13 +539,6 @@ const LessonControl = () => {
                       <ComponentLoading />
                     </div>
                   }>
-                  {/**
-                   *
-                   *
-                   * THIS LOADS THE LESSON COMPONENT
-                   *
-                   *
-                   */}
                   <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
                     <CoreUniversalLesson />
                   </ErrorBoundary>

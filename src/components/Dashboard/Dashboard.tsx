@@ -128,6 +128,7 @@ const Dashboard = (props: DashboardProps) => {
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
         image: user.image,
+        onDemand: user?.onDemand,
       },
     });
 
@@ -200,8 +201,6 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
 
-  // const [classIds, setClassIds] = useState<string[]>([]);
-  // const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string>('');
 
   /******************************************
@@ -223,8 +222,6 @@ const Dashboard = (props: DashboardProps) => {
 
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
-
-      // console.log('all student classes - ', arrayOfResponseObjects);
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null

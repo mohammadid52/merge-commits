@@ -171,6 +171,7 @@ const Profile = (props: ProfilePageProps) => {
         onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
         role: state.user.role,
         image: `profile_image_${person.id}`,
+        onDemand: state.user?.onDemand,
       },
     });
     setImageLoading(false);
