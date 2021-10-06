@@ -26,6 +26,7 @@ import TabView from './TabView';
 import {useHistory} from 'react-router-dom';
 import {userInfo} from 'os';
 import update from 'lodash/update';
+import ChangePasscode from '../Profile/ChangePasscode';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -542,6 +543,8 @@ const Anthology = ({
   const [showPasscodeEntry, setShowPasscodeEntry] = useState<boolean>(false);
   const [passcodeInput, setPasscodeInput] = useState<string>('');
   const [accessMessage, setAccessMessage] = useState<any>({message: '', textClass: ''});
+  const [forgotPrompt, setForgotPrompt] = useState<boolean>(false);
+  const previousForgot = usePrevious(forgotPrompt);
 
   const handlePrivateSectionAccess = async () => {
     try {
@@ -586,8 +589,14 @@ const Anthology = ({
 
   // ~~~~~~~~~~~ FORGOT CODE LINK ~~~~~~~~~~ //
 
-  const goToForgot = () => {
-    history.push('/dashboard/profile/passcode');
+  const handleForgotPasscode = (success?: boolean) => {
+    // history.push('/dashboard/profile/passcode');
+    if (forgotPrompt === false) {
+      setForgotPrompt(true);
+      setAccessMessage({message: '', textClass: ''});
+    } else {
+      setForgotPrompt(false);
+    }
   };
 
   // ~~~~~~~~~ STANDARD ROOM SELECT ~~~~~~~~ //
@@ -639,40 +648,55 @@ const Anthology = ({
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
-              title={`This Notebook is Passcode Protected`}
+              title={`${
+                !forgotPrompt
+                  ? 'This Notebook is Passcode Protected'
+                  : 'Change Your Passcode!'
+              }`}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
               scrollHidden={true}
               closeAction={() => setShowPasscodeEntry(false)}>
-              <FormInput
-                value={passcodeInput}
-                type={'password'}
-                onChange={(e) => {
-                  setPasscodeInput(e.target.value);
-                }}
-                id="passcode"
-                name="passcode"
-                label={'Enter Your Passcode:'}
-                placeHolder={''}
-                className={`w-full my-2`}
-                isRequired
-              />
-              {accessMessage.message !== '' && (
-                <p className={`${accessMessage.textClass} text-center text-xs`}>
-                  {accessMessage.message}
-                </p>
-              )}
-              <Buttons
-                label={'Submit'}
-                btnClass="w-full px-6 py-4 my-2"
-                onClick={handlePrivateSectionAccess}
-              />
-              <p
-                onClick={() => goToForgot()}
-                className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
-                Forgot Passcode?
-              </p>
+              <div className="w-128 flex justify-center">
+                {!forgotPrompt ? (
+                  <div className={`w-8/12`}>
+                    <FormInput
+                      value={passcodeInput}
+                      type={'password'}
+                      onChange={(e) => {
+                        setPasscodeInput(e.target.value);
+                      }}
+                      id="passcode"
+                      name="passcode"
+                      label={'Enter Your Passcode:'}
+                      placeHolder={''}
+                      className={`w-full my-2`}
+                      isRequired
+                    />
+                    {accessMessage.message !== '' && (
+                      <p className={`${accessMessage.textClass} text-center text-xs`}>
+                        {accessMessage.message}
+                      </p>
+                    )}
+                    <Buttons
+                      label={'Submit'}
+                      btnClass="w-full px-6 py-4 my-2"
+                      onClick={handlePrivateSectionAccess}
+                    />
+                    <p
+                      onClick={() => handleForgotPasscode()}
+                      className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
+                      Forgot Passcode?
+                    </p>
+                  </div>
+                ) : (
+                  <ChangePasscode
+                    fromWhere={'notebook'}
+                    handleForgotPasscode={handleForgotPasscode}
+                  />
+                )}
+              </div>
             </Modal>
           </div>
         )}

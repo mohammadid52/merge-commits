@@ -28,7 +28,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
   lastName,
   preferredName,
   currentLocation,
-  handleResetViewAndShare,
   handleViewStudentData,
   handleShareStudentData,
   viewedStudent,

@@ -15,9 +15,19 @@ const groupBy = (item: any, key: string) =>
     {}
   );
 
-const Today: React.FC<LessonProps> = (props: LessonProps) => {
-  const {activeRoom, activeRoomInfo, isTeacher, lessonLoading, lessons} = props;
-  const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
+const Today: React.FC<LessonProps> = ({
+  activeRoom,
+  activeRoomInfo,
+  isTeacher,
+  lessonLoading,
+  lessons,
+}: LessonProps) => {
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const {classRoomDict} = useDictionary(clientKey);
   const [accessible, setAccessible] = useState<boolean>(true);
   const [lessonsBySession, setLessonsBySession] = useState<any>([]);
@@ -26,7 +36,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
 
   useEffect(() => {
     setAccessible(true);
-  }, [props]);
+  }, [lessons]);
 
   useEffect(() => {
     if (lessonLoading && lessonsBySession.length) {
@@ -49,7 +59,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
     }
   }, [lessons]);
 
-  const emptyStyles = 'flex justify-center items-center w-full h-48'
+  const emptyStyles = 'flex justify-center items-center w-full h-48';
 
   return (
     <>

@@ -128,6 +128,7 @@ const Dashboard = (props: DashboardProps) => {
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
         image: user.image,
+        onDemand: user?.onDemand,
       },
     });
 
@@ -200,8 +201,6 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
 
-  // const [classIds, setClassIds] = useState<string[]>([]);
-  // const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string>('');
 
   /******************************************
@@ -223,8 +222,6 @@ const Dashboard = (props: DashboardProps) => {
 
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
-
-      // console.log('all student classes - ', arrayOfResponseObjects);
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -472,7 +469,7 @@ const Dashboard = (props: DashboardProps) => {
       estEndDate,
       i = 0;
     while (iteration <= Math.ceil(duration)) {
-      const isOccupied = scheduleDates.find(
+      const isOccupied = scheduleDates?.find(
         (ele) =>
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
@@ -513,7 +510,7 @@ const Dashboard = (props: DashboardProps) => {
     let count: number = 0,
       lastOccupiedDate: any = startDate,
       scheduleDates = lessonImpactLog
-        .filter((log: any) => log.adjustment === 'Push')
+        ?.filter((log: any) => log.adjustment === 'Push')
         .map((log: any) => log.impactDate);
 
     return syllabusList.map((syllabus: any) => ({
@@ -595,6 +592,7 @@ const Dashboard = (props: DashboardProps) => {
                 syllabi.find((syllabus: any) => syllabus.id === syllabusID),
               ];
             }, [])
+            .filter((syllabus: any) => syllabus)
             .map((syllabus: any) => ({
               ...syllabus,
               lessons: {
