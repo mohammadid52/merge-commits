@@ -1780,6 +1780,7 @@ export const getCurriculum = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
@@ -4865,6 +4866,7 @@ export const getAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
@@ -5095,6 +5097,7 @@ export const listAttendances = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
@@ -5535,6 +5538,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
@@ -5587,6 +5591,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
@@ -6767,6 +6772,7 @@ export const attendanceByStudent = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies

@@ -3853,6 +3853,7 @@ export const createCurriculum = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
@@ -3962,6 +3963,7 @@ export const updateCurriculum = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
@@ -4071,6 +4073,7 @@ export const deleteCurriculum = /* GraphQL */ `
           id
           name
           type
+          institutionID
           description
           methodology
           policies
@@ -11191,6 +11194,7 @@ export const createAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
@@ -11447,6 +11451,7 @@ export const updateAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
@@ -11703,6 +11708,7 @@ export const deleteAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
@@ -12425,6 +12431,7 @@ export const createUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
@@ -12467,6 +12474,7 @@ export const updateUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
@@ -12509,6 +12517,7 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
