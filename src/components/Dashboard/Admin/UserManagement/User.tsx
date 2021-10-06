@@ -119,9 +119,6 @@ const User = () => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  // const [stdCheckpoints, setStdCheckpoints] = useState([]);
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
-  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
 
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
@@ -211,25 +208,73 @@ const User = () => {
     setQuestionData(questionData);
   };
 
+  // ##################################################################### //
+  // ########################## GET CHECKPOINTS ########################## //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+
+  const [allCheckpointIds, setAllCheckpointIds] = useState([]);
+  const [allCheckpointQuesSeq, setAllCheckpointQuesSeq] = useState();
+
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
   // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
 
-  const getCheckpointSequences = async (checkpointIDS: string[]) => {
+  const getCheckpointSequences: any = async (
+    checkpointIDS: string[],
+    nextToken: string,
+    loopLimit: 10,
+    output: any[]
+  ) => {
     if (checkpointIDS && checkpointIDS.length > 0) {
       try {
         let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-        let compoundQuery = createFilterToFetchSpecificItemsOnly(modifiedIds, 'id');
+        let compoundQuery = {
+          filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
+          limit: 100,
+        };
+        let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
+
         let getAllCheckpointSequences: any = await API.graphql(
-          graphqlOperation(queries.listCSequencess, {filter: {compoundQuery}})
+          graphqlOperation(
+            queries.listCSequencess,
+            nextToken ? queryWithNextToken : compoundQuery
+          )
         );
-        return getAllCheckpointSequences;
+
+        let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
+
+        let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
+        // return responseItems;
+
+        if (theNextToken !== null && loopLimit > 0) {
+          console.log(nextToken);
+          getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
+            ...output,
+            ...responseItems,
+          ]);
+        } else {
+          return [...output, responseItems];
+        }
       } catch (e) {
         console.error('getCheckpointSequences - ', e);
         return [];
       }
     } else {
-      return [[]];
+      return [];
     }
   };
+
+  useEffect(() => {
+    if (allCheckpointIds.length > 0) {
+      const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
+      Promise.resolve(getAllSequences).then((output: any) => {
+        console.log('all checkpoint sequences - ', output);
+      });
+    }
+  }, [allCheckpointIds]);
 
   async function getUserById(id: string) {
     try {
@@ -274,7 +319,12 @@ const User = () => {
        *   DEMOGRAPHIC AND   *
        * PRIVATE CHECKPOINTS *
        ***********************/
+
+      // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+
+      // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
       const demographicCheckpoints = uniqCheckpoints
         .filter((checkpoint: any) => checkpoint.scope !== 'private')
         .reverse();
@@ -282,12 +332,10 @@ const User = () => {
         .filter((checkpoint: any) => checkpoint.scope === 'private')
         .reverse();
 
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      // setStdCheckpoints([...uniqCheckpoints]);
       setDemographicCheckpoints(demographicCheckpoints);
       setPrivateCheckpoints(privateCheckpoints);
 
@@ -300,12 +348,17 @@ const User = () => {
       });
 
       if (uniqCheckpointIDs?.length > 0) {
+        setAllCheckpointIds(uniqCheckpointIDs);
         getQuestionData(uniqCheckpointIDs, userData);
       }
     } catch (error) {
       console.error(error);
     }
   }
+
+  // ##################################################################### //
+  // ########################### PROFILE IMAGE ########################### //
+  // ##################################################################### //
 
   const isAdmin = state.user.role === 'ADM';
 
@@ -1619,6 +1672,6 @@ const User = () => {
       </>
     );
   }
-};
+};;
 
 export default User;
