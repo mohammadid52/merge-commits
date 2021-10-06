@@ -114,7 +114,10 @@ const User = () => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  // const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
@@ -243,12 +246,21 @@ const User = () => {
       sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const demographicCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope !== 'private')
+        .reverse();
+      const privateCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope === 'private')
+        .reverse();
+
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      setStdCheckpoints([...uniqCheckpoints]);
+      // setStdCheckpoints([...uniqCheckpoints]);
+      setDemographicCheckpoints(demographicCheckpoints);
+      setPrivateCheckpoints(privateCheckpoints);
 
       setStatus('done');
       setUser(() => {
@@ -1488,14 +1500,21 @@ const User = () => {
                       path={`${match.url}/edit`}
                       render={() => (
                         <UserEdit
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
                           setTab={setTab}
                           user={user}
                           status={status}
                           setStatus={setStatus}
                           getUserById={getUserById}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                         />
                       )}
                     />
@@ -1503,10 +1522,17 @@ const User = () => {
                       path={`${match.url}/`}
                       render={() => (
                         <UserInformation
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
                           setTab={setTab}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                           user={user}
                           status={status}
                         />

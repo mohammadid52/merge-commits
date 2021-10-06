@@ -35,7 +35,7 @@ interface UserInfoProps {
   getUserById: (id: string) => void;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
   questionData: any;
-  stdCheckpoints: any;
+  checkpoints: any;
   tab: string;
   setTab: Function;
 }
@@ -51,13 +51,13 @@ const UserEdit = (props: UserInfoProps) => {
     tab,
     setTab,
     setStatus,
-    stdCheckpoints,
+    checkpoints,
     questionData,
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
-  const {UserEditDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {UserEditDict, UserInformationDict} = useDictionary(clientKey);
   const [checkpointData, setCheckpointData] = useState<any>({});
   console.log(
     '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
@@ -598,7 +598,7 @@ const UserEdit = (props: UserInfoProps) => {
 
   const getCurrentTabQuestions = () => {
     if (checkpointID) {
-      const questions = stdCheckpoints.filter((item: any) => item.id === checkpointID)[0];
+      const questions = checkpoints.filter((item: any) => item.id === checkpointID)[0];
       return questions?.questions?.items ? questions?.questions?.items : [];
     } else return [];
   };
@@ -608,7 +608,7 @@ const UserEdit = (props: UserInfoProps) => {
   }
 
   const checkpointID =
-    tab !== 'p' && stdCheckpoints.length > 0 && stdCheckpoints[parseInt(tab || '1')].id;
+    tab !== 'p' && checkpoints.length > 0 && checkpoints[parseInt(tab || '1')].id;
 
   // Code for Other Field
 
@@ -673,11 +673,45 @@ const UserEdit = (props: UserInfoProps) => {
                 )}>
                 {UserEditDict[userLanguage]['heading']}
               </a>
-              {(state.user.role === 'FLW' ||
+              <a
+                onClick={() => setTab('demographics')}
+                key="demographics"
+                className={`${
+                  tab === 'demographics'
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                {UserInformationDict[userLanguage]['demographics']}
+              </a>
+              <a
+                onClick={() => setTab('private')}
+                key="private"
+                className={`${
+                  tab === 'private'
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                {UserInformationDict[userLanguage]['private']}
+                <IconContext.Provider
+                  value={{
+                    size: '0.8rem',
+                    className: `
+                      ${
+                        tab === 'private'
+                          ? 'text-indigo-500'
+                          : 'text-gray-400 group-hover:text-gray-500'
+                      }
+                      ml-2 h-5 w-5
+                    `,
+                  }}>
+                  <IoLockClosed />
+                </IconContext.Provider>
+              </a>
+              {/* {(state.user.role === 'FLW' ||
                 state.user.role === 'TR' ||
                 state.user.role === 'ADM') &&
-                stdCheckpoints.length > 0 &&
-                stdCheckpoints.map((checkpoint: any, index: number) => {
+                checkpoints.length > 0 &&
+                checkpoints.map((checkpoint: any, index: number) => {
                   return (
                     <a
                       onClick={() => setTab(index)}
@@ -705,7 +739,7 @@ const UserEdit = (props: UserInfoProps) => {
                       )}
                     </a>
                   );
-                })}
+                })} */}
             </nav>
           </div>
 
