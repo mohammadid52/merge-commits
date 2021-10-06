@@ -1214,13 +1214,21 @@ type CommunityChat @model
 }
 
 type Subscription {
-  onChangePersonLocation(
+  onCreateUpdatePersonLocationItem(
     syllabusLessonID: ID!
     lessonID: ID!
     roomID: ID!
   ): PersonLocation
     @aws_subscribe(
       mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
+    )
+  onDeletePersonLocationItem(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    roomID: ID!
+  ): PersonLocation
+    @aws_subscribe(
+      mutations: ["deletePersonLocation"]
     )
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
