@@ -2,245 +2,13 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
-  subscription OnCreateUpdatePersonLocationItem(
+export const onChangePersonLocation = /* GraphQL */ `
+  subscription OnChangePersonLocation(
     $syllabusLessonID: ID!
     $lessonID: ID!
     $roomID: ID!
   ) {
-    onCreateUpdatePersonLocationItem(
-      syllabusLessonID: $syllabusLessonID
-      lessonID: $lessonID
-      roomID: $roomID
-    ) {
-      id
-      personAuthID
-      personEmail
-      syllabusLessonID
-      lessonID
-      roomID
-      currentLocation
-      lessonProgress
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        addedby
-        createdAt
-        updatedAt
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          addedby
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData {
-          studentAuthID
-          lessonPageID
-        }
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
-        classroomGroups {
-          nextToken
-        }
-        weekDay
-        conferenceCallLink
-        lessonImpactLog {
-          impactDate
-          reasonComment
-          lessonImpact
-          adjustment
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeletePersonLocationItem = /* GraphQL */ `
-  subscription OnDeletePersonLocationItem(
-    $syllabusLessonID: ID!
-    $lessonID: ID!
-    $roomID: ID!
-  ) {
-    onDeletePersonLocationItem(
+    onChangePersonLocation(
       syllabusLessonID: $syllabusLessonID
       lessonID: $lessonID
       roomID: $roomID
@@ -4460,6 +4228,27 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          institutionID
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4467,16 +4256,6 @@ export const onCreateCurriculum = /* GraphQL */ `
           type
           typeID
           checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      universalSyllabus {
-        items {
-          id
-          unitId
-          curriculumId
           createdAt
           updatedAt
         }
@@ -4556,6 +4335,27 @@ export const onUpdateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          institutionID
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4563,16 +4363,6 @@ export const onUpdateCurriculum = /* GraphQL */ `
           type
           typeID
           checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      universalSyllabus {
-        items {
-          id
-          unitId
-          curriculumId
           createdAt
           updatedAt
         }
@@ -4652,6 +4442,27 @@ export const onDeleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          institutionID
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4659,16 +4470,6 @@ export const onDeleteCurriculum = /* GraphQL */ `
           type
           typeID
           checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      universalSyllabus {
-        items {
-          id
-          unitId
-          curriculumId
           createdAt
           updatedAt
         }
@@ -4718,11 +4519,11 @@ export const onCreateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -4786,11 +4587,11 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -4854,11 +4655,11 @@ export const onDeleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5135,11 +4936,11 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5189,11 +4990,11 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5243,11 +5044,11 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5674,11 +5475,11 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5787,11 +5588,11 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -5900,11 +5701,11 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -10907,11 +10708,11 @@ export const onCreateAttendance = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -10921,11 +10722,13 @@ export const onCreateAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
         pupose
         objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -11159,11 +10962,11 @@ export const onUpdateAttendance = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -11173,11 +10976,13 @@ export const onUpdateAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
         pupose
         objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -11411,11 +11216,11 @@ export const onDeleteAttendance = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        universalSyllabusSeq
-        checkpoints {
+        universalSyllabus {
           nextToken
         }
-        universalSyllabus {
+        universalSyllabusSeq
+        checkpoints {
           nextToken
         }
         createdAt
@@ -11425,11 +11230,13 @@ export const onDeleteAttendance = /* GraphQL */ `
         id
         name
         type
+        institutionID
         description
         methodology
         policies
         pupose
         objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -12107,11 +11914,13 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
       pupose
       objectives
+      curriculumID
       languages
       lessons {
         items {
@@ -12145,11 +11954,13 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
       pupose
       objectives
+      curriculumID
       languages
       lessons {
         items {
@@ -12183,11 +11994,13 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
       pupose
       objectives
+      curriculumID
       languages
       lessons {
         items {
@@ -12210,39 +12023,6 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCurriculumUnits = /* GraphQL */ `
-  subscription OnCreateCurriculumUnits {
-    onCreateCurriculumUnits {
-      id
-      unitId
-      curriculumId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCurriculumUnits = /* GraphQL */ `
-  subscription OnUpdateCurriculumUnits {
-    onUpdateCurriculumUnits {
-      id
-      unitId
-      curriculumId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCurriculumUnits = /* GraphQL */ `
-  subscription OnDeleteCurriculumUnits {
-    onDeleteCurriculumUnits {
-      id
-      unitId
-      curriculumId
       createdAt
       updatedAt
     }

@@ -1096,6 +1096,7 @@ type UniversalSyllabus
   id: ID!
   name: String!
   type: String
+  institutionID: ID!
   description: String
   methodology: String
   policies: String
