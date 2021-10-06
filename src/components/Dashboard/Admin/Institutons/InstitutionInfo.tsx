@@ -43,6 +43,8 @@ import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
 import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
 import User from '../UserManagement/User';
+import UnitList from './EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
+import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -138,6 +140,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {
           title: 'Units',
           key: 'unit',
+          redirectionUrl: `${match.url}/units`,
+          active: location.pathname.indexOf('units') > -1,
         },
         {
           title: Institute_info[userLanguage]['TABS']['LESSONS'],
@@ -445,20 +449,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
                   <Route
-                    path={`${match.url}/edit`}
-                    exact
-                    render={() => (
-                      <InstitutionBuilder
-                        institutionId={institute?.id}
-                        institute={instProps.institute}
-                        loading={instProps.loading}
-                        postInfoUpdate={instProps.postInfoUpdate}
-                        updateServiceProviders={instProps.updateServiceProviders}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )}
-                  />
-                  <Route
                     path={`${match.url}/class`}
                     exact
                     render={() => (
@@ -531,6 +521,23 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     )}
                   />
                   <Route
+                    path={`${match.url}/units`}
+                    exact
+                    render={() => (
+                      <UnitList instId={institute?.id} instName={institute?.name} />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path={`${match.url}/units/add`}
+                    render={() => <UnitBuilder instId={institute?.id}/>}
+                  />
+                  <Route
+                    exact
+                    path={`${match.url}/units/:unitId/edit`}
+                    render={() => <UnitBuilder instId={institute?.id}/>}
+                  />
+                  <Route
                     path={`${match.url}/research-and-analytics`}
                     exact
                     render={() => <Csv institutionId={institute?.id} />}
@@ -543,6 +550,20 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         serviceProviders={institute.serviceProviders}
                         instituteId={instProps?.institute?.id}
                         instName={institute?.name}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/edit`}
+                    exact
+                    render={() => (
+                      <InstitutionBuilder
+                        institutionId={institute?.id}
+                        institute={instProps.institute}
+                        loading={instProps.loading}
+                        postInfoUpdate={instProps.postInfoUpdate}
+                        updateServiceProviders={instProps.updateServiceProviders}
+                        toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )}
                   />

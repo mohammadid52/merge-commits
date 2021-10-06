@@ -14,7 +14,7 @@ import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
 import Loader from '@atoms/Loader';
 
 import CourseFormComponent from './CourseFormComponent';
-import LessonPlanManager from './UnitManager';
+import UnitManager from './UnitManager';
 import UnitFormComponent from './CourseFormComponent';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
@@ -42,13 +42,13 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const step = params.get('step');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, CommonlyUsedDict, CourseBuilderdict} = useDictionary(
+  const {BreadcrumsTitles, CommonlyUsedDict, CourseBuilderDict} = useDictionary(
     clientKey
   );
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
-  const [savedLessonsList, setSavedLessonsList] = useState([]);
-  const [lessonsIds, setLessonsIds] = useState([]);
+  const [savedSyllabusList, setSavedSyllabusList] = useState([]);
+  const [syllabusIds, setSyllabusIds] = useState([]);
   const [messages, setMessages] = useState<IUIMessages>({
     show: false,
     message: '',
@@ -82,31 +82,27 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   }, [instId]);
 
   const fetchCourseData = async () => {
+    setFetchingDetails(true);
     if (courseId) {
       try {
         const result: any = await API.graphql(
-          graphqlOperation(queries.getCurriculum, {id: courseId})
+          graphqlOperation(customQueries.getCurriculum, {id: courseId})
         );
         const savedData = result.data.getCurriculum;
-        console.log(savedData, 'savedData');
-
+        const curriculumUnits: any = await API.graphql(
+          graphqlOperation(customQueries.listCurriculumUnitss, {id: courseId})
+        );
         setCourseData(savedData);
-        // Load from response value
-        // const imageUrl: any = savedData.image
-        //   ? await getImageFromS3(`instituteImages/curricular_image_${currID}`)
-        //   : null;
-        // setImageUrl(imageUrl);
-
-        // if (savedData && savedData.designers && savedData.designers.length) {
-        //   setDesignerIds([...savedData?.designers]);
-        // }
-        // setPreviousName(savedData.name);
+        setSyllabusIds(savedData.universalSyllabusSeq || [])
+        setSavedSyllabusList(curriculumUnits?.data.listCurriculumUnitss?.items)
+        setFetchingDetails(false);
       } catch {
         setMessages({
           show: true,
-          message: CourseBuilderdict[userLanguage]['messages']['FETCH_COURSE_ERR'],
+          message: CourseBuilderDict[userLanguage]['messages']['FETCH_COURSE_ERR'],
           isError: true,
         });
+        setFetchingDetails(false);
       }
     }
   };
@@ -187,29 +183,18 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return <CourseFormComponent courseId={courseId} courseData={courseData} />;
       case 'unit_manager':
         return (
-          <LessonPlanManager
+          <UnitManager
             courseId={courseId}
             institutionId={instId}
-            savedLessonsList={savedLessonsList}
-            setSavedLessonsList={setSavedLessonsList}
-            lessonsIds={lessonsIds}
-            setLessonsIds={setLessonsIds}
+            savedSyllabusList={savedSyllabusList}
+            setSavedSyllabusList={setSavedSyllabusList}
+            syllabusIds={syllabusIds}
+            setSyllabusIds={setSyllabusIds}
           />
         );
       case 'learning_objectives':
         return (
           <LearningObjective curricularId={courseId} institutionId={instId} />
-        );
-      case 'unit_manager':
-        return (
-          <LessonPlanManager
-            courseId={courseId}
-            institutionId={instId}
-            savedLessonsList={savedLessonsList}
-            setSavedLessonsList={setSavedLessonsList}
-            lessonsIds={lessonsIds}
-            setLessonsIds={setLessonsIds}
-          />
         );
       case 'demographics':
         return <CheckpointList curricularId={courseId} institutionId={instId} />;

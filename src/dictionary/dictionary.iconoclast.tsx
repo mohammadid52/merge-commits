@@ -55,6 +55,7 @@ const BreadcrumsTitles: any = {
     CURRICULARBUILDER: 'New Course',
     CURRICULUM: 'Course',
     COURSES: 'Courses',
+    UNITS: 'Units',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
     CLASSROOM: 'Classroom',
@@ -882,6 +883,7 @@ const Institute_info: any = {
       CLASS_MANAGER: 'Class Manager',
       COURSE_MANAGER: 'Course Manager',
       COURSES: 'Courses',
+      UNITS: 'Units',
       COMMUNITY_MANAGER: 'Community Manager',
       INSTITUTION_MANAGER:'Institution Manager',
       CLASSES: 'Classes',
@@ -1323,7 +1325,7 @@ const classBuilderdict: any = {
   },
 };
 
-const CourseBuilderdict: any = {
+const CourseBuilderDict: any = {
   EN: {
     TITLE: 'Create New Course',
     SUBTITLE: 'Add new course to the list',
@@ -3565,12 +3567,15 @@ const UnitLookupDict: any = {
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This lesson is not added to any course or units.',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
     MESSAGES: {
       ADDED: 'Lesson added successfully.',
       ADDERR: 'Error while adding lesson to unit, please try later.',
       FETCHERR: 'Error while fetching units Data, Please try again later.',
     },
+    INFO: 'This institute does not have any unit. Please create a new unit.',
   },
   ES: {
     HEADING: 'TBD',
@@ -4002,7 +4007,7 @@ export {
   EditTopicDict,
   ProfileCheckpointlookupDict,
   RegistrationDict,
-  CourseBuilderdict,
+  CourseBuilderDict,
   SyllabusDict,
   UserDict,
   UserEditDict,

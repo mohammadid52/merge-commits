@@ -86,6 +86,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Cohort Creation',
     CURRICULUM: 'Course',
     COURSES: 'Courses',
+    UNITS: 'Units',
     CURRICULARBUILDER: 'New Course',
     CLASSROOM_CREATION: 'Class Creation',
     CLASSROOMS: 'Classrooms',
@@ -922,6 +923,7 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
+      UNITS: 'Units',
       CLASS_MANAGER: 'Class Manager',
       COURSE_MANAGER: 'Course Manager',
       COMMUNITY_MANAGER: 'Community Manager',
@@ -1364,7 +1366,7 @@ const classBuilderdict: any = {
   },
 };
 
-const CourseBuilderdict: any = {
+const CourseBuilderDict: any = {
   EN: {
     TITLE: 'Create New Course',
     SUBTITLE: 'Add new course to the list',
@@ -3493,7 +3495,10 @@ const UnitLookupDict: any = {
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This session is not added to any course or modules.',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'Session added successfully.',
       ADDERR: 'Error while adding session to module, please try later.',
@@ -3921,6 +3926,6 @@ export {
   LessonsListDict,
   EditQuestionModalDict,
   LearningEvidenceDict,
-  CourseBuilderdict,
+  CourseBuilderDict,
   CommonlyUsedDict
 };

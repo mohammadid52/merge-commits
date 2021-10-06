@@ -1,16 +1,11 @@
-import React, {Fragment, useContext, useEffect} from 'react';
+import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as queries from '@graphql/queries';
 
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Buttons from '../../../../Atoms/Buttons';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};

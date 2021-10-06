@@ -1877,6 +1877,31 @@ export const listUniversalLessons = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalSyllabusOptions = /* GraphQL */ `
+  query ListUniversalSyllabuss(
+    $id: ID
+    $filter: ModelUniversalSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        institutionID
+      }
+      nextToken
+    }
+  }
+`;
 export const listUniversalLessonsOptions = /* GraphQL */ `
   query ListUniversalLessons(
     $id: ID
@@ -1958,7 +1983,6 @@ export const getUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       lessons {
         items {
@@ -2039,7 +2063,6 @@ export const getUniversalSyllabusData = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       universalLessonsSeq
       designers
@@ -2703,39 +2726,11 @@ export const getCurriculum = /* GraphQL */ `
       }
       designers
       image
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabus {
         items {
           id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
+          unitId
+          curriculumId
           createdAt
           updatedAt
         }
@@ -4344,3 +4339,31 @@ export const listStaffWithBasicInfo = /* GraphQL */ `
     }
   }
 `
+export const listCurriculumUnitss = /* GraphQL */ `
+  query ListCurriculumUnitss(
+    $filter: ModelcurriculumUnitsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurriculumUnitss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        unitId
+        unit {
+          id
+          name
+          type
+          institutionID
+        }
+        curriculumId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

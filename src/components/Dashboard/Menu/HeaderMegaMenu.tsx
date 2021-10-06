@@ -61,8 +61,10 @@ const HeaderMegaMenu = () => {
           active: location.pathname.indexOf('course') > -1,
         },
         {
-          title: 'Units',
+          title: Institute_info[userLanguage]['TABS']['UNITS'],
           key: 'unit',
+          redirectionUrl: `${baseUrl}/units`,
+          active: location.pathname.indexOf('units') > -1,
         },
         {
           title: Institute_info[userLanguage]['TABS']['LESSONS'],

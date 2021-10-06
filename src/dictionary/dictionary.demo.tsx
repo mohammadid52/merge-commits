@@ -1379,7 +1379,7 @@ const classBuilderdict: any = {
   },
 };
 
-const CourseBuilderdict: any = {
+const CourseBuilderDict: any = {
   EN: {
     TITLE: 'Create New Curriculum',
     SUBTITLE: 'Add new curriculum to the list',
@@ -3823,7 +3823,7 @@ export {
   InstitueCurriculam,
   InstitueRomms,
   classBuilderdict,
-  CourseBuilderdict,
+  CourseBuilderDict,
   CurricularBuilderdict,
   RoomBuilderdict,
   EditCurriculardict,

@@ -8,7 +8,6 @@ import {useQuery} from '../../../../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import {languageList} from '../../../../../../../../utilities/staticData';
 
-import BreadCrums from '../../../../../../../Atoms/BreadCrums';
 import PageWrapper from '../../../../../../../Atoms/PageWrapper';
 import SectionTitle from '../../../../../../../Atoms/SectionTitle';
 import StepComponent, {
@@ -37,17 +36,16 @@ interface IUIMessages {
   lessonError?: boolean;
 }
 
-const UnitBuilder = () => {
+const UnitBuilder = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
-  const {curricularId, institutionId} = urlParams;
   const params = useQuery(location.search);
   const step = params.get('step');
-  const syllabusId = params.get('id');
+  const {unitId}: any = useParams();
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, SyllabusDict} = useDictionary(clientKey);
+  const {SyllabusDict} = useDictionary(clientKey);
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedLessonsList, setSavedLessonsList] = useState([]);
@@ -70,10 +68,6 @@ const UnitBuilder = () => {
     languages: [{id: '1', name: 'English', value: 'EN'}],
   };
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
-  const [curriculumData, setCurriculumData] = useState<any>({
-    name: '',
-    institution:{},
-  });
 
   useEffect(() => {
     if (step) {
@@ -82,7 +76,7 @@ const UnitBuilder = () => {
   }, [step]);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?step=${step}&id=${syllabusId}`;
+    const redirectionUrl = `${match.url}?step=${step}&id=${unitId}`;
     history.push(redirectionUrl);
   };
 
@@ -92,34 +86,16 @@ const UnitBuilder = () => {
   };
 
   useEffect(() => {
-    fetchCurriculumBasicInfo()
     fetchSyllabusData();
   }, []);
 
-  const fetchCurriculumBasicInfo = async() => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumBasicInfo, {
-          id: curricularId,
-        })
-      );
-      const {name, institution} = result?.data.getCurriculum;
-      setCurriculumData({
-        name,
-        institution,
-      });
-    } catch (error) {
-      
-    }
-  }
-
   const fetchSyllabusData = async () => {
-    if (syllabusId) {
+    if (unitId) {
       setFetchingDetails(true);
       try {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabus, {
-            id: syllabusId,
+            id: unitId,
           })
         );
         const savedData = result.data.getUniversalSyllabus;
@@ -173,29 +149,6 @@ const UnitBuilder = () => {
     }
   };
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: curriculumData.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false,
-    },
-    {
-      title: curriculumData.name || 'loading...',
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false,
-    },
-    {
-      title: syllabusData?.name || BreadcrumsTitles[userLanguage]['UnitBuilder'],
-      url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`,
-      last: true,
-    },
-  ];
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
@@ -207,7 +160,7 @@ const UnitBuilder = () => {
       title: 'Lesson Plan manager',
       description: 'Assign lessons to Unit',
       stepValue: 'lessons',
-      disabled: !Boolean(syllabusId),
+      disabled: !Boolean(unitId),
       isComplete: false,
       tooltipText: 'Add overview details in step 1 to continue',
     },
@@ -217,6 +170,7 @@ const UnitBuilder = () => {
       case 'overview':
         return (
           <UnitFormComponent
+            instId={instId}
             syllabusDetails={syllabusData}
             postAddSyllabus={postAddSyllabus}
             onCancel={fetchSyllabusData}
@@ -225,8 +179,8 @@ const UnitBuilder = () => {
       case 'lessons':
         return (
           <LessonPlanManager
-            syllabusId={syllabusId}
-            institutionId={institutionId}
+            syllabusId={unitId}
+            institutionId={instId}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}
             lessonsIds={lessonsIds}
@@ -237,49 +191,42 @@ const UnitBuilder = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full p-4">
       {/* Section Header */}
-      <BreadCrums
-        items={breadCrumsList}
-        // unsavedChanges={unsavedChanges}
-        // toggleModal={toggleUnSaveModal}
-      />
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <SectionTitle title={SyllabusDict[userLanguage]['TITLE']} />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+        <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
             onClick={gobackToLessonsList}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div> */}
-      </div>
+        </div>
+      </div> */}
 
       {/* Body */}
-      <PageWrapper>
-        <div className="w-full m-auto">
-          <StepComponent
-            steps={steps}
-            activeStep={activeStep}
-            handleTabSwitch={handleTabSwitch}
-          />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
-            {fetchingDetails ? (
-              <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader />
-                  <p className="mt-2 text-center">
-                    Fetching syllabus details please wait...
-                  </p>
-                </div>
+      <div className="w-full m-auto">
+        <StepComponent
+          steps={steps}
+          activeStep={activeStep}
+          handleTabSwitch={handleTabSwitch}
+        />
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+          {fetchingDetails ? (
+            <div className="h-100 flex justify-center items-center">
+              <div className="w-5/10">
+                <Loader />
+                <p className="mt-2 text-center">
+                  Fetching syllabus details please wait...
+                </p>
               </div>
-            ) : (
-              currentStepComp(activeStep)
-            )}
-          </div>
+            </div>
+          ) : (
+            currentStepComp(activeStep)
+          )}
         </div>
-      </PageWrapper>
+      </div>
     </div>
   );
 };

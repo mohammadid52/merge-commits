@@ -110,10 +110,10 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
           render={() => <EditMeasurement />} // Edit curricular measurement
         />
-        <Route
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
           render={() => <UnitBuilder />} // Add new syllabus to curricular
-        />
+        /> */}
         {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
           render={() => <AddSyllabus />} // Add new syllabus to curricular
