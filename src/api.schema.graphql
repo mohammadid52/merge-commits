@@ -253,11 +253,11 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
-  universalSyllabus: [UniversalSyllabus]
-    @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
   universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
+  universalSyllabus: [curriculumUnits] @connection(keyName: "unitsbyCurriculum", fields: ["id"])
 }
+
 type Topic
   @model
   @key(fields: ["id"])
@@ -1091,23 +1091,29 @@ type InputComment {
 
 type UniversalSyllabus
   @model
-  @key(fields: ["id"])
-  @key(name: "uniSyllabusByCurriculum", fields: ["curriculumID"]) {
+  @key(fields: ["id"]) {
   id: ID!
   name: String!
   type: String
+  institutionID: ID!
   description: String
   methodology: String
   policies: String
   pupose: String
   objectives: String
-  curriculumID: ID!
   languages: [Language]
   lessons: [UniversalSyllabusLesson]
     @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
+}
+
+type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
+    id: ID!
+    unitId: ID!
+    unit: UniversalSyllabus @connection(fields: ["unitId"]) 
+    curriculumId: ID!
 }
 
 # Need to add universalStudentData field
@@ -1209,13 +1215,21 @@ type CommunityChat @model
 }
 
 type Subscription {
-  onChangePersonLocation(
+  onCreateUpdatePersonLocationItem(
     syllabusLessonID: ID!
     lessonID: ID!
     roomID: ID!
   ): PersonLocation
     @aws_subscribe(
       mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
+    )
+  onDeletePersonLocationItem(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    roomID: ID!
+  ): PersonLocation
+    @aws_subscribe(
+      mutations: ["deletePersonLocation"]
     )
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
