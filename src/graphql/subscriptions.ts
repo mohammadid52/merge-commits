@@ -5526,6 +5526,7 @@ export const onCreateCheckpoint = /* GraphQL */ `
       language
       estTime
       scope
+      questionSeq
       createdAt
       updatedAt
     }
@@ -5559,6 +5560,7 @@ export const onUpdateCheckpoint = /* GraphQL */ `
       language
       estTime
       scope
+      questionSeq
       createdAt
       updatedAt
     }
@@ -5592,6 +5594,7 @@ export const onDeleteCheckpoint = /* GraphQL */ `
       language
       estTime
       scope
+      questionSeq
       createdAt
       updatedAt
     }
@@ -5702,6 +5705,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -5815,6 +5819,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -5928,6 +5933,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -5961,6 +5967,7 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -6013,6 +6020,7 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -6065,6 +6073,7 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -6365,6 +6374,7 @@ export const onCreateAssessmentCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -6412,6 +6422,7 @@ export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -6459,6 +6470,7 @@ export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -7796,6 +7808,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -7927,6 +7940,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -8058,6 +8072,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }

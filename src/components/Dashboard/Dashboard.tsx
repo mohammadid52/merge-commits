@@ -174,12 +174,11 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.user.role]);
 
-  /**
-   * INIT ADMIN NOT LOADING ANYTHING
-   */
+  // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
+
   useEffect(() => {
     const userRole = state.user.role;
-    if (userRole === 'ADM') {
+    if (userRole === 'ADM' || userRole === 'SUP') {
       setRoomsLoading(true);
     }
   }, []);
@@ -187,25 +186,25 @@ const Dashboard = (props: DashboardProps) => {
   // ##################################################################### //
   // ########################### LOADING STATUS ########################## //
   // ##################################################################### //
+
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
-  const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
 
   // ##################################################################### //
   // ############################# HOME DATA ############################# //
   // ##################################################################### //
+
   // Fetching results
   const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
-
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
-
   const [curriculumIds, setCurriculumIds] = useState<string>('');
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
    ******************************************/
+
   const getDashboardData = async (authId: string, email: string) => {
     try {
       const queryObj = {
@@ -218,10 +217,9 @@ const Dashboard = (props: DashboardProps) => {
       const dashboardDataFetch = await API.graphql(
         graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
       );
-      const response = await dashboardDataFetch;
 
       // @ts-ignore
-      let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
+      let arrayOfResponseObjects = await dashboardDataFetch?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -271,6 +269,7 @@ const Dashboard = (props: DashboardProps) => {
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
    ******************************************/
+
   const getClassList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
@@ -322,6 +321,13 @@ const Dashboard = (props: DashboardProps) => {
   /******************************************
    * 2.1 LIST TEACHER ROOMS                 *
    ******************************************/
+  /***********************************************
+   *    THIS FUNCTION CAN ACTUALLY BE REMOVED    *
+   * IT'S ACTUALLY RETURNING THE SAME (BUT LESS) *
+   *    DATA AS GETDASHBOARDDATAFORTEACHERS()    *
+   *    AND ESSENTIALLY USING THE SAME QUERY     *
+   ***********************************************/
+
   const listRoomTeacher = async (teacherAuthID: string) => {
     try {
       const queryObj = {
@@ -332,9 +338,8 @@ const Dashboard = (props: DashboardProps) => {
       const classIdFromRoomsFetch = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
-      const response = await classIdFromRoomsFetch;
       //@ts-ignore
-      const arrayOfResponseObjects = response?.data?.listRooms?.items;
+      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
@@ -357,45 +362,10 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.user.role]);
 
-  /******************************************
-   * 3.1 LIST ALL WIDGETS FOR ROOM          *
-   ******************************************/
-  useEffect(() => {
-    // const listRoomWidgets = async () => {
-    //   setWidgetLoading(true);
-    //   //
-    //   try {
-    //     const queryObj = {
-    //       name: 'queries.listNoticeboardWidgets',
-    //       valueObj: {filter: {roomID: {eq: state.activeRoom}}},
-    //     };
-    //     // const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
-    //     // const response = await noticeboardWidgetsFetch;
-    //     // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-    //     const keepEmptyForNow:any = [];
-    //     dispatch({
-    //       type: 'UPDATE_ROOM',
-    //       payload: {
-    //         property: 'widgets',
-    //         data: keepEmptyForNow,
-    //       },
-    //     });
-    //   } catch (e) {
-    //     console.error('listNoticeboardWidgetsFetch: -> ', e);
-    //   } finally {
-    //     setWidgetLoading(false);
-    //   }
-    // };
-    // if (state.activeRoom && widgetLoading === false) {
-    //   listRoomWidgets();
-    // }
-  }, [state.activeRoom]);
+  /**********************************
+   * 3. LIST CURRICULUMS BY ROOM ID *
+   **********************************/
 
-  const previousRoom = usePrevious(state.activeRoom);
-
-  /**
-   * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
-   */
   useEffect(() => {
     const listRoomCurriculums = async () => {
       if (state.roomData.rooms.length > 0) {
@@ -449,6 +419,10 @@ const Dashboard = (props: DashboardProps) => {
       setActiveRoomInfo(getRoomFromState);
     }
   }, [state.activeRoom]);
+
+  // ##################################################################### //
+  // ######################### SCHEDULE AND TIMES ######################## //
+  // ##################################################################### //
 
   const calculateAvailableStartEndDate = (
     date: Moment,
@@ -557,10 +531,11 @@ const Dashboard = (props: DashboardProps) => {
     }));
   };
 
-  /**
-   * 5. LIST AVAILABLE SYLLABUS
-   */
-  useEffect(() => {
+  /********************
+   * 5. LIST SYLLABUS *
+   ********************/
+
+  const listSyllabus = async () => {
     setSyllabusLoading(true);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -569,79 +544,75 @@ const Dashboard = (props: DashboardProps) => {
         data: [],
       },
     });
-    const listSyllabus = async () => {
-      if (curriculumIds.length > 0) {
-        try {
-          let scheduleDetails: any = await API.graphql(
-            graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-          );
-          scheduleDetails = scheduleDetails?.data?.getRoom;
-          const getCurriculum = await API.graphql(
-            graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
-          );
-          // @ts-ignore
-          const response = await getCurriculum.data.getCurriculum;
 
-          const syllabi = response.universalSyllabus.items;
-          const sequence = response.universalSyllabusSeq;
+    try {
+      let scheduleDetails: any = await API.graphql(
+        graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+      );
+      scheduleDetails = scheduleDetails?.data?.getRoom;
+      const getCurriculum = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
+      );
+      // @ts-ignore
+      const response = await getCurriculum.data.getCurriculum;
 
-          const mappedResponseObjects = sequence
-            ?.reduce((acc: any[], syllabusID: string) => {
-              return [
-                ...acc,
-                syllabi.find((syllabus: any) => syllabus.id === syllabusID),
-              ];
-            }, [])
-            .filter((syllabus: any) => syllabus)
-            .map((syllabus: any) => ({
-              ...syllabus,
-              lessons: {
-                ...syllabus.lessons,
-                items: syllabus.lessons.items
-                  .map((t: any) => {
-                    let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                    return {...t, index};
-                  })
-                  .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-              },
-            }));
-          if (
-            scheduleDetails &&
-            scheduleDetails.startDate &&
-            scheduleDetails.endDate &&
-            scheduleDetails.frequency
-          ) {
-            const modifiedData = calculateSchedule(
-              mappedResponseObjects,
-              scheduleDetails
-            );
-          }
+      const syllabi = response.universalSyllabus.items;
+      const sequence = response.universalSyllabusSeq;
 
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'syllabus',
-              data: mappedResponseObjects,
-            },
-          });
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'curriculum',
-              data: {name: response.name},
-            },
-          });
-          setSyllabusLoading(false);
-        } catch (e) {
-          console.error('Curriculum ids ERR: ', e);
-        } finally {
-          setSyllabusLoading(false);
-        }
+      const mappedResponseObjects = sequence
+        ?.reduce((acc: any[], syllabusID: string) => {
+          return [...acc, syllabi.find((syllabus: any) => syllabus.id === syllabusID)];
+        }, [])
+        .filter((syllabus: any) => syllabus)
+        .map((syllabus: any) => ({
+          ...syllabus,
+          lessons: {
+            ...syllabus.lessons,
+            items: syllabus.lessons.items
+              .map((t: any) => {
+                let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                return {...t, index};
+              })
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+          },
+        }));
+      if (
+        scheduleDetails &&
+        scheduleDetails.startDate &&
+        scheduleDetails.endDate &&
+        scheduleDetails.frequency
+      ) {
+        const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
       }
-    };
 
-    listSyllabus();
-  }, [state.activeRoom, curriculumIds]);
+      //TODO: combine these dispatches
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'syllabus',
+          data: mappedResponseObjects,
+        },
+      });
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'curriculum',
+          data: {name: response.name},
+        },
+      });
+      //  setSyllabusLoading(false);
+    } catch (e) {
+      console.error('Curriculum ids ERR: ', e);
+    } finally {
+      setSyllabusLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (curriculumIds.length > 0) {
+      listSyllabus();
+    }
+  }, [curriculumIds]);
 
   /******************************************
    * 6.1 LIST ALL THE SYLLABUS LESSON       *
@@ -661,47 +632,48 @@ const Dashboard = (props: DashboardProps) => {
     /**
      * IF there are any syllabus active, do a fetch for lessons
      */
-    if (activeRoomInfo?.activeSyllabus) {
-      try {
-        const syllabusLessonFetch = await API.graphql(
-          graphqlOperation(customQueries.getUniversalSyllabus, {
-            id: activeRoomInfo?.activeSyllabus,
-          })
-        );
-        //@ts-ignore
-        const response = await syllabusLessonFetch.data.getUniversalSyllabus;
-        const lessons = response?.lessons.items
-          .map((t: any) => {
-            let index = response?.universalLessonsSeq?.indexOf(t.id);
-            return {...t, index};
-          })
-          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'lessons',
-            data: lessons,
-          },
-        });
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'activeSyllabus',
-            data: response,
-          },
-        });
-      } catch (e) {
-        console.error('syllabus lessons: ', e);
-      } finally {
-        setLessonLoading(false);
-      }
+    try {
+      const syllabusLessonFetch = await API.graphql(
+        graphqlOperation(customQueries.getUniversalSyllabus, {
+          id: activeRoomInfo?.activeSyllabus,
+        })
+      );
+      //@ts-ignore
+      const response = await syllabusLessonFetch.data.getUniversalSyllabus;
+      const lessons = response?.lessons.items
+        .map((t: any) => {
+          let index = response?.universalLessonsSeq?.indexOf(t.id);
+          return {...t, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'lessons',
+          data: lessons,
+        },
+      });
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'activeSyllabus',
+          data: response,
+        },
+      });
+    } catch (e) {
+      console.error('syllabus lessons: ', e);
+    } finally {
+      setLessonLoading(false);
     }
   };
 
   // ~~~~~~~~ TRIGGER LESSON LOADING ~~~~~~~ //
   useEffect(() => {
-    listSyllabusLessons();
+    if (activeRoomInfo?.activeSyllabus) {
+      listSyllabusLessons();
+    }
   }, [activeRoomInfo]);
 
   // ##################################################################### //
