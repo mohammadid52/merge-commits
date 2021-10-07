@@ -27,9 +27,12 @@ export const UnitList = ({instId}: any) => {
   const fetchSyllabusList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSyllabuss)
+        graphqlOperation(queries.listUniversalSyllabuss, {
+          filter: {
+            institutionID: {eq: instId},
+          },
+        })
       );
-      console.log(result, 'resulttttttttttt');
       setUnits(result.data?.listUniversalSyllabuss.items);
       setLoading(false);
     } catch (error) {

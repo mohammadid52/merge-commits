@@ -86,7 +86,9 @@ const LessonPlanManager = ({
       });
       return;
     }
-    history.push('/dashboard/lesson-builder/lesson/add');
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/lessons/add`
+    );
   };
 
   const selectLesson = (value: string, name: string, id: string) => {
@@ -174,9 +176,16 @@ const LessonPlanManager = ({
       };
       return tableList;
     });
-    const filteredDropDownList = dropdownLessonsList.filter((item) =>
-      updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
-    );
+    const filteredDropDownList = allLessonsList
+      .filter((item) =>
+        updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
+      )
+      .filter((item: any) => (item.lessonPlan ? true : false))
+      .map((item: {id: string; title: string; type: string}) => ({
+        id: item.id,
+        name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+        value: item.title,
+      }));
 
     updatedTableList = updatedTableList
       .map((t: any) => {
@@ -199,6 +208,17 @@ const LessonPlanManager = ({
   useEffect(() => {
     if (Array.isArray(savedLessonsList) && savedLessonsList.length) {
       updateListAndDropdown();
+    } else {
+      if (allLessonsList.length) {
+        const updatedList = allLessonsList
+          ?.filter((item: any) => (item.lessonPlan ? true : false))
+          .map((item: {id: string; title: string; type: string}) => ({
+            id: item.id,
+            name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+            value: item.title,
+          }));
+        setDropdownLessonsList([...updatedList]);
+      }
     }
   }, [savedLessonsList, allLessonsList]);
 
@@ -230,8 +250,8 @@ const LessonPlanManager = ({
           name: `${item.title} - ${item.type && getLessonType(item.type)}`,
           value: item.title,
         }));
+      // setDropdownLessonsList([...updatedList]);
       setAllLessonsList([...sortedList]);
-      setDropdownLessonsList([...updatedList]);
       setLoading(false);
     } catch {
       setMessages({
@@ -256,6 +276,9 @@ const LessonPlanManager = ({
       );
       setSelectedLessonsList((list: any) =>
         list.filter((_item: any) => _item.id !== item.id)
+      );
+      setSavedLessonsList((prevList: any) =>
+        prevList.filter((lesson: any) => lesson.id !== item.uniqlessonId)
       );
       setDeleting(false);
       closeLessonAction();

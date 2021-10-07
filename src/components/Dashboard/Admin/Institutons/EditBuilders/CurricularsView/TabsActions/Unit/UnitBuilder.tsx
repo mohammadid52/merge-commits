@@ -76,12 +76,12 @@ const UnitBuilder = ({instId}: any) => {
   }, [step]);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?step=${step}&id=${unitId}`;
+    const redirectionUrl = `${match.url}?step=${step}`;
     history.push(redirectionUrl);
   };
 
   const postAddSyllabus = (syllabusId: string) => {
-    const redirectionUrl = `${match.url}?step=lessons&id=${syllabusId}`;
+    const redirectionUrl = `/dashboard/manage-institutions/institution/${instId}/units/${syllabusId}/edit?step=lessons`;
     history.push(redirectionUrl);
   };
 
@@ -143,9 +143,6 @@ const UnitBuilder = ({instId}: any) => {
         });
         setFetchingDetails(false);
       }
-    } else {
-      console.log('can not find unit id');
-      // history.push('/dashboard/manage-institutions');
     }
   };
 
