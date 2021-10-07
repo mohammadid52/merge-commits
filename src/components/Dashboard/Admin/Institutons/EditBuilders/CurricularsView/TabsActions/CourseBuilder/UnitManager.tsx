@@ -76,7 +76,7 @@ const UnitManager = ({
     }
   }, [savedSyllabusList]);
 
-  const createNewLesson = () => {
+  const createNewUnit = () => {
     if (unsavedChanges) {
       setWarnModal({
         ...warnModal,
@@ -86,7 +86,7 @@ const UnitManager = ({
       });
       return;
     }
-    history.push('/dashboard/lesson-builder/lesson/add');
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/add`);
   };
 
   const handleSelectSyllabus = (value: string, name: string, id: string) => {
@@ -107,23 +107,11 @@ const UnitManager = ({
       );
       const newSyllabus = result.data.createCurriculumUnits;
 
-      // if (!syllabusIds.length) {
-      //   const associatedRooms: any = await API.graphql(
-      //     graphqlOperation(customQueries.listRoomsByActiveSyllabusId, {
-      //       filter: {activeSyllabus: {eq: syllabusId}},
-      //     })
-      //   );
-      //   associatedRooms?.data.listRooms.items?.map(async (room: any) => {
-      //     const updatedRoomResult: any = await API.graphql(
-      //       graphqlOperation(mutations.updateRoom, {
-      //         input: {id: room.id, activeLessons: [selectedSyllabus.id]},
-      //       })
-      //     );
-      //   });
-      //   await updateSyllabusSequence([newLesson.id]);
-      // } else {
-      //   await updateSyllabusSequence([...syllabusIds, newLesson.id]);
-      // }
+      if (!syllabusIds.length) {
+        await updateSyllabusSequence([newSyllabus.unitId]);
+      } else {
+        await updateSyllabusSequence([...syllabusIds, newSyllabus.unitId]);
+      }
       setSelectedSyllabus({id: '', name: '', value: ''});
       setSavedSyllabusList([...savedSyllabusList, newSyllabus]);
       setAddingSyllabus(false);
@@ -141,23 +129,30 @@ const UnitManager = ({
   const updateListAndDropdown = async () => {
     // To update table list and dropdown as per selected items.
     const savedSyllabusIds = [...savedSyllabusList];
-    const syllabusDetails = [...allSyllabusList];
-    let filteredList = syllabusDetails.filter((item) =>
-      savedSyllabusIds.some((unit) => unit.unitId === item.id)
-    );
-    const filteredDropDownList = dropdownSyllabusList.filter((item) =>
-    filteredList.find((unit) => unit.id === item.id) ? false : true
+    let filteredList = savedSyllabusIds.map((assignedSyllabus) => ({
+      ...assignedSyllabus.unit,
+      id: assignedSyllabus.id,
+      unitId: assignedSyllabus.unitId,
+    }));
+    const filteredDropDownList = allSyllabusList.filter((item) =>
+      filteredList.find((unit) => unit.unitId === item.id) ? false : true
     );
 
     filteredList = filteredList
       .map((t: any) => {
-        let index = syllabusIds?.indexOf(t.uniqlessonId);
+        let index = syllabusIds?.indexOf(t.unitId);
         return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
     setSelectedSyllabusList(filteredList);
-    setDropdownSyllabusList(filteredDropDownList);
+    setDropdownSyllabusList(
+      filteredDropDownList.map((item: {id: string; name: string}) => ({
+        id: item.id,
+        name: item.name,
+        value: item.name,
+      }))
+    );
   };
 
   useEffect(() => {
@@ -170,6 +165,15 @@ const UnitManager = ({
   useEffect(() => {
     if (Array.isArray(savedSyllabusList) && savedSyllabusList.length) {
       updateListAndDropdown();
+    } else {
+      if (allSyllabusList.length) {
+        const updatedList = allSyllabusList.map((item: {id: string; name: string}) => ({
+          id: item.id,
+          name: item.name,
+          value: item.name,
+        }));
+        setDropdownSyllabusList([...updatedList]);
+      }
     }
   }, [savedSyllabusList, allSyllabusList]);
 
@@ -193,14 +197,8 @@ const UnitManager = ({
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
       );
-
-      const updatedList = sortedList.map((item: {unitId: string; name: string}) => ({
-        id: item.unitId,
-        name: item.name,
-        value: item.name,
-      }));
+      // setDropdownSyllabusList([...updatedList]);
       setAllSyllabusList([...sortedList]);
-      setDropdownSyllabusList([...updatedList]);
       setLoading(false);
     } catch {
       setMessages({
@@ -215,23 +213,26 @@ const UnitManager = ({
   const onDelete = (item: any) => {
     const onDrop = async () => {
       setDeleting(true);
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: item.uniqlessonId},
+      await API.graphql(
+        graphqlOperation(customMutations.deleteCurriculumUnits, {
+          input: {id: item.id},
         })
       );
       await updateSyllabusSequence(
-        syllabusIds.filter((lessonId: any) => lessonId !== item.uniqlessonId)
+        syllabusIds.filter((unitId: any) => unitId !== item.unitId)
       );
       setSelectedSyllabusList((list: any) =>
         list.filter((_item: any) => _item.id !== item.id)
+      );
+      setSavedSyllabusList((prevList: any) =>
+        prevList.filter((syllabus: any) => syllabus.id !== item.id)
       );
       setDeleting(false);
       closeLessonAction();
     };
     setWarnModal2({
       show: true,
-      message: `Are you sure you want to delete (${item.title})?`,
+      message: `Are you sure you want to remove ${item.name} from course?`,
       action: onDrop,
     });
   };
@@ -256,16 +257,16 @@ const UnitManager = ({
         result.destination.index
       );
       setSyllabusIds(list);
-      let lessonsList = selectedSyllabusList
+      let syllabusList = selectedSyllabusList
         .map((t: any) => {
-          let index = list.indexOf(t.uniqlessonId);
+          let index = list.indexOf(t.id);
           return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-      setSelectedSyllabusList(lessonsList);
-      updateSyllabusSequence(list);
+      setSelectedSyllabusList(syllabusList);
       // Graphql mutation to update syllabus lesson seq
+      updateSyllabusSequence(list);
     }
   };
 
@@ -302,7 +303,7 @@ const UnitManager = ({
         <div className="flex justify-end">
           <AddButton
             label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-            onClick={createNewLesson}
+            onClick={createNewUnit}
           />
         </div>
       </div>
@@ -334,7 +335,7 @@ const UnitManager = ({
           </div>
         ) : null}
 
-        {/* *************** LESSONS LIST ************ */}
+        {/* *************** SYLLABUS LIST ************ */}
         <div>
           {loading ? (
             <div className="h-100 flex justify-center items-center">
@@ -344,7 +345,7 @@ const UnitManager = ({
             </div>
           ) : selectedSyllabusList?.length > 0 ? (
             <div>
-              {/* *************** LESSONS TABLE HEADERS ************ */}
+              {/* *************** SYLLABUS TABLE HEADERS ************ */}
               <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
@@ -384,7 +385,8 @@ const UnitManager = ({
                                         gotoLessonBuilder(item.id, item.type)
                                       }>
                                       {item.name || '--'}
-                                    </div>{/* <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
+                                    </div>
+                                    {/* <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
                                               {editState.id !== item.id ? (
                                                 <span
                                                   className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
@@ -432,7 +434,7 @@ const UnitManager = ({
             </div>
           ) : (
             <div className="text-center p-16 mt-4">
-              {CourseBuilderDict[userLanguage]['nolesson']}
+              {CourseBuilderDict[userLanguage]['NO_UNIT']}
             </div>
           )}
         </div>

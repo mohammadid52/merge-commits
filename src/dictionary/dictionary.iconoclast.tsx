@@ -1339,6 +1339,7 @@ const CourseBuilderDict: any = {
     OBJECT: 'Objective',
     ADD_NEW_UNIT: 'New Unit',
     SELECT_UNIT: 'Select Unit',
+    NO_UNIT: 'No units assigned to course',
     TABLE_HEADS: {
       NUMBER: 'No.',
       LESSONS: 'Lessons',
@@ -1355,6 +1356,7 @@ const CourseBuilderDict: any = {
         invalid:
           'Invalid path please go back to institution selection page to select your institute.',
         FETCH_COURSE_ERR: 'Error while fetching course data, please try again later.',
+        FETCH_UNIT_ERR: 'Error while fetching units, please try again later.',
       },
       validation: {
         name: 'Course name is required please enter name.',

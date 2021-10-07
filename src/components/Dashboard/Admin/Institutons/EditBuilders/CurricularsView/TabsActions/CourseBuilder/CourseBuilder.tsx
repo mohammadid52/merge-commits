@@ -85,16 +85,18 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     setFetchingDetails(true);
     if (courseId) {
       try {
-        const result: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculum, {id: courseId})
-        );
-        const savedData = result.data.getCurriculum;
-        const curriculumUnits: any = await API.graphql(
-          graphqlOperation(customQueries.listCurriculumUnitss, {id: courseId})
-        );
+        const [curriculumResult, curriculumUnits]: any = await Promise.all([
+          await API.graphql(
+            graphqlOperation(customQueries.getCurriculum, {id: courseId})
+          ),
+          await API.graphql(
+            graphqlOperation(customQueries.listCurriculumUnitss, {id: courseId})
+          ),
+        ]);
+        const savedData = curriculumResult.data.getCurriculum;
         setCourseData(savedData);
-        setSyllabusIds(savedData.universalSyllabusSeq || [])
-        setSavedSyllabusList(curriculumUnits?.data.listCurriculumUnitss?.items)
+        setSyllabusIds(savedData.universalSyllabusSeq || []);
+        setSavedSyllabusList(curriculumUnits?.data.listCurriculumUnitss?.items);
         setFetchingDetails(false);
       } catch {
         setMessages({
@@ -193,9 +195,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           />
         );
       case 'learning_objectives':
-        return (
-          <LearningObjective curricularId={courseId} institutionId={instId} />
-        );
+        return <LearningObjective curricularId={courseId} institutionId={instId} />;
       case 'demographics':
         return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }

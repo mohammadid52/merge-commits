@@ -1612,15 +1612,12 @@ export const listCurriculumsForLessons = /* GraphQL */ `
         universalSyllabus {
           items {
             id
-            name
-            lessons {
-              items {
-                id
-                lessonID
-              }
-            }
-            universalLessonsSeq
-            curriculumID
+            unitId
+            unit {
+              id
+              name
+              type            
+            }  
           }
           nextToken
         }

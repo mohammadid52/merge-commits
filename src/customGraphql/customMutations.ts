@@ -1384,3 +1384,15 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
     }
   }
 `;
+
+export const deleteCurriculumUnits = /* GraphQL */ `
+  mutation DeleteCurriculumUnits(
+    $input: DeleteCurriculumUnitsInput!
+    $condition: ModelcurriculumUnitsConditionInput
+  ) {
+    deleteCurriculumUnits(input: $input, condition: $condition) {
+      id
+      unitId
+    }
+  }
+`;
