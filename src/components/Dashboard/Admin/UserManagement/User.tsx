@@ -222,59 +222,59 @@ const User = () => {
 
   // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
 
-  const getCheckpointSequences: any = async (
-    checkpointIDS: string[],
-    nextToken: string,
-    loopLimit: 10,
-    output: any[]
-  ) => {
-    if (checkpointIDS && checkpointIDS.length > 0) {
-      try {
-        let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-        let compoundQuery = {
-          filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
-          limit: 100,
-        };
-        let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
+  // const getCheckpointSequences: any = async (
+  //   checkpointIDS: string[],
+  //   nextToken: string,
+  //   loopLimit: 10,
+  //   output: any[]
+  // ) => {
+  //   if (checkpointIDS && checkpointIDS.length > 0) {
+  //     try {
+  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+  //       let compoundQuery = {
+  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
+  //         limit: 100,
+  //       };
+  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
 
-        let getAllCheckpointSequences: any = await API.graphql(
-          graphqlOperation(
-            queries.listCSequencess,
-            nextToken ? queryWithNextToken : compoundQuery
-          )
-        );
+  //       let getAllCheckpointSequences: any = await API.graphql(
+  //         graphqlOperation(
+  //           queries.listCSequencess,
+  //           nextToken ? queryWithNextToken : compoundQuery
+  //         )
+  //       );
 
-        let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
+  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
 
-        let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
-        // return responseItems;
+  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
+  //       // return responseItems;
 
-        if (theNextToken !== null && loopLimit > 0) {
-          console.log(nextToken);
-          getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
-            ...output,
-            ...responseItems,
-          ]);
-        } else {
-          return [...output, responseItems];
-        }
-      } catch (e) {
-        console.error('getCheckpointSequences - ', e);
-        return [];
-      }
-    } else {
-      return [];
-    }
-  };
+  //       if (theNextToken !== null && loopLimit > 0) {
+  //         console.log(nextToken);
+  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
+  //           ...output,
+  //           ...responseItems,
+  //         ]);
+  //       } else {
+  //         return [...output, responseItems];
+  //       }
+  //     } catch (e) {
+  //       console.error('getCheckpointSequences - ', e);
+  //       return [];
+  //     }
+  //   } else {
+  //     return [];
+  //   }
+  // };
 
-  useEffect(() => {
-    if (allCheckpointIds.length > 0) {
-      const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
-      Promise.resolve(getAllSequences).then((output: any) => {
-        console.log('all checkpoint sequences - ', output);
-      });
-    }
-  }, [allCheckpointIds]);
+  // useEffect(() => {
+  //   if (allCheckpointIds.length > 0) {
+  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
+  //     Promise.resolve(getAllSequences).then((output: any) => {
+  //       console.log('all checkpoint sequences - ', output);
+  //     });
+  //   }
+  // }, [allCheckpointIds]);
 
   async function getUserById(id: string) {
     try {
