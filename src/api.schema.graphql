@@ -526,6 +526,7 @@ type Checkpoint @model {
   language: String
   estTime: Int
   scope: String
+  questionSeq: [String]
 }
 
 type commonCheckpoint
