@@ -259,7 +259,7 @@ const UnitManager = ({
       setSyllabusIds(list);
       let syllabusList = selectedSyllabusList
         .map((t: any) => {
-          let index = list.indexOf(t.id);
+          let index = list.indexOf(t.unitId);
           return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));

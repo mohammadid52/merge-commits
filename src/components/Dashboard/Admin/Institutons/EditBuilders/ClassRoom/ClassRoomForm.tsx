@@ -594,7 +594,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             setLoading(false);
           }
           history.push(
-            `/dashboard/manage-institutions/${instId}/room-edit/${roomId}?step=unit-planner`
+            `/dashboard/manage-institutions/institution/${instId}/room-edit/${roomId}?step=unit-planner`
           );
         }
       } catch{

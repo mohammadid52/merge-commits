@@ -96,9 +96,15 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           ),
         ]);
         const savedData = curriculumResult.data.getCurriculum;
+        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnitss?.items]
+        .map((t: any) => {
+          let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
+          return {...t, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
         setCourseData(savedData);
         setSyllabusIds(savedData.universalSyllabusSeq || []);
-        setSavedSyllabusList(curriculumUnits?.data.listCurriculumUnitss?.items);
+        setSavedSyllabusList(sortedSyllabusList);
         setFetchingDetails(false);
       } catch {
         setMessages({
