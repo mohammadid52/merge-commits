@@ -97,14 +97,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                   {`${user.preferredName ? user.preferredName : '--'}`}
                 </dd>
               </div>
-              {/* <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['BIRTHDAY']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.birthdate ? changeToUsFormat(user.birthdate) : 'not set'}`}
-                </dd>
-              </div> */}
+
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['LANGUAGE']}
@@ -117,14 +110,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.email}`}</dd>
               </div>
-              {/* <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['CONTACT']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.phone ? user.phone : '--'}`}
-                </dd>
-              </div> */}
+
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']}

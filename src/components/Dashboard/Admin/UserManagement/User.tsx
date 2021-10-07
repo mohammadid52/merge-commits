@@ -33,7 +33,12 @@ import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast
 import * as mutations from '../../../../graphql/mutations';
 import * as queries from '../../../../graphql/queries';
 import {getImageFromS3} from '../../../../utilities/services';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getUniqItems,
+  initials,
+  stringToHslColor,
+} from '../../../../utilities/strings';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
@@ -125,7 +130,10 @@ const User = ({instituteId}: IUserProps) => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  // const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
@@ -185,6 +193,12 @@ const User = ({instituteId}: IUserProps) => {
     },
   ];
 
+  // ##################################################################### //
+  // ######################### PROFILE QUESTIONS ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
+
   const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
@@ -208,12 +222,26 @@ const User = ({instituteId}: IUserProps) => {
     );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
+  };
 
-    // questionData.forEach(async (item: any) => {
-    // await API.graphql(
-    //   graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
-    // );
-    // });
+  // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
+
+  const getCheckpointSequences = async (checkpointIDS: string[]) => {
+    if (checkpointIDS && checkpointIDS.length > 0) {
+      try {
+        let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+        let compoundQuery = createFilterToFetchSpecificItemsOnly(modifiedIds, 'id');
+        let getAllCheckpointSequences: any = await API.graphql(
+          graphqlOperation(queries.listCSequencess, {filter: {compoundQuery}})
+        );
+        return getAllCheckpointSequences;
+      } catch (e) {
+        console.error('getCheckpointSequences - ', e);
+        return [];
+      }
+    } else {
+      return [[]];
+    }
   };
 
   async function getUserById(id: string) {
@@ -255,13 +283,26 @@ const User = ({instituteId}: IUserProps) => {
 
       sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
+      /***********************
+       *   DEMOGRAPHIC AND   *
+       * PRIVATE CHECKPOINTS *
+       ***********************/
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const demographicCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope !== 'private')
+        .reverse();
+      const privateCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope === 'private')
+        .reverse();
+
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      setStdCheckpoints([...uniqCheckpoints]);
+      // setStdCheckpoints([...uniqCheckpoints]);
+      setDemographicCheckpoints(demographicCheckpoints);
+      setPrivateCheckpoints(privateCheckpoints);
 
       setStatus('done');
       setUser(() => {
@@ -1504,15 +1545,22 @@ const User = ({instituteId}: IUserProps) => {
                       path={`${match.url}/edit`}
                       render={() => (
                         <UserEdit
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
                           instituteId={instituteId}
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
                           setTab={setTab}
                           user={user}
                           status={status}
                           setStatus={setStatus}
                           getUserById={getUserById}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                         />
                       )}
                     />
@@ -1520,10 +1568,17 @@ const User = ({instituteId}: IUserProps) => {
                       path={`${match.url}/`}
                       render={() => (
                         <UserInformation
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
                           setTab={setTab}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                           user={user}
                           status={status}
                         />

@@ -2762,6 +2762,8 @@ const UserEditDict: any = {
 const UserInformationDict: any = {
   EN: {
     details: 'Private Details',
+    demographics: 'Demographics',
+    private: 'Private',
     heading: 'Personal Information',
     fullname: 'Full Name',
     nickname: 'Nickname',
@@ -2773,6 +2775,8 @@ const UserInformationDict: any = {
   },
   ES: {
     details: 'TDB',
+    demographics: 'TBD',
+    private: 'TBD',
     heading: 'TBD',
     fullname: 'TBD',
     nickname: 'TBD',
