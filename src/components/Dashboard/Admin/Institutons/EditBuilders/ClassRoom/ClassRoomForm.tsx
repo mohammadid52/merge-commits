@@ -329,9 +329,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      if (!isMounted) {
-        return;
-      }
+      // if (!isMounted) {
+      //   return;
+      // }
       const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
