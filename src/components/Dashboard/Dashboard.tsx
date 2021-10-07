@@ -277,7 +277,7 @@ const Dashboard = (props: DashboardProps) => {
             ...acc,
             {
               name: dataObj?.class?.name,
-              rooms: dataObj?.class?.rooms,
+              room: dataObj?.class?.room,
               students: dataObj?.class?.students,
             },
           ];
@@ -294,13 +294,7 @@ const Dashboard = (props: DashboardProps) => {
     let rooms: any = [];
     classList && classList.length
       ? classList.forEach((classObj) =>
-          classObj.rooms.items.length
-            ? classObj.rooms.items.forEach((room: any) =>
-                room.curricula?.items.length && room.curricula?.items[0].curriculum
-                  ? rooms.push(room)
-                  : null
-              )
-            : null
+          classObj.room ? rooms.push(classObj.room) : null
         )
       : null;
     return rooms;
@@ -308,6 +302,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
+    console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',

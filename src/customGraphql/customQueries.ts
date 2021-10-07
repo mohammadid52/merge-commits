@@ -5,66 +5,64 @@ export const getDashboardData = /* GraphQL */ `
         items {
           class {
             name
-            rooms {
-              items {
-                id
-                institutionID
-                classID
-                teacherAuthID
-                teacherEmail
-                name
-                maxPersons
-                activeSyllabus
-                activeLessonId
-                activeLessons
-                completedLessons {
-                  lessonID
-                  time
-                }
-                ClosedPages
-                disabledPages
-                studentViewing
-                displayData {
-                  studentAuthID
-                  lessonPageID
-                }
-                currentPage
-                teacher {
-                  firstName
-                  lastName
-                  image
-                  email
-                  role
-                  phone
-                  authId
-                }
-                coTeachers {
-                  items {
-                    teacher {
-                      authId
-                      firstName
-                      lastName
-                      image
-                      email
-                      role
-                      phone
-                    }
+            room {
+              id
+              institutionID
+              classID
+              teacherAuthID
+              teacherEmail
+              name
+              maxPersons
+              activeSyllabus
+              activeLessonId
+              activeLessons
+              completedLessons {
+                lessonID
+                time
+              }
+              ClosedPages
+              disabledPages
+              studentViewing
+              displayData {
+                studentAuthID
+                lessonPageID
+              }
+              currentPage
+              teacher {
+                firstName
+                lastName
+                image
+                email
+                role
+                phone
+                authId
+              }
+              coTeachers {
+                items {
+                  teacher {
+                    authId
+                    firstName
+                    lastName
+                    image
+                    email
+                    role
+                    phone
                   }
                 }
-                curricula {
-                  items {
+              }
+              curricula {
+                items {
+                  id
+                  curriculumID
+                  curriculum {
+                    name
+                    image
                     id
-                    curriculumID
-                    curriculum {
-                      name
-                      image
-                      id
-                      description
-                      designers
-                      objectives
-                      summary
-                      type
-                    }
+                    description
+                    designers
+                    objectives
+                    summary
+                    type
                   }
                 }
               }
@@ -788,9 +786,6 @@ export const getRoom = /* GraphQL */ `
           filters
           createdAt
           updatedAt
-        }
-        rooms {
-          nextToken
         }
         students {
           nextToken
@@ -2457,20 +2452,35 @@ export const getClassDetails = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        currentPage
+        activeLessons
+        weekDay
+        conferenceCallLink
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -3620,11 +3630,9 @@ export const getChatRooms = /* GraphQL */ `
           classID
           class {
             id
-            rooms {
-              items {
-                id
-                name
-              }
+            room {
+              id
+              name
             }
           }
         }
