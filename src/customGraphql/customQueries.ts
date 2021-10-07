@@ -3024,6 +3024,146 @@ export const userById = /* GraphQL */ `
     }
   }
 `;
+export const getUserProfile = /* GraphQL */ `
+  query UserById(
+    $id: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userById(
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        classes {
+          items {
+            classID
+            class {
+              id
+              type
+              name
+              createdAt
+              updatedAt
+              institutionID
+              institution {
+                name
+                checkpoints {
+                  items {
+                    type
+                    typeID
+                    checkpoint {
+                      scope
+                      id
+                      label
+                      title
+                      questions {
+                        items {
+                          id
+                          required
+                          question {
+                            id
+                            label
+                            type
+                            question
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              room {
+                id
+                name
+                class {
+                  id
+                  name
+                  institution {
+                    name
+                  }
+                }
+                teacher {
+                  firstName
+                  preferredName
+                  lastName
+                  image
+                }
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
+                      name
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            scope
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
+                                  id
+                                  label
+                                  type
+                                  question
+                                  options {
+                                    text
+                                    label
+                                    icon
+                                    color
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 
 export const getPersonData = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {

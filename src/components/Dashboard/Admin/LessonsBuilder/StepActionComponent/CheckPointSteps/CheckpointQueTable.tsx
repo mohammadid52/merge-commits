@@ -41,10 +41,8 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
           id: checkpointId,
         })
       );
-      let questionSequence: any = await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${checkpointId}`})
-      );
-      questionSequence = questionSequence?.data.getCSequences?.sequence || [];
+      let questionSequence = fetchCheckpointsData.data?.getCheckpoint.questionSeq;
+
       if (!fetchCheckpointsData) {
         setError(true);
         throw new Error('fail!');
@@ -56,12 +54,15 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
           const questionsList: any = checkpointQuestions.map(
             (item: any) => item.question
           );
-          let list = questionsList
-            .map((t: any) => {
-              let index = questionSequence.indexOf(t.id);
-              return {...t, index};
-            })
-            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+          let list = questionSequence
+            ? questionsList
+                .map((t: any) => {
+                  let index = questionSequence.indexOf(t.id);
+                  return {...t, index};
+                })
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+            : questionsList;
+
           setQuestionsList(list);
         } else {
           setQuestionsList([]);

@@ -276,36 +276,45 @@ const User = () => {
   //   }
   // }, [allCheckpointIds]);
 
-  async function getUserById(id: string) {
+  async function getUserProfile(id: string) {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.userById, {id: id})
+        graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
+      console.log('studentClasses - ', studentClasses);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
+
       userData.rooms = studentRooms;
+
       const studentCurriculars: any = studentRooms
-        .map((item: any) => item?.curricula?.items)
-        .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
+        ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
+        : [];
+
+      const uniqCurriculars: any = studentCurriculars
+        ? getUniqItems(
+            studentCurriculars.filter((d: any) => d !== null),
+            'curriculumID'
+          )
+        : [];
+
       const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+        ? uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1)
+        : [];
+
+      const studentCheckpoints: any = studCurriCheckp
+        ? studCurriCheckp.map((item: any) => item?.checkpoint)
+        : [];
 
       let sCheckpoints: any[] = [];
 
@@ -321,7 +330,7 @@ const User = () => {
        ***********************/
 
       // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
-      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
@@ -434,7 +443,7 @@ const User = () => {
 
   useEffect(() => {
     if (typeof id === 'string') {
-      getUserById(id);
+      getUserProfile(id);
     }
   }, []);
 
@@ -1588,7 +1597,7 @@ const User = () => {
                           user={user}
                           status={status}
                           setStatus={setStatus}
-                          getUserById={getUserById}
+                          getUserById={getUserProfile}
                           questionData={questionData}
                           checkpoints={
                             tab === 'demographics'
