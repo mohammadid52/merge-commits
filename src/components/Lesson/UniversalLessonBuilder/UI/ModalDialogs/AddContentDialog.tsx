@@ -1,7 +1,9 @@
+import Buttons from '@components/Atoms/Buttons';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import {useOverlayContext} from '@contexts/OverlayContext';
-import {noop} from 'lodash';
-import React, {useState} from 'react';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
+import {isEmpty, noop} from 'lodash';
+import React, {useEffect, useState} from 'react';
 import {
   AiOutlineBorderlessTable,
   AiOutlineFileImage,
@@ -24,19 +26,24 @@ import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
 
 interface AddContentDialog {
-  addContentModal?: {show: boolean; type: string};
-  setAddContentModal?: React.Dispatch<
-    React.SetStateAction<{show: boolean; type: string}>
-  >;
-  hideAllModals?: () => void;
-  onItemClick?: (type: string) => void;
+  setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
+  onComponentCreateClick?: () => void;
+  onItemClick?: (type: string, bottom?: boolean) => void;
 }
-const AddContentDialog = ({onItemClick}: AddContentDialog) => {
+const AddContentDialog = ({
+  onItemClick,
+  onComponentCreateClick,
+  setCurrentHelpStep,
+}: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
     {name: 'User Interaction', current: false},
   ];
+
+  const {selectedComponent, setShowingPin, showingPin} = usePageBuilderContext();
+
+  const [activeItem, setActiveItem] = useState(null); // content type
 
   const {addContentModal} = useOverlayContext();
 
@@ -244,40 +251,118 @@ const AddContentDialog = ({onItemClick}: AddContentDialog) => {
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab] = helpers;
+  const btnClass = `font-semibold hover:text-gray-600 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
+
+  const onCustomPositionClick = (e: any) => {
+    e.stopPropagation();
+    if (!addContentModal.show) {
+      onItemClick(activeItem, false);
+    }
+    setCurrentHelpStep(1);
+  };
+
+  const onCreateComponentClick = (e: any) => {
+    e.stopPropagation();
+    onComponentCreateClick();
+    setActiveItem(null);
+  };
+
+  useEffect(() => {
+    if (!isEmpty(selectedComponent)) {
+      setCurrentHelpStep(2);
+    }
+  }, [selectedComponent]);
+
+  const onBottomClick = (e: any) => {
+    e.stopPropagation();
+    if (!addContentModal.show) {
+      onItemClick(activeItem, true);
+      setCurrentHelpStep(null);
+    }
+  };
 
   const Item = ({content}: {content: any}) => {
+    const currentType = activeItem === content.type;
+
+    const onFinalStep =
+      currentType && !isEmpty(selectedComponent) && !addContentModal.show;
+    const onOptions = currentType && !onFinalStep;
+    const onInit = !currentType && !onFinalStep;
     return (
       <div
-        onClick={() => (addContentModal.show ? noop : onItemClick(content.type))}
-        key={content.name}
+        // onClick={() => (addContentModal.show ? noop : onItemClick(content.type))}
+        onClick={() => {
+          setActiveItem(content.type);
+          setShowingPin(false);
+        }}
         className={`relative ${
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
         } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
-        <span
-          className={classNames(
-            content.iconBackground,
-            content.iconForeground,
-            'rounded-lg inline-flex p-3 w-auto'
-          )}>
-          <content.icon className="h-6 w-6" aria-hidden="true" />
-        </span>
-        <div className="flex-1 min-w-0 flex items-center justify-between">
-          <a href="#" className="focus:outline-none">
-            <span className="absolute inset-0" aria-hidden="true" />
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
-              {content.name}
-            </p>
-            <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
-          </a>
-        </div>
+        <>
+          {onInit && (
+            <>
+              <span
+                className={classNames(
+                  content.iconBackground,
+                  content.iconForeground,
+                  'rounded-lg inline-flex p-3 w-auto'
+                )}>
+                <content.icon className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <div className="flex-1 min-w-0 flex items-center justify-between">
+                <div className="focus:outline-none cursor-pointer">
+                  <span className="absolute inset-0" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {content.name}
+                  </p>
+                  <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+                </div>
+              </div>
 
-        <div className="w-auto">
-          <HiOutlineArrowRight
-            className={`arrow-icon w-auto ${content.iconForeground}`}
-          />
-        </div>
+              <div className="w-auto">
+                <HiOutlineArrowRight
+                  className={`arrow-icon w-auto ${content.iconForeground}`}
+                />
+              </div>
+            </>
+          )}
+        </>
+        <>
+          {onOptions && (
+            <div className="px-2 dark:text-gray-500 flex items-center justify-between">
+              <Buttons
+                onClick={onCustomPositionClick}
+                overrideClass
+                btnClass={`${
+                  showingPin ? 'iconoclast:border-main border-0 curate:border-main' : ''
+                } ${btnClass}`}
+                label="Custom position"
+              />
+              <Buttons
+                overrideClass
+                onClick={onBottomClick}
+                btnClass={btnClass}
+                transparent
+                label="Add to Botom"
+              />
+            </div>
+          )}
+        </>
+        <>
+          {onFinalStep && (
+            <div className="px-2 dark:text-gray-500 flex items-center justify-center">
+              <Buttons
+                overrideClass
+                onClick={onCreateComponentClick}
+                transparent
+                btnClass={btnClass}
+                label="Create component"
+              />
+            </div>
+          )}
+        </>
       </div>
     );
   };
@@ -288,8 +373,8 @@ const AddContentDialog = ({onItemClick}: AddContentDialog) => {
       <AnimatedContainer show={onTextTab} animationType="translateY">
         {onTextTab && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
-            {textContent.map((content) => (
-              <Item content={content} />
+            {textContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
         )}
@@ -297,8 +382,8 @@ const AddContentDialog = ({onItemClick}: AddContentDialog) => {
       <AnimatedContainer show={onMediaTab} animationType="translateY">
         {onMediaTab && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
-            {mediaContent.map((content) => (
-              <Item content={content} />
+            {mediaContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
         )}
@@ -306,8 +391,8 @@ const AddContentDialog = ({onItemClick}: AddContentDialog) => {
       <AnimatedContainer show={onUIContentTab} animationType="translateY">
         {onUIContentTab && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
-            {userInterfaceContent.map((content) => (
-              <Item content={content} />
+            {userInterfaceContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
         )}

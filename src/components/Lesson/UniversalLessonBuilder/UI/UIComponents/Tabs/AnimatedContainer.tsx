@@ -8,8 +8,10 @@ const AnimatedContainer = ({
   duration = '300',
   className,
   customAnimation,
+  fixWidth = false,
 }: {
   show: boolean;
+  fixWidth?: boolean;
   className?: string;
   customAnimation?: {show: string; hide: string};
   children: React.ReactNode;
@@ -33,14 +35,13 @@ const AnimatedContainer = ({
         return show ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full';
     }
   };
-
   return (
     <div
       className={classNames(
         genAnimation(),
         'transition-all  transform',
         `duration-${duration}`,
-        className
+        fixWidth ? (show ? className : 'w-0') : className
       )}>
       {children}
     </div>

@@ -4,6 +4,7 @@ import Modal from '@atoms/Modal';
 import ContentModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {useQuery} from '@customHooks/urlParam';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -33,6 +34,8 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
+import isEmpty from 'lodash/isEmpty';
+
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -140,6 +143,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setAddContentModal({type: '', show: false});
     setCurrentModalDialog('');
   };
+  const {setSelectedComponent, selectedComponent} = usePageBuilderContext();
+
+  useEffect(() => {
+    if (!isEmpty(selectedComponent)) {
+      setBlockConfig({
+        ...blockConfig,
+        position: selectedComponent.partContentIdx,
+      });
+    }
+  }, [selectedComponent]);
 
   const handleModalPopToggle = (
     dialogToToggle: string,
@@ -151,19 +164,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
-    if (!modalPopVisible) {
-      setBlockConfig({
-        section,
-        position,
-        targetId,
-        isEditingMode: false,
-      });
-      setModalPopVisible(true);
-    }
+    setBlockConfig({
+      section,
+      position,
+      targetId,
+      isEditingMode: false,
+    });
     // Toggle Which Dialog is Shown
-    if (currentModalDialog !== dialogToToggle) {
-      setCurrentModalDialog(dialogToToggle);
-    }
+    // if (currentModalDialog !== dialogToToggle) {
+    //   setCurrentModalDialog(dialogToToggle);
+    // }
   };
 
   const handleEditBlockContent = (
@@ -218,21 +228,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      // case dialogLabelList.VIEW_PAGES:
-      //   return (
-      //     <PageSelector
-      //       universalLessonDetails={universalLessonDetails}
-      //       deleteFromULBHandler={deleteFromULBHandler}
-      //       universalBuilderDict={UniversalBuilderDict}
-      //       userLanguage={userLanguage}
-      //       galleryVisible={galleryVisible}
-      //       loading={loading}
-      //       selectedPageID={selectedPageID}
-      //       setSelectedPageID={setSelectedPageID}
-      //       handleModalPopToggle={handleModalPopToggle}
-      //       hideAllModals={hideAllModals}
-      //     />
-      //   );
       case dialogLabelList.NEW_PAGE:
         return (
           <NewPageDialog
@@ -243,26 +238,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
-        return (
-          <AddContentDialog
-            hideAllModals={hideAllModals}
-            addContentModal={addContentModal}
-            setAddContentModal={setAddContentModal}
-          />
-        );
+        return <AddContentDialog />;
 
       default:
-        return (
-          <NewPageDialog
-            universalLessonDetails={universalLessonDetails}
-            closeAction={hideAllModals}
-          />
-        );
+        return null;
     }
   };
 
   const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
+    setSelectedComponent(null);
     if (showPopup) {
       wait(700).then(() => {
         setSavingStatus('loading');
@@ -281,6 +266,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
    * If you want to add a modal component,
    * first add constant type in constants.tsx and add component here
    */
+
   const modalByType = (type: string) => {
     const {
       position = 0,

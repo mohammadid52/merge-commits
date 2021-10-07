@@ -330,8 +330,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
         {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
         <PageBuilderSlideOver
-          activePageData={activePageData}
+          deleteFromULBHandler={deleteFromULBHandler}
           open={showLessonEditOverlay}
+          handleEditBlockContent={handleEditBlockContent}
+          handleModalPopToggle={handleModalPopToggle}
         />
         {/* ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
         <div

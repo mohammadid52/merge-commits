@@ -18,6 +18,7 @@ import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {
   useTabs,
 } from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -83,6 +84,7 @@ const HeaderModalComponent = ({
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
+  const {blockConfig} = useULBContext();
 
   const [errors, setErrors] = useState({animation: '', title: ''});
   const [selectedValues, setSelectedValues] = useState({
@@ -209,7 +211,7 @@ const HeaderModalComponent = ({
           '',
           'header',
           [{id: uuidv4().toString(), value}],
-          0,
+          blockConfig.position,
           classValue
         );
 
@@ -221,7 +223,8 @@ const HeaderModalComponent = ({
           'header',
 
           [{id: uuidv4().toString(), value}],
-          0,
+          blockConfig.position,
+
           classValue
         );
         await addToDB(updatedList);

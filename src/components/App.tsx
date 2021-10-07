@@ -4,18 +4,18 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {GlobalContextProvider} from '@contexts/GlobalContext';
 import MainRouter from './AppMainRouter';
 import {OverlayContextProvider} from '@contexts/OverlayContext';
-import {EditStateContextProvider} from '@contexts/EditStateContext';
+import {PageBuilderProvider} from '@contexts/PageBuilderContext';
 
 const App: React.FC = () => {
   return (
     <CookiesProvider>
       <GlobalContextProvider>
         <OverlayContextProvider>
-          <EditStateContextProvider>
+          <PageBuilderProvider>
             <Router>
               <MainRouter />
             </Router>
-          </EditStateContextProvider>
+          </PageBuilderProvider>
         </OverlayContextProvider>
       </GlobalContextProvider>
     </CookiesProvider>

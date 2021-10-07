@@ -2,6 +2,7 @@ import composePartContent from '@components/Lesson/UniversalLessonBlockComponent
 import {AddNewBlock} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
@@ -23,6 +24,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
   } = props;
+
+  const {selectedComponent} = usePageBuilderContext();
+
   const [editedID, setEditedID] = useState<string>('');
   const {
     state: {userlessonPage: {themeTextColor = ''} = {}},
@@ -44,6 +48,27 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     previewMode,
     updateMovableList,
   } = useULBContext();
+
+  const LastBlock = ({selectedPageDetails}: any) => {
+    return !previewMode ? (
+      <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+        <AddNewBlock
+          idx={selectedPageDetails.pageContent.length - 1}
+          mode={mode}
+          handleModalPopToggle={(dialogToToggle) =>
+            handleModalPopToggle(
+              dialogToToggle,
+              selectedPageDetails.pageContent.length,
+              'pageContent',
+              selectedPageID
+            )
+          }
+        />
+      </BuilderRowWrapper>
+    ) : (
+      <div />
+    );
+  };
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
@@ -73,14 +98,13 @@ const BuilderRowComposer = (props: RowComposerProps) => {
             // ONE ROW
             <div
               key={`row_pagepart_${idx}`}
-              // className={`relative ${
-              //   selIDForHover?.pageContentID && !selIDForHover?.partContentID
-              //     ? `opacity-${
-              //         pagePart.id === selIDForHover?.pageContentID ? '100' : '50'
-              //       } transition-opacity duration-200`
-              //     : ''
-              // }`}
-            >
+              className={`relative ${
+                selectedComponent?.pageContentID && !selectedComponent?.partContentID
+                  ? `opacity-${
+                      pagePart.id === selectedComponent?.pageContentID ? '100' : '50'
+                    } transition-opacity duration-200`
+                  : ''
+              }`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -106,16 +130,16 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                       {pagePart.partContent.map((content: PartContent, idx2: number) => (
                         <li
                           key={content.id}
-                          // className={
-                          //   selIDForHover?.pageContentID && selIDForHover?.partContentID
-                          //     ? `transition-opacity duration-200 opacity-${
-                          //         selIDForHover?.partContentID === content.id
-                          //           ? '100'
-                          //           : '50'
-                          //       } `
-                          //     : ''
-                          // }
-                        >
+                          className={
+                            selectedComponent?.pageContentID &&
+                            selectedComponent?.partContentID
+                              ? `transition-opacity duration-200 opacity-${
+                                  selectedComponent?.partContentID === content.id
+                                    ? '100'
+                                    : '50'
+                                } `
+                              : ''
+                          }>
                           <EditOverlayBlock
                             key={`pp_${idx}_pc_${idx2}`}
                             mode={mode}
@@ -123,6 +147,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             contentID={content.id}
                             editedID={editedID}
                             pageContentID={pagePart.id}
+                            contentType={content.type}
+                            contentValue={content.value}
                             partContentID={content.id}
                             isComponent={true}
                             isLast={idx2 === pagePart.partContent?.length - 1}
@@ -198,6 +224,21 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                       <h1 className={`w-auto text-center`}>This block has no content</h1>
                     </div>
                   )}
+                  {/* {!previewMode && (
+                    <div className="my-2 grid grid-cols-1">
+                      <AddNewBlockMini
+                        mode={mode}
+                        handleModalPopToggle={(dialogToToggle) =>
+                          handleModalPopToggle(
+                            dialogToToggle,
+                            pagePart?.partContent?.length,
+                            'partContent',
+                            pagePart.id
+                          )
+                        }
+                      />
+                    </div>
+                  )} */}
                 </BuilderRowWrapper>
               </EditOverlayBlock>
 
@@ -212,7 +253,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
           <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
             This page has no layout information.
           </h1>
-          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
+          {/* <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
             Click on the below button to add components
           </h1>
           <EditOverlayBlock
@@ -227,13 +268,13 @@ const BuilderRowComposer = (props: RowComposerProps) => {
               mode={mode}
               hasContent={false}
               dataIdAttribute={`addNewRow`}>
-              {/* <AddNewBlock
+              <AddNewBlock
                 idx={-1}
                 mode={mode}
                 handleModalPopToggle={handleModalPopToggle}
-              /> */}
+              />
             </BuilderRowWrapper>
-          </EditOverlayBlock>
+          </EditOverlayBlock> */}
         </>
       )}
     </>
