@@ -377,13 +377,6 @@ const Dashboard = (props: DashboardProps) => {
             },
           };
 
-          /***************************************************
-           *                                                 *
-           * DISABLED handleFetchAndCache()                  *
-           * TO TROUBLESHOOT LESSONS NOT LOADING             *
-           * ON SYLLABUS-ACTIVATION SWTICH                   *
-           *                                                 *
-           ***************************************************/
           // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
           const roomCurriculumsFetch = await API.graphql(
             graphqlOperation(queries.listRoomCurriculums, {
@@ -535,47 +528,79 @@ const Dashboard = (props: DashboardProps) => {
    * 5. LIST SYLLABUS *
    ********************/
 
+  const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+    let getSyllabusInSequence =
+      sequenceArray && sequenceArray.length > 0
+        ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
+            return [
+              ...acc,
+              syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID),
+            ];
+          }, [])
+        : syllabusArray;
+
+    // console.log('syllabusArray ', syllabusArray);
+    // console.log('getSyllabusInSequence ', getSyllabusInSequence);
+
+    let mapSyllabusToSequence =
+      sequenceArray && sequenceArray.length > 0
+        ? getSyllabusInSequence
+            ?.map((syllabus: any) => syllabus?.unit)
+            .map((syllabus: any) => ({
+              ...syllabus,
+              lessons: {
+                ...syllabus.lessons,
+                items:
+                  syllabus?.lessons?.items && syllabus?.lessons?.items.length > 0
+                    ? syllabus.lessons.items
+                        .map((t: any) => {
+                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                          return {...t, index};
+                        })
+                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                    : [],
+              },
+            }))
+        : getSyllabusInSequence;
+
+    // console.log('mapSyllabusToSequence ', mapSyllabusToSequence);
+
+    return mapSyllabusToSequence;
+  };
+
   const listSyllabus = async () => {
     setSyllabusLoading(true);
-    dispatch({
-      type: 'UPDATE_ROOM',
-      payload: {
-        property: 'syllabus',
-        data: [],
-      },
-    });
 
     try {
+      // ~~~~~~~~~~~~~~ CURRICULUM ~~~~~~~~~~~~~ //
+      let getCurriculum = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
+      );
+      // @ts-ignore
+      let response = await getCurriculum.data.getCurriculum;
+
+      let syllabi = response.universalSyllabus.items;
+      let sequence = response.universalSyllabusSeq;
+
+      let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
+
+      console.log('response - ', mappedResponseObjects);
+
+      //TODO: combine these dispatches
+      dispatch({
+        type: 'UPDATE_ROOM_MULTI',
+        payload: {
+          syllabus: mappedResponseObjects,
+          curriculum: {name: response.name},
+        },
+      });
+
+      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
       let scheduleDetails: any = await API.graphql(
         graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
       );
       scheduleDetails = scheduleDetails?.data?.getRoom;
-      const getCurriculum = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
-      );
-      // @ts-ignore
-      const response = await getCurriculum.data.getCurriculum;
 
-      const syllabi = response.universalSyllabus.items;
-      const sequence = response.universalSyllabusSeq;
-
-      const mappedResponseObjects = sequence
-        ?.reduce((acc: any[], syllabusID: string) => {
-          return [...acc, syllabi.find((syllabus: any) => syllabus.id === syllabusID)];
-        }, [])
-        .filter((syllabus: any) => syllabus)
-        .map((syllabus: any) => ({
-          ...syllabus,
-          lessons: {
-            ...syllabus.lessons,
-            items: syllabus.lessons.items
-              .map((t: any) => {
-                let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                return {...t, index};
-              })
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-          },
-        }));
       if (
         scheduleDetails &&
         scheduleDetails.startDate &&
@@ -584,32 +609,16 @@ const Dashboard = (props: DashboardProps) => {
       ) {
         const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
       }
-
-      //TODO: combine these dispatches
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'syllabus',
-          data: mappedResponseObjects,
-        },
-      });
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'curriculum',
-          data: {name: response.name},
-        },
-      });
-      //  setSyllabusLoading(false);
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
+      setSyllabusLoading(false);
     } finally {
       setSyllabusLoading(false);
     }
   };
 
   useEffect(() => {
-    if (curriculumIds.length > 0) {
+    if (curriculumIds !== '') {
       listSyllabus();
     }
   }, [curriculumIds]);
@@ -619,7 +628,7 @@ const Dashboard = (props: DashboardProps) => {
    *      - LESSONS                         *
    ******************************************/
 
-  const listSyllabusLessons = async () => {
+  const listSyllabusLessons = async (syllabusID: string) => {
     setLessonLoading(true);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -636,7 +645,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const syllabusLessonFetch = await API.graphql(
         graphqlOperation(customQueries.getUniversalSyllabus, {
-          id: activeRoomInfo?.activeSyllabus,
+          id: syllabusID,
         })
       );
       //@ts-ignore
@@ -649,17 +658,10 @@ const Dashboard = (props: DashboardProps) => {
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
       dispatch({
-        type: 'UPDATE_ROOM',
+        type: 'UPDATE_ROOM_MULTI',
         payload: {
-          property: 'lessons',
-          data: lessons,
-        },
-      });
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'activeSyllabus',
-          data: response,
+          activeSyllabus: response,
+          lessons: lessons,
         },
       });
     } catch (e) {
@@ -672,7 +674,7 @@ const Dashboard = (props: DashboardProps) => {
   // ~~~~~~~~ TRIGGER LESSON LOADING ~~~~~~~ //
   useEffect(() => {
     if (activeRoomInfo?.activeSyllabus) {
-      listSyllabusLessons();
+      listSyllabusLessons(activeRoomInfo.activeSyllabus);
     }
   }, [activeRoomInfo]);
 

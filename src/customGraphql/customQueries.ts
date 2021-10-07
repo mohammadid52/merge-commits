@@ -1958,7 +1958,6 @@ export const getUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       lessons {
         items {
@@ -2039,7 +2038,6 @@ export const getUniversalSyllabusData = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       universalLessonsSeq
       designers
@@ -2724,17 +2722,43 @@ export const getCurriculum = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
+          unitId
+          unit {
+            id
+            name
+            type
+            institutionID
+            description
+            methodology
+            policies
+            pupose
+            objectives
+            languages
+            lessons {
+              items {
+                id
+                syllabusID
+                lessonID
+                unit
+                sequence
+                status
+                complete
+                roster
+                viewing
+                startDate
+                endDate
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            universalLessonsSeq
+            designers
+            status
+            createdAt
+            updatedAt
+          }
+          curriculumId
           createdAt
           updatedAt
         }
@@ -4067,27 +4091,43 @@ export const getCurriculumForClasses = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          lessons {
-            items {
-              id
-              lesson {
-                duration
-                title
+          unitId
+          unit {
+            id
+            name
+            type
+            institutionID
+            description
+            methodology
+            policies
+            pupose
+            objectives
+            languages
+            lessons {
+              items {
+                id
+                syllabusID
+                lessonID
+                unit
+                sequence
+                status
+                complete
+                roster
+                viewing
+                startDate
+                endDate
+                createdAt
+                updatedAt
               }
+              nextToken
             }
+            universalLessonsSeq
+            designers
+            status
+            createdAt
+            updatedAt
           }
-          universalLessonsSeq
-          designers
-          status
+          curriculumId
           createdAt
           updatedAt
         }

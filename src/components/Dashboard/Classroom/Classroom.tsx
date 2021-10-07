@@ -242,6 +242,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         })
       );
       setSettingLessons(false);
+    } else {
+      setSettingLessons(false)
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
