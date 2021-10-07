@@ -71,8 +71,8 @@ const UnitManager = ({
 
   useEffect(() => {
     if (savedSyllabusList?.length && !syllabusIds.length) {
-      const lessonSeq = savedSyllabusList.map((item: any) => item.id);
-      updateSyllabusSequence(lessonSeq);
+      const syllabusSeq = savedSyllabusList.map((item: any) => item.unitId);
+      updateSyllabusSequence(syllabusSeq);
     }
   }, [savedSyllabusList]);
 

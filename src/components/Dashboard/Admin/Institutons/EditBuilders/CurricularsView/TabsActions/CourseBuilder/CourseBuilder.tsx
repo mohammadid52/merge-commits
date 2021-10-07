@@ -90,7 +90,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
             graphqlOperation(customQueries.getCurriculum, {id: courseId})
           ),
           await API.graphql(
-            graphqlOperation(customQueries.listCurriculumUnitss, {id: courseId})
+            graphqlOperation(customQueries.listCurriculumUnitss, {
+              filter: {curriculumId: {eq: courseId}},
+            })
           ),
         ]);
         const savedData = curriculumResult.data.getCurriculum;
@@ -246,9 +248,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
                 <Loader />
-                <p className="mt-2 text-center">
-                  Fetching syllabus details please wait...
-                </p>
+                <p className="mt-2 text-center">Fetching course details please wait...</p>
               </div>
             </div>
           ) : (
