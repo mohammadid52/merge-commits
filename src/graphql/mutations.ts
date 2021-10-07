@@ -136,43 +136,15 @@ export const batchAddLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -269,43 +241,15 @@ export const batchDeleteLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -5139,264 +5083,6 @@ export const deleteRoomCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createWarmUp = /* GraphQL */ `
-  mutation CreateWarmUp(
-    $input: CreateWarmUpInput!
-    $condition: ModelWarmUpConditionInput
-  ) {
-    createWarmUp(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateWarmUp = /* GraphQL */ `
-  mutation UpdateWarmUp(
-    $input: UpdateWarmUpInput!
-    $condition: ModelWarmUpConditionInput
-  ) {
-    updateWarmUp(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteWarmUp = /* GraphQL */ `
-  mutation DeleteWarmUp(
-    $input: DeleteWarmUpInput!
-    $condition: ModelWarmUpConditionInput
-  ) {
-    deleteWarmUp(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createActivity = /* GraphQL */ `
-  mutation CreateActivity(
-    $input: CreateActivityInput!
-    $condition: ModelActivityConditionInput
-  ) {
-    createActivity(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateActivity = /* GraphQL */ `
-  mutation UpdateActivity(
-    $input: UpdateActivityInput!
-    $condition: ModelActivityConditionInput
-  ) {
-    updateActivity(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteActivity = /* GraphQL */ `
-  mutation DeleteActivity(
-    $input: DeleteActivityInput!
-    $condition: ModelActivityConditionInput
-  ) {
-    deleteActivity(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createCheckpoint = /* GraphQL */ `
   mutation CreateCheckpoint(
     $input: CreateCheckpointInput!
@@ -6027,411 +5713,6 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
     }
   }
 `;
-export const createAssessment = /* GraphQL */ `
-  mutation CreateAssessment(
-    $input: CreateAssessmentInput!
-    $condition: ModelAssessmentConditionInput
-  ) {
-    createAssessment(input: $input, condition: $condition) {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAssessment = /* GraphQL */ `
-  mutation UpdateAssessment(
-    $input: UpdateAssessmentInput!
-    $condition: ModelAssessmentConditionInput
-  ) {
-    updateAssessment(input: $input, condition: $condition) {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAssessment = /* GraphQL */ `
-  mutation DeleteAssessment(
-    $input: DeleteAssessmentInput!
-    $condition: ModelAssessmentConditionInput
-  ) {
-    deleteAssessment(input: $input, condition: $condition) {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAssessmentQuestions = /* GraphQL */ `
-  mutation CreateAssessmentQuestions(
-    $input: CreateAssessmentQuestionsInput!
-    $condition: ModelAssessmentQuestionsConditionInput
-  ) {
-    createAssessmentQuestions(input: $input, condition: $condition) {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAssessmentQuestions = /* GraphQL */ `
-  mutation UpdateAssessmentQuestions(
-    $input: UpdateAssessmentQuestionsInput!
-    $condition: ModelAssessmentQuestionsConditionInput
-  ) {
-    updateAssessmentQuestions(input: $input, condition: $condition) {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAssessmentQuestions = /* GraphQL */ `
-  mutation DeleteAssessmentQuestions(
-    $input: DeleteAssessmentQuestionsInput!
-    $condition: ModelAssessmentQuestionsConditionInput
-  ) {
-    deleteAssessmentQuestions(input: $input, condition: $condition) {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAssessmentCheckpoint = /* GraphQL */ `
-  mutation CreateAssessmentCheckpoint(
-    $input: CreateAssessmentCheckpointInput!
-    $condition: ModelAssessmentCheckpointConditionInput
-  ) {
-    createAssessmentCheckpoint(input: $input, condition: $condition) {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAssessmentCheckpoint = /* GraphQL */ `
-  mutation UpdateAssessmentCheckpoint(
-    $input: UpdateAssessmentCheckpointInput!
-    $condition: ModelAssessmentCheckpointConditionInput
-  ) {
-    updateAssessmentCheckpoint(input: $input, condition: $condition) {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAssessmentCheckpoint = /* GraphQL */ `
-  mutation DeleteAssessmentCheckpoint(
-    $input: DeleteAssessmentCheckpointInput!
-    $condition: ModelAssessmentCheckpointConditionInput
-  ) {
-    deleteAssessmentCheckpoint(input: $input, condition: $condition) {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createQuestion = /* GraphQL */ `
   mutation CreateQuestion(
     $input: CreateQuestionInput!
@@ -6583,48 +5864,6 @@ export const deleteQuestionType = /* GraphQL */ `
     deleteQuestionType(input: $input, condition: $condition) {
       id
       name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createWord = /* GraphQL */ `
-  mutation CreateWord(
-    $input: CreateWordInput!
-    $condition: ModelWordConditionInput
-  ) {
-    createWord(input: $input, condition: $condition) {
-      id
-      word
-      definition
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateWord = /* GraphQL */ `
-  mutation UpdateWord(
-    $input: UpdateWordInput!
-    $condition: ModelWordConditionInput
-  ) {
-    updateWord(input: $input, condition: $condition) {
-      id
-      word
-      definition
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteWord = /* GraphQL */ `
-  mutation DeleteWord(
-    $input: DeleteWordInput!
-    $condition: ModelWordConditionInput
-  ) {
-    deleteWord(input: $input, condition: $condition) {
-      id
-      word
-      definition
       createdAt
       updatedAt
     }
@@ -6809,79 +6048,15 @@ export const createLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -6983,79 +6158,15 @@ export const updateLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -7157,79 +6268,15 @@ export const deleteLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -7327,43 +6374,15 @@ export const createLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7461,43 +6480,15 @@ export const updateLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7595,43 +6586,15 @@ export const deleteLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7693,768 +6656,6 @@ export const deleteLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLessonCheckpoint = /* GraphQL */ `
-  mutation CreateLessonCheckpoint(
-    $input: CreateLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    createLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLessonCheckpoint = /* GraphQL */ `
-  mutation UpdateLessonCheckpoint(
-    $input: UpdateLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    updateLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLessonCheckpoint = /* GraphQL */ `
-  mutation DeleteLessonCheckpoint(
-    $input: DeleteLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    deleteLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLessonKeyWord = /* GraphQL */ `
-  mutation CreateLessonKeyWord(
-    $input: CreateLessonKeyWordInput!
-    $condition: ModelLessonKeyWordConditionInput
-  ) {
-    createLessonKeyWord(input: $input, condition: $condition) {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLessonKeyWord = /* GraphQL */ `
-  mutation UpdateLessonKeyWord(
-    $input: UpdateLessonKeyWordInput!
-    $condition: ModelLessonKeyWordConditionInput
-  ) {
-    updateLessonKeyWord(input: $input, condition: $condition) {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLessonKeyWord = /* GraphQL */ `
-  mutation DeleteLessonKeyWord(
-    $input: DeleteLessonKeyWordInput!
-    $condition: ModelLessonKeyWordConditionInput
-  ) {
-    deleteLessonKeyWord(input: $input, condition: $condition) {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
         createdAt
         updatedAt
       }
@@ -8617,43 +6818,15 @@ export const createSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -8782,43 +6955,15 @@ export const updateSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -8947,43 +7092,15 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -9120,7 +7237,6 @@ export const createStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -9314,7 +7430,6 @@ export const updateStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -9508,7 +7623,6 @@ export const deleteStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -9907,7 +8021,6 @@ export const createQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10029,7 +8142,6 @@ export const updateQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10151,7 +8263,6 @@ export const deleteQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10754,7 +8865,6 @@ export const createPersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10982,7 +9092,6 @@ export const updatePersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -11210,7 +9319,6 @@ export const deletePersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
