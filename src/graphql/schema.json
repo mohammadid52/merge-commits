@@ -55560,21 +55560,25 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "proficiencyGroups",
+        "name" : "partnerGroups",
         "description" : null,
         "fields" : [ {
-          "name" : "groupName",
+          "name" : "partners",
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "groupIDs",
+          "name" : "advisors",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -55660,33 +55664,29 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "partnerGroups",
+        "name" : "StudentPageInput",
         "description" : null,
         "fields" : [ {
-          "name" : "partners",
+          "name" : "pagePartID",
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "LIST",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "advisors",
+          "name" : "pagePartInput",
           "description" : null,
           "args" : [ ],
           "type" : {
             "kind" : "LIST",
             "name" : null,
             "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
+              "kind" : "OBJECT",
+              "name" : "partInput",
               "ofType" : null
             }
           },
@@ -55738,10 +55738,10 @@
         "possibleTypes" : null
       }, {
         "kind" : "OBJECT",
-        "name" : "StudentPageInput",
+        "name" : "proficiencyGroups",
         "description" : null,
         "fields" : [ {
-          "name" : "pagePartID",
+          "name" : "groupName",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -55752,15 +55752,15 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "pagePartInput",
+          "name" : "groupIDs",
           "description" : null,
           "args" : [ ],
           "type" : {
             "kind" : "LIST",
             "name" : null,
             "ofType" : {
-              "kind" : "OBJECT",
-              "name" : "partInput",
+              "kind" : "SCALAR",
+              "name" : "String",
               "ofType" : null
             }
           },
@@ -56555,6 +56555,23 @@
         "onFragment" : false,
         "onField" : true
       }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
         "name" : "aws_cognito_user_pools",
         "description" : "Tells the service this field/object has access authorized by a Cognito User Pools token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
@@ -56630,23 +56647,6 @@
         "description" : "Tells the service this field/object has access authorized by an OIDC token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
-        } ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
