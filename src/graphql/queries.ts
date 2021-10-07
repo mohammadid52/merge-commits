@@ -2422,6 +2422,7 @@ export const getCheckpoint = /* GraphQL */ `
       language
       estTime
       scope
+      questionSeq
       createdAt
       updatedAt
     }
@@ -2452,6 +2453,7 @@ export const listCheckpoints = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -2646,6 +2648,7 @@ export const getAssessmentCheckpoint = /* GraphQL */ `
         language
         estTime
         scope
+        questionSeq
         createdAt
         updatedAt
       }
@@ -2693,6 +2696,7 @@ export const listAssessmentCheckpoints = /* GraphQL */ `
           language
           estTime
           scope
+          questionSeq
           createdAt
           updatedAt
         }
