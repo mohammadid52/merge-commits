@@ -201,6 +201,7 @@ export const getInstitution = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -542,6 +543,7 @@ export const getRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -561,8 +563,35 @@ export const getRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -704,6 +733,7 @@ export const listRooms = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -1010,6 +1040,7 @@ export const getClassroomGroups = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -1273,6 +1304,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -1432,6 +1464,7 @@ export const getClass = /* GraphQL */ `
       institutionID
       type
       name
+      roomId
       institution {
         id
         name
@@ -1469,38 +1502,116 @@ export const getClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
           id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
           name
-          maxPersons
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
           filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
+          setupComplete
           createdAt
           updatedAt
         }
-        nextToken
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -1533,6 +1644,7 @@ export const listClasss = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -1552,8 +1664,35 @@ export const listClasss = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -1580,6 +1719,7 @@ export const getClassStudent = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -1599,8 +1739,35 @@ export const getClassStudent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -1666,6 +1833,7 @@ export const listClassStudents = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -4521,6 +4689,7 @@ export const getPersonLocation = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -5014,6 +5183,7 @@ export const getAttendance = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }

@@ -108,11 +108,10 @@ type Staff
 
 type Room
   @model
-  @key(name: "roomByInstitution", fields: ["institutionID"])
-  @key(name: "roomByClass", fields: ["classID"]) {
+  @key(name: "roomByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
-  classID: ID!
+  classID: ID
   teacherAuthID: String!
   teacherEmail: String!
   name: String!
@@ -217,8 +216,9 @@ type Class @model @key(name: "classByInstitution", fields: ["institutionID"]) {
   institutionID: ID!
   type: String
   name: String!
+  roomId: ID!
   institution: Institution @connection(fields: ["institutionID"])
-  rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
+  room: Room @connection(fields: ["roomId"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
