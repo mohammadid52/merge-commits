@@ -3024,51 +3024,49 @@ export const userById = /* GraphQL */ `
                 }
               }
               rooms {
-                items {
+                id
+                name
+                class {
                   id
                   name
-                  class {
-                    id
+                  institution {
                     name
-                    institution {
+                  }
+                }
+                teacher {
+                  firstName
+                  preferredName
+                  lastName
+                  image
+                }
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
                       name
-                    }
-                  }
-                  teacher {
-                    firstName
-                    preferredName
-                    lastName
-                    image
-                  }
-                  curricula {
-                    items {
-                      curriculumID
-                      curriculum {
-                        name
-                        checkpoints {
-                          items {
-                            type
-                            typeID
-                            checkpoint {
-                              scope
-                              id
-                              label
-                              title
-                              questions {
-                                items {
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            scope
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
                                   id
-                                  required
-                                  question {
-                                    id
+                                  label
+                                  type
+                                  question
+                                  options {
+                                    text
                                     label
-                                    type
-                                    question
-                                    options {
-                                      text
-                                      label
-                                      icon
-                                      color
-                                    }
+                                    icon
+                                    color
                                   }
                                 }
                               }
@@ -3077,10 +3075,9 @@ export const userById = /* GraphQL */ `
                         }
                       }
                     }
-                    nextToken
                   }
+                  nextToken
                 }
-                nextToken
               }
             }
           }
@@ -3289,7 +3286,7 @@ export const getPersonData = /* GraphQL */ `
                 }
               }
             }
-            rooms {
+            room {
               id
               curricula {
                 items {
