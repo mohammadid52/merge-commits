@@ -624,9 +624,35 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
+  const initSchedule = async (syllabusArray: any[]) => {
+    if (syllabusArray) {
+      try {
+        let scheduleDetails: any = await API.graphql(
+          graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+        );
+        scheduleDetails = scheduleDetails?.data?.getRoom;
+
+        if (
+          scheduleDetails &&
+          scheduleDetails.startDate &&
+          scheduleDetails.endDate &&
+          scheduleDetails.frequency
+        ) {
+          const modifiedData = calculateSchedule(syllabusArray, scheduleDetails);
+        }
+      } catch (e) {
+        console.error('error with initSchedule() ', e);
+      }
+    }
+  };
+
   useEffect(() => {
+    const getSyllabusAndSchedule = async () => {
+      await listSyllabus();
+      await initSchedule(state.roomData.syllabus);
+    };
     if (curriculumIds !== '' && state.activeRoom) {
-      listSyllabus();
+      getSyllabusAndSchedule();
     }
   }, [state.activeRoom, curriculumIds]);
 
