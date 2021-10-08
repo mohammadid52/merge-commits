@@ -9,8 +9,6 @@ import * as customQueries from '@customGraphql/customQueries';
 import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
 
-import BreadCrums from '@atoms/BreadCrums';
-import SectionTitle from '@atoms/SectionTitle';
 import PageWrapper from '@atoms/PageWrapper';
 
 import {getAsset} from '../../../../assets';
@@ -100,13 +98,6 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
       last: true,
     };
-  }else if (pathname.indexOf('edit') > -1) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
-      last: true,
-    };
   } else if (pathname.indexOf('staff') > -1) {
     heroSectionTitle = BreadcrumsTitles[userLanguage].STAFF;
     breadcrumbPathForSection = {
@@ -152,7 +143,7 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
       last: true,
     };
-  } else if (pathname.indexOf('room') > -1) {
+  } else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
     breadcrumbPathForSection = {
       title: heroSectionTitle,
@@ -164,6 +155,13 @@ const Institution = (props: InstitutionProps) => {
     breadcrumbPathForSection = {
       title: heroSectionTitle,
       url: `/dashboard/manage-institutions/institution/${institutionId}/research-and-analytics`,
+      last: true,
+    };
+  } else if (pathname.indexOf('edit') > -1) {
+    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
+    breadcrumbPathForSection = {
+      title: heroSectionTitle,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
       last: true,
     };
   }

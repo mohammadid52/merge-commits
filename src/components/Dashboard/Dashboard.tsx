@@ -9,7 +9,6 @@ import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
 
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';

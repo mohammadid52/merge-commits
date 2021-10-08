@@ -1640,15 +1640,19 @@ export const listCurriculumsForLessons = /* GraphQL */ `
         universalSyllabus {
           items {
             id
-            name
-            lessons {
-              items {
-                id
-                lessonID
+            unitId
+            unit {
+              name
+              type
+              lessons {
+                items {
+                  id
+                  lessonID
+                }
               }
+              universalLessonsSeq
             }
-            universalLessonsSeq
-            curriculumID
+            curriculumId
           }
           nextToken
         }
@@ -4241,7 +4245,7 @@ export const getClassroomSyllabus = /* GraphQL */ `
         items {
           id
           unitId
-          unit{
+          unit {
             name
             type
             lessons {
