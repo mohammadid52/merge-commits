@@ -81,7 +81,7 @@ const EditRoom = (props: EditRoomProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
-      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
+      url: `/dashboard/manage-institutions/institution/${roomData.institute?.id}/class-rooms`,
       last: false,
     },
     {
@@ -524,7 +524,7 @@ const EditRoom = (props: EditRoomProps) => {
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
         setUnsavedChanges(false);
         history.push(
-          `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
+          `/dashboard/manage-institutions/institution/${roomData.institute?.id}/class-rooms`
         );
       } catch {
         setMessages({

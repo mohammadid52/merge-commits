@@ -53,6 +53,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const getCurrentPage = (id: string) =>
     universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
 
+    console.log(universalLessonDetails,'universalLessonDetails');
+    
   const updateMovableList = (
     items: any,
     section: string = 'pageContent',
@@ -148,7 +150,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const pushUserToThisId = (lessonId: string, pageId: string) => {
     try {
       history.push(
-        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+        `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${pageId}`
       );
     } catch (error) {
       console.log(

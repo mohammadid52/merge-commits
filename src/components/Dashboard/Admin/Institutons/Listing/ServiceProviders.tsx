@@ -32,15 +32,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const dictionary = spBuilderDict[userLanguage];
 
   const {instId, serviceProviders, instName} = props;
-  const existingPartners = serviceProviders.items.map((item: any) => {
-    return {
-      id: item.id,
-      status: item.status,
-      partner: {...item.providerInstitution},
-    };
-  });
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
-  const [partners, setPartners] = useState(existingPartners);
+  const [partners, setPartners] = useState<any>([]);
   const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
     show: false,
     item: {},
@@ -48,6 +41,20 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
+
+  useEffect(() => {
+    console.log(serviceProviders,'serviceProviders');
+    
+    if (!partners.length && serviceProviders.items?.filter((item) => item.id).length) {
+      setPartners(
+        serviceProviders.items.map((item: any) => ({
+          id: item.id,
+          status: item.status,
+          partner: {...item.providerInstitution},
+        }))
+      );
+    }
+  }, [serviceProviders]);
 
   const onServProChange = (val: string, name: string, id: string) => {
     setNewServPro({
@@ -113,6 +120,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           ...partners,
           {id: item.id, status: 'Active', partner: {...item.providerInstitution}},
         ];
+
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
           (item: any) => item.id !== newServPro.id
         );
@@ -144,7 +152,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           input: {id, status},
         })
       );
-      const updatedPartners = partners.map((sp) => {
+      const updatedPartners = partners.map((sp: any) => {
         if (sp.id === id) {
           sp.status = status;
         }
@@ -155,14 +163,20 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     }
     setStatusEdit('');
   };
+
+  console.log(partners, 'partners++++++++');
+
   return (
-    <div className="pt-8 flex m-auto justify-center">
+    <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {instName?.toUpperCase()} {dictionary.TITLE}
-          </h3>
-          <div className="flex items-center w-6/10 m-auto px-2 mb-8">
+        <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
+          {/* TITLE */}
+          <div className="w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              {dictionary.SERVICE}
+            </h3>
+          </div>
+          <div className="flex items-center w-6/10 m-auto px-2 my-8">
             <Selector
               selectedItem={newServPro.value}
               list={availableServiceProviders}
@@ -176,25 +190,27 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
             />
           </div>
 
-          {partners && partners.length > 0 ? (
-            <Fragment>
-              <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.NO}</span>
-                </div>
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.SERVICE}</span>
-                </div>
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.STATUS}</span>
-                </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{dictionary.ACTION}</span>
+          {partners?.length ? (
+            <div className="px-4 pb-4">
+              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
+                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.NO}</span>
+                  </div>
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.SERVICE}</span>
+                  </div>
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.STATUS}</span>
+                  </div>
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{dictionary.ACTION}</span>
+                  </div>
                 </div>
               </div>
 
               <div className="w-full m-auto max-h-88 overflow-y-auto">
-                {partners.map((item, index) => (
+                {partners.map((item: any, index: number) => (
                   <div
                     key={index}
                     className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
@@ -250,13 +266,13 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                   </div>
                 ))}
               </div>
-            </Fragment>
+            </div>
           ) : (
             <div className="text-center p-16">
               <p> {dictionary.INFO}</p>
             </div>
           )}
-        </PageWrapper>
+        </div>
       </div>
     </div>
   );

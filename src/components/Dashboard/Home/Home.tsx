@@ -70,8 +70,8 @@ const Home = (props: ClassroomControlProps) => {
   const getTeacherList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          if (dataObj?.class?.rooms.items.length > 0) {
-            const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+          if (dataObj?.class?.room) {
+            const teacherObj = dataObj?.class?.room?.teacher;
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
                 teacher?.firstName === teacherObj?.firstName &&
@@ -94,9 +94,9 @@ const Home = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items.length > 0) {
-          if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-            item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
+        if (item?.class?.room.length > 0) {
+          if (item?.class?.room.coTeachers.items.length > 0) {
+            item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
                 coTeachersList.push(_item.teacher);
