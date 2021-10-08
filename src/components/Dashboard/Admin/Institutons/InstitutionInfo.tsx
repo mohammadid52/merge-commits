@@ -459,7 +459,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       />
                     )}
                   />
-                  <Route
+                  {/* <Route
                     path={`${match.url}/class-creation`}
                     exact
                     render={() => (
@@ -468,8 +468,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Create new class
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path={`${match.url}/class-edit/:classId`}
                     exact
                     render={() => (
@@ -478,7 +478,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Edit current class
-                  />
+                  /> */}
                   <Route
                     path={`${match.url}/class-rooms`}
                     exact

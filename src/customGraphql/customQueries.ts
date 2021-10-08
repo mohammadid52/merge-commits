@@ -4247,19 +4247,22 @@ export const getClassroomSyllabus = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          lessons {
-            items {
-              id
-              lesson {
-                duration
-                title
+          unitId
+          unit{
+            name
+            type
+            lessons {
+              items {
+                id
+                lesson {
+                  duration
+                  title
+                }
               }
             }
+            universalLessonsSeq
+            status
           }
-          universalLessonsSeq
-          status
           createdAt
           updatedAt
         }

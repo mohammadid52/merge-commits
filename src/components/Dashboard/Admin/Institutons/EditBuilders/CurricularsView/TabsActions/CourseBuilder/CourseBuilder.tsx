@@ -132,29 +132,6 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     }));
   };
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: courseData?.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${instId}/staff`,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['COURSES'],
-      url: `/dashboard/manage-institutions/institution/${instId}/course`,
-      last: false,
-    },
-    {
-      title: courseData?.name || BreadcrumsTitles[userLanguage]['COURSE_BUILDER'],
-      url: `/dashboard/manage-institutions/curricular/${courseId}/syllabus/add`,
-      last: true,
-    },
-  ];
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
