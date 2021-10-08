@@ -108,11 +108,10 @@ type Staff
 
 type Room
   @model
-  @key(name: "roomByInstitution", fields: ["institutionID"])
-  @key(name: "roomByClass", fields: ["classID"]) {
+  @key(name: "roomByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
-  classID: ID!
+  classID: ID
   teacherAuthID: String!
   teacherEmail: String!
   name: String!
@@ -217,8 +216,9 @@ type Class @model @key(name: "classByInstitution", fields: ["institutionID"]) {
   institutionID: ID!
   type: String
   name: String!
+  roomId: ID!
   institution: Institution @connection(fields: ["institutionID"])
-  rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
+  room: Room @connection(fields: ["roomId"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
@@ -468,19 +468,6 @@ type WritingPrompts {
   example: String!
 }
 
-type WarmUp @model {
-  id: ID!
-  title: String!
-  label: String!
-  stage: String!
-  type: String!
-  language: Language!
-  SELTypes: [ID!]
-  instructions: Instructions!
-  inputs: Inputs!
-  breakdown: Breakdown!
-}
-
 type Content {
   video: Boolean!
   link: String
@@ -494,20 +481,6 @@ type Tool {
   name: String!
   color: String!
   icon: String!
-}
-
-type Activity @model {
-  id: ID!
-  title: String!
-  label: String!
-  stage: String!
-  type: String!
-  language: Language!
-  SELTypes: [ID!]
-  instructions: Instructions!
-  lineNumber: Int
-  writingPrompts: [WritingPrompts!]!
-  breakdown: Breakdown!
 }
 
 type Checkpoint @model {
@@ -553,38 +526,6 @@ type CheckpointQuestions
   question: Question @connection(fields: ["questionID"])
 }
 
-type Assessment @model {
-  id: ID!
-  title: String!
-  type: String!
-  openingMessage: [String]
-  closingMessage: [String]
-  questions: [AssessmentQuestions]
-    @connection(keyName: "questionsByAssessments", fields: ["id"])
-  checkpoints: [AssessmentCheckpoint]
-    @connection(keyName: "checkpointByAssessment", fields: ["id"])
-}
-
-type AssessmentQuestions
-  @model
-  @key(name: "questionsByAssessments", fields: ["assessmentID", "questionID"]) {
-  id: ID!
-  assessmentID: ID!
-  questionID: ID!
-  assessment: Assessment @connection(fields: ["assessmentID"])
-  question: Question @connection(fields: ["questionID"])
-}
-
-type AssessmentCheckpoint
-  @model
-  @key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"]) {
-  id: ID!
-  assessmentID: ID!
-  checkpointID: ID!
-  assessment: Assessment @connection(fields: ["assessmentID"])
-  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
-}
-
 type Option {
   text: String!
   label: String
@@ -621,12 +562,6 @@ type QuestionResponse {
   otherResponse: String
 }
 
-type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWord") {
-  id: ID!
-  word: String!
-  definition: String
-}
-
 type RoomMsgs
   @model
   @key(
@@ -655,20 +590,15 @@ type Lesson @model @key(fields: ["id"]) {
   artistID: ID
   language: [Language!]
   SELStructure: String
-  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
   summary: String
   purpose: String
   designers: [String]
   objectives: [String]
-  checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
   doFirstID: ID
   warmUpId: ID
   coreLessonId: ID
-  activityId: ID!
-  activity: Activity @connection(fields: ["activityId"])
-  assessmentID: ID!
-  assessment: Assessment @connection(fields: ["assessmentID"])
+  activityId: ID
   filters: [String]
   coverImage: String
   summaryTitle: String
@@ -698,26 +628,6 @@ type LessonComponents {
   LessonComponentID: ID!
   sequence: Int
   stage: String
-}
-type LessonCheckpoint
-  @model(queries: null)
-  @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
-  id: ID!
-  lessonID: ID!
-  checkpointID: ID!
-  position: Int!
-  lesson: Lesson @connection(fields: ["lessonID"])
-  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
-}
-
-type LessonKeyWord
-  @model(queries: null)
-  @key(name: "wordsByLesson", fields: ["lessonID", "wordID"]) {
-  id: ID!
-  wordID: ID!
-  lessonID: ID!
-  word: Word @connection(fields: ["wordID"])
-  lesson: Lesson @connection(fields: ["lessonID"])
 }
 
 type Syllabus
@@ -844,7 +754,6 @@ type Theme {
   summary: [String!]!
   summaryLabel: String!
   quote: [Quote]
-  # keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
   images: [String!]!
   additionalContent: AdditionalContent
