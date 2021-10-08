@@ -29,31 +29,31 @@ const ExpandedMenu = ({
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonDict} = useDictionary(clientKey);
 
-  const [widgets, setWidgets] = useState<any>([]);
+  // const [widgets, setWidgets] = useState<any>([]);
 
-  const getSideWidgets = () => {
-    const thereAreWidgets = state.roomData.widgets.length > 0;
-    if (thereAreWidgets) {
-      return state.roomData.widgets.filter((widgetObj: Widget) => {
-        return widgetObj.placement === 'sidebar' && widgetObj.active;
-      });
-    } else {
-      return [];
-    }
-  };
-  useEffect(() => {
-    if (state.roomData.widgets.length > 0) {
-      setWidgets(getSideWidgets);
-    }
-  }, [state.roomData.widgets]);
+  // const getSideWidgets = () => {
+  //   const thereAreWidgets = state.roomData.widgets.length > 0;
+  //   if (thereAreWidgets) {
+  //     return state.roomData.widgets.filter((widgetObj: Widget) => {
+  //       return widgetObj.placement === 'sidebar' && widgetObj.active;
+  //     });
+  //   } else {
+  //     return [];
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (state.roomData.widgets.length > 0) {
+  //     setWidgets(getSideWidgets);
+  //   }
+  // }, [state.roomData.widgets]);
 
-  const getCallWidgets = (): Widget[] => {
-    return widgets.filter((widgetObj: Widget) => widgetObj.type === 'call');
-  };
+  // const getCallWidgets = (): Widget[] => {
+  //   return widgets.filter((widgetObj: Widget) => widgetObj.type === 'call');
+  // };
 
-  const getFileWidgets = (): Widget[] => {
-    return widgets.filter((widgetObj: Widget) => widgetObj.type === 'file');
-  };
+  // const getFileWidgets = (): Widget[] => {
+  //   return widgets.filter((widgetObj: Widget) => widgetObj.type === 'file');
+  // };
 
   return (
     <div
@@ -86,7 +86,7 @@ const ExpandedMenu = ({
           sectionLabel={`Call`}
           sectionTitle={'Call Links'}
           focusSection={focusSection}>
-          <CallWidgetsSmall widgets={getCallWidgets()} />
+          {/* <CallWidgetsSmall widgets={getCallWidgets()} /> */}
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}
@@ -94,7 +94,7 @@ const ExpandedMenu = ({
           sectionLabel={`File`}
           sectionTitle={'File Links'}
           focusSection={focusSection}>
-          <FileWidgetsSmall widgets={getFileWidgets()} />
+          {/* <FileWidgetsSmall widgets={getFileWidgets()} /> */}
         </SideMenuSection>
         {focusSection === 'Chatroom' && (
           <SideMenuSection
