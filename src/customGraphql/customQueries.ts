@@ -3232,37 +3232,35 @@ export const getPersonData = /* GraphQL */ `
               }
             }
             rooms {
-              items {
-                id
-                curricula {
-                  items {
-                    curriculumID
-                    curriculum {
-                      name
-                      checkpoints {
-                        items {
-                          type
-                          typeID
-                          checkpoint {
-                            scope
-                            id
-                            label
-                            title
-                            questions {
-                              items {
+              id
+              curricula {
+                items {
+                  curriculumID
+                  curriculum {
+                    name
+                    checkpoints {
+                      items {
+                        type
+                        typeID
+                        checkpoint {
+                          scope
+                          id
+                          label
+                          title
+                          questions {
+                            items {
+                              id
+                              required
+                              question {
                                 id
-                                required
-                                question {
-                                  id
+                                label
+                                type
+                                question
+                                options {
+                                  text
                                   label
-                                  type
-                                  question
-                                  options {
-                                    text
-                                    label
-                                    icon
-                                    color
-                                  }
+                                  icon
+                                  color
                                 }
                               }
                             }
@@ -3271,10 +3269,9 @@ export const getPersonData = /* GraphQL */ `
                       }
                     }
                   }
-                  nextToken
                 }
+                nextToken
               }
-              nextToken
             }
           }
         }
