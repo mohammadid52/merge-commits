@@ -1181,9 +1181,6 @@ type Mutation {
   batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
-<<<<<<< HEAD
-# hello
-=======
 
 # Hello weorld
->>>>>>> 80e157fd4b611bfe80f9215fd92d13a1ded4fe5e
+# hello
