@@ -1,24 +1,23 @@
-import {Dialog} from '@headlessui/react';
+import Selector from '@atoms/Form/Selector';
+import RichTextEditor from '@atoms/RichTextEditor';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import * as customMutations from '@customGraphql/customMutations';
+import useDictionary from '@customHooks/dictionary';
+import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import ModalPopUp from '@molecules/ModalPopUp';
 import '@pathofdev/react-tag-input/build/index.css';
+import Input from '@uiComponents/Input';
+import {estimatedTimeList} from '@utilities/staticData';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {estimatedTimeList} from '../../../../../utilities/staticData';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Selector from '../../../../Atoms/Form/Selector';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import Input from './Input';
 
 const InputTag = ({
   tags,
