@@ -10,17 +10,16 @@ import {getAsset} from '../../../assets';
 import Buttons from '../../Atoms/Buttons';
 // import ProgressBar from './ProgressBar';
 
-const SyllabusSwitch = (props: DashboardProps) => {
-  const {
-    classRoomActiveSyllabus,
-    curriculumName,
-    activeRoom,
-    currentPage,
-    syllabusLoading,
-    handleSyllabusActivation,
-    institutionId
-  } = props;
-    const history = useHistory();
+const SyllabusSwitch = ({
+  classRoomActiveSyllabus,
+  curriculumName,
+  activeRoom,
+  currentPage,
+  syllabusLoading,
+  handleSyllabusActivation,
+  institutionId,
+}: DashboardProps) => {
+  const history = useHistory();
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');

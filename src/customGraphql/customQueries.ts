@@ -3290,37 +3290,35 @@ export const getPersonData = /* GraphQL */ `
               }
             }
             rooms {
-              items {
-                id
-                curricula {
-                  items {
-                    curriculumID
-                    curriculum {
-                      name
-                      checkpoints {
-                        items {
-                          type
-                          typeID
-                          checkpoint {
-                            scope
-                            id
-                            label
-                            title
-                            questions {
-                              items {
+              id
+              curricula {
+                items {
+                  curriculumID
+                  curriculum {
+                    name
+                    checkpoints {
+                      items {
+                        type
+                        typeID
+                        checkpoint {
+                          scope
+                          id
+                          label
+                          title
+                          questions {
+                            items {
+                              id
+                              required
+                              question {
                                 id
-                                required
-                                question {
-                                  id
+                                label
+                                type
+                                question
+                                options {
+                                  text
                                   label
-                                  type
-                                  question
-                                  options {
-                                    text
-                                    label
-                                    icon
-                                    color
-                                  }
+                                  icon
+                                  color
                                 }
                               }
                             }
@@ -3329,10 +3327,9 @@ export const getPersonData = /* GraphQL */ `
                       }
                     }
                   }
-                  nextToken
                 }
+                nextToken
               }
-              nextToken
             }
           }
         }
@@ -3783,11 +3780,7 @@ export const listUnits = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listCurriculumUnitss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         unitId
@@ -4605,11 +4598,7 @@ export const getStudentSurveyResponse = /* GraphQL */ `
 `;
 
 export const listStaffWithBasicInfo = /* GraphQL */ `
-  query ListStaffs(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -4619,18 +4608,14 @@ export const listStaffWithBasicInfo = /* GraphQL */ `
       }
     }
   }
-`
+`;
 export const listCurriculumUnitss = /* GraphQL */ `
   query ListCurriculumUnitss(
     $filter: ModelcurriculumUnitsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listCurriculumUnitss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         unitId

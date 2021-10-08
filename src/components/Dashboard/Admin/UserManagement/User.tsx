@@ -130,9 +130,6 @@ const User = ({instituteId}: IUserProps) => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  // const [stdCheckpoints, setStdCheckpoints] = useState([]);
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
-  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
 
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
@@ -224,56 +221,113 @@ const User = ({instituteId}: IUserProps) => {
     setQuestionData(questionData);
   };
 
+  // ##################################################################### //
+  // ########################## GET CHECKPOINTS ########################## //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+
+  const [allCheckpointIds, setAllCheckpointIds] = useState([]);
+  const [allCheckpointQuesSeq, setAllCheckpointQuesSeq] = useState();
+
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
   // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
 
-  const getCheckpointSequences = async (checkpointIDS: string[]) => {
-    if (checkpointIDS && checkpointIDS.length > 0) {
-      try {
-        let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-        let compoundQuery = createFilterToFetchSpecificItemsOnly(modifiedIds, 'id');
-        let getAllCheckpointSequences: any = await API.graphql(
-          graphqlOperation(queries.listCSequencess, {filter: {compoundQuery}})
-        );
-        return getAllCheckpointSequences;
-      } catch (e) {
-        console.error('getCheckpointSequences - ', e);
-        return [];
-      }
-    } else {
-      return [[]];
-    }
-  };
+  // const getCheckpointSequences: any = async (
+  //   checkpointIDS: string[],
+  //   nextToken: string,
+  //   loopLimit: 10,
+  //   output: any[]
+  // ) => {
+  //   if (checkpointIDS && checkpointIDS.length > 0) {
+  //     try {
+  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+  //       let compoundQuery = {
+  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
+  //         limit: 100,
+  //       };
+  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
 
-  async function getUserById(id: string) {
+  //       let getAllCheckpointSequences: any = await API.graphql(
+  //         graphqlOperation(
+  //           queries.listCSequencess,
+  //           nextToken ? queryWithNextToken : compoundQuery
+  //         )
+  //       );
+
+  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
+
+  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
+  //       // return responseItems;
+
+  //       if (theNextToken !== null && loopLimit > 0) {
+  //         console.log(nextToken);
+  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
+  //           ...output,
+  //           ...responseItems,
+  //         ]);
+  //       } else {
+  //         return [...output, responseItems];
+  //       }
+  //     } catch (e) {
+  //       console.error('getCheckpointSequences - ', e);
+  //       return [];
+  //     }
+  //   } else {
+  //     return [];
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (allCheckpointIds.length > 0) {
+  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
+  //     Promise.resolve(getAllSequences).then((output: any) => {
+  //       console.log('all checkpoint sequences - ', output);
+  //     });
+  //   }
+  // }, [allCheckpointIds]);
+
+  async function getUserProfile(id: string) {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.userById, {id: id})
+        graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
+      console.log('studentClasses - ', studentClasses);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
+
       userData.rooms = studentRooms;
+
       const studentCurriculars: any = studentRooms
-        .map((item: any) => item?.curricula?.items)
-        .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
+        ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
+        : [];
+
+      const uniqCurriculars: any = studentCurriculars
+        ? getUniqItems(
+            studentCurriculars.filter((d: any) => d !== null),
+            'curriculumID'
+          )
+        : [];
+
       const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+        ? uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1)
+        : [];
+
+      const studentCheckpoints: any = studCurriCheckp
+        ? studCurriCheckp.map((item: any) => item?.checkpoint)
+        : [];
 
       let sCheckpoints: any[] = [];
 
@@ -287,7 +341,12 @@ const User = ({instituteId}: IUserProps) => {
        *   DEMOGRAPHIC AND   *
        * PRIVATE CHECKPOINTS *
        ***********************/
-      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+
+      // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
+      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+
+      // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
       const demographicCheckpoints = uniqCheckpoints
         .filter((checkpoint: any) => checkpoint.scope !== 'private')
         .reverse();
@@ -295,12 +354,10 @@ const User = ({instituteId}: IUserProps) => {
         .filter((checkpoint: any) => checkpoint.scope === 'private')
         .reverse();
 
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      // setStdCheckpoints([...uniqCheckpoints]);
       setDemographicCheckpoints(demographicCheckpoints);
       setPrivateCheckpoints(privateCheckpoints);
 
@@ -313,12 +370,17 @@ const User = ({instituteId}: IUserProps) => {
       });
 
       if (uniqCheckpointIDs?.length > 0) {
+        setAllCheckpointIds(uniqCheckpointIDs);
         getQuestionData(uniqCheckpointIDs, userData);
       }
     } catch (error) {
       console.error(error);
     }
   }
+
+  // ##################################################################### //
+  // ########################### PROFILE IMAGE ########################### //
+  // ##################################################################### //
 
   const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
@@ -394,7 +456,7 @@ const User = ({instituteId}: IUserProps) => {
 
   useEffect(() => {
     if (userId) {
-      getUserById(userId);
+      getUserProfile(userId);
     }
   }, [userId]);
 
@@ -1552,7 +1614,7 @@ const User = ({instituteId}: IUserProps) => {
                           user={user}
                           status={status}
                           setStatus={setStatus}
-                          getUserById={getUserById}
+                          getUserById={getUserProfile}
                           questionData={questionData}
                           checkpoints={
                             tab === 'demographics'

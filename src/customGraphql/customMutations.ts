@@ -952,6 +952,7 @@ export const createCheckpoint = /* GraphQL */ `
       objectives
       designers
       language
+      questionSeq
       createdAt
       updatedAt
     }
@@ -978,6 +979,7 @@ export const updateCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      questionSeq
       createdAt
       updatedAt
     }
