@@ -45,7 +45,7 @@ export interface ITabParentProps {
 
 export interface ITabViewProps extends ITabParentProps {
   handleEditUpdate?: (e: any) => void;
-  updateJournalContent?: (html: string, targetType: string) => void;
+  updateJournalContent?: (html: string, targetType: string, idx?: number) => void;
   createTemplate?: any;
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];

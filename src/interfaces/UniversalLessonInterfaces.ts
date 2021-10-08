@@ -138,3 +138,16 @@ export interface UniversalJournalData {
   createdAt?: any;
   recordID?: string;
 }
+
+export interface IFormBlockProps {
+  id?: string;
+  label?: string;
+  value?: string;
+  mode?: string;
+  numbered?: boolean;
+  required?: boolean;
+  type?: string;
+  index?: string;
+  inputID?: string;
+  classString?: string;
+}

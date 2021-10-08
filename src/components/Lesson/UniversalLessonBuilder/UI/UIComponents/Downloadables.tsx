@@ -85,7 +85,7 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
   const allFiles = mapDownloadablesFilesTogether();
 
   return (
-    <div className="flex items-center justify-center w-16 fixed bottom-5 right-8 lg:w-18 xl:w-20 z-50">
+    <div className="flex items-center justify-center ">
       <ClickAwayListener onClickAway={() => setShowDownloadMenu(false)}>
         <div
           title={`downloadables files ${

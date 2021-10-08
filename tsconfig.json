@@ -17,8 +17,10 @@
       "@utilities/*": ["utilities/*"],
       "@atoms/*": ["components/Atoms/*"],
       "@molecules/*": ["components/Molecules/*"],
+      "@lesson/*": ["components/Lesson/*"],
       "@uiComponents/*": ["components/Lesson/UniversalLessonBuilder/UI/UIComponents/*"],
       "@UlbUI/*": ["components/Lesson/UniversalLessonBuilder/UI/*"],
+      "@UlbModals/*": ["components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/*"],
       "@UlbBlocks/*": ["components/Lesson/UniversalLessonBlockComponents/Blocks/*"],
       "@dictionary/*": ["dictionary/*"]
     },

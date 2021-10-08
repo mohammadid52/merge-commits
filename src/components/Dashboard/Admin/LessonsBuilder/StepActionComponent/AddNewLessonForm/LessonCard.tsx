@@ -89,7 +89,7 @@ const LessonCard = ({
                  *  LEFT SECTION IMAGE
                  */}
                 <DroppableMedia
-                  className="w-full md:h-56 h-48 sm:w-2.5/10  rounded-tl rounded-bl shadow"
+                  className="w-full md:h-56 h-48 sm:w-2.5/10  rounded-tl rounded-bl shadow cursor-pointer"
                   mediaRef={imageRef}
                   setImage={(img: any, file: any) => {
                     setImage(img);

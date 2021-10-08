@@ -9,7 +9,6 @@ import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {standardTheme} from './GlobalContext';
 import {getClientKey} from '../utilities/strings';
-// import { handleFetchAndCache } from '../utilities/sessionData';
 import {lessonStateOLD} from '../state/LessonStateOLD';
 import {lessonReducerOLD} from '../reducers/LessonReducerOLD';
 

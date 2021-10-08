@@ -1,20 +1,20 @@
+import {isEmpty} from '@aws-amplify/core';
+import {Switch} from '@headlessui/react';
 import {filter, map, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import FormInput from '../../../../Atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
 import {getAsset} from '../../../../../assets';
-import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {Switch} from '@headlessui/react';
-import {classNames} from './TextInput';
-import {optionResponses} from '../../../../../utilities/staticData';
-import {isEmpty} from '@aws-amplify/core';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {optionResponses} from '../../../../../utilities/staticData';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import FormInput from '../../../../Atoms/Form/FormInput';
+import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {classNames} from './TextInput';
 
 const InputContainer = ({
   shouldShowActions,

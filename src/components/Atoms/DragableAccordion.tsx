@@ -62,7 +62,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}>
                               <div
-                                className={`w-full px-8 py-6 text-left ${
+                                className={`w-full px-8 py-2 2xl:py-6 text-left ${
                                   theme.outlineNone
                                 } ${
                                   selectedItem === item.id

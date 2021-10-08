@@ -1,11 +1,20 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
@@ -14,7 +23,6 @@ import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
 import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import {Route, Switch, useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -25,7 +33,12 @@ import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast
 import * as mutations from '../../../../graphql/mutations';
 import * as queries from '../../../../graphql/queries';
 import {getImageFromS3} from '../../../../utilities/services';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getUniqItems,
+  initials,
+  stringToHslColor,
+} from '../../../../utilities/strings';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
@@ -86,7 +99,11 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
   updatedAt?: string;
 }
 
-const User = () => {
+interface IUserProps {
+  instituteId?: string;
+}
+
+const User = ({instituteId}: IUserProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -113,11 +130,13 @@ const User = () => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  const [stdCheckpoints, setStdCheckpoints] = useState([]);
+
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
   );
+
+  const {userId}: any = useParams();
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -171,6 +190,12 @@ const User = () => {
     },
   ];
 
+  // ##################################################################### //
+  // ######################### PROFILE QUESTIONS ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
+
   const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
@@ -194,44 +219,128 @@ const User = () => {
     );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
-
-    // questionData.forEach(async (item: any) => {
-    // await API.graphql(
-    //   graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
-    // );
-    // });
   };
 
-  async function getUserById(id: string) {
+  // ##################################################################### //
+  // ########################## GET CHECKPOINTS ########################## //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+
+  const [allCheckpointIds, setAllCheckpointIds] = useState([]);
+  const [allCheckpointQuesSeq, setAllCheckpointQuesSeq] = useState();
+
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
+  // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
+
+  // const getCheckpointSequences: any = async (
+  //   checkpointIDS: string[],
+  //   nextToken: string,
+  //   loopLimit: 10,
+  //   output: any[]
+  // ) => {
+  //   if (checkpointIDS && checkpointIDS.length > 0) {
+  //     try {
+  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+  //       let compoundQuery = {
+  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
+  //         limit: 100,
+  //       };
+  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
+
+  //       let getAllCheckpointSequences: any = await API.graphql(
+  //         graphqlOperation(
+  //           queries.listCSequencess,
+  //           nextToken ? queryWithNextToken : compoundQuery
+  //         )
+  //       );
+
+  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
+
+  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
+  //       // return responseItems;
+
+  //       if (theNextToken !== null && loopLimit > 0) {
+  //         console.log(nextToken);
+  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
+  //           ...output,
+  //           ...responseItems,
+  //         ]);
+  //       } else {
+  //         return [...output, responseItems];
+  //       }
+  //     } catch (e) {
+  //       console.error('getCheckpointSequences - ', e);
+  //       return [];
+  //     }
+  //   } else {
+  //     return [];
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (allCheckpointIds.length > 0) {
+  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
+  //     Promise.resolve(getAllSequences).then((output: any) => {
+  //       console.log('all checkpoint sequences - ', output);
+  //     });
+  //   }
+  // }, [allCheckpointIds]);
+
+  async function getUserProfile(id: string) {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.userById, {id: id})
+        graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
+      console.log('studentClasses - ', studentClasses);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
+
       userData.rooms = studentRooms;
-      const studentCurriculars: any = studentRooms
-        .map((item: any) => item?.curricula?.items)
-        .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
-      const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+
+      const studentCurriculars: any =
+        studentRooms.length > 0
+          ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
+          : [];
+
+      // console.log('studentCurriculars', studentCurriculars);
+
+      const uniqCurriculars: any =
+        studentCurriculars.length > 0
+          ? getUniqItems(
+              studentCurriculars.filter((d: any) => d !== null),
+              'curriculumID'
+            )
+          : [];
+      // console.log('uniqCurriculars', uniqCurriculars);
+
+      const studCurriCheckp: any =
+        uniqCurriculars.length > 0
+          ? uniqCurriculars
+              .map((item: any) => item?.curriculum?.checkpoints?.items)
+              .flat(1)
+          : [];
+
+      // console.log('studCurriCheckp', studCurriCheckp);
+
+      const studentCheckpoints: any =
+        studCurriCheckp.length > 0
+          ? studCurriCheckp.map((item: any) => item?.checkpoint)
+          : [];
+
+      // console.log('studentCheckpoints', studentCheckpoints);
 
       let sCheckpoints: any[] = [];
 
@@ -241,13 +350,31 @@ const User = () => {
 
       sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
-      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      /***********************
+       *   DEMOGRAPHIC AND   *
+       * PRIVATE CHECKPOINTS *
+       ***********************/
+
+      // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
+      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+
+      // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
+      const demographicCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope !== 'private'
+      );
+      // .reverse();
+      const privateCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope === 'private'
+      );
+      // .reverse();
+
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      setStdCheckpoints([...uniqCheckpoints]);
+      setDemographicCheckpoints(demographicCheckpoints);
+      setPrivateCheckpoints(privateCheckpoints);
 
       setStatus('done');
       setUser(() => {
@@ -258,6 +385,7 @@ const User = () => {
       });
 
       if (uniqCheckpointIDs?.length > 0) {
+        setAllCheckpointIds(uniqCheckpointIDs);
         getQuestionData(uniqCheckpointIDs, userData);
       }
     } catch (error) {
@@ -265,7 +393,11 @@ const User = () => {
     }
   }
 
-  const isAdmin = state.user.role === 'ADM';
+  // ##################################################################### //
+  // ########################### PROFILE IMAGE ########################### //
+  // ##################################################################### //
+
+  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
   useEffect(() => {
     async function getUrl() {
@@ -338,10 +470,10 @@ const User = () => {
   }
 
   useEffect(() => {
-    if (typeof id === 'string') {
-      getUserById(id);
+    if (userId) {
+      getUserProfile(userId);
     }
-  }, []);
+  }, [userId]);
 
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -416,7 +548,7 @@ const User = () => {
 
   const switchMainTab = (tab: string) => {
     setCurTab(tab);
-    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+    history.push(`/dashboard/manage-users/user?id=${userId}&tab=${tab}`);
   };
 
   const handleClassRoomClick = (roomId: string) => {
@@ -1361,12 +1493,15 @@ const User = () => {
   };
 
   const isTeacher =
-    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
+    state.user.role === 'TR' ||
+    state.user.role === 'FLW' ||
+    state.user.role === 'ADM' ||
+    state.user.role === 'SUP';
   {
     return (
       <>
-        <div className={`mx-auto max-w-256`}>
-          <BreadCrums items={breadCrumsList} />
+        <div className={`pl-12 max-w-256`}>
+          {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div className="flex justify-end mb-4">
               <Buttons
@@ -1396,7 +1531,7 @@ const User = () => {
               )}
             </div>
           </div>
-          <AnimatedContainer show={onUserInformationTab}>
+          <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
               <div
                 className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
@@ -1487,14 +1622,22 @@ const User = () => {
                       path={`${match.url}/edit`}
                       render={() => (
                         <UserEdit
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          instituteId={instituteId}
+                          tab={tab}
                           setTab={setTab}
                           user={user}
                           status={status}
                           setStatus={setStatus}
-                          getUserById={getUserById}
+                          getUserById={getUserProfile}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                         />
                       )}
                     />
@@ -1502,10 +1645,17 @@ const User = () => {
                       path={`${match.url}/`}
                       render={() => (
                         <UserInformation
-                          tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
                           setTab={setTab}
                           questionData={questionData}
-                          stdCheckpoints={stdCheckpoints}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
                           user={user}
                           status={status}
                         />
@@ -1533,27 +1683,15 @@ const User = () => {
             )}
           </AnimatedContainer>
           <AnimatedContainer show={onNotebookTab}>
-            {onNotebookTab &&
-              (loading ? (
-                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="">
-                    <Loader color="rgba(107, 114, 128, 1)" />
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      {'Loading Notebook Data'}
-                    </p>
-                  </div>
-                </div>
-              ) : studentData && studentData.length > 0 ? (
-                studentData.map((item: any) => <StudentData item={item} />)
-              ) : (
-                <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="">
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      {'No Notebook Data Found'}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            {onNotebookTab && (
+              <Anthology
+                isTeacher={isTeacher}
+                studentID={user.id}
+                studentAuthID={user.authId}
+                studentName={user.firstName}
+                studentEmail={user.email}
+              />
+            )}
           </AnimatedContainer>
 
           {curTab === 'Timeline' && (

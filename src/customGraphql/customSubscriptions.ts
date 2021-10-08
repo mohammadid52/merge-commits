@@ -89,7 +89,10 @@ export const onChangeRoom = /* GraphQL */ `
       ClosedPages
       disabledPages
       studentViewing
-      displayData
+      displayData {
+        studentAuthID
+        lessonPageID
+      }
       currentPage
       createdAt
       updatedAt

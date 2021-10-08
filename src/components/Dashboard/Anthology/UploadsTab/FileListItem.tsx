@@ -1,3 +1,4 @@
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
 import React, {useCallback, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
@@ -12,6 +13,7 @@ interface IFileListItem {
   handleToggleDelete: (fileKeyToToggle: string) => void;
   handleConfirmDelete: () => void;
   deleting: boolean;
+  uploadKey?: string;
 }
 
 const FileListItem = ({
@@ -23,6 +25,7 @@ const FileListItem = ({
   handleToggleDelete,
   handleConfirmDelete,
   deleting,
+  uploadKey,
 }: IFileListItem) => {
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //
@@ -38,7 +41,7 @@ const FileListItem = ({
     async (uniqKey: string) => {
       const imageUrl: any = await getImageFromS3(uniqKey);
       if (imageUrl) {
-        return imageUrl;
+        return `${imageUrl}`;
       } else {
         return '';
       }
@@ -47,7 +50,7 @@ const FileListItem = ({
   );
 
   useEffect(() => {
-    const imageURL = getImageURL(fileKey);
+    const imageURL = getImageURL(`${uploadKey}${fileKey}`);
     Promise.resolve(imageURL).then((urlStr: string) => setImageUrl(urlStr));
   }, [fileKey]);
 
@@ -61,12 +64,13 @@ const FileListItem = ({
         fileIdx % 2 === 0 ? 'bg-gray-50' : ''
       }`}>
       <div className="flex items-center space-x-4">
-        <div className="p-2 flex flex-shrink-0 min-w-16 w-16 h-16">
-          <span className="rounded-full shadow  bg-gray-400 overflow-hidden">
+        <div className="flex flex-shrink-0 min-w-16 w-16 h-16">
+          <span className="flex justify-center items-center rounded border-0 border-gray-400  bg-gray-200 overflow-hidden">
             {isImage(fileName) ? (
-              <img src={imageUrl} alt={fileName} />
+              <img className="w-auto h-full object-cover" src={imageUrl} alt={fileName} />
             ) : (
-              <IconContext.Provider value={{size: '48px', color: 'darkgrey'}}>
+              <IconContext.Provider
+                value={{size: '32px', color: 'gray-400', className: 'p-2'}}>
                 <AiOutlineFile />
               </IconContext.Provider>
             )}
@@ -105,7 +109,10 @@ const FileListItem = ({
                 className="bg-indigo-100 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
                 Delete
               </a>
-              <a className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+              <a
+                target="_blank"
+                href={imageUrl}
+                className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
                 View
               </a>
             </>

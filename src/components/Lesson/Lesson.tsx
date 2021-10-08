@@ -1,14 +1,19 @@
 import React from 'react';
 // import {LessonContextProvider} from '../../contexts/LessonContext';
 import LessonApp from './LessonApp';
-import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import Noticebar from '@components/Noticebar/Noticebar';
+import useNotifications from '@customHooks/notifications';
 
 const Lesson = () => {
+  const {notifications} = useNotifications('lesson');
   return (
-    // <LessonContextProvider>
+    <>
+      {/* <LessonContextProvider> */}
+      <Noticebar notifications={notifications} />
       <LessonApp />
-    // </LessonContextProvider>
+      {/* </LessonContextProvider> */}
+    </>
   );
 };
 
-export default Lesson;
+export default React.memo(Lesson);

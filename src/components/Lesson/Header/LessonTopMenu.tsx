@@ -1,17 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {LessonContext} from '../../../contexts/LessonContext';
+import React, {useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
 
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
-import {getLocalStorageData} from '../../../utilities/localStorage';
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-} from '../../../interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
 
 const LessonTopMenu = ({
   handlePopup,
@@ -19,7 +12,11 @@ const LessonTopMenu = ({
   setisAtEnd,
   handleRequiredNotification,
 }: LessonHeaderBarProps) => {
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const theme = gContext.theme;
+
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -116,7 +113,7 @@ const LessonTopMenu = ({
           <div className="flex flex-row justify-center">
             {/* BACK BUTTON */}
 
-            <div
+            {/* <div
               className={`my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
                 lessonState.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
@@ -131,14 +128,21 @@ const LessonTopMenu = ({
                 }}>
                 <AiOutlineArrowLeft />
               </IconContext.Provider>
-            </div>
+            </div> */}
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar handleHome={() => handlePopup(false)} />
+            <ProgressBar
+              handleHome={() => handlePopup(false)}
+              handleRequiredNotification={handleRequiredNotification}
+              pages={PAGES}
+              currentPage={lessonState?.currentPage}
+              studentData={lessonState?.studentData}
+              requiredInputs={lessonState?.requiredInputs}
+            />
 
             {/* FORWARD BUTTON */}
-
+            {/* 
             <div
               className={`my-auto ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
                 canContinue()
@@ -154,7 +158,7 @@ const LessonTopMenu = ({
                 }}>
                 <AiOutlineArrowRight />
               </IconContext.Provider>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,7 +1,9 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import useLessonControls from '@customHooks/lessonControls';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {WASI} from 'wasi';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import useDeviceDetect from '../../customHooks/deviceDetect';
@@ -26,16 +28,14 @@ import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import TopMenu from './TopMenu';
 
 const LessonControl = () => {
-  const {
-    clientKey,
-    dispatch,
-    lessonState,
-    lessonDispatch,
-    controlState,
-    theme,
-    userLanguage,
-  } = useContext(GlobalContext);
-  const {lessonPlannerDict} = useDictionary(clientKey);
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const dispatch = gContext.dispatch;
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const controlState = gContext.controlState;
+  const theme = gContext.theme;
+
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
@@ -45,6 +45,7 @@ const LessonControl = () => {
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
+
   const handlePageChange = (pageNr: number) => {
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
@@ -56,31 +57,10 @@ const LessonControl = () => {
     });
   };
 
-  const {visible, setVisible} = useOutsideAlerter(false);
-  const [quickRegister, setQuickRegister] = useState(false);
-  const [homePopup, setHomePopup] = useState(false);
-  const [lessonButton, setLessonButton] = useState(false);
-
-  const handleClick = () => {
-    setVisible((prevState: any) => !prevState);
-  };
-  const handleHomePopup = () => {
-    setHomePopup((prevState: any) => !prevState);
-  };
-  const handleLessonButton = () => {
-    setLessonButton((prevState: any) => !prevState);
-  };
-  const handleGoToUserManagement = () => {
-    history.push('/dashboard/manage-users');
-  };
-  const handleHome = async () => {
-    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
-    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
-  };
-
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
+
   let subscription: any;
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
@@ -183,14 +163,14 @@ const LessonControl = () => {
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
-    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
     try {
       const listFilter = {
         filter: {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: syllabusID},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id},
         },
       };
       const studentData: any = await API.graphql(
@@ -254,17 +234,6 @@ const LessonControl = () => {
     setIsSameStudentShared(false);
   };
 
-  /**
-   * VIEWING A STUDENT
-   *  1. compare new studentViewing ID
-   *  2. if it's not the same as before, and not ''
-   *  3. unsubscribe
-   *  4. mutate the room table
-   *
-   *  --then--
-   *  5. subscribe
-   */
-
   const handleRoomUpdate = async (payload: any) => {
     if (typeof payload === 'object' && Object.keys(payload).length > 0) {
       try {
@@ -291,16 +260,20 @@ const LessonControl = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
+      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
+        return [
+          ...acc,
+          {
+            id: page.id,
+            label: page.label,
+          },
+        ];
+      }, []);
+      setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);
     }
-
-    // else {
-    //   setTimeout(() => {
-    //     lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-    //   }, 1000);
-    // }
   };
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
@@ -350,184 +323,80 @@ const LessonControl = () => {
   // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
 
+  const {resetViewAndShare} = useLessonControls();
+
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    if (lessonState.studentViewing !== '') {
-      const viewedStudentLocation = controlState.roster.find(
-        (student: any) => student.personAuthID === lessonState.studentViewing
-      )?.currentLocation;
+    if (lessonState.displayData[0].studentAuthID === '') {
+      if (lessonState.studentViewing !== '') {
+        const viewedStudentLocation = controlState.roster.find(
+          (student: any) => student.personAuthID === lessonState.studentViewing
+        )?.currentLocation;
 
-      if (viewedStudentLocation !== '') {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-        history.push(`${match.url}/${viewedStudentLocation}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/0`);
+        if (viewedStudentLocation !== undefined) {
+          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+          history.push(`${match.url}/${viewedStudentLocation}`);
+        } else {
+          lessonDispatch({
+            type: 'SET_CURRENT_PAGE',
+            payload: lessonState?.currentPage ? lessonState.currentPage : 0,
+          });
+          history.push(
+            `${match.url}/${lessonState?.currentPage ? lessonState.currentPage : 0}`
+          );
+
+          /**********************************
+           *   RESET VIEW AND SHARING IF    *
+           *   THE CURRENT VIEWED STUDENT   *
+           * EXITS THE LESSON WHILE TEACHER *
+           *          WAS VIEWING           *
+           **********************************/
+          const reset = resetViewAndShare();
+          Promise.resolve(reset).then((_: void) => {
+            setUserHasLeftPopup(true);
+          });
+        }
       }
     }
   }, [controlState.roster, lessonState.studentViewing]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
-  // useEffect(() => {
-  //   if (
-  //     !state.displayData ||
-  //     !state.displayData.studentInfo ||
-  //     !state.studentViewing.studentInfo ||
-  //     !state.studentViewing.studentInfo.student
-  //   ) {
-  //     setIsSameStudentShared(false);
-  //   }
-  //
-  //   if (
-  //     state.displayData &&
-  //     state.displayData.studentInfo &&
-  //     state.studentViewing.studentInfo &&
-  //     state.studentViewing.studentInfo.student
-  //   ) {
-  //     if (
-  //       state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
-  //     ) {
-  //       setIsSameStudentShared(true);
-  //     }
-  //
-  //     if (
-  //       state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
-  //     ) {
-  //       setIsSameStudentShared(false);
-  //     }
-  //
-  //     if (
-  //       state.displayData.studentInfo.id ===
-  //         state.studentViewing.studentInfo.student.id &&
-  //       !state.studentViewing.live
-  //     ) {
-  //       setIsSameStudentShared(false);
-  //     }
-  //   }
-  // }, [state.displayData, state.studentViewing]);
-
-  // ~ SHARE A VIEWED STUDENT'S DATA LOGIC ~ //
-  const handleShareStudentData = async () => {
-    // if (state.studentViewing.studentInfo) {
-    //   let displayData = {
-    //     breakdownComponent: state.studentViewing.studentInfo.currentLocation
-    //       ? state.studentViewing.studentInfo.currentLocation
-    //       : state.studentViewing.studentInfo.lessonProgress,
-    //     studentInfo: {
-    //       id: state.studentViewing.studentInfo.student.id,
-    //       firstName: state.studentViewing.studentInfo.student.firstName,
-    //       preferredName: state.studentViewing.studentInfo.student.preferredName
-    //         ? state.studentViewing.studentInfo.student.preferredName
-    //         : null,
-    //       lastName: state.studentViewing.studentInfo.student.lastName,
-    //     },
-    //     warmUpData: state.studentViewing.studentInfo.warmupData
-    //       ? state.studentViewing.studentInfo.warmupData
-    //       : null,
-    //     corelessonData: state.studentViewing.studentInfo.corelessonData
-    //       ? state.studentViewing.studentInfo.corelessonData
-    //       : null,
-    //     activityData: state.studentViewing.studentInfo.activityData
-    //       ? state.studentViewing.studentInfo.activityData
-    //       : null,
-    //   };
-    //   // console.log('display data: ', displayData);
-    //   dispatch({
-    //     type: 'SET_SHARE_MODE',
-    //     payload: state.studentViewing.studentInfo.currentLocation
-    //       ? state.studentViewing.studentInfo.currentLocation
-    //       : state.studentViewing.studentInfo.lessonProgress,
-    //   });
-    //   dispatch({type: 'SET_DISPLAY_DATA', payload: displayData});
-    // }
-  };
 
   // ##################################################################### //
   // ################### CLASSROOM AND PLANNER CONTROL ################### //
   // ##################################################################### //
-  const handleOpen = async () => {
-    await handleOpenPlanner();
-    //   dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
+
+  const [quickRegister, setQuickRegister] = useState(false);
+  const [leavePopup, setLeavePopup] = useState(false);
+  const [homePopup, setHomePopup] = useState(false);
+  const [userHasLeftPopup, setUserHasLeftPopup] = useState(false);
+
+  // ~~~~~~~~ TOGGLE POPUP & ACTIONS ~~~~~~~ //
+
+  const handleLeavePopup = () => {
+    setLeavePopup((prevState: any) => !prevState);
+  };
+  const handleHomePopup = () => {
+    setHomePopup((prevState: any) => !prevState);
+  };
+  const handleUserHasLeftPopup = () => {
+    setUserHasLeftPopup(!userHasLeftPopup);
   };
 
-  const handleComplete = async () => {
-    //   await handleCompletePlanner();
-    //   dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
-    handleHome();
+  // ~~~~~~~~~~~ POPUP NAVIGATION ~~~~~~~~~~ //
+
+  const handleGoToUserManagement = () => {
+    history.push('/dashboard/manage-users');
+  };
+  const handleHome = async () => {
+    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
-  const handleUpdatePlanner = async () => {
-    // let updatedSyllabusLessonData: any = {
-    //   id: state.syllabusLessonID,
-    //   status: state.open ? 'Active' : 'Inactive',
-    //   complete: state.complete ? state.complete : false,
-    //   viewing:
-    //     state.studentViewing.studentInfo && state.studentViewing.studentInfo.personAuthID
-    //       ? state.studentViewing.studentInfo.personAuthID
-    //       : null,
-    //   displayData: state.displayData,
-    //   lessonPlan: state.pages,
-    //   startDate: '1989-11-02',
-    //   endDate: '2077-11-02',
-    // };
-    //
-    // try {
-    //   console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData);
-    //   const updatedSyllabusLesson = await API.graphql(
-    //     graphqlOperation(customMutations.updateSyllabusLesson, {
-    //       input: updatedSyllabusLessonData,
-    //     })
-    //   );
-    //   dispatch({type: 'SAVED_CHANGES'});
-    // } catch (err) {
-    //   console.error('handleUpdateSyllabusLesson - ', err);
-    // }
-  };
-
-  /**
-   * CLASSROOM CONTROL AND UPDATING PLANNER
-   * close the lesson off in the planner
-   */
-  const handleCompletePlanner = async () => {
-    // let completedSyllabusLessonData = {
-    //   id: state.syllabusLessonID,
-    //   status: 'Inactive',
-    //   complete: true,
-    //   endDate: awsFormatDate(dateString('-', 'WORLD')),
-    // };
-    //
-    // try {
-    //   const completedSyllabusLesson = await API.graphql(
-    //     graphqlOperation(customMutations.updateSyllabusLesson, {
-    //       input: completedSyllabusLessonData,
-    //     })
-    //   );
-    //   dispatch({type: 'SAVED_CHANGES'});
-    // } catch (err) {
-    //   console.error(err);
-    // }
-  };
-
-  const handleOpenPlanner = async () => {
-    // let startedSyllabusLessonData = {
-    //   id: state.syllabusLessonID,
-    //   status: 'Active',
-    //   complete: false,
-    //   startDate: awsFormatDate(dateString('-', 'WORLD')),
-    // };
-    //
-    // try {
-    //   console.log(startedSyllabusLessonData);
-    //   const startedSyllabusLesson = await API.graphql(
-    //     graphqlOperation(customMutations.updateSyllabusLesson, {
-    //       input: startedSyllabusLessonData,
-    //     })
-    //   );
-    // } catch (err) {
-    //   console.error(err);
-    // }
-  };
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
@@ -540,18 +409,18 @@ const LessonControl = () => {
 
         {/* USER MANAGEMENT */}
         <div
-          className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleClick}>
+          className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
+          onClick={handleLeavePopup}>
           <PositiveAlert
             identifier={''}
-            alert={visible}
-            setAlert={setVisible}
+            alert={leavePopup}
+            setAlert={setLeavePopup}
             header="Are you sure you want to leave the Teacher View?"
             button1="Go to student management"
             button2="Cancel"
             svg="question"
             handleButton1={handleGoToUserManagement}
-            handleButton2={() => handleClick}
+            handleButton2={() => handleLeavePopup}
             theme="light"
             fill="screen"
           />
@@ -574,21 +443,16 @@ const LessonControl = () => {
             fill="screen"
           />
         </div>
-        <div
-          className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLessonButton}>
+        {/* USER HAS LEFT NOTIFICATION */}
+        <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
           <PositiveAlert
             identifier={''}
-            alert={lessonButton}
-            setAlert={setLessonButton}
-            header="Are you sure you want to complete this lesson?"
-            button1="Complete lesson"
-            button2="Cancel"
+            alert={userHasLeftPopup}
+            setAlert={setUserHasLeftPopup}
+            header="The student you were viewing has left the room."
+            button1="Close"
             svg="question"
-            handleButton1={() => {
-              handleComplete();
-            }}
-            handleButton2={() => handleLessonButton}
+            handleButton1={handleUserHasLeftPopup}
             theme="light"
             fill="screen"
           />
@@ -598,13 +462,9 @@ const LessonControl = () => {
 
         <TopMenu
           isSameStudentShared={isSameStudentShared}
-          handleOpen={handleOpen}
-          handleComplete={handleComplete}
-          handleLessonButton={handleLessonButton}
           handleQuitViewing={handleQuitViewing}
-          handleShareStudentData={handleShareStudentData}
           handleQuitShare={handleQuitShare}
-          handleClick={handleClick}
+          handleLeavePopup={handleLeavePopup}
           handleHomePopup={handleHomePopup}
           handlePageChange={handlePageChange}
           setQuickRegister={setQuickRegister}
@@ -622,8 +482,6 @@ const LessonControl = () => {
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
                   <ClassRoster
-                    handleUpdateSyllabusLesson={handleUpdatePlanner}
-                    handleShareStudentData={handleShareStudentData}
                     isSameStudentShared={isSameStudentShared}
                     handleQuitShare={handleQuitShare}
                     handleQuitViewing={handleQuitViewing}
@@ -642,7 +500,7 @@ const LessonControl = () => {
               </div>
 
               <HamburgerMenu
-                handleClick={handleClick}
+                handleLeavePopup={handleLeavePopup}
                 setQuickRegister={setQuickRegister}
                 handleHomePopup={handleHomePopup}
               />
@@ -664,8 +522,7 @@ const LessonControl = () => {
             />
 
             <div
-              className={`
-                          ${fullscreen ? 'h-full' : 'h-full'}
+              className={`${fullscreen ? 'h-full' : 'h-full'}
                           ${theme.bg} 
                           relative w-full  
                           border-t-2 border-black
@@ -682,13 +539,6 @@ const LessonControl = () => {
                       <ComponentLoading />
                     </div>
                   }>
-                  {/**
-                   *
-                   *
-                   * THIS LOADS THE LESSON COMPONENT
-                   *
-                   *
-                   */}
                   <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
                     <CoreUniversalLesson />
                   </ErrorBoundary>

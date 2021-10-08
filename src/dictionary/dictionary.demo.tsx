@@ -64,6 +64,15 @@ const BUTTONS: any = {
   },
 };
 
+const CommonlyUsedDict:any = {
+  EN:{
+    BACK_TO_LIST: 'Back to list'
+  },
+  ES:{
+    BACK_TO_LIST: 'Back to list'
+  }
+}
+
 const EditQuestionModalDict: any = {
   EN: {
     TITLE: 'Edit QUESTION',
@@ -520,7 +529,7 @@ const spBuilderDict: any = {
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO:
-      'This institute does not have any service provider. Please add new service provider.',
+      'This institute does not have any service vendor. Please add new service vendor.',
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
@@ -944,8 +953,14 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
       CLASSES: 'Classes',
+      LIVE_CLASS_ROOM: 'Live Classroom',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classrooms',
+      GENERAL_INFORMATION: 'General Information',
+      LESSONS: 'Lessons',
+      RESEARCH_AND_ANALYTICS: 'Research & Analytics',
+      HOME: 'Dashboard',
+      NOTEBOOK: 'Notebook',
     },
   },
   ES: {
@@ -961,6 +976,12 @@ const Institute_info: any = {
       CLASSES: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
+      LIVE_CLASS_ROOM: "TBD",
+      GENERAL_INFORMATION: 'TBD',
+      LESSONS: 'TBD',
+      RESEARCH_AND_ANALYTICS: 'TBD',
+      HOME: 'TBD',
+      NOTEBOOK: 'TBD',
     },
   },
 };
@@ -1078,6 +1099,89 @@ const InstitutionAddDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      uploaderr: 'Unable to upload image. Please try again later. ',
+      adderr: 'Unable to add new institute. Please try again later.',
+    },
+  },
+  ES: {
+    INFOA: 'TBD',
+    INFO: 'TBD',
+    TITLE: 'TBD',
+    SUBTITLE: 'TBD',
+
+    FORM: {
+      TITLE: 'TBD',
+      INSTITUTION_TYPE: 'TBD',
+      NAME_INPUT_LABEL: 'TBD',
+      NAME_INPUT_PLACEHOLDER: 'TBD',
+      WEBSITE_INPUT_LABEL: 'TBD',
+      WEBSITE_INPUT_PLACEHOLDER: 'TBD',
+      ADDRESS_INPUT_LABEL: 'TBD',
+      ADDRESS2_INPUT_LABEL: 'TBD',
+      CITY_LABEL: 'TBD',
+      STATE_LABEL: 'TBD',
+      ZIP_LABEL: 'TBD',
+      PHONE_LABEL: 'TBD',
+      state: 'TBD',
+      SERVICEPROVIDER_LABEL: 'TBD',
+    },
+    INSTITUTION_TYPE: {
+      SCHOOL: 'TBD',
+      AFTERSCHOOL: 'TBD',
+      DAYCAMP: 'TBD',
+      SUMMERCAMP: 'TBD',
+      C3: 'TBD',
+    },
+    BUTTON: {
+      CANCEL: 'TBD',
+      SAVE: 'TBD',
+    },
+    messages: {
+      namerequired: 'TBD',
+      uploaderr: 'TBD',
+      adderr: 'TBD',
+    },
+  },
+};
+
+const InstitutionBuilderDict: any = {
+  EN: {
+    INFOA: 'Click circle to manage your avatar.',
+    INFO: 'Click the circle above to update institution image.',
+    TITLE: 'Add Institution',
+    SUBTITLE: 'Add new institution to the list',
+    FORM: {
+      TITLE: 'General Information and Vendor Management',
+      INSTITUTION_TYPE: 'Institution Type',
+      NAME_INPUT_LABEL: 'Institution Name',
+      NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
+      WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
+      WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
+      ADDRESS_INPUT_LABEL: 'Address line 1',
+      ADDRESS2_INPUT_LABEL: 'Address line 2',
+      CITY_LABEL: 'City',
+      STATE_LABEL: 'State',
+      ZIP_LABEL: 'Zip',
+      PHONE_LABEL: 'Phone',
+      state: 'Select state',
+      SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
+    },
+    SERVICE_VENDORS: 'Service Vendors',
+    INSTITUTION_TYPE: {
+      SCHOOL: 'School',
+      AFTERSCHOOL: 'After School',
+      DAYCAMP: 'Day Camp',
+      SUMMERCAMP: 'Summer Camp',
+      C3: '501C3',
+    },
+    BUTTON: {
+      CANCEL: 'Cancel',
+      SAVE: 'Save',
+    },
+    messages: {
+      namerequired: 'Institute name is required.',
+      saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
       adderr: 'Unable to add new institute. Please try again later.',
     },
@@ -1275,6 +1379,85 @@ const classBuilderdict: any = {
 
     BUTTON: {
       ADD: 'TBD',
+      SAVE: 'TBD',
+      SAVING: 'TBD',
+    },
+  },
+};
+
+const CourseBuilderDict: any = {
+  EN: {
+    TITLE: 'Create New Curriculum',
+    SUBTITLE: 'Add new curriculum to the list',
+    HEADING: 'CURRICULUM INFORMATION',
+    NAME: 'Curriculum Name',
+    LANGUAGE: 'Select Language',
+    DESIGNER: 'Select Designers',
+    TYPE: 'Select Type',
+    SUMMARY: 'Summary',
+    DESCRIPTION: 'Description',
+    OBJECT: 'Objective',
+    ADD_NEW_UNIT: 'New Unit',
+    SELECT_UNIT: 'Select Unit',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSONS: 'Lessons',
+      OBJECTIVES: 'Objective',
+      UNIT_NAME: 'Unit Name',
+      ACTION: 'Actions',
+    },
+    MESSAGES: {
+      error: {
+        save: 'Unable to save new curriculum please try again later.',
+        fetch: 'Unable to fetch institution list pleas try later.',
+        designerlist: 'Error while fetching Designers list Please try again later.',
+        process: 'Error while processing please Try again later.',
+        invalid:
+          'Invalid path please go back to institution selection page to select your institute.',
+      },
+      validation: {
+        name: 'Curricular name is required please enter name.',
+        institute: 'Please select an institute to add curricular.',
+        curricular: 'This curricular name is already exist, please add another name.',
+      },
+      success: {
+        save: 'New curriculum has been saved.',
+      },
+    },
+    BUTTON: {
+      SAVE: 'Save',
+      SAVING: 'Saving...',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    SUBTITLE: 'TBD',
+    HEADING: 'TBD',
+    NAME: 'TBD',
+    LANGUAGE: 'TBD',
+    DESIGNER: 'TBD',
+    TYPE: 'TBD',
+    SUMMARY: 'TBD',
+    DESCRIPTION: 'TBD',
+    OBJECT: 'TBD',
+    messages: {
+      error: {
+        save: 'TBD',
+        fetch: 'TBD',
+        designerlist: 'TBD',
+        process: 'TBD',
+        invalid: 'TBD',
+      },
+      validation: {
+        name: 'TBD',
+        institute: 'TBD',
+        curricular: 'TBD',
+      },
+      success: {
+        save: 'TBD',
+      },
+    },
+    BUTTON: {
       SAVE: 'TBD',
       SAVING: 'TBD',
     },
@@ -2585,6 +2768,8 @@ const UserEditDict: any = {
 const UserInformationDict: any = {
   EN: {
     details: 'Private Details',
+    demographics: 'Demographics',
+    private: 'Private',
     heading: 'Personal Information',
     fullname: 'Full Name',
     nickname: 'Nickname',
@@ -2596,6 +2781,8 @@ const UserInformationDict: any = {
   },
   ES: {
     details: 'TDB',
+    demographics: 'TBD',
+    private: 'TBD',
     heading: 'TBD',
     fullname: 'TBD',
     nickname: 'TBD',
@@ -3641,10 +3828,12 @@ export {
   Institute_info,
   InstitutionEditDict,
   InstitutionAddDict,
+  InstitutionBuilderDict,
   Institute_class,
   InstitueCurriculam,
   InstitueRomms,
   classBuilderdict,
+  CourseBuilderDict,
   CurricularBuilderdict,
   RoomBuilderdict,
   EditCurriculardict,
@@ -3699,4 +3888,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   General,
+  CommonlyUsedDict
 };

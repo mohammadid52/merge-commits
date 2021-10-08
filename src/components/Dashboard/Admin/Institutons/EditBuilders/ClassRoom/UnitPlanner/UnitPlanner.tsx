@@ -49,7 +49,6 @@ const UnitPlanner = ({
   }, [roomData.curricular?.id]);
 
   const fetchClassRoomSyllabus = async () => {
-    console.log('fetchClassRoomSyllabus');
     try {
       setLoading(true);
       const list: any = await API.graphql(
@@ -62,10 +61,11 @@ const UnitPlanner = ({
         result?.universalSyllabus.items
           ?.map((item: any) => ({
             ...item,
-            index: result?.universalSyllabusSeq?.indexOf(item.id),
+            ...item.unit,
+            index: result?.universalSyllabusSeq?.indexOf(item.unitId),
             lessons: {
-              ...item.lessons,
-              items: item.lessons?.items
+              ...item.unit.lessons,
+              items: item.unit.lessons?.items
                 .map((t: any) => {
                   let index = result?.universalLessonsSeq?.indexOf(t.id);
                   return {...t, index};

@@ -5,63 +5,64 @@ export const getDashboardData = /* GraphQL */ `
         items {
           class {
             name
-            rooms {
-              items {
-                id
-                institutionID
-                classID
-                teacherAuthID
-                teacherEmail
-                name
-                maxPersons
-                activeSyllabus
-                activeLessonId
-                activeLessons
-                completedLessons {
-                  lessonID
-                  time
-                }
-                ClosedPages
-                disabledPages
-                studentViewing
-                displayData
-                currentPage
-                teacher {
-                  firstName
-                  lastName
-                  image
-                  email
-                  role
-                  phone
-                  authId
-                }
-                coTeachers {
-                  items {
-                    teacher {
-                      authId
-                      firstName
-                      lastName
-                      image
-                      email
-                      role
-                      phone
-                    }
+            room {
+              id
+              institutionID
+              classID
+              teacherAuthID
+              teacherEmail
+              name
+              maxPersons
+              activeSyllabus
+              activeLessonId
+              activeLessons
+              completedLessons {
+                lessonID
+                time
+              }
+              ClosedPages
+              disabledPages
+              studentViewing
+              displayData {
+                studentAuthID
+                lessonPageID
+              }
+              currentPage
+              teacher {
+                firstName
+                lastName
+                image
+                email
+                role
+                phone
+                authId
+              }
+              coTeachers {
+                items {
+                  teacher {
+                    authId
+                    firstName
+                    lastName
+                    image
+                    email
+                    role
+                    phone
                   }
                 }
-                curricula {
-                  items {
+              }
+              curricula {
+                items {
+                  id
+                  curriculumID
+                  curriculum {
+                    name
+                    image
                     id
-                    curriculumID
-                    curriculum {
-                      name
-                      image
-                      id
-                      description
-                      designers
-                      objectives
-                      summary
-                      type
-                    }
+                    description
+                    designers
+                    objectives
+                    summary
+                    type
                   }
                 }
               }
@@ -69,6 +70,7 @@ export const getDashboardData = /* GraphQL */ `
             students {
               items {
                 student {
+                  authId
                   firstName
                   lastName
                   image
@@ -180,6 +182,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           students {
             items {
               student {
+                authId
                 firstName
                 lastName
                 image
@@ -228,7 +231,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
         createdAt
         updatedAt
@@ -645,6 +651,39 @@ export const listClassStudents = /* GraphQL */ `
   }
 `;
 
+export const listClassStudentsForRoom = /* GraphQL */ `
+  query ListClassStudents(
+    $filter: ModelClassStudentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        classID
+        studentID
+        studentEmail
+        studentAuthID
+        status
+        group
+        student {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          image
+        }
+        createdAt
+      }
+    }
+  }
+`;
+
 /**
  * QUERY BELOW MADE BY AMAN, THE KING
  */
@@ -674,7 +713,10 @@ export const listRooms = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
       }
       nextToken
@@ -778,9 +820,6 @@ export const getRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
-        }
         students {
           nextToken
         }
@@ -854,7 +893,10 @@ export const getRoomSetup = /* GraphQL */ `
       ClosedPages
       disabledPages
       studentViewing
-      displayData
+      displayData {
+        studentAuthID
+        lessonPageID
+      }
       currentPage
       completedLessons {
         lessonID
@@ -950,7 +992,10 @@ export const listRoomsDashboard = /* GraphQL */ `
         ClosedPages
         disabledPages
         studentViewing
-        displayData
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
         currentPage
         createdAt
         updatedAt
@@ -1595,15 +1640,19 @@ export const listCurriculumsForLessons = /* GraphQL */ `
         universalSyllabus {
           items {
             id
-            name
-            lessons {
-              items {
-                id
-                lessonID
+            unitId
+            unit {
+              name
+              type
+              lessons {
+                items {
+                  id
+                  lessonID
+                }
               }
+              universalLessonsSeq
             }
-            universalLessonsSeq
-            curriculumID
+            curriculumId
           }
           nextToken
         }
@@ -1860,6 +1909,31 @@ export const listUniversalLessons = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalSyllabusOptions = /* GraphQL */ `
+  query ListUniversalSyllabuss(
+    $id: ID
+    $filter: ModelUniversalSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        institutionID
+      }
+      nextToken
+    }
+  }
+`;
 export const listUniversalLessonsOptions = /* GraphQL */ `
   query ListUniversalLessons(
     $id: ID
@@ -1917,9 +1991,9 @@ export const listUniversalLessonsForInstitution = /* GraphQL */ `
           id
           title
           label
-          pageContent{
+          pageContent {
             id
-            partContent{
+            partContent {
               id
             }
           }
@@ -1941,7 +2015,6 @@ export const getUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       lessons {
         items {
@@ -2022,7 +2095,6 @@ export const getUniversalSyllabusData = /* GraphQL */ `
       policies
       pupose
       objectives
-      curriculumID
       languages
       universalLessonsSeq
       designers
@@ -2137,6 +2209,7 @@ export const listInstitutions = /* GraphQL */ `
         name
         type
         district
+        address
         address
         addressLine2
         city
@@ -2441,20 +2514,35 @@ export const getClassDetails = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        currentPage
+        activeLessons
+        weekDay
+        conferenceCallLink
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -2706,17 +2794,43 @@ export const getCurriculum = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
+          unitId
+          unit {
+            id
+            name
+            type
+            institutionID
+            description
+            methodology
+            policies
+            pupose
+            objectives
+            languages
+            lessons {
+              items {
+                id
+                syllabusID
+                lessonID
+                unit
+                sequence
+                status
+                complete
+                roster
+                viewing
+                startDate
+                endDate
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            universalLessonsSeq
+            designers
+            status
+            createdAt
+            updatedAt
+          }
+          curriculumId
           createdAt
           updatedAt
         }
@@ -2914,51 +3028,49 @@ export const userById = /* GraphQL */ `
                 }
               }
               rooms {
-                items {
+                id
+                name
+                class {
                   id
                   name
-                  class {
-                    id
+                  institution {
                     name
-                    institution {
+                  }
+                }
+                teacher {
+                  firstName
+                  preferredName
+                  lastName
+                  image
+                }
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
                       name
-                    }
-                  }
-                  teacher {
-                    firstName
-                    preferredName
-                    lastName
-                    image
-                  }
-                  curricula {
-                    items {
-                      curriculumID
-                      curriculum {
-                        name
-                        checkpoints {
-                          items {
-                            type
-                            typeID
-                            checkpoint {
-                              scope
-                              id
-                              label
-                              title
-                              questions {
-                                items {
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            scope
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
                                   id
-                                  required
-                                  question {
-                                    id
+                                  label
+                                  type
+                                  question
+                                  options {
+                                    text
                                     label
-                                    type
-                                    question
-                                    options {
-                                      text
-                                      label
-                                      icon
-                                      color
-                                    }
+                                    icon
+                                    color
                                   }
                                 }
                               }
@@ -2967,10 +3079,149 @@ export const userById = /* GraphQL */ `
                         }
                       }
                     }
-                    nextToken
+                  }
+                  nextToken
+                }
+              }
+            }
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUserProfile = /* GraphQL */ `
+  query UserById(
+    $id: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userById(
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        classes {
+          items {
+            classID
+            class {
+              id
+              type
+              name
+              createdAt
+              updatedAt
+              institutionID
+              institution {
+                name
+                checkpoints {
+                  items {
+                    type
+                    typeID
+                    checkpoint {
+                      scope
+                      id
+                      label
+                      title
+                      questions {
+                        items {
+                          id
+                          required
+                          question {
+                            id
+                            label
+                            type
+                            question
+                          }
+                        }
+                      }
+                    }
                   }
                 }
-                nextToken
+              }
+              room {
+                id
+                name
+                class {
+                  id
+                  name
+                  institution {
+                    name
+                  }
+                }
+                teacher {
+                  firstName
+                  preferredName
+                  lastName
+                  image
+                }
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
+                      name
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            scope
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
+                                  id
+                                  label
+                                  type
+                                  question
+                                  options {
+                                    text
+                                    label
+                                    icon
+                                    color
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  nextToken
+                }
               }
             }
           }
@@ -3039,38 +3290,36 @@ export const getPersonData = /* GraphQL */ `
                 }
               }
             }
-            rooms {
-              items {
-                id
-                curricula {
-                  items {
-                    curriculumID
-                    curriculum {
-                      name
-                      checkpoints {
-                        items {
-                          type
-                          typeID
-                          checkpoint {
-                            scope
-                            id
-                            label
-                            title
-                            questions {
-                              items {
+            room {
+              id
+              curricula {
+                items {
+                  curriculumID
+                  curriculum {
+                    name
+                    checkpoints {
+                      items {
+                        type
+                        typeID
+                        checkpoint {
+                          scope
+                          id
+                          label
+                          title
+                          questions {
+                            items {
+                              id
+                              required
+                              question {
                                 id
-                                required
-                                question {
-                                  id
+                                label
+                                type
+                                question
+                                options {
+                                  text
                                   label
-                                  type
-                                  question
-                                  options {
-                                    text
-                                    label
-                                    icon
-                                    color
-                                  }
+                                  icon
+                                  color
                                 }
                               }
                             }
@@ -3079,10 +3328,9 @@ export const getPersonData = /* GraphQL */ `
                       }
                     }
                   }
-                  nextToken
                 }
+                nextToken
               }
-              nextToken
             }
           }
         }
@@ -3438,11 +3686,9 @@ export const getChatRooms = /* GraphQL */ `
           classID
           class {
             id
-            rooms {
-              items {
-                id
-                name
-              }
+            room {
+              id
+              name
             }
           }
         }
@@ -3530,6 +3776,30 @@ export const getInstClassRooms = /* GraphQL */ `
 `;
 
 export const listUnits = /* GraphQL */ `
+  query ListCurriculumUnitss(
+    $filter: ModelcurriculumUnitsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        unitId
+        unit {
+          id
+          name
+          type
+          status
+          createdAt
+          updatedAt
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCurriculumCheckpointsData = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
       id
@@ -3971,19 +4241,22 @@ export const getClassroomSyllabus = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          lessons {
-            items {
-              id
-              lesson {
-                duration
-                title
+          unitId
+          unit {
+            name
+            type
+            lessons {
+              items {
+                id
+                lesson {
+                  duration
+                  title
+                }
               }
             }
+            universalLessonsSeq
+            status
           }
-          universalLessonsSeq
-          status
           createdAt
           updatedAt
         }
@@ -4049,27 +4322,47 @@ export const getCurriculumForClasses = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          lessons {
-            items {
-              id
-              lesson {
-                duration
-                title
+          unitId
+          unit {
+            id
+            name
+            type
+            institutionID
+            description
+            methodology
+            policies
+            pupose
+            objectives
+            languages
+            lessons {
+              items {
+                id
+                syllabusID
+                lessonID
+                unit
+                sequence
+                status
+                lesson{
+                  duration
+                  title
+                }
+                complete
+                roster
+                viewing
+                startDate
+                endDate
+                createdAt
+                updatedAt
               }
+              nextToken
             }
+            universalLessonsSeq
+            designers
+            status
+            createdAt
+            updatedAt
           }
-          universalLessonsSeq
-          designers
-          status
+          curriculumId
           createdAt
           updatedAt
         }
@@ -4110,6 +4403,47 @@ export const getScheduleDetails = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+    }
+  }
+`;
+
+export const listRoomsNotebook = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        activeSyllabus
+        curricula {
+          items {
+            id
+            roomID
+            curriculumID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCurriculumNotebook = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
     }
   }
 `;
@@ -4179,11 +4513,7 @@ export const getInstitutionCurriculums = /* GraphQL */ `
 `;
 
 export const listRoomsBasicDetails = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -4219,6 +4549,88 @@ export const listRoomsBasicDetails = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getStudentSurveyResponse = /* GraphQL */ `
+  query ListUniversalLessonStudentDatas(
+    $id: ID
+    $filter: ModelUniversalLessonStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        pageData {
+          domID
+          options
+          input
+        }
+        hasExerciseData
+        exerciseData {
+          id
+          feedbacks
+          shared
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listStaffWithBasicInfo = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+      }
+    }
+  }
+`;
+export const listCurriculumUnitss = /* GraphQL */ `
+  query ListCurriculumUnitss(
+    $filter: ModelcurriculumUnitsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        unitId
+        unit {
+          id
+          name
+          type
+          institutionID
+        }
+        curriculumId
         createdAt
         updatedAt
       }

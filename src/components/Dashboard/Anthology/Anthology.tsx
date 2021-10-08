@@ -24,6 +24,9 @@ import EmptyViewWrapper from './EmptyViewWrapper';
 import RoomView from './RoomView';
 import TabView from './TabView';
 import {useHistory} from 'react-router-dom';
+import {userInfo} from 'os';
+import update from 'lodash/update';
+import ChangePasscode from '../Profile/ChangePasscode';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -31,6 +34,8 @@ export interface IAnthologyProps {
   studentID?: string;
   studentAuthID?: string;
   studentEmail?: string;
+  studentName?: string;
+  isTeacher?: boolean;
 }
 export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -39,7 +44,13 @@ export interface ViewEditMode {
   recordID?: string;
 }
 
-const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) => {
+const Anthology = ({
+  studentID,
+  studentAuthID,
+  studentEmail,
+  studentName,
+  isTeacher,
+}: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const gContext = useContext(GlobalContext);
@@ -230,9 +241,18 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
           studentAuthID: {eq: studentAuthId},
         },
       };
+      const listFilterIfTeacher = {
+        filter: {
+          studentAuthID: {eq: studentAuthID},
+          shared: {eq: 'true'},
+        },
+      };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
+        graphqlOperation(
+          queries.listUniversalJournalDatas,
+          isTeacher ? listFilterIfTeacher : listFilter
+        )
       );
       const journalEntryDataRows = journalEntryData.data.listUniversalJournalDatas.items;
 
@@ -344,19 +364,24 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
     });
   };
 
-  const updateJournalDataContent = (html: string, targetType: string) => {
-    const updatedNotesData = {
-      ...journalEntryData,
-      entryData: journalEntryData.entryData.map((entryObj: any) => {
-        if (entryObj.type === targetType) {
-          return {...entryObj, input: html};
-        } else {
-          return entryObj;
-        }
-      }),
-    };
-    // console.log('input - ', html);
-    setJournalEntryData(updatedNotesData);
+  const updateJournalDataContent = (html: string, targetType: string, idx?: number) => {
+    if (idx !== undefined) {
+      update(journalEntryData, `entryData[${idx}].input`, () => html);
+      setJournalEntryData({...journalEntryData});
+    } else {
+      const updatedNotesData = {
+        ...journalEntryData,
+        entryData: journalEntryData.entryData.map((entryObj: any) => {
+          if (entryObj.type === targetType) {
+            return {...entryObj, input: html};
+          } else {
+            return entryObj;
+          }
+        }),
+      };
+      // console.log('input - ', html);
+      setJournalEntryData(updatedNotesData);
+    }
   };
 
   // ##################################################################### //
@@ -435,6 +460,7 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();
           await updateStudentData();
+          await updateJournalData();
         } else if (viewEditMode.mode === '') {
           await handleResetJournalEntry();
         }
@@ -517,6 +543,8 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
   const [showPasscodeEntry, setShowPasscodeEntry] = useState<boolean>(false);
   const [passcodeInput, setPasscodeInput] = useState<string>('');
   const [accessMessage, setAccessMessage] = useState<any>({message: '', textClass: ''});
+  const [forgotPrompt, setForgotPrompt] = useState<boolean>(false);
+  const previousForgot = usePrevious(forgotPrompt);
 
   const handlePrivateSectionAccess = async () => {
     try {
@@ -561,8 +589,14 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
 
   // ~~~~~~~~~~~ FORGOT CODE LINK ~~~~~~~~~~ //
 
-  const goToForgot = () => {
-    history.push('/dashboard/profile/passcode');
+  const handleForgotPasscode = (success?: boolean) => {
+    // history.push('/dashboard/profile/passcode');
+    if (forgotPrompt === false) {
+      setForgotPrompt(true);
+      setAccessMessage({message: '', textClass: ''});
+    } else {
+      setForgotPrompt(false);
+    }
   };
 
   // ~~~~~~~~~ STANDARD ROOM SELECT ~~~~~~~~ //
@@ -580,61 +614,89 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
       setShowPasscodeEntry(false);
       setPasscodeInput('');
       setAccessMessage('');
-    } else if (section === 'Private Notebook') {
+    } else if (section === 'Private Notebook' && !isTeacher) {
       setShowPasscodeEntry(true);
+    } else if (section === 'Private Notebook' && isTeacher) {
+      setMainSection('Private');
+      setSectionRoomID('private');
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage({message: '', textClass: ''});
     }
   };
 
   return (
     <React.Fragment>
-      <div>
-        <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
-      </div>
-      <div className="px-10">
-        <div
-          className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-          <h2 className={`text-base text-center font-semibold`}>
-            All your work in place
-          </h2>
+      {!isTeacher && (
+        <div>
+          <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
         </div>
+      )}
+      <div className="px-10">
+        {!isTeacher && (
+          <div
+            className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+            <h2 className={`text-base text-center font-semibold`}>
+              All your work in place
+            </h2>
+          </div>
+        )}
 
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
             <Modal
-              title={`This Notebook is Passcode Protected`}
+              title={`${
+                !forgotPrompt
+                  ? 'This Notebook is Passcode Protected'
+                  : 'Change Your Passcode!'
+              }`}
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
               scrollHidden={true}
               closeAction={() => setShowPasscodeEntry(false)}>
-              <FormInput
-                value={passcodeInput}
-                type={'password'}
-                onChange={(e) => {
-                  setPasscodeInput(e.target.value);
-                }}
-                id="passcode"
-                name="passcode"
-                label={'Enter Your Passcode:'}
-                placeHolder={''}
-                className={`w-full my-2`}
-                isRequired
-              />
-              {accessMessage.message !== '' && (
-                <p className={`${accessMessage.textClass} text-center text-xs`}>
-                  {accessMessage.message}
-                </p>
-              )}
-              <Buttons
-                label={'Submit'}
-                btnClass="w-full px-6 py-4 my-2"
-                onClick={handlePrivateSectionAccess}
-              />
-              <p
-                onClick={() => goToForgot()}
-                className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
-                Forgot Passcode?
-              </p>
+              <div className="w-128 flex justify-center">
+                {!forgotPrompt ? (
+                  <div className={`w-8/12`}>
+                    <FormInput
+                      value={passcodeInput}
+                      type={'password'}
+                      onChange={(e) => {
+                        setPasscodeInput(e.target.value);
+                      }}
+                      id="passcode"
+                      name="passcode"
+                      label={'Enter Your Passcode:'}
+                      placeHolder={''}
+                      className={`w-full my-2`}
+                      isRequired
+                    />
+                    {accessMessage.message !== '' && (
+                      <p className={`${accessMessage.textClass} text-center text-xs`}>
+                        {accessMessage.message}
+                      </p>
+                    )}
+                    <Buttons
+                      label={'Submit'}
+                      btnClass="w-full px-6 py-4 my-2"
+                      onClick={handlePrivateSectionAccess}
+                    />
+                    <p
+                      onClick={() => handleForgotPasscode()}
+                      className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
+                      Forgot Passcode?
+                    </p>
+                  </div>
+                ) : (
+                  <ChangePasscode
+                    fromWhere={'notebook'}
+                    handleForgotPasscode={handleForgotPasscode}
+                  />
+                )}
+              </div>
             </Modal>
           </div>
         )}
@@ -642,7 +704,11 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
         <div className="mx-auto max-w-256">
           <div className="my-8">
             <SectionTitleV3
-              title={anthologyDict[userLanguage]['TITLE_CONTAINER']}
+              title={
+                !isTeacher
+                  ? 'Your ' + anthologyDict[userLanguage]['TITLE']
+                  : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
+              }
               fontSize="xl"
               fontStyle="semibold"
               extraContainerClass="px-6"
@@ -668,6 +734,7 @@ const Anthology = ({studentID, studentAuthID, studentEmail}: IAnthologyProps) =>
                 sectionRoomID={sectionRoomID}
                 sectionTitle={sectionTitle}
                 handleSectionSelect={handleSectionSelect}
+                isTeacher={isTeacher}
               />
             </EmptyViewWrapper>
           </div>

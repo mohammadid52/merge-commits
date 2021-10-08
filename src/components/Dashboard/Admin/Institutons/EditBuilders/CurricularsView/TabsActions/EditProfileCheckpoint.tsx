@@ -45,6 +45,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigner] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
+  const [qSequence, setQSequence] = useState([]);
   const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
   const [checkpQuestionId, setCheckpQuestionId] = useState([]);
   const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
@@ -127,6 +128,25 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   const addQuesToCheckpoint = (obj: any) => {
     setCheckpQuestions([...checkpQuestions, obj]);
   };
+
+  // ##################################################################### //
+  // ###################### CHECKPOINT FUNCTIONALITY ##################### //
+  // ##################################################################### //
+
+  // ~~~~~ REGEN CHECKP QUESTION ORDER ~~~~~ //
+  const generateSequence = (checkpointQArray: any[]) => {
+    return checkpointQArray.map((checkpointQObj: any) => checkpointQObj.id);
+  };
+  useEffect(() => {
+    const newSequence = generateSequence(checkpQuestions);
+    setQSequence(newSequence);
+  }, [checkpQuestions]);
+
+  const getSequence = async () => {};
+
+  const createSequence = async () => {};
+
+  const updateSequence = async () => {};
 
   // Add new checkpoint to the curricular
   const addCheckpointQuestions = async (
@@ -213,6 +233,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
           scope: checkpointData.scope,
+          questionSeq: qSequence,
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateCheckpoint, {input: input})
@@ -225,6 +246,9 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           let newArrayOfId = checkpQuestions.map((que: any) => que.id);
           return !newArrayOfId.includes(queId);
         });
+
+        console.log('modified checkpoint - ', newQuestions);
+
         if (newCheckpoint) {
           if (newQuestions.length > 0) {
             let newAddedQuestions = await Promise.all(

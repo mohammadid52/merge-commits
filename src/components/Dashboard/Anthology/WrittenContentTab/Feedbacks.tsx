@@ -608,8 +608,9 @@ const Feedbacks = ({
               </div>
             </div>
           ) : feedbackData && feedbackData.length > 0 ? (
-            feedbackData.map((feedback: any) => (
+            feedbackData.map((feedback: any, key: number) => (
               <Feedback
+                key={`feedback_${key}`}
                 setAttModal={setAttModal}
                 deleteModal={deleteModal}
                 uploadingAttachment={uploadingAttachment}

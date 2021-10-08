@@ -2,7 +2,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory,useParams, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -22,9 +22,7 @@ import Loader from '../../../Atoms/Loader';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';
@@ -49,6 +47,7 @@ export interface InitialData {
   imagePreviewUrl?: string;
   studentSummary?: string;
   lessonPlan?: any[];
+  targetAudience?: string;
 }
 export interface InputValueObject {
   id: string;
@@ -58,10 +57,11 @@ export interface InputValueObject {
 interface LessonBuilderProps {
   designersList: any[];
   institutionList: any[];
+  instId: string;
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const {institutionList} = props;
+  const {institutionList, instId} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -84,12 +84,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     notes: '',
     notesHtml: '<p></p>',
     languages: [{id: '1', name: 'English', value: 'EN'}],
-    institution: {id: '', name: '', value: ''},
+    institution: {id: instId, name: '', value: instId},
     language: [''],
     imageUrl: '',
     imageCaption: '',
     studentSummary: '',
     lessonPlan: [{}],
+    targetAudience: ''
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -126,7 +127,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
+  const [lessonId, setLessonId] = useState((useParams() as any).lessonId || '');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [institutionData, setInstitutionData] = useState<any>(null);
@@ -294,6 +295,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   useEffect(() => {
     fetchCurriculum();
   }, [formData?.institution]);
+
+  useEffect(() => {
+    if(instId && !lessonId){
+      fetchStaffByInstitution(instId)
+    }
+  }, [instId, lessonId])
 
   const addCheckpointQuestions = async (
     quesId: string,
@@ -470,7 +477,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       curriculums.map((curriculum: any) => {
         const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
           (syllabus: any) =>
-            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+            syllabus.unit?.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
               .length
         );
         const isCourseAdded = Boolean(assignedSyllabi.length);
@@ -479,7 +486,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             ...curriculum,
             assignedSyllabi,
             // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId),
           });
         }
       });
@@ -771,12 +778,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums
+      {/* <BreadCrums
         items={breadCrumsList}
         unsavedChanges={unsavedChanges}
         toggleModal={toggleUnSaveModal}
-      />
-      <div className="flex justify-between">
+      /> */}
+      {/* <div className="flex justify-between">
         <SectionTitle
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
@@ -791,10 +798,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             />
           </div>
         ) : null}
-      </div>
-
+      </div> */}
+      <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
+        {LessonBuilderDict[userLanguage]['TITLE']}
+      </h3>
       {/* Body */}
-      <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}>
+      {/* <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}> */}
         <div className="w-full m-auto">
           <StepComponent
             steps={steps}
@@ -920,7 +929,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             message={warnModal2.message}
           />
         )}
-      </PageWrapper>
+      {/* </PageWrapper> */}
     </div>
   );
 };
