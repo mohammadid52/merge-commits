@@ -51,10 +51,12 @@ const PageBuilderLayout = ({
   children,
   open,
   width = '28rem',
+  overflowHidden = true,
 }: {
   children: React.ReactNode;
   open: boolean;
   width?: string;
+  overflowHidden?: boolean;
 }) => {
   return (
     <div
@@ -64,8 +66,9 @@ const PageBuilderLayout = ({
         minWidth: open ? width : '0rem',
       }}
       className={classNames(
+        overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
         open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform dark-scroll  transition-all duration-300 overflow-y-scroll fixed right-0 inset-y-0 break-normal h-screen bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+        'p-8 transform   transition-all duration-300  fixed right-0 inset-y-0 break-normal h-screen bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
       )}>
       {children}
     </div>
@@ -367,7 +370,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
         {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
 
-        <PageBuilderLayout open={showLessonEditOverlay}>
+        <PageBuilderLayout overflowHidden open={showLessonEditOverlay}>
           <PageBuilderSlideOver
             deleteFromULBHandler={deleteFromULBHandler}
             open={showLessonEditOverlay}
