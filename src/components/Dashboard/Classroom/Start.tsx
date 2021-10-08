@@ -104,7 +104,7 @@ const Start: React.FC<StartProps> = ({
       const syllabusData = state.roomData.syllabus.find(
         (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
       );
-        
+
       if (syllabusData) {
         let filter: any = {
           studentID: {eq: state.user?.id},
@@ -214,13 +214,16 @@ const Start: React.FC<StartProps> = ({
   };
 
   const handleMarkAsCompleteClick = async (lessonIds: any) => {
+    const payloadLessonIds = Array.isArray(lessonIds)
+      ? lessonIds
+      : warnModal.activeLessonsId;
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
         input: {
           id: roomID,
           completedLessons: [
             ...(state.roomData.completedLessons || []),
-            ...(lessonIds || warnModal.activeLessonsId)?.map((lessonID: any) => ({
+            ...payloadLessonIds?.map((lessonID: any) => ({
               lessonID,
               time: new Date().toISOString(),
             })),
