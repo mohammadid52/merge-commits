@@ -94,9 +94,9 @@ const Home = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
-        if (item?.class?.room) {
-          if (item?.class?.room?.coTeachers.items.length > 0) {
-            item?.class?.room?.coTeachers.items.map((_item: any) => {
+        if (item?.class?.room.length > 0) {
+          if (item?.class?.room.coTeachers.items.length > 0) {
+            item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
                 coTeachersList.push(_item.teacher);
