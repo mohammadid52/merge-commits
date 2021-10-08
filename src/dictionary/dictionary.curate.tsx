@@ -927,14 +927,16 @@ const Institute_info: any = {
       CLASS_MANAGER: 'Class Manager',
       COURSE_MANAGER: 'Course Manager',
       COMMUNITY_MANAGER: 'Community Manager',
-      INSTITUTION_MANAGER:'Institution Manager',
+      INSTITUTION_MANAGER: 'Institution Manager',
       CLASSES: 'Cohorts',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classes',
       STUDENT_ROASTER: 'Student Roster',
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lessons',
-      RESEARCH_AND_ANALYTICS: 'Research & Analytics'
+      RESEARCH_AND_ANALYTICS: 'Research & Analytics',
+      HOME: 'Dashboard',
+      NOTEBOOK: 'Notebook',
     },
   },
   ES: {
@@ -953,7 +955,9 @@ const Institute_info: any = {
       STUDENT_ROASTER: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
-      RESEARCH_AND_ANALYTICS: 'TBD'
+      RESEARCH_AND_ANALYTICS: 'TBD',
+      HOME: 'TBD',
+      NOTEBOOK: 'TBD',
     },
   },
 };

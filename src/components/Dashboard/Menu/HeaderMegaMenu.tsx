@@ -15,8 +15,11 @@ const HeaderMegaMenu = () => {
   } = useContext(GlobalContext);
   const {Institute_info} = useDictionary(clientKey);
 
-  const baseUrl = user.associateInstitute?.length ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}` : '';
+  const baseUrl = user.associateInstitute?.length
+    ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
+    : '';
 
+  // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
     {
       title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
@@ -126,6 +129,32 @@ const HeaderMegaMenu = () => {
     },
   ];
 
+  // ~~~~~~~~~~~~~ MENU STUDENT ~~~~~~~~~~~~ //
+  const headerMenusForStudent = [
+    {
+      title: Institute_info[userLanguage]['TABS']['HOME'],
+      key: 'dashboard',
+      redirectionUrl: `${baseUrl}/dashboard/home`,
+      active: location.pathname.indexOf('home') > -1,
+    },
+    {
+      title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
+      key: 'notebook',
+      redirectionUrl: `${baseUrl}/dashboard/anthology`,
+      active: location.pathname.indexOf('anthology') > -1,
+    },
+  ];
+
+  // ~~~~~~~~~~~~~ SWITCH MENUS ~~~~~~~~~~~~ //
+  const getMenuByRole = (role: string) => {
+    switch (role) {
+      case 'ST':
+        return headerMenusForStudent;
+      default:
+        return headerMenusForInstitution;
+    }
+  };
+
   const updateTab = ({key, redirectionUrl}: any) => {
     if (redirectionUrl) {
       history.push(redirectionUrl);
@@ -134,7 +163,7 @@ const HeaderMegaMenu = () => {
 
   return (
     <div>
-      <Tabs tabsData={headerMenusForInstitution} updateTab={updateTab} tabWithNumbers />
+      <Tabs tabsData={getMenuByRole(user?.role)} updateTab={updateTab} tabWithNumbers />
     </div>
   );
 };
