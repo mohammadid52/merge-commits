@@ -26,6 +26,7 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;

@@ -112,6 +112,14 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
+  useEffect(() => {
+    if (state.currentPage === 'homepage') {
+      dispatch({
+        type: 'RESET_ROOMDATA',
+      });
+    }
+  }, [state.currentPage]);
+
   // ##################################################################### //
   // ############################ USER LOADING ########################### //
   // ##################################################################### //
@@ -190,6 +198,7 @@ const Dashboard = (props: DashboardProps) => {
     if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
+    setLocalStorageData('last_page', 'dashboard');
   }, []);
 
   // ##################################################################### //
