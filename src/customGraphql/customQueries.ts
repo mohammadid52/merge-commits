@@ -3717,6 +3717,34 @@ export const getInstClassRooms = /* GraphQL */ `
 `;
 
 export const listUnits = /* GraphQL */ `
+  query ListCurriculumUnitss(
+    $filter: ModelcurriculumUnitsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurriculumUnitss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        unitId
+        unit {
+          id
+          name
+          type
+          status
+          createdAt
+          updatedAt
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCurriculumCheckpointsData = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
       id
@@ -3740,22 +3768,6 @@ export const listUnits = /* GraphQL */ `
             }
           }
         }
-      }
-      syllabi {
-        items {
-          id
-          name
-          type
-        }
-        nextToken
-      }
-      universalSyllabus {
-        items {
-          id
-          name
-          type
-        }
-        nextToken
       }
     }
   }
