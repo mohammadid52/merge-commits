@@ -21,6 +21,7 @@ interface LessonPlansListProps {
   lessonName: string;
   loading: boolean;
   universalLessonDetails: {
+    institutionID?: string;
     lessonPlan: UniversalLessonPage[];
   };
 }
@@ -169,8 +170,7 @@ const LessonActivities = ({
 
   const lessonPagePreview = (id: string, preview: boolean = true) => {
     setPreviewMode(preview);
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+    history.push(`/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

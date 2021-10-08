@@ -4,22 +4,17 @@ import {HiPencil} from 'react-icons/hi';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
-import {DeleteActionBtn} from '../../../../Atoms/Buttons/DeleteActionBtn';
+import Selector from '@atoms/Form/Selector';
+import AddButton from '@atoms/Buttons/AddButton';
+import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
+import SearchSelectorWithAvatar from '@atoms/Form/SearchSelectorWithAvatar';
+import Loader from '@atoms/Loader';
 
 import {
   stringToHslColor,
   getInitialsFromString,
   initials,
   createFilterToFetchAllItemsExcept,
-  createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
 import {getImageFromS3} from '../../../../../utilities/services';
 import {groupOptions} from '../../../../../utilities/staticData';
@@ -27,22 +22,24 @@ import {getAsset} from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
-import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
 
-interface EditClassProps {}
+interface EditClassProps {
+  instId: string;
+  classId: string;
+  toggleUpdateState?: () => void;
+  roomData: any;
+}
 
-const EditClass = (props: EditClassProps) => {
+const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
-  const urlParams = useQuery();
   const match = useRouteMatch();
 
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
@@ -58,6 +55,7 @@ const EditClass = (props: EditClassProps) => {
 
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
+  const [saving, setSaving] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -77,9 +75,19 @@ const EditClass = (props: EditClassProps) => {
     action: () => {},
   });
 
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {user},
+    theme,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {
+    editClassDict,
+    BreadcrumsTitles,
+    BUTTONS: ButtonDict,
+    CommonlyUsedDict,
+  } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
 
   const breadCrumsList = [
@@ -96,12 +104,12 @@ const EditClass = (props: EditClassProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSES'],
-      url: `/dashboard/manage-institutions/institution?id=${classData.institute?.id}&tab=1`,
+      url: `/dashboard/manage-institutions/institution/${classData.institute?.id}/class`,
       last: false,
     },
     {
       title: classData?.name,
-      url: `${match.url}?id=${urlParams.get('id')}`,
+      url: `${match.url}?id=${classId}`,
       last: true,
     },
   ];
@@ -113,21 +121,26 @@ const EditClass = (props: EditClassProps) => {
   const fetchClassData = async (classId: string) => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getClassDetails, {id: classId})
+        graphqlOperation(customQueries.listClassStudentsForRoom, {
+          filter: {classID: {eq: classId}},
+        })
       );
-      const classData = result.data.getClass;
-      setClassData({
-        ...classData,
-        id: classData.id,
-        name: classData.name,
-        institute: {
-          id: classData.institution.id,
-          name: classData.institution.name,
-          value: classData.institution.name,
-        },
-      });
+      // const result: any = await API.graphql(
+      //   graphqlOperation(customQueries.getClassDetails, {id: classId})
+      // );
+      // const classData = result.data.getClass;
+      // setClassData({
+      //   ...classData,
+      //   id: classData.id,
+      //   name: classData.name,
+      //   institute: {
+      //     id: classData.institution.id,
+      //     name: classData.institution.name,
+      //     value: classData.institution.name,
+      //   },
+      // });
       const selectedStudentsIds: any = [];
-      const selectedStudents = classData.students.items.map((stu: any) => {
+      const selectedStudents = result.data.listClassStudents?.items.map((stu: any) => {
         selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
@@ -211,16 +224,16 @@ const EditClass = (props: EditClassProps) => {
     setFilteredStudents([]);
   };
 
-  const onNameChange = (e: any) => {
-    setClassData({
-      ...classData,
-      name: e.target.value,
-    });
-    setUnsavedChanges(true);
-    if (messages.show) {
-      setMessages({show: false, message: '', isError: false});
-    }
-  };
+  // const onNameChange = (e: any) => {
+  //   setClassData({
+  //     ...classData,
+  //     name: e.target.value,
+  //   });
+  //   setUnsavedChanges(true);
+  //   if (messages.show) {
+  //     setMessages({show: false, message: '', isError: false});
+  //   }
+  // };
 
   const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
@@ -241,13 +254,13 @@ const EditClass = (props: EditClassProps) => {
   const addStudentInClass = async () => {
     if (newMember.id) {
       const {id, name, avatar} = newMember;
-      await saveClassStudent(id, classData.id);
+      await saveClassStudent(id);
       setNewMember(defaultNewMember);
     }
     setFilteredStudents([]);
   };
 
-  const saveClassStudent = async (id: string, classId: string) => {
+  const saveClassStudent = async (id: string) => {
     try {
       setAdding(true);
       const selected = students.find((item: any) => item.id === id);
@@ -281,6 +294,12 @@ const EditClass = (props: EditClassProps) => {
         message: 'Student added successfully',
         isError: false,
       });
+      setTimeout(() => {
+        setAddMessage({
+          message: '',
+          isError: false,
+        });
+      }, 2000);
     } catch (err) {
       console.log('saveClassStudent', err);
       setAddMessage({
@@ -315,18 +334,23 @@ const EditClass = (props: EditClassProps) => {
 
   const onGroupEdit = async (studentId: string, group: string) => {
     setUpdating(true);
-    await API.graphql(
-      graphqlOperation(customMutations.updateClassStudent, {
-        input: {id: studentId, group},
-      })
-    );
-    setClassStudents((prevStudent) =>
-      prevStudent.map((student) =>
-        student.id === studentId ? {...student, group} : student
-      )
-    );
-    setStudentIdToEdit('');
-    setUpdating(false);
+    try {
+      await API.graphql(
+        graphqlOperation(customMutations.updateClassStudent, {
+          input: {id: studentId, group},
+        })
+      );
+      setClassStudents((prevStudent) =>
+        prevStudent.map((student) =>
+          student.id === studentId ? {...student, group} : student
+        )
+      );
+      setStudentIdToEdit('');
+      setUpdating(false);
+    } catch (error) {
+      console.log(error,'errorerror')
+      setUpdating(false);
+    }
   };
 
   const onDelete = (id: any) => {
@@ -368,9 +392,8 @@ const EditClass = (props: EditClassProps) => {
   };
 
   useEffect(() => {
-    const classId = urlParams.get('id');
     if (classId) fetchClassData(classId);
-    else history.push('/dashboard/manage-institutions');
+    // else history.push('/dashboard/manage-institutions');
     // try {
     //   console.log('Here.......')
     //   const input = { classStudents: [{
@@ -391,27 +414,27 @@ const EditClass = (props: EditClassProps) => {
     // } catch (err) {
     //   console.log('ERRRRROR', err);
     // }
-  }, []);
+  }, [classId]);
 
-  const checkUniqClassName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
-          filter: {
-            institutionID: {eq: classData.institute.id},
-            name: {eq: classData.name},
-          },
-        })
-      );
-      return list.data.listClasss.items.length === 0 ? true : false;
-    } catch {
-      setMessages({
-        show: true,
-        message: dictionary.messages.processerror,
-        isError: true,
-      });
-    }
-  };
+  // const checkUniqClassName = async () => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listClasss, {
+  //         filter: {
+  //           institutionID: {eq: classData.institute.id},
+  //           name: {eq: classData.name},
+  //         },
+  //       })
+  //     );
+  //     return list.data.listClasss.items.length === 0 ? true : false;
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: dictionary.messages.processerror,
+  //       isError: true,
+  //     });
+  //   }
+  // };
 
   const validateForm = async () => {
     if (classData.name.trim() === '') {
@@ -428,24 +451,27 @@ const EditClass = (props: EditClassProps) => {
         isError: true,
       });
       return false;
-    } else if (classData.name.trim() !== '' && previousName !== classData.name) {
-      const isUniq = await checkUniqClassName();
-      if (!isUniq) {
-        setMessages({
-          show: true,
-          message: dictionary.messages.classexist,
-          isError: true,
-        });
-        return false;
-      } else {
-        return true;
-      }
-    } else {
+    }
+    //  else if (classData.name.trim() !== '' && previousName !== classData.name) {
+    //   const isUniq = await checkUniqClassName();
+    //   if (!isUniq) {
+    //     setMessages({
+    //       show: true,
+    //       message: dictionary.messages.classexist,
+    //       isError: true,
+    //     });
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // }
+    else {
       return true;
     }
   };
 
   const saveClassDetails = async () => {
+    setSaving(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -457,17 +483,20 @@ const EditClass = (props: EditClassProps) => {
         const newClass: any = await API.graphql(
           graphqlOperation(mutations.updateClass, {input: input})
         );
+        toggleUpdateState();
         setMessages({
           show: true,
           message: dictionary.messages.classupdate,
           isError: false,
         });
+        setSaving(false);
       } catch {
         setMessages({
           show: true,
           message: dictionary.messages.unableupdate,
           isError: true,
         });
+        setSaving(false);
       }
     }
   };
@@ -531,97 +560,116 @@ const EditClass = (props: EditClassProps) => {
 
   return (
     <div className="">
-      <BreadCrums items={breadCrumsList} />
+      {/* <BreadCrums items={breadCrumsList} /> */}
 
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+        <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             btnClass=""
             label="Go Back"
             onClick={goBack}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div> */}
+        </div>
+      </div> */}
+      <div className="px-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {roomData.name}
+        </h3>
       </div>
 
-      <PageWrapper>
-        <div className="w-8/10 2xl:w-6/10 px-2 m-auto mb-4">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+      {loading ? (
+        <div className="h-100 flex justify-center items-center">
+          <div className="w-5/10">
+            <Loader />
+            <p className="mt-2 text-center">{dictionary.LOADING}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="px-4 mt-4">
+          <div className="w-8/10 2xl:w-6/10 px-2 m-auto mb-4">
+            {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {dictionary.heading}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="col-span-4">
-              <FormInput
-                value={classData.name}
-                id="className"
-                onChange={onNameChange}
-                name="className"
-                label={dictionary.NAME_INPUT_LABEL}
-                isRequired
+          </h3> */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="col-span-4">
+                <FormInput
+                  value={classData.name}
+                  id="className"
+                  onChange={onNameChange}
+                  name="className"
+                  label={dictionary.NAME_INPUT_LABEL}
+                  isRequired
+                />
+              </div>
+              <Buttons
+                btnClass="mx-2 lg:ml-5 lg:mr-10 py-1 mt-auto"
+                label={
+                  saving
+                    ? ButtonDict[userLanguage]['SAVING']
+                    : ButtonDict[userLanguage]['SAVE']
+                }
+                onClick={saveClassDetails}
+                transparent={!unsavedChanges}
+                disabled={!unsavedChanges || saving}
+              />
+            </div> */}
+          </div>
+
+          <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="col-span-2">
+                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                  Add students to class
+                </label>
+                <div className="flex items-center justify-between">
+                  <SearchSelectorWithAvatar
+                    selectedItem={newMember}
+                    list={searching ? filteredStudents : students}
+                    placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
+                    onChange={onStudentSelect}
+                    fetchStudentList={fetchStudentList}
+                    clearFilteredStudents={clearFilteredStudents}
+                    searchStatus={searching}
+                    searchCallback={setSearching}
+                    imageFromS3={false}
+                    creatable
+                    creatableLabel={'Add students from register to class'}
+                    onCreate={() => history.push('/dashboard/registration')}
+                  />
+                </div>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                  {dictionary.GROUP}
+                </label>
+                <div className="flex items-center justify-between">
+                  <Selector
+                    selectedItem={newMember?.group}
+                    list={groupOptions}
+                    placeholder={dictionary.GROUP_PLACEHOLDER}
+                    onChange={onGroupChange}
+                    disabled={!newMember?.id}
+                  />
+                </div>
+              </div>
+              <AddButton
+                className="mx-2 lg:ml-5 lg:mr-10 py-1 px-5 mt-auto"
+                label={dictionary.ADD_STUDENT_BUTTON}
+                onClick={addStudentInClass}
+                disabled={adding || !newMember.id}
               />
             </div>
-            <Buttons
-              btnClass="mx-2 lg:ml-5 lg:mr-10 py-1 mt-auto"
-              label="Save"
-              onClick={saveClassDetails}
-              transparent={!unsavedChanges}
-              disabled={!unsavedChanges}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="col-span-2">
-              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                Add students to class
-              </label>
-              <div className="flex items-center justify-between">
-                <SearchSelectorWithAvatar
-                  selectedItem={newMember}
-                  list={searching ? filteredStudents : students}
-                  placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
-                  onChange={onStudentSelect}
-                  fetchStudentList={fetchStudentList}
-                  clearFilteredStudents={clearFilteredStudents}
-                  searchStatus={searching}
-                  searchCallback={setSearching}
-                  imageFromS3={false}
-                />
-              </div>
+            <div className="py-2">
+              <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {addMessage?.message}
+              </p>
             </div>
-            <div className="col-span-2">
-              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                {dictionary.GROUP}
-              </label>
-              <div className="flex items-center justify-between">
-                <Selector
-                  selectedItem={newMember?.group}
-                  list={groupOptions}
-                  placeholder={dictionary.GROUP_PLACEHOLDER}
-                  onChange={onGroupChange}
-                  disabled={!newMember?.id}
-                />
-              </div>
-            </div>
-            <AddButton
-              className="mx-2 lg:ml-5 lg:mr-10 py-1 px-5 mt-auto"
-              label={dictionary.ADD_STUDENT_BUTTON}
-              onClick={addStudentInClass}
-              disabled={adding || !newMember.id}
-            />
           </div>
-          <div className="py-2">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {addMessage?.message}
-            </p>
-          </div>
-        </div>
-        {classStudents ? (
-          <Fragment>
-            {!loading ? (
-              classStudents.length ? (
+          {classStudents ? (
+            <Fragment>
+              {classStudents.length ? (
                 <Fragment>
                   <div className="mt-8 w-full lg:w-9/10 m-auto px-2">
                     <div className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
@@ -648,8 +696,14 @@ const EditClass = (props: EditClassProps) => {
                           {index + 1}.
                         </div>
                         <div
-                          className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer"
-                          onClick={() => movetoStudentProfile(item.student.id)}>
+                          className={`flex w-5/10 items-center px-4 py-2 whitespace-normal ${
+                            user.role !== 'BLD' ? 'cursor-pointer' : ''
+                          } `}
+                          onClick={() =>
+                            user.role !== 'BLD'
+                              ? movetoStudentProfile(item.student.id)
+                              : null
+                          }>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
                               <img
@@ -678,7 +732,10 @@ const EditClass = (props: EditClassProps) => {
                           </div>
                           <div className="ml-4">
                             {/* {item.student.name} */}
-                            <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                            <div
+                              className={`${
+                                user.role !== 'BLD' ? 'hover:text-gray-600' : ''
+                              } text-sm leading-5 font-medium text-gray-900`}>
                               {item.student.name}
                             </div>
                             <div className="text-sm leading-5 text-gray-500">
@@ -736,38 +793,37 @@ const EditClass = (props: EditClassProps) => {
                 <div className="py-12 my-12 m-auto text-center">
                   {dictionary.NOSTUDENT}
                 </div>
-              )
-            ) : (
-              <div className="py-12 my-12 m-auto text-center">{dictionary.LOADING}</div>
-            )}
-            {messages.show && (
-              <div className="py-2 m-auto text-center">
-                <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                  {messages.message && messages.message}
-                </p>
-              </div>
-            )}
-            {warnModal.show && (
-              <ModalPopUp
-                closeAction={DiscardChanges}
-                saveAction={saveAndMove}
-                saveLabel="SAVE"
-                cancelLabel="DISCARD"
-                message={warnModal.message}
-              />
-            )}
-            {warnModal2.show && (
-              <ModalPopUp
-                closeAction={closeDeleteModal}
-                saveAction={warnModal2.action}
-                saveLabel="Yes"
-                message={warnModal2.message}
-                loading={deleting}
-              />
-            )}
-          </Fragment>
-        ) : null}
-      </PageWrapper>
+              )}
+              {messages.show && (
+                <div className="py-2 m-auto text-center">
+                  <p
+                    className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                    {messages.message && messages.message}
+                  </p>
+                </div>
+              )}
+              {warnModal.show && (
+                <ModalPopUp
+                  closeAction={DiscardChanges}
+                  saveAction={saveAndMove}
+                  saveLabel="SAVE"
+                  cancelLabel="DISCARD"
+                  message={warnModal.message}
+                />
+              )}
+              {warnModal2.show && (
+                <ModalPopUp
+                  closeAction={closeDeleteModal}
+                  saveAction={warnModal2.action}
+                  saveLabel="Yes"
+                  message={warnModal2.message}
+                  loading={deleting}
+                />
+              )}
+            </Fragment>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 };

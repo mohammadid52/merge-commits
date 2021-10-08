@@ -6,6 +6,7 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
+import * as queries from '../../graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -25,6 +26,7 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
@@ -34,43 +36,46 @@ const LessonApp = () => {
 
   const history = useHistory();
   const match = useRouteMatch();
-  const urlParams: any = useParams();
+
+  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
+
   const getRoomData = getLocalStorageData('room_info');
+  const urlParams: any = useParams();
   const {lessonID} = urlParams;
+  const isOnDemand = user.onDemand;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
+
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
-  //  NAVIGATION CONSTANTS
+
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
-  /**
-   * FOR SCROLL TO TOP
-   */
   const topLessonRef = useRef();
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
+
   let subscription: any;
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ----------- 1 ---------- //
   //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
 
-  useEffect(() => {
-    if (lessonState.lessonData.id) {
-      lessonDispatch({
-        type: 'SET_SUBSCRIBE_FUNCTION',
-        payload: {
-          subscribeFunc: subscribeToRoom,
-        },
-      });
-    }
-  }, [lessonState.lessonData.id]);
+  // useEffect(() => {
+  //   if (lessonState.lessonData.id) {
+  //     lessonDispatch({
+  //       type: 'SET_SUBSCRIBE_FUNCTION',
+  //       payload: {
+  //         subscribeFunc: subscribeToRoom,
+  //       },
+  //     });
+  //   }
+  // }, [lessonState.lessonData.id]);
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
@@ -92,7 +97,6 @@ const LessonApp = () => {
   // ----------- 3 ---------- //
 
   const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
-    // console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
     setLocalStorageData('room_info', {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
@@ -117,6 +121,7 @@ const LessonApp = () => {
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
+
   const getSyllabusLesson = async (lessonID?: string) => {
     try {
       const universalLesson: any = await API.graphql(
@@ -142,13 +147,8 @@ const LessonApp = () => {
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) => {
-        // console.log('Lesson Mount - ', 'Lesson fetched!')
-      });
-    }
-    return () => {
+
+    const leaveUnload = () => {
       const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
       Promise.resolve(leaveRoom).then((_: void) => {
         if (subscription) {
@@ -156,6 +156,17 @@ const LessonApp = () => {
         }
         lessonDispatch({type: 'CLEANUP'});
       });
+    };
+
+    if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
+      getSyllabusLesson(lessonID).then((_: void) => {
+        //
+      });
+    }
+
+    return () => {
+      leaveUnload();
     };
   }, []);
 
@@ -177,11 +188,12 @@ const LessonApp = () => {
   };
 
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
       setLessonDataLoaded(true);
-      // Initialize page url and context
       if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
         history.push(`${match.url}/${CURRENT_PAGE}`);
@@ -193,6 +205,7 @@ const LessonApp = () => {
       // Initialize closed pages based on room-configuration
 
       if (
+        !isOnDemand &&
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan.length > 0
       ) {
@@ -730,6 +743,7 @@ const LessonApp = () => {
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
+  const [getted, setGetted] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [created, setCreated] = useState(false);
 
@@ -745,18 +759,19 @@ const LessonApp = () => {
     currentLocation: '',
     lessonProgress: '',
   });
-  // const previousLocation = usePrevious(personLocationObj);
 
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
+
   useEffect(() => {
-    if (personLocationObj.id === '') {
+    if (!isOnDemand && personLocationObj.id === '') {
       initializeLocation();
     }
   }, [lessonState.lessonData.id]);
 
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
+
   useEffect(() => {
-    if (created && lessonState.currentPage >= 0) {
+    if (!isOnDemand && created && lessonState.currentPage >= 0) {
       const pageChangeLocation = {
         ...getLocationData,
         currentLocation: lessonState.currentPage,
@@ -771,15 +786,41 @@ const LessonApp = () => {
   }, [created, lessonState.currentPage]);
 
   const initializeLocation = async () => {
-    if (!cleared && !created) {
-      await leaveRoomLocation(user.authId, user.email);
-      // console.log('CLEARED location...');
-      await createPersonLocation();
-      // console.log('CREATED location...');
+    if (!getted) {
+      const getLocation = await getPersonLocation();
+
+      if (getLocation === undefined || getLocation === null) {
+        await createPersonLocation();
+      } else {
+        if (getLocation.lessonID === lessonID) {
+          await updatePersonLocation(getLocation);
+        } else {
+          await leaveRoomLocation(user.authId, user.email);
+          await createPersonLocation();
+        }
+      }
     }
   };
 
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
+
+  const getPersonLocation = async () => {
+    try {
+      const getUserLocation: any = await API.graphql(
+        graphqlOperation(queries.getPersonLocation, {
+          personEmail: user.email,
+          personAuthID: user.authId,
+        })
+      );
+      const response = getUserLocation.data.getPersonLocation;
+
+      return response;
+    } catch (e) {
+      // console.error('createPersonLocation - ', e);
+    } finally {
+      setGetted(true);
+    }
+  };
 
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;
@@ -905,7 +946,6 @@ const LessonApp = () => {
             </div>
           ) : (
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
-              {/*{lessonDataLoaded && <Body />}*/}
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
                 <CoreUniversalLesson />

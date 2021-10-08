@@ -100,6 +100,7 @@ const MainRouter: React.FC = () => {
             associateInstitute:
               instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
               [],
+            onDemand: userInfo?.onDemand,
           },
         });
       } else {

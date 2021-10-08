@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+import {useParams} from 'react-router';
 import {HiPencil} from 'react-icons/hi';
 // import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as mutation from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
 import {useQuery} from '../../../../../../customHooks/urlParam';
 
 import Modal from '../../../../../Atoms/Modal';
@@ -39,7 +39,7 @@ const ClassRoomHolidays = ({
   sortLogsByDate,
 }: IClassRoomHolidaysProps) => {
   const params = useQuery(location.search);
-  const roomId = params.get('id');
+  const {roomId}: any = useParams();
 
   const [dateOrder, setDateOrder] = useState('asc');
   const [formOpen, setFormOpen] = useState<boolean>(false);

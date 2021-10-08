@@ -6,6 +6,11 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData,
+} from '../../../utilities/localStorage';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -119,8 +124,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
 
+  // useEffect(() => {
+  //   // setLocalStorageData('last_page', 'classroom');
+  //   return () => {
+  //     let lastPage = getLocalStorageData('last_page');
+  //     if (lastPage === 'dashboard' || lastPage === 'classroom') {
+  //       dispatch({
+  //         type: 'RESET_ROOMDATA',
+  //       });
+  //       removeLocalStorageData('last_page');
+  //     } else if (lastPage === 'lesson') {
+  //       setLocalStorageData('last_page', 'classroom');
+  //     }
+  //   };
+  // }, []);
+
   // ##################################################################### //
-  // #################### ROOM SWITCHING (DEPRECATED) #################### //
+  // ########################### ROOM SWITCHING ########################## //
   // ##################################################################### //
   useEffect(() => {
     if (state.user.role === 'ST') {
@@ -242,6 +262,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         })
       );
       setSettingLessons(false);
+    } else {
+      setSettingLessons(false);
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
@@ -259,16 +281,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state.roomData.lessons]);
 
-  const sortedLessons = (lessonArray: any[], sortProperty: string) => {
-    return lessonArray.sort((a: any, b: any) => {
-      if (a[sortProperty] > b[sortProperty]) {
-        return 1;
-      }
-      if (a[sortProperty] < b[sortProperty]) {
-        return -1;
-      }
-    });
-  };
+  // const sortedLessons = (lessonArray: any[], sortProperty: string) => {
+  //   return lessonArray.sort((a: any, b: any) => {
+  //     if (a[sortProperty] > b[sortProperty]) {
+  //       return 1;
+  //     }
+  //     if (a[sortProperty] < b[sortProperty]) {
+  //       return -1;
+  //     }
+  //   });
+  // };
 
   // ##################################################################### //
   // ########################### ADDITIONAL UI ########################### //

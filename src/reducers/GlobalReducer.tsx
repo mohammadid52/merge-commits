@@ -17,6 +17,20 @@ type globalActions =
       };
     }
   | {
+      type: 'UPDATE_ROOM_MULTI';
+      payload: {
+        rooms?: any[];
+        activeSyllabus?: any;
+        curriculum?: any;
+        syllabus?: any[];
+        lessons?: any[];
+      };
+    }
+  | {
+      type: 'RESET_ROOMDATA';
+      payload: any;
+    }
+  | {
       type: 'UPDATE_CURRENTPAGE';
       payload: {
         data: string;
@@ -56,6 +70,7 @@ type globalActions =
         lastLoggedOut?: string;
         lastLoggedIn?: string;
         associateInstitute?: any[];
+        onDemand?: any;
       };
     }
   | {
@@ -91,6 +106,40 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         roomData: {
           ...state.roomData,
           [action.payload.property]: action.payload.data,
+        },
+      };
+    case 'UPDATE_ROOM_MULTI':
+      return {
+        ...state,
+        roomData: {
+          activeSyllabus: action.payload.activeSyllabus
+            ? action.payload.activeSyllabus
+            : state.roomData.activeSyllabus,
+          curriculum: action.payload.curriculum
+            ? action.payload.curriculum
+            : state.roomData.curriculum,
+          rooms: action.payload.rooms ? action.payload.rooms : state.roomData.rooms,
+          lessons: action.payload.lessons
+            ? action.payload.lessons
+            : state.roomData.lessons,
+          syllabus: action.payload.syllabus
+            ? action.payload.syllabus
+            : state.roomData.syllabus,
+        },
+      };
+    case 'RESET_ROOMDATA':
+      console.log('RESET_ROOMDATA');
+      return {
+        ...state,
+        currentPage: '',
+        activeRoom: 'asdsad',
+        activeSyllabus: '',
+        roomData: {
+          rooms: state.roomData.rooms ? state.roomData.rooms : [],
+          activeSyllabus: '',
+          curriculum: {},
+          syllabus: [],
+          lessons: [],
         },
       };
     case 'UPDATE_CURRENTPAGE':
@@ -146,6 +195,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lastLoggedIn: action.payload.lastLoggedIn,
           lastLoggedOut: action.payload.lastLoggedOut,
           associateInstitute: action.payload.associateInstitute,
+          onDemand: action.payload?.onDemand,
         },
       };
     case 'LOG_IN':

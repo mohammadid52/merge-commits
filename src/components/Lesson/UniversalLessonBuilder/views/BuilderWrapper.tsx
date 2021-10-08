@@ -1,3 +1,4 @@
+import React, {useContext, useEffect, useState} from 'react';
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
@@ -48,7 +49,6 @@ import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import ImageGallery from '@UlbUI/ImageGallery';
 import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
 import {capitalizeFirstLetter, wait} from '@utilities/functions';
-import React, {useContext, useEffect, useState} from 'react';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';

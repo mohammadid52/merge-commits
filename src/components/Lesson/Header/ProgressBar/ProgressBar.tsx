@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import StageIcon from './StageIcon';
 import {
   StudentPageInput,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
 import {AiOutlineHome} from 'react-icons/ai';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 interface IProgressBarProps {
   handleHome?: () => void;
@@ -23,7 +24,9 @@ const ProgressBar = ({
   studentData,
   requiredInputs,
 }: IProgressBarProps) => {
-  // ~~~~~~~~~ WHICH PAGE IS SHAred ~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const user = gContext.state.user;
+  const isOnDemand = user.onDemand;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
@@ -83,13 +86,14 @@ const ProgressBar = ({
                 key={`${page.id}_progressIcon`}
                 pageNr={key}
                 id={page.id}
-                enabled={page.disabled !== true}
-                open={page.open !== false}
+                enabled={page.disabled !== true || isOnDemand}
+                open={page.open !== false || isOnDemand}
                 active={key === currentPage}
                 label={page.label}
                 handleRequiredNotification={handleRequiredNotification}
                 clickable={
                   key === 0 ||
+                  isOnDemand ||
                   ((nextRequiredIdx !== null ? key <= nextRequiredIdx : true) &&
                     page.open !== false)
                 }

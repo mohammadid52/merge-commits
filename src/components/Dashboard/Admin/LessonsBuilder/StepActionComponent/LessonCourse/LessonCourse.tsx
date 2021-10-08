@@ -7,7 +7,6 @@ import useDictionary from '../../../../../../customHooks/dictionary';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as mutations from '../../../../../../graphql/mutations';
 
-import Accordion from '../../../../../Atoms/Accordion';
 import Buttons from '../../../../../Atoms/Buttons';
 import Loader from '../../../../../Atoms/Loader';
 import Modal from '../../../../../Atoms/Modal';
@@ -15,9 +14,6 @@ import PageWrapper from '../../../../../Atoms/PageWrapper';
 
 import DetailTable from './DetailTable';
 import AddCourse from './AddCourse';
-import {IoIosAdd, IoIosClose} from 'react-icons/io';
-import {getImageFromS3, getImageFromS3Static} from '../../../../../../utilities/services';
-import {FaDoorOpen, FaGraduationCap, FaHotel, FaUser} from 'react-icons/fa';
 import CourseCard from './CourseCard';
 
 interface ILessonCourseProps {
@@ -56,7 +52,9 @@ const LessonCourse = ({
   // }, [institution]);
 
   useEffect(() => {
-    setSelectedCurriculumList(selectedCurriculums);
+    if(selectedCurriculums?.length){
+      setSelectedCurriculumList(selectedCurriculums);
+    }
   }, [selectedCurriculums]);
 
   // useEffect(() => {

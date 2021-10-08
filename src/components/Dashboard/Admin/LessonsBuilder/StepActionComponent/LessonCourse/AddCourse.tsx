@@ -10,7 +10,6 @@ import {getAsset} from '../../../../../../assets';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 import * as mutations from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
@@ -208,7 +207,7 @@ const AddCourse = (props: IAddCourse) => {
     );
     const filteredList: any = curricularsList.map((item: any) => {
       const result: any = item?.universalSyllabus?.items.filter(
-        (unit: any) => !selectedSyllabusId.includes(unit?.id)
+        (unit: any) => !selectedSyllabusId.includes(unit?.unitId)
       );
       return {
         id: item?.id,
@@ -230,9 +229,9 @@ const AddCourse = (props: IAddCourse) => {
       );
       if (selectedItem) {
         const syllabusList: any = selectedItem?.unitList?.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          value: item.name,
+          id: item.unitId,
+          name: item.unit?.name,
+          value: item.unit?.name,
         }));
         setUnitsList([...syllabusList]);
       }
@@ -297,15 +296,15 @@ const AddCourse = (props: IAddCourse) => {
           />
         </div>
       </div>
-      <div className="px-4">
-        <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-          <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+      <div className="px-4 py-4">
+        <div className="flex justify-between w-full m-auto px-8 whitespace-nowrap border-b-0 border-gray-200 bg-gray-50">
+          <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['NO']}</span>
           </div>
-          <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-4/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['CURRICULUMNAME']}</span>
           </div>
-          <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-4/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['UNITNAME']}</span>
           </div>
         </div>

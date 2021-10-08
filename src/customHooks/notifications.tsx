@@ -10,6 +10,7 @@ import {
   removeSessionStorageData,
   setSessionStorageData,
 } from '@utilities/sessionStorage';
+import useLessonControls from './lessonControls';
 
 // ##################################################################### //
 // ######################## GLOBAL NOTIFICATIONS ####################### //
@@ -73,56 +74,7 @@ const useLessonControlNotifications = () => {
 
   // ~~~~~~~~~~~ FUNCTIONS - LIVE ~~~~~~~~~~ //
 
-  //TODO: REFACTOR THESE FUNCTIONS INTO A HOOK
-
-  const handleRoomUpdate = async (payload: any) => {
-    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
-      try {
-        const updateRoom: any = await API.graphql(
-          graphqlOperation(mutations.updateRoom, {
-            input: payload,
-          })
-        );
-      } catch (e) {
-        console.error('handleRoomUpdate - ', e);
-      }
-    } else {
-      console.log('incorrect data for handleRoomUpdate() - ', payload);
-    }
-  };
-
-  const resetViewAndShare = async () => {
-    if (
-      lessonState.studentViewing !== '' ||
-      lessonState.displayData[0].studentAuthID !== ''
-    ) {
-      console.log('reset reset...');
-
-      if (
-        lessonState.studentViewing !== '' ||
-        lessonState.displayData[0].studentAuthID !== ''
-      ) {
-        lessonDispatch({
-          type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          payload: {
-            id: getRoomData.id,
-            studentViewing: '',
-            displayData: [{studentAuthID: '', lessonPageID: ''}],
-          },
-        });
-      }
-      setLocalStorageData('room_info', {
-        ...getRoomData,
-        studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
-      });
-      await handleRoomUpdate({
-        id: getRoomData.id,
-        studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
-      });
-    }
-  };
+  const {resetViewAndShare} = useLessonControls();
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
   const getPageLabel = (pageID: string) => {

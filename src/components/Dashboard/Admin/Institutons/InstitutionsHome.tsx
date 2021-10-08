@@ -5,10 +5,11 @@ import {DashboardProps} from '../../Dashboard';
 // Institute info tabs.
 import ClassBuilder from './Builders/ClassBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
-import RoomBuilder from './Builders/RoomBuilder';
+import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
 import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
 import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
 import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
@@ -24,9 +25,9 @@ import InstitutionLookup from './InstitutionLookup';
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
-  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
+  const [tabsData, setTabsData] = useState({inst: 'staff', instCurr: 0});
   const tabProps = {tabsData, setTabsData};
-  // TODO: Need to setup route saperately if required,
+  // TODO: Need to setup route separately if required,
   // currently everything is tied to institutions.
   // so curricular can be open after selecting any specific institute only.
   // Need to discuss this with Mike.
@@ -37,7 +38,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   }, [state.user.role]);
 
   return (
-    <div className={`w-full h-full px-2 py-8 md:p-8 flex justify-center`}>
+    <div className={`w-full h-full flex justify-center`}>
       <Switch>
         <Route
           exact
@@ -46,32 +47,41 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         <Route
           path={`${match.url}/add`}
-          render={() => <InstitutionAdd />} // Create New institution.
+          render={() => <InstitutionBuilder />} // Create New institution.
         />
-        <Route
+        {/* <Route
           path={`${match.url}/institution/class-creation`}
           render={() => <ClassBuilder />} // Create new class
-        />
+        /> */}
         <Route
           path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />} // Create new curricular
         />
-        <Route
+        {/* <Route
+          path={`${match.url}/institution/:institutionId/course-builder`}
+          exact
+          render={() => <CourseBuilder />} // Create new course
+        /> */}
+        {/* <Route
+          path={`${match.url}/institution/:institutionId/course-builder/:courseId`}
+          render={() => <CourseBuilder />} // Create new course
+        /> */}
+        {/* <Route
           path={`${match.url}/institution/room-creation`}
           render={() => <ClassRoomBuilder />} // Create new room
-        />
+        /> */}
         <Route
-          path={`${match.url}/institution`}
+          path={`${match.url}/institution/:institutionId`}
           render={() => <Institution tabProps={tabProps} />} // Institution info page
         />
-        <Route
+        {/* <Route
           path={`${match.url}/class-edit`}
           render={() => <EditClass />} // Edit current class
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/room-edit`}
           render={() => <ClassRoomBuilder />} // Edit current room.
-        />
+        /> */}
         {/* <Route
           path={`${match.url}/:institutionId/curricular/edit`}
           render={() => <EditCurricular />} // Edit current curricular
@@ -100,10 +110,10 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
           render={() => <EditMeasurement />} // Edit curricular measurement
         />
-        <Route
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
           render={() => <UnitBuilder />} // Add new syllabus to curricular
-        />
+        /> */}
         {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
           render={() => <AddSyllabus />} // Add new syllabus to curricular

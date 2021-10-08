@@ -6,9 +6,8 @@ export interface globalStateType {
     curriculum: any;
     rooms: any[];
     syllabus: any[];
-    activeSyllabus: any;
+    activeSyllabus: string;
     lessons: any[];
-    widgets: any[];
   };
   currentPage: string;
   activeRoom: string;
@@ -45,9 +44,8 @@ export const globalState: globalStateType = {
     curriculum: {},
     rooms: [],
     syllabus: [],
-    activeSyllabus: {},
+    activeSyllabus: '',
     lessons: [],
-    widgets: [],
   },
   currentPage: '',
   activeRoom: '',
