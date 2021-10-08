@@ -68,7 +68,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     {title: roomData?.institute?.name, goBack: true, last: false},
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
-      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
+      url: `/dashboard/manage-institutions/institution/${roomData.institute?.id}/class-rooms`,
       last: false,
     },
     {
@@ -83,11 +83,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       history.push('/dashboard/registration');
     } else if (field === 'curricular') {
       history.push(
-        `/dashboard/manage-institutions/institution/curricular-creation?id=${roomData?.institute?.id}`
+        `/dashboard/manage-institutions/institution/${roomData?.institute?.id}/course-builder`
       );
     } else if (field === 'class') {
       history.push(
-        `/dashboard/manage-institutions/institution/class-creation?id=${roomData?.institute?.id}`
+        `/dashboard/manage-institutions/institution/${roomData?.institute?.id}/class-creation`
       );
     }
   };

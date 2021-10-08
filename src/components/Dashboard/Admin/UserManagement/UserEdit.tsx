@@ -30,6 +30,7 @@ function classNames(...classes: any[]) {
 }
 
 interface UserInfoProps {
+  instituteId?: string;
   user: UserInfo;
   status: string;
   getUserById: (id: string) => void;
@@ -45,6 +46,7 @@ const UserEdit = (props: UserInfoProps) => {
   const match = useRouteMatch();
 
   const {
+    instituteId,
     user,
     status,
     getUserById,
@@ -55,9 +57,10 @@ const UserEdit = (props: UserInfoProps) => {
     questionData,
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
-  const {UserEditDict, UserInformationDict} = useDictionary(clientKey);
+  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(clientKey);
   const [checkpointData, setCheckpointData] = useState<any>({});
   console.log(
     '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
@@ -72,6 +75,7 @@ const UserEdit = (props: UserInfoProps) => {
         case 'FLW':
         case 'TR':
         case 'ADM':
+        case 'SUP':
           setSuperEdit(true);
           break;
         default:
@@ -109,16 +113,17 @@ const UserEdit = (props: UserInfoProps) => {
       const update: any = await API.graphql(
         graphqlOperation(customMutations.updatePerson, {input: input})
       );
-      setStatus('loading');
+      setUpdating(false);
+      // setStatus('loading');
 
-      history.push(`/dashboard/manage-users/user${location.search}`);
+      history.push(`/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const extractItemFromArray = (responceArray: any[]) => {
-    const answerArray: any = responceArray.map((item: any) => ({
+  const extractItemFromArray = (responseArray: any[]) => {
+    const answerArray: any = responseArray.map((item: any) => ({
       [item['qid']]:
         item?.response?.length > 1
           ? [...selectedMultiOptions(item.response)]
@@ -248,6 +253,7 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   async function setPerson() {
+    setUpdating(true);
     await saveAllCheckpointData();
     await updatePerson();
     await getUserById(editUser.id);
@@ -404,6 +410,10 @@ const UserEdit = (props: UserInfoProps) => {
   ];
 
   const Role = [
+    state.user.role === 'SUP' && {
+      code: 'SUP',
+      name: 'Super Admin',
+    },
     {
       code: 'ADM',
       name: 'Admin',
@@ -424,11 +434,7 @@ const UserEdit = (props: UserInfoProps) => {
       code: 'TR',
       name: 'Teacher',
     },
-    {
-      code: 'ST',
-      name: 'Student',
-    },
-  ];
+  ].filter(Boolean);
 
   const OnDemand = [
     {
@@ -713,54 +719,36 @@ const UserEdit = (props: UserInfoProps) => {
             {tab === 'p' && (
               <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                 <div className="sm:col-span-3 p-2">
-                  <label
-                    htmlFor="firstName"
-                    className="block text-m font-medium leading-5 text-gray-700">
-                    {UserEditDict[userLanguage]['firstname']}
-                  </label>
-                  <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                    <input
-                      id="firstName"
-                      type="text"
-                      onChange={onChange}
-                      className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
-                      defaultValue={user.firstName}
-                    />
-                  </div>
+                  <FormInput
+                    value={editUser.firstName}
+                    id={'firstName'}
+                    label={UserEditDict[userLanguage]['firstname']}
+                    placeHolder=""
+                    name="firstName"
+                    onChange={onChange}
+                  />
                 </div>
 
                 <div className="sm:col-span-3 p-2">
-                  <label
-                    htmlFor="lastName"
-                    className="block text-m font-medium leading-5 text-gray-700">
-                    {UserEditDict[userLanguage]['lastname']}
-                  </label>
-                  <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                    <input
-                      id="lastName"
-                      type="text"
-                      onChange={onChange}
-                      className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                      defaultValue={user.lastName}
-                    />
-                  </div>
+                  <FormInput
+                    value={editUser.lastName}
+                    id={'lastName'}
+                    label={UserEditDict[userLanguage]['lastname']}
+                    placeHolder=""
+                    name="lastName"
+                    onChange={onChange}
+                  />
                 </div>
 
                 <div className="sm:col-span-3 p-2">
-                  <label
-                    htmlFor="preferredName"
-                    className="block text-m font-medium leading-5 text-gray-700">
-                    {UserEditDict[userLanguage]['nickname']}
-                  </label>
-                  <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                    <input
-                      id="preferredName"
-                      type="text"
-                      onChange={onChange}
-                      className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                      defaultValue={user.preferredName}
-                    />
-                  </div>
+                  <FormInput
+                    value={editUser.preferredName}
+                    id={'preferredName'}
+                    label={UserEditDict[userLanguage]['nickname']}
+                    placeHolder=""
+                    name="preferredName"
+                    onChange={onChange}
+                  />
                 </div>
 
                 <div className="sm:col-span-3 p-2">
@@ -782,6 +770,7 @@ const UserEdit = (props: UserInfoProps) => {
                     handleChange={handleChangeRole}
                     userInfo={editUser.role}
                     label={UserEditDict[userLanguage]['role']}
+                    listClassName="h-28"
                     id="role"
                     items={Role}
                   />
@@ -1019,9 +1008,13 @@ const UserEdit = (props: UserInfoProps) => {
             transparent
           />
           <Buttons
-            // disabled={uploading}
+            disabled={updating}
             btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
-            label={UserEditDict[userLanguage]['button']['save']}
+            label={
+              updating
+                ? ButtonDict['SAVING']
+                : UserEditDict[userLanguage]['button']['save']
+            }
             onClick={onSubmit}
           />
         </div>

@@ -7,6 +7,14 @@ import {find, findIndex} from 'lodash';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
@@ -15,7 +23,6 @@ import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
 import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import {Route, Switch, useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -92,7 +99,11 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
   updatedAt?: string;
 }
 
-const User = () => {
+interface IUserProps {
+  instituteId?: string;
+}
+
+const User = ({instituteId}: IUserProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -124,6 +135,8 @@ const User = () => {
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
   );
+
+  const {userId}: any = useParams();
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -369,7 +382,7 @@ const User = () => {
   // ########################### PROFILE IMAGE ########################### //
   // ##################################################################### //
 
-  const isAdmin = state.user.role === 'ADM';
+  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
   useEffect(() => {
     async function getUrl() {
@@ -442,10 +455,10 @@ const User = () => {
   }
 
   useEffect(() => {
-    if (typeof id === 'string') {
-      getUserProfile(id);
+    if (userId) {
+      getUserProfile(userId);
     }
-  }, []);
+  }, [userId]);
 
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -520,7 +533,7 @@ const User = () => {
 
   const switchMainTab = (tab: string) => {
     setCurTab(tab);
-    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+    history.push(`/dashboard/manage-users/user?id=${userId}&tab=${tab}`);
   };
 
   const handleClassRoomClick = (roomId: string) => {
@@ -1465,12 +1478,15 @@ const User = () => {
   };
 
   const isTeacher =
-    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
+    state.user.role === 'TR' ||
+    state.user.role === 'FLW' ||
+    state.user.role === 'ADM' ||
+    state.user.role === 'SUP';
   {
     return (
       <>
-        <div className={`mx-auto max-w-256`}>
-          <BreadCrums items={breadCrumsList} />
+        <div className={`pl-12 max-w-256`}>
+          {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div className="flex justify-end mb-4">
               <Buttons
@@ -1500,7 +1516,7 @@ const User = () => {
               )}
             </div>
           </div>
-          <AnimatedContainer show={onUserInformationTab}>
+          <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
               <div
                 className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
@@ -1592,6 +1608,7 @@ const User = () => {
                       render={() => (
                         <UserEdit
                           // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          instituteId={instituteId}
                           tab={tab}
                           setTab={setTab}
                           user={user}
@@ -1681,6 +1698,6 @@ const User = () => {
       </>
     );
   }
-};;
+};
 
 export default User;

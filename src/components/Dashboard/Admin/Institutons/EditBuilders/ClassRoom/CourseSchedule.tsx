@@ -461,7 +461,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
             <div className="mx-auto flex items-center justify-center rounded-full">
               <FiAlertCircle className="w-8 h-8" />
             </div>
-            <div className="mt-4">Enter classroom details</div>
+            <div className="mt-4">Enter schedule details</div>
             <div className="flex justify-center mt-4">
               <Buttons
                 btnClass={'abc'}

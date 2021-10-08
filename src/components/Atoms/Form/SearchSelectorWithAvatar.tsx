@@ -1,5 +1,5 @@
 import React, {useState, useRef, useContext, useEffect} from 'react';
-
+import {IoIosAdd} from 'react-icons/io';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {getImageFromS3} from '../../../utilities/services';
@@ -21,6 +21,9 @@ interface selectorProps {
   clearFilteredStudents?: () => void;
   searchStatus?: boolean;
   searchCallback?: React.Dispatch<React.SetStateAction<boolean>>;
+  creatable?: boolean;
+  creatableLabel?: string;
+  onCreate?: () => void;
 }
 
 const SearchSelectorWithAvatar = (props: selectorProps) => {
@@ -36,6 +39,9 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     clearFilteredStudents,
     searchStatus,
     searchCallback,
+    creatable,
+    creatableLabel,
+    onCreate
   } = props;
   const countdownTimer = 200;
   const [countdownEnabled, setCountdownEnabled] = useState(undefined);
@@ -168,7 +174,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
             className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
             }`}>
-            {/* UPDOWN ARRAW */}
+            {/* UPDOWN ARROW */}
             <svg
               className="h-5 w-5 text-gray-400"
               viewBox="0 0 20 20"
@@ -196,70 +202,90 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
               <li className="flex justify-center relative py-2 px-4">
                 <span className="font-normal">Searching...</span>
               </li>
-            ) : teacherList.length > 0 ? (
-              teacherList.map(
-                (
-                  item: {name: string; id: any; value: string; avatar?: string},
-                  key: number
-                ) => (
-                  <li
-                    key={key}
-                    onClick={() =>
-                      updateSelectedItem(item.value, item.name, item.id, item.avatar)
-                    }
-                    id={item.id}
-                    role="option"
-                    className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                    {item.avatar ? (
-                      <img
-                        src={item.avatar}
-                        alt=""
-                        className="flex-shrink-0 h-6 w-6 rounded-full"
-                      />
-                    ) : (
-                      <div
-                        className="h-6 w-6 rounded-full flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
-                        style={{
-                          background: `${stringToHslColor(
-                            getInitialsFromString(item.name)[0] +
-                              ' ' +
-                              getInitialsFromString(item.name)[1]
-                          )}`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3',
-                        }}>
-                        {item.name
-                          ? initials(
-                              getInitialsFromString(item.name)[0],
-                              getInitialsFromString(item.name)[1]
-                            )
-                          : initials('N', 'A')}
-                      </div>
-                    )}
-                    <span
-                      className={`${
-                        selectedItem.id === item.id ? 'font-semibold' : 'font-normal'
-                      } pl-4 block truncate`}>
-                      {item.name}
-                    </span>
-                    <span
-                      className={`${selectedItem.id === item.id ? 'display' : 'hidden'} ${
-                        theme.textColor[themeColor]
-                      } relative w-auto flex items-center`}>
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </li>
-                )
-              )
             ) : (
-              <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal"> No Results</span>
-              </li>
+              <>
+                {creatable && (
+                  <li
+                    onClick={onCreate}
+                    role="option"
+                    className={`flex cursor-pointer select-none relative py-2 px-4 ${theme.textColor[themeColor]}`}>
+                    <div className={`w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center`}>
+                      <IoIosAdd className="w-auto" />
+                    </div>
+                    <span className={`pl-4 block truncate`}>{creatableLabel || 'Add new'}</span>
+                  </li>
+                )}
+                {teacherList.length ? (
+                  teacherList.map(
+                    (
+                      item: {name: string; id: any; value: string; avatar?: string},
+                      key: number
+                    ) => (
+                      <li
+                        key={key}
+                        onClick={() =>
+                          updateSelectedItem(item.value, item.name, item.id, item.avatar)
+                        }
+                        id={item.id}
+                        role="option"
+                        className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                        {item.avatar ? (
+                          <img
+                            src={item.avatar}
+                            alt=""
+                            className="flex-shrink-0 h-6 w-6 rounded-full"
+                          />
+                        ) : (
+                          <div
+                            className="h-6 w-6 rounded-full flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
+                            style={{
+                              background: `${stringToHslColor(
+                                getInitialsFromString(item.name)[0] +
+                                  ' ' +
+                                  getInitialsFromString(item.name)[1]
+                              )}`,
+                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                            }}>
+                            {item.name
+                              ? initials(
+                                  getInitialsFromString(item.name)[0],
+                                  getInitialsFromString(item.name)[1]
+                                )
+                              : initials('N', 'A')}
+                          </div>
+                        )}
+                        <span
+                          className={`${
+                            selectedItem.id === item.id ? 'font-semibold' : 'font-normal'
+                          } pl-4 block truncate`}>
+                          {item.name}
+                        </span>
+                        <span
+                          className={`${
+                            selectedItem.id === item.id ? 'display' : 'hidden'
+                          } ${
+                            theme.textColor[themeColor]
+                          } relative w-auto flex items-center`}>
+                          <svg
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </li>
+                    )
+                  )
+                ) : (
+                  <li className="flex justify-center relative py-2 px-4">
+                    <span className="font-normal"> No Results</span>
+                  </li>
+                )}
+              </>
             )}
           </ul>
         </div>

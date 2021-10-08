@@ -328,6 +328,8 @@ export const getLessonType = (type: string) => {
 
 export const getUserRoleString = (role: string) => {
   switch (role) {
+    case 'SUP':
+      return 'Super Admin';
     case 'ADM':
       return 'Admin';
     case 'BLD':

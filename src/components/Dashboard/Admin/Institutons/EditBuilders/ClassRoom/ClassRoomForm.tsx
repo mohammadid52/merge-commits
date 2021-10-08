@@ -1,38 +1,40 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
-
 import * as queries from '../../../../../../graphql/queries';
 import * as mutation from '../../../../../../graphql/mutations';
+
 import PageWrapper from '../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../Atoms/Buttons';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import Selector from '../../../../../Atoms/Form/Selector';
-import {getFilterORArray} from '../../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../../Atoms/Form/SelectorWithAvatar';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../../../../utilities/services';
-import useDictionary from '../../../../../../customHooks/dictionary';
 import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
-import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 
-interface EditRoomProps {}
+import {getFilterORArray} from '../../../../../../utilities/strings';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
+import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
 
-const ClassRoomForm = (props: EditRoomProps) => {
+interface ClassRoomFormProps {
+  instId: string;
+}
+
+const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
+  const {roomId}: any = useParams();
 
   const initialData = {
     id: '',
     name: '',
-    institute: {id: '', name: '', value: ''},
+    institute: {id: instId, name: '', value: ''},
     teacher: {id: '', name: '', value: ''},
     coTeachers: [{}],
     classRoom: {id: '', name: '', value: ''},
@@ -224,9 +226,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
         })
       );
       const listStaffs = list.data.listStaffs.items;
-      if (!isMounted) {
-        return;
-      }
+      // if (!isMounted) {
+      //   return;
+      // }
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -256,7 +258,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
           image: item.staffMember?.image,
         }));
-
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
         const filteredArray = staffList.filter((member: {id: string}) => {
@@ -276,50 +277,49 @@ const ClassRoomForm = (props: EditRoomProps) => {
     }
   };
 
-  const getClassLists = async (allInstiId: string[]) => {
-    const instId = roomData.institute.id;
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
-        })
-      );
-      const listClass = list.data.listClasss?.items;
-      if (!isMounted) {
-        return;
-      }
-      if (listClass.length === 0) {
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
-          isError: true,
-        });
-      } else {
-        const sortedList = listClass.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        );
-        const filteredClassList = sortedList.filter((classItem: any) => {
-          return (
-            classItem?.institution.isServiceProvider === false ||
-            (classItem?.institution.isServiceProvider === true &&
-              classItem.institution.id === instId)
-          );
-        });
-        const classList = filteredClassList.map((item: any, i: any) => ({
-          id: item.id,
-          name: `${item.name ? item.name : ''}`,
-          value: `${item.name ? item.name : ''}`,
-        }));
-        setClassList(classList);
-      }
-    } catch {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['unableclass'],
-        isError: true,
-      });
-    }
-  };
+  // const getClassLists = async (allInstiId: string[]) => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listClasss, {
+  //         filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+  //       })
+  //     );
+  //     const listClass = list.data.listClasss?.items;
+  //     // if (!isMounted) {
+  //     //   return;
+  //     // }
+  //     if (listClass.length === 0) {
+  //       setMessages({
+  //         show: true,
+  //         message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
+  //         isError: true,
+  //       });
+  //     } else {
+  //       const sortedList = listClass.sort((a: any, b: any) =>
+  //         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+  //       );
+  //       const filteredClassList = sortedList.filter((classItem: any) => {
+  //         return (
+  //           classItem?.institution.isServiceProvider === false ||
+  //           (classItem?.institution.isServiceProvider === true &&
+  //             classItem.institution.id === instId)
+  //         );
+  //       });
+  //       const classList = filteredClassList.map((item: any, i: any) => ({
+  //         id: item.id,
+  //         name: `${item.name ? item.name : ''}`,
+  //         value: `${item.name ? item.name : ''}`,
+  //       }));
+  //       setClassList(classList);
+  //     }
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: RoomEDITdict[userLanguage]['messages']['unableclass'],
+  //       isError: true,
+  //     });
+  //   }
+  // };
 
   const getCurricularList = async (allInstiId: string[]) => {
     try {
@@ -328,9 +328,9 @@ const ClassRoomForm = (props: EditRoomProps) => {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      if (!isMounted) {
-        return;
-      }
+      // if (!isMounted) {
+      //   return;
+      // }
       const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
@@ -391,21 +391,23 @@ const ClassRoomForm = (props: EditRoomProps) => {
         isError: true,
       });
       return false;
-    } else if (roomData.classRoom.id === '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['selectclass'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.maxPersons == '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
-        isError: true,
-      });
-      return false;
     }
+    // else if (roomData.classRoom.id === '') {
+    //   setMessages({
+    //     show: true,
+    //     message: RoomEDITdict[userLanguage]['messages']['selectclass'],
+    //     isError: true,
+    //   });
+    //   return false;
+    // }
+    // else if (roomData.maxPersons == '') {
+    //   setMessages({
+    //     show: true,
+    //     message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
+    //     isError: true,
+    //   });
+    //   return false;
+    // }
     // else if (roomData.maxPersons > '256') {
     //   setMessages({
     //     show: true,
@@ -529,7 +531,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
         if (roomData.id) {
           const input = {
             id: roomData.id,
-            institutionID: roomData.institute.id,
+            institutionID: instId,
             classID: roomData.classRoom.id,
             teacherAuthID: teachersList.find(
               (item: any) => item.id === roomData.teacher.id
@@ -560,7 +562,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
           // );
         } else {
           const input = {
-            institutionID: roomData.institute.id,
+            institutionID: instId,
             activeSyllabus: roomData.curricular.id
               ? await getFirstSyllabus(roomData.curricular.id)
               : '',
@@ -572,20 +574,37 @@ const ClassRoomForm = (props: EditRoomProps) => {
               (item: any) => item.id === roomData.teacher.id
             ).email,
             name: roomData.name,
-            maxPersons: roomData.maxPersons,
+            maxPersons: 0,
           };
 
           const newRoom: any = await API.graphql(
             graphqlOperation(customMutations.createRoom, {input: input})
           );
           const roomId = newRoom.data.createRoom.id;
+          const classInput = {
+            name: roomData.name,
+            institutionID: instId,
+            roomId,
+          };
+          const newClass: any = await API.graphql(
+            graphqlOperation(customMutations.createClass, {input: classInput})
+          );
+          await API.graphql(
+            graphqlOperation(mutation.updateRoom, {
+              input: {
+                id: roomId,
+                classID: newClass.data.createClass.id,
+              },
+            })
+          );
           if (roomData.curricular.id) {
             await createRoomCurricular(roomId, roomData.curricular.id);
             await saveRoomTeachers(roomId);
           } else {
             setMessages({
               show: true,
-              message: RoomEDITdict[userLanguage]['messages']['success']['newclassroom'],
+              message:
+                RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
               isError: false,
             });
             setRoomData(initialData);
@@ -593,10 +612,11 @@ const ClassRoomForm = (props: EditRoomProps) => {
             setLoading(false);
           }
           history.push(
-            `/dashboard/manage-institutions/room-edit?id=${roomId}&step=unit-planner`
+            `/dashboard/manage-institutions/institution/${instId}/room-edit/${roomId}?step=students`
           );
         }
       } catch {
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
@@ -670,7 +690,6 @@ const ClassRoomForm = (props: EditRoomProps) => {
 
   const fetchRoomDetails = async () => {
     const isRoomEditPage = match.url.search('room-edit') > -1;
-    const roomId = params.get('id');
     if (isRoomEditPage) {
       if (roomId) {
         try {
@@ -756,12 +775,11 @@ const ClassRoomForm = (props: EditRoomProps) => {
   };
 
   const fetchOtherList = async () => {
-    const instId = roomData.institute.id;
     const items: any = await getInstituteInfo(instId);
     const serviceProviders = items.map((item: any) => item.providerID);
     const allInstiId = [...serviceProviders, instId];
     getTeachersList(allInstiId);
-    getClassLists(allInstiId);
+    // getClassLists(allInstiId);
     getCurricularList(allInstiId);
   };
 
@@ -868,7 +886,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2">
+              {/* <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
                   <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                     {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']}{' '}
@@ -899,6 +917,7 @@ const ClassRoomForm = (props: EditRoomProps) => {
                   />
                 </div>
               </div>
+               */}
               <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
                   <FormInput

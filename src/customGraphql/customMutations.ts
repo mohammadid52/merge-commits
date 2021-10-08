@@ -591,6 +591,7 @@ export const createClassStudent = /* GraphQL */ `
       status
       studentEmail
       studentAuthID
+      createdAt
     }
   }
 `;
@@ -1383,6 +1384,18 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const deleteCurriculumUnits = /* GraphQL */ `
+  mutation DeleteCurriculumUnits(
+    $input: DeleteCurriculumUnitsInput!
+    $condition: ModelcurriculumUnitsConditionInput
+  ) {
+    deleteCurriculumUnits(input: $input, condition: $condition) {
+      id
+      unitId
     }
   }
 `;

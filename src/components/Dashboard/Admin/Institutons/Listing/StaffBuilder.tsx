@@ -26,10 +26,13 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
-import Loader from '../../../../Atoms/Loader';
-import Tooltip from '../../../../Atoms/Tooltip';
-import Status from '../../../../Atoms/Status';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
+
+import Loader from '@atoms/Loader';
+import Tooltip from '@atoms/Tooltip';
+import Status from '@atoms/Status';
+import AddButton from '@atoms/Buttons/AddButton';
+import Modal from '@atoms/Modal';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -39,11 +42,18 @@ interface StaffBuilderProps {
 
 const StaffBuilder = (props: StaffBuilderProps) => {
   const {instName, instituteId} = props;
-  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    clientKey,
+    state: {user},
+    theme,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const {BUTTONS, staffBuilderDict} = useDictionary(clientKey);
+  const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
+  const [showSuperAdmin, setShowSuperAdmin] = useState(false);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [showAddSection, setShowAddSection] = useState(false);
   const [newMember, setNewMember] = useState({id: '', name: '', value: '', avatar: ''});
@@ -68,6 +78,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return 'Builder';
       case 'ADM':
         return 'Admin';
+      case 'SUP':
+        return 'Super Admin';
     }
   };
 
@@ -90,11 +102,26 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const getPersonsList = async () => {
+  const redirectToRegistrationPage = () => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${instituteId}/register-user?from=staff`
+    );
+  };
+
+  const getPersonsList = async (role: string) => {
     try {
+      if (role === 'SUP') {
+        setShowSuperAdmin(true);
+      } else {
+        setShowSuperAdmin(false);
+      }
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: {role: {ne: 'ST'}},
+          filter: role
+            ? {role: {eq: role}}
+            : user.role === 'SUP'
+            ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
+            : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
       );
@@ -241,6 +268,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     history.push(`/dashboard/manage-users/user?id=${profileId}`);
   };
 
+  const postMutation = () => {
+    setShowRegistrationForm(false);
+    fetchStaffData();
+  };
+
   const fetchStaffData = async () => {
     // const staffMembers = await getStaff()
     let [staffLists, sequenceData]: any = await Promise.all([
@@ -267,8 +299,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   useEffect(() => {
-    fetchStaffData();
-  }, []);
+    if (instituteId) {
+      fetchStaffData();
+    }
+  }, [instituteId]);
 
   const onStaffStatusChange = async (
     status: string,
@@ -292,60 +326,77 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setStatusEdit('');
   };
 
-  const showAddStaffSection = async () => {
-    let users = await getPersonsList();
-    const staffMembersIds = activeStaffList.map((item: any) => item.userId);
-    let availableUsersList = users.filter(
-      (item: any) => staffMembersIds.indexOf(item.id) < 0
-    );
-    setAvailableUsers(availableUsersList);
-    setShowAddSection(true);
+  const showAddStaffSection = async (role?: string) => {
+    if (user.role === 'SUP' && role !== 'SUP') {
+      setShowRegistrationForm(true);
+    } else {
+      let users = await getPersonsList(role);
+      const staffMembersIds = activeStaffList.map((item: any) => item.userId);
+      let availableUsersList = users.filter(
+        (item: any) => staffMembersIds.indexOf(item.id) < 0
+      );
+      setAvailableUsers(availableUsersList);
+      setShowAddSection(true);
+    }
   };
 
   return (
-    <div className="pb-8 flex m-auto justify-center">
+    <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
-        <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
-            {instName?.toUpperCase()} {dictionary['TITLE']}
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg leading-6 text-gray-600 w-auto">
+            {dictionary['TITLE']}
           </h3>
-          <div className="flex justify-end">
-            {!showAddSection ? (
+          {!showAddSection ? (
+            <div className="w-auto">
               <AddButton
                 className="ml-4 py-1"
-                label={'New staff member'}
-                onClick={showAddStaffSection}
+                label={'Staff member'}
+                onClick={() => showAddStaffSection('')}
               />
-            ) : (
-              <Buttons
-                btnClass="ml-4 py-1"
-                label={BUTTONS[userLanguage]['CANCEL']}
-                onClick={() => setShowAddSection(false)}
-              />
-            )}
-          </div>
-
-          {showAddSection ? (
-            <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
-              <SelectorWithAvatar
-                imageFromS3={false}
-                selectedItem={newMember}
-                list={availableUsers}
-                placeholder={dictionary['ADD_PLACEHOLDER']}
-                onChange={onChange}
-              />
-              <Buttons
-                btnClass="ml-4 py-1"
-                label={dictionary['ADD_BUTTON']}
-                onClick={addStaffMember}
-              />
+              {user.role === 'SUP' && (
+                <div
+                  className="text-sm text-right text-gray-400 cursor-pointer mt-1"
+                  onClick={() => showAddStaffSection('SUP')}>
+                  + {dictionary.ADD_SUPER_ADMIN}
+                </div>
+              )}
             </div>
-          ) : null}
-          {!dataLoading ? (
-            <>
-              {activeStaffList?.length > 0 ? (
-                <Fragment>
-                  <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-gray-200">
+          ) : (
+            <Buttons
+              btnClass="ml-4 py-1"
+              label={BUTTONS[userLanguage]['CANCEL']}
+              onClick={() => setShowAddSection(false)}
+            />
+          )}
+        </div>
+
+        {showAddSection ? (
+          <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
+            <SelectorWithAvatar
+              imageFromS3={false}
+              selectedItem={newMember}
+              list={availableUsers}
+              placeholder={
+                showSuperAdmin
+                  ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
+                  : dictionary['ADD_PLACEHOLDER']
+              }
+              onChange={onChange}
+            />
+            <Buttons
+              btnClass="ml-4 py-1"
+              label={dictionary['ADD_BUTTON']}
+              onClick={addStaffMember}
+            />
+          </div>
+        ) : null}
+        {!dataLoading ? (
+          <>
+            {activeStaffList?.length > 0 ? (
+              <Fragment>
+                <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
+                  <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['NO']}</span>
                     </div>
@@ -362,143 +413,153 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                       <span>{dictionary['ACTION']}</span>
                     </div>
                   </div>
+                </div>
 
-                  <div className="w-auto m-auto max-h-88 overflow-y-auto">
-                    {/* Drag and drop listing */}
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      <Droppable droppableId="droppable">
-                        {(provided, snapshot) => (
-                          <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {activeStaffList.map((item, index) => (
-                              <Draggable
-                                key={item.id}
-                                draggableId={item.id}
-                                index={index}>
-                                {(provided, snapshot) => (
+                <div className="w-auto m-auto max-h-88 overflow-y-auto">
+                  {/* Drag and drop listing */}
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                      {(provided, snapshot) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                          {activeStaffList.map((item, index) => (
+                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}>
                                   <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}>
+                                    key={index}
+                                    className={`flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200 ${
+                                      index % 2 !== 0 ? 'bg-gray-50' : ''
+                                    }`}>
+                                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
+                                      {index + 1}.
+                                    </div>
+
                                     <div
-                                      key={index}
-                                      className="flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200">
-                                      <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                        {index + 1}.
-                                      </div>
-
-                                      <div
-                                        className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
-                                        onClick={() => gotoProfilePage(item.userId)}>
-                                        <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                                          {!item.image ? (
-                                            <div
-                                              className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
-                                              style={{
-                                                /* stylelint-disable */
-                                                background: `${stringToHslColor(
-                                                  getInitialsFromString(item.name)[0] +
-                                                    ' ' +
-                                                    getInitialsFromString(item.name)[1]
-                                                )}`,
-                                                textShadow: '0.1rem 0.1rem 2px #423939b3',
-                                              }}>
-                                              {item.name
-                                                ? initials(
-                                                    getInitialsFromString(item.name)[0],
-                                                    getInitialsFromString(item.name)[1]
-                                                  )
-                                                : initials('N', 'A')}
-                                            </div>
-                                          ) : (
-                                            <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                                              <img
-                                                src={item.image}
-                                                className="rounded-full"
-                                              />
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div className="ml-2">
-                                          <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
-                                            {item.name}
+                                      className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
+                                      onClick={() => gotoProfilePage(item.userId)}>
+                                      <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                                        {!item.image ? (
+                                          <div
+                                            className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
+                                            style={{
+                                              /* stylelint-disable */
+                                              background: `${stringToHslColor(
+                                                getInitialsFromString(item.name)[0] +
+                                                  ' ' +
+                                                  getInitialsFromString(item.name)[1]
+                                              )}`,
+                                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                            }}>
+                                            {item.name
+                                              ? initials(
+                                                  getInitialsFromString(item.name)[0],
+                                                  getInitialsFromString(item.name)[1]
+                                                )
+                                              : initials('N', 'A')}
                                           </div>
-                                          <div className="text-sm leading-5 text-gray-500">
-                                            {item.email}
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                        <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800 w-auto">
-                                          {item.role ? getStaffRole(item.role) : ''}
-                                        </p>
-                                      </div>
-                                      {statusEdit === item.id ? (
-                                        <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                          <Selector
-                                            selectedItem={item.status}
-                                            placeholder="Select Status"
-                                            list={statusList}
-                                            onChange={(val, name, id) =>
-                                              onStaffStatusChange(
-                                                val,
-                                                item.id,
-                                                item.status
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      ) : (
-                                        <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                          <Status status={item.status} />
-                                        </div>
-                                      )}
-                                      <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                        {statusEdit === item.id ? (
-                                          <span
-                                            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                            onClick={() => setStatusEdit('')}>
-                                            {updateStatus ? 'updating...' : 'Cancel'}
-                                          </span>
                                         ) : (
-                                          <span
-                                            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                            onClick={() => setStatusEdit(item.id)}>
-                                            <Tooltip
-                                              text="Click to edit status"
-                                              placement="left">
-                                              Edit
-                                            </Tooltip>
-                                          </span>
+                                          <div className="h-8 w-8 rounded-full flex justify-center items-center">
+                                            <img
+                                              src={item.image}
+                                              className="rounded-full"
+                                            />
+                                          </div>
                                         )}
                                       </div>
+                                      <div className="ml-2">
+                                        <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                                          {item.name}
+                                        </div>
+                                        <div className="text-sm leading-5 text-gray-500">
+                                          {item.email}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                      <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800 w-auto">
+                                        {item.role ? getStaffRole(item.role) : ''}
+                                      </p>
+                                    </div>
+                                    {statusEdit === item.id ? (
+                                      <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                        <Selector
+                                          selectedItem={item.status}
+                                          placeholder="Select Status"
+                                          list={statusList}
+                                          onChange={(val, name, id) =>
+                                            onStaffStatusChange(val, item.id, item.status)
+                                          }
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                        <Status status={item.status} />
+                                      </div>
+                                    )}
+                                    <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                      {statusEdit === item.id ? (
+                                        <span
+                                          className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                                          onClick={() => setStatusEdit('')}>
+                                          {updateStatus ? 'updating...' : 'Cancel'}
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                                          onClick={() => setStatusEdit(item.id)}>
+                                          <Tooltip
+                                            text="Click to edit status"
+                                            placement="left">
+                                            Edit
+                                          </Tooltip>
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                  </div>
-                </Fragment>
-              ) : (
-                <div className="text-center p-16">
-                  <p> {dictionary['INFO']}</p>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 </div>
-              )}
-            </>
-          ) : (
-            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-              <div className="w-5/10">
-                <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">Loading Staff...</p>
+              </Fragment>
+            ) : (
+              <div className="text-center p-16">
+                <p> {dictionary['INFO']}</p>
               </div>
+            )}
+          </>
+        ) : (
+          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+            <div className="w-5/10">
+              <Loader color="rgba(107, 114, 128, 1)" />
+              <p className="mt-2 text-center text-lg text-gray-500">Loading Staff...</p>
             </div>
-          )}
-        </PageWrapper>
+          </div>
+        )}
+        {showRegistrationForm && (
+          <Modal
+            showHeader={true}
+            title={RegistrationDict[userLanguage]['title']}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={() => setShowRegistrationForm(false)}>
+            <Registration
+              isInInstitute
+              isInModalPopup
+              postMutation={postMutation}
+              instId={instituteId}
+            />
+          </Modal>
+        )}
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false,
     },
     {
@@ -86,7 +86,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     const currentCheckList = [...allCheckpointList];
     const newList = currentCheckList.filter((item) => {
       // Search on title for match.
-      return item.title?.toLowerCase().includes(searchInput);
+      return item.title?.toLowerCase().includes(searchInput.toLowerCase());
     });
     setFilteredList(newList);
   };

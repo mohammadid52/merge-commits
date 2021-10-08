@@ -100,7 +100,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     },
     {
       title: curricularData.institute?.name,
-      url: `/dashboard/manage-institutions/institution?id=${param.institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${param.institutionId}/staff`,
       last: false,
     },
     {

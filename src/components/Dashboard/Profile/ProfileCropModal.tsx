@@ -124,12 +124,12 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
                       'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
                     }
                   />
-                  <DummyContent />
+                  {/* <DummyContent /> */}
                 </div>
               )}
-              <div>
+              {/* <div>
                 <DummyContent />
-              </div>
+              </div> */}
             </div>
           )}
         </AnimatedContainer>

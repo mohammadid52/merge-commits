@@ -47,20 +47,19 @@ const SignOutButton = (props: SignOutButtonProps) => {
       {state.isAuthenticated ? (
         <div
           onClick={handleSignOut}
-          className="flex-shrink-0 bg-gray-700 flex border-t border-gray-200 p-4">
-          <a href="#" className="flex-shrink-0 group block">
+          className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+          <div className="flex-shrink-0 group block">
             <div className="flex items-center">
               <IconContext.Provider
                 value={{
                   size: '24px',
-                  className: 'text-white w-auto mr-1',
-                  style: {cursor: 'pointer'},
+                  className: 'w-auto mr-1',
                 }}>
-                <FiLogOut />
+                <FiLogOut className="cursor-pointer" />
               </IconContext.Provider>
-              <p className="text-sm ml-2 font-medium text-gray-300">Logout</p>
+              <p className="text-sm ml-2 font-medium">Logout</p>
             </div>
-          </a>
+          </div>
         </div>
       ) : null}
     </>

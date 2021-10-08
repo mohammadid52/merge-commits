@@ -651,6 +651,39 @@ export const listClassStudents = /* GraphQL */ `
   }
 `;
 
+export const listClassStudentsForRoom = /* GraphQL */ `
+  query ListClassStudents(
+    $filter: ModelClassStudentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        classID
+        studentID
+        studentEmail
+        studentAuthID
+        status
+        group
+        student {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          image
+        }
+        createdAt
+      }
+    }
+  }
+`;
+
 /**
  * QUERY BELOW MADE BY AMAN, THE KING
  */
@@ -1867,6 +1900,31 @@ export const listUniversalLessons = /* GraphQL */ `
             }
           }
         }
+      }
+      nextToken
+    }
+  }
+`;
+export const listUniversalSyllabusOptions = /* GraphQL */ `
+  query ListUniversalSyllabuss(
+    $id: ID
+    $filter: ModelUniversalSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        institutionID
       }
       nextToken
     }
@@ -3722,11 +3780,7 @@ export const listUnits = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listCurriculumUnitss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         unitId
@@ -3768,6 +3822,22 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
             }
           }
         }
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
       }
     }
   }
@@ -4516,6 +4586,43 @@ export const getStudentSurveyResponse = /* GraphQL */ `
           feedbacks
           shared
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listStaffWithBasicInfo = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+      }
+    }
+  }
+`;
+export const listCurriculumUnitss = /* GraphQL */ `
+  query ListCurriculumUnitss(
+    $filter: ModelcurriculumUnitsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCurriculumUnitss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        unitId
+        unit {
+          id
+          name
+          type
+          institutionID
+        }
+        curriculumId
         createdAt
         updatedAt
       }
