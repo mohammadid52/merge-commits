@@ -27,6 +27,10 @@ type globalActions =
       };
     }
   | {
+      type: 'RESET_ROOMDATA';
+      payload: any;
+    }
+  | {
       type: 'UPDATE_CURRENTPAGE';
       payload: {
         data: string;
@@ -110,7 +114,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         roomData: {
           activeSyllabus: action.payload.activeSyllabus
             ? action.payload.activeSyllabus
-            : state.activeSyllabus,
+            : state.roomData.activeSyllabus,
           curriculum: action.payload.curriculum
             ? action.payload.curriculum
             : state.roomData.curriculum,
@@ -121,6 +125,21 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           syllabus: action.payload.syllabus
             ? action.payload.syllabus
             : state.roomData.syllabus,
+        },
+      };
+    case 'RESET_ROOMDATA':
+      console.log('RESET_ROOMDATA');
+      return {
+        ...state,
+        currentPage: '',
+        activeRoom: 'asdsad',
+        activeSyllabus: '',
+        roomData: {
+          rooms: state.roomData.rooms ? state.roomData.rooms : [],
+          activeSyllabus: '',
+          curriculum: {},
+          syllabus: [],
+          lessons: [],
         },
       };
     case 'UPDATE_CURRENTPAGE':
