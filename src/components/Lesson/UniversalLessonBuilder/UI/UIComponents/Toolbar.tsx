@@ -213,7 +213,7 @@ const Toolbar = ({
         // navigate user to newly created page
         if (universalLessonDetails.id && newPage.id) {
           history.push(
-            `/dashboard/lesson-builder/lesson/page-builder?lessonId=${universalLessonDetails.id}&pageId=${newPage.id}`
+            `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${universalLessonDetails.id}/page-builder?pageId=${newPage.id}`
           );
         }
         // when user is navigated to the page show modal with lesson page details

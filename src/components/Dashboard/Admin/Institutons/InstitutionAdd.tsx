@@ -20,11 +20,12 @@ import PageWrapper from '../../../Atoms/PageWrapper';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import DroppableMedia from '../../../Molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
+import ServiceProviders from './Listing/ServiceProviders';
 
 const InstitutionAdd = () => {
   const history = useHistory();
-  const initialState = {
-    id: '',
+  const initialState: any = {
+    id: null,
     name: '',
     type: '',
     website: '',
@@ -36,6 +37,9 @@ const InstitutionAdd = () => {
     zip: '',
     phone: '',
     image: '',
+    serviceProviders: {
+      items: [],
+    },
   };
   const [instituteData, setInstituteData] = useState(initialState);
   const [showCropper, setShowCropper] = useState(false);
@@ -43,11 +47,18 @@ const InstitutionAdd = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
+  const [saving, setSaving] = useState(false);
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {InstitutionAddDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {InstitutionAddDict, BreadcrumsTitles, BUTTONS: ButtonDict} = useDictionary(
+    clientKey
+  );
   const [error, setError] = useState({
     show: true,
     errorMsg: '',
+  });
+  const [serverMessage, setServerMessage] = useState({
+    message: '',
+    isError: false,
   });
 
   const breadCrumsList = [
@@ -166,6 +177,16 @@ const InstitutionAdd = () => {
     });
   };
 
+  const updateServiceProviders = (item: any) => {
+    setInstituteData((prevData: any) => ({
+      ...prevData,
+      serviceProviders: {
+        ...prevData.serviceProviders,
+        items: [...(prevData.serviceProviders.items || []), item],
+      },
+    }));
+  };
+
   const deletUserProfile = async () => {
     setInstituteData({...instituteData, image: ''});
     setImageUrl(null);
@@ -196,13 +217,31 @@ const InstitutionAdd = () => {
     } else {
       removeErrorMSg();
       try {
+        setSaving(true);
         if (s3Image) {
           await uploadImageToS3(s3Image, instituteData.id, 'image/jpeg');
         }
-        const newInstitute = await API.graphql(
-          graphqlOperation(customMutations.createInstitution, {input: instituteData})
+        const payload = {...instituteData};
+        delete payload.serviceProviders;
+        const newInstitute: any = await API.graphql(
+          graphqlOperation(customMutations.createInstitution, {input: payload})
         );
-        history.push(`institution?id=${instituteData.id}`);
+        setInstituteData((prevData: any) => ({
+          ...prevData,
+          id: newInstitute.data?.createInstitution?.id,
+        }));
+        setSaving(false);
+        setServerMessage({
+          isError: false,
+          message: InstitutionAddDict[userLanguage]['messages']['saveMsg'],
+        });
+        setTimeout(() => {
+          setServerMessage({
+            isError: false,
+            message: '',
+          });
+        }, 2000);
+        // history.push(`institution?id=${instituteData.id}`);
       } catch {
         setError({
           show: true,
@@ -211,17 +250,18 @@ const InstitutionAdd = () => {
       }
     }
   };
-  useEffect(() => {
-    setInstituteData({
-      ...instituteData,
-      id: uuidv4(),
-    });
-  }, []);
+  // useEffect(() => {
+  //   setInstituteData({
+  //     ...instituteData,
+  //     id: uuidv4(),
+  //   });
+  // }, []);
 
   const mediaRef = React.useRef(null);
   const handleImage = () => mediaRef?.current?.click();
 
   const {
+    id,
     name,
     type,
     website,
@@ -233,7 +273,10 @@ const InstitutionAdd = () => {
     zip,
     phone,
     isServiceProvider,
+    serviceProviders,
   } = instituteData;
+
+  console.log(id, 'id before return');
 
   return (
     <div className="w-full h-full p-4">
@@ -436,8 +479,37 @@ const InstitutionAdd = () => {
                       onChange={handdleCheckBox}
                       name="isServiceProvider"
                       label={
-                        InstitutionAddDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']
+                        name
+                          ? `${name} ${InstitutionAddDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL_WITH_NAME']}`
+                          : InstitutionAddDict[userLanguage]['FORM'][
+                              'SERVICEPROVIDER_LABEL_WITHOUT_NAME'
+                            ]
                       }
+                    />
+                  </div>
+                </div>
+                {serverMessage.message && (
+                  <span className="text-sm text-green-600 text-center my-6 mx-3 w-full">
+                    {serverMessage.message}
+                  </span>
+                )}
+                <div className="px-4 w-full flex justify-end">
+                  <div className="flex justify-end w-auto pb-4">
+                    {/* <Buttons
+                  label={InstitutionEditDict[userLanguage]['BUTTON']['CANCEL']}
+                  btnClass="w-full px-6 py-4 mr-2"
+                  onClick={history.goBack}
+                  transparent
+                /> */}
+                    <Buttons
+                      label={
+                        saving
+                          ? ButtonDict[userLanguage]['SAVING']
+                          : InstitutionAddDict[userLanguage]['BUTTON']['SAVE']
+                      }
+                      btnClass="w-full px-6 py-4 ml-2"
+                      onClick={addNewInstitution}
+                      disabled={saving}
                     />
                   </div>
                 </div>
@@ -448,7 +520,7 @@ const InstitutionAdd = () => {
               ) : null}
 
               {/* Cancel-save buttons */}
-              <div className="px-4 w-full flex justify-end">
+              {/* <div className="px-4 w-full flex justify-end">
                 <div className="flex w-4/10">
                   <Buttons
                     label={InstitutionAddDict[userLanguage]['BUTTON']['CANCEL']}
@@ -463,7 +535,29 @@ const InstitutionAdd = () => {
                   />
                 </div>
               </div>
+             */}
             </form>
+            <div className="pt-8">
+              {!id ? (
+                <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
+                  <div className="w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto">
+                      {InstitutionAddDict[userLanguage]['SERVICE_VENDORS']}
+                    </h3>
+                  </div>
+                  <div className="text-center p-16">
+                    Please save institution basic info first
+                  </div>
+                </div>
+              ) : (
+                <ServiceProviders
+                  serviceProviders={serviceProviders}
+                  instId={id}
+                  updateServiceProviders={updateServiceProviders}
+                  instName={name}
+                />
+              )}
+            </div>
 
             {/* Image cropper */}
             {showCropper && (

@@ -7,6 +7,14 @@ import {find, findIndex} from 'lodash';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
@@ -15,7 +23,6 @@ import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
 import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import {Route, Switch, useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -92,7 +99,11 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
   updatedAt?: string;
 }
 
-const User = () => {
+interface IUserProps {
+  instituteId?: string;
+}
+
+const User = ({instituteId}: IUserProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -119,14 +130,13 @@ const User = () => {
 
   const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
-  // const [stdCheckpoints, setStdCheckpoints] = useState([]);
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
-  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
 
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
   );
+
+  const {userId}: any = useParams();
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -211,56 +221,113 @@ const User = () => {
     setQuestionData(questionData);
   };
 
+  // ##################################################################### //
+  // ########################## GET CHECKPOINTS ########################## //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+
+  const [allCheckpointIds, setAllCheckpointIds] = useState([]);
+  const [allCheckpointQuesSeq, setAllCheckpointQuesSeq] = useState();
+
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+
   // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
 
-  const getCheckpointSequences = async (checkpointIDS: string[]) => {
-    if (checkpointIDS && checkpointIDS.length > 0) {
-      try {
-        let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-        let compoundQuery = createFilterToFetchSpecificItemsOnly(modifiedIds, 'id');
-        let getAllCheckpointSequences: any = await API.graphql(
-          graphqlOperation(queries.listCSequencess, {filter: {compoundQuery}})
-        );
-        return getAllCheckpointSequences;
-      } catch (e) {
-        console.error('getCheckpointSequences - ', e);
-        return [];
-      }
-    } else {
-      return [[]];
-    }
-  };
+  // const getCheckpointSequences: any = async (
+  //   checkpointIDS: string[],
+  //   nextToken: string,
+  //   loopLimit: 10,
+  //   output: any[]
+  // ) => {
+  //   if (checkpointIDS && checkpointIDS.length > 0) {
+  //     try {
+  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
+  //       let compoundQuery = {
+  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
+  //         limit: 100,
+  //       };
+  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
 
-  async function getUserById(id: string) {
+  //       let getAllCheckpointSequences: any = await API.graphql(
+  //         graphqlOperation(
+  //           queries.listCSequencess,
+  //           nextToken ? queryWithNextToken : compoundQuery
+  //         )
+  //       );
+
+  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
+
+  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
+  //       // return responseItems;
+
+  //       if (theNextToken !== null && loopLimit > 0) {
+  //         console.log(nextToken);
+  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
+  //           ...output,
+  //           ...responseItems,
+  //         ]);
+  //       } else {
+  //         return [...output, responseItems];
+  //       }
+  //     } catch (e) {
+  //       console.error('getCheckpointSequences - ', e);
+  //       return [];
+  //     }
+  //   } else {
+  //     return [];
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (allCheckpointIds.length > 0) {
+  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
+  //     Promise.resolve(getAllSequences).then((output: any) => {
+  //       console.log('all checkpoint sequences - ', output);
+  //     });
+  //   }
+  // }, [allCheckpointIds]);
+
+  async function getUserProfile(id: string) {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.userById, {id: id})
+        graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
+      console.log('studentClasses - ', studentClasses);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
+
       userData.rooms = studentRooms;
+
       const studentCurriculars: any = studentRooms
-        .map((item: any) => item?.curricula?.items)
-        .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
+        ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
+        : [];
+
+      const uniqCurriculars: any = studentCurriculars
+        ? getUniqItems(
+            studentCurriculars.filter((d: any) => d !== null),
+            'curriculumID'
+          )
+        : [];
+
       const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+        ? uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1)
+        : [];
+
+      const studentCheckpoints: any = studCurriCheckp
+        ? studCurriCheckp.map((item: any) => item?.checkpoint)
+        : [];
 
       let sCheckpoints: any[] = [];
 
@@ -274,7 +341,12 @@ const User = () => {
        *   DEMOGRAPHIC AND   *
        * PRIVATE CHECKPOINTS *
        ***********************/
-      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+
+      // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
+      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+
+      // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
       const demographicCheckpoints = uniqCheckpoints
         .filter((checkpoint: any) => checkpoint.scope !== 'private')
         .reverse();
@@ -282,12 +354,10 @@ const User = () => {
         .filter((checkpoint: any) => checkpoint.scope === 'private')
         .reverse();
 
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
-      // setStdCheckpoints([...uniqCheckpoints]);
       setDemographicCheckpoints(demographicCheckpoints);
       setPrivateCheckpoints(privateCheckpoints);
 
@@ -300,6 +370,7 @@ const User = () => {
       });
 
       if (uniqCheckpointIDs?.length > 0) {
+        setAllCheckpointIds(uniqCheckpointIDs);
         getQuestionData(uniqCheckpointIDs, userData);
       }
     } catch (error) {
@@ -307,7 +378,11 @@ const User = () => {
     }
   }
 
-  const isAdmin = state.user.role === 'ADM';
+  // ##################################################################### //
+  // ########################### PROFILE IMAGE ########################### //
+  // ##################################################################### //
+
+  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
   useEffect(() => {
     async function getUrl() {
@@ -380,10 +455,10 @@ const User = () => {
   }
 
   useEffect(() => {
-    if (typeof id === 'string') {
-      getUserById(id);
+    if (userId) {
+      getUserProfile(userId);
     }
-  }, []);
+  }, [userId]);
 
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -458,7 +533,7 @@ const User = () => {
 
   const switchMainTab = (tab: string) => {
     setCurTab(tab);
-    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+    history.push(`/dashboard/manage-users/user?id=${userId}&tab=${tab}`);
   };
 
   const handleClassRoomClick = (roomId: string) => {
@@ -1403,12 +1478,15 @@ const User = () => {
   };
 
   const isTeacher =
-    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
+    state.user.role === 'TR' ||
+    state.user.role === 'FLW' ||
+    state.user.role === 'ADM' ||
+    state.user.role === 'SUP';
   {
     return (
       <>
-        <div className={`mx-auto max-w-256`}>
-          <BreadCrums items={breadCrumsList} />
+        <div className={`pl-12 max-w-256`}>
+          {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div className="flex justify-end mb-4">
               <Buttons
@@ -1438,7 +1516,7 @@ const User = () => {
               )}
             </div>
           </div>
-          <AnimatedContainer show={onUserInformationTab}>
+          <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
               <div
                 className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
@@ -1530,12 +1608,13 @@ const User = () => {
                       render={() => (
                         <UserEdit
                           // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          instituteId={instituteId}
                           tab={tab}
                           setTab={setTab}
                           user={user}
                           status={status}
                           setStatus={setStatus}
-                          getUserById={getUserById}
+                          getUserById={getUserProfile}
                           questionData={questionData}
                           checkpoints={
                             tab === 'demographics'

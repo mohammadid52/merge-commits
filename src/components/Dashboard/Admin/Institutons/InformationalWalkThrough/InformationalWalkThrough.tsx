@@ -36,10 +36,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     show: false,
     message: '',
   });
-  const [loading, setLoading] = useState(role === 'ADM' || role === 'BLD');
+  const [loading, setLoading] = useState(role === 'ADM' || role === "SUP" || role === 'BLD');
   const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
   const [instListLoading, setInstListLoading] = useState(
-    role === 'ADM' || role === 'BLD'
+    role === 'ADM' || role === "SUP" || role === 'BLD'
   );
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
@@ -51,12 +51,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const data: any = {
     title: 'root',
     children: [
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Institution Setup`,
         type: 'menu',
         id: 'inst',
         redirectionUrl: selectedInstitution?.institution?.id
-          ? `/dashboard/manage-institutions/institution?id={institutionId}`
+          ? `/dashboard/manage-institutions/institution/{institutionId}/edit`
           : '/dashboard/manage-institutions',
         children: [
           {
@@ -64,14 +64,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/edit`,
           },
           {
             title: 'Staff',
             type: 'list',
             children: [],
             id: 'inst_staff',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=0`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/staff`,
           },
           {
             title: 'Classes',
@@ -81,7 +81,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Create Class',
                 type: 'list',
                 id: 'inst_classes_create',
-                redirectionUrl: `/dashboard/manage-institutions/institution/class-creation?id={institutionId}`,
+                redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/class-creation`,
               },
               {
                 title: 'Add Student',
@@ -91,13 +91,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               },
             ],
             id: 'inst_classes',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=1`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/class`,
           },
           {
             title: 'Curriculum',
             type: 'menu',
             id: 'inst_curriculum',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/course`,
             children: [
               {
                 title: 'Add Curriculum Information',
@@ -130,7 +130,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   },
                 ],
                 id: 'inst_curriculum_units',
-                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=2`,
+                redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=curricular`,
               },
               {
                 title: 'Demographics & Information',
@@ -167,11 +167,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               },
             ],
             id: 'inst_classroom',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=4`,
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=class_room`,
           },
         ],
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Lesson Builder`,
         type: 'menu',
         id: 'lesson_builder',
@@ -260,7 +260,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           },
         ],
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Service Provider`,
         type: 'menu',
         id: 'service_provider',
@@ -269,18 +269,18 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Provide service to another organization',
             type: 'list',
             id: 'service_provider_provide_service',
-            redirectionUrl: `/dashboard/manage-institutions/institution/edit?id={institutionId}`,
+            redirectionUrl: `/dashboard/manage-institutions/institution/?id={institutionId}`,
           },
           {
             title: 'Request service from another organization',
             type: 'list',
             id: 'service_provider_request_service',
-            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
+            redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=service_provider`,
           },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=3`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}&tab=service_provider`,
       },
-      (role === 'ADM' || role === 'BLD') && {
+      (role === 'ADM' || role === "SUP" || role === 'BLD') && {
         title: `Research & Analytics`,
         type: 'list',
         id: 'research_and_analytics',
@@ -425,7 +425,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `/dashboard/csv`,
           },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution/{institutionId}/staff`,
       },
     ].filter(Boolean),
   };
@@ -517,7 +517,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       );
       setSectionDetailsLoading(false);
     } else {
-      if (role === 'ADM' || role === 'BLD') {
+      if (role === 'ADM' || role === "SUP" || role === 'BLD') {
         setAlertConfig({
           show: true,
           message: 'Please select institution before continuing',
@@ -1031,7 +1031,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/staff`
                     )
                   }>
                   1. Add Your Institution's Avatar
@@ -1049,7 +1049,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="w-auto text-base font-bold cursor-pointer"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/edit`
                     )
                   }>
                   2. Enter your Institution's contact information
@@ -1105,7 +1105,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/class-creation?id=${selectedInstitution?.institution?.id}`
+                      `/dashboard/manage-institutions/institution/${selectedInstitution?.institution?.id}/class-creation`
                     )
                   }>
                   Create a class for your institution
@@ -1360,7 +1360,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       }
       case 'inst_curriculum_units_general_info': {
         const redirectionPath = activeSection?.data?.curriculum?.length
-          ? `/dashboard/manage-institutions/${selectedInstitution?.institution?.id}/curricular?id=${activeSection?.data?.curriculum[0].id}&tab=1`
+          ? `/dashboard/manage-institutions/${selectedInstitution?.institution?.id}/curricular?id=${activeSection?.data?.curriculum[0].id}&tab=class`
           : `/dashboard/manage-institutions/institution/curricular-creation?id=${selectedInstitution?.institution?.id}`;
         const activeSyllabus = activeSection?.data?.universalSyllabus.length
           ? activeSection?.data?.universalSyllabus[0]
@@ -1917,7 +1917,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution/edit?id=${selectedInstitution?.institution?.id}&tab=3`
+                      `/dashboard/manage-institutions/institution/?id=${selectedInstitution?.institution?.id}&tab=service_provider`
                     )
                   }>
                   Toggle service provider to be true
@@ -1939,7 +1939,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(
-                      `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=3`
+                      `/dashboard/manage-institutions/institution?id=${selectedInstitution?.institution?.id}&tab=service_provider`
                     )
                   }>
                   Select service provider from list
@@ -2091,7 +2091,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                             <HiOutlineRefresh className="w-6 h-6" />
                           </span>
                         ) : (
-                          role === 'ADM' &&
+                          role === 'ADM' || role === "SUP" &&
                           (!associateInstitute?.length ||
                             associateInstitute?.length > 1) && (
                             <Selector

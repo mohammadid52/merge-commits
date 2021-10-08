@@ -19,6 +19,7 @@ interface AddSyllabusProps {
   syllabusDetails: any;
   postAddSyllabus: (syllabusId: string) => void;
   onCancel: () => void;
+  instId: string;
 }
 interface InitialData {
   name: string;
@@ -34,6 +35,7 @@ const UnitFormComponent = ({
   onCancel,
   postAddSyllabus,
   syllabusDetails,
+  instId
 }: AddSyllabusProps) => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -47,7 +49,6 @@ const UnitFormComponent = ({
     languages: [{id: '1', name: 'English', value: 'EN'}],
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
-  const [syllabusIds, setSyllabusIds] = useState([]);
   const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -57,8 +58,6 @@ const UnitFormComponent = ({
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
-
-  const params = useQuery();
 
   const [messages, setMessages] = useState({
     show: false,
@@ -76,7 +75,7 @@ const UnitFormComponent = ({
         ),
         description: syllabusDetails.description,
         objectives: syllabusDetails.objectives,
-        purpose: syllabusDetails.pupose,
+        purpose: syllabusDetails.purpose,
         methodology: syllabusDetails.methodology,
         policies: syllabusDetails.policies,
       });
@@ -130,8 +129,8 @@ const UnitFormComponent = ({
           (item: {value: string}) => item.value
         );
         const input: any = {
+          institutionID: instId,
           name: syllabusData.name,
-          curriculumID: curricularId,
           description: syllabusData.description,
           methodology: syllabusData.methodology,
           policies: syllabusData.policies,
@@ -158,14 +157,14 @@ const UnitFormComponent = ({
           );
           const newItem = newSyllabus.data.createUniversalSyllabus;
           // replace this with custom mutation updateCurriculumSyllabusSequence
-          await API.graphql(
-            graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-              input: {
-                id: curricularId,
-                universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
-              },
-            })
-          );
+          // await API.graphql(
+          //   graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+          //     input: {
+          //       id: curricularId,
+          //       universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
+          //     },
+          //   })
+          // );
           if (newItem) {
             postAddSyllabus(newItem.id);
           } else {

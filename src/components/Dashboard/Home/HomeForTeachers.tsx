@@ -169,8 +169,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData[0].class?.rooms?.items.forEach(async (_item: any, index: number) => {
-        const curriculum = _item.curricula?.items[0].curriculum;
-        if (curriculum !== null) {
+        const curriculum = _item.curricula?.items[0]?.curriculum;
+        if (curriculum) {
           const imagePath = curriculum?.image;
 
           const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);

@@ -1,10 +1,12 @@
-import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
+import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Auth from '@aws-amplify/auth';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import moment, {Moment} from 'moment';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
 
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
@@ -21,7 +23,7 @@ import EmojiFeedback from '../General/EmojiFeedback';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import Noticebar from '../Noticebar/Noticebar';
-import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import Csv from './Csv/Csv';
@@ -32,7 +34,14 @@ import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {getAsset} from '../../assets';
+import {AiOutlineUser} from 'react-icons/ai';
+// import {BsFillInfoCircleFill} from 'react-icons/bs';
+import SignOutButton from '@components/Auth/SignOut';
+import {getUserRoleString, stringToHslColor} from '@utilities/strings';
+import {getImageFromS3Static} from '@utilities/services';
+import {FiUser} from 'react-icons/fi';
 import useNotifications from '@customHooks/notifications';
+import HeaderMegaMenu from './Menu/HeaderMegaMenu';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -174,12 +183,11 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.user.role]);
 
-  /**
-   * INIT ADMIN NOT LOADING ANYTHING
-   */
+  // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
+
   useEffect(() => {
     const userRole = state.user.role;
-    if (userRole === 'ADM') {
+    if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
   }, []);
@@ -187,25 +195,25 @@ const Dashboard = (props: DashboardProps) => {
   // ##################################################################### //
   // ########################### LOADING STATUS ########################## //
   // ##################################################################### //
+
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
-  const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
 
   // ##################################################################### //
   // ############################# HOME DATA ############################# //
   // ##################################################################### //
+
   // Fetching results
   const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
-
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
-
   const [curriculumIds, setCurriculumIds] = useState<string>('');
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
    ******************************************/
+
   const getDashboardData = async (authId: string, email: string) => {
     try {
       const queryObj = {
@@ -218,10 +226,9 @@ const Dashboard = (props: DashboardProps) => {
       const dashboardDataFetch = await API.graphql(
         graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
       );
-      const response = await dashboardDataFetch;
 
       // @ts-ignore
-      let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
+      let arrayOfResponseObjects = await dashboardDataFetch?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -271,6 +278,7 @@ const Dashboard = (props: DashboardProps) => {
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
    ******************************************/
+
   const getClassList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
@@ -278,7 +286,7 @@ const Dashboard = (props: DashboardProps) => {
             ...acc,
             {
               name: dataObj?.class?.name,
-              rooms: dataObj?.class?.rooms,
+              room: dataObj?.class?.room,
               students: dataObj?.class?.students,
             },
           ];
@@ -295,13 +303,7 @@ const Dashboard = (props: DashboardProps) => {
     let rooms: any = [];
     classList && classList.length
       ? classList.forEach((classObj) =>
-          classObj.rooms.items.length
-            ? classObj.rooms.items.forEach((room: any) =>
-                room.curricula?.items.length && room.curricula?.items[0].curriculum
-                  ? rooms.push(room)
-                  : null
-              )
-            : null
+          classObj.room ? rooms.push(classObj.room) : null
         )
       : null;
     return rooms;
@@ -309,6 +311,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
+    console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -322,6 +325,13 @@ const Dashboard = (props: DashboardProps) => {
   /******************************************
    * 2.1 LIST TEACHER ROOMS                 *
    ******************************************/
+  /***********************************************
+   *    THIS FUNCTION CAN ACTUALLY BE REMOVED    *
+   * IT'S ACTUALLY RETURNING THE SAME (BUT LESS) *
+   *    DATA AS GETDASHBOARDDATAFORTEACHERS()    *
+   *    AND ESSENTIALLY USING THE SAME QUERY     *
+   ***********************************************/
+
   const listRoomTeacher = async (teacherAuthID: string) => {
     try {
       const queryObj = {
@@ -332,9 +342,8 @@ const Dashboard = (props: DashboardProps) => {
       const classIdFromRoomsFetch = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
-      const response = await classIdFromRoomsFetch;
       //@ts-ignore
-      const arrayOfResponseObjects = response?.data?.listRooms?.items;
+      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
@@ -357,45 +366,10 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.user.role]);
 
-  /******************************************
-   * 3.1 LIST ALL WIDGETS FOR ROOM          *
-   ******************************************/
-  useEffect(() => {
-    // const listRoomWidgets = async () => {
-    //   setWidgetLoading(true);
-    //   //
-    //   try {
-    //     const queryObj = {
-    //       name: 'queries.listNoticeboardWidgets',
-    //       valueObj: {filter: {roomID: {eq: state.activeRoom}}},
-    //     };
-    //     // const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
-    //     // const response = await noticeboardWidgetsFetch;
-    //     // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-    //     const keepEmptyForNow:any = [];
-    //     dispatch({
-    //       type: 'UPDATE_ROOM',
-    //       payload: {
-    //         property: 'widgets',
-    //         data: keepEmptyForNow,
-    //       },
-    //     });
-    //   } catch (e) {
-    //     console.error('listNoticeboardWidgetsFetch: -> ', e);
-    //   } finally {
-    //     setWidgetLoading(false);
-    //   }
-    // };
-    // if (state.activeRoom && widgetLoading === false) {
-    //   listRoomWidgets();
-    // }
-  }, [state.activeRoom]);
+  /**********************************
+   * 3. LIST CURRICULUMS BY ROOM ID *
+   **********************************/
 
-  const previousRoom = usePrevious(state.activeRoom);
-
-  /**
-   * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
-   */
   useEffect(() => {
     const listRoomCurriculums = async () => {
       if (state.roomData.rooms.length > 0) {
@@ -407,13 +381,6 @@ const Dashboard = (props: DashboardProps) => {
             },
           };
 
-          /***************************************************
-           *                                                 *
-           * DISABLED handleFetchAndCache()                  *
-           * TO TROUBLESHOOT LESSONS NOT LOADING             *
-           * ON SYLLABUS-ACTIVATION SWTICH                   *
-           *                                                 *
-           ***************************************************/
           // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
           const roomCurriculumsFetch = await API.graphql(
             graphqlOperation(queries.listRoomCurriculums, {
@@ -449,6 +416,10 @@ const Dashboard = (props: DashboardProps) => {
       setActiveRoomInfo(getRoomFromState);
     }
   }, [state.activeRoom]);
+
+  // ##################################################################### //
+  // ######################### SCHEDULE AND TIMES ######################## //
+  // ##################################################################### //
 
   const calculateAvailableStartEndDate = (
     date: Moment,
@@ -557,98 +528,111 @@ const Dashboard = (props: DashboardProps) => {
     }));
   };
 
-  /**
-   * 5. LIST AVAILABLE SYLLABUS
-   */
-  useEffect(() => {
-    setSyllabusLoading(true);
-    dispatch({
-      type: 'UPDATE_ROOM',
-      payload: {
-        property: 'syllabus',
-        data: [],
-      },
-    });
-    const listSyllabus = async () => {
-      if (curriculumIds.length > 0) {
-        try {
-          let scheduleDetails: any = await API.graphql(
-            graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-          );
-          scheduleDetails = scheduleDetails?.data?.getRoom;
-          const getCurriculum = await API.graphql(
-            graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
-          );
-          // @ts-ignore
-          const response = await getCurriculum.data.getCurriculum;
+  /********************
+   * 5. LIST SYLLABUS *
+   ********************/
 
-          const syllabi = response.universalSyllabus.items;
-          const sequence = response.universalSyllabusSeq;
+  const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+    let getSyllabusInSequence =
+      sequenceArray && sequenceArray.length > 0
+        ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
+            return [
+              ...acc,
+              syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID),
+            ];
+          }, [])
+        : syllabusArray;
 
-          const mappedResponseObjects = sequence
-            ?.reduce((acc: any[], syllabusID: string) => {
-              return [
-                ...acc,
-                syllabi.find((syllabus: any) => syllabus.id === syllabusID),
-              ];
-            }, [])
-            .filter((syllabus: any) => syllabus)
+    // console.log('syllabusArray ', syllabusArray);
+    // console.log('getSyllabusInSequence ', getSyllabusInSequence);
+
+    let mapSyllabusToSequence =
+      sequenceArray && sequenceArray.length > 0
+        ? getSyllabusInSequence
+            ?.map((syllabus: any) => syllabus?.unit)
             .map((syllabus: any) => ({
               ...syllabus,
               lessons: {
                 ...syllabus.lessons,
-                items: syllabus.lessons.items
-                  .map((t: any) => {
-                    let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                    return {...t, index};
-                  })
-                  .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+                items:
+                  syllabus?.lessons?.items && syllabus?.lessons?.items.length > 0
+                    ? syllabus.lessons.items
+                        .map((t: any) => {
+                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                          return {...t, index};
+                        })
+                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                    : [],
               },
-            }));
-          if (
-            scheduleDetails &&
-            scheduleDetails.startDate &&
-            scheduleDetails.endDate &&
-            scheduleDetails.frequency
-          ) {
-            const modifiedData = calculateSchedule(
-              mappedResponseObjects,
-              scheduleDetails
-            );
-          }
+            }))
+        : getSyllabusInSequence;
 
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'syllabus',
-              data: mappedResponseObjects,
-            },
-          });
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'curriculum',
-              data: {name: response.name},
-            },
-          });
-          setSyllabusLoading(false);
-        } catch (e) {
-          console.error('Curriculum ids ERR: ', e);
-        } finally {
-          setSyllabusLoading(false);
-        }
+    // console.log('mapSyllabusToSequence ', mapSyllabusToSequence);
+
+    return mapSyllabusToSequence;
+  };
+
+  const listSyllabus = async () => {
+    setSyllabusLoading(true);
+
+    try {
+      // ~~~~~~~~~~~~~~ CURRICULUM ~~~~~~~~~~~~~ //
+      let getCurriculum = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumForClasses, {id: curriculumIds})
+      );
+      // @ts-ignore
+      let response = await getCurriculum.data.getCurriculum;
+
+      let syllabi = response.universalSyllabus.items;
+      let sequence = response.universalSyllabusSeq;
+
+      let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
+
+      console.log('response - ', mappedResponseObjects);
+
+      //TODO: combine these dispatches
+      dispatch({
+        type: 'UPDATE_ROOM_MULTI',
+        payload: {
+          syllabus: mappedResponseObjects,
+          curriculum: {name: response.name},
+        },
+      });
+
+      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
+      let scheduleDetails: any = await API.graphql(
+        graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+      );
+      scheduleDetails = scheduleDetails?.data?.getRoom;
+
+      if (
+        scheduleDetails &&
+        scheduleDetails.startDate &&
+        scheduleDetails.endDate &&
+        scheduleDetails.frequency
+      ) {
+        const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
       }
-    };
+    } catch (e) {
+      console.error('Curriculum ids ERR: ', e);
+      setSyllabusLoading(false);
+    } finally {
+      setSyllabusLoading(false);
+    }
+  };
 
-    listSyllabus();
-  }, [state.activeRoom, curriculumIds]);
+  useEffect(() => {
+    if (curriculumIds !== '') {
+      listSyllabus();
+    }
+  }, [curriculumIds]);
 
   /******************************************
    * 6.1 LIST ALL THE SYLLABUS LESSON       *
    *      - LESSONS                         *
    ******************************************/
 
-  const listSyllabusLessons = async () => {
+  const listSyllabusLessons = async (syllabusID: string) => {
     setLessonLoading(true);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -661,47 +645,41 @@ const Dashboard = (props: DashboardProps) => {
     /**
      * IF there are any syllabus active, do a fetch for lessons
      */
-    if (activeRoomInfo?.activeSyllabus) {
-      try {
-        const syllabusLessonFetch = await API.graphql(
-          graphqlOperation(customQueries.getUniversalSyllabus, {
-            id: activeRoomInfo?.activeSyllabus,
-          })
-        );
-        //@ts-ignore
-        const response = await syllabusLessonFetch.data.getUniversalSyllabus;
-        const lessons = response?.lessons.items
-          .map((t: any) => {
-            let index = response?.universalLessonsSeq?.indexOf(t.id);
-            return {...t, index};
-          })
-          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'lessons',
-            data: lessons,
-          },
-        });
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'activeSyllabus',
-            data: response,
-          },
-        });
-      } catch (e) {
-        console.error('syllabus lessons: ', e);
-      } finally {
-        setLessonLoading(false);
-      }
+    try {
+      const syllabusLessonFetch = await API.graphql(
+        graphqlOperation(customQueries.getUniversalSyllabus, {
+          id: syllabusID,
+        })
+      );
+      //@ts-ignore
+      const response = await syllabusLessonFetch.data.getUniversalSyllabus;
+      const lessons = response?.lessons.items
+        .map((t: any) => {
+          let index = response?.universalLessonsSeq?.indexOf(t.id);
+          return {...t, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+      dispatch({
+        type: 'UPDATE_ROOM_MULTI',
+        payload: {
+          activeSyllabus: response,
+          lessons: lessons,
+        },
+      });
+    } catch (e) {
+      console.error('syllabus lessons: ', e);
+    } finally {
+      setLessonLoading(false);
     }
   };
 
   // ~~~~~~~~ TRIGGER LESSON LOADING ~~~~~~~ //
   useEffect(() => {
-    listSyllabusLessons();
+    if (activeRoomInfo?.activeSyllabus) {
+      listSyllabusLessons(activeRoomInfo.activeSyllabus);
+    }
   }, [activeRoomInfo]);
 
   // ##################################################################### //
@@ -733,6 +711,17 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
+  const handleLink = (e: React.MouseEvent) => {
+    history.push('/dashboard/home');
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
+  };
+
+  const initials = (firstName: string, lastName: string) => {
+    let firstInitial = firstName.charAt(0).toUpperCase();
+    let lastInitial = lastName.charAt(0).toUpperCase();
+    return firstInitial + lastInitial;
+  };
+
   const HomeSwitch = () =>
     isTeacher ? (
       <HomeForTeachers
@@ -752,186 +741,318 @@ const Dashboard = (props: DashboardProps) => {
       />
     );
 
-  return (
-    <div className="relative h-screen flex overflow-hidden container_background">
-      {state.user.role === 'ST' && <EmojiFeedback />}
-
-      {/* <ResizablePanels> */}
-      <SideMenu
-        // setActiveRoomSyllabus={setActiveRoomSyllabus}
-        setLessonLoading={setLessonLoading}
-        setSyllabusLoading={setSyllabusLoading}
-        setActiveRoomName={setActiveRoomName}
-        updateAuthState={updateAuthState}
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        role={userData.role}
-        handleRoomSelection={handleRoomSelection}
-      />
-
-      <div className="h-full overflow-y-auto">
-        {/*<FloatingSideMenu />*/}
-        <Noticebar notifications={notifications} />
-        <div className="absolute z-100 w-6 right-1 top-0.5">
-          <span
-            className="w-auto cursor-pointer"
-            onClick={() => setOpenWalkThroughModal(true)}>
-            <BsFillInfoCircleFill className={`h-5 w-5 ${theme.textColor[themeColor]}`} />
-          </span>
-        </div>
-        <Suspense
-          fallback={
-            <div className="min-h-screen w-full flex flex-col justify-center items-center">
-              <ComponentLoading />
-            </div>
-          }>
-          <Switch>
-            <Route
-              path={`${match.url}`}
-              exact
-              render={() => {
-                if (userData && userData.role !== '') {
-                  if (userData.role === 'FLW' || userData.role === 'TR') {
-                    return <Redirect to={`${match.url}/home`} />;
-                  } else if (userData.role === 'ST') {
-                    return <Redirect to={`${match.url}/home`} />;
-                  } else {
-                    return !state.user.associateInstitute?.length ||
-                      state.user.associateInstitute?.length > 1 ? (
-                      <Redirect to={`${match.url}/manage-institutions`} />
-                    ) : (
-                      <Redirect
-                        to={`${match.url}/manage-institutions/institution?id=${state.user.associateInstitute[0].institution.id}`}
+  const DropDownMenu = () => {
+    const {theme} = useContext(GlobalContext);
+    return (
+      <Menu as="div" className="relative inline-block text-left w-auto">
+        {({open}) => (
+          <>
+            <div>
+              <Menu.Button
+                className={`${
+                  open ? 'bg-indigo-300 text-indigo-700' : ''
+                } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
+                } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
+                <div className="w-auto inline-flex items-center">
+                  <div className="w-12 h-12">
+                    {state.user.image ? (
+                      <img
+                        className="inline-block rounded-full border-2 border-gray-400"
+                        style={{width: 48, height: 48}}
+                        src={getImageFromS3Static(state.user.image)}
+                        alt=""
                       />
-                    );
-                  }
-                } else
-                  return (
-                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                      <ComponentLoading />
+                    ) : (
+                      <div
+                        style={{
+                          /* stylelint-disable */
+                          background: `${
+                            state.user.firstName
+                              ? stringToHslColor(
+                                  state.user.firstName + ' ' + state.user.lastName
+                                )
+                              : '#272730'
+                          }`,
+                          textShadow: '0.1rem 0.1rem 2px #423939b3',
+                        }}
+                        className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
+                        {`${initials(state.user.firstName, state.user.lastName)}`}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* <span>{[state.user.firstName, state.user.lastName].join(' ')}</span> */}
+                  <ChevronDownIcon
+                    className="w-8 h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
+                <div className="px-1 py-1 shadow-lg">
+                  <Menu.Item key={'role'}>
+                    <div className="p-4 border-b-0 border-gray-400">
+                      <span>
+                        {[state.user.firstName, state.user.lastName].join(' ')} (
+                        {getUserRoleString(state.user.role)})
+                      </span>
                     </div>
-                  );
-              }}
+                  </Menu.Item>
+                  <Menu.Item key={'profile'}>
+                    <div
+                      onClick={() => history.push('/dashboard/profile')}
+                      className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+                      <div className="flex-shrink-0 group block">
+                        <div className="flex items-center">
+                          <IconContext.Provider
+                            value={{
+                              size: '24px',
+                              className: 'w-auto mr-1',
+                            }}>
+                            <FiUser className="cursor-pointer" />
+                          </IconContext.Provider>
+                          <p className="text-sm ml-2 font-medium">Edit Profile</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item key={'logout'}>
+                    <SignOutButton updateAuthState={updateAuthState} />
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </>
+        )}
+      </Menu>
+    );
+  };
+
+  return (
+    <>
+      <div className="w-full bg-white">
+        <div className="flex justify-between items-center">
+          <div className="w-auto mx-5">
+            <img
+              onClick={handleLink}
+              className="h-12 w-auto cursor-pointer"
+              src={getAsset(clientKey, 'loading_logo')}
+              alt="Workflow"
             />
-
-            <Route
-              exact
-              path={`${match.url}/home`}
-              render={() => (
-                <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
-                  <HomeSwitch />
-                </ErrorBoundary>
-              )}
-            />
-
-            {(userData.role === 'ADM' ||
-              userData.role === 'TR' ||
-              userData.role === 'FLW' ||
-              userData.role === 'BLD') && (
-              <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
-            )}
-
-            <Route
-              exact
-              path={`${match.url}/classroom/:roomId`}
-              render={() => (
-                <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
-                  <Classroom
-                    classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
-                    isTeacher={isTeacher}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    activeRoomInfo={activeRoomInfo}
-                    setActiveRoomInfo={setActiveRoomInfo}
-                    activeRoomName={activeRoomName}
-                    setActiveRoomName={setActiveRoomName}
-                    visibleLessonGroup={visibleLessonGroup}
-                    setVisibleLessonGroup={setVisibleLessonGroup}
-                    lessonLoading={lessonLoading}
-                    handleRoomSelection={handleRoomSelection}
-                    syllabusLoading={syllabusLoading}
-                  />
-                </ErrorBoundary>
-              )}
-            />
-
-            <Route
-              path={`${match.url}/anthology`}
-              render={() => (
-                <Anthology
-                  studentAuthID={stateUser?.authId}
-                  studentID={stateUser?.id}
-                  studentEmail={stateUser?.email}
-                  studentName={stateUser?.name}
-                />
-              )}
-            />
-
-            <Route
-              path={`${match.url}/noticeboard`}
-              render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
-            />
-
-            <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
-
-            <Route path={`${match.url}/registration`} render={() => <Registration />} />
-
-            <Route
-              path={`${match.url}/profile`}
-              render={() => <Profile updateAuthState={updateAuthState} />}
-            />
-
-            <Route
-              path={`${match.url}/lesson-planner/:roomId`}
-              render={() => (
-                <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
-                  <LessonPlanHome
-                    classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
-                    handleRoomSelection={handleRoomSelection}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    activeRoomInfo={activeRoomInfo}
-                    setActiveRoomInfo={setActiveRoomInfo}
-                    activeRoomName={activeRoomName}
-                    setActiveRoomName={setActiveRoomName}
-                    visibleLessonGroup={visibleLessonGroup}
-                    setVisibleLessonGroup={setVisibleLessonGroup}
-                    lessonLoading={lessonLoading}
-                    setLessonLoading={setLessonLoading}
-                    syllabusLoading={syllabusLoading}
-                    setSyllabusLoading={setSyllabusLoading}
-                  />
-                </ErrorBoundary>
-              )}
-            />
-
-            <Route
-              path={`${match.url}/manage-institutions`}
-              render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
-            />
-
-            <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
-
-            <UniversalLessonBuilderProvider>
-              <Route
-                path={`${match.url}/lesson-builder`}
-                render={() => <LessonsBuilderHome />}
-              />
-
-              <Route
-                path={`${match.url}/universal-lesson-builder`}
-                render={() => <UniversalLessonBuilder />}
-              />
-            </UniversalLessonBuilderProvider>
-          </Switch>
-        </Suspense>
-        <InformationalWalkThrough
-          open={openWalkThroughModal}
-          onCancel={() => setOpenWalkThroughModal(false)}
-        />
+          </div>
+          <HeaderMegaMenu />
+          <DropDownMenu />
+        </div>
       </div>
-      {/* </ResizablePanels> */}
-    </div>
+      <div className="relative h-screen flex overflow-hidden container_background">
+        {state.user.role === 'ST' && <EmojiFeedback />}
+        {/* <ResizablePanels> */}
+        {/* <SideMenu
+          // setActiveRoomSyllabus={setActiveRoomSyllabus}
+          setLessonLoading={setLessonLoading}
+          setSyllabusLoading={setSyllabusLoading}
+          setActiveRoomName={setActiveRoomName}
+          updateAuthState={updateAuthState}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          role={userData.role}
+          handleRoomSelection={handleRoomSelection}
+        /> */}
+
+        <div className="h-full overflow-y-auto">
+          {/*<FloatingSideMenu />*/}
+          <Noticebar notifications={notifications} />
+          {/* <div className="absolute z-100 w-6 right-1 top-0.5">
+            <span
+              className="w-auto cursor-pointer"
+              onClick={() => setOpenWalkThroughModal(true)}>
+              <BsFillInfoCircleFill
+                className={`h-5 w-5 ${theme.textColor[themeColor]}`}
+              />
+            </span>
+          </div> */}
+          <Suspense
+            fallback={
+              <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                <ComponentLoading />
+              </div>
+            }>
+            <Switch>
+              <Route
+                path={`${match.url}`}
+                exact
+                render={() => {
+                  if (userData && userData.role !== '') {
+                    if (userData.role === 'FLW' || userData.role === 'TR') {
+                      return <Redirect to={`${match.url}/home`} />;
+                    } else if (userData.role === 'ST') {
+                      return <Redirect to={`${match.url}/home`} />;
+                    } else {
+                      return !state.user.associateInstitute?.length ||
+                        state.user.associateInstitute?.length > 1 ? (
+                        <Redirect to={`${match.url}/manage-institutions`} />
+                      ) : (
+                        <Redirect
+                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`}
+                        />
+                      );
+                    }
+                  } else
+                    return (
+                      <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                        <ComponentLoading />
+                      </div>
+                    );
+                }}
+              />
+
+              <Route
+                exact
+                path={`${match.url}/home`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
+                    <HomeSwitch />
+                  </ErrorBoundary>
+                )}
+              />
+
+              {(userData.role === 'SUP' ||
+                userData.role === 'ADM' ||
+                userData.role === 'TR' ||
+                userData.role === 'FLW' ||
+                userData.role === 'BLD') && (
+                <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
+              )}
+
+              <Route
+                exact
+                path={`${match.url}/classroom/:roomId`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
+                    <Classroom
+                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      isTeacher={isTeacher}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      activeRoomInfo={activeRoomInfo}
+                      setActiveRoomInfo={setActiveRoomInfo}
+                      activeRoomName={activeRoomName}
+                      setActiveRoomName={setActiveRoomName}
+                      visibleLessonGroup={visibleLessonGroup}
+                      setVisibleLessonGroup={setVisibleLessonGroup}
+                      lessonLoading={lessonLoading}
+                      handleRoomSelection={handleRoomSelection}
+                      syllabusLoading={syllabusLoading}
+                    />
+                  </ErrorBoundary>
+                )}
+              />
+
+              <Route
+                path={`${match.url}/anthology`}
+                render={() => (
+                  <Anthology
+                    studentAuthID={stateUser?.authId}
+                    studentID={stateUser?.id}
+                    studentEmail={stateUser?.email}
+                    studentName={stateUser?.name}
+                  />
+                )}
+              />
+
+              <Route
+                path={`${match.url}/noticeboard`}
+                render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
+              />
+
+              {/* <Route
+                path={`${match.url}/manage-users`}
+                render={() => <UserManagement />}
+              /> */}
+
+              <Route path={`${match.url}/registration`} render={() => <Registration />} />
+
+              <Route
+                path={`${match.url}/profile`}
+                render={() => <Profile updateAuthState={updateAuthState} />}
+              />
+
+              <Route
+                path={`${match.url}/lesson-planner/:roomId`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
+                    <LessonPlanHome
+                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      handleRoomSelection={handleRoomSelection}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      activeRoomInfo={activeRoomInfo}
+                      setActiveRoomInfo={setActiveRoomInfo}
+                      activeRoomName={activeRoomName}
+                      setActiveRoomName={setActiveRoomName}
+                      visibleLessonGroup={visibleLessonGroup}
+                      setVisibleLessonGroup={setVisibleLessonGroup}
+                      lessonLoading={lessonLoading}
+                      setLessonLoading={setLessonLoading}
+                      syllabusLoading={syllabusLoading}
+                      setSyllabusLoading={setSyllabusLoading}
+                    />
+                  </ErrorBoundary>
+                )}
+              />
+
+              <Route
+                path={`${match.url}/manage-institutions`}
+                render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+              />
+
+              <Route
+                path={`${match.url}/question-bank`}
+                render={() => <QuestionBank />}
+              />
+
+              {/* <UniversalLessonBuilderProvider>
+                <Route
+                  path={`${match.url}/lesson-builder`}
+                  render={() => <LessonsBuilderHome />}
+                />
+
+                <Route
+                  path={`${match.url}/universal-lesson-builder`}
+                  render={() => <UniversalLessonBuilder />}
+                />
+              </UniversalLessonBuilderProvider> */}
+            </Switch>
+          </Suspense>
+          {/* <InformationalWalkThrough
+            open={openWalkThroughModal}
+            onCancel={() => setOpenWalkThroughModal(false)}
+          /> */}
+        </div>
+        {/* </ResizablePanels> */}
+      </div>
+      <div className="w-full flex justify-center items-center bg-gray-900">
+        {/* <DropDownMenu /> */}
+
+        {/* <NavLink to="/dashboard"> */}
+        {/* <img
+          className="h-16 px-4 py-2"
+          src={getAsset(clientKey, 'main_logo')}
+          alt="Logo"
+        /> */}
+        {/* </NavLink> */}
+      </div>
+    </>
   );
 };
 

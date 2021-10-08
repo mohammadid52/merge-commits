@@ -25,8 +25,9 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 import useDictionary from '../../../../customHooks/dictionary';
 import UserListLoader from './UserListLoader';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
-const UserLookup = () => {
+const UserLookup = ({isInInstitute}: any) => {
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
@@ -64,9 +65,9 @@ const UserLookup = () => {
   ];
 
   const sortByList = [
-    { id: 1, name: 'Name', value: 'lastName' },
-    { id: 2, name: 'Role', value: 'role' },
-    { id: 4, name: 'Status', value: 'status' },
+    {id: 1, name: 'Name', value: 'lastName'},
+    {id: 2, name: 'Role', value: 'role'},
+    {id: 4, name: 'Status', value: 'status'},
   ];
 
   const goNextPage = () => {
@@ -238,6 +239,8 @@ const UserLookup = () => {
 
   const fetchAllUsersList = async () => {
     const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+    const isBuilder = state.user.role === 'BLD';
+    const isAdmin = state.user.role === 'ADM';
     const teacherAuthID = state.user.authId;
 
     let authIds: any[] = [];
@@ -269,6 +272,19 @@ const UserLookup = () => {
         } finally {
         }
       }
+      if (isTeacher || isBuilder || isAdmin) {
+        const staff: any = await API.graphql(
+          graphqlOperation(customQueries.listStaffWithBasicInfo, {
+            filter: {
+              ...createFilterToFetchSpecificItemsOnly(
+                state.user.associateInstitute.map((item: any) => item.institution.id),
+                'institutionID'
+              ),
+            },
+          })
+        );
+        authIds = staff.data?.listStaffs.items.map((staff: any) => staff.staffAuthID);
+      }
 
       const authIdFilter: any = authIds.map((item: any) => {
         return {
@@ -278,10 +294,10 @@ const UserLookup = () => {
         };
       });
 
-      if ((isTeacher && authIdFilter.length > 0) || !isTeacher) {
+      if ((authIdFilter.length && (isTeacher || isBuilder || isAdmin)) || !isTeacher) {
         let users: any;
         let response: any;
-        if (isTeacher) {
+        if (isTeacher || isBuilder) {
           users = await API.graphql(
             graphqlOperation(queries.listPersons, {
               filter: {
@@ -356,46 +372,54 @@ const UserLookup = () => {
   }, [sortingType.value, sortingType.asc]);
 
   // if (status !== 'done') {
-    // return <LessonLoading />;
+  // return <LessonLoading />;
   // }
 
   return (
-    <div className={`w-full h-full`}>
+    <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle
-          title={UserLookupDict[userLanguage]['title']}
-          subtitle={UserLookupDict[userLanguage]['subtitle']}
-        />
-        <div className="flex justify-end py-4 mb-4">
+      {!isInInstitute && <BreadCrums items={breadCrumsList} />}
+      <div className="flex justify-between items-center">
+        {isInInstitute ? (
+          <h3 className="text-lg leading-6 text-gray-600 w-auto">Users</h3>
+        ) : (
+          <SectionTitle
+            title={UserLookupDict[userLanguage]['title']}
+            subtitle={UserLookupDict[userLanguage]['subtitle']}
+          />
+        )}
+        <div className="flex justify-end mb-4">
           <SearchInput
             value={searchInput.value}
             onChange={setSearch}
             onKeyDown={searchUserFromList}
             closeAction={removeSearchAction}
-            style="mr-4 w-full"
+            style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
           />
-          <Selector
-            placeholder={UserLookupDict[userLanguage]['sortby']}
-            list={sortByList}
-            selectedItem={sortingType.name}
-            onChange={setSortingValue}
-            btnClass="rounded-r-none  border-r-none "
-            arrowHidden={true}
-          />
-          <button
-            className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-            onClick={toggleSortDimention}>
-            <IconContext.Provider
-              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-              {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-            </IconContext.Provider>
-          </button>
+          {!isInInstitute && (
+            <>
+              <Selector
+                placeholder={UserLookupDict[userLanguage]['sortby']}
+                list={sortByList}
+                selectedItem={sortingType.name}
+                onChange={setSortingValue}
+                btnClass="rounded-r-none  border-r-none "
+                arrowHidden={true}
+              />
+              <button
+                className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                onClick={toggleSortDimention}>
+                <IconContext.Provider
+                  value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                  {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
+                </IconContext.Provider>
+              </button>
+            </>
+          )}
           <Buttons
             label={UserLookupDict[userLanguage]['button']['add']}
             onClick={handleLink}
-            btnClass="mr-4 w-full"
+            btnClass={isInInstitute ? '' : 'mr-4 w-full'}
             Icon={AiOutlineUsergroupAdd}
           />
         </div>
@@ -404,8 +428,11 @@ const UserLookup = () => {
       {/* List / Table */}
       <div className="flex flex-col">
         <div className="-my-2 py-2">
-          <div className="white_back py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
-            <div className="h-8/10 px-4">
+          <div
+            className={`${
+              isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
+            } mb-8 align-middle rounded-lg"`}>
+            <div className={`h-8/10 ${isInInstitute ? '' : 'px-4'}`}>
               <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UserLookupDict[userLanguage]['name']}</span>
@@ -419,7 +446,7 @@ const UserLookup = () => {
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   {UserLookupDict[userLanguage]['action']}
                 </div>
-                {state.user.role !== 'ST' ? (
+                {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {UserLookupDict[userLanguage]['action']}
                   </div>
@@ -454,7 +481,7 @@ const UserLookup = () => {
             </div>
 
             {/* Pagination And Counter */}
-            <div className="flex justify-center px-8 my-4">
+            <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>
               {!searchInput.isActive && (
                 <Fragment>
                   <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">

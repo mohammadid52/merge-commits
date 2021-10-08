@@ -56,7 +56,9 @@ const LessonCourse = ({
   // }, [institution]);
 
   useEffect(() => {
-    setSelectedCurriculumList(selectedCurriculums);
+    if(selectedCurriculums?.length){
+      setSelectedCurriculumList(selectedCurriculums);
+    }
   }, [selectedCurriculums]);
 
   // useEffect(() => {
