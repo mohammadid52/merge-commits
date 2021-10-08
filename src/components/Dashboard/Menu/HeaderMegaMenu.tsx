@@ -82,12 +82,12 @@ const HeaderMegaMenu = () => {
       key: 'class',
       type: 'dropdown',
       children: [
-        {
-          title: Institute_info[userLanguage]['TABS']['CLASSES'],
-          key: 'class',
-          redirectionUrl: `${baseUrl}/class`,
-          active: location.pathname.indexOf('class') > -1,
-        },
+        // {
+        //   title: Institute_info[userLanguage]['TABS']['CLASSES'],
+        //   key: 'class',
+        //   redirectionUrl: `${baseUrl}/class`,
+        //   active: location.pathname.indexOf('class') > -1,
+        // },
         {
           title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
           key: 'class_room',

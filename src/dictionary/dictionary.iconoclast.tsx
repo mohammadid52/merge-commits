@@ -1656,6 +1656,8 @@ const RoomEDITdict: any = {
     LOCATION_PLACEHOLDER: 'Enter location here',
     CLASS_DETAILS_TAB_HEADING: 'Class Details',
     CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_STUDENT_TAB_HEADING: 'Students',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'Add students to classroom',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',

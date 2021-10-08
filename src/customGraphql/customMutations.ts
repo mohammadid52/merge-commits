@@ -591,6 +591,7 @@ export const createClassStudent = /* GraphQL */ `
       status
       studentEmail
       studentAuthID
+      createdAt
     }
   }
 `;

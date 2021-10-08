@@ -1,25 +1,20 @@
 import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {HiPencil} from 'react-icons/hi';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
-import {DeleteActionBtn} from '../../../../Atoms/Buttons/DeleteActionBtn';
+import Selector from '@atoms/Form/Selector';
+import AddButton from '@atoms/Buttons/AddButton';
+import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
+import SearchSelectorWithAvatar from '@atoms/Form/SearchSelectorWithAvatar';
+import Loader from '@atoms/Loader';
 
 import {
   stringToHslColor,
   getInitialsFromString,
   initials,
   createFilterToFetchAllItemsExcept,
-  createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
 import {getImageFromS3} from '../../../../../utilities/services';
 import {groupOptions} from '../../../../../utilities/staticData';
@@ -27,29 +22,25 @@ import {getAsset} from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
-import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
-import {BsArrowLeft} from 'react-icons/bs';
-import Loader from '@components/Atoms/Loader';
 
 interface EditClassProps {
   instId: string;
-  toggleUpdateState: () => void;
+  classId: string;
+  toggleUpdateState?: () => void;
+  roomData: any;
 }
 
-const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
+const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
-  const urlParams = useQuery();
   const match = useRouteMatch();
-  const {classId}: any = useParams();
 
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
   const defaultNewMember = {id: '', name: '', value: '', avatar: '', group: ''};
@@ -130,21 +121,26 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
   const fetchClassData = async (classId: string) => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getClassDetails, {id: classId})
+        graphqlOperation(customQueries.listClassStudentsForRoom, {
+          filter: {classID: {eq: classId}},
+        })
       );
-      const classData = result.data.getClass;
-      setClassData({
-        ...classData,
-        id: classData.id,
-        name: classData.name,
-        institute: {
-          id: classData.institution.id,
-          name: classData.institution.name,
-          value: classData.institution.name,
-        },
-      });
+      // const result: any = await API.graphql(
+      //   graphqlOperation(customQueries.getClassDetails, {id: classId})
+      // );
+      // const classData = result.data.getClass;
+      // setClassData({
+      //   ...classData,
+      //   id: classData.id,
+      //   name: classData.name,
+      //   institute: {
+      //     id: classData.institution.id,
+      //     name: classData.institution.name,
+      //     value: classData.institution.name,
+      //   },
+      // });
       const selectedStudentsIds: any = [];
-      const selectedStudents = classData.students.items.map((stu: any) => {
+      const selectedStudents = result.data.listClassStudents?.items.map((stu: any) => {
         selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
@@ -228,16 +224,16 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
     setFilteredStudents([]);
   };
 
-  const onNameChange = (e: any) => {
-    setClassData({
-      ...classData,
-      name: e.target.value,
-    });
-    setUnsavedChanges(true);
-    if (messages.show) {
-      setMessages({show: false, message: '', isError: false});
-    }
-  };
+  // const onNameChange = (e: any) => {
+  //   setClassData({
+  //     ...classData,
+  //     name: e.target.value,
+  //   });
+  //   setUnsavedChanges(true);
+  //   if (messages.show) {
+  //     setMessages({show: false, message: '', isError: false});
+  //   }
+  // };
 
   const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
@@ -258,13 +254,13 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
   const addStudentInClass = async () => {
     if (newMember.id) {
       const {id, name, avatar} = newMember;
-      await saveClassStudent(id, classData.id);
+      await saveClassStudent(id);
       setNewMember(defaultNewMember);
     }
     setFilteredStudents([]);
   };
 
-  const saveClassStudent = async (id: string, classId: string) => {
+  const saveClassStudent = async (id: string) => {
     try {
       setAdding(true);
       const selected = students.find((item: any) => item.id === id);
@@ -298,6 +294,12 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
         message: 'Student added successfully',
         isError: false,
       });
+      setTimeout(() => {
+        setAddMessage({
+          message: '',
+          isError: false,
+        });
+      }, 2000);
     } catch (err) {
       console.log('saveClassStudent', err);
       setAddMessage({
@@ -332,18 +334,23 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
 
   const onGroupEdit = async (studentId: string, group: string) => {
     setUpdating(true);
-    await API.graphql(
-      graphqlOperation(customMutations.updateClassStudent, {
-        input: {id: studentId, group},
-      })
-    );
-    setClassStudents((prevStudent) =>
-      prevStudent.map((student) =>
-        student.id === studentId ? {...student, group} : student
-      )
-    );
-    setStudentIdToEdit('');
-    setUpdating(false);
+    try {
+      await API.graphql(
+        graphqlOperation(customMutations.updateClassStudent, {
+          input: {id: studentId, group},
+        })
+      );
+      setClassStudents((prevStudent) =>
+        prevStudent.map((student) =>
+          student.id === studentId ? {...student, group} : student
+        )
+      );
+      setStudentIdToEdit('');
+      setUpdating(false);
+    } catch (error) {
+      console.log(error,'errorerror')
+      setUpdating(false);
+    }
   };
 
   const onDelete = (id: any) => {
@@ -386,7 +393,7 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
 
   useEffect(() => {
     if (classId) fetchClassData(classId);
-    else history.push('/dashboard/manage-institutions');
+    // else history.push('/dashboard/manage-institutions');
     // try {
     //   console.log('Here.......')
     //   const input = { classStudents: [{
@@ -407,27 +414,27 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
     // } catch (err) {
     //   console.log('ERRRRROR', err);
     // }
-  }, []);
+  }, [classId]);
 
-  const checkUniqClassName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
-          filter: {
-            institutionID: {eq: classData.institute.id},
-            name: {eq: classData.name},
-          },
-        })
-      );
-      return list.data.listClasss.items.length === 0 ? true : false;
-    } catch {
-      setMessages({
-        show: true,
-        message: dictionary.messages.processerror,
-        isError: true,
-      });
-    }
-  };
+  // const checkUniqClassName = async () => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listClasss, {
+  //         filter: {
+  //           institutionID: {eq: classData.institute.id},
+  //           name: {eq: classData.name},
+  //         },
+  //       })
+  //     );
+  //     return list.data.listClasss.items.length === 0 ? true : false;
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: dictionary.messages.processerror,
+  //       isError: true,
+  //     });
+  //   }
+  // };
 
   const validateForm = async () => {
     if (classData.name.trim() === '') {
@@ -444,19 +451,21 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
         isError: true,
       });
       return false;
-    } else if (classData.name.trim() !== '' && previousName !== classData.name) {
-      const isUniq = await checkUniqClassName();
-      if (!isUniq) {
-        setMessages({
-          show: true,
-          message: dictionary.messages.classexist,
-          isError: true,
-        });
-        return false;
-      } else {
-        return true;
-      }
-    } else {
+    }
+    //  else if (classData.name.trim() !== '' && previousName !== classData.name) {
+    //   const isUniq = await checkUniqClassName();
+    //   if (!isUniq) {
+    //     setMessages({
+    //       show: true,
+    //       message: dictionary.messages.classexist,
+    //       isError: true,
+    //     });
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // }
+    else {
       return true;
     }
   };
@@ -566,18 +575,8 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
       </div> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
-          {dictionary.TITLE}
+          {roomData.name}
         </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-          onClick={() =>
-            history.push(`/dashboard/manage-institutions/institution/${instId}/class`)
-          }>
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
-        </div>
       </div>
 
       {loading ? (
@@ -593,7 +592,7 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
             {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {dictionary.heading}
           </h3> */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div className="col-span-4">
                 <FormInput
                   value={classData.name}
@@ -615,7 +614,7 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
                 transparent={!unsavedChanges}
                 disabled={!unsavedChanges || saving}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
@@ -701,7 +700,9 @@ const EditClass = ({instId, toggleUpdateState}: EditClassProps) => {
                             user.role !== 'BLD' ? 'cursor-pointer' : ''
                           } `}
                           onClick={() =>
-                            user.role !== 'BLD' ? movetoStudentProfile(item.student.id) : null
+                            user.role !== 'BLD'
+                              ? movetoStudentProfile(item.student.id)
+                              : null
                           }>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (

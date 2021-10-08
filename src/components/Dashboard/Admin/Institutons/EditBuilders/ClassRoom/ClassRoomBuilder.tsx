@@ -3,7 +3,6 @@ import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-do
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
 import {useQuery} from '../../../../../../customHooks/urlParam';
 
 import * as queries from '../../../../../../graphql/queries';
@@ -13,12 +12,12 @@ import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
-import {goBackBreadCrumb} from '../../../../../../utilities/functions';
 import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepComponent';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
 import ClassRoomForm from './ClassRoomForm';
 import CourseSchedule from './CourseSchedule';
 import {BsArrowLeft} from 'react-icons/bs';
+import EditClass from '../EditClass';
 
 interface ClassRoomBuilderProps {
   instId: string;
@@ -53,37 +52,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
 
-  const {BreadcrumsTitles, CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
-
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: roomData?.institute?.name || BreadcrumsTitles[userLanguage]['LOADING'],
-      goBack: true,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
-      url: `/dashboard/manage-institutions/institution/${roomData?.institute?.id}/class-rooms`,
-      last: false,
-    },
-    match.url.search('room-edit') > -1
-      ? {
-          title: roomData.name || BreadcrumsTitles[userLanguage]['LOADING'],
-          url: `/dashboard/room-edit?id=${roomId}`,
-          last: true,
-        }
-      : {
-          title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
-          url: `${match.url}`,
-          last: true,
-        },
-  ];
+  const {CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -101,14 +70,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       ...warnModal,
       show: !warnModal.show,
     });
-  };
-
-  const goBack = () => {
-    if (unsavedChanges) {
-      toggleModal();
-    } else {
-      goBackBreadCrumb(breadCrumsList, history);
-    }
   };
 
   const getInstituteInfo = async (instId: string) => {
@@ -187,48 +148,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
-        isError: true,
-      });
-    }
-  };
-
-  const getClassLists = async (allInstiId: string[]) => {
-    const instId = roomData?.institute?.id;
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
-        })
-      );
-      const listClass = list.data.listClasss?.items;
-      if (listClass.length === 0) {
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
-          isError: true,
-        });
-      } else {
-        const sortedList = listClass.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        );
-        const filteredClassList = sortedList.filter((classItem: any) => {
-          return (
-            classItem?.institution.isServiceProvider === false ||
-            (classItem?.institution.isServiceProvider === true &&
-              classItem.institution.id === instId)
-          );
-        });
-        const classList = filteredClassList.map((item: any, i: any) => ({
-          id: item.id,
-          name: `${item.name ? item.name : ''}`,
-          value: `${item.name ? item.name : ''}`,
-        }));
-        setClassList(classList);
-      }
-    } catch {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['unableclass'],
         isError: true,
       });
     }
@@ -377,92 +296,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     }
   };
 
-  const saveRoomDetails = async () => {
-    setLoading(true);
-    const isValid = await validateForm();
-    if (isValid) {
-      try {
-        const input = {
-          id: roomData.id,
-          institutionID: roomData?.institute?.id,
-          classID: roomData.classRoom.id,
-          teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id)
-            .authId,
-          teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id)
-            .email,
-          name: roomData.name,
-          maxPersons: roomData.maxPersons,
-        };
-        const newRoom: any = await API.graphql(
-          graphqlOperation(mutation.updateRoom, {input: input})
-        );
-
-        const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        await saveRoomTeachers(roomData.id);
-        await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
-        setUnsavedChanges(false);
-        history.push(
-          `/dashboard/manage-institutions/institution/${roomData?.institute?.id}/class-rooms`
-        );
-      } catch {
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-          isError: true,
-        });
-      }
-    }
-  };
-
-  const saveRoomTeachers = async (roomID: string) => {
-    const updatedTeachers = selectedCoTeachers;
-    const originalTeachers = originalTeacher;
-
-    const deletedItems: any[] = [];
-    const newItems: any[] = [];
-
-    originalTeachers.forEach((d) => {
-      if (updatedTeachers.map((d) => d.id).indexOf(d.id) === -1) {
-        deletedItems.push(d.rowId);
-      }
-    });
-
-    updatedTeachers.forEach((d) => {
-      if (originalTeachers.map((d) => d.id).indexOf(d.id) === -1) {
-        const input = {
-          roomID,
-          teacherID: d.id,
-          teacherEmail: d.email,
-          teacherAuthID: d.authId,
-        };
-        newItems.push(input);
-      }
-    });
-
-    if (newItems.length > 0) {
-      await Promise.all(
-        newItems.map(async (teacher) => {
-          await API.graphql(
-            graphqlOperation(customMutations.createRoomCoTeachers, {input: teacher})
-          );
-        })
-      );
-    }
-
-    if (deletedItems.length > 0) {
-      await Promise.all(
-        deletedItems.map(async (id) => {
-          const input = {
-            id: id,
-          };
-          await API.graphql(
-            graphqlOperation(mutation.deleteRoomCoTeachers, {input: input})
-          );
-        })
-      );
-    }
-  };
-
   const filterCurricularData = (currId: string) => {
     const currentList = [...curricularList];
     const selectedCurr = currentList.find((item) => item.id === currId);
@@ -561,7 +394,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     const serviceProviders = items.map((item: any) => item.providerID);
     const allInstiId = [...serviceProviders, instId];
     getTeachersList(allInstiId);
-    getClassLists(allInstiId);
     getCurricularList(allInstiId);
   };
 
@@ -585,14 +417,14 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
 
   useEffect(() => {
     fetchRoomDetails();
-  }, []);
+  }, [roomId]);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?id=${instId}&step=${step}`;
+    const redirectionUrl = `${match.url}?step=${step}`;
     history.push(redirectionUrl);
   };
 
-  const {teacher} = roomData;
+  const {classID} = roomData;
 
   const steps: IStepElementInterface[] = [
     {
@@ -601,23 +433,31 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       stepValue: 'overview',
     },
     {
+      title: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_HEADING,
+      description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
+      stepValue: 'students',
+      disabled: !roomId,
+    },
+    {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
-      disabled: !roomData?.id,
+      disabled: !roomId,
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
-      disabled: !roomData?.id,
+      disabled: !roomId,
     },
   ];
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
-        return <ClassRoomForm instId={instId}/>;
+        return <ClassRoomForm instId={instId} />;
+      case 'students':
+        return <EditClass instId={instId} classId={classID} roomData={roomData}/>;
       case 'unit-planner':
         return <CourseSchedule roomData={roomData} />;
       case 'class-dynamics':
@@ -656,7 +496,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         <div
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
-            history.push(`/dashboard/manage-institutions/institution/${instId}/class-rooms`)
+            history.push(
+              `/dashboard/manage-institutions/institution/${instId}/class-rooms`
+            )
           }>
           <span className="w-auto mr-2">
             <BsArrowLeft />
