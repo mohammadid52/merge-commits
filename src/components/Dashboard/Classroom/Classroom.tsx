@@ -117,7 +117,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const { classRoomDict, BreadcrumsTitles } = useDictionary(clientKey);
+  
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: 'RESET_ROOMDATA'})
+    }
+  },[])
 
   // ##################################################################### //
   // #################### ROOM SWITCHING (DEPRECATED) #################### //
@@ -261,16 +268,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state.roomData.lessons]);
 
-  const sortedLessons = (lessonArray: any[], sortProperty: string) => {
-    return lessonArray.sort((a: any, b: any) => {
-      if (a[sortProperty] > b[sortProperty]) {
-        return 1;
-      }
-      if (a[sortProperty] < b[sortProperty]) {
-        return -1;
-      }
-    });
-  };
+  // const sortedLessons = (lessonArray: any[], sortProperty: string) => {
+  //   return lessonArray.sort((a: any, b: any) => {
+  //     if (a[sortProperty] > b[sortProperty]) {
+  //       return 1;
+  //     }
+  //     if (a[sortProperty] < b[sortProperty]) {
+  //       return -1;
+  //     }
+  //   });
+  // };
 
   // ##################################################################### //
   // ########################### ADDITIONAL UI ########################### //

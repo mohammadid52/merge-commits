@@ -360,12 +360,14 @@ const User = ({instituteId}: IUserProps) => {
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
-      const demographicCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope !== 'private')
-        .reverse();
-      const privateCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope === 'private')
-        .reverse();
+      const demographicCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope !== 'private'
+      );
+      // .reverse();
+      const privateCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope === 'private'
+      );
+      // .reverse();
 
       const personalInfo: any = {...userData};
 
