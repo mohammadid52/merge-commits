@@ -548,14 +548,14 @@ const Dashboard = (props: DashboardProps) => {
     let mapSyllabusToSequence =
       sequenceArray && sequenceArray.length > 0
         ? getSyllabusInSequence
-            ?.map((syllabus: any) => syllabus?.unit)
-            .map((syllabus: any) => ({
+            ?.map((syllabus: any) => ({
               ...syllabus,
+              ...syllabus.unit,
               lessons: {
-                ...syllabus.lessons,
+                ...syllabus.unit.lessons,
                 items:
-                  syllabus?.lessons?.items && syllabus?.lessons?.items.length > 0
-                    ? syllabus.lessons.items
+                  syllabus?.unit.lessons?.items?.length > 0
+                    ? syllabus.unit.lessons.items
                         .map((t: any) => {
                           let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
                           return {...t, index};
@@ -564,9 +564,9 @@ const Dashboard = (props: DashboardProps) => {
                     : [],
               },
             }))
+            .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
 
-    // console.log('mapSyllabusToSequence ', mapSyllabusToSequence);
 
     return mapSyllabusToSequence;
   };
@@ -581,7 +581,7 @@ const Dashboard = (props: DashboardProps) => {
       );
       // @ts-ignore
       let response = await getCurriculum.data.getCurriculum;
-
+      
       let syllabi = response.universalSyllabus.items;
       let sequence = response.universalSyllabusSeq;
 

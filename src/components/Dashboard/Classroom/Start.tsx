@@ -104,11 +104,11 @@ const Start: React.FC<StartProps> = ({
       const syllabusData = state.roomData.syllabus.find(
         (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
       );
-
+        
       if (syllabusData) {
         let filter: any = {
           studentID: {eq: state.user?.id},
-          curriculumID: {eq: syllabusData.curriculumID},
+          curriculumID: {eq: syllabusData.curriculumId},
           syllabusID: {eq: syllabusData.id},
           lessonID: {eq: lessonKey},
         };

@@ -4345,6 +4345,10 @@ export const getCurriculumForClasses = /* GraphQL */ `
                 unit
                 sequence
                 status
+                lesson{
+                  duration
+                  title
+                }
                 complete
                 roster
                 viewing

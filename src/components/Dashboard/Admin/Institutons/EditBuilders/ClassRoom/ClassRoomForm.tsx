@@ -136,39 +136,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     removeErrorMsg();
   };
 
-  const selectInstitute = async (val: string, name: string, id: string) => {
-    if (roomData.institute.id !== id) {
-      setRoomData({
-        ...roomData,
-        institute: {
-          id: id,
-          name: name,
-          value: val,
-        },
-        teacher: {id: '', name: '', value: ''},
-        coTeachers: [{}],
-        classRoom: {id: '', name: '', value: ''},
-        curricular: {id: '', name: '', value: ''},
-      });
-      setUnsavedChanges(true);
-
-      removeErrorMsg();
-    }
-  };
-
-  const selectClass = (val: string, name: string, id: string) => {
-    setRoomData({
-      ...roomData,
-      classRoom: {
-        id: id,
-        name: name,
-        value: val,
-      },
-    });
-    setUnsavedChanges(true);
-
-    removeErrorMsg();
-  };
   const selectCurriculum = (val: string, name: string, id: string) => {
     setRoomData({
       ...roomData,
