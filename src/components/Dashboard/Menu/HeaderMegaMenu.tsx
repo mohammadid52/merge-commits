@@ -103,6 +103,12 @@ const HeaderMegaMenu = () => {
           redirectionUrl: `${baseUrl}/class-rooms`,
           active: location.pathname.indexOf('room') > -1,
         },
+        (user.role === 'FLW' || user.role === 'TR') && {
+          title: Institute_info[userLanguage]['TABS']['LIVE_CLASS_ROOM'],
+          key: 'live_classroom',
+          redirectionUrl: `/dashboard/home`,
+          active: location.pathname.indexOf('room') > -1,
+        },
       ].filter(Boolean),
     },
     {

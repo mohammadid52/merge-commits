@@ -57,7 +57,7 @@ const InstitutionInfoView = (instProps: any) => {
                       />
                     )} // Create new class
                   />
-                  <Route
+                  {/* <Route
                     path={`${match.url}/class-edit/:classId`}
                     exact
                     render={() => (
@@ -66,7 +66,7 @@ const InstitutionInfoView = (instProps: any) => {
                         toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Edit current class
-                  />
+                  /> */}
                   <Route
                     path={`${match.url}/class-rooms`}
                     exact

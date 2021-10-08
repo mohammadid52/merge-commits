@@ -1640,15 +1640,19 @@ export const listCurriculumsForLessons = /* GraphQL */ `
         universalSyllabus {
           items {
             id
-            name
-            lessons {
-              items {
-                id
-                lessonID
+            unitId
+            unit {
+              name
+              type
+              lessons {
+                items {
+                  id
+                  lessonID
+                }
               }
+              universalLessonsSeq
             }
-            universalLessonsSeq
-            curriculumID
+            curriculumId
           }
           nextToken
         }
@@ -4237,19 +4241,22 @@ export const getClassroomSyllabus = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
-          lessons {
-            items {
-              id
-              lesson {
-                duration
-                title
+          unitId
+          unit {
+            name
+            type
+            lessons {
+              items {
+                id
+                lesson {
+                  duration
+                  title
+                }
               }
             }
+            universalLessonsSeq
+            status
           }
-          universalLessonsSeq
-          status
           createdAt
           updatedAt
         }
@@ -4335,6 +4342,10 @@ export const getCurriculumForClasses = /* GraphQL */ `
                 unit
                 sequence
                 status
+                lesson{
+                  duration
+                  title
+                }
                 complete
                 roster
                 viewing
