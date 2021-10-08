@@ -105,12 +105,12 @@ const CurricularView = (props: CurricularViewProps) => {
     },
     {
       title: curricularData.institute?.name,
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
-      url: `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
       last: false,
     },
     {

@@ -495,3 +495,22 @@ export const weekdaysOption: any = [
   {id: 4, name: 'Thursday'},
   {id: 5, name: 'Friday'},
 ];
+
+export const targetAudienceForIconoclast = [
+  {id:1, name: "Middle School"},
+  {id:2, name: "High School"},
+  {id:3, name: "All"},
+]
+
+export const periodOptions = [
+  {id: 1, name: '.25'},
+  {id: 2, name: '.33'},
+  {id: 3, name: '.5'},
+  {id: 4, name: '.66'},
+  {id: 5, name: '.75'},
+  {id: 6, name: '1'},
+  {id: 7, name: '2'},
+  {id: 8, name: '3'},
+  {id: 9, name: '4'},
+  {id: 10, name: '5'},
+];

@@ -12,7 +12,11 @@ import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
 
-const LessonsBuilderHome = () => {
+interface ILessonBuilderHomeProps {
+  instId: string;
+}
+
+const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
   const {dispatch} = useContext(GlobalContext);
   const {
     editMode,
@@ -84,32 +88,34 @@ const LessonsBuilderHome = () => {
 
   return (
     <>
-      <div className={`w-full h-full px-2 xl:px-8 py-8 flex justify-center`}>
+      <div className={`w-full h-full flex justify-center`}>
         {/*<UniversalLessonBuilderProvider>*/}
         <Switch>
           <Route
             exact
             path={`${match.url}`}
-            render={() => <LessonsList />} // Lessons builder List Home
+            render={() => <LessonsList isInInstitution instId={instId} />} // Lessons builder List Home
           />
           <Route
             exact
-            path={`${match.url}/lesson/add`}
+            path={`${match.url}/add`}
             render={() => (
               <LessonBuilder
                 designersList={designersList}
                 institutionList={institutionList}
+                instId={instId}
               />
             )} // Add new lesson form
           />
           <Route
             exact
-            path={`${match.url}/lesson/edit`}
+            path={`${match.url}/:lessonId`}
             render={() => (
               // <LessonEdit designersList={designersList} />
               <LessonBuilder
                 designersList={designersList}
                 institutionList={institutionList}
+                instId={instId}
               />
             )} // Edit lesson, assessment or survey form
           />
@@ -124,7 +130,7 @@ const LessonsBuilderHome = () => {
             render={() => <LessonPlan />}
           />
           <Route
-            path={`${match.url}/lesson/page-builder`}
+            path={`${match.url}/:lessonId/page-builder`}
             render={() => <UniversalLessonBuilder />}
           />
         </Switch>
@@ -137,6 +143,7 @@ const LessonsBuilderHome = () => {
         open={newLessonPlanShow}
         setOpen={setNewLessonPlanShow}
         activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+        instId={instId}
       />
     </>
   );

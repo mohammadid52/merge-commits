@@ -78,7 +78,7 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
         </div>
       </div>
 
-      <CallLinkLauncher callback={handleSectionButtons} />
+      {/* <CallLinkLauncher callback={handleSectionButtons} /> */}
     </div>
   );
 };

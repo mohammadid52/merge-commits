@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {BiBook, BiSun} from 'react-icons/bi';
@@ -48,7 +49,7 @@ const LessonPlanNavigation = ({
   const updatePage = (id: string) => {
     setSelectedPageID(id);
     history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 
@@ -121,7 +122,9 @@ const LessonPlanNavigation = ({
               {...provided.droppableProps}
               className="bg-white border-b h-12 border-gray-200 flex"
               aria-label="Breadcrumb">
-              <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+              <ol
+                key={nanoid(4)}
+                className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
                 <li className="flex w-auto">
                   <div className="flex items-center">
                     <a href="#" className="text-gray-600">

@@ -1,27 +1,27 @@
-import React, {Fragment, useContext, useState} from 'react';
-import {useHistory} from 'react-router';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {remove} from 'lodash';
+import React, {Fragment, useContext, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {FaTasks} from 'react-icons/fa';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Buttons from '../../../../Atoms/Buttons';
-import Loader from '../../../../Atoms/Loader';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-
+import {useHistory} from 'react-router';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import Loader from '../../../../Atoms/Loader';
+import PageWrapper from '../../../../Atoms/PageWrapper';
 import Popover from '../../../../Atoms/Popover';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 interface LessonPlansListProps {
   lessonId: string;
   lessonName: string;
   loading: boolean;
   universalLessonDetails: {
+    institutionID?: string;
     lessonPlan: UniversalLessonPage[];
   };
 }
@@ -30,7 +30,7 @@ interface PageRowProps {
   index: number;
   page: UniversalLessonPage;
   toggleDeleteModal: (show: boolean, id?: string) => void;
-  lessonPagePreview: (id: string) => void;
+  lessonPagePreview: (id: string, preview?: boolean) => void;
 }
 
 const PageRow = ({page, lessonPagePreview, toggleDeleteModal, index}: PageRowProps) => {
@@ -44,6 +44,7 @@ const PageRow = ({page, lessonPagePreview, toggleDeleteModal, index}: PageRowPro
     <Draggable draggableId={`${page.id}`} index={index} key={`${page.id}`}>
       {(provided) => (
         <div
+          onClick={() => lessonPagePreview(page.id, false)}
           key={index}
           className="flex justify-between bg-white w-full border-b-0 border-gray-200"
           ref={provided.innerRef}
@@ -167,10 +168,9 @@ const LessonActivities = ({
     // );
   };
 
-  const lessonPagePreview = (id: string) => {
-    setPreviewMode(true);
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+  const lessonPagePreview = (id: string, preview: boolean = true) => {
+    setPreviewMode(preview);
+    history.push(`/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

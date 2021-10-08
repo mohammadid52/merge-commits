@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+#container {
+  height: 801px;
+  overflow: visible;
+  padding: 0;
+  position: relative;
+}
+
+.preview-note {
+  font-family: 'Patrick Hand', cursive;
+  border: transparent;
+  user-select: text !important;
+  display: inline-block;
+  box-sizing: border-box;
+
+  overflow: scroll;
+
+  padding: 0;
+  box-shadow: 6px 7px 12px -5px rgba(0, 0, 0, 0.75);
+  position: relative;
+  margin: 10px;
+  padding: 25px;
+
+  // pseudo-elements
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &::first-line {
+    position: relative;
+    font-weight: bold;
+  }
+}
+
+.sticky-container {
+  ._sticky {
+    & textarea {
+      font-family: 'Patrick Hand', cursive;
+      background: transparent;
+      border: transparent;
+      user-select: text !important;
+      display: inline-block;
+      box-sizing: border-box;
+
+      overflow: scroll;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      // pseudo-elements
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &:focus {
+        cursor: text !important;
+        outline: none;
+        box-shadow: none;
+      }
+
+      &::first-line {
+        position: relative;
+        font-weight: bold;
+      }
+    }
+    box-shadow: 6px 7px 12px -5px rgba(0, 0, 0, 0.75);
+    position: relative;
+    max-width: 520px;
+    max-height: 250px;
+    margin: 10px;
+  }
+}
+
+.blackboard {
+  position: relative;
+  border: tan solid 12px;
+  border-top: #bda27e solid 12px;
+  border-left: #b19876 solid 12px;
+  border-bottom: #c9ad86 solid 12px;
+  box-shadow: 0px 0px 6px 5px rgba(58, 18, 13, 0), 0px 0px 0px 2px #c2a782,
+    0px 0px 0px 4px #a58e6f, 3px 4px 8px 5px rgba(0, 0, 0, 0.5);
+  background-image: radial-gradient(
+      circle at left 30%,
+      rgba(34, 34, 34, 0.3),
+      rgba(34, 34, 34, 0.3) 80px,
+      rgba(34, 34, 34, 0.5) 100px,
+      rgba(51, 51, 51, 0.5) 160px,
+      rgba(51, 51, 51, 0.5)
+    ),
+    linear-gradient(
+      215deg,
+      transparent,
+      transparent 100px,
+      #222 260px,
+      #222 320px,
+      transparent
+    ),
+    radial-gradient(circle at right, #111, rgba(51, 51, 51, 1));
+  background-color: #333;
+}
+
+.blackboard:before {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      175deg,
+      transparent,
+      transparent 40px,
+      rgba(120, 120, 120, 0.1) 100px,
+      rgba(120, 120, 120, 0.1) 110px,
+      transparent 220px,
+      transparent
+    ),
+    linear-gradient(200deg, transparent 80%, rgba(50, 50, 50, 0.3)),
+    radial-gradient(
+      ellipse at right bottom,
+      transparent,
+      transparent 200px,
+      rgba(80, 80, 80, 0.1) 260px,
+      rgba(80, 80, 80, 0.1) 320px,
+      transparent 400px,
+      transparent
+    );
+  border: #2c2c2c solid 2px;
+
+  color: rgba(238, 238, 238, 0.7);
+  text-align: center;
+  padding-top: 20px;
+}

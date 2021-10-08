@@ -1,3 +1,4 @@
+import {setLocalStorageData} from '@utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {getAsset} from '../../../assets';
@@ -69,8 +70,8 @@ const Home = (props: ClassroomControlProps) => {
   const getTeacherList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          if (dataObj?.class?.rooms.items.length > 0) {
-            const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+          if (dataObj?.class?.room) {
+            const teacherObj = dataObj?.class?.room?.teacher;
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
                 teacher?.firstName === teacherObj?.firstName &&
@@ -93,9 +94,9 @@ const Home = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items.length > 0) {
-          if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-            item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
+        if (item?.class?.room) {
+          if (item?.class?.room.coTeachers.items.length > 0) {
+            item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
                 coTeachersList.push(_item.teacher);
@@ -169,32 +170,34 @@ const Home = (props: ClassroomControlProps) => {
 
     classList &&
       classList.length > 0 &&
-      classList.forEach((item: {rooms: {items: any[]}; name: string; id: string}) => {
-        item.rooms.items.forEach(async (_item: any, index) => {
-          const curriculum = _item.curricula?.items[0].curriculum;
-          if (curriculum !== null) {
-            const imagePath = curriculum?.image;
+      classList.forEach(
+        async (item: {room: any; name: string; id: string}, idx: number) => {
+          if (item.room) {
+            const curriculum = item.room.curricula?.items[0].curriculum;
+            if (curriculum !== null) {
+              const imagePath = curriculum?.image;
 
-            const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-            const teacherProfileImg = await (_item.teacher.image
-              ? getImageFromS3(_item.teacher.image)
-              : false);
+              const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+              const teacherProfileImg = await (item.room.teacher.image
+                ? getImageFromS3(item.room.teacher.image)
+                : false);
 
-            const modifiedItem = {
-              ..._item,
-              roomName: item?.name,
-              bannerImage: image,
-              teacherProfileImg,
-              roomIndex: index,
-            };
+              const modifiedItem = {
+                ...item.room,
+                roomName: item?.name,
+                bannerImage: image,
+                teacherProfileImg,
+                roomIndex: idx,
+              };
 
-            modifiedClassList.push(modifiedItem);
-            if (!uniqIds.includes(curriculum?.id)) {
-              uniqIds.push(curriculum?.id);
+              modifiedClassList.push(modifiedItem);
+              if (!uniqIds.includes(curriculum?.id)) {
+                uniqIds.push(curriculum?.id);
+              }
             }
           }
-        });
-      });
+        }
+      );
 
     return modifiedClassList;
   };
@@ -202,7 +205,9 @@ const Home = (props: ClassroomControlProps) => {
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
-      setStudentsList(await studentsListWithImages);
+      const studentList = await studentsListWithImages;
+      setStudentsList(studentList);
+      setLocalStorageData('student_list', studentList);
       setCoTeachersList(await coTeacherListWithImages);
     };
     if (homeData && homeData.length > 0) {

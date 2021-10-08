@@ -1,15 +1,37 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
-import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
-import {capitalizeFirstLetter, wait} from '../../../../utilities/functions';
-import Info from '../../../Atoms/Alerts/Info';
-import Buttons from '../../../Atoms/Buttons';
-import Modal from '../../../Atoms/Modal';
-import useUnsavedChanges from '../hooks/useUnsavedChanges';
+import Info from '@atoms/Alerts/Info';
+import Buttons from '@atoms/Buttons';
+import Modal from '@atoms/Modal';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {useQuery} from '@customHooks/urlParam';
+import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {PartContent} from '@interfaces/UniversalLessonInterfaces';
+import useUnsavedChanges from '@lesson/UniversalLessonBuilder/hooks/useUnsavedChanges';
+import {CoreBuilder} from '@lesson/UniversalLessonBuilder/views/CoreBuilder';
+import {Accordion} from '@uiComponents/Accordian';
+import AddContentDialog from '@UlbModals/AddContentDialog';
+import CheckpointComponent from '@UlbModals/CheckpointFormDialog';
+import DividerModal from '@UlbModals/DividerModal';
+import DownloadModal from '@UlbModals/DownloadModal';
+import HeaderModalComponent from '@UlbModals/HeaderFormDialog';
+import HighlighterFormDialog from '@UlbModals/HighlighterFormDialog';
+import InputModalComponent from '@UlbModals/InputFormDialog';
+import JumbotronFormDialog from '@UlbModals/JumbotronModalDialog';
+import KeywordModalDialog from '@UlbModals/KeywordModalDialog';
+import LinestarterModalDialog from '@UlbModals/LinestarterModalDialog';
+import LinksModalDialog from '@UlbModals/LinksModalDialog';
+import NewPageDialog from '@UlbModals/NewPageDialog';
+import NotesModalDialog from '@UlbModals/NotesModalDialog';
+import ParaModalComponent from '@UlbModals/ParaFormDialog';
+import ReviewSliderModal from '@UlbModals/ReviewSliderModal';
+import TableModal from '@UlbModals/TableModal';
+import TagInputDialog from '@UlbModals/TagInputDialog';
+import UniversalInputDialog from '@UlbModals/UniversalInputDialog';
+import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
+import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
+import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
+import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -22,33 +44,11 @@ import {
   SELECT_MANY,
   SELECT_ONE,
   TABLE,
-} from '../UI/common/constants';
-import ImageFormComponent from '../UI/FormElements/ImageComponent';
-import ImageGallery from '../UI/ImageGallery';
-import LessonPlanNavigation from '../UI/LessonPlanNavigation';
-import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
-import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
-import DividerModal from '../UI/ModalDialogs/DividerModal';
-import DownloadModal from '../UI/ModalDialogs/DownloadModal';
-import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
-import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
-import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
-import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
-import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
-import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
-import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
-import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
-import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
-import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
-import TableModal from '../UI/ModalDialogs/TableModal';
-import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
-import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
-import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
-import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
-import WritingExerciseModal from '../UI/ModalDialogs/WritingExerciseModal';
-import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
-import {Accordion} from '../UI/UIComponents/Accordian';
-import {CoreBuilder} from './CoreBuilder';
+} from '@UlbUI/common/constants';
+import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
+import ImageGallery from '@UlbUI/ImageGallery';
+import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
+import {capitalizeFirstLetter, wait} from '@utilities/functions';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -377,6 +377,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
       case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
+      case 'notes-form':
+        return <NotesModalDialog {...commonProps} />;
       case FORM_TYPES.JUMBOTRON:
         return (
           <JumbotronFormDialog classString={selectedContentClass} {...commonProps} />
@@ -500,6 +502,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
         return 'Review Slider Component';
+      case 'notes-form':
+        return 'Notes Component';
       case FORM_TYPES.WRITING_EXERCISE:
       case 'writing-exercise-form-default':
         return 'Writing Exercise Component';
@@ -511,12 +515,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     UnsavedModal,
     askBeforeClose,
-    unsavedChanges,
+
     setUnsavedChanges,
   } = useUnsavedChanges(closeAction);
 
   const [optionsCollapse, setOptionsCollapse] = useState(true);
-  const [modalHeight, setModalHeight] = useState(null);
 
   return (
     <div

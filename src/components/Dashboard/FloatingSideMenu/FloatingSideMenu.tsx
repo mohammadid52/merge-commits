@@ -1,5 +1,6 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
+import {findIndex} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {SetStateAction, useContext, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -155,7 +156,14 @@ const FloatingSideMenu = () => {
       );
       const notesDataRows = notesData.data.listUniversalJournalDatas.items;
 
-      if (notesDataRows?.length === 0) {
+      const notesFormIndex = findIndex(
+        notesDataRows,
+        (d: any) => !d.entryData[0].domID.includes('notes_form')
+      );
+
+      const isNotesCreated = notesFormIndex > -1;
+
+      if (!isNotesCreated) {
         const newJournalEntry = await createJournalData();
         console.log('newJournalEntry - ', newJournalEntry);
         setNotesData({
@@ -270,12 +278,13 @@ const FloatingSideMenu = () => {
     <div>
       <div className={`relative`}>
         <div
+          style={{zIndex: 3000}}
           className={`
                relative
                w-0
                h-full
               ${menuOpenLevel === 3 ? 'mx-auto' : `ml-auto ${scrollbarMarginRight}`}
-              flex flex-row flex-1 z-100`}>
+              flex flex-row flex-1`}>
           <div
             className={`
               fixed

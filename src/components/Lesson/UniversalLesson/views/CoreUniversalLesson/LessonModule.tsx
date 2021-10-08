@@ -2,7 +2,7 @@ import {Transition} from '@headlessui/react';
 import map from 'lodash/map';
 import React, {useState} from 'react';
 import ReactHtmlParser from 'react-html-parser';
-import {UniversalLesson} from '../../../../../API';
+import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import Table from '../../../../Molecules/Table';
 import ThemeModal from '../../../../Molecules/ThemeModal';
 import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
@@ -236,7 +236,9 @@ const EvidenceTab = ({
           className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
           leaveTo="opacity-0">
           {checkedEvidence.map((evidence: any) => (
-            <div className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
+            <div
+              key={evidence.id}
+              className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
               <AiFillCheckCircle className="mr-2 w-auto text-green-500" />
               <p className="text-gray-900 dark:text-white  w-auto">{evidence.name}</p>
             </div>
@@ -284,6 +286,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
     <ThemeModal
       dark={currentLesson?.darkMode || true}
       subHeader={currentLesson?.summary}
+      //@ts-ignore
       header={`${currentLesson?.title} - Lesson Overview`}
       open={open}
       setOpen={setOpen}>
@@ -303,9 +306,11 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                 <>
                   {currentLesson?.objectives[0] ? (
                     <div>
-                      <p className="text-gray-400 font-medium text-lg leading-3">
+                      <div
+                        style={{color: 'rgba(203, 213, 224, 1) !important'}}
+                        className="text-gray-400 font-medium text-lg leading-3">
                         {ReactHtmlParser(currentLesson?.objectives[0])}
-                      </p>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center min-h-32">
@@ -320,19 +325,25 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
             <AnimatedContainer show={onResourcesTab} animationType="scale">
               {onResourcesTab && (
                 <>
-                  {currentLesson?.studentMaterials ? (
-                    <div>
-                      <p className="text-gray-400 font-medium text-lg leading-3">
-                        {currentLesson?.studentMaterials}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center min-h-32">
-                      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
-                        No Resources Listed
-                      </p>
-                    </div>
-                  )}
+                  {
+                    //@ts-ignore
+                    currentLesson?.studentMaterials ? (
+                      <div>
+                        <p className="text-gray-400 font-medium text-lg leading-3">
+                          {
+                            //@ts-ignore
+                            currentLesson?.studentMaterials
+                          }
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center min-h-32">
+                        <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
+                          No Resources Listed
+                        </p>
+                      </div>
+                    )
+                  }
                 </>
               )}
             </AnimatedContainer>

@@ -1,6 +1,9 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import Buttons from '@components/Atoms/Buttons';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
+import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {removeExtension} from '@utilities/functions';
 import {getImageFromS3Static} from '@utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
@@ -14,14 +17,10 @@ import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {useQuery} from '../../../../../customHooks/urlParam';
 import * as mutations from '../../../../../graphql/mutations';
 import {getLocalStorageData} from '../../../../../utilities/localStorage';
 import Modal from '../../../../Atoms/Modal';
 import {UPLOAD_KEYS} from '../../../constants';
-import {FormControlProps} from '../FormBlock';
-import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
-import Buttons from '@components/Atoms/Buttons';
 
 interface IFile {
   _status: 'progress' | 'failed' | 'success' | 'other';
@@ -250,14 +249,17 @@ const AttachmentBlock = ({
   index,
   required,
   id,
-}: FormControlProps) => {
+}: IFormBlockProps) => {
   const {
+    lessonState,
     userLanguage,
     state: {
       user,
       lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
     },
   } = useContext(GlobalContext);
+
+  const lessonType = lessonState?.lessonData?.type;
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -354,9 +356,16 @@ const AttachmentBlock = ({
 
   const [uploading, setUploading] = useState(false);
 
-  /**
-   * This Function will store all image data to createPersonFiles table
-   */
+  const getSizeInBytesInt = (size: number): number => {
+    const inKB = size / 1024;
+    const inMB = inKB / 1024;
+    if (inMB < 1) {
+      return parseInt(inKB.toFixed(2));
+    } else {
+      return parseInt(inMB.toFixed(2));
+    }
+  };
+
   const onUploadAllFiles = async () => {
     setUploading(true);
     try {
@@ -366,10 +375,12 @@ const AttachmentBlock = ({
         files: map(filesUploading, (file: any) => ({
           fileName: file.fileName,
           fileKey: file.fileKey,
+          fileSize: getSizeInBytesInt(file.file?.size),
         })),
         lessonPageID: roomInfo?.activeLessonId,
         lessonID: roomInfo?.activeLessonId,
         syllabusLessonID: roomInfo?.activeSyllabus,
+        lessonType: lessonType,
         roomID: roomInfo?.id,
       };
 
@@ -378,7 +389,7 @@ const AttachmentBlock = ({
       );
       resetAll();
     } catch (error) {
-      console.error('@uploadFileDataToTable: ', error.message);
+      console.error('@uploadFileDataToTable: ', error);
     } finally {
       setUploading(false);
     }
@@ -445,7 +456,7 @@ const AttachmentBlock = ({
 
   const handleFileSelection = async (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
-      uploadFile(e.target.files[0]);
+      uploadFile(e.target.files);
     }
   };
 
@@ -491,7 +502,6 @@ const AttachmentBlock = ({
                 onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
                 type="file"
                 className="hidden"
-                multiple={false}
               />
               <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
               {isDragActive ? (
@@ -574,4 +584,4 @@ const AttachmentBlock = ({
     </>
   );
 };
-export default AttachmentBlock;
+export default React.memo(AttachmentBlock);

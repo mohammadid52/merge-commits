@@ -591,6 +591,7 @@ export const createClassStudent = /* GraphQL */ `
       status
       studentEmail
       studentAuthID
+      createdAt
     }
   }
 `;
@@ -951,6 +952,7 @@ export const createCheckpoint = /* GraphQL */ `
       objectives
       designers
       language
+      questionSeq
       createdAt
       updatedAt
     }
@@ -977,6 +979,7 @@ export const updateCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      questionSeq
       createdAt
       updatedAt
     }
@@ -1381,6 +1384,18 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const deleteCurriculumUnits = /* GraphQL */ `
+  mutation DeleteCurriculumUnits(
+    $input: DeleteCurriculumUnitsInput!
+    $condition: ModelcurriculumUnitsConditionInput
+  ) {
+    deleteCurriculumUnits(input: $input, condition: $condition) {
+      id
+      unitId
     }
   }
 `;

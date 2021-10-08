@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import { GlobalContext } from '@contexts/GlobalContext';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import Buttons from '../../Atoms/Buttons';
 import ContentCard from '../../Atoms/ContentCard';
@@ -13,6 +14,10 @@ const StudentsTiles = (props: {
   isTeacher?: boolean;
 }) => {
   const {studentsList, title, state, isTeacher = false} = props;
+
+  const {
+    state: {user},
+  } = useContext(GlobalContext);
 
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
@@ -135,7 +140,7 @@ const StudentsTiles = (props: {
                           className=""
                           onClick={() => {
                             if (student.id && isTeacher) {
-                              history.push(`manage-users/user?id=${student.id}`);
+                              history.push(`/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${student.id}`);
                             }
                           }}>
                           <div className="space-y-4">

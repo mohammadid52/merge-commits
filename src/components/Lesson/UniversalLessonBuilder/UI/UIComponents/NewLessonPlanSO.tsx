@@ -107,6 +107,7 @@ interface NewLessonPlanSOInterface {
   editMode: boolean;
   pageDetails: any;
   activePageData: UniversalLessonPage;
+  instId: string
 }
 
 interface ErrorInterface {
@@ -133,7 +134,7 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
   label: '',
 };
 
-const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
+const NewLessonPlanSO = ({instId, open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -151,6 +152,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
     setNewLessonPlanShow,
     setUniversalLessonDetails,
   } = useULBContext();
+  
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {
@@ -352,7 +354,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
 
           if (data.id && !editMode) {
             history.push(
-              `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+              `/dashboard/manage-institutions/institution/${instId}/lessons/${lessonId}/page-builder?pageId=${pageId}`
             );
           }
         }

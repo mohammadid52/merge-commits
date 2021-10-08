@@ -1,13 +1,13 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import {globalReducer} from '../reducers/GlobalReducer';
-import {globalState} from '../state/GlobalState';
-import {getClientKey} from '../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useEffect, useReducer} from 'react';
 import * as mutations from '../graphql/mutations';
-import {lessonReducer} from '../reducers/LessonReducer';
-import {lessonState as lessonStateObject} from '../state/LessonState';
+import {globalReducer} from '../reducers/GlobalReducer';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
+import {lessonReducer} from '../reducers/LessonReducer';
+import {globalState} from '../state/GlobalState';
 import {lessonControlState} from '../state/LessonControlState';
+import {lessonState as lessonStateObject} from '../state/LessonState';
+import {getClientKey} from '../utilities/strings';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -151,6 +151,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
    * state,dispatch --> Used in dashboard etc.
    * lessonState, lessonStateDispatch --> Used in lesson state
    */
+
   const [state, dispatch] = useReducer(globalReducer, globalState);
   const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
   const [controlState, controlDispatch] = useReducer(

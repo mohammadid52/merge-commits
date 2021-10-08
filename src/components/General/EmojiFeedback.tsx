@@ -25,7 +25,7 @@ const EmojiFeedback = () => {
 
   const [lastMoodSubmission, setLastMoodSubmission] = useState<any>({});
 
-  const [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     if (isEmpty(lastMoodSubmission)) {
@@ -45,7 +45,8 @@ const EmojiFeedback = () => {
       const res: any = await API.graphql(
         graphqlOperation(customQueries.listPersonSentimentss, payload)
       );
-      setLastMoodSubmission(res.data.listPersonSentimentss?.items[0]);
+      const responseItems = res.data.listPersonSentimentss?.items[0];
+      setLastMoodSubmission(responseItems);
     } catch (error) {
       console.error(error);
     } finally {
@@ -70,6 +71,8 @@ const EmojiFeedback = () => {
       } else {
         setShowSentimentModal(false);
       }
+    } else if (!fetching && isEmpty(lastMoodSubmission)) {
+      setShowSentimentModal(true);
     }
   }, [fetching, lastMoodSubmission]);
 

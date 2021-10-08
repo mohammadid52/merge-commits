@@ -1,6 +1,7 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
+import {BsArrowLeft} from 'react-icons/bs';
 import {IoClose} from 'react-icons/io5';
 import {useHistory, useLocation} from 'react-router-dom';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -23,10 +24,13 @@ import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithA
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 
-interface ClassBuilderProps {}
+interface ClassBuilderProps {
+  instId: string;
+  toggleUpdateState: () => void;
+}
 
 const ClassBuilder = (props: ClassBuilderProps) => {
-  const {} = props;
+  const {instId, toggleUpdateState} = props;
   const history = useHistory();
   const location = useLocation();
   const initialData = {
@@ -51,7 +55,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [allStudentList, setAllStudentList] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {classBuilderdict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {classBuilderdict, CommonlyUsedDict, BreadcrumsTitles} = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -77,7 +81,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['Class_Creation'],
-      url: '/dashboard/class-creation',
+      url: `/dashboard/manage-institutions/institution/${classData.instituteId}/class-creation`,
       last: true,
     },
   ];
@@ -99,7 +103,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const getBasicInstitutionInfo = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: params.get('id'),
+        id: instId,
       })
     );
     setClassData((prevData) => ({
@@ -238,7 +242,6 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           isError: false,
         });
         setSelectedStudent([]);
-        const instId = params.get('id');
         setClassData({...initialData, instituteId: instId});
         setIsLoading(false);
       })
@@ -252,10 +255,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   };
 
   const saveClassDetails = async () => {
+    setIsLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
-        setIsLoading(true);
         const input = {
           name: classData.name,
           institutionID: classData.instituteId,
@@ -265,7 +268,9 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         );
         const classId = newClass.data.createClass.id;
         saveAllStudentsData(classId);
+        toggleUpdateState();
       } catch {
+        setIsLoading(false);
         setMessages({
           show: true,
           message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['SAVECLASSERROR'],
@@ -350,7 +355,6 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   };
 
   useEffect(() => {
-    const instId = params.get('id');
     if (instId) {
       setClassData({
         ...classData,
@@ -376,28 +380,40 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   return (
     <div className="">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
+      {/* <BreadCrums items={breadCrumsList} /> */}
+      {/* <div className="flex justify-between">
         <SectionTitle
           title={classBuilderdict[userLanguage]['TITLE']}
           subtitle={classBuilderdict[userLanguage]['SUBTITLE']}
         />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+        <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             btnClass=""
             label="Go Back"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div> */}
+        </div>
+      </div> */}
+      <div className="px-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {classBuilderdict[userLanguage]['TITLE']}
+        </h3>
+        <div
+          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() =>
+            history.push(`/dashboard/manage-institutions/institution/${instId}/class`)
+          }>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
+        </div>
       </div>
 
       {/* Body section */}
-      <PageWrapper>
+      <div className="px-8">
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {classBuilderdict[userLanguage]['HEADING']}
-          </h3>
           <div className="">
             <div className="px-3 py-4">
               <FormInput
@@ -499,7 +515,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             disabled={loading ? true : false}
           />
         </div>
-      </PageWrapper>
+      </div>
     </div>
   );
 };

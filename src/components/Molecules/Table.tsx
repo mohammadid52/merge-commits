@@ -35,12 +35,15 @@ const Table = ({
                   config?.headers?.bgColor || 'iconoclast:bg-main curate:bg-main'
                 } `}>
                 <tr>
-                  {map(headers, (header) => (
+                  {map(headers, (header, idx) => (
                     <th
+                      key={header}
                       scope="col"
                       className={`${
                         config?.headers?.textColor || 'text-gray-500'
-                      } px-6 py-3  text-left text-xs font-medium  uppercase tracking-wider`}>
+                      } px-6 py-3 ${
+                        idx === 0 ? 'w-72' : ''
+                      } text-left text-xs font-medium  uppercase tracking-wider`}>
                       {header}
                     </th>
                   ))}
@@ -49,7 +52,7 @@ const Table = ({
               <tbody className="max-h-88 overflow-y-auto dark-scroll">
                 {dataList.map((item, idx) => (
                   <tr
-                    key={item.id}
+                    key={idx}
                     className={` ${
                       config?.dataList?.bgColor
                         ? config?.dataList?.bgColor
@@ -59,11 +62,14 @@ const Table = ({
                           : `${config?.dataList?.patternConfig.secondColor}`
                         : 'bg-transparent'
                     }`}>
-                    {map(headers, (header) => (
+                    {map(headers, (header, _idx) => (
                       <td
+                        key={item.id + '-' + header}
                         className={`${
                           config?.dataList?.textColor || 'text-gray-500'
-                        } px-6 py-4  whitespace-nowrap text-sm`}>
+                        } px-6 py-4 ${
+                          _idx === 0 ? 'w-72' : ''
+                        } whitespace-nowrap text-sm`}>
                         {item[camelCase(header.toLowerCase())]}
                       </td>
                     ))}

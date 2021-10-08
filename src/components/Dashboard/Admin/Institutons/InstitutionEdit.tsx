@@ -17,10 +17,12 @@ import Loader from '../../../Atoms/Loader';
 import DroppableMedia from '../../../Molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
+import ServiceProviders from './Listing/ServiceProviders';
 
 interface InstitutionEditProps {
   institute: InstInfo;
   toggleUpdateState: () => void;
+  updateServiceProviders: Function;
 }
 interface InstInfo {
   id: string;
@@ -35,16 +37,20 @@ interface InstInfo {
   image: string;
   phone: string;
   isServiceProvider: boolean;
+  serviceProviders: {
+    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+  };
 }
 
-const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
-  const [editFormValues, setEditFormValues] = useState<InstInfo>(instEditPrps.institute);
+const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
+  const [editFormValues, setEditFormValues] = useState<InstInfo>(instEditProps.institute);
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {InstitutionEditDict} = useDictionary(clientKey);
+  const {InstitutionEditDict, BUTTONS: ButtonDict} = useDictionary(clientKey);
   const [showModal, setShowModal] = useState({
     warnModal: false,
     infoModal: false,
@@ -53,6 +59,10 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const [error, setError] = useState({
     show: true,
     errorMsg: '',
+  });
+  const [serverMessage, setServerMessage] = useState({
+    message: '',
+    isError: false,
   });
   const history = useHistory();
 
@@ -132,6 +142,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     } else {
       removeErrorMSg();
       try {
+        setSaving(true);
         const input = {
           id: editFormValues.id,
           name: editFormValues.name,
@@ -150,8 +161,19 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         await API.graphql(
           graphqlOperation(customMutations.updateInstitution, {input: input})
         );
-        instEditPrps.toggleUpdateState();
-        history.goBack();
+        setSaving(false);
+        instEditProps.toggleUpdateState();
+        setServerMessage({
+          isError: false,
+          message: InstitutionEditDict[userLanguage]['messages']['saveMsg'],
+        });
+        setTimeout(() => {
+          setServerMessage({
+            isError: false,
+            message: '',
+          });
+        }, 2000);
+        // history.goBack();
       } catch {
         setError({
           show: true,
@@ -247,7 +269,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
       const update: any = await API.graphql(
         graphqlOperation(customMutations.updateInstitution, {input: input})
       );
-      instEditPrps.toggleUpdateState();
+      instEditProps.toggleUpdateState();
     } catch (error) {
       setError({
         show: true,
@@ -257,24 +279,25 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   };
 
   useEffect(() => {
-    setEditFormValues(instEditPrps.institute);
-  }, [instEditPrps.institute]);
+    setEditFormValues(instEditProps.institute);
+  }, [instEditProps.institute]);
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(instEditPrps.institute.image);
+      const imageUrl: any = await getImageFromS3(instEditProps.institute.image);
       setImageUrl(imageUrl);
     }
     getUrl();
-  }, [instEditPrps.institute.image]);
+  }, [instEditProps.institute.image]);
 
   useEffect(() => {
-    if (instEditPrps.institute.image !== editFormValues.image) {
+    if (instEditProps.institute.image !== editFormValues.image) {
       updateImagUrlToDb();
     }
   }, [editFormValues.image]);
 
   const {
+    id,
     name,
     type,
     website,
@@ -286,6 +309,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     zip,
     phone,
     isServiceProvider,
+    serviceProviders,
   } = editFormValues;
 
   const mediaRef = React.useRef(null);
@@ -465,11 +489,49 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   onChange={onServiceProviderChange}
                   name="isServiceProvider"
                   label={
-                    InstitutionEditDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']
+                    name
+                      ? `${name} ${InstitutionEditDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL_WITH_NAME']}`
+                      : InstitutionEditDict[userLanguage]['FORM'][
+                          'SERVICEPROVIDER_LABEL_WITHOUT_NAME'
+                        ]
                   }
                 />
               </div>
             </div>
+            {serverMessage.message && (
+              <span className="text-sm text-green-600 text-center my-6 mx-3 w-full">
+                {serverMessage.message}
+              </span>
+            )}
+            <div className="px-4 w-full flex justify-end">
+              <div className="flex justify-end w-auto pb-4">
+                {/* <Buttons
+                  label={InstitutionEditDict[userLanguage]['BUTTON']['CANCEL']}
+                  btnClass="w-full px-6 py-4 mr-2"
+                  onClick={history.goBack}
+                  transparent
+                /> */}
+                <Buttons
+                  label={
+                    saving
+                      ? ButtonDict[userLanguage]['SAVING']
+                      : InstitutionEditDict[userLanguage]['BUTTON']['SAVE']
+                  }
+                  btnClass="w-full px-6 py-4 ml-2"
+                  onClick={handleEditFormSubmit}
+                  disabled={saving}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-8">
+            <ServiceProviders
+              serviceProviders={serviceProviders}
+              instId={id}
+              updateServiceProviders={instEditProps.updateServiceProviders}
+              instName={name}
+            />
           </div>
 
           {error.show ? (
@@ -477,7 +539,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           ) : null}
 
           {/* Cancel-save buttons */}
-          <div className="px-4 w-full flex justify-end">
+          {/* <div className="px-4 w-full flex justify-end">
             <div className="flex w-4/10">
               <Buttons
                 label={InstitutionEditDict[userLanguage]['BUTTON']['CANCEL']}
@@ -491,7 +553,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                 onClick={handleEditFormSubmit}
               />
             </div>
-          </div>
+          </div> */}
         </form>
 
         {/* Image cropper */}

@@ -2,7 +2,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch, useParams} from 'react-router-dom';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -42,7 +42,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  const {lessonId}:any = useParams();
   const tab = params.get('tab');
 
   const breadCrumsList = [

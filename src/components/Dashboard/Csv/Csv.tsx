@@ -1,21 +1,23 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useEffect, useState, useContext} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import Selector from '../../Atoms/Form/Selector';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-import { CSVLink } from 'react-csv';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import {CSVLink} from 'react-csv';
 import DateAndTime from '../DateAndTime/DateAndTime';
-import { getAsset } from '../../../assets';
+import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
-import { orderBy, uniqBy } from 'lodash';
+import {orderBy, uniqBy} from 'lodash';
 
-interface Csv { }
+interface ICsvProps {
+  institutionId?: string;
+}
 
-const Csv = (props: Csv) => {
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
-  const { CsvDict } = useDictionary(clientKey);
+const Csv = ({institutionId}: ICsvProps) => {
+  const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
+  const {CsvDict} = useDictionary(clientKey);
   const [institutions, setInstitutions] = useState([]);
   const [selectedInst, setSelectedInst] = useState(null);
 
@@ -55,7 +57,7 @@ const Csv = (props: Csv) => {
     surveyFirst: '-',
     surveyLast: '-',
     takenSurvey: 0,
-    notTakenSurvey: 0
+    notTakenSurvey: 0,
   });
 
   // methods to clear state data
@@ -115,11 +117,64 @@ const Csv = (props: Csv) => {
     setInstitutionsLoading(false);
   };
 
+  const getBasicInstitutionInfo = async (institutionId: string) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionBasicInfo, {
+          id: institutionId
+        })
+      );
+      setSelectedInst({
+        id: institutionId,
+        name: result?.data?.getInstitution.name,
+        value: result?.data?.getInstitution.name,
+      });
+    } catch (error) {
+      
+    }
+  };
+
+  useEffect(() => {
+    if (institutionId) {
+      getBasicInstitutionInfo(institutionId);
+      fetchClassRooms();
+    }
+  }, [institutionId]);
+
+  const fetchClassRooms = async () => {
+    setClassRoomLoading(true);
+    let instCRs: any = [];
+
+    let classrooms: any = await API.graphql(
+      graphqlOperation(customQueries.getInstClassRooms, {
+        id: institutionId,
+      })
+    );
+    classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+    classrooms = classrooms.map((cr: any) => {
+      let curriculum =
+        cr.curricula?.items && Array.isArray(cr.curricula?.items)
+          ? cr.curricula?.items[0].curriculum
+          : null;
+      instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+      return {
+        id: cr.id,
+        name: cr.name,
+        value: cr.name,
+        class: {...cr.class},
+        curriculum,
+      };
+    });
+    setClassRoomsList(classrooms);
+    setInstClassRooms(instCRs);
+    setClassRoomLoading(false);
+  };
+
   const onInstSelect = async (id: string, name: string, value: string) => {
     setClassRoomLoading(true);
     try {
       let sInst = selectedInst;
-      let inst = { id, name, value };
+      let inst = {id, name, value};
       setSelectedInst(inst);
       if (!sInst || sInst.id !== inst.id) {
         resetInstitution();
@@ -136,12 +191,12 @@ const Csv = (props: Csv) => {
             cr.curricula?.items && Array.isArray(cr.curricula?.items)
               ? cr.curricula?.items[0].curriculum
               : null;
-          instCRs.push({ id: cr.id, name: cr.name, value: cr.name });
+          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
             id: cr.id,
             name: cr.name,
             value: cr.name,
-            class: { ...cr.class },
+            class: {...cr.class},
             curriculum,
           };
         });
@@ -159,7 +214,7 @@ const Csv = (props: Csv) => {
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = { id, name, value };
+      let cr = {id, name, value};
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
@@ -181,25 +236,34 @@ const Csv = (props: Csv) => {
 
   const fetchUnits = async (curriculumId: string, studentsEmails: any) => {
     try {
-      let curriculumData: any = await API.graphql(
+      let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
           id: curriculumId,
         })
       );
-      let units = curriculumData?.data.getCurriculum?.universalSyllabus?.items || [];
+      let units = curriculumUnits?.data.listCurriculumUnitss?.items || [];
       units = units.map((syl: any) => {
-        return { id: syl.id, name: syl.name, value: syl.name };
+        let unitData = syl.unit;
+        return { id: unitData.id, name: unitData.name, value: unitData.name };
       });
+      // console.log('units', units)
       setUnits(units);
+      let curriculumData: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumCheckpointsData, {
+          id: curriculumId,
+        })
+      );
+      // console.log('curriculumData', curriculumData)
       let curricularCheckpoints =
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
       let cCheckpoints: any = [];
+      // console.log('curricularCheckpoints', curricularCheckpoints)
       curricularCheckpoints.map((cc: any) => {
         cCheckpoints.push(cc.checkpoint.id);
         let questions = cc.checkpoint?.questions?.items || [];
         questions.map((q: any) => {
-          demographicsQues.push({ question: q.question, checkpointID: cc.checkpoint.id });
+          demographicsQues.push({question: q.question, checkpointID: cc.checkpoint.id});
         });
       });
       setUnitsLoading(false);
@@ -220,7 +284,7 @@ const Csv = (props: Csv) => {
       graphqlOperation(customQueries.getStudentResponse, {
         filter: {
           ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-          syllabusLessonID: { eq: syllabusLessonID },
+          syllabusLessonID: {eq: syllabusLessonID},
           ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email'),
         },
         limit: 1000,
@@ -232,7 +296,7 @@ const Csv = (props: Csv) => {
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
-    let unit = { id, name, value };
+    let unit = {id, name, value};
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
   };
@@ -289,7 +353,7 @@ const Csv = (props: Csv) => {
   };
 
   const onSurveySelect = async (id: string, name: string, value: string) => {
-    let survey = { id, name, value };
+    let survey = {id, name, value};
     if (selectedSurvey) {
       clearCSVData();
     }
@@ -298,184 +362,322 @@ const Csv = (props: Csv) => {
   };
 
   const listQuestions = async (lessonId: string) => {
-    try {
-      let surveyQuestions: any = await API.graphql(
-        graphqlOperation(customQueries.getSurveyQuestions, {
+    try {      
+      let universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
         })
       );
-      let checkpoints = surveyQuestions?.data?.getLesson?.checkpoints?.items;
-      const questions: any = [];
-      let cCheckpoints: any = [];
-      checkpoints.map((cp: any) => {
-        cCheckpoints.push(cp.checkpointID);
-        let ques = cp?.checkpoint?.questions?.items;
-        ques.map((q: any) => {
-          questions.push({ question: q.question, checkpointID: cp.checkpointID });
-        });
-      });
+      let lessonObject = universalLesson.data.getUniversalLesson;
+      let questionsListdata = await getQuestionListFromLesson(lessonObject)
+      let questionList = questionsListdata.questionList
+      // console.log('questionList', questionList)
+      let questions: any = [];
+      if (questionList) {
+        questionList.map((listItem: any) => {
+          listItem.map((item: any) => {
+            questions.push({ question: {
+              id: item.questionID, 
+              question: item.questionString,
+              type: item.type,
+              options: item.options,
+            }})
+          })
+        })
+      }
+
       setSurveyQuestions(questions);
       let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
-      await getStudentsSurveyQuestionsResponse(
-        cCheckpoints,
-        syllabusLes.syllabusLessonID
-      );
+      await getStudentsSurveyQuestionsResponse(syllabusLes.syllabusLessonID, lessonId);
       setIsCSVReady(true);
-      return;
     } catch (err) {
       console.log('list questions error', err);
     }
   };
 
-  const getStudentsSurveyQuestionsResponse = async (
-    checkpointIds: any,
-    syllabusLessonID: string
-  ) => {
-    if (checkpointIds.length) {
-      let studsEmails = classStudents.map((stu: any) => stu.email);
-      let curriculumData: any = await API.graphql(
-        graphqlOperation(customQueries.getStudentResponse, {
-          filter: {
-            ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-            syllabusLessonID: { eq: syllabusLessonID },
-            ...createFilterToFetchSpecificItemsOnly(studsEmails, 'email'),
+  const getQuestionListFromLesson = async (lessonObj: any) => {
+    if (lessonObj?.lessonPlan) {
+      const mappedPages = lessonObj?.lessonPlan.reduce(
+        (
+          inputs: {
+            questionList: any[];
           },
-          limit: 1000,
+          page: any
+        ) => {
+          const pageParts = page.pageContent;
+          const reducedPageInputs = pageParts.reduce(
+            (
+              pageInputsAcc: {
+                pageInputAcc: any[];
+              },
+              pagePart: any
+            ) => {
+              if (pagePart.hasOwnProperty("partContent")) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {
+                      pageInputAcc: any[];
+                    },
+                    partContent: any
+                  ) => {
+                    //  CHECK WHICH INPUT TYPE  //
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+  
+                    // -------- IF FORM ------- //
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (
+                          subPartAcc: { pgInput: any[] },
+                          partContentSub: any
+                        ) => {
+                          return {
+                            ...subPartAcc,
+  
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                questionID: partContentSub.id,
+                                type: partContentSub.type,
+                                questionString: partContentSub.label,
+                                options: partContentSub.options,
+                              },
+                            ],
+                          };
+                        },
+                        { pgInput: [] }
+                      );
+  
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput,
+                        ],
+                      };
+                    }
+                    // ---- IF OTHER INPUT ---- //
+                    else if (isOtherInput) {
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            questionID: partContent.id,
+                            type: partContent.type,
+                            questionString: partContent.label,
+                            options: partContent.options,
+                          },
+                        ],
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  { pageInputAcc: [] }
+                );
+  
+                return {
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc,
+                  ],
+                };
+              } else {
+                return pageInputsAcc;
+              }
+            },
+            { pageInputAcc: [] }
+          );
+  
+          return {
+            questionList: [
+              ...inputs.questionList,
+              reducedPageInputs.pageInputAcc,
+            ],
+          };
+        },
+  
+        { questionList: [] }
+      );
+  
+      // console.log(JSON.stringify(mappedPages));
+      return mappedPages;
+    }
+  };
+  
+
+  const getStudentsSurveyQuestionsResponse = async (
+    syllabusLessonID: string,
+    lessonId: String
+  ) => {
+      let studsEmails = classStudents.map((stu: any) => stu.email);
+      let universalLessonStudentData: any = await API.graphql(
+        graphqlOperation(customQueries.getStudentSurveyResponse, {
+          filter: {
+            // ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
+            lessonID: { eq: lessonId },
+            // syllabusLessonID: { eq: syllabusLessonID },
+            ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
+          }
         })
       );
-      let studentsAnswersSurveyCheckpointsQuestions =
-        curriculumData?.data?.listQuestionDatas?.items || [];
-      setSCQAnswers(studentsAnswersSurveyCheckpointsQuestions);
-      return studentsAnswersSurveyCheckpointsQuestions;
-    } else {
-      console.log('no checkpoints of the selected survey');
-      return [];
-    }
+      let studentsAnswersSurveyQuestionsData = universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+      setSCQAnswers(studentsAnswersSurveyQuestionsData);
+      return;
   };
 
   const getCSVReady = async () => {
-    setCsvGettingReady(true);
-    let students = classStudents;
-    let qids: any = [];
-    let takenSurvey = 0;
-    let notTakenSurvey = 0;
-    let surveyDates: any = []
-    let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
-      qids.push(ques.question.id);
-      return { label: `${ques.question.question}`, key: `${ques.question.id}` };
-    });
-
-    /* Enable this code if demographics questions */
-
-    let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
-      qids.push(ques.question.id);
-      return {
-        label: `${ques.question.question} (demographic)`,
-        key: `${ques.question.id}`,
-      };
-    });
-
-    setCSVHeaders([
-      { label: 'AuthId', key: 'authId' },
-      { label: 'Email', key: 'email' },
-      { label: 'First Name', key: 'firstName' },
-      { label: 'Last Name', key: 'lastName' },
-      { label: 'Institute', key: 'institute' },
-      { label: 'Curriculum', key: 'curriculum' },
-      { label: 'Unit', key: 'unit' },
-      { label: 'Classroom', key: 'classroom' },
-      { label: 'Survey name', key: 'surveyName' },
-      ...demographicsQuestionHeaders, // Enable this line for demographics question
-      ...surveyQuestionHeaders,
-    ]);
-
-    let data = students.map((stu: any) => {
-      let surveyAnswerDates: any = [];
-      let studentAnswers: any = {};
-      let hasTakenSurvey = false;
-
-      SCQAnswers.map((ans: any) => {
-        if (ans.person.id === stu.id) {
-          hasTakenSurvey = true;
-          ans.responseObject.map((resp: any) => {
-            if (qids.indexOf(resp.qid) >= 0) {
-              surveyAnswerDates.push(ans.updatedAt);
-              surveyDates.push(ans.updatedAt)
-              studentAnswers[resp.qid] =
-                Array.isArray(resp.response) && resp.response.length
-                  ? resp.response[0]
-                  : '';
-            }
-          });
-        }
+    try {
+      setCsvGettingReady(true);
+      let students = classStudents;
+      let qids: any = [];
+      let takenSurvey = 0;
+      let notTakenSurvey = 0;
+      let surveyDates: any = []
+      // creating an array of question Ids and creating a object to store all question options.
+      let surveyQuestionOptions: any = {};
+      let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
+        qids.push(ques.question.id);
+        surveyQuestionOptions[ques.question.id] = ques.question.options;
+        return { label: `${ques.question.question}`, key: `${ques.question.id}` };
       });
-
+  
       /* Enable this code if demographics questions */
-      DCQAnswers.map((ans: any) => {
-        if (ans.person.id === stu.id) {
-          ans.responseObject.map((resp: any) => {
-            if (qids.indexOf(resp.qid) >= 0) {
-              studentAnswers[resp.qid] =
-                Array.isArray(resp.response) && resp.response.length
-                  ? resp.response[0]
-                  : '';
-            }
-          });
-        }
+  
+      let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
+        qids.push(ques.question.id);
+        return {
+          label: `${ques.question.question} (demographic)`,
+          key: `${ques.question.id}`,
+        };
       });
+  
+      setCSVHeaders([
+        { label: 'AuthId', key: 'authId' },
+        { label: 'Email', key: 'email' },
+        { label: 'First Name', key: 'firstName' },
+        { label: 'Last Name', key: 'lastName' },
+        { label: 'Institute', key: 'institute' },
+        { label: 'Curriculum', key: 'curriculum' },
+        { label: 'Unit', key: 'unit' },
+        { label: 'Classroom', key: 'classroom' },
+        { label: 'Survey name', key: 'surveyName' },
+        ...demographicsQuestionHeaders, // Enable this line for demographics question
+        ...surveyQuestionHeaders,
+      ]);
+  
+      let data = students.map((stu: any) => {
+        let surveyAnswerDates: any = [];
+        let studentAnswers: any = {};
+        let hasTakenSurvey = false;
+  
+        SCQAnswers.map((ans: any) => {
+          if (ans.studentID === stu.authId) {
+            hasTakenSurvey = true;
+            ans.pageData.map((page: any) => {
+              if (qids.indexOf(page.domID) >= 0) {
 
-      surveyAnswerDates = surveyAnswerDates.sort(
+                surveyAnswerDates.push(ans.updatedAt);
+                surveyDates.push(ans.updatedAt)
+                if (surveyQuestionOptions[page.domID] && Array.isArray(surveyQuestionOptions[page.domID]) && surveyQuestionOptions[page.domID].length) {
+                  if (Array.isArray(page.input) && page.input.length && page.input[0].length) {
+                    let selectedOption = surveyQuestionOptions[page.domID].filter((option: any) => {
+                      return option.id === page.input[0]
+                    });
+                    if (Array.isArray(selectedOption) && selectedOption.length) {
+                      studentAnswers[page.domID] = selectedOption[0].text;
+                    } else {
+                      studentAnswers[page.domID] = '';  
+                    }
+                  } else {
+                    studentAnswers[page.domID] = '';
+                  }
+                } else {
+                  studentAnswers[page.domID] = Array.isArray(page.input) && page.input.length ? page.input[0] : ''; 
+                }
+              }
+            })
+            // ans.responseObject.map((resp: any) => {
+            //   if (qids.indexOf(resp.qid) >= 0) {
+            //     surveyAnswerDates.push(ans.updatedAt);
+            //     surveyDates.push(ans.updatedAt)
+            //     studentAnswers[resp.qid] =
+            //       Array.isArray(resp.response) && resp.response.length
+            //         ? resp.response[0]
+            //         : '';
+            //   }
+            // });
+          }
+        });
+  
+        /* Enable this code if demographics questions */
+        DCQAnswers.map((ans: any) => {
+          if (ans.person.id === stu.id) {
+            ans.responseObject.map((resp: any) => {
+              if (qids.indexOf(resp.qid) >= 0) {
+                studentAnswers[resp.qid] =
+                  Array.isArray(resp.response) && resp.response.length
+                    ? resp.response[0]
+                    : '';
+              }
+            });
+          }
+        });
+  
+        surveyAnswerDates = surveyAnswerDates.sort(
+          // @ts-ignore
+          (a: any, b: any) => new Date(b) - new Date(a)
+        );
+  
+        if (hasTakenSurvey) {
+          takenSurvey++
+        }
+        else {
+          notTakenSurvey++;
+        }
+  
+        return {
+          ...stu,
+          institute: selectedInst.name,
+          curriculum: selectedCurriculum.name,
+          unit: selectedUnit.name,
+          classroom: selectedClassRoom.name,
+          surveyName: selectedSurvey.name,
+          ...studentAnswers,
+          hasTakenSurvey,
+          first:
+            (surveyAnswerDates[surveyAnswerDates.length - 1] &&
+              new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
+                'en-US'
+              )) ||
+            '-',
+          last:
+            (surveyAnswerDates[0] &&
+              new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
+            '-',
+        };
+      });
+      surveyDates = surveyDates.sort(
         // @ts-ignore
         (a: any, b: any) => new Date(b) - new Date(a)
       );
-
-      if (hasTakenSurvey) {
-        takenSurvey++
-      }
-      else {
-        notTakenSurvey++;
-      }
-
-      return {
-        ...stu,
-        institute: selectedInst.name,
-        curriculum: selectedCurriculum.name,
-        unit: selectedUnit.name,
-        classroom: selectedClassRoom.name,
-        surveyName: selectedSurvey.name,
-        ...studentAnswers,
-        hasTakenSurvey,
-        first:
-          (surveyAnswerDates[surveyAnswerDates.length - 1] &&
-            new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
-              'en-US'
-            )) ||
-          '-',
-        last:
-          (surveyAnswerDates[0] &&
-            new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
-          '-',
-      };
-    });
-    surveyDates = surveyDates.sort(
-      // @ts-ignore
-      (a: any, b: any) => new Date(b) - new Date(a)
-    );
-    setCSVData(orderBy(data, ['firstName'], ['asc']));
-    setStatistics({
-      surveyFirst: (surveyDates[surveyDates.length - 1] &&
-        new Date(surveyDates[surveyDates.length - 1]).toLocaleString(
-          'en-US'
-        )) ||
-      '-',
-      surveyLast: (surveyDates[0] &&
-        new Date(surveyDates[0]).toLocaleString('en-US')) ||
-      '-',
-      takenSurvey,
-      notTakenSurvey
-    })
-    setIsCSVDownloadReady(true);
-    setCsvGettingReady(false);
+      setCSVData(orderBy(data, ['firstName'], ['asc']));
+      setStatistics({
+        surveyFirst: (surveyDates[surveyDates.length - 1] &&
+          new Date(surveyDates[surveyDates.length - 1]).toLocaleString(
+            'en-US'
+          )) ||
+        '-',
+        surveyLast: (surveyDates[0] &&
+          new Date(surveyDates[0]).toLocaleString('en-US')) ||
+        '-',
+        takenSurvey,
+        notTakenSurvey
+      })
+      setIsCSVDownloadReady(true);
+      setCsvGettingReady(false);
+    } catch (err) {
+      console.log('error', err);
+    }
   };
 
   useEffect(() => {
@@ -509,29 +711,29 @@ const Csv = (props: Csv) => {
 
   const Table = () => {
     return (
-      <div className="flex flex-col ">
+      <div className="flex flex-col px-8">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
             <div className="shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" style={{ width: '15%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       Id
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       first name
                     </th>
-                    <th scope="col" style={{ width: '15%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       last Name
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Email
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Taken Survey
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Completed Date
                     </th>
                   </tr>
@@ -539,22 +741,22 @@ const Csv = (props: Csv) => {
                 <tbody>
                   {CSVData.map((listItem, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{ width: '15%' }} className={tdataStyles}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
                         {listItem.id}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.firstName}
                       </td>
-                      <td style={{ width: '15%' }} className={tdataStyles}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
                         {listItem.lastName}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.email}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.hasTakenSurvey ? 'Yes' : 'No'}
                       </td>
-                      <td style={{ width: '10%' }} className={tdataStyles}>
+                      <td style={{width: '10%'}} className={tdataStyles}>
                         {getFormatedDate(listItem.last)}
                       </td>
                     </tr>
@@ -570,7 +772,7 @@ const Csv = (props: Csv) => {
 
   const fieldClass = 'p-3 flex justify-center items-center w-full';
 
-  const Card = ({ keyItem, value }: any) => {
+  const Card = ({keyItem, value}: any) => {
     return (
       <div className="flex relative bg-white rounded-lg shadow justify-center items-center h-20 shadow inner_card">
         <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
@@ -582,32 +784,35 @@ const Csv = (props: Csv) => {
   };
 
   return (
-    <div className="p-8 w-full h-full">
+    <div className="w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
-        <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-          <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+        <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
+          <h3 className="text-lg leading-6 text-gray-600 w-auto">
+            {CsvDict[userLanguage]['TITLE']}
+          </h3>
+          {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
             <span>{CsvDict[userLanguage]['TITLE']}</span>
-          </div>
-          <div>
+          </div> */}
+          <div className="w-auto">
             <span className={`mr-0 float-right text-gray-600 text-right`}>
               <DateAndTime />
             </span>
           </div>
         </div>
       </div>
-      <SectionTitleV3
+      {/* <SectionTitleV3
         fontSize="2xl"
         fontStyle="bold"
         title={CsvDict[userLanguage]['SELECT_FILTERS']}
-      />
+      /> */}
       <div className="grid grid-cols-4 gap-x-4">
-        <Selector
+        {/* <Selector
           loading={institutionsLoading}
           selectedItem={selectedInst ? selectedInst.name : ''}
           placeholder={CsvDict[userLanguage]['SELECT_INST']}
           list={institutions}
           onChange={(value, name, id) => onInstSelect(id, name, value)}
-        />
+        /> */}
 
         <Selector
           loading={classRoomLoading}
@@ -636,7 +841,7 @@ const Csv = (props: Csv) => {
         />
         <button
           type="button"
-          className="col-end-5 mt-5 inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
+          className="col-end-5 inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
           style={{
             /* stylelint-disable */
             opacity: isCSVDownloadReady ? 1 : 0.5,
@@ -646,8 +851,9 @@ const Csv = (props: Csv) => {
             <CSVLink
               data={CSVData}
               headers={CSVHeaders}
-              filename={`${selectedClassRoom.name}_${selectedSurvey.name
-                }_${getTodayDate()}.csv`}>
+              filename={`${selectedClassRoom.name}_${
+                selectedSurvey.name
+              }_${getTodayDate()}.csv`}>
               Download CSV
             </CSVLink>
           ) : (
@@ -656,7 +862,7 @@ const Csv = (props: Csv) => {
         </button>
       </div>
       <div>
-        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Survey results'} />
+        <SectionTitleV3 title={'Survey results'} />
         {CSVData.length > 0 ? (
           <Table />
         ) : (
@@ -667,19 +873,21 @@ const Csv = (props: Csv) => {
           </div>
         )}
       </div>
-      {
-        isCSVDownloadReady &&
+      {isCSVDownloadReady && (
         <div>
           <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Statistics'} />
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
             {/* @Aman change the value:{value} */}
-            <Card keyItem="Survey First" value={getFormatedDate(statistics.surveyFirst)} />
+            <Card
+              keyItem="Survey First"
+              value={getFormatedDate(statistics.surveyFirst)}
+            />
             <Card keyItem="Survey Last" value={getFormatedDate(statistics.surveyLast)} />
             <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
             <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
           </div>
         </div>
-      }
+      )}
     </div>
   );
 };

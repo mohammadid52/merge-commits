@@ -171,6 +171,7 @@ const Profile = (props: ProfilePageProps) => {
         onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
         role: state.user.role,
         image: `profile_image_${person.id}`,
+        onDemand: state.user?.onDemand,
       },
     });
     setImageLoading(false);
@@ -279,25 +280,37 @@ const Profile = (props: ProfilePageProps) => {
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
-      const studentCurriculars: any = studentRooms
-        .map((item: any) => item?.curricula?.items)
-        .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
-      const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+       const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+         if (item?.room) {
+           return [...roomAcc, item.room];
+         } else {
+           return roomAcc;
+         }
+       }, []);
+
+       const studentCurriculars: any = studentRooms
+         .map((item: any) => item?.curricula?.items)
+         .flat(1);
+
+       const uniqCurriculars: any =
+         studentCurriculars.length > 0
+           ? getUniqItems(
+               studentCurriculars.filter((d: any) => d !== null),
+               'curriculumID'
+             )
+           : [];
+
+       const studCurriCheckp: any =
+         uniqCurriculars.length > 0
+           ? uniqCurriculars
+               .map((item: any) => item?.curriculum?.checkpoints?.items)
+               .flat(1)
+           : [];
+
+       const studentCheckpoints: any =
+         studCurriCheckp.length > 0
+           ? studCurriCheckp.map((item: any) => item?.checkpoint)
+           : [];
 
       const sCheckpoints: any[] = [];
 

@@ -263,6 +263,7 @@ const ProfileEdit = (props: UserInfoProps) => {
           onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
           role: state.user.role,
           image: state.user.image,
+          onDemand: state.user.onDemand,
         },
       });
       gobackToPreviousStep();
@@ -448,30 +449,19 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <>
                     <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        value={user.firstName}
-                        onChange={onChange}
-                        id="firstName"
-                        name="firstName"
-                        label={
-                          dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']
-                        }
-                        isRequired
-                      />
-                      {/* <label
+                      <label
                         htmlFor="firstName"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
                       </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           id="firstName"
                           onChange={onChange}
-                          type="text"
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.firstName}
                         />
-                      </div> */}
+                      </div>
                     </div>
 
                     <div className="sm:col-span-3 p-2">
