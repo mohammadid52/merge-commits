@@ -1,5 +1,7 @@
 import PageBuilderSlideOver from '@atoms/Slideover/PageBuilderSlideOver';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
 import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
@@ -45,6 +47,31 @@ interface CoreBuilderProps extends ULBSelectionProps {
   activePageData: UniversalLessonPage;
 }
 
+const PageBuilderLayout = ({
+  children,
+  open,
+  width = '28rem',
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  width?: string;
+}) => {
+  return (
+    <div
+      style={{
+        zIndex: 999999,
+        maxWidth: open ? width : '0rem',
+        minWidth: open ? width : '0rem',
+      }}
+      className={classNames(
+        open ? 'translate-x-0 ' : 'translate-x-full',
+        'p-8 transform dark-scroll  transition-all duration-300 overflow-y-scroll fixed right-0 inset-y-0 break-normal h-screen bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+      )}>
+      {children}
+    </div>
+  );
+};
+
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
 
@@ -78,7 +105,12 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setEditMode,
     previewMode,
     pushUserToThisId,
+    editMode,
+
+    getCurrentPage,
+    newLessonPlanShow,
   } = useULBContext();
+
   const {clientKey, userLanguage} = useGlobalContext();
 
   const params = useQuery(location.search);
@@ -94,13 +126,18 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   useEffect(() => {
     setCollapseSidebarOverlay(true);
   }, []);
+
   useEffect(() => {
-    if (previewMode) {
+    if (newLessonPlanShow) {
       setShowLessonEditOverlay(false);
     } else {
-      setShowLessonEditOverlay(true);
+      if (previewMode) {
+        setShowLessonEditOverlay(false);
+      } else {
+        setShowLessonEditOverlay(true);
+      }
     }
-  }, [previewMode]);
+  }, [newLessonPlanShow, previewMode]);
 
   useEffect(() => {
     if (pageId === 'open-overlay') {
@@ -329,15 +366,31 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
 
         {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
-        <PageBuilderSlideOver
-          deleteFromULBHandler={deleteFromULBHandler}
-          open={showLessonEditOverlay}
-          handleEditBlockContent={handleEditBlockContent}
-          handleModalPopToggle={handleModalPopToggle}
-        />
+
+        <PageBuilderLayout open={showLessonEditOverlay}>
+          <PageBuilderSlideOver
+            deleteFromULBHandler={deleteFromULBHandler}
+            open={showLessonEditOverlay}
+            handleEditBlockContent={handleEditBlockContent}
+            handleModalPopToggle={handleModalPopToggle}
+          />
+        </PageBuilderLayout>
+        <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
+          <NewLessonPlanSO
+            editMode={editMode}
+            setEditMode={setEditMode}
+            pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+            open={newLessonPlanShow}
+            setOpen={setNewLessonPlanShow}
+            activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+          />
+        </PageBuilderLayout>
+
         {/* ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
         <div
-          style={{marginLeft: showLessonEditOverlay ? '-15rem' : '0rem'}}
+          style={{
+            marginLeft: showLessonEditOverlay || newLessonPlanShow ? '-15rem' : '0rem',
+          }}
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar

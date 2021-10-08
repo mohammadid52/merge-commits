@@ -4,31 +4,33 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {useQuery} from '@customHooks/urlParam';
 import {Transition} from '@headlessui/react';
 import {
-  UniversalLessonPage,
   UniversalLesson,
+  UniversalLessonPage,
 } from '@interfaces/UniversalLessonInterfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
+import {reorder} from '@utilities/strings';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {isEmpty} from 'lodash';
+import map from 'lodash/map';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {IconType} from 'react-icons';
-import {AiOutlineArrowLeft, AiOutlinePlus} from 'react-icons/ai';
+import {
+  AiFillCloseCircle,
+  AiOutlineArrowLeft,
+  AiOutlineEdit,
+  AiOutlinePlus,
+} from 'react-icons/ai';
+import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
 import {HiOutlineArrowRight} from 'react-icons/hi';
-import {AiOutlineEdit, AiFillCloseCircle} from 'react-icons/ai';
-import {BiTrashAlt} from 'react-icons/bi';
-import map from 'lodash/map';
-import {reorder} from '@utilities/strings';
-import {lessonState} from 'state/LessonState';
-import {useQuery} from '@customHooks/urlParam';
 
-type NavState = 'home' | 'addContent' | 'space';
 type ActionTypes = 'edit' | 'delete' | 'init';
 
 // ======constants===================>>
@@ -228,7 +230,7 @@ const SpaceItems = ({
                 overrideClass
                 transparent
                 btnClass={btnClass}
-                label="Add space"
+                label="Add White Space"
               />
             </div>
           </div>
@@ -311,7 +313,7 @@ const OverlayHeaderTitle = ({
 
       <h4
         id="page_builder_overlay--header-title"
-        className="dark:text-white text-gray-900 font-semibold tracking-wide text-2xl text-center">
+        className="dark:text-white text-gray-900 font-semibold tracking-wide text-xl text-center">
         {title}
       </h4>
     </div>
@@ -348,7 +350,7 @@ const Item = ({
         selected
           ? 'iconoclast:border-500 curate:border-500'
           : `border-gray-300 dark:border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
-      } relative cursor-pointer form-button mt-4 form-button rounded-lg border-0  dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-5`}>
+      } relative my-8 cursor-pointer form-button mt-4 form-button rounded-lg border-0  dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
           <Icon
@@ -419,6 +421,7 @@ const ActionButtons = ({
     selectedComponent,
     setSelectedComponent,
     setShowingPin,
+    setShowMovementBox,
   } = usePageBuilderContext();
 
   const {setUniversalLessonDetails} = useULBContext();
@@ -429,6 +432,8 @@ const ActionButtons = ({
   const onInit = actionMode === 'init';
 
   const cleanup = () => {
+    setSelectedComponent(null);
+    setShowMovementBox(false);
     setSelectedComponent(null);
   };
 
@@ -462,11 +467,11 @@ const ActionButtons = ({
   };
 
   return (
-    <div className="flex border-t-0 border-gray-700 mt-4 items-center justify-between space-x-4">
+    <div className="flex items-center flex-col">
       <Item
         selected={actionMode === 'edit'}
         Icon={AiOutlineEdit}
-        label="Edit"
+        label="Edit existing component"
         onClick={() => {
           setActionMode('edit');
           setShowingPin(true);
@@ -477,7 +482,7 @@ const ActionButtons = ({
         selected={actionMode === 'delete'}
         deleteBtn
         Icon={BiTrashAlt}
-        label="Delete"
+        label="Delete existing component"
         onClick={() => {
           setActionMode('delete');
           setShowingPin(true);
@@ -541,7 +546,7 @@ const MovableButtons = () => {
     selectedComponent,
     setSelectedComponent,
     setShowingPin,
-
+    setActionMode,
     showMovementBox,
     setShowMovementBox,
   } = usePageBuilderContext();
@@ -643,14 +648,15 @@ const MovableButtons = () => {
   };
 
   return (
-    <div className="border-t-0 border-gray-700 mt-4">
+    <div className="flex items-center flex-col">
       <Item
         selected={showMovementBox}
         Icon={AiOutlineEdit}
-        label="Move component"
+        label="Move existing component"
         onClick={() => {
-          setShowingPin((prev: boolean) => !prev);
-          setShowMovementBox((prev: boolean) => !prev);
+          setActionMode('init');
+          setShowingPin(true);
+          setShowMovementBox(true);
           setSelectedComponent(null);
         }}
       />
@@ -725,7 +731,6 @@ const PageBuilderSlideOver = ({
     indexToUpdate: number
   ) => void;
 }) => {
-  const [navState, setNavState] = useState<NavState>('home');
   const {
     selectedPageID,
     universalLessonDetails,
@@ -738,6 +743,11 @@ const PageBuilderSlideOver = ({
     setShowingPin,
     actionMode,
     setActionMode,
+    navState,
+    setNavState,
+    setShowMovementBox,
+    activeContentItem,
+    setActiveContentItem,
   } = usePageBuilderContext();
 
   const {lessonState} = useGlobalContext();
@@ -764,8 +774,8 @@ const PageBuilderSlideOver = ({
             id: updatedPage.id,
             lessonPlan: [...updatedPage.lessonPlan],
           };
-          // !! Uncomment this |----------------------------------------------------->>-->
-          // await updateLessonPageToDB(input);
+
+          await updateLessonPageToDB(input);
           setUniversalLessonDetails(updatedPage);
         }
       } else {
@@ -849,28 +859,21 @@ const PageBuilderSlideOver = ({
     setSelectedComponent(null);
     setShowingPin(false);
     setContentType('');
+    setShowMovementBox(false);
     setActionMode('init');
   };
 
   const toHome = () => {
     setSaving(false);
     setNavState('home');
+    setActiveContentItem(null);
     cleanup();
   };
 
   const [currentHelpStep, setCurrentHelpStep] = useState(0);
 
   return (
-    <div
-      style={{
-        zIndex: 999999,
-        maxWidth: open ? '28rem' : '0rem',
-        minWidth: open ? '28rem' : '0rem',
-      }}
-      className={classNames(
-        open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform transition-all duration-300 fixed right-0 inset-y-0 break-normal h-screen bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
-      )}>
+    <>
       <AnimatedContainer
         className={onHome ? 'h-screen' : ''}
         animationType="scale"
@@ -887,14 +890,6 @@ const PageBuilderSlideOver = ({
                 setNavState('addContent');
               }}
             />
-            <Item
-              Icon={CgSpaceBetweenV}
-              label="Add space component"
-              onClick={() => {
-                cleanup();
-                setNavState('space');
-              }}
-            />
             <div className="h-full">
               <ActionButtons
                 deleteFromULBHandler={deleteFromULBHandler}
@@ -903,9 +898,18 @@ const PageBuilderSlideOver = ({
                 actionMode={actionMode}
               />
             </div>
+
             <div className="h-full">
               <MovableButtons />
             </div>
+            <Item
+              Icon={CgSpaceBetweenV}
+              label="Add space component"
+              onClick={() => {
+                cleanup();
+                setNavState('space');
+              }}
+            />
           </div>
         )}
       </AnimatedContainer>
@@ -915,7 +919,14 @@ const PageBuilderSlideOver = ({
         show={onAddContent}>
         {onAddContent && (
           <div>
-            <OverlayHeaderTitle onBack={toHome} title="Add new components" />
+            <OverlayHeaderTitle
+              onBack={toHome}
+              title={
+                activeContentItem
+                  ? 'Step 2: Where Do You Want To Place Component'
+                  : 'Step 1: Select A Component'
+              }
+            />
             <AddContentDialog
               setCurrentHelpStep={setCurrentHelpStep}
               onComponentCreateClick={onComponentCreateClick}
@@ -951,7 +962,7 @@ const PageBuilderSlideOver = ({
         ]}
         currentStep={currentHelpStep}
       />
-    </div>
+    </>
   );
 };
 

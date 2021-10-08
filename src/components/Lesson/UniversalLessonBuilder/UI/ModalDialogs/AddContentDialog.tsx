@@ -5,6 +5,7 @@ import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {isEmpty, noop} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {
+  AiFillCloseCircle,
   AiOutlineBorderlessTable,
   AiOutlineFileImage,
   AiOutlineHighlight,
@@ -41,9 +42,13 @@ const AddContentDialog = ({
     {name: 'User Interaction', current: false},
   ];
 
-  const {selectedComponent, setShowingPin, showingPin} = usePageBuilderContext();
-
-  const [activeItem, setActiveItem] = useState(null); // content type
+  const {
+    selectedComponent,
+    setShowingPin,
+    activeContentItem,
+    setActiveContentItem,
+    showingPin,
+  } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();
 
@@ -256,15 +261,14 @@ const AddContentDialog = ({
   const onCustomPositionClick = (e: any) => {
     e.stopPropagation();
     if (!addContentModal.show) {
-      onItemClick(activeItem, false);
+      onItemClick(activeContentItem.type, false);
     }
     setCurrentHelpStep(1);
   };
 
-  const onCreateComponentClick = (e: any) => {
-    e.stopPropagation();
+  const onCreateComponentClick = () => {
     onComponentCreateClick();
-    setActiveItem(null);
+    setActiveContentItem(null);
   };
 
   useEffect(() => {
@@ -276,23 +280,29 @@ const AddContentDialog = ({
   const onBottomClick = (e: any) => {
     e.stopPropagation();
     if (!addContentModal.show) {
-      onItemClick(activeItem, true);
+      onItemClick(activeContentItem.type, true);
       setCurrentHelpStep(null);
     }
   };
 
+  const onCancel = (e: any) => {
+    e.stopPropagation();
+    setShowingPin(false);
+    setActiveContentItem(null);
+  };
+
   const Item = ({content}: {content: any}) => {
-    const currentType = activeItem === content.type;
+    const currentType = activeContentItem && activeContentItem?.type === content.type;
 
     const onFinalStep =
       currentType && !isEmpty(selectedComponent) && !addContentModal.show;
     const onOptions = currentType && !onFinalStep;
     const onInit = !currentType && !onFinalStep;
+
     return (
       <div
-        // onClick={() => (addContentModal.show ? noop : onItemClick(content.type))}
         onClick={() => {
-          setActiveItem(content.type);
+          setActiveContentItem(content);
           setShowingPin(false);
         }}
         className={`relative ${
@@ -335,11 +345,13 @@ const AddContentDialog = ({
               <Buttons
                 onClick={onCustomPositionClick}
                 overrideClass
+                transparent
                 btnClass={`${
                   showingPin ? 'iconoclast:border-main border-0 curate:border-main' : ''
                 } ${btnClass}`}
                 label="Custom position"
               />
+
               <Buttons
                 overrideClass
                 onClick={onBottomClick}
@@ -363,15 +375,26 @@ const AddContentDialog = ({
             </div>
           )}
         </>
+
+        {activeContentItem && (
+          <span
+            onClick={onCancel}
+            style={{top: '-.5rem', right: '-.5rem'}}
+            className="absolute cursor-pointer -top-1 w-auto -right-1 p-1 rounded-full transition-all">
+            <AiFillCloseCircle className="text-white text-base" />
+          </span>
+        )}
       </div>
     );
   };
 
   return (
     <>
-      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
-      <AnimatedContainer show={onTextTab} animationType="translateY">
-        {onTextTab && (
+      {!activeContentItem && <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />}
+      <AnimatedContainer
+        show={onTextTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onTextTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
             {textContent.map((content, idx) => (
               <Item key={idx} content={content} />
@@ -379,8 +402,10 @@ const AddContentDialog = ({
           </div>
         )}
       </AnimatedContainer>
-      <AnimatedContainer show={onMediaTab} animationType="translateY">
-        {onMediaTab && (
+      <AnimatedContainer
+        show={onMediaTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onMediaTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {mediaContent.map((content, idx) => (
               <Item key={idx} content={content} />
@@ -388,13 +413,27 @@ const AddContentDialog = ({
           </div>
         )}
       </AnimatedContainer>
-      <AnimatedContainer show={onUIContentTab} animationType="translateY">
-        {onUIContentTab && (
+      <AnimatedContainer
+        show={onUIContentTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onUIContentTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {userInterfaceContent.map((content, idx) => (
               <Item key={idx} content={content} />
             ))}
           </div>
+        )}
+      </AnimatedContainer>
+      <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
+        {!isEmpty(activeContentItem) && (
+          <>
+            <h4 className="dark:text-white m-4 text-base font-medium capitalize">
+              {activeContentItem.type} Component
+            </h4>
+            <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+              <Item content={activeContentItem} />
+            </div>
+          </>
         )}
       </AnimatedContainer>
     </>

@@ -1,7 +1,10 @@
 import React, {createContext, useContext, useState} from 'react';
 const PageBuilderContext = createContext(null);
+
+// TYPES
 type ActionTypes = 'edit' | 'delete' | 'init';
 type MoveDirTypes = 'up' | 'down';
+type NavState = 'home' | 'addContent' | 'space';
 
 export const PageBuilderProvider = ({children}: any) => {
   const [showingPin, setShowingPin] = useState(false);
@@ -9,6 +12,8 @@ export const PageBuilderProvider = ({children}: any) => {
   const [actionMode, setActionMode] = useState<ActionTypes>('init');
   const [moveDir, setMoveDir] = useState<MoveDirTypes>('down');
   const [showMovementBox, setShowMovementBox] = useState(false);
+  const [navState, setNavState] = useState<NavState>('home');
+  const [activeContentItem, setActiveContentItem] = useState(null); // content type
 
   return (
     <PageBuilderContext.Provider
@@ -23,6 +28,10 @@ export const PageBuilderProvider = ({children}: any) => {
         setMoveDir,
         showMovementBox,
         setShowMovementBox,
+        navState,
+        setNavState,
+        activeContentItem,
+        setActiveContentItem,
       }}>
       {children}
     </PageBuilderContext.Provider>

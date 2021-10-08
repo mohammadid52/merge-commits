@@ -2,11 +2,9 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import * as queries from '../../../../graphql/queries';
 import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
-import NewLessonPlanSO from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
@@ -14,14 +12,7 @@ import LessonTabView from './StepActionComponent/LessonTabView';
 
 const LessonsBuilderHome = () => {
   const {dispatch} = useContext(GlobalContext);
-  const {
-    editMode,
-    setEditMode,
-    selectedPageID,
-    getCurrentPage,
-    newLessonPlanShow,
-    setNewLessonPlanShow,
-  } = useULBContext();
+
   const match = useRouteMatch();
   const [designersList, setDesignersList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
@@ -130,14 +121,6 @@ const LessonsBuilderHome = () => {
         </Switch>
         {/*</UniversalLessonBuilderProvider>*/}
       </div>
-      <NewLessonPlanSO
-        editMode={editMode}
-        setEditMode={setEditMode}
-        pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-        open={newLessonPlanShow}
-        setOpen={setNewLessonPlanShow}
-        activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
-      />
     </>
   );
 };
