@@ -81,7 +81,6 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -195,6 +194,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -313,7 +313,6 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -427,6 +426,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -502,7 +502,6 @@ export const onChangeStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -685,43 +684,15 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -973,6 +944,7 @@ export const onChangeRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -992,8 +964,35 @@ export const onChangeRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -1293,6 +1292,7 @@ export const onCreateInstitution = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -1413,6 +1413,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -1533,6 +1534,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -2063,6 +2065,7 @@ export const onCreateRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -2082,8 +2085,35 @@ export const onCreateRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -2250,6 +2280,7 @@ export const onUpdateRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -2269,8 +2300,35 @@ export const onUpdateRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -2437,6 +2495,7 @@ export const onDeleteRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -2456,8 +2515,35 @@ export const onDeleteRoom = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -2960,6 +3046,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3131,6 +3218,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3302,6 +3390,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3476,6 +3565,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3632,6 +3722,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3788,6 +3879,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -3867,6 +3959,7 @@ export const onCreateClass = /* GraphQL */ `
       institutionID
       type
       name
+      roomId
       institution {
         id
         name
@@ -3904,38 +3997,116 @@ export const onCreateClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
           id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
           name
-          maxPersons
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
           filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
+          setupComplete
           createdAt
           updatedAt
         }
-        nextToken
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -3963,6 +4134,7 @@ export const onUpdateClass = /* GraphQL */ `
       institutionID
       type
       name
+      roomId
       institution {
         id
         name
@@ -4000,38 +4172,116 @@ export const onUpdateClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
           id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
           name
-          maxPersons
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
           filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
+          setupComplete
           createdAt
           updatedAt
         }
-        nextToken
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -4059,6 +4309,7 @@ export const onDeleteClass = /* GraphQL */ `
       institutionID
       type
       name
+      roomId
       institution {
         id
         name
@@ -4096,38 +4347,116 @@ export const onDeleteClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      rooms {
-        items {
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
           id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
           name
-          maxPersons
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
           filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
+          setupComplete
           createdAt
           updatedAt
         }
-        nextToken
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        createdAt
+        updatedAt
       }
       students {
         items {
@@ -4163,6 +4492,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -4182,8 +4512,35 @@ export const onCreateClassStudent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -4244,6 +4601,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -4263,8 +4621,35 @@ export const onUpdateClassStudent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -4325,6 +4710,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -4344,8 +4730,35 @@ export const onDeleteClassStudent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        rooms {
-          nextToken
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
         }
         students {
           nextToken
@@ -5258,246 +5671,6 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const onCreateWarmUp = /* GraphQL */ `
-  subscription OnCreateWarmUp {
-    onCreateWarmUp {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateWarmUp = /* GraphQL */ `
-  subscription OnUpdateWarmUp {
-    onUpdateWarmUp {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteWarmUp = /* GraphQL */ `
-  subscription OnDeleteWarmUp {
-    onDeleteWarmUp {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      inputs {
-        title
-        example
-        titleExample
-        textExample
-        listInputNumber
-        truthGameInputs {
-          id
-          label
-        }
-        additionalInputs {
-          id
-          name
-          prompt
-          example
-        }
-        pollInputs {
-          id
-          question
-        }
-        adventureGameInputs {
-          id
-          text
-        }
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateActivity = /* GraphQL */ `
-  subscription OnCreateActivity {
-    onCreateActivity {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateActivity = /* GraphQL */ `
-  subscription OnUpdateActivity {
-    onUpdateActivity {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteActivity = /* GraphQL */ `
-  subscription OnDeleteActivity {
-    onDeleteActivity {
-      id
-      title
-      label
-      stage
-      type
-      language
-      SELTypes
-      instructions {
-        video
-        link
-        text
-      }
-      lineNumber
-      writingPrompts {
-        id
-        name
-        prompt
-        example
-      }
-      breakdown {
-        included
-        reflectionQuestions
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateCheckpoint = /* GraphQL */ `
   subscription OnCreateCheckpoint {
     onCreateCheckpoint {
@@ -6101,384 +6274,6 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAssessment = /* GraphQL */ `
-  subscription OnCreateAssessment {
-    onCreateAssessment {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAssessment = /* GraphQL */ `
-  subscription OnUpdateAssessment {
-    onUpdateAssessment {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAssessment = /* GraphQL */ `
-  subscription OnDeleteAssessment {
-    onDeleteAssessment {
-      id
-      title
-      type
-      openingMessage
-      closingMessage
-      questions {
-        items {
-          id
-          assessmentID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpoints {
-        items {
-          id
-          assessmentID
-          checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAssessmentQuestions = /* GraphQL */ `
-  subscription OnCreateAssessmentQuestions {
-    onCreateAssessmentQuestions {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAssessmentQuestions = /* GraphQL */ `
-  subscription OnUpdateAssessmentQuestions {
-    onUpdateAssessmentQuestions {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAssessmentQuestions = /* GraphQL */ `
-  subscription OnDeleteAssessmentQuestions {
-    onDeleteAssessmentQuestions {
-      id
-      assessmentID
-      questionID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      question {
-        id
-        label
-        type
-        question
-        designers
-        language
-        sourceId
-        note
-        options {
-          text
-          label
-          icon
-          color
-        }
-        published
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAssessmentCheckpoint = /* GraphQL */ `
-  subscription OnCreateAssessmentCheckpoint {
-    onCreateAssessmentCheckpoint {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
-  subscription OnUpdateAssessmentCheckpoint {
-    onUpdateAssessmentCheckpoint {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
-  subscription OnDeleteAssessmentCheckpoint {
-    onDeleteAssessmentCheckpoint {
-      id
-      assessmentID
-      checkpointID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateQuestion = /* GraphQL */ `
   subscription OnCreateQuestion {
     onCreateQuestion {
@@ -6603,39 +6398,6 @@ export const onDeleteQuestionType = /* GraphQL */ `
     onDeleteQuestionType {
       id
       name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateWord = /* GraphQL */ `
-  subscription OnCreateWord {
-    onCreateWord {
-      id
-      word
-      definition
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateWord = /* GraphQL */ `
-  subscription OnUpdateWord {
-    onUpdateWord {
-      id
-      word
-      definition
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteWord = /* GraphQL */ `
-  subscription OnDeleteWord {
-    onDeleteWord {
-      id
-      word
-      definition
       createdAt
       updatedAt
     }
@@ -6808,79 +6570,15 @@ export const onCreateLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -6979,79 +6677,15 @@ export const onUpdateLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -7150,79 +6784,15 @@ export const onDeleteLesson = /* GraphQL */ `
       artistID
       language
       SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       connection
       summary
       purpose
       designers
       objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       doFirstID
       warmUpId
       coreLessonId
       activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       filters
       coverImage
       summaryTitle
@@ -7317,43 +6887,15 @@ export const onCreateLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7448,43 +6990,15 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7579,43 +7093,15 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -7677,750 +7163,6 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateLessonCheckpoint = /* GraphQL */ `
-  subscription OnCreateLessonCheckpoint {
-    onCreateLessonCheckpoint {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateLessonCheckpoint = /* GraphQL */ `
-  subscription OnUpdateLessonCheckpoint {
-    onUpdateLessonCheckpoint {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteLessonCheckpoint = /* GraphQL */ `
-  subscription OnDeleteLessonCheckpoint {
-    onDeleteLessonCheckpoint {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        stage
-        type
-        instructionsTitle
-        instructions
-        questions {
-          nextToken
-        }
-        purpose
-        objectives
-        designers
-        language
-        estTime
-        scope
-        questionSeq
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateLessonKeyWord = /* GraphQL */ `
-  subscription OnCreateLessonKeyWord {
-    onCreateLessonKeyWord {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateLessonKeyWord = /* GraphQL */ `
-  subscription OnUpdateLessonKeyWord {
-    onUpdateLessonKeyWord {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteLessonKeyWord = /* GraphQL */ `
-  subscription OnDeleteLessonKeyWord {
-    onDeleteLessonKeyWord {
-      id
-      wordID
-      lessonID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
         createdAt
         updatedAt
       }
@@ -8571,43 +7313,15 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -8733,43 +7447,15 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -8895,43 +7581,15 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         artistID
         language
         SELStructure
-        keywords {
-          nextToken
-        }
         connection
         summary
         purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
         doFirstID
         warmUpId
         coreLessonId
         activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
         filters
         coverImage
         summaryTitle
@@ -9261,7 +7919,6 @@ export const onCreateQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -9380,7 +8037,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -9499,7 +8155,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10090,7 +8745,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10204,6 +8858,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -10314,7 +8969,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10428,6 +9082,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -10538,7 +9193,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
-          assessmentID
           filters
           coverImage
           summaryTitle
@@ -10652,6 +9306,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -11091,6 +9746,7 @@ export const onCreateAttendance = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -11344,6 +10000,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }
@@ -11597,6 +10254,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           institutionID
           type
           name
+          roomId
           createdAt
           updatedAt
         }

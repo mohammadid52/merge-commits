@@ -181,16 +181,24 @@ const Csv = (props: Csv) => {
 
   const fetchUnits = async (curriculumId: string, studentsEmails: any) => {
     try {
-      let curriculumData: any = await API.graphql(
+      let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
           id: curriculumId,
         })
       );
-      let units = curriculumData?.data.getCurriculum?.universalSyllabus?.items || [];
+      let units = curriculumUnits?.data.listCurriculumUnitss?.items || [];
       units = units.map((syl: any) => {
-        return { id: syl.id, name: syl.name, value: syl.name };
+        let unitData = syl.unit;
+        return { id: unitData.id, name: unitData.name, value: unitData.name };
       });
+      // console.log('units', units)
       setUnits(units);
+      let curriculumData: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumCheckpointsData, {
+          id: curriculumId,
+        })
+      );
+      // console.log('curriculumData', curriculumData)
       let curricularCheckpoints =
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
