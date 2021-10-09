@@ -893,7 +893,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {state.user.role === 'ST' && <EmojiFeedback />}
+        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}
