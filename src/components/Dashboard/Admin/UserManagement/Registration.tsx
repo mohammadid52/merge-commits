@@ -88,10 +88,12 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
   const Roles = [
     state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
     state.user.role === 'SUP' && {code: 'ADM', name: 'Admin'},
+    {code: 'SUP', name: 'Super Admin'},
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
+    {code: 'ST', name: 'Student'},
     state.user.role !== 'SUP' && isInModalPopup && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
@@ -280,20 +282,20 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
           message: RegistrationDict[userLanguage]['messages']['userrol'],
         };
       }
-      if (!newUserInputs.institution.id) {
-        return {
-          show: true,
-          type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['institution'],
-        };
-      }
-      if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
-        return {
-          show: true,
-          type: 'error',
-          message: 'class is required',
-        };
-      }
+      // if (!newUserInputs.institution.id) {
+      //   return {
+      //     show: true,
+      //     type: 'error',
+      //     message: RegistrationDict[userLanguage]['messages']['institution'],
+      //   };
+      // }
+      // if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
+      //   return {
+      //     show: true,
+      //     type: 'error',
+      //     message: 'class is required',
+      //   };
+      // }
       validated = true;
       if (validated) {
         signUp();
@@ -367,7 +369,7 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     let list = institutions.map((inst: any) => {
       return {code: inst.id, name: inst.name};
     });
-    setInstitutions(list);
+    setInstitutions([list[list.length - 1]]);
     setInstitutionsData(institutions);
   };
 
@@ -385,7 +387,10 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
   }, [institutionsData, instId]);
 
   return (
-    <div className={`w-full h-full ${isInInstitute ? isInModalPopup ? 'p-4' : 'py-8 px-12' : 'mt-4 p-12'}`}>
+    <div
+      className={`w-full h-full ${
+        isInInstitute ? (isInModalPopup ? 'p-4' : 'py-8 px-12') : 'mt-4 p-12'
+      }`}>
       {isInInstitute ? (
         !isInModalPopup && (
           <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
@@ -496,7 +501,7 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
                         value={`${newUserInputs.role}`}
                       />
                     </div>
-                    {/* <div className="sm:col-span-3 p-2">
+                    <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         style={true}
                         handleChange={handleInstituteChange}
@@ -509,39 +514,35 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
                           RegistrationDict[userLanguage].messages.ROLE_NO_OPTION
                         }
                       />
-                    </div> */}
-                    {newUserInputs.role &&
-                      newUserInputs.role === 'ST' &&
-                      newUserInputs.institution.id && (
-                        <>
-                          <div className="sm:col-span-3 p-2">
-                            <DropdownForm
-                              style={true}
-                              handleChange={handleClassChange}
-                              userInfo={`${newUserInputs.class.name}`}
-                              label="Class"
-                              id="class"
-                              items={instClasses}
-                              value={`${newUserInputs.class.id}`}
-                            />
-                          </div>
-                          <div className="sm:col-span-3 p-2">
-                            <Selector
-                              label={'Group'}
-                              selectedItem={newUserInputs?.group}
-                              list={newUserInputs.class.id ? groupOptions : []}
-                              placeholder={
-                                RegistrationDict[userLanguage].GROUP_PLACEHOLDER
-                              }
-                              onChange={onGroupChange}
-                              noOptionMessage={
-                                RegistrationDict[userLanguage].messages.GROUP_NO_OPTION
-                              }
-                              labelTextClass="text-m"
-                            />
-                          </div>
-                        </>
-                      )}
+                    </div>
+                    {newUserInputs.role && newUserInputs.role === 'ST' && (
+                      /*newUserInputs.institution.id &&*/ <>
+                        <div className="sm:col-span-3 p-2">
+                          <DropdownForm
+                            style={true}
+                            handleChange={handleClassChange}
+                            userInfo={`${newUserInputs.class.name}`}
+                            label="Class"
+                            id="class"
+                            items={instClasses}
+                            value={`${newUserInputs.class.id}`}
+                          />
+                        </div>
+                        <div className="sm:col-span-3 p-2">
+                          <Selector
+                            label={'Group'}
+                            selectedItem={newUserInputs?.group}
+                            list={newUserInputs.class.id ? groupOptions : []}
+                            placeholder={RegistrationDict[userLanguage].GROUP_PLACEHOLDER}
+                            onChange={onGroupChange}
+                            noOptionMessage={
+                              RegistrationDict[userLanguage].messages.GROUP_NO_OPTION
+                            }
+                            labelTextClass="text-m"
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </form>

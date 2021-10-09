@@ -135,6 +135,7 @@ const Login = ({updateAuthState}: LoginProps) => {
     } else {
       try {
         const user = await Auth.signIn(username, 'xIconoclast.5x');
+        console.log('user', user);
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           setNewUser(user);
           setCreatePassword(true);
