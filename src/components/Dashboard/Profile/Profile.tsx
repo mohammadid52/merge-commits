@@ -326,15 +326,16 @@ const Profile = (props: ProfilePageProps) => {
         return {
           ...checkpointObj,
           questions: {
-            items: checkpointObj.questionSeq.map((idStr: string) => {
-              let found = checkpointObj.questions.items.find(
-                (questionItem: any) => questionItem.question.id === idStr
-              );
-              // console.log('found ---', found);
-              return checkpointObj.questions.items.find(
-                (questionItem: any) => questionItem.question.id === idStr
-              );
-            }),
+            items: checkpointObj.questionSeq
+              ? checkpointObj.questionSeq.map((idStr: string) => {
+                  let found = checkpointObj.questions.items.find(
+                    (questionItem: any) => questionItem.question.id === idStr
+                  );
+                  return checkpointObj.questions.items.find(
+                    (questionItem: any) => questionItem.question.id === idStr
+                  );
+                })
+              : checkpointObj.questions.items,
           },
         };
       });
