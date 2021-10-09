@@ -749,7 +749,7 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  const handleLink = (e: React.MouseEvent) => {
+  const handleLink = () => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
@@ -882,7 +882,7 @@ const Dashboard = (props: DashboardProps) => {
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
-              onClick={handleLink}
+              onClick={stateUser.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
