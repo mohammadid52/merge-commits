@@ -111,7 +111,7 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           // defaultValue={activeTab}
-          >
+        >
           {tabsData.map((tab: ITabElements, index: number) => (
             <option className="transition-all" key={index}>
               {tab.title}
@@ -140,7 +140,7 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } ${
                   menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
+                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform scale-95 hover:scale-100 text-gray-700`}>
                 {tabWithNumbers ? index + 1 : ''}. {menu.title}
               </button>
             )

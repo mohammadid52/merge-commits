@@ -310,24 +310,37 @@ const User = ({instituteId}: IUserProps) => {
 
       userData.rooms = studentRooms;
 
-      const studentCurriculars: any = studentRooms
-        ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
-        : [];
+      const studentCurriculars: any =
+        studentRooms.length > 0
+          ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
+          : [];
 
-      const uniqCurriculars: any = studentCurriculars
-        ? getUniqItems(
-            studentCurriculars.filter((d: any) => d !== null),
-            'curriculumID'
-          )
-        : [];
+      // console.log('studentCurriculars', studentCurriculars);
 
-      const studCurriCheckp: any = uniqCurriculars
-        ? uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1)
-        : [];
+      const uniqCurriculars: any =
+        studentCurriculars.length > 0
+          ? getUniqItems(
+              studentCurriculars.filter((d: any) => d !== null),
+              'curriculumID'
+            )
+          : [];
+      // console.log('uniqCurriculars', uniqCurriculars);
 
-      const studentCheckpoints: any = studCurriCheckp
-        ? studCurriCheckp.map((item: any) => item?.checkpoint)
-        : [];
+      const studCurriCheckp: any =
+        uniqCurriculars.length > 0
+          ? uniqCurriculars
+              .map((item: any) => item?.curriculum?.checkpoints?.items)
+              .flat(1)
+          : [];
+
+      // console.log('studCurriCheckp', studCurriCheckp);
+
+      const studentCheckpoints: any =
+        studCurriCheckp.length > 0
+          ? studCurriCheckp.map((item: any) => item?.checkpoint)
+          : [];
+
+      // console.log('studentCheckpoints', studentCheckpoints);
 
       let sCheckpoints: any[] = [];
 
@@ -347,12 +360,14 @@ const User = ({instituteId}: IUserProps) => {
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
-      const demographicCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope !== 'private')
-        .reverse();
-      const privateCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope === 'private')
-        .reverse();
+      const demographicCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope !== 'private'
+      );
+      // .reverse();
+      const privateCheckpoints = uniqCheckpoints.filter(
+        (checkpoint: any) => checkpoint.scope === 'private'
+      );
+      // .reverse();
 
       const personalInfo: any = {...userData};
 

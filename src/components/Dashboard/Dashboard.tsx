@@ -112,6 +112,14 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
+  useEffect(() => {
+    if (state.currentPage === 'homepage') {
+      dispatch({
+        type: 'RESET_ROOMDATA',
+      });
+    }
+  }, [state.currentPage]);
+
   // ##################################################################### //
   // ############################ USER LOADING ########################### //
   // ##################################################################### //
@@ -190,6 +198,7 @@ const Dashboard = (props: DashboardProps) => {
     if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
+    setLocalStorageData('last_page', 'dashboard');
   }, []);
 
   // ##################################################################### //
@@ -369,41 +378,44 @@ const Dashboard = (props: DashboardProps) => {
   /**********************************
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
+  const listRoomCurriculums = async () => {
+    console.log('listRoomCurriculums - ', '');
+    if (state.roomData.rooms.length > 0) {
+      try {
+        const queryObj = {
+          name: 'customQueries.listRoomCurriculums',
+          valueObj: {
+            roomID: {eq: state.activeRoom},
+          },
+        };
 
-  useEffect(() => {
-    const listRoomCurriculums = async () => {
-      if (state.roomData.rooms.length > 0) {
-        try {
-          const queryObj = {
-            name: 'customQueries.listRoomCurriculums',
-            valueObj: {
+        // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
+        const roomCurriculumsFetch = await API.graphql(
+          graphqlOperation(queries.listRoomCurriculums, {
+            filter: {
               roomID: {eq: state.activeRoom},
             },
-          };
+          })
+        );
+        const response = await roomCurriculumsFetch;
+        // @ts-ignore
+        const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
 
-          // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
-          const roomCurriculumsFetch = await API.graphql(
-            graphqlOperation(queries.listRoomCurriculums, {
-              filter: {
-                roomID: {eq: state.activeRoom},
-              },
-            })
-          );
-          const response = await roomCurriculumsFetch;
-          // @ts-ignore
-          const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
-
-          if (arrayOfResponseObjects.length > 0) {
-            setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
-          }
-        } catch (e) {
-          console.error('RoomCurriculums fetch ERR: ', e);
-        } finally {
-          // console.log('curriciulum ids - ', curriculumIds);
+        if (arrayOfResponseObjects.length > 0) {
+          setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
         }
+      } catch (e) {
+        console.error('RoomCurriculums fetch ERR: ', e);
+      } finally {
+        // console.log('curriciulum ids - ', curriculumIds);
       }
-    };
-    listRoomCurriculums();
+    }
+  };
+
+  useEffect(() => {
+    if (state.activeRoom && state.activeRoom !== '') {
+      listRoomCurriculums();
+    }
   }, [state.activeRoom]);
 
   // Save info of selected room to cookie
@@ -588,7 +600,7 @@ const Dashboard = (props: DashboardProps) => {
 
       let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
 
-      console.log('response - ', mappedResponseObjects);
+      console.log('listSyllabus - ', mappedResponseObjects);
 
       //TODO: combine these dispatches
       dispatch({
@@ -600,19 +612,19 @@ const Dashboard = (props: DashboardProps) => {
       });
 
       // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
-      let scheduleDetails: any = await API.graphql(
-        graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-      );
-      scheduleDetails = scheduleDetails?.data?.getRoom;
+      // let scheduleDetails: any = await API.graphql(
+      //   graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+      // );
+      // scheduleDetails = scheduleDetails?.data?.getRoom;
 
-      if (
-        scheduleDetails &&
-        scheduleDetails.startDate &&
-        scheduleDetails.endDate &&
-        scheduleDetails.frequency
-      ) {
-        const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
-      }
+      // if (
+      //   scheduleDetails &&
+      //   scheduleDetails.startDate &&
+      //   scheduleDetails.endDate &&
+      //   scheduleDetails.frequency
+      // ) {
+      //   const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
+      // }
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
@@ -621,11 +633,37 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  useEffect(() => {
-    if (curriculumIds !== '') {
-      listSyllabus();
+  const initSchedule = async (syllabusArray: any[]) => {
+    if (syllabusArray) {
+      try {
+        let scheduleDetails: any = await API.graphql(
+          graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
+        );
+        scheduleDetails = scheduleDetails?.data?.getRoom;
+
+        if (
+          scheduleDetails &&
+          scheduleDetails.startDate &&
+          scheduleDetails.endDate &&
+          scheduleDetails.frequency
+        ) {
+          const modifiedData = calculateSchedule(syllabusArray, scheduleDetails);
+        }
+      } catch (e) {
+        console.error('error with initSchedule() ', e);
+      }
     }
-  }, [curriculumIds]);
+  };
+
+  useEffect(() => {
+    const getSyllabusAndSchedule = async () => {
+      await listSyllabus();
+      await initSchedule(state.roomData.syllabus);
+    };
+    if (curriculumIds !== '' && state.activeRoom) {
+      getSyllabusAndSchedule();
+    }
+  }, [state.activeRoom, curriculumIds]);
 
   /******************************************
    * 6.1 LIST ALL THE SYLLABUS LESSON       *
@@ -711,7 +749,7 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  const handleLink = (e: React.MouseEvent) => {
+  const handleLink = () => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
@@ -844,7 +882,7 @@ const Dashboard = (props: DashboardProps) => {
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
-              onClick={handleLink}
+              onClick={stateUser.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
@@ -855,7 +893,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {state.user.role === 'ST' && <EmojiFeedback />}
+        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}

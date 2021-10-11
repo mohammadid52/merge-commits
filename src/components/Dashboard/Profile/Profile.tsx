@@ -280,25 +280,37 @@ const Profile = (props: ProfilePageProps) => {
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
-      const studentInstitutions: any = studentClasses?.map(
-        (item: any) => item?.institution
-      );
-      const studentRooms: any = studentClasses
-        ?.map((item: any) => item?.rooms?.items)
-        ?.flat(1);
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
+
       const studentCurriculars: any = studentRooms
         .map((item: any) => item?.curricula?.items)
         .flat(1);
-      const uniqCurriculars: any = getUniqItems(
-        studentCurriculars.filter((d: any) => d !== null),
-        'curriculumID'
-      );
-      const studCurriCheckp: any = uniqCurriculars
-        .map((item: any) => item?.curriculum?.checkpoints?.items)
-        .flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map(
-        (item: any) => item?.checkpoint
-      );
+
+      const uniqCurriculars: any =
+        studentCurriculars.length > 0
+          ? getUniqItems(
+              studentCurriculars.filter((d: any) => d !== null),
+              'curriculumID'
+            )
+          : [];
+
+      const studCurriCheckp: any =
+        uniqCurriculars.length > 0
+          ? uniqCurriculars
+              .map((item: any) => item?.curriculum?.checkpoints?.items)
+              .flat(1)
+          : [];
+
+      const studentCheckpoints: any =
+        studCurriCheckp.length > 0
+          ? studCurriCheckp.map((item: any) => item?.checkpoint)
+          : [];
 
       const sCheckpoints: any[] = [];
 
@@ -307,7 +319,29 @@ const Profile = (props: ProfilePageProps) => {
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+
+      // console.log('uniqCheckpoints - ', uniqCheckpoints);
+
+      const sortedCheckpointQ = uniqCheckpoints.map((checkpointObj: any) => {
+        return {
+          ...checkpointObj,
+          questions: {
+            items: checkpointObj.questionSeq
+              ? checkpointObj.questionSeq.map((idStr: string) => {
+                  let found = checkpointObj.questions.items.find(
+                    (questionItem: any) => questionItem.question.id === idStr
+                  );
+                  return checkpointObj.questions.items.find(
+                    (questionItem: any) => questionItem.question.id === idStr
+                  );
+                })
+              : checkpointObj.questions.items,
+          },
+        };
+      });
+      // console.log('sorted ', sortedCheckpointQ);
+
+      const uniqCheckpointIDs: any = sortedCheckpointQ.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
       delete personalInfo.classes;
       if (uniqCheckpointIDs?.length > 0) {

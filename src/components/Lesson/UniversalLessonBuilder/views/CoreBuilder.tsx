@@ -3,7 +3,6 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
 import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import * as customQueries from '@customGraphql/customQueries';
@@ -22,9 +21,12 @@ import Toolbar from '@uiComponents/Toolbar';
 import Notifications from '@UlbUI/Notifications/UlbNotifications';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {find, findLastIndex, map, remove} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
+import {GlobalContext} from '@contexts/GlobalContext';
+import Tooltip from '@components/Atoms/Tooltip';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -114,7 +116,30 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     newLessonPlanShow,
   } = useULBContext();
 
-  const {clientKey, userLanguage} = useGlobalContext();
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
+  const LessonSlideover = () => {
+    return (
+      <div
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
+        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
+        <Tooltip placement="left" text="Show Activity Panel">
+          <div className="w-auto transform rotate-180 mr-1">
+            <RiArrowRightSLine color="#fff" size={24} />
+          </div>
+        </Tooltip>
+      </div>
+    );
+  };
+
+  const {
+    state: {
+      lessonPage: {themeSecBackgroundColor = 'bg-gray-700', themeTextColor = ''} = {},
+    },
+  } = useContext(GlobalContext);
 
   const params = useQuery(location.search);
 
@@ -362,8 +387,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       )}
 
       <div
-        id="main-builder-screen"
-        className={`relative dark-scroll grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white `}>
+        className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
+          activePageData && activePageData.class ? activePageData.class : ''
+        }`}>
+        <LessonSlideover />
+
         {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
         <Notifications />
         {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}

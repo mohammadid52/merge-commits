@@ -88,7 +88,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
-  const {lessonId}:any = useParams();
+  const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
   const {state, dispatch, clientKey, userLanguage, lessonState} = useContext(
     GlobalContext
@@ -580,19 +580,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     <div
       id={`universalLessonBuilderContainer`}
       className="h-full bg-dark-gray flex overflow-hidden">
-      <div
-        onClick={() => {
-          setNewLessonPlanShow(true);
-          setEditMode(true);
-        }}
-        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
-        <Tooltip placement="left" text="Show Activity Panel">
-          <div className="w-auto transform rotate-180 mr-1">
-            <RiArrowRightSLine color="#fff" size={24} />
-          </div>
-        </Tooltip>
-      </div>
-
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
         {/* <BreadCrums items={breadCrumsList} /> */}
