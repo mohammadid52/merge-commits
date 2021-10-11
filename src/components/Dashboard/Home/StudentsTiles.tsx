@@ -1,4 +1,5 @@
-import { GlobalContext } from '@contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import Buttons from '../../Atoms/Buttons';
@@ -16,8 +17,11 @@ const StudentsTiles = (props: {
   const {studentsList, title, state, isTeacher = false} = props;
 
   const {
+    clientKey,
+    userLanguage,
     state: {user},
   } = useContext(GlobalContext);
+  const {StudentDict} = useDictionary(clientKey);
 
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
@@ -116,8 +120,8 @@ const StudentsTiles = (props: {
         additionalClass="shadow bg-white mb-20 rounded-b-lg">
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
-            {list && list.length > 0 ? (
-              <ul className="grid grid-cols-2 justify-center items-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
+            {list?.length ? (
+              <ul className="grid justify-center items-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
                 {list &&
                   list.length > 0 &&
                   list.slice(0, viewMore ? list.length - 1 : 12).map(
@@ -140,7 +144,9 @@ const StudentsTiles = (props: {
                           className=""
                           onClick={() => {
                             if (student.id && isTeacher) {
-                              history.push(`/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${student.id}`);
+                              history.push(
+                                `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${student.id}`
+                              );
                             }
                           }}>
                           <div className="space-y-4">
@@ -170,7 +176,11 @@ const StudentsTiles = (props: {
                     }
                   )}
               </ul>
-            ) : null}
+            ) : (
+              <div className="grid grid-cols-2 justify-center items-center">
+                {StudentDict[userLanguage].NO_STUDENT}
+              </div>
+            )}
           </div>
         </div>
       </ContentCard>

@@ -100,7 +100,7 @@ const HeaderMegaMenu = () => {
         (user.role === 'FLW' || user.role === 'TR') && {
           title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
           key: 'roaster',
-          redirectionUrl: `${baseUrl}/class-rooms`,
+          redirectionUrl: `${baseUrl}/students`,
           active: location.pathname.indexOf('room') > -1,
         },
         (user.role === 'FLW' || user.role === 'TR') && {

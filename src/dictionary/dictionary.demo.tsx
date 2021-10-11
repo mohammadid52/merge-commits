@@ -3798,6 +3798,15 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const StudentDict:any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3862,6 +3871,7 @@ export {
   ProfileCheckpointlookupDict,
   RegistrationDict,
   SyllabusDict,
+  StudentDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
