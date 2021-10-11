@@ -1,14 +1,10 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {SiGoogleclassroom} from 'react-icons/si';
 
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as queries from '../../../../../graphql/queries';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';

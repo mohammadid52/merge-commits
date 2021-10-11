@@ -1724,6 +1724,8 @@ const RoomEDITdict: any = {
     CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
     CLASS_DYNAMICS_TAB_HEADING: 'TBD',
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
+    CLASS_STUDENT_TAB_HEADING: 'TBD',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'TBD',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
     messages: {
@@ -2677,6 +2679,7 @@ const RegistrationDict: any = {
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
       GROUP_NO_OPTION: 'Select class first',
+      GROUP_NO_OPTION_AFTER_FETCH: 'No group found',
       ROLE_NO_OPTION: 'Select role first',
     },
   },

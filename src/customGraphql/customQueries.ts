@@ -3732,6 +3732,7 @@ export const getInstitutionsList = /* GraphQL */ `
             id
             type
             name
+            roomId
           }
           nextToken
         }
@@ -4633,6 +4634,24 @@ export const listCurriculumUnitss = /* GraphQL */ `
         curriculumId
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listClassroomGroupssOptions = /* GraphQL */ `
+  query ListClassroomGroupss(
+    $filter: ModelClassroomGroupsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassroomGroupss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        classRoomID
+        groupName
+        groupType
       }
       nextToken
     }

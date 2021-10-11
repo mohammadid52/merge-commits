@@ -265,7 +265,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     } catch (error) {
       console.error(error.message);
       console.log('Error while fetching lesson data');
-      history.push(`/dashboard/lesson-builder`);
+      history.push(`/dashboard/manage-institutions/institution/${instId}/lessons`);
     }
   };
 

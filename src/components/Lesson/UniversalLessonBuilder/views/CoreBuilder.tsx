@@ -106,7 +106,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const goToLessonPlan = () => {
     history.push(
-      `/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
     );
   };
   const Button = ({

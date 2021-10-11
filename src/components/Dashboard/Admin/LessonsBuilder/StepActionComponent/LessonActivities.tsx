@@ -136,12 +136,6 @@ const LessonActivities = ({
 
   const pages = universalLessonDetails.lessonPlan;
 
-  const addNewLessonPage = () => {
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&isNewPage=${true}`
-    );
-  };
-
   const addNewLessonPlan = () => {
     /**
      * Removed the áutomatic pushes to the BUILDER,

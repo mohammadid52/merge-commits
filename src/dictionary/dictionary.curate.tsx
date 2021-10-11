@@ -1670,8 +1670,8 @@ const EditCurriculardict: any = {
 
 const RoomEDITdict: any = {
   EN: {
-    TITLE: 'Edit Class',
-    SUBTITLE: 'Edit Class information',
+    TITLE: 'Edit Classroom',
+    SUBTITLE: 'Edit Classroom information',
     HEADING: 'Classroom information',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',

@@ -26,7 +26,9 @@ import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import {goBackBreadCrumb} from '../../../../../utilities/functions';
+import Modal from '@components/Atoms/Modal';
+
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 
 interface EditClassProps {
   instId: string;
@@ -44,6 +46,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
   const defaultNewMember = {id: '', name: '', value: '', avatar: '', group: ''};
+
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [classData, setClassData] = useState(initialData);
   const [messages, setMessages] = useState({show: false, message: '', isError: false});
   const [addMessage, setAddMessage] = useState({message: '', isError: false});
@@ -85,8 +89,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const {
     editClassDict,
     BreadcrumsTitles,
-    BUTTONS: ButtonDict,
-    CommonlyUsedDict,
+    RegistrationDict,
   } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
 
@@ -348,7 +351,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setStudentIdToEdit('');
       setUpdating(false);
     } catch (error) {
-      console.log(error,'errorerror')
+      console.log(error, 'errorerror');
       setUpdating(false);
     }
   };
@@ -501,18 +504,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const goBack = () => {
-    if (unsavedChanges) {
-      setWarnModal({
-        show: true,
-        profile: false,
-        profileId: '',
-        goBack: true,
-        message: 'Do you want to save changes before going back?',
-      });
-    } else {
-      goBackBreadCrumb(breadCrumsList, history);
-    }
+  const postMutation = () => {
+    setShowRegistrationForm(false);
+    fetchClassData(classId);
   };
 
   const movetoStudentProfile = (profileID: string) => {
@@ -636,7 +630,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     imageFromS3={false}
                     creatable
                     creatableLabel={'Add students from register to class'}
-                    onCreate={() => history.push('/dashboard/registration')}
+                    onCreate={() => setShowRegistrationForm(true)}
                   />
                 </div>
               </div>
@@ -819,6 +813,22 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   message={warnModal2.message}
                   loading={deleting}
                 />
+              )}
+              {showRegistrationForm && (
+                <Modal
+                  showHeader={true}
+                  title={RegistrationDict[userLanguage]['title']}
+                  showHeaderBorder={true}
+                  showFooter={false}
+                  closeAction={() => setShowRegistrationForm(false)}>
+                  <Registration
+                    classId={classId}
+                    isInInstitute
+                    isInModalPopup
+                    postMutation={postMutation}
+                    instId={instId}
+                  />
+                </Modal>
               )}
             </Fragment>
           ) : null}
