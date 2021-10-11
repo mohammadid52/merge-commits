@@ -26,6 +26,7 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
@@ -913,7 +914,10 @@ const LessonApp = () => {
 
   return (
     <>
-      <FloatingSideMenu />
+      {/* 
+      TODO: Add this again later
+      */}
+      {/* <FloatingSideMenu /> */}
       <div
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>

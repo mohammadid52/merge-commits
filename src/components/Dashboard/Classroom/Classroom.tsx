@@ -6,6 +6,11 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData,
+} from '../../../utilities/localStorage';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -117,17 +122,25 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { classRoomDict, BreadcrumsTitles } = useDictionary(clientKey);
-  
-  useEffect(() => {
-    return () => {
-      dispatch({
-        type: 'RESET_ROOMDATA'})
-    }
-  },[])
+  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
+
+  // useEffect(() => {
+  //   // setLocalStorageData('last_page', 'classroom');
+  //   return () => {
+  //     let lastPage = getLocalStorageData('last_page');
+  //     if (lastPage === 'dashboard' || lastPage === 'classroom') {
+  //       dispatch({
+  //         type: 'RESET_ROOMDATA',
+  //       });
+  //       removeLocalStorageData('last_page');
+  //     } else if (lastPage === 'lesson') {
+  //       setLocalStorageData('last_page', 'classroom');
+  //     }
+  //   };
+  // }, []);
 
   // ##################################################################### //
-  // #################### ROOM SWITCHING (DEPRECATED) #################### //
+  // ########################### ROOM SWITCHING ########################## //
   // ##################################################################### //
   useEffect(() => {
     if (state.user.role === 'ST') {
@@ -250,7 +263,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       );
       setSettingLessons(false);
     } else {
-      setSettingLessons(false)
+      setSettingLessons(false);
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 

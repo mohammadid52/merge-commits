@@ -4,6 +4,7 @@ import {find, findLastIndex, map, remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {AiOutlineCheck, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {IconType} from 'react-icons/lib';
+import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -77,13 +78,30 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     fetchingLessonDetails,
     setLessonPlanFields,
     setEditMode,
-
     pushUserToThisId,
     previewMode,
     setPreviewMode,
     savingStatus,
   } = useULBContext();
+
   const {clientKey, userLanguage} = useContext(GlobalContext);
+
+  const LessonSlideover = () => {
+    return (
+      <div
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
+        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
+        <Tooltip placement="left" text="Show Activity Panel">
+          <div className="w-auto transform rotate-180 mr-1">
+            <RiArrowRightSLine color="#fff" size={24} />
+          </div>
+        </Tooltip>
+      </div>
+    );
+  };
 
   const {
     state: {
@@ -358,6 +376,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
+        <LessonSlideover />
+
         {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
         <div className="fixed z-100 bottom-3 right-5  w-auto ">
           <Transition

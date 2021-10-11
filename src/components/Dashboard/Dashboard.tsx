@@ -111,6 +111,14 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
+  useEffect(() => {
+    if (state.currentPage === 'homepage') {
+      dispatch({
+        type: 'RESET_ROOMDATA',
+      });
+    }
+  }, [state.currentPage]);
+
   // ##################################################################### //
   // ############################ USER LOADING ########################### //
   // ##################################################################### //
@@ -189,6 +197,7 @@ const Dashboard = (props: DashboardProps) => {
     if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
+    setLocalStorageData('last_page', 'dashboard');
   }, []);
 
   // ##################################################################### //
@@ -739,7 +748,7 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  const handleLink = (e: React.MouseEvent) => {
+  const handleLink = () => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
@@ -872,7 +881,7 @@ const Dashboard = (props: DashboardProps) => {
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
-              onClick={handleLink}
+              onClick={stateUser.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
@@ -883,7 +892,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {state.user.role === 'ST' && <EmojiFeedback />}
+        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}

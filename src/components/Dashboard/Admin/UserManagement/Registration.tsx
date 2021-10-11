@@ -100,6 +100,7 @@ const Registration = ({
   const Roles = [
     state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
     state.user.role === 'SUP' && {code: 'ADM', name: 'Admin'},
+    {code: 'SUP', name: 'Super Admin'},
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
@@ -427,7 +428,7 @@ const Registration = ({
     let list = institutions.map((inst: any) => {
       return {code: inst.id, name: inst.name};
     });
-    setInstitutions(list);
+    setInstitutions([list[list.length - 1]]);
     setInstitutionsData(institutions);
   };
 

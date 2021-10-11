@@ -3286,6 +3286,7 @@ export const getPersonData = /* GraphQL */ `
                         }
                       }
                     }
+                    questionSeq
                   }
                 }
               }
@@ -3324,6 +3325,7 @@ export const getPersonData = /* GraphQL */ `
                               }
                             }
                           }
+                          questionSeq
                         }
                       }
                     }

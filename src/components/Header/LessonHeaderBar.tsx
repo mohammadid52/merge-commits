@@ -18,8 +18,11 @@ const LessonHeaderBar = ({
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const theme = gContext.theme;
-
+  const initializeTimer = useStudentTimer();
   const history = useHistory();
+
+  if (initializeTimer) {
+  }
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
