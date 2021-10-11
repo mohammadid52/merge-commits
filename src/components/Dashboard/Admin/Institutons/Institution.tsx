@@ -122,6 +122,13 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
       last: true,
     };
+  } else if (pathname.indexOf('students') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'];
+    breadcrumbPathForSection = {
+      title: heroSectionTitle,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/students`,
+      last: true,
+    };
   } else if (pathname.indexOf('units') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['UNITS'];
     breadcrumbPathForSection = {

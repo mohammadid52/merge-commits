@@ -7,14 +7,16 @@ import ContentCard from '../../Atoms/ContentCard';
 import SearchInput from '../../Atoms/Form/SearchInputToggle';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import Loader from '../../Atoms/Loader';
 
 const StudentsTiles = (props: {
   studentsList: any;
   state: any;
   title: string;
   isTeacher?: boolean;
+  loading?: boolean;
 }) => {
-  const {studentsList, title, state, isTeacher = false} = props;
+  const {studentsList, title, state, isTeacher = false, loading = false} = props;
 
   const {
     clientKey,
@@ -120,8 +122,14 @@ const StudentsTiles = (props: {
         additionalClass="shadow bg-white mb-20 rounded-b-lg">
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
-            {list?.length ? (
-              <ul className="grid justify-center items-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
+            {loading ? (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <Loader color="rgba(107, 114, 128, 1)" />
+                </div>
+              </div>
+            ) : list?.length ? (
+              <ul className="grid grid-cols-2 justify-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
                 {list &&
                   list.length > 0 &&
                   list.slice(0, viewMore ? list.length - 1 : 12).map(
@@ -177,7 +185,7 @@ const StudentsTiles = (props: {
                   )}
               </ul>
             ) : (
-              <div className="grid grid-cols-2 justify-center items-center">
+              <div className="grid justify-center items-center">
                 {StudentDict[userLanguage].NO_STUDENT}
               </div>
             )}

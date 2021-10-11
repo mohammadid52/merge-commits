@@ -36,7 +36,7 @@ interface newUserInput {
   externalId: string;
   group: {
     id: string;
-    name: string
+    name: string;
   };
   message: {
     show: boolean;
@@ -69,7 +69,7 @@ const initialState: newUserInput = {
   message: {show: false, text: '', type: ''},
   institution: {id: '', name: ''},
   class: {id: '', name: '', roomId: ''},
-  group: {id: '', name: ''}
+  group: {id: '', name: ''},
 };
 
 const Registration = ({
@@ -130,9 +130,10 @@ const Registration = ({
         class: {
           id: classId,
           name: classData.name,
-          roomId: classData.roomId
+          roomId: classData.roomId,
         },
       }));
+      getClassRoomGroups(classData.roomId)
     }
   }, [classId]);
 
@@ -167,10 +168,12 @@ const Registration = ({
           },
         })
       );
-      setGroups(list?.data?.listClassroomGroupss.items?.map((item:any) => ({
-        name: item.groupName,
-        id: item.id
-      })));
+      setGroups(
+        list?.data?.listClassroomGroupss.items?.map((item: any) => ({
+          name: item.groupName,
+          id: item.id,
+        }))
+      );
       setGroupLoading(false);
     } catch (error) {
       setGroupLoading(false);
@@ -223,18 +226,19 @@ const Registration = ({
           await API.graphql(
             graphqlOperation(customMutations.createClassStudent, {input})
           );
+          if (newUserInputs.group?.id) {
+            await API.graphql(
+              graphqlOperation(customMutations.createClassroomGroupStudents, {
+                input: {
+                  classRoomGroupID: newUserInputs.group.id,
+                  studentEmail: newUserInputs.email,
+                  studentAuthId: authId,
+                },
+              })
+            );
+          }
         }
-        if (newUserInputs.group?.id) {
-          await API.graphql(
-            graphqlOperation(customMutations.createClassroomGroupStudents, {
-              input: {
-                classRoomGroupID: newUserInputs.group.id,
-                studentEmail: newUserInputs.email,
-                studentAuthId: authId
-              },
-            })
-          );
-        }
+        
       }
       handleMessage('success', 'User registered successfully');
       if (isInModalPopup) {
@@ -411,7 +415,7 @@ const Registration = ({
     });
   };
 
-  const handleClassChange = (item: {name: string; code: string, roomId: string}) => {
+  const handleClassChange = (item: {name: string; code: string; roomId: string}) => {
     getClassRoomGroups(item.roomId);
     setNewUserInputs(() => {
       return {
@@ -594,22 +598,28 @@ const Registration = ({
                               />
                             </div>
                           )}
-                          <div className="sm:col-span-3 p-2">
-                            <Selector
-                              label={'Group'}
-                              selectedItem={newUserInputs?.group?.name}
-                              list={groups || []}
-                              placeholder={
-                                RegistrationDict[userLanguage].GROUP_PLACEHOLDER
-                              }
-                              onChange={onGroupChange}
-                              noOptionMessage={
-                                newUserInputs.class.id ? RegistrationDict[userLanguage].messages.GROUP_NO_OPTION_AFTER_FETCH : RegistrationDict[userLanguage].messages.GROUP_NO_OPTION
-                              }
-                              labelTextClass="text-m"
-                              loading={groupLoading}
-                            />
-                          </div>
+                          {groups?.length && (
+                            <div className="sm:col-span-3 p-2">
+                              <Selector
+                                label={'Group'}
+                                selectedItem={newUserInputs?.group?.name}
+                                list={groups || []}
+                                placeholder={
+                                  RegistrationDict[userLanguage].GROUP_PLACEHOLDER
+                                }
+                                onChange={onGroupChange}
+                                noOptionMessage={
+                                  newUserInputs.class.id
+                                    ? RegistrationDict[userLanguage].messages
+                                        .GROUP_NO_OPTION_AFTER_FETCH
+                                    : RegistrationDict[userLanguage].messages
+                                        .GROUP_NO_OPTION
+                                }
+                                labelTextClass="text-m"
+                                loading={groupLoading}
+                              />
+                            </div>
+                          )}
                         </>
                       )}
                   </div>

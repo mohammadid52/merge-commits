@@ -2764,6 +2764,7 @@ const UserInformationDict: any = {
     account: 'Account Created',
     ondemand: 'On-Demand',
     SUPER_ADMIN: 'Super Admin',
+    RESET_PASSWORD: 'Reset password',
   },
   ES: {
     heading: 'TBD',
@@ -2777,6 +2778,7 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
   },
 };
 

@@ -265,7 +265,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    history.push(`/dashboard/manage-users/user?id=${profileId}`);
+    history.push(`/dashboard/manage-institutions/institution/${instituteId}/manage-users/${profileId}`);
   };
 
   const postMutation = () => {
