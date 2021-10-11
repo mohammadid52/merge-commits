@@ -14,6 +14,7 @@ export const PageBuilderProvider = ({children}: any) => {
   const [showMovementBox, setShowMovementBox] = useState(false);
   const [navState, setNavState] = useState<NavState>('home');
   const [activeContentItem, setActiveContentItem] = useState(null); // content type
+  const [showLocationIcon, setShowLocationIcon] = useState(false);
 
   return (
     <PageBuilderContext.Provider
@@ -27,6 +28,8 @@ export const PageBuilderProvider = ({children}: any) => {
         moveDir,
         setMoveDir,
         showMovementBox,
+        showLocationIcon,
+        setShowLocationIcon,
         setShowMovementBox,
         navState,
         setNavState,

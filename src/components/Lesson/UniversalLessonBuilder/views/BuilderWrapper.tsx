@@ -143,7 +143,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setAddContentModal({type: '', show: false});
     setCurrentModalDialog('');
   };
-  const {setSelectedComponent, selectedComponent} = usePageBuilderContext();
+  const {
+    setSelectedComponent,
+    selectedComponent,
+    setShowLocationIcon,
+  } = usePageBuilderContext();
 
   useEffect(() => {
     if (!isEmpty(selectedComponent)) {
@@ -248,6 +252,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
     setSelectedComponent(null);
+    setShowLocationIcon(false);
     if (showPopup) {
       wait(700).then(() => {
         setSavingStatus('loading');

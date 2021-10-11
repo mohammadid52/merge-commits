@@ -64,7 +64,7 @@ const PageBuilderLayout = ({
   return (
     <div
       style={{
-        zIndex: 999999,
+        zIndex: 9990,
         maxWidth: open ? width : '0rem',
         minWidth: open ? width : '0rem',
       }}

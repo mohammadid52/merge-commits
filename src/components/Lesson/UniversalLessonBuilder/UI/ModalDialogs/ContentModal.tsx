@@ -135,7 +135,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           intenseOpacity ? 'dark-backdrop' : 'backdrop fade-in'
         } fixed inset-0 bg-black`}></div>
       <div
-        style={{zIndex: 10000, maxWidth: 'calc(100vw - 28rem )'}}
+        style={{zIndex: 10000}}
         onClick={() => closeOnBackdrop && closeAction()}
         className={
           'fixed modal transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none'

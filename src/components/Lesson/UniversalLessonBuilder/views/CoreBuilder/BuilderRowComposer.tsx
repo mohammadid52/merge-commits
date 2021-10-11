@@ -42,47 +42,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const {
-    selectedPageID,
-    universalLessonDetails,
-    previewMode,
-    updateMovableList,
-  } = useULBContext();
-
-  const LastBlock = ({selectedPageDetails}: any) => {
-    return !previewMode ? (
-      <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-        <AddNewBlock
-          idx={selectedPageDetails.pageContent.length - 1}
-          mode={mode}
-          handleModalPopToggle={(dialogToToggle) =>
-            handleModalPopToggle(
-              dialogToToggle,
-              selectedPageDetails.pageContent.length,
-              'pageContent',
-              selectedPageID
-            )
-          }
-        />
-      </BuilderRowWrapper>
-    ) : (
-      <div />
-    );
-  };
+  const {selectedPageID, universalLessonDetails} = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
-
-  const handleOnDragEnd = (result: any, pageContentId: string, partContent: any) => {
-    if (!result.destination) return;
-    const items = Array.from(partContent);
-
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    updateMovableList(items, 'pageContent', selectedPageID, pageContentId);
-  };
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
@@ -148,6 +112,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             editedID={editedID}
                             pageContentID={pagePart.id}
                             contentType={content.type}
+                            handleModalPopToggle={handleModalPopToggle}
                             contentValue={content.value}
                             partContentID={content.id}
                             isComponent={true}
