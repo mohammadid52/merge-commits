@@ -1,7 +1,7 @@
-import PageBuilderSlideOver from '@atoms/Slideover/PageBuilderSlideOver';
+import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
+import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
 import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
@@ -27,6 +27,7 @@ import {useHistory} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '@contexts/GlobalContext';
 import Tooltip from '@components/Atoms/Tooltip';
+import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -70,7 +71,7 @@ const PageBuilderLayout = ({
       className={classNames(
         overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
         open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform   transition-all duration-300  fixed right-0 inset-y-0 break-normal h-screen bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+        'p-8 transform   transition-all duration-300  absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
       )}>
       {children}
     </div>
@@ -149,6 +150,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     showLessonEditOverlay,
     setShowLessonEditOverlay,
     setCollapseSidebarOverlay,
+    showDataForCopyClone,
   } = useOverlayContext();
 
   useEffect(() => {
@@ -156,7 +158,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   }, []);
 
   useEffect(() => {
-    if (newLessonPlanShow) {
+    if (newLessonPlanShow || showDataForCopyClone) {
       setShowLessonEditOverlay(false);
     } else {
       if (previewMode) {
@@ -165,7 +167,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         setShowLessonEditOverlay(true);
       }
     }
-  }, [newLessonPlanShow, previewMode]);
+  }, [newLessonPlanShow, previewMode, showDataForCopyClone]);
 
   useEffect(() => {
     if (pageId === 'open-overlay') {
@@ -376,7 +378,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   };
 
   return (
-    <>
+    <div className="relative">
       {activePageData && show && (
         <ModalPopUp
           message={message}
@@ -385,6 +387,28 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
+
+      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
+        <NewLessonPlanSO
+          editMode={editMode}
+          setEditMode={setEditMode}
+          pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+          open={newLessonPlanShow}
+          setOpen={setNewLessonPlanShow}
+          activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+        />
+      </PageBuilderLayout>
+
+      <PageBuilderLayout overflowHidden open={showLessonEditOverlay}>
+        <PageBuilderSlideOver
+          deleteFromULBHandler={deleteFromULBHandler}
+          open={showLessonEditOverlay}
+          handleEditBlockContent={handleEditBlockContent}
+          handleModalPopToggle={handleModalPopToggle}
+        />
+      </PageBuilderLayout>
+
+      <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
 
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
@@ -398,39 +422,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
         {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
 
-        <PageBuilderLayout overflowHidden open={showLessonEditOverlay}>
-          <PageBuilderSlideOver
-            deleteFromULBHandler={deleteFromULBHandler}
-            open={showLessonEditOverlay}
-            handleEditBlockContent={handleEditBlockContent}
-            handleModalPopToggle={handleModalPopToggle}
-          />
-        </PageBuilderLayout>
-        <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
-          <NewLessonPlanSO
-            editMode={editMode}
-            setEditMode={setEditMode}
-            pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-            open={newLessonPlanShow}
-            setOpen={setNewLessonPlanShow}
-            activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
-          />
-        </PageBuilderLayout>
-
         {/* ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
         <div
           style={{
             marginLeft: showLessonEditOverlay || newLessonPlanShow ? '-15rem' : '0rem',
           }}
-          className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
+          className={`col-start-2  items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar
-              getCopyData={getCopyData}
-              getCloneData={getCloneData}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
-              universalLessonDetails={universalLessonDetails}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           )}
@@ -461,6 +463,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </LessonPageWrapper>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -88,7 +88,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
   return (
-    <>
+    <div>
       {selectedPageID &&
       selectedPageDetails &&
       selectedPageDetails.pageContent &&
@@ -168,50 +168,36 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             createNewBlockULBHandler={createNewBlockULBHandler}
                             deleteFromULBHandler={deleteFromULBHandler}
                             updateFromULBHandler={updateFromULBHandler}>
-                            {
-                              content.value.length > 0 ? (
-                                <div className={`${paddingForHeader(content.type)}`}>
-                                  <div
-                                    className={`${
-                                      content.type === FORM_TYPES.JUMBOTRON ||
-                                      content.type.includes('writing-exercise')
-                                        ? 'px-4 pt-4'
-                                        : content.type === 'header'
-                                        ? ''
-                                        : content.class
-                                    }`}
-                                    id={`${
-                                      content.type === 'notes-form' ? '' : content.id
-                                    }`}>
-                                    {composePartContent(
-                                      content.id,
-                                      content.type,
-                                      content.value,
-                                      `pp_${idx}_pc_${idx2}`,
-                                      content.class,
-                                      pagePart.id,
-                                      mode,
-                                      updateBlockContentULBHandler,
-                                      idx2,
-                                      undefined, // notesData
-                                      false // isStudent
-                                    )}
-                                  </div>
+                            {content.value.length > 0 ? (
+                              <div className={`${paddingForHeader(content.type)}`}>
+                                <div
+                                  className={`${
+                                    content.type === FORM_TYPES.JUMBOTRON ||
+                                    content.type.includes('writing-exercise')
+                                      ? 'px-4 pt-4'
+                                      : content.type === 'header'
+                                      ? ''
+                                      : content.class
+                                  }`}
+                                  id={`${
+                                    content.type === 'notes-form' ? '' : content.id
+                                  }`}>
+                                  {composePartContent(
+                                    content.id,
+                                    content.type,
+                                    content.value,
+                                    `pp_${idx}_pc_${idx2}`,
+                                    content.class,
+                                    pagePart.id,
+                                    mode,
+                                    updateBlockContentULBHandler,
+                                    idx2,
+                                    undefined, // notesData
+                                    false // isStudent
+                                  )}
                                 </div>
-                              ) : null
-                              // <AddNewBlock
-                              //   idx={-1}
-                              //   mode={mode}
-                              //   handleModalPopToggle={(dialogToToggle) =>
-                              //     handleModalPopToggle(
-                              //       dialogToToggle,
-                              //       idx2,
-                              //       'partContent',
-                              //       pagePart.id
-                              //     )
-                              //   }
-                              // />
-                            }
+                              </div>
+                            ) : null}
                           </EditOverlayBlock>
                         </li>
                       ))}
@@ -224,60 +210,19 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                       <h1 className={`w-auto text-center`}>This block has no content</h1>
                     </div>
                   )}
-                  {/* {!previewMode && (
-                    <div className="my-2 grid grid-cols-1">
-                      <AddNewBlockMini
-                        mode={mode}
-                        handleModalPopToggle={(dialogToToggle) =>
-                          handleModalPopToggle(
-                            dialogToToggle,
-                            pagePart?.partContent?.length,
-                            'partContent',
-                            pagePart.id
-                          )
-                        }
-                      />
-                    </div>
-                  )} */}
                 </BuilderRowWrapper>
               </EditOverlayBlock>
-
-              {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
             </div>
           )),
-          // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          // <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,
         ]
       ) : (
         <>
           <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
             This page has no layout information.
           </h1>
-          {/* <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
-            Click on the below button to add components
-          </h1>
-          <EditOverlayBlock
-            mode={mode}
-            key={`pp_addNew`}
-            contentID={`addNewRow`}
-            editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
-            createNewBlockULBHandler={createNewBlockULBHandler}
-            updateFromULBHandler={updateFromULBHandler}>
-            <BuilderRowWrapper
-              mode={mode}
-              hasContent={false}
-              dataIdAttribute={`addNewRow`}>
-              <AddNewBlock
-                idx={-1}
-                mode={mode}
-                handleModalPopToggle={handleModalPopToggle}
-              />
-            </BuilderRowWrapper>
-          </EditOverlayBlock> */}
         </>
       )}
-    </>
+    </div>
   );
 };
 

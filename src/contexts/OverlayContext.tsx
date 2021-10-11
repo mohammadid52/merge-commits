@@ -15,6 +15,7 @@ export function OverlayContextProvider(props: React.PropsWithChildren<{}>): JSX.
     show: false,
     type: '',
   });
+  const [showDataForCopyClone, setShowDataForCopyClone] = useState(false);
 
   return (
     <ContextMenuContext.Provider
@@ -29,6 +30,8 @@ export function OverlayContextProvider(props: React.PropsWithChildren<{}>): JSX.
         setCollapseSidebarOverlay,
         addContentModal,
         setAddContentModal,
+        showDataForCopyClone,
+        setShowDataForCopyClone,
       }}>
       {props.children}
     </ContextMenuContext.Provider>
