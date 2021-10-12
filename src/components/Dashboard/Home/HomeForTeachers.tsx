@@ -83,10 +83,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     }
   };
 
-  const getTeacherList =
-    homeData && homeData.length > 0
-      ? homeData.reduce((acc: any[], dataObj: any) => {
-          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+  const getTeacherList = homeData?.length
+    ? homeData[0]?.class?.rooms?.items.reduce((acc: any[], dataObj: any) => {
+        const teacherObj = dataObj?.teacher;
+        if (teacherObj) {
           const teacherIsPresent = acc?.find(
             (teacher: any) =>
               teacher?.firstName === teacherObj?.firstName &&
@@ -97,17 +97,18 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           } else {
             return [...acc, teacherObj];
           }
-        }, [])
-      : [];
+        }
+        return acc;
+      }, [])
+    : [];
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
     let uniqIds: string[] = [];
-    homeData &&
-      homeData.length > 0 &&
-      homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-          item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
+    homeData?.length &&
+      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+        if (item.coTeachers?.items?.length) {
+          item.coTeachers.items.forEach((_item: any) => {
             if (!uniqIds.includes(_item.teacher.email)) {
               coTeachersList.push(_item.teacher);
               uniqIds.push(_item.teacher.email);
@@ -251,7 +252,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             />
 
             {/* Teachers Section */}
-            {teacherList && teacherList.length > 0 && (
+            {Boolean(teacherList?.length || coTeachersList?.length) && (
               <div className="my-6">
                 <SectionTitleV3
                   title={`Your Team`}

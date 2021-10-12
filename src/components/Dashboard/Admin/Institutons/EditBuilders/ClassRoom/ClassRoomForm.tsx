@@ -45,10 +45,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
-  const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -66,7 +64,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     return new URLSearchParams(location.search);
   };
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary(clientKey);
+  const {RoomBuilderdict, RoomEDITdict} = useDictionary('curate');
 
   const params = useQuery();
 

@@ -83,7 +83,6 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
@@ -120,6 +119,13 @@ const Institution = (props: InstitutionProps) => {
     breadcrumbPathForSection = {
       title: heroSectionTitle,
       url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
+      last: true,
+    };
+  } else if (pathname.indexOf('students') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'];
+    breadcrumbPathForSection = {
+      title: heroSectionTitle,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/students`,
       last: true,
     };
   } else if (pathname.indexOf('units') > -1) {
