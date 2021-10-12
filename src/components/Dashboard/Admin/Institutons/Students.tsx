@@ -16,8 +16,6 @@ const Students = (props: any) => {
   }, []);
 
   const fetchStudentList = async () => {
-    console.log('inside fetchStudentList');
-
     const response: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForTeachers, {
         filter: {teacherAuthID: {eq: state.user.authId}},

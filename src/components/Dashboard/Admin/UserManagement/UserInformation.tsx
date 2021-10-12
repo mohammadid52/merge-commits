@@ -212,7 +212,7 @@ const UserInformation = ({
                     <Status status={user?.onDemand ? 'YES' : 'NO'} />
                   </dd>
                 </div>
-                <div className="sm:col-span-1 p-2">
+                <div className="sm:col-span-1 p-2 flex items-centers">
                   <Buttons
                     label={UserInformationDict[userLanguage]['RESET_PASSWORD']}
                     onClick={resetPassword}
