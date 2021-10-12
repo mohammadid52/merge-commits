@@ -9,8 +9,6 @@ import * as customQueries from '@customGraphql/customQueries';
 import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
 
-import BreadCrums from '@atoms/BreadCrums';
-import SectionTitle from '@atoms/SectionTitle';
 import PageWrapper from '@atoms/PageWrapper';
 
 import {getAsset} from '../../../../assets';
@@ -85,7 +83,6 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
@@ -98,13 +95,6 @@ const Institution = (props: InstitutionProps) => {
     breadcrumbPathForSection = {
       title: heroSectionTitle,
       url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
-      last: true,
-    };
-  }else if (pathname.indexOf('edit') > -1) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
       last: true,
     };
   } else if (pathname.indexOf('staff') > -1) {
@@ -131,6 +121,13 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
       last: true,
     };
+  } else if (pathname.indexOf('students') > -1) {
+    heroSectionTitle = Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'];
+    breadcrumbPathForSection = {
+      title: heroSectionTitle,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/students`,
+      last: true,
+    };
   } else if (pathname.indexOf('units') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['UNITS'];
     breadcrumbPathForSection = {
@@ -152,7 +149,7 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
       last: true,
     };
-  } else if (pathname.indexOf('room') > -1) {
+  } else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
     breadcrumbPathForSection = {
       title: heroSectionTitle,
@@ -164,6 +161,13 @@ const Institution = (props: InstitutionProps) => {
     breadcrumbPathForSection = {
       title: heroSectionTitle,
       url: `/dashboard/manage-institutions/institution/${institutionId}/research-and-analytics`,
+      last: true,
+    };
+  } else if (pathname.indexOf('edit') > -1) {
+    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
+    breadcrumbPathForSection = {
+      title: heroSectionTitle,
+      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
       last: true,
     };
   }

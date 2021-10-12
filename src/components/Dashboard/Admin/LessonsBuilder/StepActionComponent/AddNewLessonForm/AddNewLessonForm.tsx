@@ -523,13 +523,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             </div>
           </Card>
           <Card cardTitle="Lesson Objectives">
-            <div className="max-h-96 p-4">
+            <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 maxHeight={'max-h-96'}
                 initialValue={objectiveHtml}
                 onChange={(htmlContent, plainText) =>
                   setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
                 }
+                wrapperClass={'lesson'}
               />
             </div>
           </Card>
@@ -541,12 +542,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             />
           </Card>
           <Card cardTitle="Reminder & Notes">
-            <div className="max-h-96 p-4">
+            <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 initialValue={notesHtml}
                 onChange={(htmlContent, plainText) =>
                   setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
                 }
+                wrapperClass={'lesson'}
               />
             </div>
           </Card>

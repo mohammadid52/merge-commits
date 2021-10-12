@@ -143,6 +143,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
         open={newLessonPlanShow}
         setOpen={setNewLessonPlanShow}
         activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+        instId={instId}
       />
     </>
   );

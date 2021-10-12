@@ -98,7 +98,7 @@ const CourseCard = ({
               key={index}
               style={{background: colors[Math.floor(Math.random() * colors.length)]}}
               className="mb-1 w-auto bg-gray-200 rounded-full px-2 text-xs leading-loose cursor-pointer">
-              {syllabus.name}
+              {syllabus.unit.name}
             </span>
           ))}
         </div>

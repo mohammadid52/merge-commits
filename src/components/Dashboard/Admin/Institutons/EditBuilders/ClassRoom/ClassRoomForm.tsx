@@ -45,10 +45,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
-  const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -66,7 +64,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     return new URLSearchParams(location.search);
   };
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary(clientKey);
+  const {RoomBuilderdict, RoomEDITdict} = useDictionary('curate');
 
   const params = useQuery();
 
@@ -136,39 +134,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     removeErrorMsg();
   };
 
-  const selectInstitute = async (val: string, name: string, id: string) => {
-    if (roomData.institute.id !== id) {
-      setRoomData({
-        ...roomData,
-        institute: {
-          id: id,
-          name: name,
-          value: val,
-        },
-        teacher: {id: '', name: '', value: ''},
-        coTeachers: [{}],
-        classRoom: {id: '', name: '', value: ''},
-        curricular: {id: '', name: '', value: ''},
-      });
-      setUnsavedChanges(true);
-
-      removeErrorMsg();
-    }
-  };
-
-  const selectClass = (val: string, name: string, id: string) => {
-    setRoomData({
-      ...roomData,
-      classRoom: {
-        id: id,
-        name: name,
-        value: val,
-      },
-    });
-    setUnsavedChanges(true);
-
-    removeErrorMsg();
-  };
   const selectCurriculum = (val: string, name: string, id: string) => {
     setRoomData({
       ...roomData,

@@ -38,13 +38,13 @@ const HeaderMegaMenu = () => {
           redirectionUrl: `${baseUrl}/staff`,
           active: location.pathname.indexOf('staff') > -1,
         },
-        {
+        (user.role === 'SUP' || user.role === 'ADM') && {
           title: 'User registry',
           key: 'user_registry',
           redirectionUrl: `${baseUrl}/manage-users`,
           active: location.pathname.indexOf('manage-users') > -1,
         },
-        {
+        (user.role === 'ADM' || user.role === 'FLW' || user.role === 'TR') && {
           title: 'Register New User',
           key: 'register',
           redirectionUrl: `${baseUrl}/register-user`,
@@ -80,7 +80,7 @@ const HeaderMegaMenu = () => {
         },
       ],
     },
-    {
+    user.role !== 'BLD' && {
       title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
       key: 'class',
       type: 'dropdown',
@@ -100,7 +100,13 @@ const HeaderMegaMenu = () => {
         (user.role === 'FLW' || user.role === 'TR') && {
           title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
           key: 'roaster',
-          redirectionUrl: `${baseUrl}/class-rooms`,
+          redirectionUrl: `${baseUrl}/students`,
+          active: location.pathname.indexOf('room') > -1,
+        },
+        (user.role === 'FLW' || user.role === 'TR') && {
+          title: Institute_info[userLanguage]['TABS']['LIVE_CLASS_ROOM'],
+          key: 'live_classroom',
+          redirectionUrl: `/dashboard/home`,
           active: location.pathname.indexOf('room') > -1,
         },
       ].filter(Boolean),
@@ -127,7 +133,7 @@ const HeaderMegaMenu = () => {
       redirectionUrl: `${baseUrl}/research-and-analytics`,
       active: location.pathname.indexOf('research-and-analytics') > -1,
     },
-  ];
+  ].filter(Boolean);
 
   // ~~~~~~~~~~~~~ MENU STUDENT ~~~~~~~~~~~~ //
   const headerMenusForStudent = [

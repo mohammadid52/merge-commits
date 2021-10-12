@@ -10,7 +10,6 @@ import {getAsset} from '../../../../../../assets';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 import * as mutations from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
@@ -208,7 +207,7 @@ const AddCourse = (props: IAddCourse) => {
     );
     const filteredList: any = curricularsList.map((item: any) => {
       const result: any = item?.universalSyllabus?.items.filter(
-        (unit: any) => !selectedSyllabusId.includes(unit?.id)
+        (unit: any) => !selectedSyllabusId.includes(unit?.unitId)
       );
       return {
         id: item?.id,
