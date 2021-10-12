@@ -89,7 +89,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     theme,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, BreadcrumsTitles, RegistrationDict} = useDictionary(clientKey);
+  const {editClassDict, RegistrationDict} = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
 
   // const breadCrumsList = [
@@ -117,7 +117,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   // ];
 
   const gotoProfileInfo = (profileId: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
+    );
   };
 
   const fetchClassData = async (classId: string) => {
@@ -263,7 +265,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       name: name,
       value: str,
       avatar: avatar,
-      group: {id:'', name:''},
+      group: {id: '', name: ''},
     });
     if (addMessage.message) {
       setAddMessage({
@@ -857,7 +859,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   showFooter={false}
                   closeAction={() => setShowRegistrationForm(false)}>
                   <Registration
-                    classId={classId}
+                    classData={{classId, roomId: roomData.id}}
                     isInInstitute
                     isInModalPopup
                     postMutation={postMutation}

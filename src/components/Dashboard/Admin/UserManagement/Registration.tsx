@@ -105,7 +105,7 @@ const Registration = ({
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    {code: 'ST', name: 'Student'},
+    (!isInModalPopup || (isInModalPopup && classId)) && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -133,7 +133,7 @@ const Registration = ({
           roomId: classData.roomId,
         },
       }));
-      getClassRoomGroups(classData.roomId)
+      getClassRoomGroups(classData.roomId);
     }
   }, [classId]);
 
@@ -238,7 +238,7 @@ const Registration = ({
             );
           }
         }
-        
+
       }
       handleMessage('success', 'User registered successfully');
       if (isInModalPopup) {
@@ -598,7 +598,7 @@ const Registration = ({
                               />
                             </div>
                           )}
-                          {groups?.length && (
+                          {Boolean(groups?.length) && (
                             <div className="sm:col-span-3 p-2">
                               <Selector
                                 label={'Group'}
