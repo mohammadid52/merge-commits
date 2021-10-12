@@ -417,7 +417,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
-        <Notifications />
+        {/* <Notifications /> */}
         {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
 
         {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}

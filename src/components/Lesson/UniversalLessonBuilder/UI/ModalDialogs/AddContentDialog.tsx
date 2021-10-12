@@ -1,9 +1,9 @@
 import Buttons from '@components/Atoms/Buttons';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {classNames} from '@UlbUI/FormElements/TextInput';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {isEmpty, noop} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
+import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
   AiOutlineBorderlessTable,
@@ -22,20 +22,16 @@ import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
-import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {DIVIDER, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
-  onComponentCreateClick?: () => void;
+
   onItemClick?: (type: string, bottom?: boolean) => void;
 }
-const AddContentDialog = ({
-  onItemClick,
-  onComponentCreateClick,
-  setCurrentHelpStep,
-}: AddContentDialog) => {
+const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
@@ -266,11 +262,6 @@ const AddContentDialog = ({
     setCurrentHelpStep(1);
   };
 
-  const onCreateComponentClick = () => {
-    onComponentCreateClick();
-    setActiveContentItem(null);
-  };
-
   useEffect(() => {
     if (!isEmpty(selectedComponent)) {
       setCurrentHelpStep(2);
@@ -358,19 +349,6 @@ const AddContentDialog = ({
                 btnClass={btnClass}
                 transparent
                 label="Add to Botom"
-              />
-            </div>
-          )}
-        </>
-        <>
-          {onFinalStep && (
-            <div className="px-2 dark:text-gray-500 flex items-center justify-center">
-              <Buttons
-                overrideClass
-                onClick={onCreateComponentClick}
-                transparent
-                btnClass={btnClass}
-                label="Create component"
               />
             </div>
           )}

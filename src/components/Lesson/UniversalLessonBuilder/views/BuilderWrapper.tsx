@@ -253,6 +253,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setAddContentModal({type: '', show: false});
     setSelectedComponent(null);
     setShowLocationIcon(false);
+
     if (showPopup) {
       wait(700).then(() => {
         setSavingStatus('loading');

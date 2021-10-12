@@ -427,27 +427,13 @@ const ActionButtons = ({
   const {setUniversalLessonDetails} = useULBContext();
 
   const notSelected = isEmpty(selectedComponent);
-  const onEditMode = actionMode === 'edit' && !notSelected;
+
   const onDeleteMode = actionMode === 'delete' && !notSelected;
   const onInit = actionMode === 'init';
 
   const cleanup = () => {
     setSelectedComponent(null);
     setShowMovementBox(false);
-    setSelectedComponent(null);
-  };
-
-  const onEditClick = () => {
-    handleEditBlockContent(
-      selectedComponent?.componentData?.type,
-      'partContent',
-      selectedComponent?.componentData?.value,
-      selectedComponent.pageContentID,
-      selectedComponent.partContentIdx,
-      selectedComponent?.componentData?.class
-    );
-    setShowingPin(false);
-    setActionMode('init');
   };
 
   const onDeleteClick = async () => {
@@ -501,7 +487,7 @@ const ActionButtons = ({
           />
         )}
       </AnimatedContainer>
-      <AnimatedContainer
+      {/* <AnimatedContainer
         className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
         animationType="opacity"
         show={onEditMode}>
@@ -517,7 +503,7 @@ const ActionButtons = ({
             message={'Click on button to edit component'}
           />
         )}
-      </AnimatedContainer>
+      </AnimatedContainer> */}
       <AnimatedContainer
         className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
         animationType="opacity"
@@ -817,19 +803,6 @@ const PageBuilderSlideOver = ({
     setCurrentModalDialog('');
   };
 
-  // this the local copy to store new component type
-  const [contentType, setContentType] = useState('');
-
-  const onComponentCreateClick = () => {
-    if (!isEmpty(selectedComponent)) {
-      hideAllModals();
-      setAddContentModal({show: true, type: contentType});
-      const position = selectedComponent.partContentIdx + 1; // this the position idx where the new component will go
-      handleModalPopToggle('', position, 'partContent', selectedComponent?.pageContentID);
-      setShowingPin(false);
-    }
-  };
-
   const onContentItemClick = (type: string, bottom: boolean = false) => {
     // setNavState('home');
     if (pageContent.length > 0) {
@@ -838,7 +811,6 @@ const PageBuilderSlideOver = ({
         setAddContentModal({show: true, type});
         handleModalPopToggle('', pageContent.length, 'pageContent', selectedPageID);
       } else {
-        setContentType(type);
         setShowingPin(true);
       }
     } else {
@@ -858,7 +830,7 @@ const PageBuilderSlideOver = ({
     setSelectedSpace(null);
     setSelectedComponent(null);
     setShowingPin(false);
-    setContentType('');
+
     setShowMovementBox(false);
     setActionMode('init');
   };
@@ -929,7 +901,6 @@ const PageBuilderSlideOver = ({
             />
             <AddContentDialog
               setCurrentHelpStep={setCurrentHelpStep}
-              onComponentCreateClick={onComponentCreateClick}
               onItemClick={onContentItemClick}
             />
           </div>

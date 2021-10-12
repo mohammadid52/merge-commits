@@ -72,7 +72,7 @@ const ModalBody = (bodyProps: {
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto overflow-y-${scrollHidden ? 'hidden' : 'scroll'}`}
+      } flex-auto modal-body`}
       style={{maxHeight: 'calc(100vh - 150px)'}}>
       {children}
     </div>
@@ -133,12 +133,12 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         style={{zIndex: 9999}}
         className={`${
           intenseOpacity ? 'dark-backdrop' : 'backdrop fade-in'
-        } fixed inset-0 bg-black`}></div>
+        } absolute  inset-0 bg-black`}></div>
       <div
         style={{zIndex: 10000}}
         onClick={() => closeOnBackdrop && closeAction()}
         className={
-          'fixed modal transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none'
+          'absolute  modal dark-scroll transition-all bg-black bg-opacity-80 duration-500 show justify-center items-start flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none py-24'
         }>
         <div
           onClick={(e) => {

@@ -1,17 +1,15 @@
+import {SPACER} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect, useState} from 'react';
-import {BsCircle} from 'react-icons/bs';
-import {GoLocation} from 'react-icons/go';
+import React, {Fragment, useEffect} from 'react';
 import {IoLocationSharp} from 'react-icons/io5';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {SPACER} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 
 interface IEditOverlayBlockProps extends RowWrapperProps {
   handleEditBlockContent?: () => void;
@@ -49,10 +47,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
 
     setActionMode,
   } = usePageBuilderContext();
-  console.log(
-    '🚀 ~ file: EditOverlayBlock.tsx ~ line 53 ~ EditOverlayBlock ~ selectedComponent',
-    selectedComponent
-  );
 
   const {setAddContentModal} = useOverlayContext();
 
@@ -84,7 +78,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const onEditClick = () => {
     handleEditBlockContent();
 
-    setActionMode('init');
+    // setActionMode('init');
   };
   // This function will select component position, for adding new component
   const onComponentSelect = () => {
