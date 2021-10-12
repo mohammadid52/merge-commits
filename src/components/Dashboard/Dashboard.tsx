@@ -268,7 +268,7 @@ const Dashboard = (props: DashboardProps) => {
         ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
           ...item,
           ...item.room,
-          teacher: item.room
+          teacher: item.room.teacher
         })),
       ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {

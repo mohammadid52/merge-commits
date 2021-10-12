@@ -1683,6 +1683,8 @@ const RoomEDITdict: any = {
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
     TEACHER_PLACEHOLDER: 'Select teacher',
+    CO_TEACHER_LABEL: 'Co-Facilitator',
+    CO_TEACHER_PLACEHOLDER: 'Select Co-facilitator',
     CLASS_NAME_LABEL: 'Cohort Name',
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
     CURRICULUM_LABEL: 'Course',
