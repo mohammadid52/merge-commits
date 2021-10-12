@@ -20,6 +20,7 @@ interface ModalProps {
   scrollHidden?: boolean;
   titleButton?: React.ReactElement;
   customTitle?: React.ReactNode;
+  outerCloseBtn?: boolean;
 }
 
 const ModalBody = (bodyProps: {
@@ -81,6 +82,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     titleButton,
     hidePadding = false,
     scrollHidden = false,
+    outerCloseBtn = false,
     customTitle,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
@@ -115,6 +117,17 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             }
           }}
           className="relative w-auto my-4 mx-auto max-w-lg ">
+          {outerCloseBtn && (
+            <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
+              <button
+                className={`ml-auto w-auto ${theme.outlineNone}`}
+                onClick={closeAction}>
+                <span className="w-8 h-8 ml-4 flex cursor-pointer  items-center justify-center rounded transition-all duration-150">
+                  <IoClose className="text-white" />
+                </span>
+              </button>
+            </div>
+          )}
           <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
             {showHeader && (
               <ModalHeader
