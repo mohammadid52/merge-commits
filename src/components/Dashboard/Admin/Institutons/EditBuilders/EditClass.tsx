@@ -298,15 +298,17 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         graphqlOperation(customMutations.createClassStudent, {input: input})
       );
       newStudent = newStudent.data.createClassStudent;
-      await API.graphql(
-        graphqlOperation(customMutations.createClassroomGroupStudents, {
-          input: {
-            classRoomGroupID: newMember.group?.id,
-            studentEmail: selected.email,
-            studentAuthId: selected.authId,
-          },
-        })
-      );
+      if (newMember.group?.id) {
+        await API.graphql(
+          graphqlOperation(customMutations.createClassroomGroupStudents, {
+            input: {
+              classRoomGroupID: newMember.group?.id,
+              studentEmail: selected.email,
+              studentAuthId: selected.authId,
+            },
+          })
+        );
+      }
       setClassStudents([
         ...classStudents,
         {
