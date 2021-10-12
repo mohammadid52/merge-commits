@@ -120,7 +120,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           filter: role
             ? {role: {eq: role}}
             : user.role === 'SUP'
-            ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
+            ? {role: {eq: 'SUP'}}
+            // ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
             : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
@@ -265,7 +266,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${instituteId}/manage-users/${profileId}`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${instituteId}/manage-users/${profileId}`
+    );
   };
 
   const postMutation = () => {
@@ -327,7 +330,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const showAddStaffSection = async (role?: string) => {
-    if (user.role === 'SUP' && role !== 'SUP') {
+    if (role === 'SUP') {
       setShowRegistrationForm(true);
     } else {
       let users = await getPersonsList(role);
@@ -352,15 +355,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               <AddButton
                 className="ml-4 py-1"
                 label={'Staff member'}
-                onClick={() => showAddStaffSection('')}
+                onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
               />
-              {user.role === 'SUP' && (
+              {/*{user.role === 'SUP' && (
                 <div
                   className="text-sm text-right text-gray-400 cursor-pointer mt-1"
                   onClick={() => showAddStaffSection('SUP')}>
                   + {dictionary.ADD_SUPER_ADMIN}
                 </div>
-              )}
+              )} */}
             </div>
           ) : (
             <Buttons
