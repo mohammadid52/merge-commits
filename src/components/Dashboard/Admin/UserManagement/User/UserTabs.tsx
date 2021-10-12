@@ -20,7 +20,9 @@ const UserTabs = ({
   theme,
 }: IUserTabsProps) => {
   const getTabsData = () => {
-    if (viewedUser && viewedUser?.role !== 'ST') {
+    if (viewedUser?.role === 'TR' || viewedUser?.role === 'FLW') {
+      return tabs.filter((tabObj: any) => tabObj.name !== 'Notebook');
+    } else if (viewedUser?.role === 'ADM' || viewedUser?.role === 'SUP') {
       return tabs.filter((tabObj: any) => tabObj.name === 'User Information');
     } else {
       return tabs;
