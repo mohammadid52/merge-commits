@@ -1,24 +1,25 @@
-import {Switch} from '@headlessui/react';
-// import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Selector from '@atoms/Form/Selector';
+import {
+  Tabs3,
+  useTabs,
+} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
+import {Switch} from '@headlessui/react';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import DummyContent from '@UlbUI/Preview/DummyContent';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import Tabs, {
-  useTabs,
-} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+// import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -275,7 +276,7 @@ const HeaderModalComponent = ({
 
   return (
     <div>
-      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
 
       <AnimatedContainer animationType="scale" show={onSetupTab}>
         {onSetupTab && (

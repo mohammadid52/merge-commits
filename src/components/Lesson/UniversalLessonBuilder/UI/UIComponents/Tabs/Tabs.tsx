@@ -166,7 +166,7 @@ export const Tabs3 = ({
         </select>
       </div>
       <div className="hidden sm:block">
-        <nav className="transition-all flex space-x-4" aria-label="Tabs">
+        <nav className="transition-all mb-4 flex space-x-4" aria-label="Tabs">
           {tabs.map((tab, idx: number) => (
             <div
               onClick={() => setCurTab(tab.name)}
@@ -178,7 +178,7 @@ export const Tabs3 = ({
                     ? 'iconoclast:bg-main text-white curate:bg-main '
                     : 'iconoclast:bg-100 iconoclast:text-700 curate:bg-100 curate:text-700 '
                   : 'text-gray-500 hover:text-gray-600',
-                'px-3 transition-all py-2 font-medium text-sm rounded-md'
+                'px-3 text-center cursor-pointer transition-all py-3 font-medium text-sm rounded-md'
               )}
               aria-current={tab.current ? 'page' : undefined}>
               {numbered ? `${idx + 1}. ` : ''}

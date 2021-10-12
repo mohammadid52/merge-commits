@@ -21,7 +21,7 @@ import ColorPicker from '../ColorPicker/ColorPicker';
 import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
 
 const Toggle = ({
   checked,
@@ -447,7 +447,7 @@ const JumbotronModalDialog = ({
 
   return (
     <>
-      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
 
       <AnimatedContainer animationType="scale" show={onSetupTab}>
         {onSetupTab && (

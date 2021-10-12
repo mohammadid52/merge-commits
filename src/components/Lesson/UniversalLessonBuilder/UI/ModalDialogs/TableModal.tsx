@@ -1,17 +1,17 @@
+import {filter, map, omit, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {v4 as uuidv4} from 'uuid';
-import {filter, forEach, map, omit, remove, update} from 'lodash';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
-import {TABLE} from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Buttons from '../../../../Atoms/Buttons';
+import FormInput from '../../../../Atoms/Form/FormInput';
 import ColorPicker from '../ColorPicker/ColorPicker';
+import {TABLE} from '../common/constants';
 import Toggle from '../Toggle';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
 
 interface TableProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -216,7 +216,7 @@ const TableModal = (props: TableProps) => {
 
   return (
     <>
-      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
       <AnimatedContainer show={onSetupTab}>
         {onSetupTab && (
           <div style={{maxWidth: '94rem'}}>

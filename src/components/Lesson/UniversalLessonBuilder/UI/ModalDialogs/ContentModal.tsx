@@ -1,8 +1,6 @@
+import ModalHeader from '@components/Molecules/ModalHeader';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import React, {useContext, useEffect} from 'react';
-import {IconContext} from 'react-icons';
-import {IoClose} from 'react-icons/io5';
-// @ts-ignore
+import React, {useEffect} from 'react';
 
 interface ModalProps {
   showHeader: boolean;
@@ -20,38 +18,6 @@ interface ModalProps {
   titleButton?: React.ReactElement;
   customTitle?: React.ReactNode;
 }
-
-const ModalHeader = (headerProps: {
-  title?: string;
-  onClick?: () => void;
-  titleButton?: React.ReactElement;
-  customTitle?: React.ReactNode;
-  showBorder?: boolean;
-}) => {
-  const {title, onClick, showBorder, customTitle, titleButton} = headerProps;
-  const {theme} = useGlobalContext();
-
-  return (
-    <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
-      <div className="flex items-center">
-        {title ? (
-          <h3 className="w-auto text-xl font-semibold">{title}</h3>
-        ) : customTitle ? (
-          customTitle
-        ) : null}
-        {titleButton}
-      </div>
-
-      <button className={`ml-auto w-auto ${theme.outlineNone}`} onClick={onClick}>
-        <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
-          <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
-            <IoClose />
-          </IconContext.Provider>
-        </span>
-      </button>
-    </div>
-  );
-};
 
 const ModalBody = (bodyProps: {
   children: React.ReactNode;
