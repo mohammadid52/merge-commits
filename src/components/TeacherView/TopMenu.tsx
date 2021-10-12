@@ -109,7 +109,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
 
           {/* CONTROL START */}
           <div
-            className="relative 
+            className="relative h-full
             w-full lg:w-7/10 h-20 flex flex-col items-center z-100">
             <LessonControlBar handlePageChange={handlePageChange} />
           </div>
