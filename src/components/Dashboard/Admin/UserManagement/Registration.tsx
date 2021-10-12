@@ -17,7 +17,6 @@ import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {createUserUrl} from '../../../../utilities/urls';
-import {groupOptions} from '../../../../utilities/staticData';
 
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
@@ -35,7 +34,10 @@ interface newUserInput {
   grade: string;
   role: string;
   externalId: string;
-  group: string;
+  group: {
+    id: string;
+    name: string;
+  };
   message: {
     show: boolean;
     text: string;
@@ -48,6 +50,7 @@ interface newUserInput {
   class: {
     id: string;
     name: string;
+    roomId: string;
   };
 }
 
@@ -65,17 +68,26 @@ const initialState: newUserInput = {
   externalId: '',
   message: {show: false, text: '', type: ''},
   institution: {id: '', name: ''},
-  class: {id: '', name: ''},
-  group: '',
+  class: {id: '', name: '', roomId: ''},
+  group: {id: '', name: ''},
 };
 
-const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutation}: any) => {
+const Registration = ({
+  classData,
+  isInInstitute,
+  instId,
+  isInModalPopup = false,
+  postMutation,
+}: any) => {
+  const {classId} = classData || {};
   const history = useHistory();
   const params = useQuery(location.search);
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
   const [instClasses, setInstClasses] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [groupLoading, setGroupLoading] = useState(false);
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
@@ -88,11 +100,12 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
   const Roles = [
     state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
     state.user.role === 'SUP' && {code: 'ADM', name: 'Admin'},
+    {code: 'SUP', name: 'Super Admin'},
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    state.user.role !== 'SUP' && isInModalPopup && {code: 'ST', name: 'Student'},
+    (!isInModalPopup || (isInModalPopup && classId)) && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -109,6 +122,21 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     },
   ];
 
+  useEffect(() => {
+    if (classId) {
+      setNewUserInputs((prevValues) => ({
+        ...prevValues,
+        role: 'ST',
+        class: {
+          id: classId,
+          name: classData.name,
+          roomId: classData.roomId,
+        },
+      }));
+      getClassRoomGroups(classData.roomId);
+    }
+  }, [classId]);
+
   const handleMessage = (type: string, text: string) => {
     setNewUserInputs(() => {
       return {
@@ -122,11 +150,34 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     });
   };
 
-  const onGroupChange = (_: string, name: string) => {
+  const onGroupChange = (_: string, name: string, id: string) => {
     setNewUserInputs((prevValues) => ({
       ...prevValues,
-      group: name,
+      group: {id, name},
     }));
+  };
+
+  const getClassRoomGroups = async (roomId: string) => {
+    try {
+      setGroupLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listClassroomGroupssOptions, {
+          filter: {
+            classRoomID: {eq: roomId},
+            groupType: {eq: 'Proficiency'},
+          },
+        })
+      );
+      setGroups(
+        list?.data?.listClassroomGroupss.items?.map((item: any) => ({
+          name: item.groupName,
+          id: item.id,
+        }))
+      );
+      setGroupLoading(false);
+    } catch (error) {
+      setGroupLoading(false);
+    }
   };
 
   async function registerUser(authId: string) {
@@ -162,19 +213,32 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
           graphqlOperation(mutations.createStaff, {input: input})
         );
       } else {
-        // add the student in the class
-        // need to get the user id from new person object
-        const input = {
-          classID: newUserInputs.class.id,
-          studentID: person.id,
-          studentAuthID: authId,
-          studentEmail: newUserInputs.email,
-          status: 'Active',
-          group: newUserInputs.group,
-        };
-        let newStudent: any = await API.graphql(
-          graphqlOperation(customMutations.createClassStudent, {input})
-        );
+        if (newUserInputs.class.id) {
+          // add the student in the class
+          // need to get the user id from new person object
+          const input = {
+            classID: newUserInputs.class.id,
+            studentID: person.id,
+            studentAuthID: authId,
+            studentEmail: newUserInputs.email,
+            status: 'Active',
+          };
+          await API.graphql(
+            graphqlOperation(customMutations.createClassStudent, {input})
+          );
+          if (newUserInputs.group?.id) {
+            await API.graphql(
+              graphqlOperation(customMutations.createClassroomGroupStudents, {
+                input: {
+                  classRoomGroupID: newUserInputs.group.id,
+                  studentEmail: newUserInputs.email,
+                  studentAuthId: authId,
+                },
+              })
+            );
+          }
+        }
+
       }
       handleMessage('success', 'User registered successfully');
       if (isInModalPopup) {
@@ -287,13 +351,13 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
           message: RegistrationDict[userLanguage]['messages']['institution'],
         };
       }
-      if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
-        return {
-          show: true,
-          type: 'error',
-          message: 'class is required',
-        };
-      }
+      // if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
+      //   return {
+      //     show: true,
+      //     type: 'error',
+      //     message: 'class is required',
+      //   };
+      // }
       validated = true;
       if (validated) {
         signUp();
@@ -340,7 +404,7 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     const selectedInst = institutionsData.filter((inst) => inst.id === item.code)[0];
     let classes = selectedInst.classes.items;
     let classList = classes.map((cl: any) => {
-      return {code: cl.id, name: cl.name};
+      return {code: cl.id, name: cl.name, roomId: cl.roomId};
     });
     setInstClasses(classList);
     setNewUserInputs(() => {
@@ -351,11 +415,12 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     });
   };
 
-  const handleClassChange = (item: {name: string; code: string}) => {
+  const handleClassChange = (item: {name: string; code: string; roomId: string}) => {
+    getClassRoomGroups(item.roomId);
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        class: {id: item.code, name: item.name},
+        class: {id: item.code, name: item.name, roomId: item.roomId},
       };
     });
   };
@@ -367,7 +432,7 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
     let list = institutions.map((inst: any) => {
       return {code: inst.id, name: inst.name};
     });
-    setInstitutions(list);
+    setInstitutions([list[list.length - 1]]);
     setInstitutionsData(institutions);
   };
 
@@ -385,7 +450,10 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
   }, [institutionsData, instId]);
 
   return (
-    <div className={`w-full h-full ${isInInstitute ? isInModalPopup ? 'p-4' : 'py-8 px-12' : 'mt-4 p-12'}`}>
+    <div
+      className={`w-full h-full ${
+        isInInstitute ? (isInModalPopup ? 'p-4' : 'py-8 px-12') : 'mt-4 p-12'
+      }`}>
       {isInInstitute ? (
         !isInModalPopup && (
           <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
@@ -484,18 +552,21 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
                       />
                     </div>
 
-                    <div className="sm:col-span-3 p-2">
-                      <DropdownForm
-                        style={true}
-                        handleChange={handleChangeRole}
-                        userInfo={`${newUserInputs.role}`}
-                        label="Role"
-                        listClassName="h-28"
-                        id="role"
-                        items={Roles}
-                        value={`${newUserInputs.role}`}
-                      />
-                    </div>
+                    {!classId && (
+                      <div className="sm:col-span-3 p-2">
+                        <DropdownForm
+                          style={true}
+                          handleChange={handleChangeRole}
+                          userInfo={`${newUserInputs.role}`}
+                          label="Role"
+                          listClassName="h-28"
+                          id="role"
+                          isRequired
+                          items={Roles}
+                          value={`${newUserInputs.role}`}
+                        />
+                      </div>
+                    )}
                     {/* <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         style={true}
@@ -514,32 +585,41 @@ const Registration = ({isInInstitute, instId, isInModalPopup = false, postMutati
                       newUserInputs.role === 'ST' &&
                       newUserInputs.institution.id && (
                         <>
-                          <div className="sm:col-span-3 p-2">
-                            <DropdownForm
-                              style={true}
-                              handleChange={handleClassChange}
-                              userInfo={`${newUserInputs.class.name}`}
-                              label="Class"
-                              id="class"
-                              items={instClasses}
-                              value={`${newUserInputs.class.id}`}
-                            />
-                          </div>
-                          <div className="sm:col-span-3 p-2">
-                            <Selector
-                              label={'Group'}
-                              selectedItem={newUserInputs?.group}
-                              list={newUserInputs.class.id ? groupOptions : []}
-                              placeholder={
-                                RegistrationDict[userLanguage].GROUP_PLACEHOLDER
-                              }
-                              onChange={onGroupChange}
-                              noOptionMessage={
-                                RegistrationDict[userLanguage].messages.GROUP_NO_OPTION
-                              }
-                              labelTextClass="text-m"
-                            />
-                          </div>
+                          {!classId && (
+                            <div className="sm:col-span-3 p-2">
+                              <DropdownForm
+                                style={true}
+                                handleChange={handleClassChange}
+                                userInfo={`${newUserInputs.class.name}`}
+                                label="Class"
+                                id="class"
+                                items={instClasses}
+                                value={`${newUserInputs.class.id}`}
+                              />
+                            </div>
+                          )}
+                          {Boolean(groups?.length) && (
+                            <div className="sm:col-span-3 p-2">
+                              <Selector
+                                label={'Group'}
+                                selectedItem={newUserInputs?.group?.name}
+                                list={groups || []}
+                                placeholder={
+                                  RegistrationDict[userLanguage].GROUP_PLACEHOLDER
+                                }
+                                onChange={onGroupChange}
+                                noOptionMessage={
+                                  newUserInputs.class.id
+                                    ? RegistrationDict[userLanguage].messages
+                                        .GROUP_NO_OPTION_AFTER_FETCH
+                                    : RegistrationDict[userLanguage].messages
+                                        .GROUP_NO_OPTION
+                                }
+                                labelTextClass="text-m"
+                                loading={groupLoading}
+                              />
+                            </div>
+                          )}
                         </>
                       )}
                   </div>

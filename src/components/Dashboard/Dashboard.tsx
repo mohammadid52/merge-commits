@@ -257,9 +257,20 @@ const Dashboard = (props: DashboardProps) => {
           filter: {teacherAuthID: {eq: teacherAuthID}},
         })
       );
-
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      let arrayOfResponseObjects = [
+        ...response?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room?.teacher
+        })),
+      ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
@@ -302,7 +313,7 @@ const Dashboard = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
-    if (homeData && homeData.length > 0 && getClassList.length > 0) {
+    if (homeData?.length && getClassList.length) {
       setClassList(getClassList);
     }
   }, [homeData]);
@@ -347,11 +358,23 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await API.graphql(
+      const classIdFromRoomsFetch: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       //@ts-ignore
-      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
+      const arrayOfResponseObjects = [
+        ...classIdFromRoomsFetch?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room?.teacher
+        })),
+      ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
@@ -579,7 +602,6 @@ const Dashboard = (props: DashboardProps) => {
             .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
 
-
     return mapSyllabusToSequence;
   };
 
@@ -593,7 +615,7 @@ const Dashboard = (props: DashboardProps) => {
       );
       // @ts-ignore
       let response = await getCurriculum.data.getCurriculum;
-      
+
       let syllabi = response.universalSyllabus.items;
       let sequence = response.universalSyllabusSeq;
 
@@ -748,7 +770,7 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  const handleLink = (e: React.MouseEvent) => {
+  const handleLink = () => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
@@ -881,7 +903,7 @@ const Dashboard = (props: DashboardProps) => {
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
-              onClick={handleLink}
+              onClick={stateUser.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
@@ -892,7 +914,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {state.user.role === 'ST' && <EmojiFeedback />}
+        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}

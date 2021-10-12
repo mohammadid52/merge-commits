@@ -15,7 +15,7 @@ interface ITabsProps {
   updateTab: (tab: any) => void;
 }
 
-const DropDownMenu = ({customTitle, index, menu, onClick}: any) => {
+const DropDownMenu = ({index, menu, onClick}: any) => {
   const {theme} = useContext(GlobalContext);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -59,7 +59,7 @@ const DropDownMenu = ({customTitle, index, menu, onClick}: any) => {
               } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
               } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
-              {customTitle || menu.title}
+              {menu.title}
               <ChevronDownIcon
                 className="w-5 h-5 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                 aria-hidden="true"
@@ -111,7 +111,7 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           // defaultValue={activeTab}
-          >
+        >
           {tabsData.map((tab: ITabElements, index: number) => (
             <option className="transition-all" key={index}>
               {tab.title}
@@ -125,7 +125,6 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
             menu.type === 'dropdown' ? (
               <DropDownMenu
                 menu={menu}
-                customTitle={`${index + 1}. ${menu.title}`}
                 onClick={updateTab}
                 index={index}
                 key={index}
@@ -140,8 +139,8 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } ${
                   menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
-                {tabWithNumbers ? index + 1 : ''}. {menu.title}
+                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform scale-95 hover:scale-100 text-gray-700`}>
+                {menu.title}
               </button>
             )
           )}

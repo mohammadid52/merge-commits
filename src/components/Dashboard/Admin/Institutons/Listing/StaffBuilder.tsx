@@ -1,6 +1,6 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
@@ -42,16 +42,23 @@ interface StaffBuilderProps {
 
 const StaffBuilder = (props: StaffBuilderProps) => {
   const {instName, instituteId} = props;
-  const {
-    userLanguage,
-    clientKey,
-    state: {user},
-    theme,
-  } = useContext(GlobalContext);
+
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const userLanguage = gContext.userLanguage;
+  const clientKey = gContext.clientKey;
+  const state = gContext.state;
+  const user = gContext.state.user;
+  const theme = gContext.theme;
+
+  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
+  const match = useRouteMatch();
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
+
+  // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showSuperAdmin, setShowSuperAdmin] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
@@ -120,7 +127,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           filter: role
             ? {role: {eq: role}}
             : user.role === 'SUP'
-            ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
+            ? {role: {eq: 'SUP'}}
+            // ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
             : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
@@ -265,7 +273,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    history.push(`/dashboard/manage-users/user?id=${profileId}`);
+    let part1 = `/dashboard/manage-institutions/institution/${instituteId}`;
+    let part2 = `/manage-users/${profileId}`;
+    // console.log(`${part1}${part2}`);
+    history.push(`${part1}${part2}`);
   };
 
   const postMutation = () => {
@@ -327,7 +338,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const showAddStaffSection = async (role?: string) => {
-    if (user.role === 'SUP' && role !== 'SUP') {
+    if (role === 'SUP') {
       setShowRegistrationForm(true);
     } else {
       let users = await getPersonsList(role);
@@ -352,15 +363,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               <AddButton
                 className="ml-4 py-1"
                 label={'Staff member'}
-                onClick={() => showAddStaffSection('')}
+                onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
               />
-              {user.role === 'SUP' && (
+              {/*{user.role === 'SUP' && (
                 <div
                   className="text-sm text-right text-gray-400 cursor-pointer mt-1"
                   onClick={() => showAddStaffSection('SUP')}>
                   + {dictionary.ADD_SUPER_ADMIN}
                 </div>
-              )}
+              )} */}
             </div>
           ) : (
             <Buttons

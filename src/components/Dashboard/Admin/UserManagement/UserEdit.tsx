@@ -759,6 +759,7 @@ const UserEdit = (props: UserInfoProps) => {
                     userInfo={editUser.status}
                     label={UserEditDict[userLanguage]['status']}
                     id="status"
+                    isRequired
                     items={Status}
                   />
                 </div>
@@ -772,6 +773,7 @@ const UserEdit = (props: UserInfoProps) => {
                     label={UserEditDict[userLanguage]['role']}
                     listClassName="h-28"
                     id="role"
+                    isRequired
                     items={Role}
                   />
                 </div>
@@ -785,6 +787,7 @@ const UserEdit = (props: UserInfoProps) => {
                       userInfo={editUser?.onDemand ? 'Yes' : 'No'}
                       label={UserEditDict[userLanguage]['ondemand']}
                       id="ondemand"
+                      isRequired
                       items={OnDemand}
                     />
                   </div>
