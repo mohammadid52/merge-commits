@@ -108,7 +108,7 @@ const Start: React.FC<StartProps> = ({
       if (syllabusData) {
         let filter: any = {
           studentID: {eq: state.user?.id},
-          curriculumID: {eq: syllabusData.curriculumID},
+          curriculumID: {eq: syllabusData.curriculumId},
           syllabusID: {eq: syllabusData.id},
           lessonID: {eq: lessonKey},
         };
@@ -214,13 +214,16 @@ const Start: React.FC<StartProps> = ({
   };
 
   const handleMarkAsCompleteClick = async (lessonIds: any) => {
+    const payloadLessonIds = Array.isArray(lessonIds)
+      ? lessonIds
+      : warnModal.activeLessonsId;
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
         input: {
           id: roomID,
           completedLessons: [
             ...(state.roomData.completedLessons || []),
-            ...(lessonIds || warnModal.activeLessonsId)?.map((lessonID: any) => ({
+            ...payloadLessonIds?.map((lessonID: any) => ({
               lessonID,
               time: new Date().toISOString(),
             })),

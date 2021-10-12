@@ -6,20 +6,15 @@ import {BsArrowLeft} from 'react-icons/bs';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
-import * as queries from '@graphql/queries';
 import * as customQueries from '@customGraphql/customQueries';
 
-import SectionTitle from '@atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
 import Loader from '@atoms/Loader';
 
 import CourseFormComponent from './CourseFormComponent';
 import UnitManager from './UnitManager';
-import UnitFormComponent from './CourseFormComponent';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
-import Buttons from '@components/Atoms/Buttons';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
 interface IUIMessages {
   show: boolean;
@@ -82,8 +77,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   }, [instId]);
 
   const fetchCourseData = async () => {
-    setFetchingDetails(true);
     if (courseId) {
+      setFetchingDetails(true);
       try {
         const [curriculumResult, curriculumUnits]: any = await Promise.all([
           await API.graphql(
@@ -97,11 +92,11 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         ]);
         const savedData = curriculumResult.data.getCurriculum;
         const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnitss?.items]
-        .map((t: any) => {
-          let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
-          return {...t, index};
-        })
-        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+          .map((t: any) => {
+            let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
+            return {...t, index};
+          })
+          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
         setCourseData(savedData);
         setSyllabusIds(savedData.universalSyllabusSeq || []);
         setSavedSyllabusList(sortedSyllabusList);
@@ -132,29 +127,6 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     }));
   };
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: courseData?.institution?.name || 'loading...',
-      url: `/dashboard/manage-institutions/institution/${instId}/staff`,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['COURSES'],
-      url: `/dashboard/manage-institutions/institution/${instId}/course`,
-      last: false,
-    },
-    {
-      title: courseData?.name || BreadcrumsTitles[userLanguage]['COURSE_BUILDER'],
-      url: `/dashboard/manage-institutions/curricular/${courseId}/syllabus/add`,
-      last: true,
-    },
-  ];
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
