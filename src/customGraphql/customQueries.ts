@@ -332,6 +332,22 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
               }
             }
           }
+          curricula {
+            items {
+              id
+              curriculumID
+              curriculum {
+                name
+                image
+                id
+                description
+                designers
+                objectives
+                summary
+                type
+              }
+            }
+          }
         }
         teacher {
           id

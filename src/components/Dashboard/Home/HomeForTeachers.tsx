@@ -84,18 +84,21 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   };
 
   const getTeacherList = homeData?.length
-    ? homeData.reduce((acc: any[], dataObj: any) => {
-        const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
-        const teacherIsPresent = acc?.find(
-          (teacher: any) =>
-            teacher?.firstName === teacherObj?.firstName &&
-            teacher?.lastName === teacherObj?.lastName
-        );
-        if (teacherIsPresent) {
-          return acc;
-        } else {
-          return [...acc, teacherObj];
+    ? homeData[0]?.class?.rooms?.items.reduce((acc: any[], dataObj: any) => {
+        const teacherObj = dataObj?.teacher;
+        if (teacherObj) {
+          const teacherIsPresent = acc?.find(
+            (teacher: any) =>
+              teacher?.firstName === teacherObj?.firstName &&
+              teacher?.lastName === teacherObj?.lastName
+          );
+          if (teacherIsPresent) {
+            return acc;
+          } else {
+            return [...acc, teacherObj];
+          }
         }
+        return acc;
       }, [])
     : [];
 
@@ -103,9 +106,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     let coTeachersList: any[] = [];
     let uniqIds: string[] = [];
     homeData?.length &&
-      homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items[0].coTeachers?.items?.length) {
-          item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
+      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+        if (item.coTeachers?.items?.length) {
+          item.coTeachers.items.forEach((_item: any) => {
             if (!uniqIds.includes(_item.teacher.email)) {
               coTeachersList.push(_item.teacher);
               uniqIds.push(_item.teacher.email);
