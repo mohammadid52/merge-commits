@@ -313,7 +313,7 @@ const Dashboard = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
-    if (homeData && homeData.length > 0 && getClassList.length > 0) {
+    if (homeData?.length && getClassList.length) {
       setClassList(getClassList);
     }
   }, [homeData]);
@@ -358,11 +358,23 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await API.graphql(
+      const classIdFromRoomsFetch: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       //@ts-ignore
-      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
+      const arrayOfResponseObjects = [
+        ...classIdFromRoomsFetch?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room?.teacher
+        })),
+      ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
