@@ -257,9 +257,20 @@ const Dashboard = (props: DashboardProps) => {
           filter: {teacherAuthID: {eq: teacherAuthID}},
         })
       );
-
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      let arrayOfResponseObjects = [
+        ...response?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room
+        })),
+      ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
@@ -579,7 +590,6 @@ const Dashboard = (props: DashboardProps) => {
             .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
 
-
     return mapSyllabusToSequence;
   };
 
@@ -593,7 +603,7 @@ const Dashboard = (props: DashboardProps) => {
       );
       // @ts-ignore
       let response = await getCurriculum.data.getCurriculum;
-      
+
       let syllabi = response.universalSyllabus.items;
       let sequence = response.universalSyllabusSeq;
 

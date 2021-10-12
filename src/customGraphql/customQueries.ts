@@ -244,6 +244,114 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
   }
 `;
 
+export const getDashboardDataForCoTeachers = /* GraphQL */ `
+  query ListRoomCoTeacherss(
+    $filter: ModelRoomCoTeachersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoomCoTeacherss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          createdAt
+          updatedAt
+          coTeachers {
+            items {
+              id
+              roomID
+              teacher {
+                id
+                authId
+                status
+                email
+                firstName
+                lastName
+              }
+              teacherID
+              teacherEmail
+              teacherAuthID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+          teacher {
+            id
+            authId
+            status
+            email
+            role
+            type
+            firstName
+            preferredName
+            lastName
+          }
+          class {
+            id
+            institutionID
+            type
+            name
+            createdAt
+            updatedAt
+            students {
+              items {
+                student {
+                  authId
+                  firstName
+                  lastName
+                  image
+                  id
+                }
+              }
+            }
+          }
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {

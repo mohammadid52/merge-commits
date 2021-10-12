@@ -83,30 +83,28 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     }
   };
 
-  const getTeacherList =
-    homeData && homeData.length > 0
-      ? homeData.reduce((acc: any[], dataObj: any) => {
-          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
-          const teacherIsPresent = acc?.find(
-            (teacher: any) =>
-              teacher?.firstName === teacherObj?.firstName &&
-              teacher?.lastName === teacherObj?.lastName
-          );
-          if (teacherIsPresent) {
-            return acc;
-          } else {
-            return [...acc, teacherObj];
-          }
-        }, [])
-      : [];
+  const getTeacherList = homeData?.length
+    ? homeData.reduce((acc: any[], dataObj: any) => {
+        const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+        const teacherIsPresent = acc?.find(
+          (teacher: any) =>
+            teacher?.firstName === teacherObj?.firstName &&
+            teacher?.lastName === teacherObj?.lastName
+        );
+        if (teacherIsPresent) {
+          return acc;
+        } else {
+          return [...acc, teacherObj];
+        }
+      }, [])
+    : [];
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
     let uniqIds: string[] = [];
-    homeData &&
-      homeData.length > 0 &&
+    homeData?.length &&
       homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+        if (item?.class?.rooms?.items[0].coTeachers?.items?.length) {
           item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
             if (!uniqIds.includes(_item.teacher.email)) {
               coTeachersList.push(_item.teacher);
@@ -251,7 +249,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             />
 
             {/* Teachers Section */}
-            {teacherList && teacherList.length > 0 && (
+            {Boolean(teacherList?.length || coTeachersList?.length) && (
               <div className="my-6">
                 <SectionTitleV3
                   title={`Your Team`}
