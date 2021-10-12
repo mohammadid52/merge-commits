@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
-import '../../style/general/EmojiFeedback.scss';
+import '@style/general/EmojiFeedback.scss';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import Modal from '../Atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customMutations from '../../customGraphql/customMutations';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {awsFormatDate, dateString} from '../../utilities/time';
-import {wait} from '../../utilities/functions';
+import * as customQueries from '@customGraphql/customQueries';
+import * as customMutations from '@customGraphql/customMutations';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {awsFormatDate, dateString} from '@utilities/time';
+import {wait} from '@utilities/functions';
 import moment from 'moment';
 import {isEmpty} from 'lodash';
 
@@ -18,20 +18,23 @@ const EmojiFeedback = () => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
   const $ = (s: any, o = document) => o?.querySelector(s);
   const $$ = (s: any, o = document) => o?.querySelectorAll(s);
+
   const [showSentimentModal, setShowSentimentModal] = useState(false);
 
   const {state} = useContext(GlobalContext);
   const {authId, email} = state.user;
 
   const [lastMoodSubmission, setLastMoodSubmission] = useState<any>({});
+  const [fetched, setFetched] = useState(false);
 
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    if (isEmpty(lastMoodSubmission)) {
+    if (!fetched && isEmpty(lastMoodSubmission)) {
       fetchLastSubmission();
+      setFetched(true);
     }
-  }, [lastMoodSubmission]);
+  }, [lastMoodSubmission, fetched]);
 
   const fetchLastSubmission = async () => {
     try {
@@ -55,9 +58,6 @@ const EmojiFeedback = () => {
   };
 
   useEffect(() => {
-    // Use lastLoggedOut as primary. if it is null then show modal
-    // Otherwise see the hours difference. if it is greater than 24h show modal else not
-
     if (!fetching && !isEmpty(lastMoodSubmission)) {
       const lastSubmissionDate = moment(
         `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
@@ -74,7 +74,7 @@ const EmojiFeedback = () => {
     } else if (!fetching && isEmpty(lastMoodSubmission)) {
       setShowSentimentModal(true);
     }
-  }, [fetching, lastMoodSubmission]);
+  }, [lastMoodSubmission, fetching]);
 
   // useEffect(() => {
   let emoji = $('.emoji-slider-feedback'),
@@ -202,6 +202,7 @@ const EmojiFeedback = () => {
       <Modal
         scrollHidden
         intenseOpacity
+        outerCloseBtn
         closeAction={() => setShowSentimentModal(false)}
         closeOnBackdrop={false}
         hidePadding
