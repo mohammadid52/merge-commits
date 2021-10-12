@@ -101,7 +101,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
         <div
           className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
           {/* LEFT */}
-          <div className="h-full w-3/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
+          <div className="h-full w-full lg:w-3/10 min-w-100 border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
             {basicDetailsElements()}
           </div>
 
