@@ -17,6 +17,7 @@ import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
+import CurriculumList from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
 
 interface UIMessages {
   show: boolean;
@@ -177,10 +178,6 @@ const UnitManager = ({
     }
   }, [savedSyllabusList, allSyllabusList]);
 
-  const closeLessonAction = () => {
-    setWarnModal2({...warnModal2, show: false});
-  };
-
   useEffect(() => {
     fetchSyllabusList();
   }, [institutionId]);
@@ -207,6 +204,38 @@ const UnitManager = ({
         isError: true,
         lessonError: true,
       });
+    }
+  };
+
+  const updateSyllabusSequence = async (syllabusIDs: string[]) => {
+    setSyllabusIds(syllabusIDs);
+    await API.graphql(
+      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+        input: {
+          id: courseId,
+          universalSyllabusSeq: syllabusIDs,
+        },
+      })
+    );
+  };
+
+  // ~~~~~ CHECK IF UNIT CAN BE DELETED ~~~~ //
+
+  /********************************************************
+   * BASICALLY CHECK IF THIS UNIT HAS EVER BEEN ACTIVATED *
+   *       IN THE PARENT CURRICULUM, AND IF IT HAS,       *
+   *          THIS UNIT SHOULD NOT BE REMOVABLE           *
+   ********************************************************/
+
+  const checkIfRemovable = (unitObj: any, curriculumObj: any) => {
+    if (
+      curriculumObj?.syllabiHistory &&
+      curriculumObj?.syllabiHistory?.length > 0 &&
+      curriculumObj?.syllabiHistory.includes(unitObj.id)
+    ) {
+      return false;
+    } else {
+      return true;
     }
   };
 
@@ -237,18 +266,7 @@ const UnitManager = ({
     });
   };
 
-  const updateSyllabusSequence = async (syllabusIDs: string[]) => {
-    setSyllabusIds(syllabusIDs);
-    await API.graphql(
-      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-        input: {
-          id: courseId,
-          universalSyllabusSeq: syllabusIDs,
-        },
-      })
-    );
-  };
-
+  // ~~~~~~~~~~~~~~ DRAG & NAV ~~~~~~~~~~~~~ //
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
       const list: any = reorder(
@@ -270,6 +288,10 @@ const UnitManager = ({
     }
   };
 
+  const closeLessonAction = () => {
+    setWarnModal2({...warnModal2, show: false});
+  };
+
   const goToUnitBuilder = (id: string, type: string) => {
     if (unsavedChanges) {
       setWarnModal({
@@ -280,7 +302,9 @@ const UnitManager = ({
       });
       // setEditLesson({type, id});
     } else {
-      history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`);
+      history.push(
+        `/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`
+      );
     }
   };
 
@@ -378,32 +402,6 @@ const UnitManager = ({
                                       }>
                                       {item.name || '--'}
                                     </div>
-                                    {/* <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
-                                              {editState.id !== item.id ? (
-                                                <span
-                                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                                                    item.status === 'Inactive'
-                                                      ? 'bg-yellow-100 text-yellow-800'
-                                                      : item.status === 'Dropped'
-                                                      ? 'bg-red-100 text-red-800'
-                                                      : 'bg-green-100 text-green-800'
-                                                  }`}>
-                                                  {item.status}
-                                                </span>
-                                              ) : (
-                                                <div className="text-gray-900">
-                                                  <Selector
-                                                    selectedItem={item.status}
-                                                    placeholder="Select Status"
-                                                    list={statusList}
-                                                    onChange={(val, name, id) =>
-                                                      onStatusChange(val, name, id, item)
-                                                    }
-                                                  />
-                                                </div>
-                                              )}
-                                            </div>
-                                             */}
                                     <span
                                       className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
                                       onClick={() => onDelete(item)}>
