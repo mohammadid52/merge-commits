@@ -1281,6 +1281,7 @@ export const onCreateInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -1402,6 +1403,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -1523,6 +1525,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4895,6 +4898,7 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -4991,6 +4995,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -5087,6 +5092,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -5138,6 +5144,7 @@ export const onCreateTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5206,6 +5213,7 @@ export const onUpdateTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5274,6 +5282,7 @@ export const onDeleteTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5385,6 +5394,7 @@ export const onCreateRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -5434,6 +5444,7 @@ export const onUpdateRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -5483,6 +5494,7 @@ export const onDeleteRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -5555,6 +5567,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5609,6 +5622,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5663,6 +5677,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5857,6 +5872,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5971,6 +5987,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -6085,6 +6102,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9584,6 +9602,7 @@ export const onCreateAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9604,6 +9623,8 @@ export const onCreateAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -9838,6 +9859,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9858,6 +9880,8 @@ export const onUpdateAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10092,6 +10116,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -10112,6 +10137,8 @@ export const onDeleteAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10811,6 +10838,8 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -10850,6 +10879,8 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -10889,6 +10920,8 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -10916,6 +10949,8 @@ export const onCreateCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10947,6 +10982,8 @@ export const onUpdateCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10978,6 +11015,8 @@ export const onDeleteCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }

@@ -1,18 +1,18 @@
-import Modal from '@atoms/Modal';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
+import React, {useContext, useEffect, useState} from 'react';
 import '@style/general/EmojiFeedback.scss';
-import {wait} from '@utilities/functions';
-import {awsFormatDate, dateString} from '@utilities/time';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
-import {isEmpty} from 'lodash';
+import Modal from '@atoms/Modal';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '@customGraphql/customQueries';
+import * as customMutations from '@customGraphql/customMutations';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {awsFormatDate, dateString} from '@utilities/time';
+import {wait} from '@utilities/functions';
 import moment from 'moment';
-import React, {useContext, useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
 
 const EmojiFeedback = () => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
@@ -62,11 +62,12 @@ const EmojiFeedback = () => {
       const lastSubmissionDate = moment(
         `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
       );
-      const currentTime = moment();
 
-      const dayDiff = currentTime.diff(lastSubmissionDate, 'day');
+      const date = moment(lastSubmissionDate).get('date');
 
-      if (dayDiff >= 1) {
+      const todayDate = moment().get('date');
+
+      if (todayDate - date >= 1) {
         setShowSentimentModal(true);
       } else {
         setShowSentimentModal(false);
