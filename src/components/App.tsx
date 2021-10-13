@@ -1,7 +1,7 @@
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {BrowserRouter as Router} from 'react-router-dom';
-import {GlobalContextProvider} from '../contexts/GlobalContext';
+import {GlobalContextProvider} from '@contexts/GlobalContext';
 import MainRouter from './AppMainRouter';
 
 const App: React.FC = () => {

@@ -1,18 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
+import Modal from '@atoms/Modal';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
 import '@style/general/EmojiFeedback.scss';
+import {wait} from '@utilities/functions';
+import {awsFormatDate, dateString} from '@utilities/time';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
-import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import Modal from '../Atoms/Modal';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '@customGraphql/customQueries';
-import * as customMutations from '@customGraphql/customMutations';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {awsFormatDate, dateString} from '@utilities/time';
-import {wait} from '@utilities/functions';
-import moment from 'moment';
+import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
 import {isEmpty} from 'lodash';
+import moment from 'moment';
+import React, {useContext, useEffect, useState} from 'react';
 
 const EmojiFeedback = () => {
   gsap.registerPlugin(Draggable, MorphSVGPlugin, InertiaPlugin);
