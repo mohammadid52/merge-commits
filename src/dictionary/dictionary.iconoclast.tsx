@@ -119,6 +119,7 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'TBD',
     EditTopic: 'TBD',
     AddExistingCheckpoint: 'TBD',
+    STAFF: 'TBD',
     PeopleManagment: 'TBD',
     AddNewUser: 'TBD',
     UserInfo: 'TBD',
@@ -149,7 +150,7 @@ const dashboardProfileDict: any = {
       ROLE: 'Role',
       PASSWORD: 'Password',
       PASSCODE: 'Journal Passcode',
-      SUPER_ADMIN: 'Super Admin'
+      SUPER_ADMIN: 'Super Admin',
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -881,6 +882,7 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
       CLASS_MANAGER: 'Class Manager',
+      LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Manager',
       COURSES: 'Courses',
       UNITS: 'Units',
@@ -908,6 +910,7 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'TBD',
       STAFF: 'TBD',
       CLASSES: 'TBD',
+      LIVE_CLASS_ROOM: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
       STUDENT_ROASTER: 'TBD',
@@ -1369,7 +1372,7 @@ const CourseBuilderDict: any = {
       },
       success: {
         save: 'New Course has been saved.',
-      }
+      },
     },
     BUTTON: {
       SAVE: 'Save',
@@ -1722,6 +1725,8 @@ const RoomEDITdict: any = {
     CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
     CLASS_DYNAMICS_TAB_HEADING: 'TBD',
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
+    CLASS_STUDENT_TAB_HEADING: 'TBD',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'TBD',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
     messages: {
@@ -2675,6 +2680,7 @@ const RegistrationDict: any = {
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
       GROUP_NO_OPTION: 'Select class first',
+      GROUP_NO_OPTION_AFTER_FETCH: 'No group found',
       ROLE_NO_OPTION: 'Select role first',
     },
   },
@@ -2727,7 +2733,7 @@ const UserEditDict: any = {
       cancel: 'Cancel',
     },
     ondemand: 'On-Demand',
-    SUPER_ADMIN: 'Super Admin'
+    SUPER_ADMIN: 'Super Admin',
   },
   ES: {
     heading: 'TBD',
@@ -2741,7 +2747,7 @@ const UserEditDict: any = {
       cancel: 'TBD',
     },
     ondemand: 'TBD',
-    SUPER_ADMIN: 'TBD'
+    SUPER_ADMIN: 'TBD',
   },
 };
 
@@ -2758,7 +2764,8 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
-    SUPER_ADMIN: 'Super Admin'
+    SUPER_ADMIN: 'Super Admin',
+    RESET_PASSWORD: 'Reset password',
   },
   ES: {
     heading: 'TBD',
@@ -2772,6 +2779,7 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
   },
 };
 
@@ -3571,8 +3579,7 @@ const QuestionBuilderDict: any = {
 const UnitLookupDict: any = {
   EN: {
     HEADING: 'Assign Unit',
-    NOTE:
-      'NOTE: Please select Course and then units to add current lesson to that unit.',
+    NOTE: 'NOTE: Please select Course and then units to add current lesson to that unit.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
     UNITNAME: 'Unit Name',
@@ -3918,14 +3925,14 @@ const LearningEvidenceDict: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK_TO_LIST: 'Back to list',
+  },
+};
 
 const General: any = {
   EN: {
@@ -3953,6 +3960,15 @@ const General: any = {
         GREAT: 'TBD',
       },
     },
+  },
+};
+
+const StudentDict: any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
   },
 };
 
@@ -4035,6 +4051,7 @@ export {
   EditQuestionDict,
   QuestionLookupDict,
   SelectedCheckPointsListDict,
+  StudentDict,
   AddNewLessonFormDict,
   AssessmentInstuctionsDict,
   GeneralInformationDict,
@@ -4047,5 +4064,5 @@ export {
   EditQuestionModalDict,
   UniversalBuilderDict,
   LearningEvidenceDict,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

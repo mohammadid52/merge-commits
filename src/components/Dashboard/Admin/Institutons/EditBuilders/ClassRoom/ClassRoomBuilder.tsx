@@ -6,7 +6,6 @@ import * as customQueries from '../../../../../../customGraphql/customQueries';
 import {useQuery} from '../../../../../../customHooks/urlParam';
 
 import * as queries from '../../../../../../graphql/queries';
-import * as mutation from '../../../../../../graphql/mutations';
 import {getFilterORArray} from '../../../../../../utilities/strings';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
@@ -21,11 +20,10 @@ import EditClass from '../EditClass';
 
 interface ClassRoomBuilderProps {
   instId: string;
-  toggleUpdateState: () => void;
 }
 
 const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
-  const {instId, toggleUpdateState} = props;
+  const {instId} = props;
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
@@ -33,12 +31,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
-  const [teachersList, setTeachersList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -47,14 +42,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     message: '',
     isError: false,
   });
-  const [originalTeacher, setOriginalTeacher] = useState([]);
-  const [selectedCoTeachers, setSelectedCoTeachers] = useState<
-    {email?: string; authId: string; value?: string; id?: string; name?: string}[]
-  >([]);
 
   const {CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
 
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
@@ -142,7 +132,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           uniqIDs.push(member.id);
           return !duplicate;
         });
-        setTeachersList(filteredArray);
       }
     } catch {
       setMessages({
@@ -260,42 +249,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     }
   };
 
-  const saveRoomCurricular = async (id: string, roomId: string, currId: string) => {
-    if (roomId && id) {
-      try {
-        const curricularInput = {
-          id: id,
-          roomID: roomId,
-          curriculumID: currId,
-        };
-
-        const addCurricular: any = await API.graphql(
-          graphqlOperation(mutation.updateRoomCurriculum, {input: curricularInput})
-        );
-        setLoading(false);
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-          isError: false,
-        });
-      } catch {
-        setLoading(false);
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['errupdating'],
-          isError: true,
-        });
-      }
-    } else {
-      setLoading(false);
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['errprocess'],
-        isError: true,
-      });
-    }
-  };
-
   const filterCurricularData = (currId: string) => {
     const currentList = [...curricularList];
     const selectedCurr = currentList.find((item) => item.id === currId);
@@ -321,26 +274,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           const curricularId = savedData.curricula.items[0].curriculumID;
 
           const coTeachers = savedData.coTeachers?.items;
-          setOriginalTeacher(
-            coTeachers?.map((d: any) => {
-              return {
-                rowId: d.id,
-                id: d.teacherID,
-              };
-            })
-          );
-          setSelectedCoTeachers(
-            coTeachers?.map((d: any) => {
-              return {
-                id: d.teacherID,
-                authId: d.teacherAuthID,
-                email: d.teacherEmail,
-                name: `${d.teacher.firstName} ${d.teacher.lastName}`,
-                value: `${d.teacher.firstName} ${d.teacher.lastName}`,
-                rowId: d.id,
-              };
-            })
-          );
           setRoomData({
             ...savedData,
             institute: {

@@ -270,7 +270,7 @@ const UnitManager = ({
     }
   };
 
-  const gotoLessonBuilder = (id: string, type: string) => {
+  const goToUnitBuilder = (id: string, type: string) => {
     if (unsavedChanges) {
       setWarnModal({
         ...warnModal,
@@ -280,15 +280,7 @@ const UnitManager = ({
       });
       // setEditLesson({type, id});
     } else {
-      if (type === 'lesson') {
-        history.push(
-          `/dashboard/lesson-builder/lesson/edit?lessonId=${id}&from=lesson-planner`
-        );
-      } else {
-        history.push(
-          `/dashboard/lesson-builder/lesson/edit?assessmentId=${id}&from=lesson-planner`
-        );
-      }
+      history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`);
     }
   };
 
@@ -382,7 +374,7 @@ const UnitManager = ({
                                     <div
                                       className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
                                       onClick={() =>
-                                        gotoLessonBuilder(item.id, item.type)
+                                        goToUnitBuilder(item.unitId, item.type)
                                       }>
                                       {item.name || '--'}
                                     </div>
