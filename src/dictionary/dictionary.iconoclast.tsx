@@ -3927,10 +3927,12 @@ const LearningEvidenceDict: any = {
 
 const CommonlyUsedDict: any = {
   EN: {
+    BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
   },
   ES: {
-    BACK_TO_LIST: 'Back to list',
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
   },
 };
 

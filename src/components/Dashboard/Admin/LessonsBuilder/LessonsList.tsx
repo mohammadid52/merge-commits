@@ -166,7 +166,8 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
         const filteredList = getFilteredList(data, state.user.id);
 
-        setLessonsData(isTeacher ? filteredList : data);
+        // setLessonsData(isTeacher ? filteredList : data);
+        setLessonsData(data);
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
@@ -410,7 +411,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                         <LessonListLoader />
                       </Fragment>
                     ))
-                ) : currentList && currentList.length ? (
+                ) : currentList?.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
                       setShowCloneModal={setShowCloneModal}
