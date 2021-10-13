@@ -1207,7 +1207,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
-    NO_DELETE: "Can't delete (Course in use)",
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3582,23 +3582,25 @@ const QuestionBuilderDict: any = {
 
 const UnitLookupDict: any = {
   EN: {
-    HEADING: 'Assign Unit',
-    NOTE: 'NOTE: Please select Course and then units to add current lesson to that unit.',
+    HEADING: 'Assign Module',
+    NOTE:
+      'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
-    UNITNAME: 'Unit Name',
+    UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This lesson is not added to any course or units.',
+    NOTADDED: ' This session is not added to any course or modules.',
     NEW_UNIT: 'New Unit',
     UNIT_DETAILS: 'View Unit details',
     VIEW: 'View',
-    MESSAGES: {
-      ADDED: 'Lesson added successfully.',
-      ADDERR: 'Error while adding lesson to unit, please try later.',
-      FETCHERR: 'Error while fetching units Data, Please try again later.',
-    },
     INFO: 'This institute does not have any unit. Please create a new unit.',
+    MESSAGES: {
+      ADDED: 'Session added successfully.',
+      ADDERR: 'Error while adding session to module, please try later.',
+      FETCHERR: 'Error while fetching modules Data, Please try again later.',
+    },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3609,12 +3611,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 

@@ -1,4 +1,4 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import {getAsset} from '../../../../../assets';
@@ -7,6 +7,9 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
 import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
+import Popover from '@components/Atoms/Popover';
+import {BiDotsVerticalRounded} from 'react-icons/bi';
+import CurriculumListRow from './CurriculumListRow';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
@@ -63,8 +66,8 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
-    <div className="pt-0 flex m-auto justify-center p-8">
-      <div className="">
+    <div className="pt-0 flex m-auto justify-center h-full p-8">
+      <div className="flex flex-col">
         {curricular.items && curricular.items.length > 0 ? (
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
@@ -84,7 +87,7 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-auto px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculam[userLanguage]['ACTION']}
                   </span>
@@ -92,42 +95,16 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
               </div>
             </div>
 
-            <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
+            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
               {curricular.items.map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                    index % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}>
-                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                    {index + 1}.
-                  </div>
-                  <div className="flex w-full items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {item.name ? item.name : ''}
-                  </div>
-                  <span
-                    className={`w-auto text-gray-500 flex items-center justify-end text-right pr-8 py-3`}
-                    onClick={
-                      checkIfRemovable(item) ? () => handleDelete(item) : () => {}
-                    }>
-                    {checkIfRemovable(item) ? (
-                      <span className="cursor-pointer">
-                        <DeleteActionBtn handleClick={() => handleDelete(item)} />
-                      </span>
-                    ) : (
-                      <span className="text-xs">
-                        {InstitueCurriculam[userLanguage]['NO_DELETE']}
-                      </span>
-                    )}
-                  </span>
-                  <span
-                    className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
-                    onClick={() => editCurrentCurricular(item.id)}>
-                    <Tooltip text="View curriculam details" placement="left">
-                      {InstitueCurriculam[userLanguage]['VIEW']}
-                    </Tooltip>
-                  </span>
-                </div>
+                <CurriculumListRow
+                  key={`curr_list_row_${index}`}
+                  index={index}
+                  item={item}
+                  checkIfRemovable={checkIfRemovable}
+                  handleDelete={handleDelete}
+                  editCurrentCurricular={editCurrentCurricular}
+                />
               ))}
             </div>
           </Fragment>

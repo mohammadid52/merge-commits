@@ -1253,7 +1253,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This organization does not have any course. Please create a new course.',
-    NO_DELETE: "Can't delete (Course in use)",
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3527,6 +3527,7 @@ const UnitLookupDict: any = {
       ADDERR: 'Error while adding session to module, please try later.',
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3537,12 +3538,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 

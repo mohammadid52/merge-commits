@@ -441,9 +441,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             )}
           </div>
 
-          <div className="">
-            <div className="bg-white border-l-0 border-gray-200 mb-4">
-              <div className="overflow-hidden min-h-80">
+          <div className="flex">
+            <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
+              <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
                   <Route
@@ -487,19 +487,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     path={`${match.url}/room-creation`}
                     exact
-                    render={() => (
-                      <ClassRoomBuilder
-                        instId={institute?.id}
-                      />
-                    )} // Create new room
+                    render={() => <ClassRoomBuilder instId={institute?.id} />} // Create new room
                   />
                   <Route
                     path={`${match.url}/room-edit/:roomId`}
-                    render={() => (
-                      <ClassRoomBuilder
-                        instId={institute?.id}
-                      />
-                    )} // Edit current room.
+                    render={() => <ClassRoomBuilder instId={institute?.id} />} // Edit current room.
                   />
                   <Route
                     path={`${match.url}/register-user`}
@@ -508,9 +500,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     path={`${match.url}/students`}
                     exact
-                    render={() => (
-                      <Students instId={institute?.id} />
-                    )}
+                    render={() => <Students instId={institute?.id} />}
                   />
                   <Route
                     path={`${match.url}/courses`}
@@ -533,12 +523,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <Route
                     exact
                     path={`${match.url}/units/add`}
-                    render={() => <UnitBuilder instId={institute?.id}/>}
+                    render={() => <UnitBuilder instId={institute?.id} />}
                   />
                   <Route
                     exact
                     path={`${match.url}/units/:unitId/edit`}
-                    render={() => <UnitBuilder instId={institute?.id}/>}
+                    render={() => <UnitBuilder instId={institute?.id} />}
                   />
                   <Route
                     path={`${match.url}/research-and-analytics`}

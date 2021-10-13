@@ -2224,6 +2224,51 @@ export const getUniversalSyllabus = /* GraphQL */ `
   }
 `;
 
+export const listUniversalSyllabuss = /* GraphQL */ `
+  query ListUniversalSyllabuss(
+    $id: ID
+    $filter: ModelUniversalSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          items {
+            id
+          }
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        isUsed
+        lessonHistory
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getUniversalSyllabusData = /* GraphQL */ `
   query GetUniversalSyllabus($id: ID!) {
     getUniversalSyllabus(id: $id) {
