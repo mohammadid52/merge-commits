@@ -1140,6 +1140,22 @@ export const listRoomCurriculums = /* GraphQL */ `
         id
         roomID
         curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          image
+          summary
+          description
+          objectives
+          languages
+          designers
+          universalSyllabusSeq
+          syllabiHistory
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }
@@ -2581,6 +2597,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
           name
           type
           description
+          syllabiHistory
           objectives
           languages
           createdAt

@@ -1253,6 +1253,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This organization does not have any course. Please create a new course.',
+    NO_DELETE: "Can't delete (Course in use)",
   },
   ES: {
     TITLE: 'TBD',
@@ -1264,6 +1265,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 

@@ -6,6 +6,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
+import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
@@ -25,52 +26,28 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
 
   const history = useHistory();
 
+  //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
+
+  /**********************************************************
+   *   IF CURRICULUM HAS ANY AMOUNT OF SYLLABI ATTACHED,    *
+   * OR IF THIS CURRICULUM HAS EVER HAD ANY ACTIVE SYLLABI, *
+   *               THEN DO NOT ALLOW A DELETE               *
+   **********************************************************/
+
+  const checkIfRemovable = (curriculumObj: any) => {
+    if (
+      curriculumObj.syllabi?.length > 0 ||
+      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleDelete = (input: any) => {};
+
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
-  // const getUnusedCurriculums = async (curriculumArr: any[]) => {
-  //   const allCurriculums = curriculumArr.reduce((acc: string[], curriculum: any) => {
-  //     return [...acc, curriculum.id];
-  //   }, []);
-  //   if (allCurriculums.length > 0) {
-  //     try {
-  //       const allCurriculumsFilter = createFilterToFetchSpecificItemsOnly(
-  //         allCurriculums,
-  //         'curriculumID'
-  //       );
-
-  //       const allRoomCurriculums: any = await API.graphql(
-  //         graphqlOperation(queries.listRoomCurriculums, {
-  //           filter: {...allCurriculumsFilter},
-  //         })
-  //       );
-
-  //       const responseItems = allRoomCurriculums?.data?.listRoomCurriculums?.items;
-
-  //       const unusedCurriculums = allCurriculums.reduce(
-  //         (unusedAcc: string[], curriculumID: string) => {
-  //           if (
-  //             unusedAcc.indexOf(curriculumID) === -1 &&
-  //             allCurriculums.indexOf(curriculumID) > -1
-  //           ) {
-  //             return unusedAcc;
-  //           } else {
-  //             return [...unusedAcc, curriculumID];
-  //           }
-  //         },
-  //         []
-  //       );
-
-  //       console.log('unused curriculums - ', unusedCurriculums);
-  //     } catch (e) {
-  //       console.error('getUnusedCurriculums() - ', e);
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (curricular) {
-  //     getUnusedCurriculums(curricular.items);
-  //   }
-  // }, [curricular]);
 
   const createNewCurricular = () => {
     history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder`);
@@ -125,9 +102,24 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                   <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.
                   </div>
-                  <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                  <div className="flex w-full items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {item.name ? item.name : ''}
                   </div>
+                  <span
+                    className={`w-auto text-gray-500 flex items-center justify-end text-right pr-8 py-3`}
+                    onClick={
+                      checkIfRemovable(item) ? () => handleDelete(item) : () => {}
+                    }>
+                    {checkIfRemovable(item) ? (
+                      <span className="cursor-pointer">
+                        <DeleteActionBtn handleClick={() => handleDelete(item)} />
+                      </span>
+                    ) : (
+                      <span className="text-xs">
+                        {InstitueCurriculam[userLanguage]['NO_DELETE']}
+                      </span>
+                    )}
+                  </span>
                   <span
                     className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
                     onClick={() => editCurrentCurricular(item.id)}>

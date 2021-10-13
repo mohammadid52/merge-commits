@@ -35,7 +35,6 @@ const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
-const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
 type userObject = {
   [key: string]: any;
@@ -47,6 +46,8 @@ export interface ICompletedLessons {
 }
 
 export interface DashboardProps {
+  setClassroomCurriculum?: any;
+  classroomCurriculum?: any;
   classRoomActiveSyllabus?: string;
   loading?: boolean;
   isTeacher?: boolean;
@@ -206,6 +207,7 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
   const [curriculumIds, setCurriculumIds] = useState<string>('');
+  const [curriculumObj, setCurriculumObj] = useState<any>({});
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
@@ -321,7 +323,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
-    console.log('studentRoomsList - ', studentRoomsList);
+    // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -395,6 +397,7 @@ const Dashboard = (props: DashboardProps) => {
    **********************************/
   const listRoomCurriculums = async () => {
     console.log('listRoomCurriculums - ', '');
+    // removeLocalStorageData('curriculum_id');
     if (state.roomData.rooms.length > 0) {
       try {
         const queryObj = {
@@ -412,12 +415,14 @@ const Dashboard = (props: DashboardProps) => {
             },
           })
         );
+        console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
         const response = await roomCurriculumsFetch;
         // @ts-ignore
         const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
+          setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
         console.error('RoomCurriculums fetch ERR: ', e);
@@ -614,31 +619,16 @@ const Dashboard = (props: DashboardProps) => {
 
       let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
 
-      console.log('listSyllabus - ', mappedResponseObjects);
+      // console.log('listSyllabus - ', mappedResponseObjects);
 
       //TODO: combine these dispatches
       dispatch({
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           syllabus: mappedResponseObjects,
-          curriculum: {name: response.name},
+          curriculum: {id: response.id, name: response.name},
         },
       });
-
-      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
-      // let scheduleDetails: any = await API.graphql(
-      //   graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-      // );
-      // scheduleDetails = scheduleDetails?.data?.getRoom;
-
-      // if (
-      //   scheduleDetails &&
-      //   scheduleDetails.startDate &&
-      //   scheduleDetails.endDate &&
-      //   scheduleDetails.frequency
-      // ) {
-      //   const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
-      // }
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
@@ -909,17 +899,6 @@ const Dashboard = (props: DashboardProps) => {
       <div className="relative h-screen flex overflow-hidden container_background">
         {state.user.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
-        {/* <SideMenu
-          // setActiveRoomSyllabus={setActiveRoomSyllabus}
-          setLessonLoading={setLessonLoading}
-          setSyllabusLoading={setSyllabusLoading}
-          setActiveRoomName={setActiveRoomName}
-          updateAuthState={updateAuthState}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          role={userData.role}
-          handleRoomSelection={handleRoomSelection}
-        /> */}
 
         <div className="h-full overflow-y-auto">
           {/*<FloatingSideMenu />*/}
@@ -1002,7 +981,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1054,7 +1034,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1103,17 +1084,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900">
-        {/* <DropDownMenu /> */}
-
-        {/* <NavLink to="/dashboard"> */}
-        {/* <img
-          className="h-16 px-4 py-2"
-          src={getAsset(clientKey, 'main_logo')}
-          alt="Logo"
-        /> */}
-        {/* </NavLink> */}
-      </div>
+      <div className="w-full flex justify-center items-center bg-gray-900"></div>
     </>
   );
 };

@@ -1264,6 +1264,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any curriculum. Please create a new curriculum.',
+    NO_DELETE: "Can't delete (Course in use)",
   },
   ES: {
     TITLE: 'TBD',
@@ -1275,6 +1276,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
