@@ -31,3 +31,4 @@ export const ATTACHMENTS = 'Attachments';
 export const DATE_PICKER = 'Date Picker';
 export const TABLE = 'table';
 export const PARAGRAPH = 'paragraph';
+export const SPACER = 'spacer';

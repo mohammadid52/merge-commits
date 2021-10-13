@@ -34,7 +34,7 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
    *               THEN DO NOT ALLOW A DELETE               *
    **********************************************************/
 
-  const checkIfDeletable = (curriculumObj: any) => {
+  const checkIfRemovable = (curriculumObj: any) => {
     if (
       curriculumObj.syllabi?.length > 0 ||
       (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0)
@@ -107,10 +107,12 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                   </div>
                   <span
                     className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-                    onClick={checkIfDeletable() ? () => handleDelete(item) : () => {}}>
+                    onClick={
+                      checkIfRemovable(item) ? () => handleDelete(item) : () => {}
+                    }>
                     <DeleteActionBtn
                       handleClick={
-                        checkIfDeletable() ? () => handleDelete(item) : () => {}
+                        checkIfRemovable(item) ? () => handleDelete(item) : () => {}
                       }
                     />
                   </span>

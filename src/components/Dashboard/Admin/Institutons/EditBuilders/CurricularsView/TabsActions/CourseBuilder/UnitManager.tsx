@@ -28,6 +28,7 @@ interface UIMessages {
 
 const UnitManager = ({
   courseId,
+  courseData,
   institutionId,
   savedSyllabusList,
   setSavedSyllabusList,
@@ -106,6 +107,7 @@ const UnitManager = ({
       const result: any = await API.graphql(
         graphqlOperation(mutations.createCurriculumUnits, {input})
       );
+
       const newSyllabus = result.data.createCurriculumUnits;
 
       if (!syllabusIds.length) {

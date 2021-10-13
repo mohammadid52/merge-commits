@@ -14,7 +14,11 @@ import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import usePrevious from '../../customHooks/previousProps';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData,
+} from '../../utilities/localStorage';
 import {frequencyMapping} from '../../utilities/staticData';
 
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -265,11 +269,13 @@ const Dashboard = (props: DashboardProps) => {
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = [
         ...response?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
@@ -369,11 +375,13 @@ const Dashboard = (props: DashboardProps) => {
       //@ts-ignore
       const arrayOfResponseObjects = [
         ...classIdFromRoomsFetch?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
@@ -402,6 +410,7 @@ const Dashboard = (props: DashboardProps) => {
    **********************************/
   const listRoomCurriculums = async () => {
     console.log('listRoomCurriculums - ', '');
+    removeLocalStorageData('curriculum_id');
     if (state.roomData.rooms.length > 0) {
       try {
         const queryObj = {
@@ -419,12 +428,14 @@ const Dashboard = (props: DashboardProps) => {
             },
           })
         );
+        console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
         const response = await roomCurriculumsFetch;
         // @ts-ignore
         const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
+          setLocalStorageData('curriculum_id', arrayOfResponseObjects[0]?.curriculumID);
         }
       } catch (e) {
         console.error('RoomCurriculums fetch ERR: ', e);
@@ -621,31 +632,16 @@ const Dashboard = (props: DashboardProps) => {
 
       let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
 
-      console.log('listSyllabus - ', mappedResponseObjects);
+      // console.log('listSyllabus - ', mappedResponseObjects);
 
       //TODO: combine these dispatches
       dispatch({
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           syllabus: mappedResponseObjects,
-          curriculum: {name: response.name},
+          curriculum: {id: response.id, name: response.name},
         },
       });
-
-      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
-      // let scheduleDetails: any = await API.graphql(
-      //   graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-      // );
-      // scheduleDetails = scheduleDetails?.data?.getRoom;
-
-      // if (
-      //   scheduleDetails &&
-      //   scheduleDetails.startDate &&
-      //   scheduleDetails.endDate &&
-      //   scheduleDetails.frequency
-      // ) {
-      //   const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
-      // }
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
@@ -857,7 +853,7 @@ const Dashboard = (props: DashboardProps) => {
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-max">
                 <div className="px-1 py-1 shadow-lg">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
@@ -914,7 +910,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
+        {state.user.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}
