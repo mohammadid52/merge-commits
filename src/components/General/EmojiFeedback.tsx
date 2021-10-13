@@ -3,7 +3,8 @@ import '@style/general/EmojiFeedback.scss';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import Modal from '../Atoms/Modal';
+import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
+import Modal from '@atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '@customGraphql/customQueries';
 import * as customMutations from '@customGraphql/customMutations';
@@ -61,11 +62,12 @@ const EmojiFeedback = () => {
       const lastSubmissionDate = moment(
         `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
       );
-      const currentTime = moment();
 
-      const dayDiff = currentTime.diff(lastSubmissionDate, 'day');
+      const date = moment(lastSubmissionDate).get('date');
 
-      if (dayDiff >= 1) {
+      const todayDate = moment().get('date');
+
+      if (todayDate - date >= 1) {
         setShowSentimentModal(true);
       } else {
         setShowSentimentModal(false);
