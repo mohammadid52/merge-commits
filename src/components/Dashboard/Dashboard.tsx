@@ -24,21 +24,16 @@ import {frequencyMapping} from '../../utilities/staticData';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import EmojiFeedback from '../General/EmojiFeedback';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import Noticebar from '../Noticebar/Noticebar';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import Csv from './Csv/Csv';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import SideMenu from './Menu/SideMenu';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {getAsset} from '../../assets';
-import {AiOutlineUser} from 'react-icons/ai';
-// import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
 import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getImageFromS3Static} from '@utilities/services';
@@ -50,7 +45,6 @@ const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
-const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
 type userObject = {
   [key: string]: any;
@@ -62,6 +56,8 @@ export interface ICompletedLessons {
 }
 
 export interface DashboardProps {
+  setClassroomCurriculum?: any;
+  classroomCurriculum?: any;
   classRoomActiveSyllabus?: string;
   loading?: boolean;
   isTeacher?: boolean;
@@ -221,6 +217,7 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
   const [curriculumIds, setCurriculumIds] = useState<string>('');
+  const [curriculumObj, setCurriculumObj] = useState<any>({});
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
@@ -336,7 +333,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
-    console.log('studentRoomsList - ', studentRoomsList);
+    // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -435,7 +432,7 @@ const Dashboard = (props: DashboardProps) => {
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
-          setLocalStorageData('curriculum_id', arrayOfResponseObjects[0]?.curriculumID);
+          setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
         console.error('RoomCurriculums fetch ERR: ', e);
@@ -912,17 +909,6 @@ const Dashboard = (props: DashboardProps) => {
       <div className="relative h-screen flex overflow-hidden container_background">
         {state.user.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
-        {/* <SideMenu
-          // setActiveRoomSyllabus={setActiveRoomSyllabus}
-          setLessonLoading={setLessonLoading}
-          setSyllabusLoading={setSyllabusLoading}
-          setActiveRoomName={setActiveRoomName}
-          updateAuthState={updateAuthState}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          role={userData.role}
-          handleRoomSelection={handleRoomSelection}
-        /> */}
 
         <div className="h-full overflow-y-auto">
           {/*<FloatingSideMenu />*/}
@@ -995,7 +981,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1047,7 +1034,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1096,17 +1084,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900">
-        {/* <DropDownMenu /> */}
-
-        {/* <NavLink to="/dashboard"> */}
-        {/* <img
-          className="h-16 px-4 py-2"
-          src={getAsset(clientKey, 'main_logo')}
-          alt="Logo"
-        /> */}
-        {/* </NavLink> */}
-      </div>
+      <div className="w-full flex justify-center items-center bg-gray-900"></div>
     </>
   );
 };

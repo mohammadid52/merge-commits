@@ -6,11 +6,6 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
-import {
-  getLocalStorageData,
-  removeLocalStorageData,
-  setLocalStorageData,
-} from '../../../utilities/localStorage';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -104,7 +99,8 @@ const range = (from: number, to: number, step: number = 1) => {
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
-    classRoomActiveSyllabus,
+    setClassroomCurriculum,
+    classroomCurriculum,
     isTeacher,
     currentPage,
     activeRoomInfo,
@@ -284,23 +280,28 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       id: syllabusID,
       isUsed: true,
     };
+    const input3 = {
+      id: classroomCurriculum.id,
+      syllabiHistory: classroomCurriculum.syllabiHistory
+        ? classroomCurriculum.syllabiHistory.includes(syllabusID)
+          ? classroomCurriculum.syllabiHistory
+          : [...classroomCurriculum.syllabiHistory, syllabusID]
+        : [syllabusID],
+    };
 
     try {
-      const updateRoomMutation: any = API.graphql(
+      const updateRoomMutation: any = await API.graphql(
         graphqlOperation(mutations.updateRoom, {
-          input,
+          input: input,
         })
       );
-      const updateUniversalSyllabusMutation: any = API.graphql(
-        graphqlOperation(mutations.updateUniversalSyllabus, {
-          input2,
-        })
+      const updateUniversalSyllabusMutation: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
       );
-      // const updateCurriculum: any = API.graphql(
-
-      // )
-      await updateRoomMutation;
-      await updateUniversalSyllabusMutation;
+      const updateCurriculum: any = await API.graphql(
+        graphqlOperation(mutations.updateCurriculum, {input: input3})
+      );
+      setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
     } finally {

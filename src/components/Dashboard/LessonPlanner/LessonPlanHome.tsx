@@ -18,6 +18,8 @@ export interface CurriculumInfo {
 
 const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
+    setClassroomCurriculum,
+    classroomCurriculum,
     currentPage,
     setCurrentPage,
     activeRoomInfo,
@@ -33,6 +35,8 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <Classroom
+      setClassroomCurriculum={setClassroomCurriculum}
+      classroomCurriculum={classroomCurriculum}
       handleRoomSelection={handleRoomSelection}
       activeRoomInfo={activeRoomInfo}
       setActiveRoomInfo={setActiveRoomInfo}

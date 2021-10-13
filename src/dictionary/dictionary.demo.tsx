@@ -64,14 +64,14 @@ const BUTTONS: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK_TO_LIST: 'Back to list',
+  },
+};
 
 const EditQuestionModalDict: any = {
   EN: {
@@ -976,7 +976,7 @@ const Institute_info: any = {
       CLASSES: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      LIVE_CLASS_ROOM: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
@@ -1262,6 +1262,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any curriculum. Please create a new curriculum.',
+    NO_DELETE: "Can't delete (Course in use)",
   },
   ES: {
     TITLE: 'TBD',
@@ -1273,6 +1274,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
@@ -3800,7 +3802,7 @@ const LearningEvidenceDict: any = {
   },
 };
 
-const StudentDict:any = {
+const StudentDict: any = {
   EN: {
     NO_STUDENT: 'No Student Found',
   },
@@ -3900,5 +3902,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   General,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

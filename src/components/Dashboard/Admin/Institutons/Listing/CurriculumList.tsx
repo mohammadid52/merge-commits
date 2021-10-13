@@ -102,19 +102,23 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                   <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.
                   </div>
-                  <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                  <div className="flex w-full items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {item.name ? item.name : ''}
                   </div>
                   <span
-                    className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
+                    className={`w-auto text-gray-500 flex items-center justify-end text-right pr-8 py-3`}
                     onClick={
                       checkIfRemovable(item) ? () => handleDelete(item) : () => {}
                     }>
-                    <DeleteActionBtn
-                      handleClick={
-                        checkIfRemovable(item) ? () => handleDelete(item) : () => {}
-                      }
-                    />
+                    {checkIfRemovable(item) ? (
+                      <span className="cursor-pointer">
+                        <DeleteActionBtn handleClick={() => handleDelete(item)} />
+                      </span>
+                    ) : (
+                      <span className="text-xs">
+                        {InstitueCurriculam[userLanguage]['NO_DELETE']}
+                      </span>
+                    )}
                   </span>
                   <span
                     className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
