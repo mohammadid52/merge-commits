@@ -111,8 +111,8 @@ const Toolbar = ({
 
             <div
               className={`${
-                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-12 '
-              } space-x-12 transition-all transform`}>
+                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-6 '
+              } space-x-6 transition-all transform`}>
               {!previewMode && (
                 <>
                   <Button

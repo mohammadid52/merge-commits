@@ -15,6 +15,7 @@ export const PageBuilderProvider = ({children}: any) => {
   const [navState, setNavState] = useState<NavState>('home');
   const [activeContentItem, setActiveContentItem] = useState(null); // content type
   const [showLocationIcon, setShowLocationIcon] = useState(false);
+  const [selectedType, setSelectedType] = useState(null);
 
   return (
     <PageBuilderContext.Provider
@@ -23,6 +24,8 @@ export const PageBuilderProvider = ({children}: any) => {
         setShowingPin,
         selectedComponent,
         setSelectedComponent,
+        selectedType,
+        setSelectedType,
         actionMode,
         setActionMode,
         moveDir,

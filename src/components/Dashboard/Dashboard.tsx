@@ -1,48 +1,37 @@
-import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import Auth from '@aws-amplify/auth';
-import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {useCookies} from 'react-cookie';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import moment, {Moment} from 'moment';
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/solid';
-
-import {GlobalContext} from '../../contexts/GlobalContext';
-
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
-import * as customQueries from '../../customGraphql/customQueries';
-import usePrevious from '../../customHooks/previousProps';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import {frequencyMapping} from '../../utilities/staticData';
-
-import ErrorBoundary from '../Error/ErrorBoundary';
-import EmojiFeedback from '../General/EmojiFeedback';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import Noticebar from '../Noticebar/Noticebar';
-import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
-import QuestionBank from './Admin/Questions/QuestionBank';
-import Csv from './Csv/Csv';
-import Home from './Home/Home';
-import HomeForTeachers from './Home/HomeForTeachers';
-import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import SideMenu from './Menu/SideMenu';
-import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
-import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import {getAsset} from '../../assets';
-import {AiOutlineUser} from 'react-icons/ai';
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
-import {getUserRoleString, stringToHslColor} from '@utilities/strings';
-import {getImageFromS3Static} from '@utilities/services';
-import {FiUser} from 'react-icons/fi';
+import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import useNotifications from '@customHooks/notifications';
-import HeaderMegaMenu from './Menu/HeaderMegaMenu';
-
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
+import {getImageFromS3Static} from '@utilities/services';
+import {getUserRoleString, stringToHslColor} from '@utilities/strings';
+import {getAsset} from 'assets';
+import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
+import Csv from 'components/Dashboard/Csv/Csv';
+import Home from 'components/Dashboard/Home/Home';
+import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
+import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
+import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
+import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import Noticebar from 'components/Noticebar/Noticebar';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
+import moment, {Moment} from 'moment';
+import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {FiUser} from 'react-icons/fi';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {frequencyMapping} from 'utilities/staticData';
+import EmojiFeedback from 'components/General/EmojiFeedback';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -265,11 +254,13 @@ const Dashboard = (props: DashboardProps) => {
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = [
         ...response?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
@@ -369,11 +360,13 @@ const Dashboard = (props: DashboardProps) => {
       //@ts-ignore
       const arrayOfResponseObjects = [
         ...classIdFromRoomsFetch?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
@@ -981,6 +974,16 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
                     <HomeSwitch />
+                  </ErrorBoundary>
+                )}
+              />
+
+              <Route
+                exact
+                path={`${match.url}/community`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
                   </ErrorBoundary>
                 )}
               />

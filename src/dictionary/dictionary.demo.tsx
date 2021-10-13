@@ -64,14 +64,14 @@ const BUTTONS: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK_TO_LIST: 'Back to list',
+  },
+};
 
 const EditQuestionModalDict: any = {
   EN: {
@@ -960,6 +960,7 @@ const Institute_info: any = {
       LESSONS: 'Lessons',
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
+      COMMUNITY: 'Community',
       NOTEBOOK: 'Notebook',
     },
   },
@@ -974,9 +975,10 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'TBD',
       STAFF: 'TBD',
       CLASSES: 'TBD',
+      COMMUNITY: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      LIVE_CLASS_ROOM: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
@@ -3800,7 +3802,7 @@ const LearningEvidenceDict: any = {
   },
 };
 
-const StudentDict:any = {
+const StudentDict: any = {
   EN: {
     NO_STUDENT: 'No Student Found',
   },
@@ -3809,6 +3811,14 @@ const StudentDict:any = {
   },
 };
 
+const CommunityDict: any = {
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
+  },
+};
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3819,6 +3829,7 @@ export {
   AuthDict,
   CsvDict,
   paginationPage,
+  CommunityDict,
   BUTTONS,
   BreadcrumsTitles,
   DashboardDict,
@@ -3900,5 +3911,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   General,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

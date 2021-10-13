@@ -42,10 +42,8 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     setSelectedComponent,
     selectedComponent,
     actionMode,
-    setShowingPin,
     navState,
-
-    setActionMode,
+    selectedType,
   } = usePageBuilderContext();
 
   const {setAddContentModal} = useOverlayContext();
@@ -62,7 +60,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
 
   const onComponentCreateClick = () => {
     if (!isEmpty(selectedComponent)) {
-      setAddContentModal({show: true, type: selectedComponent.componentData.type});
+      setAddContentModal({show: true, type: selectedType});
       const position = selectedComponent.partContentIdx + 1; // this the position idx where the new component will go
       if (typeof handleModalPopToggle === 'function') {
         handleModalPopToggle(
