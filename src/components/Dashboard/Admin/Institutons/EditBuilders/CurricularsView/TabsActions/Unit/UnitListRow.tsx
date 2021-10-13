@@ -45,7 +45,7 @@ const UnitListRow = ({
       </div>
 
       <div
-        className={`w-1/10 flex justify-center items-center pr-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
+        className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
             show={showMenu}

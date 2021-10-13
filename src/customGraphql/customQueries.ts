@@ -3023,6 +3023,7 @@ export const getCurriculum = /* GraphQL */ `
         nextToken
       }
       universalSyllabusSeq
+      syllabiHistory
       createdAt
       updatedAt
     }

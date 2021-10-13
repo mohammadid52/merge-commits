@@ -87,7 +87,7 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
                 </div>
-                <div className="w-auto px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculam[userLanguage]['ACTION']}
                   </span>

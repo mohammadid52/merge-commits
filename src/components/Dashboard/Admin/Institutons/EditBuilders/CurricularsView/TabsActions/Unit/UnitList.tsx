@@ -14,6 +14,7 @@ import {getAsset} from 'assets';
 import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
 import UnitListRow from './UnitListRow';
 
+
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -34,7 +35,8 @@ export const UnitList = ({instId}: any) => {
   const checkIfRemovable = (unitObj: any) => {
     if (
       unitObj.lessons?.items?.length > 0 ||
-      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0)
+      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
+      unitObj?.isUsed
     ) {
       return false;
     } else {
@@ -102,7 +104,7 @@ export const UnitList = ({instId}: any) => {
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
-                <div className="w-auto px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
               </div>

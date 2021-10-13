@@ -18,6 +18,7 @@ import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
 import CurriculumList from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
+import UnitManagerRow from './UnitManagerRow';
 
 interface UIMessages {
   show: boolean;
@@ -41,6 +42,7 @@ const UnitManager = ({
   const {CourseBuilderDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
   const [addingSyllabus, setAddingSyllabus] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -78,6 +80,7 @@ const UnitManager = ({
     }
   }, [savedSyllabusList]);
 
+  // ~~~~~~~~~~~~ FUnCTIONALITY ~~~~~~~~~~~~ //
   const createNewUnit = () => {
     if (unsavedChanges) {
       setWarnModal({
@@ -233,7 +236,7 @@ const UnitManager = ({
     if (
       curriculumObj?.syllabiHistory &&
       curriculumObj?.syllabiHistory?.length > 0 &&
-      curriculumObj?.syllabiHistory.includes(unitObj.id)
+      curriculumObj?.syllabiHistory.includes(unitObj.unitId)
     ) {
       return false;
     } else {
@@ -365,15 +368,15 @@ const UnitManager = ({
             <div>
               {/* *************** SYLLABUS TABLE HEADERS ************ */}
               <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-8/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {CourseBuilderDict[userLanguage]['TABLE_HEADS']['UNIT_NAME']}
                   </span>
                 </div>
-                <div className="w-1/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>
@@ -391,27 +394,14 @@ const UnitManager = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}>
-                                  <div
-                                    key={index}
-                                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                      {index + 1}.
-                                    </div>
-                                    <div
-                                      className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
-                                      onClick={() =>
-                                        goToUnitBuilder(item.unitId, item.type)
-                                      }>
-                                      {item.name || '--'}
-                                    </div>
-                                    <span
-                                      className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-                                      onClick={() => onDelete(item)}>
-                                      <DeleteActionBtn
-                                        handleClick={() => onDelete(item)}
-                                      />
-                                    </span>
-                                  </div>
+                                  <UnitManagerRow
+                                    index={index}
+                                    item={item}
+                                    checkIfRemovable={checkIfRemovable}
+                                    handleDelete={onDelete}
+                                    goToUnitBuilder={goToUnitBuilder}
+                                    courseObj={courseData}
+                                  />
                                 </div>
                               )}
                             </Draggable>
