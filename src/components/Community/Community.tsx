@@ -2,8 +2,29 @@ import HeroBanner from '@components/Header/HeroBanner';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
 import React, {useContext} from 'react';
+import SectionTitleV3 from '@atoms/SectionTitleV3';
+import Buttons from '@atoms/Buttons';
+import ContentCard from '@components/Atoms/ContentCard';
 
-const Community = () => {
+const Content = () => {
+  return (
+    <>
+      <SectionTitleV3
+        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
+        title={'Community'}
+        fontSize="xl"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900"
+        borderBottom
+      />
+      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
+        <div>Testt</div>
+      </ContentCard>
+    </>
+  );
+};
+
+const Community = ({role}: {role: string}) => {
   const {clientKey} = useContext(GlobalContext);
 
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
@@ -19,6 +40,7 @@ const Community = () => {
           Here is what is happening today
         </h2>
       </div>
+      <Content />
     </div>
   );
 };

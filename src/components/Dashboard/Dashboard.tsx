@@ -31,6 +31,7 @@ import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -973,6 +974,16 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
                     <HomeSwitch />
+                  </ErrorBoundary>
+                )}
+              />
+
+              <Route
+                exact
+                path={`${match.url}/community`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
                   </ErrorBoundary>
                 )}
               />

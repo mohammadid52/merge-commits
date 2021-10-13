@@ -85,7 +85,7 @@ const HeaderMegaMenu = () => {
       key: 'class',
       type: 'dropdown',
       children: [
-        // {
+        // { user.role !== 'BLD' &&
         //   title: Institute_info[userLanguage]['TABS']['CLASSES'],
         //   key: 'class',
         //   redirectionUrl: `${baseUrl}/class`,
@@ -111,7 +111,7 @@ const HeaderMegaMenu = () => {
         },
       ].filter(Boolean),
     },
-    {
+    user.role !== 'BLD' && {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
       key: 'community',
       type: 'dropdown',
