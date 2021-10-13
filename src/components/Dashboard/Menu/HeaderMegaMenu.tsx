@@ -144,6 +144,12 @@ const HeaderMegaMenu = () => {
       active: location.pathname.indexOf('home') > -1,
     },
     {
+      title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
+      key: 'community',
+      redirectionUrl: `${baseUrl}/dashboard/community`,
+      active: location.pathname.indexOf('community') > -1,
+    },
+    {
       title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
       key: 'notebook',
       redirectionUrl: `${baseUrl}/dashboard/anthology`,

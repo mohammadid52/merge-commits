@@ -897,6 +897,7 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
+      COMMUNITY: 'Community',
     },
   },
   ES: {
@@ -918,6 +919,7 @@ const Institute_info: any = {
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
       HOME: 'TBD',
+      COMMUNITY: 'TBD',
       NOTEBOOK: 'TBD',
     },
   },
@@ -3972,14 +3974,24 @@ const StudentDict: any = {
   },
 };
 
+const CommunityDict: any = {
+  EN:{
+    HEADER:'Here is what is happening today'
+  },ES:{
+    HEADER:'TBD'
+  }
+}
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
   return '';
 }
 
+
+
 export {
-  AuthDict,
+  AuthDict,CommunityDict,
   CsvDict,
   paginationPage,
   BUTTONS,
