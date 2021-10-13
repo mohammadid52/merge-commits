@@ -23,7 +23,7 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {find, findLastIndex, map, remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory} from 'react-router';
+import {useHistory, useParams} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '@contexts/GlobalContext';
 import Tooltip from '@components/Atoms/Tooltip';
@@ -376,6 +376,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
     return replaceAllExistingIds;
   };
+  const {institutionId}: any = useParams();
 
   return (
     <div className="relative">
@@ -390,6 +391,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
       <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
         <NewLessonPlanSO
+          instId={institutionId}
           editMode={editMode}
           setEditMode={setEditMode}
           pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
