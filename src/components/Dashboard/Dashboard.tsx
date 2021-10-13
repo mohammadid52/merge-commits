@@ -857,7 +857,7 @@ const Dashboard = (props: DashboardProps) => {
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-max">
                 <div className="px-1 py-1 shadow-lg">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
@@ -914,7 +914,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
+        {state.user.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
         {/* <SideMenu
           // setActiveRoomSyllabus={setActiveRoomSyllabus}

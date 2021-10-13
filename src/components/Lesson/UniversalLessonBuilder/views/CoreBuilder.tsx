@@ -1,30 +1,33 @@
+import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {Transition} from '@headlessui/react';
-import {find, findLastIndex, map, remove} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {AiOutlineCheck, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {IconType} from 'react-icons/lib';
-import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory} from 'react-router';
-import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
-import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
+import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
+import {useQuery} from '@customHooks/urlParam';
+import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
-import Loader from '../../../Atoms/Loader';
-import Tooltip from '../../../Atoms/Tooltip';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
-import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
-import Toolbar from '../UI/UIComponents/Toolbar';
-import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
+} from '@interfaces/UniversalLessonInterfaces';
+import {LessonPageWrapper} from '@lesson/UniversalLessonBlockComponents/LessonPageWrapper';
+import BuilderRowComposer from '@lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
+import ModalPopUp from '@molecules/ModalPopUp';
+import Toolbar from '@uiComponents/Toolbar';
+import Notifications from '@UlbUI/Notifications/UlbNotifications';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {find, findLastIndex, map, remove} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {RiArrowRightSLine} from 'react-icons/ri';
+import {useHistory} from 'react-router';
+import {v4 as uuidv4} from 'uuid';
+import {GlobalContext} from '@contexts/GlobalContext';
+import Tooltip from '@components/Atoms/Tooltip';
+import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -46,6 +49,34 @@ interface CoreBuilderProps extends ULBSelectionProps {
 
   activePageData: UniversalLessonPage;
 }
+
+const PageBuilderLayout = ({
+  children,
+  open,
+  width = '28rem',
+  overflowHidden = true,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  width?: string;
+  overflowHidden?: boolean;
+}) => {
+  return (
+    <div
+      style={{
+        zIndex: 9990,
+        maxWidth: open ? width : '0rem',
+        minWidth: open ? width : '0rem',
+      }}
+      className={classNames(
+        overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
+        open ? 'translate-x-0 ' : 'translate-x-full',
+        'p-8 transform   transition-all duration-300  absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+      )}>
+      {children}
+    </div>
+  );
+};
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
@@ -78,10 +109,12 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     fetchingLessonDetails,
     setLessonPlanFields,
     setEditMode,
-    pushUserToThisId,
     previewMode,
-    setPreviewMode,
-    savingStatus,
+    pushUserToThisId,
+    editMode,
+
+    getCurrentPage,
+    newLessonPlanShow,
   } = useULBContext();
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -113,6 +146,29 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const pageId = params.get('pageId');
 
+  const {
+    showLessonEditOverlay,
+    setShowLessonEditOverlay,
+    setCollapseSidebarOverlay,
+    showDataForCopyClone,
+  } = useOverlayContext();
+
+  useEffect(() => {
+    setCollapseSidebarOverlay(true);
+  }, []);
+
+  useEffect(() => {
+    if (newLessonPlanShow || showDataForCopyClone) {
+      setShowLessonEditOverlay(false);
+    } else {
+      if (previewMode) {
+        setShowLessonEditOverlay(false);
+      } else {
+        setShowLessonEditOverlay(true);
+      }
+    }
+  }, [newLessonPlanShow, previewMode, showDataForCopyClone]);
+
   useEffect(() => {
     if (pageId === 'open-overlay') {
       setNewLessonPlanShow(true);
@@ -125,34 +181,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const goToLessonPlan = () => {
     history.push(
       `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
-    );
-  };
-  const Button = ({
-    onClick,
-    icon: Icon,
-    text = '',
-    tooltip = '',
-    invert = false,
-  }: {
-    onClick?: () => void;
-    icon?: IconType;
-    tooltip?: string;
-    text?: string;
-    color?: string;
-    invert?: boolean;
-  }) => {
-    return (
-      <Tooltip show={tooltip.length > 0} text={tooltip} placement="left">
-        <button
-          onClick={onClick}
-          type="button"
-          className={`${
-            invert ? 'bg-indigo-600' : 'bg-transparent'
-          } gray mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-          {Icon && <Icon className="h-5 w-5" aria-hidden="true" />}
-          {text}
-        </button>
-      </Tooltip>
     );
   };
 
@@ -255,12 +283,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   };
 
   const getCloneData = async (lessonId: string, pageId: string) => {
-    /**
-     * This object will replace all the existing ids with new ones
-     * hope this works 😼
-     * Please don't change anything 👏
-     */
-
     const selectedPage = await getPageById(lessonId, pageId);
 
     const replaceAllExistingIds: UniversalLessonPage = {
@@ -307,12 +329,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   };
 
   const getCopyData = async (lessonId: string, pageId: string) => {
-    /**
-     * This object will replace all the existing ids with new ones
-     * hope this works 😼
-     * Please don't change anything 👏
-     */
-
     const selectedPage = await getPageById(lessonId, pageId);
 
     const replaceAllExistingIds: UniversalLessonPage = {
@@ -362,7 +378,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   };
 
   return (
-    <>
+    <div className="relative">
       {activePageData && show && (
         <ModalPopUp
           message={message}
@@ -372,6 +388,28 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
 
+      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
+        <NewLessonPlanSO
+          editMode={editMode}
+          setEditMode={setEditMode}
+          pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+          open={newLessonPlanShow}
+          setOpen={setNewLessonPlanShow}
+          activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+        />
+      </PageBuilderLayout>
+
+      <PageBuilderLayout overflowHidden open={showLessonEditOverlay}>
+        <PageBuilderSlideOver
+          deleteFromULBHandler={deleteFromULBHandler}
+          open={showLessonEditOverlay}
+          handleEditBlockContent={handleEditBlockContent}
+          handleModalPopToggle={handleModalPopToggle}
+        />
+      </PageBuilderLayout>
+
+      <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
+
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
@@ -379,107 +417,28 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
-        <div className="fixed z-100 bottom-3 right-5  w-auto ">
-          <Transition
-            appear
-            show={savingStatus !== 'initial'}
-            enter="transform transition ease-in-out duration-300"
-            enterFrom="translate-x-full"
-            enterTo="translate-x-0"
-            leave="transform transition ease-in-out duration-300"
-            leaveFrom="translate-x-0"
-            leaveTo="translate-x-full"
-            className=" rounded-md shadow bg-gray-800 border-gray-700 border-0">
-            <div className="py-3 px-5">
-              {savingStatus === 'loading' && (
-                <div className={`flex items-center justify-center w-auto`}>
-                  <Loader className="text-gray-500 mr-2 w-auto" />
-                  <p className="text-white font-medium w-auto tracking-wide text-sm">
-                    Saving changes
-                  </p>
-                </div>
-              )}
-              {savingStatus === 'loaded' && (
-                <div className={`flex items-center justify-center`}>
-                  <p className="text-white font-medium tracking-wide text-sm">
-                    Changes saved
-                  </p>
-                  <AiOutlineCheck className="text-green-500 ml-2 w-auto" />
-                </div>
-              )}
-              {savingStatus === 'failed' && (
-                <div className={`flex items-center justify-center`}>
-                  <p className="text-red-500 font-medium tracking-wide text-sm">
-                    Something went wrong
-                  </p>
-                </div>
-              )}
-            </div>
-          </Transition>
-        </div>
-
+        {/* <Notifications /> */}
         {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
 
-        <div
-          className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
-          <div
-            style={{top: '12rem'}}
-            className={`${
-              !previewMode ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
-            } transform duration-200 transition-all  ${themeSecBackgroundColor}  ${themeTextColor} fixed right-5 z-10 customShadow  rounded-lg toolbar p-2 w-16`}>
-            <Button
-              onClick={() => {
-                setPreviewMode(!previewMode);
-                // setToolbarOnTop(true);
-              }}
-              tooltip="Preview"
-              color={themeTextColor}
-              icon={AiOutlineEyeInvisible}
-            />
-          </div>
+        {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
 
+        {/* ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
+        <div
+          style={{
+            marginLeft: showLessonEditOverlay || newLessonPlanShow ? '-15rem' : '0rem',
+          }}
+          className={`col-start-2  items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar
-              getCopyData={getCopyData}
-              getCloneData={getCloneData}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
-              universalLessonDetails={universalLessonDetails}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           )}
           <LessonPageWrapper>
             {fetchingLessonDetails ? (
-              // this is just a trial loader
-              // if anyone is making a component out of it .
-              // PLEASE replace this with that component
-              // :)
-              <div className="p-4 max-w-sm w-full mx-auto mt-12">
-                <div className="animate-pulse space-y-8 flex flex-col">
-                  <div className="flex-1 space-y-4 py-1">
-                    <div className="h-4 bg-gray-400 rounded w-3/4"></div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-gray-400 rounded"></div>
-                      <div className="h-4 bg-gray-400 rounded w-5/6"></div>
-                    </div>
-                  </div>
-                  <div className="flex-1 space-y-4 py-1">
-                    <div className="h-4 bg-gray-400 rounded w-3/4"></div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-gray-400 rounded"></div>
-                      <div className="h-4 bg-gray-400 rounded w-5/6"></div>
-                    </div>
-                  </div>
-                  <div className="flex-1 space-y-4 py-1">
-                    <div className="h-4 bg-gray-400 rounded w-3/4"></div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-gray-400 rounded"></div>
-                      <div className="h-4 bg-gray-400 rounded w-5/6"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <PageLoader len={5} />
             ) : (
               <BuilderRowComposer
                 mode={mode}
@@ -504,6 +463,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </LessonPageWrapper>
         </div>
       </div>
-    </>
+    </div>
   );
 };

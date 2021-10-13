@@ -61,6 +61,26 @@
         }
       }
     }
+
+    .iconoclast .group:hover .group-hover\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        & {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        & {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        & {
+          color: $themeValue;
+        }
+      }
+    }
     .iconoclast .focus\:iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         &:focus {
@@ -113,6 +133,26 @@
 
       @if $util == 'text' {
         &:hover {
+          color: $themeValue;
+        }
+      }
+    }
+
+    .curate .group:hover .group-hover\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        & {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'border' {
+        & {
+          border-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        & {
           color: $themeValue;
         }
       }

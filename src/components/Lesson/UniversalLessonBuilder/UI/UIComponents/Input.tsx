@@ -1,4 +1,3 @@
-import {Transition} from '@headlessui/react';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import React from 'react';
 
@@ -42,7 +41,7 @@ const Input = ({
           name={name}
           onChange={onChange}
           id={id}
-          className={`${whenError} block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md`}
+          className={`${whenError} block w-full dark:bg-gray-800 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-700 border-gray-300 rounded-md`}
           placeholder={placeholder}
           value={value}
           aria-invalid="true"

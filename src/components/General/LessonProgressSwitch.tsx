@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import useDictionary from '../../customHooks/dictionary';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 
@@ -9,9 +9,9 @@ type LabelProps = {
   id: any;
 };
 
-const ProgressLabels = ({ label, id }: LabelProps) => {
-  const { clientKey, userLanguage } = useContext(GlobalContext);
-  const { lessonPlannerDict } = useDictionary(clientKey);
+const ProgressLabels = ({label, id}: LabelProps) => {
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {lessonPlannerDict} = useDictionary(clientKey);
 
   if (label === 'n/a') {
     return (

@@ -1,5 +1,5 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import React, {useEffect, useReducer} from 'react';
+import React, {useContext, useEffect, useReducer} from 'react';
 import * as mutations from '../graphql/mutations';
 import {globalReducer} from '../reducers/GlobalReducer';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
@@ -121,7 +121,7 @@ export const standardTheme = {
   },
   modals: {
     header:
-      'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
+      'flex items-center justify-between p-4 border-solid rounded-t bg-gray-100 text-gray-900 border-gray-200',
     footer:
       'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
     content:
@@ -211,3 +211,5 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     </GlobalContext.Provider>
   );
 };
+
+export const useGlobalContext = () => useContext(GlobalContext);
