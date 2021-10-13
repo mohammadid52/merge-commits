@@ -15,13 +15,10 @@ import * as customMutations from '@customGraphql/customMutations';
 import {getImageFromS3} from '../../../../utilities/services';
 import {
   formatPhoneNumber,
-  getHostNameFromUrl,
   getInitialsFromString,
   initials,
   stringToHslColor,
 } from '../../../../utilities/strings';
-import Tooltip from '../../../Atoms/Tooltip';
-import Tabs, {ITabElements} from '@atoms/Tabs';
 import DroppableMedia from '@molecules/DroppableMedia';
 import ClassList from './Listing/ClassList';
 import CurriculumList from './Listing/CurriculumList';
@@ -45,6 +42,7 @@ import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
 import User from '../UserManagement/User';
 import UnitList from './EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import Students from './Students';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -459,7 +457,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       />
                     )}
                   />
-                  <Route
+                  {/* <Route
                     path={`${match.url}/class-creation`}
                     exact
                     render={() => (
@@ -468,8 +466,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Create new class
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path={`${match.url}/class-edit/:classId`}
                     exact
                     render={() => (
@@ -478,7 +476,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Edit current class
-                  />
+                  /> */}
                   <Route
                     path={`${match.url}/class-rooms`}
                     exact
@@ -492,7 +490,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     render={() => (
                       <ClassRoomBuilder
                         instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Create new room
                   />
@@ -501,13 +498,19 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     render={() => (
                       <ClassRoomBuilder
                         instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
                       />
                     )} // Edit current room.
                   />
                   <Route
                     path={`${match.url}/register-user`}
                     render={() => <Registration isInInstitute instId={institute?.id} />} // Register new user to roo,
+                  />
+                  <Route
+                    path={`${match.url}/students`}
+                    exact
+                    render={() => (
+                      <Students instId={institute?.id} />
+                    )}
                   />
                   <Route
                     path={`${match.url}/courses`}

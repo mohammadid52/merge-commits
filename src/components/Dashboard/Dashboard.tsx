@@ -9,7 +9,6 @@ import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
 
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
@@ -258,9 +257,20 @@ const Dashboard = (props: DashboardProps) => {
           filter: {teacherAuthID: {eq: teacherAuthID}},
         })
       );
-
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      let arrayOfResponseObjects = [
+        ...response?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room?.teacher
+        })),
+      ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
@@ -303,7 +313,7 @@ const Dashboard = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
-    if (homeData && homeData.length > 0 && getClassList.length > 0) {
+    if (homeData?.length && getClassList.length) {
       setClassList(getClassList);
     }
   }, [homeData]);
@@ -348,11 +358,23 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await API.graphql(
+      const classIdFromRoomsFetch: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       //@ts-ignore
-      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
+      const arrayOfResponseObjects = [
+        ...classIdFromRoomsFetch?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+          ...item,
+          ...item.room,
+          teacher: item.room?.teacher
+        })),
+      ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
@@ -561,14 +583,14 @@ const Dashboard = (props: DashboardProps) => {
     let mapSyllabusToSequence =
       sequenceArray && sequenceArray.length > 0
         ? getSyllabusInSequence
-            ?.map((syllabus: any) => syllabus?.unit)
-            .map((syllabus: any) => ({
+            ?.map((syllabus: any) => ({
               ...syllabus,
+              ...syllabus.unit,
               lessons: {
-                ...syllabus.lessons,
+                ...syllabus.unit.lessons,
                 items:
-                  syllabus?.lessons?.items && syllabus?.lessons?.items.length > 0
-                    ? syllabus.lessons.items
+                  syllabus?.unit.lessons?.items?.length > 0
+                    ? syllabus.unit.lessons.items
                         .map((t: any) => {
                           let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
                           return {...t, index};
@@ -577,9 +599,8 @@ const Dashboard = (props: DashboardProps) => {
                     : [],
               },
             }))
+            .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
-
-    // console.log('mapSyllabusToSequence ', mapSyllabusToSequence);
 
     return mapSyllabusToSequence;
   };

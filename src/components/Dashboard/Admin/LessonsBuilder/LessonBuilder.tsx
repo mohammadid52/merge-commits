@@ -265,7 +265,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     } catch (error) {
       console.error(error.message);
       console.log('Error while fetching lesson data');
-      history.push(`/dashboard/lesson-builder`);
+      history.push(`/dashboard/manage-institutions/institution/${instId}/lessons`);
     }
   };
 
@@ -477,7 +477,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       curriculums.map((curriculum: any) => {
         const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
           (syllabus: any) =>
-            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+            syllabus.unit?.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
               .length
         );
         const isCourseAdded = Boolean(assignedSyllabi.length);
@@ -486,7 +486,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             ...curriculum,
             assignedSyllabi,
             // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId),
           });
         }
       });

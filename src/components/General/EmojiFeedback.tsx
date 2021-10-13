@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import '@style/general/EmojiFeedback.scss';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
-import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import Modal from '../Atoms/Modal';
 import API, {graphqlOperation} from '@aws-amplify/api';

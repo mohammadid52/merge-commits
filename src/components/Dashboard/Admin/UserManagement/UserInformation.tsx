@@ -1,4 +1,7 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useState} from 'react';
+
+import axios from 'axios';
+import {requestResetPassword} from '../../../../utilities/urls';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './User';
@@ -9,8 +12,9 @@ import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import Status from '../../../Atoms/Status';
 import {getAsset} from '../../../../assets';
-import LinkPreview from '../../../Atoms/LinkPreview';
-import ImageMedia from './ImageMedia';
+import Buttons from '@atoms/Buttons';
+import Modal from '@components/Atoms/Modal';
+import {FiAlertCircle} from 'react-icons/fi';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -35,6 +39,11 @@ const UserInformation = ({
 }: UserInfoProps) => {
   const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
   const {UserInformationDict} = useDictionary(clientKey);
+  const [loading, setLoading] = useState(false);
+  const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
+    show: false,
+    message: '',
+  });
 
   let created = () => {
     let date = new Date(user.createdAt);
@@ -71,6 +80,28 @@ const UserInformation = ({
     color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280',
   });
 
+  const resetPassword = async () => {
+    try {
+      await axios.post(requestResetPassword, {email: user.email});
+      setResetPasswordServerResponse({
+        show: true,
+        message: 'Password was reset',
+      });
+    } catch (err) {
+      console.log('error', err);
+      setResetPasswordServerResponse({
+        show: true,
+        message: 'Error in resetting password',
+      });
+    }
+  };
+  const onAlertClose = () => {
+    setResetPasswordServerResponse({
+      show: false,
+      message: '',
+    });
+  };
+
   if (status !== 'done') {
     return <LessonLoading />;
   } else {
@@ -92,34 +123,41 @@ const UserInformation = ({
                 )}>
                 {UserInformationDict[userLanguage]['heading']}
               </a>
-              <a
-                onClick={() => setTab('demographics')}
-                key="demographics"
-                style={{...getColor(tab === 'demographics')}}
-                className={classNames(
-                  'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                )}>
-                {UserInformationDict[userLanguage]['demographics']}
-              </a>
-              <a
-                onClick={() => setTab('private')}
-                key="private"
-                style={{...getColor(tab === 'private')}}
-                className={classNames(
-                  'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                )}>
-                {UserInformationDict[userLanguage]['private']}
-                <IconContext.Provider
-                  value={{
-                    size: '0.8rem',
-                    className: classNames('group-hover:text-gray-500', 'ml-2 h-5 w-5'),
-                    color: getColor(tab === 'private').color,
-                  }}>
-                  <IoLockClosed />
-                </IconContext.Provider>
-              </a>
+              {user?.role === 'ST' && (
+                <>
+                  <a
+                    onClick={() => setTab('demographics')}
+                    key="demographics"
+                    style={{...getColor(tab === 'demographics')}}
+                    className={classNames(
+                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
+                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
+                    )}>
+                    {UserInformationDict[userLanguage]['demographics']}
+                  </a>
+                  <a
+                    onClick={() => setTab('private')}
+                    key="private"
+                    style={{...getColor(tab === 'private')}}
+                    className={classNames(
+                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
+                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
+                    )}>
+                    {UserInformationDict[userLanguage]['private']}
+                    <IconContext.Provider
+                      value={{
+                        size: '0.8rem',
+                        className: classNames(
+                          'group-hover:text-gray-500',
+                          'ml-2 h-5 w-5'
+                        ),
+                        color: getColor(tab === 'private').color,
+                      }}>
+                      <IoLockClosed />
+                    </IconContext.Provider>
+                  </a>
+                </>
+              )}
             </nav>
           </div>
         </div>
@@ -181,6 +219,13 @@ const UserInformation = ({
                     <Status status={user?.onDemand ? 'YES' : 'NO'} />
                   </dd>
                 </div>
+                <div className="sm:col-span-1 p-2 flex items-centers">
+                  <Buttons
+                    label={UserInformationDict[userLanguage]['RESET_PASSWORD']}
+                    onClick={resetPassword}
+                    disabled={loading}
+                  />
+                </div>
               </dl>
             </div>
           </div>
@@ -226,6 +271,24 @@ const UserInformation = ({
               </Fragment>
             ))}
           </Fragment>
+        )}
+        {resetPasswordServerResponse.show && (
+          <Modal showHeader={false} showFooter={false} closeAction={onAlertClose}>
+            <div className="py-8 px-16">
+              <div className="mx-auto flex items-center justify-center rounded-full">
+                <FiAlertCircle className="w-8 h-8" />
+              </div>
+              <div className="mt-4">{resetPasswordServerResponse.message}</div>
+              <div className="flex justify-center mt-4">
+                <Buttons
+                  btnClass={'abc'}
+                  label={'Ok'}
+                  labelClass={'leading-6'}
+                  onClick={onAlertClose}
+                />
+              </div>
+            </div>
+          </Modal>
         )}
 
         {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}

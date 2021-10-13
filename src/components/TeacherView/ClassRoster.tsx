@@ -433,10 +433,12 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
                 number={key}
                 id={student.personAuthID}
                 active={true}
-                firstName={student.person.firstName}
-                lastName={student.person.lastName}
-                preferredName={student.person.preferredName}
-                role={student.person.role}
+                firstName={student.person?.firstName ? student.person?.firstName : ''}
+                lastName={student.person?.lastName ? student.person?.lastName : ''}
+                preferredName={
+                  student.person?.preferredName ? student.person?.preferredName : ''
+                }
+                role={student.person?.role ? student.person?.role : ''}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
                 handleResetViewAndShare={resetViewAndShare}
@@ -463,14 +465,16 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
         {inactiveStudents.length > 0
           ? inactiveStudents.map((student: any, key: number) => (
               <RosterRow
-                key={`rosterrow_${key}`}
+                key={`rosterrow_inactive_${key}`}
                 number={key}
                 id={student.personAuthID}
                 active={false}
-                firstName={student.person.firstName}
-                lastName={student.person.lastName}
-                preferredName={student.person.preferredName}
-                role={student.person.role}
+                firstName={student.person?.firstName ? student.person?.firstName : ''}
+                lastName={student.person?.lastName ? student.person?.lastName : ''}
+                preferredName={
+                  student.person?.preferredName ? student.person?.preferredName : ''
+                }
+                role={student.person?.role ? student.person?.role : ''}
                 currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
                 handleResetViewAndShare={resetViewAndShare}

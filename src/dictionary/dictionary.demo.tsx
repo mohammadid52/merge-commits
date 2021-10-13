@@ -953,6 +953,7 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
       CLASSES: 'Classes',
+      LIVE_CLASS_ROOM: 'Live Classroom',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classrooms',
       GENERAL_INFORMATION: 'General Information',
@@ -975,6 +976,7 @@ const Institute_info: any = {
       CLASSES: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
+      LIVE_CLASS_ROOM: "TBD",
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
@@ -2776,6 +2778,7 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
+    RESET_PASSWORD: 'Reset password',
   },
   ES: {
     details: 'TDB',
@@ -2789,6 +2792,7 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
   },
 };
 const UserLookupDict: any = {
@@ -3796,6 +3800,15 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const StudentDict:any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3860,6 +3873,7 @@ export {
   ProfileCheckpointlookupDict,
   RegistrationDict,
   SyllabusDict,
+  StudentDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
