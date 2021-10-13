@@ -44,6 +44,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
     activeContentItem,
     setActiveContentItem,
     showingPin,
+    setSelectedType,
   } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();
@@ -295,6 +296,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
         onClick={() => {
           setActiveContentItem(content);
           setShowingPin(false);
+          setSelectedType(content.type);
         }}
         className={`relative ${
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''

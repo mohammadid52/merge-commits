@@ -29,7 +29,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-
+import EmojiFeedback from 'components/General/EmojiFeedback';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
