@@ -444,6 +444,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
     customPageContentId?: string
   ) => {
+    const pos = selectedComponent.partContentIdx;
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
     const pageContent = lessonPlan[lessonState.currentPage].pageContent;
@@ -451,7 +452,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     if (!isEmpty(selectedComponent)) {
       const partContent = pageContent[selectedComponent.pageContentIdx].partContent;
       partContent.splice(
-        addBlockAtPosition,
+        pos + 1,
         0,
 
         {
@@ -473,7 +474,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       const pageContentId: string = `${nanoid(6)}_part_${pageContent.length}${`${
         customPageContentId ? `_${customPageContentId}` : ''
       }`}`;
-      pageContent.splice(addBlockAtPosition, 0, {
+      pageContent.splice(pos + 1, 0, {
         class: 'rounded-lg',
         id: pageContentId,
         partContent: [

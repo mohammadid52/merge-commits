@@ -1,8 +1,11 @@
-import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import Tooltip from '@components/Atoms/Tooltip';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
+import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import * as customQueries from '@customGraphql/customQueries';
@@ -18,16 +21,13 @@ import {LessonPageWrapper} from '@lesson/UniversalLessonBlockComponents/LessonPa
 import BuilderRowComposer from '@lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
 import ModalPopUp from '@molecules/ModalPopUp';
 import Toolbar from '@uiComponents/Toolbar';
-import Notifications from '@UlbUI/Notifications/UlbNotifications';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {find, findLastIndex, map, remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory, useParams} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '@contexts/GlobalContext';
-import Tooltip from '@components/Atoms/Tooltip';
-import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import useScrollPosition from 'customHooks/useScrollPosition';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -50,15 +50,19 @@ interface CoreBuilderProps extends ULBSelectionProps {
   activePageData: UniversalLessonPage;
 }
 
-const PageBuilderLayout = ({
+const Layout = ({
   children,
   open,
   width = '28rem',
+  style,
+  className = '',
   overflowHidden = true,
 }: {
   children: React.ReactNode;
   open: boolean;
+  style?: any;
   width?: string;
+  className?: string;
   overflowHidden?: boolean;
 }) => {
   return (
@@ -67,11 +71,12 @@ const PageBuilderLayout = ({
         zIndex: 9990,
         maxWidth: open ? width : '0rem',
         minWidth: open ? width : '0rem',
+        ...style,
       }}
       className={classNames(
         overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
         open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform   transition-all duration-300  absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-112 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+        'p-8 transform  transition-all duration-300 rounded-lg absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-96 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
       )}>
       {children}
     </div>
@@ -389,7 +394,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
 
-      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
+      <Layout width="40rem" open={newLessonPlanShow}>
         <NewLessonPlanSO
           instId={institutionId}
           editMode={editMode}
@@ -399,32 +404,24 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           setOpen={setNewLessonPlanShow}
           activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
         />
-      </PageBuilderLayout>
-
-      <PageBuilderLayout overflowHidden open={showLessonEditOverlay}>
+      </Layout>
+      <Layout className="overflow-hidden" overflowHidden open={showLessonEditOverlay}>
         <PageBuilderSlideOver
           deleteFromULBHandler={deleteFromULBHandler}
           open={showLessonEditOverlay}
           handleEditBlockContent={handleEditBlockContent}
           handleModalPopToggle={handleModalPopToggle}
         />
-      </PageBuilderLayout>
-
+      </Layout>
       <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
 
       <div
+        id="core-builder"
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
         <LessonSlideover />
 
-        {/*  ~~~~~~~~~~~~~~~~~~NOTIFICATION STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
-        {/* <Notifications /> */}
-        {/* ~~~~~~~~~~~~~~~~~~NOTIFICATION ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
-
-        {/*  ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER STARTS HERE~~~~~~~~~~~~~~~~~~~~~ */}
-
-        {/* ~~~~~~~~~~~~~~~~~~EDIT SLIDEOVER ENDS HERE~~~~~~~~~~~~~~~~~~~~~  */}
         <div
           style={{
             marginLeft: showLessonEditOverlay || newLessonPlanShow ? '-15rem' : '0rem',

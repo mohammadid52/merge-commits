@@ -44,6 +44,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     actionMode,
     navState,
     selectedType,
+    showingBlockPin,
   } = usePageBuilderContext();
 
   const {setAddContentModal} = useOverlayContext();
@@ -62,6 +63,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     if (!isEmpty(selectedComponent)) {
       setAddContentModal({show: true, type: selectedType});
       const position = selectedComponent.partContentIdx + 1; // this the position idx where the new component will go
+
       if (typeof handleModalPopToggle === 'function') {
         handleModalPopToggle(
           '',
@@ -79,7 +81,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     // setActionMode('init');
   };
   // This function will select component position, for adding new component
-  const onComponentSelect = () => {
+  const onComponentSelect = (block = false) => {
     if (currentPage) {
       const pageContentIdx = findIndex(
         currentPage?.pageContent,
@@ -99,6 +101,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         partContentIdx,
         pageContentID,
         partContentID,
+        block: block,
         componentData: {
           type: contentType,
           class: classString,
@@ -151,6 +154,32 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
                 <button
                   onClick={() => onComponentSelect()}
+                  // onMouseLeave={() => setShowLocationIcon(false)}
+                  // onMouseEnter={() => {
+                  //   setShowLocationIcon(true);
+                  // }}
+                  className={`py-1 px-4 ${
+                    currentComponentSelected ? '' : 'border'
+                  } transition-all duration-300 cursor-pointer`}>
+                  {currentComponentSelected ? (
+                    <IoLocationSharp className="text-2xl text-gray-400" />
+                  ) : (
+                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                  )}
+                </button>
+              </div>
+            )}
+          {!isComponent &&
+            showingBlockPin &&
+            !(actionMode === 'edit' && contentType === SPACER) && (
+              <div
+                id="editControlsWrapper"
+                style={{top: '10%', right: '-6%'}}
+                className={`absolute ${
+                  true ? 'active' : ''
+                } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
+                <button
+                  onClick={() => onComponentSelect(true)}
                   // onMouseLeave={() => setShowLocationIcon(false)}
                   // onMouseEnter={() => {
                   //   setShowLocationIcon(true);

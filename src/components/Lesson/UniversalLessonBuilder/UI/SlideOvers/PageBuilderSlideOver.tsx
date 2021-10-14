@@ -4,7 +4,6 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import {useQuery} from '@customHooks/urlParam';
 import {Transition} from '@headlessui/react';
 import {
   UniversalLesson,
@@ -30,6 +29,7 @@ import {
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import {useRouteMatch} from 'react-router';
 
 type ActionTypes = 'edit' | 'delete' | 'init';
 
@@ -41,7 +41,7 @@ const MESSAGES = {
 };
 
 const ClickOnCircle = ({message, onClose}: {message: string; onClose: () => void}) => (
-  <div className="flex relative items-center justify-between group flex-col p-4 rounded-xl border-0 dark:border-gray-700 border-gray-200">
+  <div className="flex relative items-center justify-between group flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
     <p className="w-auto dark:text-white">{message}</p>
     <span
       onClick={onClose}
@@ -60,7 +60,7 @@ const BottomButtonWithMessage = ({
   btns: {label: string; disabled?: boolean; transparent?: boolean; onClick: () => void}[];
 }) => {
   return (
-    <div className="h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 dark:border-gray-700 border-gray-200">
+    <div className="h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
       {message && <p className="w-auto dark:text-white">{message}</p>}
       <div
         className={`flex px-2 dark:text-gray-500 items-center justify-${
@@ -151,13 +151,12 @@ const SpaceItems = ({
     setAskPos(false);
     addSpaceComponent(blankSpaceComponent);
   };
+  const onAddSpace = () => {
+    addSpaceComponent(partContentObj, true);
+  };
 
   const onCustomPosition = () => {
     setShowingPin(true);
-  };
-
-  const onAddSpace = () => {
-    addSpaceComponent(partContentObj, true);
   };
 
   return (
@@ -185,33 +184,29 @@ const SpaceItems = ({
       />
 
       <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 ${askPos ? 'mb-24' : ''}  w-auto`}
-        animationType="opacity"
+        className={`my-6  w-auto`}
+        animationType="custom"
+        customAnimation={{
+          show: 'scale-100 opacity-100',
+          hide: 'scale-50 opacity-100',
+        }}
         show={askPos && !showingPin}>
         {askPos && !showingPin && (
-          <div className="h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 dark:border-gray-700 border-gray-200">
-            <p className="w-auto dark:text-white">Where do you want to add space?</p>
-            <div className="flex px-2 dark:text-gray-500 items-center justify-between">
-              <Buttons
-                onClick={onCustomPosition}
-                overrideClass
-                btnClass={btnClass}
-                label="Custom position"
-              />
-              <Buttons
-                overrideClass
-                onClick={onAddtoBottom}
-                btnClass={btnClass}
-                transparent
-                label="Add to Botom"
-              />
-            </div>
-          </div>
+          <BottomButtonWithMessage
+            btns={[
+              {
+                label: 'Custom position',
+                onClick: onCustomPosition,
+              },
+              {label: 'Add to Botom"', onClick: onAddtoBottom, transparent: true},
+            ]}
+            message={'Where do you want to add space?'}
+          />
         )}
       </AnimatedContainer>
       <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 ${askPos ? 'mb-24' : ''}  w-auto`}
-        show={showingPin}>
+        className={` my-6  w-auto`}
+        show={showingPin && isEmpty(selectedComponent)}>
         {showingPin && isEmpty(selectedComponent) && (
           <ClickOnCircle
             onClose={() => {
@@ -221,53 +216,31 @@ const SpaceItems = ({
             message={MESSAGES.CLICK_CIRCLE}
           />
         )}
+      </AnimatedContainer>
+      <AnimatedContainer
+        animationType="custom"
+        customAnimation={{
+          show: 'scale-100 opacity-100',
+          hide: 'scale-50 opacity-100',
+        }}
+        className={` my-6  w-auto`}
+        show={!isEmpty(selectedComponent)}>
         {!isEmpty(selectedComponent) && (
-          <div className="h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 dark:border-gray-700 border-gray-200">
-            <p className="w-auto dark:text-white">Click on below button to add space</p>
-            <div className="flex px-2 dark:text-gray-500 items-center justify-center">
-              <Buttons
-                onClick={onAddSpace}
-                overrideClass
-                transparent
-                btnClass={btnClass}
-                label="Add White Space"
-              />
-            </div>
-          </div>
+          <BottomButtonWithMessage
+            btns={[
+              {
+                label: 'Add White Space',
+                onClick: onAddSpace,
+                transparent: true,
+              },
+            ]}
+            message={'Click on below button to add space'}
+          />
         )}
       </AnimatedContainer>
     </div>
   );
 };
-
-// ====================================================== //
-// =========================POPUP V2=============================>> //
-// ====================================================== //
-
-const Popup2 = ({
-  currentStep,
-  steps,
-  show,
-}: {
-  show: boolean;
-  steps: string[];
-  currentStep: number;
-}) => (
-  <div className="fixed bottom-0 inset-x-0  w-auto ">
-    <Transition
-      appear
-      show={show}
-      enter="transform transition ease-in-out duration-300"
-      enterFrom="translate-y-full"
-      enterTo="translate-y-0"
-      leave="transform transition ease-in-out duration-300 delay-1000"
-      leaveFrom="translate-y-0"
-      leaveTo="translate-y-full"
-      className="shadow-lg bg-transparent text-gray-500 border-gray-200 dark:border-gray-700 flex items-center justify-center border-t-0">
-      {show && <p className="text-center p-4 w-auto ">{steps[currentStep]}</p>}
-    </Transition>
-  </div>
-);
 
 // ====================================================== //
 // =========================POPUP=============================>> //
@@ -402,8 +375,6 @@ const addToDB = async (list: any) => {
 const ActionButtons = ({
   actionMode,
   setActionMode,
-  deleteFromULBHandler,
-  handleEditBlockContent,
 }: {
   actionMode: ActionTypes;
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
@@ -418,38 +389,16 @@ const ActionButtons = ({
   ) => void;
 }) => {
   const {
-    selectedComponent,
     setSelectedComponent,
     setShowingPin,
     setShowMovementBox,
+    setShowingBlockPin,
   } = usePageBuilderContext();
-
-  const {setUniversalLessonDetails} = useULBContext();
-
-  const notSelected = isEmpty(selectedComponent);
-
-  const onDeleteMode = actionMode === 'delete' && !notSelected;
-  const onInit = actionMode === 'init';
 
   const cleanup = () => {
     setSelectedComponent(null);
     setShowMovementBox(false);
-  };
-
-  const onDeleteClick = async () => {
-    if (!notSelected) {
-      const updatedList = deleteFromULBHandler(selectedComponent.partContentID);
-      setUniversalLessonDetails({...updatedList});
-
-      await addToDB(updatedList);
-      onCancel();
-    }
-  };
-
-  const onCancel = () => {
-    setActionMode('init');
-    cleanup();
-    setShowingPin(false);
+    setShowingBlockPin(false);
   };
 
   return (
@@ -475,52 +424,6 @@ const ActionButtons = ({
           cleanup();
         }}
       />
-
-      <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
-        animationType="opacity"
-        show={notSelected && !onInit}>
-        {notSelected && !onInit && (
-          <ClickOnCircle
-            onClose={() => onCancel()}
-            message={`Click on a circle to ${actionMode} component`}
-          />
-        )}
-      </AnimatedContainer>
-      {/* <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
-        animationType="opacity"
-        show={onEditMode}>
-        {onEditMode && (
-          <BottomButtonWithMessage
-            btns={[
-              {
-                label: 'Cancel',
-                onClick: onCancel,
-              },
-              {label: 'Edit', onClick: onEditClick, transparent: true},
-            ]}
-            message={'Click on button to edit component'}
-          />
-        )}
-      </AnimatedContainer> */}
-      <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
-        animationType="opacity"
-        show={onDeleteMode}>
-        {onDeleteMode && (
-          <BottomButtonWithMessage
-            btns={[
-              {
-                label: 'Cancel',
-                onClick: onCancel,
-              },
-              {label: 'Delete', onClick: onDeleteClick, transparent: true},
-            ]}
-            message={'Are you sure you want to delete?'}
-          />
-        )}
-      </AnimatedContainer>
     </div>
   );
 };
@@ -529,109 +432,13 @@ const ActionButtons = ({
 // ====================================================== //
 const MovableButtons = () => {
   const {
-    selectedComponent,
     setSelectedComponent,
     setShowingPin,
     setActionMode,
     showMovementBox,
     setShowMovementBox,
+    setShowingBlockPin,
   } = usePageBuilderContext();
-
-  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {lessonState} = useGlobalContext();
-
-  const notSelected = isEmpty(selectedComponent);
-
-  const pageContentIdx = selectedComponent?.pageContentIdx;
-  const partContentIdx = selectedComponent?.partContentIdx;
-
-  const currentPage: UniversalLessonPage =
-    universalLessonDetails.lessonPlan[lessonState.currentPage];
-  const pageContent = currentPage?.pageContent || [];
-
-  const [disableState, setDisableState] = useState({
-    COMPONENT_UP: true,
-    COMPONENT_DOWN: true,
-  });
-
-  const cleanup = () => {
-    setSelectedComponent(null);
-  };
-
-  useEffect(() => {
-    if (pageContentIdx >= 0) {
-      const partContent = pageContent[pageContentIdx]?.partContent || [];
-      setDisableState({
-        COMPONENT_UP: partContentIdx === 0,
-        COMPONENT_DOWN: partContent.length - 1 === partContentIdx,
-      });
-    }
-  }, [selectedComponent, pageContentIdx]);
-
-  const onCancel = () => {
-    setShowMovementBox(false);
-    cleanup();
-    setShowingPin(false);
-  };
-
-  const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
-
-  const updateData = async (path: string, newValue: any) => {
-    update(universalLessonDetails, path, () => [...newValue]);
-
-    setUniversalLessonDetails({...universalLessonDetails});
-
-    const input = {
-      id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
-    };
-    await updateLessonPageToDB(input);
-  };
-  const PATH_TO_PARTCONTENT = `lessonPlan[${lessonState.currentPage}].pageContent[${pageContentIdx}].partContent`;
-
-  const onMoveUp = () => {
-    if (!disableState.COMPONENT_UP) {
-      updateData(
-        PATH_TO_PARTCONTENT,
-        reorder(
-          pageContent[pageContentIdx].partContent,
-          partContentIdx,
-          partContentIdx - 1
-        )
-      );
-
-      setSelectedComponent((prev: any) => ({
-        ...prev,
-        partContentIdx: partContentIdx - 1,
-      }));
-    }
-  };
-  const onMoveDown = () => {
-    if (!disableState.COMPONENT_DOWN) {
-      updateData(
-        PATH_TO_PARTCONTENT,
-        reorder(
-          pageContent[pageContentIdx].partContent,
-          partContentIdx,
-          partContentIdx + 1
-        )
-      );
-      setSelectedComponent((prev: any) => ({
-        ...prev,
-        partContentIdx: partContentIdx + 1,
-      }));
-    }
-  };
-
-  const moveComponent = (dir: 'up' | 'down') => {
-    const up = dir === 'up';
-
-    if (!notSelected) {
-      if (up) onMoveUp();
-      else onMoveDown();
-    }
-  };
 
   return (
     <div className="flex items-center flex-col">
@@ -643,50 +450,10 @@ const MovableButtons = () => {
           setActionMode('init');
           setShowingPin(true);
           setShowMovementBox(true);
+          setShowingBlockPin(true);
           setSelectedComponent(null);
         }}
       />
-
-      <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
-        animationType="opacity"
-        show={notSelected && showMovementBox}>
-        {notSelected && showMovementBox && (
-          <ClickOnCircle
-            onClose={() => onCancel()}
-            message={`Click on a circle to move component`}
-          />
-        )}
-      </AnimatedContainer>
-
-      <AnimatedContainer
-        className={`fixed bottom-0 inset-x-0 mb-24  w-auto`}
-        animationType="opacity"
-        show={showMovementBox && !notSelected}>
-        {showMovementBox && !notSelected && (
-          <BottomButtonWithMessage
-            btns={[
-              {
-                label: 'Move up',
-                transparent: true,
-                disabled: disableState.COMPONENT_UP,
-                onClick: () => moveComponent('up'),
-              },
-              {
-                label: 'Cancel',
-                onClick: () => onCancel(),
-              },
-              {
-                label: 'Move Down',
-                disabled: disableState.COMPONENT_DOWN,
-                transparent: true,
-                onClick: () => moveComponent('down'),
-              },
-            ]}
-            message={'Select direction for movement'}
-          />
-        )}
-      </AnimatedContainer>
     </div>
   );
 };
@@ -734,6 +501,8 @@ const PageBuilderSlideOver = ({
     setShowMovementBox,
     activeContentItem,
     setActiveContentItem,
+    showMovementBox,
+    setShowingBlockPin,
   } = usePageBuilderContext();
 
   const {lessonState} = useGlobalContext();
@@ -830,6 +599,7 @@ const PageBuilderSlideOver = ({
     setSelectedSpace(null);
     setSelectedComponent(null);
     setShowingPin(false);
+    setShowingBlockPin(false);
 
     setShowMovementBox(false);
     setActionMode('init');
@@ -843,16 +613,241 @@ const PageBuilderSlideOver = ({
   };
 
   const [currentHelpStep, setCurrentHelpStep] = useState(0);
+  const notSelected = isEmpty(selectedComponent);
+
+  const onDeleteMode = actionMode === 'delete' && !notSelected;
+  const onDeleteClick = async () => {
+    if (!notSelected) {
+      const partContent = _pageContent[pageContentIdx]?.partContent || [];
+      const lastItem = partContent.length === 1;
+
+      const updatedList = deleteFromULBHandler(
+        lastItem ? selectedComponent.pageContentID : selectedComponent.partContentID
+      );
+      onCancel();
+
+      await addToDB(updatedList);
+    }
+  };
+
+  const onCancel = () => {
+    setActionMode('init');
+    cleanup();
+    setShowingPin(false);
+  };
+
+  const onMovementCancel = () => {
+    setShowMovementBox(false);
+    setSelectedComponent(null);
+
+    setShowingPin(false);
+  };
+
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
+
+  const updateData = async (path: string, newValue: any) => {
+    update(universalLessonDetails, path, () => [...newValue]);
+
+    setUniversalLessonDetails({...universalLessonDetails});
+
+    const input = {
+      id: lessonId,
+      lessonPlan: [...universalLessonDetails.lessonPlan],
+    };
+    await updateLessonPageToDB(input);
+  };
+  const pageContentIdx = selectedComponent?.pageContentIdx;
+
+  const PATH_TO_PARTCONTENT = `lessonPlan[${lessonState.currentPage}].pageContent[${pageContentIdx}].partContent`;
+
+  const partContentIdx = selectedComponent?.partContentIdx;
+  const currentPage: UniversalLessonPage =
+    universalLessonDetails.lessonPlan[lessonState.currentPage];
+
+  const _pageContent = currentPage?.pageContent || [];
+
+  useEffect(() => {
+    if (pageContentIdx >= 0) {
+      const partContent = _pageContent[pageContentIdx]?.partContent || [];
+      setDisableState({
+        BLOCK_UP: pageContentIdx === 0,
+        BLOCK_DOWN: _pageContent.length - 1 === pageContentIdx,
+        COMPONENT_UP: partContentIdx === 0,
+        COMPONENT_DOWN: partContent.length - 1 === partContentIdx,
+      });
+    }
+  }, [selectedComponent, pageContentIdx]);
+
+  const [disableState, setDisableState] = useState({
+    COMPONENT_UP: true,
+    COMPONENT_DOWN: true,
+    BLOCK_UP: true,
+    BLOCK_DOWN: true,
+  });
+
+  const moveBlock = (dir: 'up' | 'down') => {
+    const PATH_TO_PAGECONTENT = `lessonPlan[${lessonState.currentPage}].pageContent`;
+
+    updateData(
+      PATH_TO_PAGECONTENT,
+      reorder(
+        currentPage?.pageContent,
+        pageContentIdx,
+        dir === 'up' ? pageContentIdx - 1 : pageContentIdx + 1
+      )
+    );
+
+    setSelectedComponent((prev: any) => ({
+      ...prev,
+      pageContentIdx: dir === 'up' ? pageContentIdx - 1 : pageContentIdx + 1,
+    }));
+  };
+
+  const onMoveUp = () => {
+    if (selectedComponent) {
+      if (!disableState.COMPONENT_UP) {
+        updateData(
+          PATH_TO_PARTCONTENT,
+          reorder(
+            pageContent[pageContentIdx].partContent,
+            partContentIdx,
+            partContentIdx - 1
+          )
+        );
+
+        setSelectedComponent((prev: any) => ({
+          ...prev,
+          partContentIdx: partContentIdx - 1,
+        }));
+      }
+    }
+  };
+  const onMoveDown = () => {
+    if (!disableState.COMPONENT_DOWN) {
+      updateData(
+        PATH_TO_PARTCONTENT,
+        reorder(
+          pageContent[pageContentIdx].partContent,
+          partContentIdx,
+          partContentIdx + 1
+        )
+      );
+      setSelectedComponent((prev: any) => ({
+        ...prev,
+        partContentIdx: partContentIdx + 1,
+      }));
+    }
+  };
+
+  const moveComponent = (dir: 'up' | 'down') => {
+    const up = dir === 'up';
+    if (selectedComponent.block) {
+      moveBlock(dir);
+    } else if (!notSelected) {
+      if (up) onMoveUp();
+      else onMoveDown();
+    }
+  };
+
+  const onInit = actionMode === 'init';
+
+  const onActionCancel = () => {
+    setShowMovementBox(false);
+  };
 
   return (
     <>
       <AnimatedContainer
-        className={onHome ? 'h-screen' : ''}
+        // className={onHome ? 'h-screen' : ''}
         animationType="scale"
         show={onHome}>
         {onHome && (
           <div>
             <OverlayHeaderTitle showBackBtn={false} onBack={toHome} title="Edit page" />
+            <AnimatedContainer
+              className={`my-6  w-auto`}
+              animationType="opacity"
+              show={notSelected && !onInit}>
+              {notSelected && !onInit && (
+                <ClickOnCircle
+                  onClose={() => {
+                    onCancel();
+                    onActionCancel();
+                  }}
+                  message={`Click on a circle to ${actionMode} component`}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer
+              className={`my-6  w-auto`}
+              animationType="custom"
+              customAnimation={{
+                show: 'scale-100 opacity-100',
+                hide: 'scale-50 opacity-100',
+              }}
+              show={onDeleteMode}>
+              {onDeleteMode && (
+                <BottomButtonWithMessage
+                  btns={[
+                    {
+                      label: 'Cancel',
+                      onClick: () => {
+                        onCancel();
+                        onActionCancel();
+                      },
+                    },
+                    {label: 'Delete', onClick: onDeleteClick, transparent: true},
+                  ]}
+                  message={'Are you sure you want to delete?'}
+                />
+              )}
+            </AnimatedContainer>
+
+            <AnimatedContainer
+              className={`my-6  w-auto`}
+              animationType="opacity"
+              show={notSelected && showMovementBox}>
+              {notSelected && showMovementBox && (
+                <ClickOnCircle
+                  onClose={() => onCancel()}
+                  message={`Click on a circle to move component`}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer
+              className={` my-6  w-auto`}
+              animationType="custom"
+              customAnimation={{
+                show: 'scale-100 opacity-100',
+                hide: 'scale-50 opacity-100',
+              }}
+              show={showMovementBox && !notSelected}>
+              {showMovementBox && !notSelected && (
+                <BottomButtonWithMessage
+                  btns={[
+                    {
+                      label: 'Move up',
+                      transparent: true,
+                      disabled: disableState.COMPONENT_UP,
+                      onClick: () => moveComponent('up'),
+                    },
+                    {
+                      label: 'Cancel',
+                      onClick: () => onMovementCancel(),
+                    },
+                    {
+                      label: 'Move Down',
+                      disabled: disableState.COMPONENT_DOWN,
+                      transparent: true,
+                      onClick: () => moveComponent('down'),
+                    },
+                  ]}
+                  message={'Select direction for movement'}
+                />
+              )}
+            </AnimatedContainer>
 
             <Item
               Icon={AiOutlinePlus}
@@ -886,7 +881,7 @@ const PageBuilderSlideOver = ({
         )}
       </AnimatedContainer>
       <AnimatedContainer
-        className={onAddContent ? 'h-screen' : ''}
+        // className={onAddContent ? 'h-screen' : ''}
         animationType="scale"
         show={onAddContent}>
         {onAddContent && (
@@ -907,7 +902,7 @@ const PageBuilderSlideOver = ({
         )}
       </AnimatedContainer>
       <AnimatedContainer
-        className={onSpace ? 'h-screen' : ''}
+        // className={onSpace ? 'h-screen' : ''}
         animationType="scale"
         show={onSpace}>
         {onSpace && (
@@ -924,7 +919,7 @@ const PageBuilderSlideOver = ({
         )}
       </AnimatedContainer>
       <Popup saving={saving} text={'Saving'} />
-      <Popup2
+      {/* <Popup2
         show={onAddContent && currentHelpStep !== null}
         steps={[
           'Click on a component to add',
@@ -932,7 +927,7 @@ const PageBuilderSlideOver = ({
           "Click on 'Create component'",
         ]}
         currentStep={currentHelpStep}
-      />
+      /> */}
     </>
   );
 };
