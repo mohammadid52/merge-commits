@@ -13,7 +13,7 @@ const HeaderMegaMenu = () => {
     userLanguage,
     state: {user},
   } = useContext(GlobalContext);
-  const {Institute_info} = useDictionary(clientKey);
+  const {Institute_info, CommunityDict} = useDictionary(clientKey);
 
   const baseUrl = user.associateInstitute?.length
     ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
@@ -117,13 +117,22 @@ const HeaderMegaMenu = () => {
       type: 'dropdown',
       children: [
         {
-          title: 'New Person Spotlight',
+          key: 'new_person_spotlight',
+          redirectionUrl: `/dashboard/new-person-spotlight`,
+          active: location.pathname.indexOf('new-person-spotlight') > -1,
+          title: CommunityDict[userLanguage]['TABS']['NEW_PERSON_SPOTLIGHT'],
         },
         {
-          title: 'Announcements & Events',
+          key: 'announcements_and_events',
+          redirectionUrl: `/dashboard/announcements-and-events`,
+          active: location.pathname.indexOf('announcements-and-events') > -1,
+          title: CommunityDict[userLanguage]['TABS']['ANNOUNCEMENTS'],
         },
         {
-          title: 'Front Page',
+          key: 'front_page',
+          redirectionUrl: `/dashboard/community`,
+          active: location.pathname.indexOf('community') > -1,
+          title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE'],
         },
       ],
     },
@@ -143,12 +152,12 @@ const HeaderMegaMenu = () => {
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active: location.pathname.indexOf('home') > -1,
     },
-    // {
-    //   title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
-    //   key: 'community',
-    //   redirectionUrl: `${baseUrl}/dashboard/community`,
-    //   active: location.pathname.indexOf('community') > -1,
-    // },
+    {
+      title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
+      key: 'community',
+      redirectionUrl: `${baseUrl}/dashboard/community`,
+      active: location.pathname.indexOf('community') > -1,
+    },
     {
       title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
       key: 'notebook',

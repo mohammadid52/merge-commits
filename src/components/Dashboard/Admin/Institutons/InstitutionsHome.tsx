@@ -2,23 +2,17 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
-// Institute info tabs.
-import ClassBuilder from './Builders/ClassBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
-import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
 import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
 import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
 import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
 import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
 import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import EditClass from './EditBuilders/EditClass';
 import Institution from './Institution';
-import InstitutionAdd from './InstitutionAdd';
 // Instituttion
 import InstitutionLookup from './InstitutionLookup';
 

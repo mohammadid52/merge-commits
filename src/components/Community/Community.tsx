@@ -1,47 +1,60 @@
-import HeroBanner from '@components/Header/HeroBanner';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {getAsset} from 'assets';
-import React, {useContext} from 'react';
+import ContentCard from '@atoms/ContentCard';
+import BreadCrums from '@components/Atoms/BreadCrums';
+import DashboardContainer from '@components/Dashboard/DashboardContainer';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import SectionTitleV3 from '@atoms/SectionTitleV3';
-import Buttons from '@atoms/Buttons';
-import ContentCard from '@components/Atoms/ContentCard';
+import useDictionary from '@customHooks/dictionary';
+import {getAsset} from 'assets';
+import React from 'react';
 
-const Content = () => {
+const AddNewCard = () => {
   return (
-    <>
-      <SectionTitleV3
-        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-        title={'Community'}
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-gray-900"
-        borderBottom
-      />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
-        <div>Testt</div>
-      </ContentCard>
-    </>
+    <div className="h-48 border-gray-400 border-0 rounded-lg flex items-center justify-center">
+      <p className="w-auto">Add new card</p>
+    </div>
   );
 };
 
 const Community = ({role}: {role: string}) => {
-  const {clientKey} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useGlobalContext();
+  const bannerImg = getAsset(clientKey, 'dashboardBanner1');
+  const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
 
-  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
+      url: `/dashboard/`,
+      last: true,
+    },
+  ];
 
   return (
-    <div>
+    <DashboardContainer
+      bannerImg={bannerImg}
+      currentPage={state.currentPage}
+      bannerTitle={CommunityDict[userLanguage]['TITLE']}>
+      <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
+        <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+          <BreadCrums items={breadCrumsList} />
+        </div>
+      </div>
       <div>
-        <HeroBanner imgUrl={dashboardBanner1} title={'Community'} />
+        <SectionTitleV3
+          extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
+          title={'Community'}
+          fontSize="xl"
+          fontStyle="semibold"
+          extraClass="leading-6 text-gray-900"
+          borderBottom
+        />
+        <ContentCard
+          hasBackground={false}
+          additionalClass="shadow bg-white p-6 rounded-b-lg">
+          <AddNewCard />
+        </ContentCard>
       </div>
-      <div
-        className={`w-full lg:max-w-192 md:max-w-none 2xl:max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative iconoclast:bg-main curate:bg-main text-white rounded`}>
-        <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
-          Here is what is happening today
-        </h2>
-      </div>
-      <Content />
-    </div>
+    </DashboardContainer>
   );
 };
 

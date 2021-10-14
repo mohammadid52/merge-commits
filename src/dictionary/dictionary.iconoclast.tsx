@@ -3983,12 +3983,25 @@ const StudentDict: any = {
 };
 
 const CommunityDict: any = {
-  EN:{
-    HEADER:'Here is what is happening today'
-  },ES:{
-    HEADER:'TBD'
-  }
-}
+  EN: {
+    TITLE: 'Community',
+    HEADER: 'Here is what is happening today',
+    TABS: {
+      FRONT_PAGE: 'Front page',
+      NEW_PERSON_SPOTLIGHT: 'New Person Spotlight',
+      ANNOUNCEMENTS: 'Announcements & Events',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    HEADER: 'TBD',
+    TABS: {
+      FRONT_PAGE: 'TBD',
+      NEW_PERSON_SPOTLIGHT: 'TBD',
+      ANNOUNCEMENTS: 'TBD',
+    },
+  },
+};
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -3996,10 +4009,9 @@ function paginationPage(lang: string, page: number, total: number) {
   return '';
 }
 
-
-
 export {
-  AuthDict,CommunityDict,
+  AuthDict,
+  CommunityDict,
   CsvDict,
   paginationPage,
   BUTTONS,

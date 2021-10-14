@@ -3823,10 +3823,22 @@ const StudentDict: any = {
 
 const CommunityDict: any = {
   EN: {
+    TITLE: 'Community',
     HEADER: 'Here is what is happening today',
+    TABS: {
+      FRONT_PAGE: 'Front page',
+      NEW_PERSON_SPOTLIGHT: 'New Person Spotlight',
+      ANNOUNCEMENTS: 'Announcements & Events',
+    },
   },
   ES: {
+    TITLE: 'TBD',
     HEADER: 'TBD',
+    TABS: {
+      FRONT_PAGE: 'TBD',
+      NEW_PERSON_SPOTLIGHT: 'TBD',
+      ANNOUNCEMENTS: 'TBD',
+    },
   },
 };
 function paginationPage(lang: string, page: number, total: number) {
