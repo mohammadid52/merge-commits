@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
+import * as mutations from '@graphql/mutations';
 import AddButton from '@atoms/Buttons/AddButton';
 import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -13,7 +13,7 @@ import Tooltip from '@components/Atoms/Tooltip';
 import {getAsset} from 'assets';
 import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
 import UnitListRow from './UnitListRow';
-
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -21,32 +21,10 @@ export const UnitList = ({instId}: any) => {
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {UnitLookupDict} = useDictionary(clientKey);
+
+  // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [units, setUnits] = useState<any>([]);
-
-  // ~ CHECK TO SEE IF UNIT CAN BE DELETED ~ //
-
-  /****************************************************
-   *   IF UNIT HAS ANY AMOUNT OF SYLLABI ATTACHED,    *
-   * OR IF THIS UNIT HAS EVER HAD ANY ACTIVE LESSONS, *
-   *            THEN DO NOT ALLOW A DELETE            *
-   ****************************************************/
-
-  const checkIfRemovable = (unitObj: any) => {
-    if (
-      unitObj.lessons?.items?.length > 0 ||
-      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
-      unitObj?.isUsed
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const handleDelete = (input: any) => {};
-
-  // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
 
   useEffect(() => {
     fetchSyllabusList();
@@ -67,6 +45,69 @@ export const UnitList = ({instId}: any) => {
       setLoading(false);
     }
   };
+
+  const updateUnitList = (inputObj: any) => {
+    setUnits(units.filter((unitObj: any) => unitObj.id !== inputObj.id));
+  };
+
+  // ~ CHECK TO SEE IF UNIT CAN BE DELETED ~ //
+
+  /****************************************************
+   *   IF UNIT HAS ANY AMOUNT OF SYLLABI ATTACHED,    *
+   * OR IF THIS UNIT HAS EVER HAD ANY ACTIVE LESSONS, *
+   *            THEN DO NOT ALLOW A DELETE            *
+   ****************************************************/
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (unitObj: any) => {
+    if (
+      unitObj.lessons?.items?.length > 0 ||
+      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
+      unitObj?.isUsed
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the unit "${targetString}"?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...');
+      await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabus, {
+          input: {id: item.id},
+        })
+      );
+      updateUnitList(item);
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
+
   const handleAdd = () => {
     history.push(`${match.url}/add`);
   };
@@ -88,7 +129,7 @@ export const UnitList = ({instId}: any) => {
             </div>
           </div>
         ) : units.length ? (
-          <>
+          <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
               <AddButton
@@ -117,12 +158,21 @@ export const UnitList = ({instId}: any) => {
                   index={index}
                   item={unit}
                   checkIfRemovable={checkIfRemovable}
-                  handleDelete={handleDelete}
+                  handleToggleDelete={handleToggleDelete}
                   editCurrentUnit={handleView}
                 />
               ))}
             </div>
-          </>
+            {deleteModal.show && (
+              <ModalPopUp
+                closeAction={handleToggleDelete}
+                saveAction={deleting ? () => {} : deleteModal.action}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                cancelLabel="CANCEL"
+                message={deleteModal.message}
+              />
+            )}
+          </Fragment>
         ) : (
           <>
             <div className="flex justify-center mt-8">

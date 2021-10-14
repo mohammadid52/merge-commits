@@ -74,6 +74,7 @@ interface InstInfo {
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute, tabProps} = instProps;
+
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
@@ -92,120 +93,119 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {Institute_info} = useDictionary(clientKey);
   const mediaRef = useRef(null);
 
-  const headerMenusForInstitution = [
-    {
-      title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
-      key: 'institution',
-      type: 'dropdown',
-      children: [
-        {
-          title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
-          key: 'general_information',
-          redirectionUrl: `${match.url}/edit`,
-          active: location.pathname.indexOf('/edit') > -1,
-        },
-        {
-          title: Institute_info[userLanguage]['TABS']['STAFF'],
-          key: 'staff',
-          redirectionUrl: `${match.url}/staff`,
-          active: location.pathname.indexOf('staff') > -1,
-        },
-        {
-          title: 'User registry',
-          key: 'user_registry',
-          redirectionUrl: `${match.url}/person`,
-          active: location.pathname.indexOf('register') > -1,
-        },
-        {
-          title: 'Register New User',
-          key: 'register',
-          redirectionUrl: `${match.url}/register-user`,
-          active: location.pathname.indexOf('register-user') > -1,
-        },
-      ].filter(Boolean),
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
-      key: 'course',
-      type: 'dropdown',
-      children: [
-        {
-          title: 'Courses',
-          key: 'course',
-          redirectionUrl: `${match.url}/courses`,
-          active: location.pathname.indexOf('course') > -1,
-        },
-        {
-          title: 'Units',
-          key: 'unit',
-          redirectionUrl: `${match.url}/units`,
-          active: location.pathname.indexOf('units') > -1,
-        },
-        {
-          title: Institute_info[userLanguage]['TABS']['LESSONS'],
-          key: 'lessons',
-          redirectionUrl: `${match.url}/lessons`,
-          active: location.pathname.indexOf('lessons') > -1,
-        },
-        {
-          title: 'Game Changers ',
-        },
-      ],
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
-      key: 'class',
-      type: 'dropdown',
-      children: [
-        {
-          title: Institute_info[userLanguage]['TABS']['CLASSES'],
-          key: 'class',
-          redirectionUrl: `${match.url}/class`,
-          active: location.pathname.indexOf('class') > -1,
-        },
-        {
-          title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
-          key: 'class_room',
-          redirectionUrl: `${match.url}/class-rooms`,
-          active: location.pathname.indexOf('room') > -1,
-        },
-        (user.role === 'FLW' || user.role === 'TR') && {
-          title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
-          key: 'roaster',
-          redirectionUrl: `${match.url}/class-rooms`,
-          active: location.pathname.indexOf('room') > -1,
-        },
-      ].filter(Boolean),
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
-      key: 'community',
-      type: 'dropdown',
-      children: [
-        {
-          title: 'New Person Spotlight',
-        },
-        {
-          title: 'Announcements & Events',
-        },
-        {
-          title: 'Front Page',
-        },
-      ],
-    },
-    {
-      title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
-      key: 'research_and_analytics',
-      redirectionUrl: `${match.url}/research-and-analytics`,
-    },
-  ];
+  // const headerMenusForInstitution = [
+  //   {
+  //     title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
+  //     key: 'institution',
+  //     type: 'dropdown',
+  //     children: [
+  //       {
+  //         title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
+  //         key: 'general_information',
+  //         redirectionUrl: `${match.url}/edit`,
+  //         active: location.pathname.indexOf('/edit') > -1,
+  //       },
+  //       {
+  //         title: Institute_info[userLanguage]['TABS']['STAFF'],
+  //         key: 'staff',
+  //         redirectionUrl: `${match.url}/staff`,
+  //         active: location.pathname.indexOf('staff') > -1,
+  //       },
+  //       {
+  //         title: 'User registry',
+  //         key: 'user_registry',
+  //         redirectionUrl: `${match.url}/person`,
+  //         active: location.pathname.indexOf('register') > -1,
+  //       },
+  //       {
+  //         title: 'Register New User',
+  //         key: 'register',
+  //         redirectionUrl: `${match.url}/register-user`,
+  //         active: location.pathname.indexOf('register-user') > -1,
+  //       },
+  //     ].filter(Boolean),
+  //   },
+  //   {
+  //     title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
+  //     key: 'course',
+  //     type: 'dropdown',
+  //     children: [
+  //       {
+  //         title: 'Courses',
+  //         key: 'course',
+  //         redirectionUrl: `${match.url}/courses`,
+  //         active: location.pathname.indexOf('course') > -1,
+  //       },
+  //       {
+  //         title: 'Units',
+  //         key: 'unit',
+  //         redirectionUrl: `${match.url}/units`,
+  //         active: location.pathname.indexOf('units') > -1,
+  //       },
+  //       {
+  //         title: Institute_info[userLanguage]['TABS']['LESSONS'],
+  //         key: 'lessons',
+  //         redirectionUrl: `${match.url}/lessons`,
+  //         active: location.pathname.indexOf('lessons') > -1,
+  //       },
+  //       {
+  //         title: 'Game Changers ',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
+  //     key: 'class',
+  //     type: 'dropdown',
+  //     children: [
+  //       {
+  //         title: Institute_info[userLanguage]['TABS']['CLASSES'],
+  //         key: 'class',
+  //         redirectionUrl: `${match.url}/class`,
+  //         active: location.pathname.indexOf('class') > -1,
+  //       },
+  //       {
+  //         title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
+  //         key: 'class_room',
+  //         redirectionUrl: `${match.url}/class-rooms`,
+  //         active: location.pathname.indexOf('room') > -1,
+  //       },
+  //       (user.role === 'FLW' || user.role === 'TR') && {
+  //         title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
+  //         key: 'roaster',
+  //         redirectionUrl: `${match.url}/class-rooms`,
+  //         active: location.pathname.indexOf('room') > -1,
+  //       },
+  //     ].filter(Boolean),
+  //   },
+  //   {
+  //     title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
+  //     key: 'community',
+  //     type: 'dropdown',
+  //     children: [
+  //       {
+  //         title: 'New Person Spotlight',
+  //       },
+  //       {
+  //         title: 'Announcements & Events',
+  //       },
+  //       {
+  //         title: 'Front Page',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
+  //     key: 'research_and_analytics',
+  //     redirectionUrl: `${match.url}/research-and-analytics`,
+  //   },
+  // ];
 
   const updateTab = ({key, redirectionUrl}: any) => {
-    tabProps.setTabsData({...tabProps.tabsData, inst: key});
-    if (redirectionUrl) {
-      history.push(redirectionUrl);
-    }
-
+    // tabProps.setTabsData({...tabProps.tabsData, inst: key});
+    // if (redirectionUrl) {
+    //   history.push(redirectionUrl);
+    // }
     // if (tab === 'user_registry') {
     //   history.push(`/dashboard/manage-users`);
     // } else if (tab === 'unit') {
@@ -283,6 +283,27 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     website,
     isServiceProvider,
   } = instProps?.institute;
+
+  // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
+  const [curricular, setCurricular] = useState<any>({});
+  useEffect(() => {
+    if (instProps?.institute?.curricula) {
+      setCurricular(instProps?.institute?.curricula);
+    }
+  }, [instProps?.institute?.curricula]);
+
+  const updateCurricularList = (itemObj: any) => {
+    setCurricular({
+      ...curricular,
+      items: curricular.items.filter(
+        (curriculumObj: any) => curriculumObj.id !== itemObj.id
+      ),
+    });
+  };
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
 
   return (
     <div>
@@ -507,7 +528,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     exact
                     render={() => (
                       <CurriculumList
-                        curricular={instProps?.institute?.curricula}
+                        updateCurricularList={updateCurricularList}
+                        curricular={curricular && curricular}
                         instId={institute?.id}
                         instName={institute?.name}
                       />

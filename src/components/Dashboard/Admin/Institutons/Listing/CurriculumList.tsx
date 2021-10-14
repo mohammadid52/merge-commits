@@ -1,32 +1,30 @@
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
-
-import {getAsset} from '../../../../../assets';
+import * as mutations from '@graphql/mutations';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
-import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
-import Popover from '@components/Atoms/Popover';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
 import CurriculumListRow from './CurriculumListRow';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
+  updateCurricularList?: any;
   instId: string;
   instName: string;
 }
 
-const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => {
+const CurriculumList = ({
+  curricular,
+  updateCurricularList,
+  instId,
+}: CurriculumListProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const theme = gContext.theme;
   const userLanguage = gContext.userLanguage;
-
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
+  const {InstitueCurriculam} = useDictionary(clientKey);
   const history = useHistory();
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
@@ -36,6 +34,12 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
    * OR IF THIS CURRICULUM HAS EVER HAD ANY ACTIVE SYLLABI, *
    *               THEN DO NOT ALLOW A DELETE               *
    **********************************************************/
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
 
   const checkIfRemovable = (curriculumObj: any) => {
     if (
@@ -48,7 +52,35 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
     }
   };
 
-  const handleDelete = (input: any) => {};
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the course "${targetString}"?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...');
+      await API.graphql(
+        graphqlOperation(mutations.deleteCurriculum, {
+          input: {id: item.id},
+        })
+      );
+      updateCurricularList(item);
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
 
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
 
@@ -102,11 +134,20 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                   index={index}
                   item={item}
                   checkIfRemovable={checkIfRemovable}
-                  handleDelete={handleDelete}
+                  handleToggleDelete={handleToggleDelete}
                   editCurrentCurricular={editCurrentCurricular}
                 />
               ))}
             </div>
+            {deleteModal.show && (
+              <ModalPopUp
+                closeAction={handleToggleDelete}
+                saveAction={deleting ? () => {} : deleteModal.action}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                cancelLabel="CANCEL"
+                message={deleteModal.message}
+              />
+            )}
           </Fragment>
         ) : (
           <Fragment>
