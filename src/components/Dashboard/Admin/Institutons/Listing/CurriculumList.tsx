@@ -1,76 +1,88 @@
-import React, {Fragment, useContext} from 'react';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
-
-import {getAsset} from '../../../../../assets';
+import * as mutations from '@graphql/mutations';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import Tooltip from '../../../../Atoms/Tooltip';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
+import CurriculumListRow from './CurriculumListRow';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
+  updateCurricularList?: any;
   instId: string;
   instName: string;
 }
 
-const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => {
+const CurriculumList = ({
+  curricular,
+  updateCurricularList,
+  instId,
+}: CurriculumListProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const theme = gContext.theme;
   const userLanguage = gContext.userLanguage;
-
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
+  const {InstitueCurriculam} = useDictionary(clientKey);
   const history = useHistory();
 
+  //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
+
+  /**********************************************************
+   *   IF CURRICULUM HAS ANY AMOUNT OF SYLLABI ATTACHED,    *
+   * OR IF THIS CURRICULUM HAS EVER HAD ANY ACTIVE SYLLABI, *
+   *               THEN DO NOT ALLOW A DELETE               *
+   **********************************************************/
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (curriculumObj: any) => {
+    if (
+      curriculumObj.syllabi?.length > 0 ||
+      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the course "${targetString}"?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...');
+      await API.graphql(
+        graphqlOperation(mutations.deleteCurriculum, {
+          input: {id: item.id},
+        })
+      );
+      updateCurricularList(item);
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
-  // const getUnusedCurriculums = async (curriculumArr: any[]) => {
-  //   const allCurriculums = curriculumArr.reduce((acc: string[], curriculum: any) => {
-  //     return [...acc, curriculum.id];
-  //   }, []);
-  //   if (allCurriculums.length > 0) {
-  //     try {
-  //       const allCurriculumsFilter = createFilterToFetchSpecificItemsOnly(
-  //         allCurriculums,
-  //         'curriculumID'
-  //       );
-
-  //       const allRoomCurriculums: any = await API.graphql(
-  //         graphqlOperation(queries.listRoomCurriculums, {
-  //           filter: {...allCurriculumsFilter},
-  //         })
-  //       );
-
-  //       const responseItems = allRoomCurriculums?.data?.listRoomCurriculums?.items;
-
-  //       const unusedCurriculums = allCurriculums.reduce(
-  //         (unusedAcc: string[], curriculumID: string) => {
-  //           if (
-  //             unusedAcc.indexOf(curriculumID) === -1 &&
-  //             allCurriculums.indexOf(curriculumID) > -1
-  //           ) {
-  //             return unusedAcc;
-  //           } else {
-  //             return [...unusedAcc, curriculumID];
-  //           }
-  //         },
-  //         []
-  //       );
-
-  //       console.log('unused curriculums - ', unusedCurriculums);
-  //     } catch (e) {
-  //       console.error('getUnusedCurriculums() - ', e);
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (curricular) {
-  //     getUnusedCurriculums(curricular.items);
-  //   }
-  // }, [curricular]);
 
   const createNewCurricular = () => {
     history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder`);
@@ -86,8 +98,8 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
-    <div className="pt-0 flex m-auto justify-center p-8">
-      <div className="">
+    <div className="pt-0 flex m-auto justify-center h-full p-8">
+      <div className="flex flex-col">
         {curricular.items && curricular.items.length > 0 ? (
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
@@ -107,7 +119,7 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculam[userLanguage]['ACTION']}
                   </span>
@@ -115,29 +127,27 @@ const CurriculumList = ({curricular, instId, instName}: CurriculumListProps) => 
               </div>
             </div>
 
-            <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
+            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
               {curricular.items.map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                    index % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}>
-                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                    {index + 1}.
-                  </div>
-                  <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {item.name ? item.name : ''}
-                  </div>
-                  <span
-                    className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
-                    onClick={() => editCurrentCurricular(item.id)}>
-                    <Tooltip text="View curriculam details" placement="left">
-                      {InstitueCurriculam[userLanguage]['VIEW']}
-                    </Tooltip>
-                  </span>
-                </div>
+                <CurriculumListRow
+                  key={`curr_list_row_${index}`}
+                  index={index}
+                  item={item}
+                  checkIfRemovable={checkIfRemovable}
+                  handleToggleDelete={handleToggleDelete}
+                  editCurrentCurricular={editCurrentCurricular}
+                />
               ))}
             </div>
+            {deleteModal.show && (
+              <ModalPopUp
+                closeAction={handleToggleDelete}
+                saveAction={deleting ? () => {} : deleteModal.action}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                cancelLabel="CANCEL"
+                message={deleteModal.message}
+              />
+            )}
           </Fragment>
         ) : (
           <Fragment>

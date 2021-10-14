@@ -914,7 +914,10 @@ const LessonApp = () => {
 
   return (
     <>
-      <FloatingSideMenu />
+      {/* 
+      TODO: Add this again later
+      */}
+      {/* <FloatingSideMenu /> */}
       <div
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>

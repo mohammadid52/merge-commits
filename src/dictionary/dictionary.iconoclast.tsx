@@ -119,6 +119,7 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'TBD',
     EditTopic: 'TBD',
     AddExistingCheckpoint: 'TBD',
+    STAFF: 'TBD',
     PeopleManagment: 'TBD',
     AddNewUser: 'TBD',
     UserInfo: 'TBD',
@@ -149,7 +150,7 @@ const dashboardProfileDict: any = {
       ROLE: 'Role',
       PASSWORD: 'Password',
       PASSCODE: 'Journal Passcode',
-      SUPER_ADMIN: 'Super Admin'
+      SUPER_ADMIN: 'Super Admin',
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -881,7 +882,7 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
       CLASS_MANAGER: 'Class Manager',
-      LIVE_CLASS_ROOM: "Live Classroom",
+      LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Manager',
       COURSES: 'Courses',
       UNITS: 'Units',
@@ -896,6 +897,7 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
+      COMMUNITY: 'Community',
     },
   },
   ES: {
@@ -909,7 +911,7 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'TBD',
       STAFF: 'TBD',
       CLASSES: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      LIVE_CLASS_ROOM: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
       STUDENT_ROASTER: 'TBD',
@@ -917,6 +919,7 @@ const Institute_info: any = {
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
       HOME: 'TBD',
+      COMMUNITY: 'TBD',
       NOTEBOOK: 'TBD',
     },
   },
@@ -1204,6 +1207,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -1215,6 +1219,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
@@ -1371,7 +1376,7 @@ const CourseBuilderDict: any = {
       },
       success: {
         save: 'New Course has been saved.',
-      }
+      },
     },
     BUTTON: {
       SAVE: 'Save',
@@ -1724,6 +1729,8 @@ const RoomEDITdict: any = {
     CLASS_DETAILS_TAB_DESCRIPTION: 'TBD',
     CLASS_DYNAMICS_TAB_HEADING: 'TBD',
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
+    CLASS_STUDENT_TAB_HEADING: 'TBD',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'TBD',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
     messages: {
@@ -2677,6 +2684,7 @@ const RegistrationDict: any = {
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
       GROUP_NO_OPTION: 'Select class first',
+      GROUP_NO_OPTION_AFTER_FETCH: 'No group found',
       ROLE_NO_OPTION: 'Select role first',
     },
   },
@@ -2729,7 +2737,7 @@ const UserEditDict: any = {
       cancel: 'Cancel',
     },
     ondemand: 'On-Demand',
-    SUPER_ADMIN: 'Super Admin'
+    SUPER_ADMIN: 'Super Admin',
   },
   ES: {
     heading: 'TBD',
@@ -2743,7 +2751,7 @@ const UserEditDict: any = {
       cancel: 'TBD',
     },
     ondemand: 'TBD',
-    SUPER_ADMIN: 'TBD'
+    SUPER_ADMIN: 'TBD',
   },
 };
 
@@ -2760,7 +2768,8 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
-    SUPER_ADMIN: 'Super Admin'
+    SUPER_ADMIN: 'Super Admin',
+    RESET_PASSWORD: 'Reset password',
   },
   ES: {
     heading: 'TBD',
@@ -2774,6 +2783,7 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
   },
 };
 
@@ -3572,24 +3582,25 @@ const QuestionBuilderDict: any = {
 
 const UnitLookupDict: any = {
   EN: {
-    HEADING: 'Assign Unit',
+    HEADING: 'Assign Module',
     NOTE:
-      'NOTE: Please select Course and then units to add current lesson to that unit.',
+      'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
-    UNITNAME: 'Unit Name',
+    UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This lesson is not added to any course or units.',
+    NOTADDED: ' This session is not added to any course or modules.',
     NEW_UNIT: 'New Unit',
     UNIT_DETAILS: 'View Unit details',
     VIEW: 'View',
-    MESSAGES: {
-      ADDED: 'Lesson added successfully.',
-      ADDERR: 'Error while adding lesson to unit, please try later.',
-      FETCHERR: 'Error while fetching units Data, Please try again later.',
-    },
     INFO: 'This institute does not have any unit. Please create a new unit.',
+    MESSAGES: {
+      ADDED: 'Session added successfully.',
+      ADDERR: 'Error while adding session to module, please try later.',
+      FETCHERR: 'Error while fetching modules Data, Please try again later.',
+    },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3600,12 +3611,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 
@@ -3920,14 +3935,14 @@ const LearningEvidenceDict: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK_TO_LIST: 'Back to list',
+  },
+};
 
 const General: any = {
   EN: {
@@ -3958,14 +3973,33 @@ const General: any = {
   },
 };
 
+const StudentDict: any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
+  },
+};
+
+const CommunityDict: any = {
+  EN:{
+    HEADER:'Here is what is happening today'
+  },ES:{
+    HEADER:'TBD'
+  }
+}
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
   return '';
 }
 
+
+
 export {
-  AuthDict,
+  AuthDict,CommunityDict,
   CsvDict,
   paginationPage,
   BUTTONS,
@@ -4037,6 +4071,7 @@ export {
   EditQuestionDict,
   QuestionLookupDict,
   SelectedCheckPointsListDict,
+  StudentDict,
   AddNewLessonFormDict,
   AssessmentInstuctionsDict,
   GeneralInformationDict,
@@ -4049,5 +4084,5 @@ export {
   EditQuestionModalDict,
   UniversalBuilderDict,
   LearningEvidenceDict,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

@@ -1,9 +1,9 @@
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import React, {useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoMdAddCircleOutline} from 'react-icons/io';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 export const AddNewBlock = (props: RowWrapperProps) => {
   const {handleModalPopToggle, idx} = props;
@@ -20,16 +20,18 @@ export const AddNewBlock = (props: RowWrapperProps) => {
         setNewBlockSeqId(idx);
       }}
       className={`
-      w-full h-48 
+      w-full focus:scale-95 scale-100 transform  h-48 cursor-pointer
       flex justify-center items-center 
       bg-gray-400 bg-opacity-20 
       rounded
       z-0`}>
-      <div className={`w-auto cursor-pointer`}>
-        <IconContext.Provider value={{size: '4rem', color: iconColor}}>
-          <IoMdAddCircleOutline />
+      <div className={`w-auto `}>
+        <IconContext.Provider value={{size: '4rem'}}>
+          <IoMdAddCircleOutline className="iconoclast:text-main curate:text-main" />
         </IconContext.Provider>
-        <p className={`text-center ${themeTextColor}`}>Add New Block</p>
+        <p className={`text-center iconoclast:text-main curate:text-main`}>
+          Add New Block
+        </p>
       </div>
     </div>
   );

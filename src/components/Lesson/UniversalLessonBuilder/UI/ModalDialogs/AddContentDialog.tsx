@@ -1,7 +1,12 @@
-import React from 'react';
+import Buttons from '@components/Atoms/Buttons';
+import {classNames} from '@UlbUI/FormElements/TextInput';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
+import {isEmpty} from 'lodash';
+import React, {useEffect} from 'react';
 import {
+  AiFillCloseCircle,
   AiOutlineBorderlessTable,
-  AiOutlineCalendar,
   AiOutlineFileImage,
   AiOutlineHighlight,
   AiOutlineLink,
@@ -13,36 +18,36 @@ import {
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
 import {CgNotes} from 'react-icons/cg';
-import {
-  HiOutlineArrowRight,
-  HiOutlineEmojiHappy,
-  HiOutlineExternalLink,
-} from 'react-icons/hi';
+import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline} from 'react-icons/io5';
-import {MdInput, MdTitle} from 'react-icons/md';
+import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
-import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {DIVIDER, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 
 interface AddContentDialog {
-  addContentModal: {show: boolean; type: string};
-  setAddContentModal: React.Dispatch<React.SetStateAction<{show: boolean; type: string}>>;
-  hideAllModals?: () => void;
-}
-const AddContentDialog = ({
-  setAddContentModal,
+  setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
 
-  hideAllModals,
-}: AddContentDialog) => {
-  function classNames(...classes: any[]) {
-    return classes.filter(Boolean).join(' ');
-  }
+  onItemClick?: (type: string, bottom?: boolean) => void;
+}
+const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
     {name: 'User Interaction', current: false},
   ];
+
+  const {
+    selectedComponent,
+    setShowingPin,
+    activeContentItem,
+    setActiveContentItem,
+    showingPin,
+    setSelectedType,
+  } = usePageBuilderContext();
+
+  const {addContentModal} = useOverlayContext();
 
   const textContent = [
     {
@@ -248,119 +253,167 @@ const AddContentDialog = ({
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab] = helpers;
+  const btnClass = `font-semibold hover:text-gray-600 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
+
+  const onCustomPositionClick = (e: any) => {
+    e.stopPropagation();
+    if (!addContentModal.show) {
+      onItemClick(activeContentItem.type, false);
+    }
+    setCurrentHelpStep(1);
+  };
+
+  useEffect(() => {
+    if (!isEmpty(selectedComponent)) {
+      setCurrentHelpStep(2);
+    }
+  }, [selectedComponent]);
+
+  const onBottomClick = (e: any) => {
+    e.stopPropagation();
+    if (!addContentModal.show) {
+      onItemClick(activeContentItem.type, true);
+      setCurrentHelpStep(null);
+    }
+  };
+
+  const onCancel = (e: any) => {
+    e.stopPropagation();
+    setShowingPin(false);
+    setActiveContentItem(null);
+  };
+
+  const Item = ({content}: {content: any}) => {
+    const currentType = activeContentItem && activeContentItem?.type === content.type;
+
+    const onFinalStep =
+      currentType && !isEmpty(selectedComponent) && !addContentModal.show;
+    const onOptions = currentType && !onFinalStep;
+    const onInit = !currentType && !onFinalStep;
+
+    return (
+      <div
+        onClick={() => {
+          setActiveContentItem(content);
+          setShowingPin(false);
+          setSelectedType(content.type);
+        }}
+        className={`relative ${
+          addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
+        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${
+          content.iconBackground
+        }  transition-all focus-within:ring-2`}>
+        <>
+          {onInit && (
+            <>
+              <span
+                className={classNames(
+                  content.iconBackground,
+                  content.iconForeground,
+                  'rounded-lg inline-flex p-3 w-auto'
+                )}>
+                <content.icon className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <div className="flex-1 min-w-0 flex items-center justify-between">
+                <div className="focus:outline-none cursor-pointer">
+                  <span className="absolute inset-0" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {content.name}
+                  </p>
+                  <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+                </div>
+              </div>
+
+              <div className="w-auto">
+                <HiOutlineArrowRight
+                  className={`arrow-icon w-auto ${content.iconForeground}`}
+                />
+              </div>
+            </>
+          )}
+        </>
+        <>
+          {onOptions && (
+            <div className="px-2 dark:text-gray-500 flex items-center justify-between">
+              <Buttons
+                onClick={onCustomPositionClick}
+                overrideClass
+                transparent
+                btnClass={`${
+                  showingPin ? 'iconoclast:border-main border-0 curate:border-main' : ''
+                } ${btnClass}`}
+                label="Custom position"
+              />
+
+              <Buttons
+                overrideClass
+                onClick={onBottomClick}
+                btnClass={btnClass}
+                transparent
+                label="Add to Botom"
+              />
+            </div>
+          )}
+        </>
+
+        {activeContentItem && (
+          <span
+            onClick={onCancel}
+            style={{top: '-.5rem', right: '-.5rem'}}
+            className="absolute cursor-pointer -top-1 w-auto -right-1 p-1 rounded-full transition-all">
+            <AiFillCloseCircle className="text-white text-base" />
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
-      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
-      <AnimatedContainer show={onTextTab}>
-        {onTextTab && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 px-2 my-4">
-            {textContent.map((content) => (
-              <div
-                onClick={() => {
-                  hideAllModals();
-                  setAddContentModal({show: true, type: content.type});
-                }}
-                key={content.name}
-                className={`relative form-button rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground} transition-all focus-within:ring-2`}>
-                <span
-                  className={classNames(
-                    content.iconBackground,
-                    content.iconForeground,
-                    'rounded-lg inline-flex p-3 w-auto'
-                  )}>
-                  <content.icon className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <div className="flex-1 min-w-0 flex items-center justify-between">
-                  <a href="#" className="focus:outline-none">
-                    <span className="absolute inset-0" aria-hidden="true" />
-                    <p className="text-sm font-medium text-gray-900">{content.name}</p>
-                    <p className="text-sm text-gray-500 truncate">{content.subtitle}</p>
-                  </a>
-                </div>
-
-                <div className="w-auto">
-                  <HiOutlineArrowRight
-                    className={`arrow-icon w-auto ${content.iconForeground}`}
-                  />
-                </div>
-              </div>
+      {!activeContentItem && <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />}
+      <AnimatedContainer
+        show={onTextTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onTextTab && isEmpty(activeContentItem) && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
+            {textContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
         )}
       </AnimatedContainer>
-      <AnimatedContainer show={onMediaTab}>
-        {onMediaTab && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 px-2 my-4">
-            {mediaContent.map((content) => (
-              <div
-                onClick={() => {
-                  hideAllModals();
-                  setAddContentModal({show: true, type: content.type});
-                }}
-                key={content.name}
-                className={`relative form-button rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground} transition-all focus-within:ring-2`}>
-                <span
-                  className={classNames(
-                    content.iconBackground,
-                    content.iconForeground,
-                    'rounded-lg inline-flex p-3 w-auto'
-                  )}>
-                  <content.icon className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <div className="flex-1 min-w-0 flex items-center justify-between">
-                  <a href="#" className="focus:outline-none">
-                    <span className="absolute inset-0" aria-hidden="true" />
-                    <p className="text-sm font-medium text-gray-900">{content.name}</p>
-                    <p className="text-sm text-gray-500 truncate">{content.subtitle}</p>
-                  </a>
-                </div>
-
-                <div className="w-auto">
-                  <HiOutlineArrowRight
-                    className={`arrow-icon w-auto ${content.iconForeground}`}
-                  />
-                </div>
-              </div>
+      <AnimatedContainer
+        show={onMediaTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onMediaTab && isEmpty(activeContentItem) && (
+          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+            {mediaContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
         )}
       </AnimatedContainer>
-      <AnimatedContainer show={onUIContentTab}>
-        {onUIContentTab && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 px-2 my-4">
-            {userInterfaceContent.map((content) => (
-              <div
-                onClick={() => {
-                  hideAllModals();
-                  setAddContentModal({show: true, type: content.type});
-                }}
-                key={content.name}
-                className={`relative form-button rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground} transition-all focus-within:ring-2`}>
-                <span
-                  className={classNames(
-                    content.iconBackground,
-                    content.iconForeground,
-                    'rounded-lg inline-flex p-3 w-auto'
-                  )}>
-                  <content.icon className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <div className="flex-1 min-w-0 flex items-center justify-between">
-                  <a href="#" className="focus:outline-none">
-                    <span className="absolute inset-0" aria-hidden="true" />
-                    <p className="text-sm font-medium text-gray-900">{content.name}</p>
-                    <p className="text-sm text-gray-500 truncate">{content.subtitle}</p>
-                  </a>
-                </div>
-
-                <div className="w-auto">
-                  <HiOutlineArrowRight
-                    className={`arrow-icon w-auto ${content.iconForeground}`}
-                  />
-                </div>
-              </div>
+      <AnimatedContainer
+        show={onUIContentTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onUIContentTab && isEmpty(activeContentItem) && (
+          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+            {userInterfaceContent.map((content, idx) => (
+              <Item key={idx} content={content} />
             ))}
           </div>
+        )}
+      </AnimatedContainer>
+      <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
+        {!isEmpty(activeContentItem) && (
+          <>
+            <h4 className="dark:text-white m-4 text-base font-medium capitalize">
+              {activeContentItem.type} Component
+            </h4>
+            <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+              <Item content={activeContentItem} />
+            </div>
+          </>
         )}
       </AnimatedContainer>
     </>

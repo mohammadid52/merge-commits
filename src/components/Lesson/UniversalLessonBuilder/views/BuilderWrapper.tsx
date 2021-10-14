@@ -2,7 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
+import ContentModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
 import {GlobalContext} from '@contexts/GlobalContext';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {useQuery} from '@customHooks/urlParam';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -32,6 +35,8 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
+import isEmpty from 'lodash/isEmpty';
+
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -92,20 +97,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
 
-  // Modal popIn
-  const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-
-  const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+  const {
+    currentModalDialog,
+    setCurrentModalDialog,
+    addContentModal,
+    setAddContentModal,
+    modalPopVisible,
+    setModalPopVisible,
+  } = useOverlayContext();
 
   // Manage image gallery component
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
-
-  // This state handles all the modal components
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
-  });
 
   useEffect(() => {
     if (isNewPage === 'true') {
@@ -140,6 +143,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setAddContentModal({type: '', show: false});
     setCurrentModalDialog('');
   };
+  const {
+    setSelectedComponent,
+    selectedComponent,
+    setShowLocationIcon,
+    setNavState,
+    setActiveContentItem,
+  } = usePageBuilderContext();
+
+  useEffect(() => {
+    if (!isEmpty(selectedComponent)) {
+      setBlockConfig({
+        ...blockConfig,
+        position: selectedComponent.partContentIdx,
+      });
+    }
+  }, [selectedComponent]);
 
   const handleModalPopToggle = (
     dialogToToggle: string,
@@ -151,19 +170,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
-    if (!modalPopVisible) {
-      setBlockConfig({
-        section,
-        position,
-        targetId,
-        isEditingMode: false,
-      });
-      setModalPopVisible(true);
-    }
+    setBlockConfig({
+      section,
+      position,
+      targetId,
+      isEditingMode: false,
+    });
     // Toggle Which Dialog is Shown
-    if (currentModalDialog !== dialogToToggle) {
-      setCurrentModalDialog(dialogToToggle);
-    }
+    // if (currentModalDialog !== dialogToToggle) {
+    //   setCurrentModalDialog(dialogToToggle);
+    // }
   };
 
   const handleEditBlockContent = (
@@ -218,21 +234,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      // case dialogLabelList.VIEW_PAGES:
-      //   return (
-      //     <PageSelector
-      //       universalLessonDetails={universalLessonDetails}
-      //       deleteFromULBHandler={deleteFromULBHandler}
-      //       universalBuilderDict={UniversalBuilderDict}
-      //       userLanguage={userLanguage}
-      //       galleryVisible={galleryVisible}
-      //       loading={loading}
-      //       selectedPageID={selectedPageID}
-      //       setSelectedPageID={setSelectedPageID}
-      //       handleModalPopToggle={handleModalPopToggle}
-      //       hideAllModals={hideAllModals}
-      //     />
-      //   );
       case dialogLabelList.NEW_PAGE:
         return (
           <NewPageDialog
@@ -243,27 +244,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
-        return (
-          <AddContentDialog
-            hideAllModals={hideAllModals}
-            addContentModal={addContentModal}
-            setAddContentModal={setAddContentModal}
-          />
-        );
+        return <AddContentDialog />;
 
       default:
-        return (
-          <NewPageDialog
-            universalLessonDetails={universalLessonDetails}
-            closeAction={hideAllModals}
-          />
-        );
+        return null;
     }
   };
 
   const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
+    setSelectedComponent(null);
+    setShowLocationIcon(false);
+
     if (showPopup) {
+      setNavState('home');
+      setActiveContentItem(null);
+
       wait(700).then(() => {
         setSavingStatus('loading');
         wait(1000).then(() => {
@@ -281,6 +277,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
    * If you want to add a modal component,
    * first add constant type in constants.tsx and add component here
    */
+
   const modalByType = (type: string) => {
     const {
       position = 0,
@@ -333,7 +330,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
       setUnsavedChanges,
-      askBeforeClose,
+      askBeforeClose: () => closeAction(false),
       setSavingStatus,
     };
 
@@ -543,17 +540,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
       {addContentModal.show && (
-        <Modal
+        <ContentModal
           showHeader={true}
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={askBeforeClose}>
+          closeAction={closeAction}>
           <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>
-          <UnsavedModal />
-        </Modal>
+          {/* <UnsavedModal /> */}
+        </ContentModal>
       )}
 
       {suggestionModal.show && (

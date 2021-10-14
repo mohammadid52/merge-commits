@@ -6,6 +6,7 @@ interface DropdownProps {
   listClassName?: string;
   userInfo: string;
   id: string;
+  isRequired?: boolean;
   handleChange: (item: {code: string | boolean; name: string}) => void;
   style: boolean;
   value: string;
@@ -13,7 +14,7 @@ interface DropdownProps {
 }
 
 // TODO: Need to make this component
-// to use selector component in atom > froms > selector.
+// to use selector component in atom > forms > selector.
 
 const DropdownForm = (props: DropdownProps) => {
   const {
@@ -23,6 +24,7 @@ const DropdownForm = (props: DropdownProps) => {
     userInfo,
     handleChange,
     id,
+    isRequired,
     style,
     noOptionMessage,
   } = props;
@@ -73,7 +75,7 @@ const DropdownForm = (props: DropdownProps) => {
         className={`${
           style ? 'text-m' : 'text-sm'
         } block leading-5 font-medium text-gray-700`}>
-        <span className={`${style ? 'text-red-500' : 'hidden'}`}>* </span>
+        {isRequired && <span className={`${style ? 'text-red-500' : 'hidden'}`}>* </span>}
         {label}
       </label>
       <div className="relative">

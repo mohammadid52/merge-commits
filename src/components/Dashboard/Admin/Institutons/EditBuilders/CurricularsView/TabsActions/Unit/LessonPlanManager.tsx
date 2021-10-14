@@ -330,15 +330,9 @@ const LessonPlanManager = ({
       });
       // setEditLesson({type, id});
     } else {
-      if (type === 'lesson') {
-        history.push(
-          `/dashboard/lesson-builder/lesson/edit?lessonId=${id}&from=lesson-planner`
-        );
-      } else {
-        history.push(
-          `/dashboard/lesson-builder/lesson/edit?assessmentId=${id}&from=lesson-planner`
-        );
-      }
+      history.push(
+        `/dashboard/manage-institutions/institution/${institutionId}/lessons/${id}`
+      );
     }
   };
 

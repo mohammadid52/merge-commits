@@ -561,6 +561,7 @@ export const createInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -685,6 +686,7 @@ export const updateInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -809,6 +811,7 @@ export const deleteInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4256,6 +4259,7 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -4355,6 +4359,7 @@ export const updateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -4454,6 +4459,7 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -4508,6 +4514,7 @@ export const createTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -4579,6 +4586,7 @@ export const updateTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -4650,6 +4658,7 @@ export const deleteTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -4782,6 +4791,7 @@ export const createRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4834,6 +4844,7 @@ export const updateRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4886,6 +4897,7 @@ export const deleteRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4961,6 +4973,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5018,6 +5031,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5075,6 +5089,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5281,6 +5296,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5398,6 +5414,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -5515,6 +5532,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9722,6 +9740,7 @@ export const createAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9742,6 +9761,8 @@ export const createAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -9805,6 +9826,7 @@ export const createAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -9979,6 +10001,7 @@ export const updateAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -9999,6 +10022,8 @@ export const updateAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10062,6 +10087,7 @@ export const updateAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -10236,6 +10262,7 @@ export const deleteAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -10256,6 +10283,8 @@ export const deleteAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -10319,6 +10348,7 @@ export const deleteAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -10580,6 +10610,7 @@ export const createUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -10664,6 +10695,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -10748,6 +10780,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -10994,6 +11027,8 @@ export const createUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -11036,6 +11071,8 @@ export const updateUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -11078,6 +11115,8 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -11108,6 +11147,8 @@ export const createCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -11142,6 +11183,8 @@ export const updateCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -11176,6 +11219,8 @@ export const deleteCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -11260,6 +11305,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11386,6 +11432,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11512,6 +11559,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11613,6 +11661,7 @@ export const createUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -11691,6 +11740,7 @@ export const updateUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -11769,6 +11819,7 @@ export const deleteUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }

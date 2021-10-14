@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
@@ -17,6 +17,8 @@ import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
+import CurriculumList from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
+import UnitManagerRow from './UnitManagerRow';
 
 interface UIMessages {
   show: boolean;
@@ -27,6 +29,7 @@ interface UIMessages {
 
 const UnitManager = ({
   courseId,
+  courseData,
   institutionId,
   savedSyllabusList,
   setSavedSyllabusList,
@@ -39,6 +42,7 @@ const UnitManager = ({
   const {CourseBuilderDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
   const [addingSyllabus, setAddingSyllabus] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -76,6 +80,7 @@ const UnitManager = ({
     }
   }, [savedSyllabusList]);
 
+  // ~~~~~~~~~~~~ FUnCTIONALITY ~~~~~~~~~~~~ //
   const createNewUnit = () => {
     if (unsavedChanges) {
       setWarnModal({
@@ -105,6 +110,7 @@ const UnitManager = ({
       const result: any = await API.graphql(
         graphqlOperation(mutations.createCurriculumUnits, {input})
       );
+
       const newSyllabus = result.data.createCurriculumUnits;
 
       if (!syllabusIds.length) {
@@ -177,10 +183,6 @@ const UnitManager = ({
     }
   }, [savedSyllabusList, allSyllabusList]);
 
-  const closeLessonAction = () => {
-    setWarnModal2({...warnModal2, show: false});
-  };
-
   useEffect(() => {
     fetchSyllabusList();
   }, [institutionId]);
@@ -210,8 +212,57 @@ const UnitManager = ({
     }
   };
 
-  const onDelete = (item: any) => {
-    const onDrop = async () => {
+  const updateSyllabusSequence = async (syllabusIDs: string[]) => {
+    setSyllabusIds(syllabusIDs);
+    await API.graphql(
+      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+        input: {
+          id: courseId,
+          universalSyllabusSeq: syllabusIDs,
+        },
+      })
+    );
+  };
+
+  // ~~~~~ CHECK IF UNIT CAN BE DELETED ~~~~ //
+
+  /********************************************************
+   * BASICALLY CHECK IF THIS UNIT HAS EVER BEEN ACTIVATED *
+   *       IN THE PARENT CURRICULUM, AND IF IT HAS,       *
+   *          THIS UNIT SHOULD NOT BE REMOVABLE           *
+   ********************************************************/
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (unitObj: any, curriculumObj: any) => {
+    if (
+      curriculumObj?.syllabiHistory &&
+      curriculumObj?.syllabiHistory?.length > 0 &&
+      curriculumObj?.syllabiHistory.includes(unitObj.unitId)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to remove "${targetString}" from course?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    try {
       setDeleting(true);
       await API.graphql(
         graphqlOperation(customMutations.deleteCurriculumUnits, {
@@ -229,26 +280,41 @@ const UnitManager = ({
       );
       setDeleting(false);
       closeLessonAction();
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to remove ${item.name} from course?`,
-      action: onDrop,
-    });
+    } catch (e) {
+      console.error('Problem deleting Unit from UnitManager - ', e);
+    } finally {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
   };
 
-  const updateSyllabusSequence = async (syllabusIDs: string[]) => {
-    setSyllabusIds(syllabusIDs);
-    await API.graphql(
-      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-        input: {
-          id: courseId,
-          universalSyllabusSeq: syllabusIDs,
-        },
-      })
-    );
-  };
+  // const onDelete = (item: any) => {
+  //   const onDrop = async () => {
+  //     setDeleting(true);
+  //     await API.graphql(
+  //       graphqlOperation(customMutations.deleteCurriculumUnits, {
+  //         input: {id: item.id},
+  //       })
+  //     );
+  //     await updateSyllabusSequence(
+  //       syllabusIds.filter((unitId: any) => unitId !== item.unitId)
+  //     );
+  //     setSelectedSyllabusList((list: any) =>
+  //       list.filter((_item: any) => _item.id !== item.id)
+  //     );
+  //     setSavedSyllabusList((prevList: any) =>
+  //       prevList.filter((syllabus: any) => syllabus.id !== item.id)
+  //     );
+  //     setDeleting(false);
+  //     closeLessonAction();
+  //   };
+  //   setWarnModal2({
+  //     show: true,
+  //     message: `Are you sure you want to remove ${item.name} from course?`,
+  //     action: onDrop,
+  //   });
+  // };
 
+  // ~~~~~~~~~~~~~~ DRAG & NAV ~~~~~~~~~~~~~ //
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
       const list: any = reorder(
@@ -270,6 +336,10 @@ const UnitManager = ({
     }
   };
 
+  const closeLessonAction = () => {
+    setWarnModal2({...warnModal2, show: false});
+  };
+
   const goToUnitBuilder = (id: string, type: string) => {
     if (unsavedChanges) {
       setWarnModal({
@@ -280,7 +350,9 @@ const UnitManager = ({
       });
       // setEditLesson({type, id});
     } else {
-      history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`);
+      history.push(
+        `/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`
+      );
     }
   };
 
@@ -336,18 +408,18 @@ const UnitManager = ({
               </div>
             </div>
           ) : selectedSyllabusList?.length > 0 ? (
-            <div>
+            <Fragment>
               {/* *************** SYLLABUS TABLE HEADERS ************ */}
               <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-8/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {CourseBuilderDict[userLanguage]['TABLE_HEADS']['UNIT_NAME']}
                   </span>
                 </div>
-                <div className="w-1/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>
@@ -365,53 +437,14 @@ const UnitManager = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}>
-                                  <div
-                                    key={index}
-                                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                      {index + 1}.
-                                    </div>
-                                    <div
-                                      className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
-                                      onClick={() =>
-                                        goToUnitBuilder(item.unitId, item.type)
-                                      }>
-                                      {item.name || '--'}
-                                    </div>
-                                    {/* <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
-                                              {editState.id !== item.id ? (
-                                                <span
-                                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                                                    item.status === 'Inactive'
-                                                      ? 'bg-yellow-100 text-yellow-800'
-                                                      : item.status === 'Dropped'
-                                                      ? 'bg-red-100 text-red-800'
-                                                      : 'bg-green-100 text-green-800'
-                                                  }`}>
-                                                  {item.status}
-                                                </span>
-                                              ) : (
-                                                <div className="text-gray-900">
-                                                  <Selector
-                                                    selectedItem={item.status}
-                                                    placeholder="Select Status"
-                                                    list={statusList}
-                                                    onChange={(val, name, id) =>
-                                                      onStatusChange(val, name, id, item)
-                                                    }
-                                                  />
-                                                </div>
-                                              )}
-                                            </div>
-                                             */}
-                                    <span
-                                      className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-                                      onClick={() => onDelete(item)}>
-                                      <DeleteActionBtn
-                                        handleClick={() => onDelete(item)}
-                                      />
-                                    </span>
-                                  </div>
+                                  <UnitManagerRow
+                                    index={index}
+                                    item={item}
+                                    checkIfRemovable={checkIfRemovable}
+                                    handleToggleDelete={handleToggleDelete}
+                                    goToUnitBuilder={goToUnitBuilder}
+                                    courseObj={courseData}
+                                  />
                                 </div>
                               )}
                             </Draggable>
@@ -423,7 +456,16 @@ const UnitManager = ({
                   </Droppable>
                 </DragDropContext>
               </div>
-            </div>
+              {deleteModal.show && (
+                <ModalPopUp
+                  closeAction={handleToggleDelete}
+                  saveAction={deleting ? () => {} : deleteModal.action}
+                  saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                  cancelLabel="CANCEL"
+                  message={deleteModal.message}
+                />
+              )}
+            </Fragment>
           ) : (
             <div className="text-center p-16 mt-4">
               {CourseBuilderDict[userLanguage]['NO_UNIT']}

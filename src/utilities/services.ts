@@ -68,8 +68,7 @@ export const getImagesFromS3Folder = async (
           // an error occurred
           if (err) {
             reject(err);
-          }
-          else {
+          } else {
             resolve(data);
           } // successful response
         }

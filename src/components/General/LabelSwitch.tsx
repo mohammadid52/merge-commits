@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import useDictionary from '../../customHooks/dictionary';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React from 'react';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 
@@ -9,13 +7,9 @@ type LabelProps = {
 };
 
 const FooterLabels = (props: LabelProps) => {
-  const { label } = props;
+  const {label} = props;
 
-  return (
-    <div className='whitespace-pre'>
-      {label}
-    </div>
-  );
+  return <div className="whitespace-pre">{label}</div>;
 };
 
 export default FooterLabels;
