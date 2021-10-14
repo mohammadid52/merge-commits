@@ -2,16 +2,16 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {getAsset} from '../assets';
-import MobileOops from '../components/Error/MobileOops';
-import {GlobalContext} from '../contexts/GlobalContext';
-import * as customMutations from '../customGraphql/customMutations';
-import * as customQueries from '../customGraphql/customQueries';
-import useDeviceDetect from '../customHooks/deviceDetect';
-import * as queries from '../graphql/queries';
-import AuthRoutes from './AppRoutes/AuthRoutes';
-import UnauthRoutes from './AppRoutes/UnauthRoutes';
-import ComponentLoading from './Lesson/Loading/ComponentLoading';
+import {getAsset} from 'assets';
+import MobileOops from 'components/Error/MobileOops';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDeviceDetect from 'customHooks/deviceDetect';
+import * as queries from 'graphql/queries';
+import AuthRoutes from 'components/AppRoutes/AuthRoutes';
+import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();

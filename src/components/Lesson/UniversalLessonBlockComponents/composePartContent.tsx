@@ -1,9 +1,13 @@
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
-import {GlobalContext} from '@contexts/GlobalContext';
 import map from 'lodash/map';
-import React, {useContext} from 'react';
-import {DIVIDER, FORM_TYPES, TABLE} from '../UniversalLessonBuilder/UI/common/constants';
+import React from 'react';
+import {
+  DIVIDER,
+  FORM_TYPES,
+  SPACER,
+  TABLE,
+} from '../UniversalLessonBuilder/UI/common/constants';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
 import DownloadBlock from './Blocks/DownloadBlock';
@@ -18,6 +22,10 @@ import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import TableBlock from './Blocks/TableBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
+
+const Spacer = (props: any) => {
+  return <div style={{margin: `${props.value[0].value || 32}px 0px`}} />;
+};
 
 const composePartContent = (
   id: string,
@@ -44,6 +52,8 @@ const composePartContent = (
     return <JumbotronBlock {...commonBlockProps} />;
   } else if (type.includes('keyword')) {
     return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+  } else if (type.includes(SPACER)) {
+    return <Spacer id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('highlighter')) {
     return (
       <HighlighterBlock

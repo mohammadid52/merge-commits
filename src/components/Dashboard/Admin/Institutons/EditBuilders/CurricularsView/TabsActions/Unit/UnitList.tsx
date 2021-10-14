@@ -1,15 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
-
+import * as mutations from '@graphql/mutations';
 import AddButton from '@atoms/Buttons/AddButton';
 import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
 
 import * as queries from '@graphql/queries';
+import * as customQueries from '@customGraphql/customQueries';
 import Loader from '@components/Atoms/Loader';
 import Tooltip from '@components/Atoms/Tooltip';
 import {getAsset} from 'assets';
+import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
+import UnitListRow from './UnitListRow';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -17,6 +21,8 @@ export const UnitList = ({instId}: any) => {
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {UnitLookupDict} = useDictionary(clientKey);
+
+  // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [units, setUnits] = useState<any>([]);
 
@@ -27,7 +33,7 @@ export const UnitList = ({instId}: any) => {
   const fetchSyllabusList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSyllabuss, {
+        graphqlOperation(customQueries.listUniversalSyllabuss, {
           filter: {
             institutionID: {eq: instId},
           },
@@ -39,6 +45,69 @@ export const UnitList = ({instId}: any) => {
       setLoading(false);
     }
   };
+
+  const updateUnitList = (inputObj: any) => {
+    setUnits(units.filter((unitObj: any) => unitObj.id !== inputObj.id));
+  };
+
+  // ~ CHECK TO SEE IF UNIT CAN BE DELETED ~ //
+
+  /****************************************************
+   *   IF UNIT HAS ANY AMOUNT OF SYLLABI ATTACHED,    *
+   * OR IF THIS UNIT HAS EVER HAD ANY ACTIVE LESSONS, *
+   *            THEN DO NOT ALLOW A DELETE            *
+   ****************************************************/
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (unitObj: any) => {
+    if (
+      unitObj.lessons?.items?.length > 0 ||
+      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
+      unitObj?.isUsed
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the unit "${targetString}"?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...');
+      await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabus, {
+          input: {id: item.id},
+        })
+      );
+      updateUnitList(item);
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
+
   const handleAdd = () => {
     history.push(`${match.url}/add`);
   };
@@ -46,9 +115,13 @@ export const UnitList = ({instId}: any) => {
     history.push(`${match.url}/${unitId}/edit`);
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
+
   return (
-    <div className="pt-0 flex m-auto justify-center p-8">
-      <div className="">
+    <div className="pt-0 flex m-auto justify-center h-full p-8">
+      <div className="flex flex-col">
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -56,7 +129,7 @@ export const UnitList = ({instId}: any) => {
             </div>
           </div>
         ) : units.length ? (
-          <>
+          <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
               <AddButton
@@ -72,38 +145,34 @@ export const UnitList = ({instId}: any) => {
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
               </div>
             </div>
 
-            <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
+            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
               {units.map((unit: any, index: number) => (
-                <div
-                  key={index}
-                  className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                    index % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}>
-                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                    {index + 1}.
-                  </div>
-                  <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {unit.name || ''}
-                  </div>
-                  <span
-                    className={`w-1/10 h-6 text-left flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
-                    onClick={() => handleView(unit.id)}>
-                    <Tooltip
-                      text={UnitLookupDict[userLanguage]['UNIT_DETAILS']}
-                      placement="left">
-                      {UnitLookupDict[userLanguage]['VIEW']}
-                    </Tooltip>
-                  </span>
-                </div>
+                <UnitListRow
+                  key={`unit_list_row_${index}`}
+                  index={index}
+                  item={unit}
+                  checkIfRemovable={checkIfRemovable}
+                  handleToggleDelete={handleToggleDelete}
+                  editCurrentUnit={handleView}
+                />
               ))}
             </div>
-          </>
+            {deleteModal.show && (
+              <ModalPopUp
+                closeAction={handleToggleDelete}
+                saveAction={deleting ? () => {} : deleteModal.action}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                cancelLabel="CANCEL"
+                message={deleteModal.message}
+              />
+            )}
+          </Fragment>
         ) : (
           <>
             <div className="flex justify-center mt-8">

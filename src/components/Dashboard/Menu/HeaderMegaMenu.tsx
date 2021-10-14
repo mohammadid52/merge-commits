@@ -85,7 +85,7 @@ const HeaderMegaMenu = () => {
       key: 'class',
       type: 'dropdown',
       children: [
-        // {
+        // { user.role !== 'BLD' &&
         //   title: Institute_info[userLanguage]['TABS']['CLASSES'],
         //   key: 'class',
         //   redirectionUrl: `${baseUrl}/class`,
@@ -111,7 +111,7 @@ const HeaderMegaMenu = () => {
         },
       ].filter(Boolean),
     },
-    {
+    user.role !== 'BLD' && {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
       key: 'community',
       type: 'dropdown',
@@ -143,6 +143,12 @@ const HeaderMegaMenu = () => {
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active: location.pathname.indexOf('home') > -1,
     },
+    // {
+    //   title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
+    //   key: 'community',
+    //   redirectionUrl: `${baseUrl}/dashboard/community`,
+    //   active: location.pathname.indexOf('community') > -1,
+    // },
     {
       title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
       key: 'notebook',

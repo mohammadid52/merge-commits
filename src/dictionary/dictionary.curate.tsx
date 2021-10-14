@@ -64,14 +64,14 @@ const BUTTONS: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK_TO_LIST: 'Back to list',
+  },
+};
 
 // Breadcrumbs
 const BreadcrumsTitles: any = {
@@ -928,7 +928,7 @@ const Institute_info: any = {
       UNITS: 'Units',
       COURSES: 'Courses',
       CLASS_MANAGER: 'Class Manager',
-      LIVE_CLASS_ROOM: "Live Classroom",
+      LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Manager',
       COMMUNITY_MANAGER: 'Community Manager',
       INSTITUTION_MANAGER: 'Institution Manager',
@@ -940,6 +940,7 @@ const Institute_info: any = {
       LESSONS: 'Lessons',
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
+      COMMUNITY: 'Community',
       NOTEBOOK: 'Notebook',
     },
   },
@@ -955,13 +956,14 @@ const Institute_info: any = {
       STAFF: 'TBD',
       CLASSES: 'TBD',
       COURSES: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      LIVE_CLASS_ROOM: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
       STUDENT_ROASTER: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
+      COMMUNITY: 'TBD',
       HOME: 'TBD',
       NOTEBOOK: 'TBD',
     },
@@ -1250,8 +1252,8 @@ const InstitueCurriculam: any = {
     NAME: 'Course Name',
     ACTION: 'Actions',
     VIEW: 'View',
-    INFO:
-      'This organization does not have any course. Please create a new course.',
+    INFO: 'This organization does not have any course. Please create a new course.',
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -1263,6 +1265,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
@@ -3524,6 +3527,7 @@ const UnitLookupDict: any = {
       ADDERR: 'Error while adding session to module, please try later.',
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3534,12 +3538,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 
@@ -3857,12 +3865,21 @@ const LearningEvidenceDict: any = {
   },
 };
 
-const StudentDict:any = {
+const StudentDict: any = {
   EN: {
     NO_STUDENT: 'No Student Found',
   },
   ES: {
     NO_STUDENT: 'TBD',
+  },
+};
+
+const CommunityDict: any = {
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
   },
 };
 
@@ -3874,6 +3891,7 @@ function paginationPage(lang: string, page: number, total: number) {
 
 export {
   AuthDict,
+  CommunityDict,
   General,
   CsvDict,
   DashboardDict,
@@ -3957,5 +3975,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   CourseBuilderDict,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

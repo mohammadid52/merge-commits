@@ -59,7 +59,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       {Icon && iconBeforeLabel && (
         <span className="w-auto">
           <IconContext.Provider value={{color: '#ffffff'}}>
-            <Icon className="w-6 h-6"/>
+            <Icon className="w-6 h-6" />
           </IconContext.Provider>
         </span>
       )}
