@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
@@ -231,6 +231,11 @@ const UnitManager = ({
    *       IN THE PARENT CURRICULUM, AND IF IT HAS,       *
    *          THIS UNIT SHOULD NOT BE REMOVABLE           *
    ********************************************************/
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
 
   const checkIfRemovable = (unitObj: any, curriculumObj: any) => {
     if (
@@ -244,8 +249,20 @@ const UnitManager = ({
     }
   };
 
-  const onDelete = (item: any) => {
-    const onDrop = async () => {
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to remove "${targetString}" from course?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    try {
       setDeleting(true);
       await API.graphql(
         graphqlOperation(customMutations.deleteCurriculumUnits, {
@@ -263,13 +280,39 @@ const UnitManager = ({
       );
       setDeleting(false);
       closeLessonAction();
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to remove ${item.name} from course?`,
-      action: onDrop,
-    });
+    } catch (e) {
+      console.error('Problem deleting Unit from UnitManager - ', e);
+    } finally {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
   };
+
+  // const onDelete = (item: any) => {
+  //   const onDrop = async () => {
+  //     setDeleting(true);
+  //     await API.graphql(
+  //       graphqlOperation(customMutations.deleteCurriculumUnits, {
+  //         input: {id: item.id},
+  //       })
+  //     );
+  //     await updateSyllabusSequence(
+  //       syllabusIds.filter((unitId: any) => unitId !== item.unitId)
+  //     );
+  //     setSelectedSyllabusList((list: any) =>
+  //       list.filter((_item: any) => _item.id !== item.id)
+  //     );
+  //     setSavedSyllabusList((prevList: any) =>
+  //       prevList.filter((syllabus: any) => syllabus.id !== item.id)
+  //     );
+  //     setDeleting(false);
+  //     closeLessonAction();
+  //   };
+  //   setWarnModal2({
+  //     show: true,
+  //     message: `Are you sure you want to remove ${item.name} from course?`,
+  //     action: onDrop,
+  //   });
+  // };
 
   // ~~~~~~~~~~~~~~ DRAG & NAV ~~~~~~~~~~~~~ //
   const onDragEnd = async (result: any) => {
@@ -365,7 +408,7 @@ const UnitManager = ({
               </div>
             </div>
           ) : selectedSyllabusList?.length > 0 ? (
-            <div>
+            <Fragment>
               {/* *************** SYLLABUS TABLE HEADERS ************ */}
               <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -398,7 +441,7 @@ const UnitManager = ({
                                     index={index}
                                     item={item}
                                     checkIfRemovable={checkIfRemovable}
-                                    handleDelete={onDelete}
+                                    handleToggleDelete={handleToggleDelete}
                                     goToUnitBuilder={goToUnitBuilder}
                                     courseObj={courseData}
                                   />
@@ -413,7 +456,16 @@ const UnitManager = ({
                   </Droppable>
                 </DragDropContext>
               </div>
-            </div>
+              {deleteModal.show && (
+                <ModalPopUp
+                  closeAction={handleToggleDelete}
+                  saveAction={deleting ? () => {} : deleteModal.action}
+                  saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                  cancelLabel="CANCEL"
+                  message={deleteModal.message}
+                />
+              )}
+            </Fragment>
           ) : (
             <div className="text-center p-16 mt-4">
               {CourseBuilderDict[userLanguage]['NO_UNIT']}

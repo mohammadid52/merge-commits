@@ -9,7 +9,7 @@ interface IUnitManagerRowProps {
   index: number;
   item: any;
   checkIfRemovable: any;
-  handleDelete: any;
+  handleToggleDelete: any;
   goToUnitBuilder: any;
   courseObj: any;
 }
@@ -18,14 +18,13 @@ const UnitManagerRow = ({
   index,
   item,
   checkIfRemovable,
-  handleDelete,
+  handleToggleDelete,
   goToUnitBuilder,
   courseObj,
 }: IUnitManagerRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -62,7 +61,7 @@ const UnitManagerRow = ({
                 <div className="col-span-1">
                   {checkIfRemovable(item, courseObj) ? (
                     <dt
-                      onClick={() => handleDelete(item)}
+                      onClick={() => handleToggleDelete(item.name, item)}
                       className={`cursor-pointer ${textClass}`}>
                       Delete
                     </dt>

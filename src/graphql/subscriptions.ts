@@ -9688,6 +9688,7 @@ export const onCreateAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -9945,6 +9946,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -10202,6 +10204,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -10451,6 +10454,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -10532,6 +10536,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -10613,6 +10618,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -11098,6 +11104,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11221,6 +11228,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11344,6 +11352,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -11442,6 +11451,7 @@ export const onCreateUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -11517,6 +11527,7 @@ export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -11592,6 +11603,7 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }

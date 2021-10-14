@@ -9,7 +9,7 @@ interface IUnitListRowProps {
   index: number;
   item: any;
   checkIfRemovable: any;
-  handleDelete: any;
+  handleToggleDelete: any;
   editCurrentUnit: any;
 }
 
@@ -17,7 +17,7 @@ const UnitListRow = ({
   index,
   item,
   checkIfRemovable,
-  handleDelete,
+  handleToggleDelete,
   editCurrentUnit,
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
@@ -60,7 +60,7 @@ const UnitListRow = ({
                 <div className="col-span-1">
                   {checkIfRemovable(item) ? (
                     <dt
-                      onClick={() => handleDelete(item)}
+                      onClick={() => handleToggleDelete(item.name, item)}
                       className={`cursor-pointer ${textClass}`}>
                       Delete
                     </dt>

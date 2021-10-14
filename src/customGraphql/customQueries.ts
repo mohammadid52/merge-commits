@@ -4025,8 +4025,11 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
+          unit {
+            name
+            type
+            universalLessonsSeq
+          }
         }
         nextToken
       }

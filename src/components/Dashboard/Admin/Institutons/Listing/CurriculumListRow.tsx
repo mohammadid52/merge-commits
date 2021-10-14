@@ -8,7 +8,7 @@ interface ICurriculumListRowProps {
   index: number;
   item: any;
   checkIfRemovable: any;
-  handleDelete: any;
+  handleToggleDelete: any;
   editCurrentCurricular: any;
 }
 
@@ -16,7 +16,7 @@ const CurriculumListRow = ({
   index,
   item,
   checkIfRemovable,
-  handleDelete,
+  handleToggleDelete,
   editCurrentCurricular,
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
@@ -59,7 +59,7 @@ const CurriculumListRow = ({
                 <div className="col-span-1">
                   {checkIfRemovable(item) ? (
                     <dt
-                      onClick={() => handleDelete(item)}
+                      onClick={() => handleToggleDelete(item.name, item)}
                       className={`${textClass} cursor-pointer`}>
                       Delete
                     </dt>
