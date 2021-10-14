@@ -4,6 +4,7 @@ import useDictionary from '@customHooks/dictionary';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
+import {HiOutlineTrash} from 'react-icons/hi';
 
 interface IUnitManagerRowProps {
   index: number;
@@ -41,7 +42,9 @@ const UnitManagerRow = ({
       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
         {index + 1}.
       </div>
-      <div className="flex w-8/10 items-center px-8 py-3 text-center text-s leading-4 font-medium ">
+      <div
+        onClick={() => goToUnitBuilder(item.unitId, item.type)}
+        className="cursor-pointer flex w-8/10 items-center px-8 py-3 text-center text-s leading-4 font-medium ">
         {item.name ? item.name : ''}
       </div>
 
@@ -62,13 +65,18 @@ const UnitManagerRow = ({
                   {checkIfRemovable(item, courseObj) ? (
                     <dt
                       onClick={() => handleToggleDelete(item.name, item)}
-                      className={`cursor-pointer ${textClass}`}>
-                      Delete
+                      className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                      <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
                     </dt>
                   ) : (
                     <dt
-                      className={`${textDisabledClass} whitespace-normal break-normal pointer-events-none`}>
-                      Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
+                      className={`text-center text-gray-500 flex flex-row text-xs pointer-events-none`}>
+                      <span className="w-auto">
+                        <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
+                      </span>
+                      <span className="w-auto">
+                        {UnitLookupDict[userLanguage]['NO_DELETE']}
+                      </span>
                     </dt>
                   )}
                 </div>

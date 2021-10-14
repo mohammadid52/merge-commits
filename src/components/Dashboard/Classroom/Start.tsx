@@ -14,6 +14,8 @@ import {Lesson} from './Classroom';
 
 interface StartProps {
   isTeacher?: boolean;
+  lessonProps: any;
+  syllabusProps?: any;
   lessonKey: any;
   open: boolean;
   accessible: boolean;
@@ -23,18 +25,22 @@ interface StartProps {
   isCompleted?: boolean;
   preview?: boolean;
   activeRoomInfo?: any;
+  isUsed?: boolean;
 }
 
 const Start: React.FC<StartProps> = ({
   activeRoomInfo,
   isActive,
   isCompleted,
+  lessonProps,
+  syllabusProps,
   lessonKey,
   open,
   accessible,
   type,
   roomID,
   preview,
+  isUsed,
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -70,34 +76,36 @@ const Start: React.FC<StartProps> = ({
     }
   }, [state.roomData.syllabus]);
 
-  const mutateToggleEnableDisable = async () => {
-    const mutatedLessonData = {
-      id: lessonKey,
-      status: open ? 'Inactive' : 'Active',
-    };
-    await API.graphql(
-      graphqlOperation(customMutations.updateSyllabusLesson, {
-        input: mutatedLessonData,
-      })
-    );
-  };
+  // const mutateToggleEnableDisable = async () => {
+  //   const mutatedLessonData = {
+  //     id: lessonKey,
+  //     status: open ? 'Inactive' : 'Active',
+  //   };
+  //   await API.graphql(
+  //     graphqlOperation(customMutations.updateSyllabusLesson, {
+  //       input: mutatedLessonData,
+  //     })
+  //   );
+  // };
 
-  const toggleEnableDisable = async () => {
-    const arrayWithToggledLesson = state.roomData.lessons.map(
-      (lesson: Lesson, i: number) => {
-        if (lesson.id === lessonKey) {
-          return {...lesson, status: lesson.status === 'Active' ? 'Inactive' : 'Active'};
-        } else {
-          return lesson;
-        }
-      }
-    );
-    await mutateToggleEnableDisable();
-    dispatch({
-      type: 'TOGGLE_LESSON',
-      payload: {property: 'lessons', data: arrayWithToggledLesson},
-    });
-  };
+  // const toggleEnableDisable = async () => {
+  //   const arrayWithToggledLesson = state.roomData.lessons.map(
+  //     (lesson: Lesson, i: number) => {
+  //       if (lesson.id === lessonKey) {
+  //         return {...lesson, status: lesson.status === 'Active' ? 'Inactive' : 'Active'};
+  //       } else {
+  //         return lesson;
+  //       }
+  //     }
+  //   );
+  //   await mutateToggleEnableDisable();
+  //   dispatch({
+  //     type: 'TOGGLE_LESSON',
+  //     payload: {property: 'lessons', data: arrayWithToggledLesson},
+  //   });
+  // };
+
+  // ~~~~~~~~~~~~~~ ATTENDANCE ~~~~~~~~~~~~~ //
 
   const fetchAttendance = async () => {
     try {
@@ -129,7 +137,7 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const recordAttendance = async () => {
+  const recordAttendance = async (lessonObj: any) => {
     try {
       setLoading(true);
       const syllabusData = state.roomData.syllabus.find(
@@ -150,9 +158,36 @@ const Start: React.FC<StartProps> = ({
           input: payload,
         })
       );
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
+    }
+  };
+
+  //  SPECIFIC FETCHES TO PREVENT IMPROPER DELETION  //
+
+  const setLessonIsUsed = async (lessonObj: any) => {
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {
+          input: {id: lessonObj.id, isUsed: true},
+        })
+      );
+    } catch (e) {
+      console.error('setLessonIsUsed() - ', e);
+    }
+  };
+
+  const setSyllabusLessonHistory = async (syllabusID: string, historyArray: any[]) => {
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateUniversalSyllabus, {
+          input: {id: syllabusID, lessonHistory: historyArray},
+        })
+      );
+    } catch (e) {
+      console.error('setSyllabusLessenHistory() - ', e);
     }
   };
 
@@ -160,18 +195,32 @@ const Start: React.FC<StartProps> = ({
     if (!isTeacher && accessible && open) {
       try {
         if (!attendanceRecorded) {
-          recordAttendance();
+          await recordAttendance(lessonProps);
         }
         history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);
       }
-    }
-
-    if (isTeacher) {
+    } else if (isTeacher) {
       if (isActive) {
         if (!attendanceRecorded) {
-          recordAttendance();
+          recordAttendance(lessonProps);
+        }
+        // if lesson does not have 'isUsed' as true
+        if (!(lessonProps?.isUsed === true)) {
+          await setLessonIsUsed(lessonProps);
+        }
+        // check if lesson has never been tought/activated before
+        // if it has never been activated in a syllabus, add it to the syllabus history
+        if (Array.isArray(syllabusProps?.lessonHistory)) {
+          if (!syllabusProps?.lessonHistory.includes(lessonProps.id)) {
+            await setSyllabusLessonHistory(syllabusProps?.id, [
+              ...syllabusProps.lessonHistory,
+              lessonProps.id,
+            ]);
+          }
+        } else {
+          await setSyllabusLessonHistory(syllabusProps?.id, [lessonProps.id]);
         }
         history.push(`${`/lesson-control/${lessonKey}`}`);
       } else {
