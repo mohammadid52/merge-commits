@@ -3742,6 +3742,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3758,6 +3759,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
