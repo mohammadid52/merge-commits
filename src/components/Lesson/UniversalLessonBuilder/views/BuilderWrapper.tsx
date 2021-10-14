@@ -325,7 +325,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
       setUnsavedChanges,
-      askBeforeClose,
+      askBeforeClose: () => closeAction(false),
       setSavingStatus,
     };
 
@@ -540,11 +540,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={askBeforeClose}>
+          closeAction={closeAction}>
           <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>
-          <UnsavedModal />
+          {/* <UnsavedModal /> */}
         </ContentModal>
       )}
 
