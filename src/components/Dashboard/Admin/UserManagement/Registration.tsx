@@ -238,7 +238,6 @@ const Registration = ({
             );
           }
         }
-
       }
       handleMessage('success', 'User registered successfully');
       if (isInModalPopup) {
@@ -441,11 +440,18 @@ const Registration = ({
   }, []);
 
   useEffect(() => {
-    if (institutionsData.length && instId) {
-      handleInstituteChange({
-        code: instId,
-        name: '',
-      });
+    if (instId) {
+      if (classId) {
+        setNewUserInputs((prevInput) => ({
+          ...prevInput,
+          institution: {id: instId, name: ''},
+        }));
+      } else if (institutionsData.length) {
+        handleInstituteChange({
+          code: instId,
+          name: '',
+        });
+      }
     }
   }, [institutionsData, instId]);
 
