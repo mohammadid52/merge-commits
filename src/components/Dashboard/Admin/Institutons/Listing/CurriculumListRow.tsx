@@ -23,7 +23,7 @@ const CurriculumListRow = ({
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
+  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const CurriculumListRow = ({
                         <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
                       </span>
                       <span className="w-auto">
-                        {InstitueCurriculam[userLanguage]['NO_DELETE']}
+                        {InstitueCurriculum[userLanguage]['NO_DELETE']}
                       </span>
                     </dt>
                   )}

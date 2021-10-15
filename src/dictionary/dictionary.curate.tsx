@@ -1242,7 +1242,7 @@ const Institute_class: any = {
   },
 };
 
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
@@ -1276,7 +1276,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Class Name',
     CLASS_NAME: 'Cohort Name',
     TEACHER: 'Facilitator',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     MXSTUDENTS: 'Max. Participants',
     ACTION: 'Actions',
     EDIT: 'edit',
@@ -3915,7 +3915,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CurricularBuilderdict,
