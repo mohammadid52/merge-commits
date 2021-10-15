@@ -1140,6 +1140,22 @@ export const listRoomCurriculums = /* GraphQL */ `
         id
         roomID
         curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          image
+          summary
+          description
+          objectives
+          languages
+          designers
+          universalSyllabusSeq
+          syllabiHistory
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }
@@ -2028,6 +2044,7 @@ export const listUniversalLessons = /* GraphQL */ `
             }
           }
         }
+        isUsed
       }
       nextToken
     }
@@ -2187,6 +2204,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
               interactionType
               tags
             }
+            isUsed
             darkMode
             rubrics
             createdAt
@@ -2200,10 +2218,56 @@ export const getUniversalSyllabus = /* GraphQL */ `
         nextToken
       }
       universalLessonsSeq
+      lessonHistory
       designers
       status
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const listUniversalSyllabuss = /* GraphQL */ `
+  query ListUniversalSyllabuss(
+    $id: ID
+    $filter: ModelUniversalSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        institutionID
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        languages
+        lessons {
+          items {
+            id
+          }
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        isUsed
+        lessonHistory
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;
@@ -2581,6 +2645,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
           name
           type
           description
+          syllabiHistory
           objectives
           languages
           createdAt
@@ -2961,6 +3026,7 @@ export const getCurriculum = /* GraphQL */ `
         nextToken
       }
       universalSyllabusSeq
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -3962,8 +4028,11 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
       universalSyllabus {
         items {
           id
-          name
-          type
+          unit {
+            name
+            type
+            universalLessonsSeq
+          }
         }
         nextToken
       }
@@ -4469,7 +4538,7 @@ export const getCurriculumForClasses = /* GraphQL */ `
                 unit
                 sequence
                 status
-                lesson{
+                lesson {
                   duration
                   title
                 }
@@ -4484,6 +4553,8 @@ export const getCurriculumForClasses = /* GraphQL */ `
               nextToken
             }
             universalLessonsSeq
+            isUsed
+            lessonHistory
             designers
             status
             createdAt

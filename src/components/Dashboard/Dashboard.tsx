@@ -1,52 +1,40 @@
-import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import Auth from '@aws-amplify/auth';
-import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {useCookies} from 'react-cookie';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import moment, {Moment} from 'moment';
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/solid';
-
-import {GlobalContext} from '../../contexts/GlobalContext';
-
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
-import * as customQueries from '../../customGraphql/customQueries';
-import usePrevious from '../../customHooks/previousProps';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import {frequencyMapping} from '../../utilities/staticData';
-
-import ErrorBoundary from '../Error/ErrorBoundary';
-import EmojiFeedback from '../General/EmojiFeedback';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import Noticebar from '../Noticebar/Noticebar';
-import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
-import QuestionBank from './Admin/Questions/QuestionBank';
-import Csv from './Csv/Csv';
-import Home from './Home/Home';
-import HomeForTeachers from './Home/HomeForTeachers';
-import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import SideMenu from './Menu/SideMenu';
-import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
-import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import {getAsset} from '../../assets';
-import {AiOutlineUser} from 'react-icons/ai';
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
-import {getUserRoleString, stringToHslColor} from '@utilities/strings';
-import {getImageFromS3Static} from '@utilities/services';
-import {FiUser} from 'react-icons/fi';
+import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import useNotifications from '@customHooks/notifications';
-import HeaderMegaMenu from './Menu/HeaderMegaMenu';
-
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
+import {getImageFromS3Static} from '@utilities/services';
+import {getUserRoleString, stringToHslColor} from '@utilities/strings';
+import {getAsset} from 'assets';
+import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
+import Csv from 'components/Dashboard/Csv/Csv';
+import Home from 'components/Dashboard/Home/Home';
+import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
+import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
+import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
+import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import Noticebar from 'components/Noticebar/Noticebar';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
+import moment, {Moment} from 'moment';
+import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {FiUser} from 'react-icons/fi';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {frequencyMapping} from 'utilities/staticData';
+import EmojiFeedback from 'components/General/EmojiFeedback';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
-const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
 type userObject = {
   [key: string]: any;
@@ -58,6 +46,8 @@ export interface ICompletedLessons {
 }
 
 export interface DashboardProps {
+  setClassroomCurriculum?: any;
+  classroomCurriculum?: any;
   classRoomActiveSyllabus?: string;
   loading?: boolean;
   isTeacher?: boolean;
@@ -217,6 +207,7 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
   const [curriculumIds, setCurriculumIds] = useState<string>('');
+  const [curriculumObj, setCurriculumObj] = useState<any>({});
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
@@ -265,11 +256,13 @@ const Dashboard = (props: DashboardProps) => {
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = [
         ...response?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
@@ -330,7 +323,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
-    console.log('studentRoomsList - ', studentRoomsList);
+    // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -369,11 +362,13 @@ const Dashboard = (props: DashboardProps) => {
       //@ts-ignore
       const arrayOfResponseObjects = [
         ...classIdFromRoomsFetch?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher
-        })),
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
       ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
@@ -402,6 +397,7 @@ const Dashboard = (props: DashboardProps) => {
    **********************************/
   const listRoomCurriculums = async () => {
     console.log('listRoomCurriculums - ', '');
+    // removeLocalStorageData('curriculum_id');
     if (state.roomData.rooms.length > 0) {
       try {
         const queryObj = {
@@ -419,12 +415,14 @@ const Dashboard = (props: DashboardProps) => {
             },
           })
         );
+        console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
         const response = await roomCurriculumsFetch;
         // @ts-ignore
         const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
+          setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
         console.error('RoomCurriculums fetch ERR: ', e);
@@ -621,31 +619,16 @@ const Dashboard = (props: DashboardProps) => {
 
       let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
 
-      console.log('listSyllabus - ', mappedResponseObjects);
+      // console.log('listSyllabus - ', mappedResponseObjects);
 
       //TODO: combine these dispatches
       dispatch({
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           syllabus: mappedResponseObjects,
-          curriculum: {name: response.name},
+          curriculum: {id: response.id, name: response.name},
         },
       });
-
-      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
-      // let scheduleDetails: any = await API.graphql(
-      //   graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-      // );
-      // scheduleDetails = scheduleDetails?.data?.getRoom;
-
-      // if (
-      //   scheduleDetails &&
-      //   scheduleDetails.startDate &&
-      //   scheduleDetails.endDate &&
-      //   scheduleDetails.frequency
-      // ) {
-      //   const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
-      // }
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
@@ -857,7 +840,7 @@ const Dashboard = (props: DashboardProps) => {
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-max">
                 <div className="px-1 py-1 shadow-lg">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
@@ -914,19 +897,8 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {/* {state.user.role === 'ST' && <EmojiFeedback />} */}
+        {state.user.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
-        {/* <SideMenu
-          // setActiveRoomSyllabus={setActiveRoomSyllabus}
-          setLessonLoading={setLessonLoading}
-          setSyllabusLoading={setSyllabusLoading}
-          setActiveRoomName={setActiveRoomName}
-          updateAuthState={updateAuthState}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          role={userData.role}
-          handleRoomSelection={handleRoomSelection}
-        /> */}
 
         <div className="h-full overflow-y-auto">
           {/*<FloatingSideMenu />*/}
@@ -985,6 +957,16 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
+              <Route
+                exact
+                path={`${match.url}/community`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
+                  </ErrorBoundary>
+                )}
+              />
+
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||
                 userData.role === 'TR' ||
@@ -999,7 +981,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1051,7 +1034,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -1100,17 +1084,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900">
-        {/* <DropDownMenu /> */}
-
-        {/* <NavLink to="/dashboard"> */}
-        {/* <img
-          className="h-16 px-4 py-2"
-          src={getAsset(clientKey, 'main_logo')}
-          alt="Logo"
-        /> */}
-        {/* </NavLink> */}
-      </div>
+      <div className="w-full flex justify-center items-center bg-gray-900"></div>
     </>
   );
 };

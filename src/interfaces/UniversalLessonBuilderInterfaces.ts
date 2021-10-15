@@ -17,7 +17,7 @@ export interface ULBDialogComponent {
 
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
-  deleteFromULBHandler?: (targetID: string) => void;
+  deleteFromULBHandler?: (targetID: string) => UniversalLesson;
   updateFromULBHandler?: (
     targetID: string,
     propertyToTarget: string,

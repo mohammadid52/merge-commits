@@ -256,6 +256,7 @@ type Curriculum
   universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
   universalSyllabus: [curriculumUnits] @connection(keyName: "unitsbyCurriculum", fields: ["id"])
+syllabiHistory:[String]
 }
 
 type Topic
@@ -879,7 +880,8 @@ type UniversalLesson @model @key(fields: ["id"]) {
   smallGroupSize: Int
   smallGroupOption: String
   studentMaterials: String
-  targetAudience: String 
+  targetAudience: String
+  isUsed: Boolean 
 }
 
 type UniversalLessonPlan {
@@ -1017,6 +1019,8 @@ type UniversalSyllabus
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
+  isUsed: Boolean
+  lessonHistory:[String]
 }
 
 type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {

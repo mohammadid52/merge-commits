@@ -17,6 +17,7 @@ import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
+import LessonPlanManagerRow from './LessonPlanManagerRow';
 
 interface UIMessages {
   show: boolean;
@@ -27,6 +28,7 @@ interface UIMessages {
 
 const LessonPlanManager = ({
   syllabusId,
+  syllabusDetails,
   institutionId,
   savedLessonsList,
   setSavedLessonsList,
@@ -69,6 +71,48 @@ const LessonPlanManager = ({
     lessonError: false,
   });
 
+  // ##################################################################### //
+  // ################################ CRUD ############################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~~ FETCH ~~~~~~~~~~~~~~~~ //
+  useEffect(() => {
+    fetchLessonsList();
+  }, [institutionId]);
+
+  const fetchLessonsList = async () => {
+    try {
+      setLoading(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonsOptions, {
+          filter: {institutionID: {eq: institutionId}},
+        })
+      );
+      const savedData = result.data.listUniversalLessons;
+      const sortedList = savedData?.items?.sort((a: any, b: any) =>
+        a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+      );
+
+      const updatedList = sortedList
+        ?.filter((item: any) => (item.lessonPlan ? true : false))
+        .map((item: {id: string; title: string; type: string}) => ({
+          id: item.id,
+          name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+          value: item.title,
+        }));
+      // setDropdownLessonsList([...updatedList]);
+      setAllLessonsList([...sortedList]);
+      setLoading(false);
+    } catch {
+      setMessages({
+        show: true,
+        message: SyllabusDict[userLanguage]['MESSAGES']['fetchlist'],
+        isError: true,
+        lessonError: true,
+      });
+    }
+  };
+
   useEffect(() => {
     if (savedLessonsList?.length && !lessonsIds.length) {
       const lessonSeq = savedLessonsList.map((item: any) => item.id);
@@ -76,6 +120,7 @@ const LessonPlanManager = ({
     }
   }, [savedLessonsList]);
 
+  // ~~~~~~~~~~~~~~~~~ CRUD ~~~~~~~~~~~~~~~~ //
   const createNewLesson = () => {
     if (unsavedChanges) {
       setWarnModal({
@@ -93,6 +138,10 @@ const LessonPlanManager = ({
 
   const selectLesson = (value: string, name: string, id: string) => {
     setSelectedLesson({id, name, value});
+  };
+
+  const closeLessonAction = () => {
+    setWarnModal2({...warnModal2, show: false});
   };
 
   const addNewLesson = async () => {
@@ -222,74 +271,6 @@ const LessonPlanManager = ({
     }
   }, [savedLessonsList, allLessonsList]);
 
-  const closeLessonAction = () => {
-    setWarnModal2({...warnModal2, show: false});
-  };
-
-  useEffect(() => {
-    fetchLessonsList();
-  }, [institutionId]);
-
-  const fetchLessonsList = async () => {
-    try {
-      setLoading(true);
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonsOptions, {
-          filter: {institutionID: {eq: institutionId}},
-        })
-      );
-      const savedData = result.data.listUniversalLessons;
-      const sortedList = savedData?.items?.sort((a: any, b: any) =>
-        a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
-      );
-
-      const updatedList = sortedList
-        ?.filter((item: any) => (item.lessonPlan ? true : false))
-        .map((item: {id: string; title: string; type: string}) => ({
-          id: item.id,
-          name: `${item.title} - ${item.type && getLessonType(item.type)}`,
-          value: item.title,
-        }));
-      // setDropdownLessonsList([...updatedList]);
-      setAllLessonsList([...sortedList]);
-      setLoading(false);
-    } catch {
-      setMessages({
-        show: true,
-        message: SyllabusDict[userLanguage]['MESSAGES']['fetchlist'],
-        isError: true,
-        lessonError: true,
-      });
-    }
-  };
-
-  const onDelete = (item: any) => {
-    const onDrop = async () => {
-      setDeleting(true);
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: item.uniqlessonId},
-        })
-      );
-      await updateLessonSequence(
-        lessonsIds.filter((lessonId: any) => lessonId !== item.uniqlessonId)
-      );
-      setSelectedLessonsList((list: any) =>
-        list.filter((_item: any) => _item.id !== item.id)
-      );
-      setSavedLessonsList((prevList: any) =>
-        prevList.filter((lesson: any) => lesson.id !== item.uniqlessonId)
-      );
-      setDeleting(false);
-      closeLessonAction();
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to delete (${item.title})?`,
-      action: onDrop,
-    });
-  };
-
   const updateLessonSequence = async (lessonsIDs: string[]) => {
     setLessonsIds(lessonsIDs);
     await API.graphql(
@@ -318,6 +299,104 @@ const LessonPlanManager = ({
       updateLessonSequence(list);
       // Graphql mutation to update syllabus lesson seq
     }
+  };
+
+  // ~~~~ CHECK IF LESSON CAN BE DELETED ~~~ //
+
+  /***********************************************
+   * CHECK IF LESSON HAS EVER BEEN ACTIVATED, IT *
+   *    WILL BE ON THE UNIT --> LESSONHISTORY    *
+   ***********************************************/
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (lessonObj: any, unitObj: any) => {
+    if (
+      unitObj?.lessonHistory &&
+      unitObj?.lessonHistory?.length > 0 &&
+      unitObj?.lessonHistory.includes(lessonObj.id)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, lessonObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to remove "${targetString}" from unit?`,
+        action: () => handleDelete(lessonObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (lesson: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...', lesson);
+      await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
+          input: {id: lesson.uniqlessonId},
+        })
+      );
+      await updateLessonSequence(
+        lessonsIds.filter((lessonId: any) => lessonId !== lesson.uniqlessonId)
+      );
+      setSelectedLessonsList((list: any) =>
+        list.filter((_item: any) => _item.id !== lesson.id)
+      );
+      setSavedLessonsList((prevList: any) =>
+        prevList.filter((lesson: any) => lesson.id !== lesson.uniqlessonId)
+      );
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const updateLessonList = (lessonObj: any) => {
+    setAllLessonsList(
+      allLessonsList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
+    );
+  };
+
+  /*******
+   * END *
+   *******/
+  const onDelete = (item: any) => {
+    const onDrop = async () => {
+      setDeleting(true);
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
+          input: {id: item.uniqlessonId},
+        })
+      );
+      await updateLessonSequence(
+        lessonsIds.filter((lessonId: any) => lessonId !== item.uniqlessonId)
+      );
+      setSelectedLessonsList((list: any) =>
+        list.filter((_item: any) => _item.id !== item.id)
+      );
+      setSavedLessonsList((prevList: any) =>
+        prevList.filter((lesson: any) => lesson.id !== item.uniqlessonId)
+      );
+      setDeleting(false);
+      closeLessonAction();
+    };
+    setWarnModal2({
+      show: true,
+      message: `Are you sure you want to delete (${item.title})?`,
+      action: onDrop,
+    });
   };
 
   const gotoLessonBuilder = (id: string, type: string) => {
@@ -424,62 +503,14 @@ const LessonPlanManager = ({
                                   <div
                                     key={index}
                                     className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                      {index + 1}.
-                                    </div>
-                                    <div
-                                      className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
-                                      onClick={() =>
-                                        gotoLessonBuilder(item.id, item.type)
-                                      }>
-                                      {item.title || '--'}
-                                    </div>
-                                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer">
-                                      {item.type || '--'}
-                                    </div>
-                                    <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal text-gray-500">
-                                      {item?.measurements?.length > 0
-                                        ? item?.measurements?.map(
-                                            (rubric: any, index: number) =>
-                                              index === item?.measurements?.length - 1
-                                                ? rubric?.rubric?.name + '.'
-                                                : rubric?.rubric?.name + ', '
-                                          )
-                                        : '-'}
-                                    </div>
-                                    {/* <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
-                                              {editState.id !== item.id ? (
-                                                <span
-                                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                                                    item.status === 'Inactive'
-                                                      ? 'bg-yellow-100 text-yellow-800'
-                                                      : item.status === 'Dropped'
-                                                      ? 'bg-red-100 text-red-800'
-                                                      : 'bg-green-100 text-green-800'
-                                                  }`}>
-                                                  {item.status}
-                                                </span>
-                                              ) : (
-                                                <div className="text-gray-900">
-                                                  <Selector
-                                                    selectedItem={item.status}
-                                                    placeholder="Select Status"
-                                                    list={statusList}
-                                                    onChange={(val, name, id) =>
-                                                      onStatusChange(val, name, id, item)
-                                                    }
-                                                  />
-                                                </div>
-                                              )}
-                                            </div>
-                                             */}
-                                    <span
-                                      className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-                                      onClick={() => onDelete(item)}>
-                                      <DeleteActionBtn
-                                        handleClick={() => onDelete(item)}
-                                      />
-                                    </span>
+                                    <LessonPlanManagerRow
+                                      index={index}
+                                      lessonObject={item}
+                                      syllabusObject={syllabusDetails}
+                                      checkIfRemovable={checkIfRemovable}
+                                      handleToggleDelete={handleToggleDelete}
+                                      gotoLessonBuilder={gotoLessonBuilder}
+                                    />
                                   </div>
                                 </div>
                               )}
@@ -500,6 +531,15 @@ const LessonPlanManager = ({
           )}
         </div>
       </div>
+      {deleteModal.show && (
+        <ModalPopUp
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
+      )}
       {warnModal2.show && (
         <ModalPopUp
           closeAction={closeLessonAction}

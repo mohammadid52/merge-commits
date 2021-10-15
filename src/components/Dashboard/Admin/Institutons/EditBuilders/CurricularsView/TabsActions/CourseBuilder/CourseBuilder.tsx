@@ -167,6 +167,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return (
           <UnitManager
             courseId={courseId}
+            courseData={courseData}
             institutionId={instId}
             savedSyllabusList={savedSyllabusList}
             setSavedSyllabusList={setSavedSyllabusList}

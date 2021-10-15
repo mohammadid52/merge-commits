@@ -190,6 +190,7 @@ export const getInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -1965,6 +1966,7 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -2025,6 +2027,7 @@ export const listCurriculums = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2078,6 +2081,7 @@ export const getTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2131,6 +2135,7 @@ export const listTopics = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -2252,6 +2257,7 @@ export const getRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -2365,6 +2371,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2396,6 +2403,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4437,6 +4445,7 @@ export const getAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -4457,6 +4466,8 @@ export const getAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -4520,6 +4531,7 @@ export const getAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -4668,6 +4680,7 @@ export const listAttendances = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4685,6 +4698,8 @@ export const listAttendances = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -4718,6 +4733,7 @@ export const listAttendances = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -4877,6 +4893,7 @@ export const getUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -4957,6 +4974,7 @@ export const listUniversalLessons = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -5143,6 +5161,8 @@ export const getUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -5180,6 +5200,8 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -5209,6 +5231,8 @@ export const getCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -5246,6 +5270,8 @@ export const listCurriculumUnitss = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -5329,6 +5355,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -5431,6 +5458,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -5505,6 +5533,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -6384,6 +6413,7 @@ export const attendanceByStudent = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -6401,6 +6431,8 @@ export const attendanceByStudent = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -6434,6 +6466,7 @@ export const attendanceByStudent = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }

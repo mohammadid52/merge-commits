@@ -36,8 +36,6 @@ export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
 };
 
 export const getImageFromS3Static = (key: string, isPrivate?: boolean): string => {
-  console.log('key', key);
-  console.log('private - ', isPrivate);
   if (key) {
     // Needs to fetch full URL to support image editing without refresh.
 
@@ -70,8 +68,7 @@ export const getImagesFromS3Folder = async (
           // an error occurred
           if (err) {
             reject(err);
-          }
-          else {
+          } else {
             resolve(data);
           } // successful response
         }

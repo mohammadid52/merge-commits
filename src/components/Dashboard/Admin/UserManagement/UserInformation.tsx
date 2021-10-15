@@ -123,34 +123,41 @@ const UserInformation = ({
                 )}>
                 {UserInformationDict[userLanguage]['heading']}
               </a>
-              <a
-                onClick={() => setTab('demographics')}
-                key="demographics"
-                style={{...getColor(tab === 'demographics')}}
-                className={classNames(
-                  'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                )}>
-                {UserInformationDict[userLanguage]['demographics']}
-              </a>
-              <a
-                onClick={() => setTab('private')}
-                key="private"
-                style={{...getColor(tab === 'private')}}
-                className={classNames(
-                  'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                )}>
-                {UserInformationDict[userLanguage]['private']}
-                <IconContext.Provider
-                  value={{
-                    size: '0.8rem',
-                    className: classNames('group-hover:text-gray-500', 'ml-2 h-5 w-5'),
-                    color: getColor(tab === 'private').color,
-                  }}>
-                  <IoLockClosed />
-                </IconContext.Provider>
-              </a>
+              {user?.role === 'ST' && (
+                <>
+                  <a
+                    onClick={() => setTab('demographics')}
+                    key="demographics"
+                    style={{...getColor(tab === 'demographics')}}
+                    className={classNames(
+                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
+                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
+                    )}>
+                    {UserInformationDict[userLanguage]['demographics']}
+                  </a>
+                  <a
+                    onClick={() => setTab('private')}
+                    key="private"
+                    style={{...getColor(tab === 'private')}}
+                    className={classNames(
+                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
+                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
+                    )}>
+                    {UserInformationDict[userLanguage]['private']}
+                    <IconContext.Provider
+                      value={{
+                        size: '0.8rem',
+                        className: classNames(
+                          'group-hover:text-gray-500',
+                          'ml-2 h-5 w-5'
+                        ),
+                        color: getColor(tab === 'private').color,
+                      }}>
+                      <IoLockClosed />
+                    </IconContext.Provider>
+                  </a>
+                </>
+              )}
             </nav>
           </div>
         </div>

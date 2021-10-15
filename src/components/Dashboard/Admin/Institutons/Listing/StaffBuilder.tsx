@@ -1,6 +1,6 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
@@ -42,16 +42,23 @@ interface StaffBuilderProps {
 
 const StaffBuilder = (props: StaffBuilderProps) => {
   const {instName, instituteId} = props;
-  const {
-    userLanguage,
-    clientKey,
-    state: {user},
-    theme,
-  } = useContext(GlobalContext);
+
+  // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const userLanguage = gContext.userLanguage;
+  const clientKey = gContext.clientKey;
+  const state = gContext.state;
+  const user = gContext.state.user;
+  const theme = gContext.theme;
+
+  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
+  const match = useRouteMatch();
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
+
+  // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showSuperAdmin, setShowSuperAdmin] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
@@ -266,9 +273,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${instituteId}/manage-users/${profileId}`
-    );
+    let part1 = `/dashboard/manage-institutions/institution/${instituteId}`;
+    let part2 = `/manage-users/${profileId}`;
+    // console.log(`${part1}${part2}`);
+    history.push(`${part1}${part2}`);
   };
 
   const postMutation = () => {

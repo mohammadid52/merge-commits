@@ -53,6 +53,7 @@ import Attendance from './Attendance';
 import Feedback from './Feedback';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
+import UserTabs from './User/UserTabs';
 
 export interface UserInfo {
   authId: string;
@@ -232,62 +233,6 @@ const User = ({instituteId}: IUserProps) => {
 
   const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
-
-  // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
-
-  // const getCheckpointSequences: any = async (
-  //   checkpointIDS: string[],
-  //   nextToken: string,
-  //   loopLimit: 10,
-  //   output: any[]
-  // ) => {
-  //   if (checkpointIDS && checkpointIDS.length > 0) {
-  //     try {
-  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-  //       let compoundQuery = {
-  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
-  //         limit: 100,
-  //       };
-  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
-
-  //       let getAllCheckpointSequences: any = await API.graphql(
-  //         graphqlOperation(
-  //           queries.listCSequencess,
-  //           nextToken ? queryWithNextToken : compoundQuery
-  //         )
-  //       );
-
-  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
-
-  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
-  //       // return responseItems;
-
-  //       if (theNextToken !== null && loopLimit > 0) {
-  //         console.log(nextToken);
-  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
-  //           ...output,
-  //           ...responseItems,
-  //         ]);
-  //       } else {
-  //         return [...output, responseItems];
-  //       }
-  //     } catch (e) {
-  //       console.error('getCheckpointSequences - ', e);
-  //       return [];
-  //     }
-  //   } else {
-  //     return [];
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (allCheckpointIds.length > 0) {
-  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
-  //     Promise.resolve(getAllSequences).then((output: any) => {
-  //       console.log('all checkpoint sequences - ', output);
-  //     });
-  //   }
-  // }, [allCheckpointIds]);
 
   async function getUserProfile(id: string) {
     try {
@@ -529,11 +474,11 @@ const User = ({instituteId}: IUserProps) => {
   // Useeffect to load student data and process it
   useEffect(() => {
     const initializeStudentData = async () => {
-      if (user.authId) {
-        await listStudentData();
-      }
+      await listStudentData();
     };
-    initializeStudentData();
+    if (!isTeacher && !isAdmin && user.authId) {
+      initializeStudentData();
+    }
   }, [user.authId]);
 
   if (status !== 'done') {
@@ -635,49 +580,6 @@ const User = ({instituteId}: IUserProps) => {
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    );
-  };
-
-  const Tabs = () => {
-    const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
-
-    return (
-      <div className="w-8/10 bg-white rounded-lg p-2">
-        <div className="sm:hidden">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
-          <select
-            id="tabs"
-            name="tabs"
-            className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-            defaultValue={curTab}>
-            {tabsData.map((tab) => (
-              <option className="transition-all" key={tab.name}>
-                {tab.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden sm:block">
-          <nav className="flex user__profile-tabs space-x-4" aria-label="Tabs">
-            {tabsData.map((tab) => (
-              <div
-                key={tab.name}
-                onClick={() => {
-                  setCurTab(tab.name);
-                }}
-                className={`px-3 ${
-                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
-                  tab.name === curTab ? 'active' : ''
-                }`}>
-                {tab.name}
-              </div>
-            ))}
-          </nav>
         </div>
       </div>
     );
@@ -1525,7 +1427,15 @@ const User = ({instituteId}: IUserProps) => {
           <div className="flex justify-between items-center mb-4 py-4 w-auto">
             {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
 
-            <Tabs />
+            <UserTabs
+              tabs={tabs}
+              currentTab={curTab}
+              viewedUser={user}
+              setCurrentTab={setCurTab}
+              isTeacher={isTeacher}
+              isAdmin={isAdmin}
+              theme={theme}
+            />
 
             <div className="flex justify-end w-auto">
               {currentPath !== 'edit' && onUserInformationTab && (

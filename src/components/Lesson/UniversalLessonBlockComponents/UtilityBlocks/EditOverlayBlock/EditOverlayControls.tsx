@@ -1,3 +1,17 @@
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useDictionary from '@customHooks/dictionary';
+import {useQuery} from '@customHooks/urlParam';
+import {
+  RowWrapperProps,
+  ULBSelectionProps,
+} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import ModalPopUp from '@molecules/ModalPopUp';
+import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
+import {FORM_TYPES} from '@UlbUI/common/constants';
+import {reorder} from '@utilities/strings';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {find, findIndex, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
@@ -5,20 +19,6 @@ import {AiOutlineBgColors, AiOutlineDelete, AiOutlineEdit} from 'react-icons/ai'
 import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import {
-  RowWrapperProps,
-  ULBSelectionProps,
-} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {reorder} from '../../../../../utilities/strings';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
-import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -197,7 +197,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
   // if (previewMode) return null;
-  const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-2.5rem'};
+  const iconPos = isComponent ? {top: '10%', left: '-8%'} : {top: '10%', right: '-13%'};
 
   const addToDB = async (list: any) => {
     const input = {
@@ -294,8 +294,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   return (
     <div
       id="editControlsWrapper"
+      onBlur={() => {
+        setOverlayVisible(false);
+      }}
       style={{...iconPos, zIndex: overlayVisible ? 2000 : 10}}
-      className={`absolute flex flex-row items-center bg-transparent rounded-lg  h-auto w-auto ${
+      className={`absolute ${
+        overlayVisible ? 'active' : ''
+      } flex flex-row items-center bg-transparent rounded-lg  h-auto w-auto ${
         isComponent ? componentAlignmentToggleClass : ''
       }`}>
       {!previewMode && (
@@ -308,10 +313,10 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           }}>
           <div
             className={`flex ulb_action ${
-              overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
+              overlayVisible ? 'opacity-100 visible' : 'opacity-0 invisible'
             }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
-              isComponent ? 'left-2' : 'right-2'
-            } ${themeSecBackgroundColor} rounded-lg shadow-lg `}>
+              isComponent ? 'left-2 bg-indigo-600' : 'right-2 bg-purple-600'
+            }  rounded-lg shadow-lg `}>
             {/* {section === 'pageContent' ? (
             <>
               <button
@@ -422,29 +427,34 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         </ClickAwayListener>
       )}
 
-      {!previewMode && (
+      {!previewMode && isComponent && (
         <button
-          onMouseEnter={() => {
-            if (isComponent) {
-              setSelIDForHover({pageContentID, partContentID});
-            } else {
-              setSelIDForHover({partContentID: '', pageContentID});
-            }
-          }}
           onMouseLeave={() => {
             setSelIDForHover({partContentID: '', pageContentID: ''});
           }}
-          className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
+          className={`bg-indigo-600  ${
+            overlayVisible ? 'scale-95' : 'scale-100'
+          } transform whitespace-normal customShadow rounded-lg py-1 px-4 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
           onClick={() => {
             handleEditBlockToggle();
-
-            if (isComponent) {
-              setSelID({pageContentID, partContentID});
-            } else {
-              setSelID({partContentID: '', pageContentID});
-            }
+            setSelID({pageContentID, partContentID});
           }}>
-          {overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}
+          {overlayVisible ? <IoCloseSharp size={20} /> : 'Edit'}
+        </button>
+      )}
+      {!previewMode && !isComponent && (
+        <button
+          onMouseLeave={() => {
+            setSelIDForHover({partContentID: '', pageContentID: ''});
+          }}
+          className={`bg-purple-600 ${
+            overlayVisible ? 'scale-95' : 'scale-100'
+          } transform  whitespace-normal customShadow rounded-lg py-1 px-4 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
+          onClick={() => {
+            handleEditBlockToggle();
+            setSelID({partContentID: '', pageContentID});
+          }}>
+          {overlayVisible ? <IoCloseSharp size={20} /> : 'Edit Block'}
         </button>
       )}
       {show && (
