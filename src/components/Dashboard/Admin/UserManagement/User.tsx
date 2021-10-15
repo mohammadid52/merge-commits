@@ -1411,9 +1411,7 @@ const User = ({instituteId}: IUserProps) => {
               <span className="w-auto mr-2">
                 <BsArrowLeft />
               </span>
-              <div className="text-sm">
-                {CommonlyUsedDict[userLanguage]['BACK']}
-              </div>
+              <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
             </div>
             // <div className="flex justify-end mb-4">
             //   <Buttons
@@ -1592,14 +1590,23 @@ const User = ({instituteId}: IUserProps) => {
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 {isTimelineOpen ? (
                   <Attendance
-                    id={id}
+                    id={userId}
                     goToClassroom={goToClassroom}
                     selectedRoomId={selectedRoomId}
+                    role={user.role}
                   />
                 ) : (
                   <AssociatedClasses list={user?.rooms} />
                 )}
               </div>
+            )}
+            {(user.role === 'TR' || user.role === 'FLW') && (
+              <Attendance
+                id={userId}
+                goToClassroom={goToClassroom}
+                selectedRoomId={selectedRoomId}
+                role={user.role}
+              />
             )}
           </AnimatedContainer>
           <AnimatedContainer show={onNotebookTab}>
@@ -1614,12 +1621,12 @@ const User = ({instituteId}: IUserProps) => {
             )}
           </AnimatedContainer>
 
-          {curTab === 'Timeline' && (
+          {/* {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
             </div>
-          )}
+          )} */}
         </div>
         {showCropper && (
           <ProfileCropModal
