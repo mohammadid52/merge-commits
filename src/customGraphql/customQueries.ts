@@ -3405,6 +3405,7 @@ export const getUserProfile = /* GraphQL */ `
                                 }
                               }
                             }
+                            questionSeq
                           }
                         }
                       }

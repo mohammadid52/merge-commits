@@ -334,13 +334,18 @@ const useLessonNotifications = () => {
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
-      if (val.check) {
-        return [...acc, val];
-      } else {
-        return acc;
-      }
-    }, []);
+    if (lessonState?.lessonData?.type === 'lesson') {
+      return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+        if (val.check) {
+          return [...acc, val];
+        } else {
+          return acc;
+        }
+      }, []);
+    } else {
+      return [];
+    }
+   
   };
 
   return {lessonNotifications: collectNotifications(watchList)};

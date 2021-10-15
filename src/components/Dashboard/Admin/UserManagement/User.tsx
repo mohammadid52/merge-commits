@@ -305,14 +305,52 @@ const User = ({instituteId}: IUserProps) => {
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
-      const demographicCheckpoints = uniqCheckpoints.filter(
-        (checkpoint: any) => checkpoint.scope !== 'private'
-      );
-      // .reverse();
-      const privateCheckpoints = uniqCheckpoints.filter(
-        (checkpoint: any) => checkpoint.scope === 'private'
-      );
-      // .reverse();
+      const demographicCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope !== 'private')
+        .map((checkpoint: any) => {
+          if (checkpoint?.questionSeq) {
+            return {
+              ...checkpoint,
+              questions: {
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, []),
+              },
+            };
+          } else {
+            return checkpoint;
+          }
+        });
+      const privateCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope === 'private')
+        .map((checkpoint: any) => {
+          if (checkpoint?.questionSeq) {
+            return {
+              ...checkpoint,
+              questions: {
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, []),
+              },
+            };
+          } else {
+            return checkpoint;
+          }
+        });
 
       const personalInfo: any = {...userData};
 
