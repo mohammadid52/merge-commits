@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
@@ -36,7 +36,10 @@ const LessonPlanForm = () => {
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
   const pages = universalLessonDetails?.lessonPlan;
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +83,9 @@ const LessonPlanForm = () => {
         setLoading(false);
         if (data) {
           setActiveTab(1);
-          history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`);
+          history.push(
+            `/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`
+          );
         }
       } catch (error) {
         setLoading(false);

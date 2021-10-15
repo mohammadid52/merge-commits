@@ -1,4 +1,3 @@
-import React, {useContext, useEffect, useState} from 'react';
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
@@ -35,8 +34,6 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
-import isEmpty from 'lodash/isEmpty';
-
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -54,6 +51,9 @@ import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import ImageGallery from '@UlbUI/ImageGallery';
 import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
 import {capitalizeFirstLetter, wait} from '@utilities/functions';
+import isEmpty from 'lodash/isEmpty';
+import React, {useContext, useEffect, useState} from 'react';
+import {useRouteMatch} from 'react-router';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -61,6 +61,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
+  instId: string;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -72,6 +73,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
+    instId,
   } = props;
   const {
     state: {user},
@@ -90,8 +92,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   } = useULBContext();
 
   const params = useQuery(location.search);
-  const isNewPage = params.get('isNewPage');
-  const lessonId = params.get('lessonId');
+  // const isNewPage = params.get('isNewPage');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
+  const isNewPage = route.params.isNewPage;
 
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
@@ -609,6 +615,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        instId={instId}
         createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}

@@ -16,7 +16,7 @@ import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
 
 const InputTag = ({
@@ -72,7 +72,7 @@ const InputTag = ({
         ))}
         <li className="bg-transparent flex-grow-1 p-0">
           <input
-            className={`block w-full dark:bg-gray-800 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-700 border-gray-300 rounded-md`}
+            className={`block dark:text-white w-full dark:bg-gray-800 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-700 border-gray-300 rounded-md`}
             type="text"
             placeholder="Add tags here..."
             onKeyDown={inputKeyDown}
@@ -106,7 +106,7 @@ interface NewLessonPlanSOInterface {
   editMode: boolean;
   pageDetails: any;
   activePageData: UniversalLessonPage;
-  instId: string
+  instId: string;
 }
 
 interface ErrorInterface {
@@ -133,7 +133,12 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
   label: '',
 };
 
-const NewLessonPlanSO = ({instId, open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
+const NewLessonPlanSO = ({
+  instId,
+  open,
+  setOpen,
+  pageDetails,
+}: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -151,7 +156,7 @@ const NewLessonPlanSO = ({instId, open, setOpen, pageDetails}: NewLessonPlanSOIn
     setNewLessonPlanShow,
     setUniversalLessonDetails,
   } = useULBContext();
-  
+
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {
@@ -271,7 +276,9 @@ const NewLessonPlanSO = ({instId, open, setOpen, pageDetails}: NewLessonPlanSOIn
     }
   }, true);
 
-  const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
   const classworkPages = universalLessonDetails?.lessonPlan;
   const homeworkPages = universalLessonDetails?.homework || [];
 

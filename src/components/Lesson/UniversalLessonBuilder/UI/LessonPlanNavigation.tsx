@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {BiBook, BiSun} from 'react-icons/bi';
 import {BsMoon} from 'react-icons/bs';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {useQuery} from '../../../../customHooks/urlParam';
@@ -35,7 +35,10 @@ const LessonPlanNavigation = ({
   const {dispatch} = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
 
   const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
