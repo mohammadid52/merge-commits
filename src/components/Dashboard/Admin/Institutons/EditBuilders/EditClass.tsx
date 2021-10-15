@@ -1,10 +1,9 @@
 import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {HiPencil} from 'react-icons/hi';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import Selector from '@atoms/Form/Selector';
 import AddButton from '@atoms/Buttons/AddButton';
 import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from '@atoms/Form/SearchSelectorWithAvatar';
@@ -89,7 +88,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     theme,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, RegistrationDict} = useDictionary(clientKey);
+  const {editClassDict, RegistrationDict} = useDictionary('curate');
   const dictionary = editClassDict[userLanguage];
 
   // const breadCrumsList = [
@@ -646,7 +645,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             </div> */}
           </div>
 
-          <div className="flex flex-col items-center justify-center w-8/10 2xl:w-6/10 m-auto px-2 mb-4">
+          <div className="flex flex-col items-center justify-center w-9/10 2xl:w-6/10 m-auto px-2 mb-4">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div className="col-span-2">
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
@@ -686,7 +685,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 </div>
               )} */}
               <AddButton
-                className="mx-2 lg:ml-5 lg:mr-10 py-1 px-5 mt-auto"
+                className="mx-2 2xl:ml-5 2xl:mr-10 py-1 px-5 mt-auto"
                 label={dictionary.ADD_STUDENT_BUTTON}
                 onClick={addStudentInClass}
                 disabled={adding || !newMember.id}
