@@ -1200,7 +1200,7 @@ const Institute_class: any = {
     },
   },
 };
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'INSTITUTE COURSE',
     BUTTON: {
@@ -1234,7 +1234,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
     TEACHER: 'Teacher',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'Edit',
@@ -1251,7 +1251,7 @@ const InstitueRomms: any = {
   ES: {
     TITLE: 'TBD',
     NO: 'TBD',
-    CURRICULAM: 'TBD',
+    CURRICULUM: 'TBD',
     CLASSROOMS_NAME: 'TBD',
     CLASS_NAME: 'TBD',
     TEACHER: 'TBD',
@@ -3995,12 +3995,13 @@ const StudentDict: any = {
 };
 
 const CommunityDict: any = {
-  EN:{
-    HEADER:'Here is what is happening today'
-  },ES:{
-    HEADER:'TBD'
-  }
-}
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
+  },
+};
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -4008,10 +4009,9 @@ function paginationPage(lang: string, page: number, total: number) {
   return '';
 }
 
-
-
 export {
-  AuthDict,CommunityDict,
+  AuthDict,
+  CommunityDict,
   CsvDict,
   paginationPage,
   BUTTONS,
@@ -4033,7 +4033,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CurricularBuilderdict,

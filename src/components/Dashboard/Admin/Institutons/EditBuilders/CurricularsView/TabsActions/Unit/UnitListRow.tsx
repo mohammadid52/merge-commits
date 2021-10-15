@@ -24,7 +24,7 @@ const UnitListRow = ({
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
+  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);

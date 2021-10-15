@@ -108,7 +108,7 @@ const RoomsList = (props: RoomListProps) => {
                 </div>
 
                 <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
+                  <span>{InstitueRomms[userLanguage]['CURRICULUM']}</span>
                 </div>
 
                 <div className="w-1/10 px-4 py-2 bg-gray-50 flex text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
