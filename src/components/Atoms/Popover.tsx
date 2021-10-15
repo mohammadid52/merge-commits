@@ -59,7 +59,7 @@ const Popover = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
             style={{...dynamicDir}}
-            className={`${containerClass} z-100 w-auto bg-white cursor-pointer select-none ${
+            className={`${containerClass} z-100 w-auto bg-white select-none ${
               rounded ? `rounded-${rounded}` : 'rounded'
             } customShadow absolute right-${right} border-0 border-gray-200 min-h-${minHeight} min-w-${minWidth} p-4`}
             show={show}>

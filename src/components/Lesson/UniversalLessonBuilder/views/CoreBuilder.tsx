@@ -25,9 +25,8 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {find, findLastIndex, map, remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory, useParams} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import useScrollPosition from 'customHooks/useScrollPosition';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -36,7 +35,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
   galleryVisible?: boolean;
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
-
+  instId: string;
   lessonId: string;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   handleEditBlockContent?: (
@@ -107,6 +106,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleModalPopToggle,
     handleTagModalOpen,
     activePageData,
+    instId,
   } = props;
   const {
     setUniversalLessonDetails,
@@ -381,7 +381,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
     return replaceAllExistingIds;
   };
-  const {institutionId}: any = useParams();
+
+  const route: any = useRouteMatch();
 
   return (
     <div className="relative">
@@ -396,7 +397,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
       <Layout width="40rem" open={newLessonPlanShow}>
         <NewLessonPlanSO
-          instId={institutionId}
+          instId={instId}
           editMode={editMode}
           setEditMode={setEditMode}
           pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
@@ -417,7 +418,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
       <div
         id="core-builder"
-        className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
+        style={{minHeight: '100vh'}}
+        className={`relative  grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
         <LessonSlideover />

@@ -18,6 +18,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
   const {dispatch} = useContext(GlobalContext);
 
   const match = useRouteMatch();
+
   const [designersList, setDesignersList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
 
@@ -122,7 +123,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
           />
           <Route
             path={`${match.url}/:lessonId/page-builder`}
-            render={() => <UniversalLessonBuilder />}
+            render={() => <UniversalLessonBuilder instId={instId} />}
           />
         </Switch>
         {/*</UniversalLessonBuilderProvider>*/}

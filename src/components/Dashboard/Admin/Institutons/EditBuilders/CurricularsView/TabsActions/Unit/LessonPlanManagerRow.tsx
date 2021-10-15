@@ -53,17 +53,18 @@ const LessonPlanManagerRow = ({
         <span
           className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
           onClick={() => handleToggleDelete(lessonObject.name, lessonObject)}>
-          <DeleteActionBtn
+          {/* <DeleteActionBtn
             handleClick={() => handleToggleDelete(lessonObject.name, lessonObject)}
-          />
+          /> */}
+          <p className=" text-center text-red-500 hover:text-red-400  text-xs">Delete</p>
         </span>
       ) : (
         <span
-          className={`relative w-1/10 flex  text-gray-500 items-center justify-center text-left px-8 py-3`}
+          className={`relative w-1/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}
           onClick={() => {}}>
-          <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
-          <p className="absolute text-center  text-gray-500 transform translate-y-full text-xs">
-            {LessonsListDict[userLanguage]['NO_DELETE']}
+          {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
+          <p className="text-center  text-gray-500 text-xs">
+            Delete {LessonsListDict[userLanguage]['NO_DELETE']}
           </p>
         </span>
       )}

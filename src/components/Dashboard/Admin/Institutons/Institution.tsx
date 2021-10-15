@@ -180,7 +180,7 @@ const Institution = (props: InstitutionProps) => {
     //   last: false,
     // },
     {
-      title: institutionData.name,
+      title: institutionData?.name,
       url:
         currentPath !== 'edit'
           ? `${location.pathname}${location.search}`
