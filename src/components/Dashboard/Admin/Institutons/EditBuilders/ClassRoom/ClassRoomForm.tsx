@@ -349,6 +349,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         isError: true,
       });
       return false;
+    } else if (!roomData.curricular.id) {
+      setMessages({
+        show: true,
+        message: RoomEDITdict[userLanguage]['messages']['selectCurriculum'],
+        isError: true,
+      });
+      return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
@@ -357,6 +364,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       });
       return false;
     }
+
     // else if (roomData.classRoom.id === '') {
     //   setMessages({
     //     show: true,
@@ -489,9 +497,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     }
   };
   const saveRoomDetails = async () => {
-    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
+      setLoading(true);
       try {
         if (roomData.id) {
           const input = {
@@ -801,13 +809,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                </label>
                 <Selector
                   selectedItem={curricular.value}
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                  labelTextClass={'text-xs'}
                   list={curricularList}
+                  isRequired
                   onChange={selectCurriculum}
                 />
               </div>
