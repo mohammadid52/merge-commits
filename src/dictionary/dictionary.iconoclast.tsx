@@ -2770,6 +2770,7 @@ const UserInformationDict: any = {
     ondemand: 'On-Demand',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
   },
   ES: {
     heading: 'TBD',
@@ -2784,6 +2785,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD'
   },
 };
 

@@ -82,17 +82,20 @@ const UserInformation = ({
 
   const resetPassword = async () => {
     try {
+      setLoading(true);
       await axios.post(requestResetPassword, {email: user.email});
       setResetPasswordServerResponse({
         show: true,
-        message: 'Password was reset',
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_SUCCESS'],
       });
+      setLoading(false);
     } catch (err) {
       console.log('error', err);
       setResetPasswordServerResponse({
         show: true,
-        message: 'Error in resetting password',
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_FAILURE'],
       });
+      setLoading(false);
     }
   };
   const onAlertClose = () => {
@@ -221,7 +224,7 @@ const UserInformation = ({
                 </div>
                 <div className="sm:col-span-1 p-2 flex items-centers">
                   <Buttons
-                    label={UserInformationDict[userLanguage]['RESET_PASSWORD']}
+                    label={loading ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']: UserInformationDict[userLanguage]['RESET_PASSWORD']}
                     onClick={resetPassword}
                     disabled={loading}
                   />

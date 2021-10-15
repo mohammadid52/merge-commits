@@ -2782,6 +2782,11 @@ const UserInformationDict: any = {
     account: 'Account Created',
     ondemand: 'On-Demand',
     RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
+    MESSAGE:{
+      RESET_PASSWORD_SUCCESS: 'Password was reset',
+      RESET_PASSWORD_FAILURE: 'Error in resetting password',
+    }
   },
   ES: {
     heading: 'TBD',
@@ -2796,6 +2801,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD',
   },
 };
 
