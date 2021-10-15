@@ -21,16 +21,31 @@ const Students = (props: any) => {
         filter: {teacherAuthID: {eq: state.user.authId}},
       })
     );
-    const data = response?.data?.listRooms?.items;
+    const assignedRoomsAsCoTeacher: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        filter: {teacherAuthID: {eq: state.user.authId}},
+      })
+    );
+    const data = [
+      ...response?.data?.listRooms?.items,
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+        ...item,
+        ...item.room,
+        teacher: item.room?.teacher
+      })),
+    ];
 
     let list: any[] = [];
     let uniqIds: string[] = [];
+    
     if (data?.length) {
-      data[0]?.class?.students?.items.forEach((student: any) => {
-        if (!uniqIds.includes(student.student.id)) {
-          list.push(student);
-          uniqIds.push(student.student.id);
-        }
+      data.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          if (!uniqIds.includes(student.student.id)) {
+            list.push(student);
+            uniqIds.push(student.student.id);
+          }
+        });
       });
     }
     setLoading(false);

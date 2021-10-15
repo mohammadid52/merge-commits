@@ -1666,7 +1666,7 @@ const RoomEDITdict: any = {
     LOCATION_LABEL: 'Classroom location',
     LOCATION_PLACEHOLDER: 'Enter location here',
     CLASS_DETAILS_TAB_HEADING: 'Class Details',
-    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom',
     CLASS_STUDENT_TAB_HEADING: 'Students',
     CLASS_STUDENT_TAB_DESCRIPTION: 'Add students to classroom',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
@@ -2770,6 +2770,7 @@ const UserInformationDict: any = {
     ondemand: 'On-Demand',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
   },
   ES: {
     heading: 'TBD',
@@ -2784,6 +2785,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD'
   },
 };
 
@@ -3939,10 +3941,12 @@ const LearningEvidenceDict: any = {
 
 const CommonlyUsedDict: any = {
   EN: {
+    BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
   },
   ES: {
-    BACK_TO_LIST: 'Back to list',
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
   },
 };
 

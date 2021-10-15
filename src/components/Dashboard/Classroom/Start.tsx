@@ -3,7 +3,6 @@ import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
@@ -146,7 +145,7 @@ const Start: React.FC<StartProps> = ({
 
       const payload = {
         studentID: state.user?.id,
-        curriculumID: syllabusData.curriculumID,
+        curriculumID: syllabusData.curriculumId,
         syllabusID: syllabusData.id,
         lessonID: lessonKey,
         roomID,
