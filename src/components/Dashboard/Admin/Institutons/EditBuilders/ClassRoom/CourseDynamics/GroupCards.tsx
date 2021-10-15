@@ -11,10 +11,10 @@ interface IGroupCardProps {
   group: any;
   handleDelete: () => void;
   handleEditClick: (data: any) => void;
+  redirectToUserPage: (studentId:string) => void;
 }
 
-const GroupCard = ({group, handleDelete,handleEditClick}: IGroupCardProps) => {
-  const history = useHistory();
+const GroupCard = ({group, handleDelete,handleEditClick,redirectToUserPage}: IGroupCardProps) => {
 
   const stringToHslColor = (str: string) => {
     let hash = 0;
@@ -70,11 +70,7 @@ const GroupCard = ({group, handleDelete,handleEditClick}: IGroupCardProps) => {
                 <div
                   key={student.id}
                   className="w-full p-2 cursor-pointer hover:bg-gray-200 rounded-md"
-                  onClick={() =>
-                    history.push(
-                      `/dashboard/manage-users/user?id=${student.id}&from=group`
-                    )
-                  }>
+                  onClick={() => redirectToUserPage(student.id)}>
                   <div className="w-full">
                     <div className="flex items-center justify-center">
                       <div className="flex-shrink-0 h-10 w-10 lg:w-14 lg:h-14">

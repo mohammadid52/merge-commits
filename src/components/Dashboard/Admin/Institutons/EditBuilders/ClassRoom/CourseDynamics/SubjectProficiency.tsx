@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
@@ -9,7 +10,6 @@ import Loader from '../../../../../../Atoms/Loader';
 
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import {useEffect} from 'react';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 interface ISubjectProficiencyProps {
@@ -17,6 +17,7 @@ interface ISubjectProficiencyProps {
 }
 
 const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
+  const history = useHistory();
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
@@ -121,6 +122,12 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
     setWarnModal((prevValues) => ({...prevValues, show: false}));
   };
 
+  const redirectToUserPage = (studentId: string) => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+    );
+  };
+
   return (
     <div>
       <div className="flex justify-end my-8">
@@ -145,6 +152,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
                 key={group.id}
                 handleEditClick={handleEditClick}
                 handleDelete={() => onDelete(group)}
+                redirectToUserPage={redirectToUserPage}
               />
             ))}
           </div>

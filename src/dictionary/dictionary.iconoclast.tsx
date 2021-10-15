@@ -473,6 +473,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Class Name',
     STUDENTS: 'STUDENTS',
     ADD_STUDENT_PLACEHOLDER: 'Select student',
+    ADD_STUDENT_LABEL: 'Add students to class',
+    ADD_STUDENT_FROM_REGSITER: 'Add students from register to class',
     ADD_STUDENT_BUTTON: 'Add',
     GROUP: 'Group',
     GROUP_PLACEHOLDER: 'Select Group',
@@ -508,6 +510,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Nombre de la clase',
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
+    ADD_STUDENT_LABEL: 'TBD',
+    ADD_STUDENT_FROM_REGSITER: 'TBD',
     ADD_STUDENT_BUTTON: 'Añadir',
     GROUP: 'TBD',
     GROUP_PLACEHOLDER: 'TBD',
@@ -1196,7 +1200,7 @@ const Institute_class: any = {
     },
   },
 };
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'INSTITUTE COURSE',
     BUTTON: {
@@ -1230,7 +1234,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
     TEACHER: 'Teacher',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'Edit',
@@ -1247,7 +1251,7 @@ const InstitueRomms: any = {
   ES: {
     TITLE: 'TBD',
     NO: 'TBD',
-    CURRICULAM: 'TBD',
+    CURRICULUM: 'TBD',
     CLASSROOMS_NAME: 'TBD',
     CLASS_NAME: 'TBD',
     TEACHER: 'TBD',
@@ -1666,7 +1670,7 @@ const RoomEDITdict: any = {
     LOCATION_LABEL: 'Classroom location',
     LOCATION_PLACEHOLDER: 'Enter location here',
     CLASS_DETAILS_TAB_HEADING: 'Class Details',
-    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom',
     CLASS_STUDENT_TAB_HEADING: 'Students',
     CLASS_STUDENT_TAB_DESCRIPTION: 'Add students to classroom',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
@@ -1689,6 +1693,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'Classroom name is required please enter name.',
       selectinstitute: 'Please select an institute to add Classroom.',
       selectteacher: 'Please select a teacher for the Classroom.',
+      selectCurriculum: 'Please select a course for the Class.',
       selectclass: 'Please select a class for the Classroom.',
       mxstudent: 'Please set Max students limit for the Classroom.',
       oneclass: 'One Classroom can allow max. 30 students.',
@@ -1745,6 +1750,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'TBD',
       selectinstitute: 'TBD',
       selectteacher: 'TBD',
+      selectCurriculum: 'TBD',
       selectclass: 'TBD',
       mxstudent: 'TBD',
       oneclass: 'TBD',
@@ -2770,6 +2776,7 @@ const UserInformationDict: any = {
     ondemand: 'On-Demand',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
   },
   ES: {
     heading: 'TBD',
@@ -2784,6 +2791,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD'
   },
 };
 
@@ -3839,6 +3847,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3855,6 +3864,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
@@ -3937,10 +3947,12 @@ const LearningEvidenceDict: any = {
 
 const CommonlyUsedDict: any = {
   EN: {
+    BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
   },
   ES: {
-    BACK_TO_LIST: 'Back to list',
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
   },
 };
 
@@ -3983,12 +3995,13 @@ const StudentDict: any = {
 };
 
 const CommunityDict: any = {
-  EN:{
-    HEADER:'Here is what is happening today'
-  },ES:{
-    HEADER:'TBD'
-  }
-}
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
+  },
+};
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -3996,10 +4009,9 @@ function paginationPage(lang: string, page: number, total: number) {
   return '';
 }
 
-
-
 export {
-  AuthDict,CommunityDict,
+  AuthDict,
+  CommunityDict,
   CsvDict,
   paginationPage,
   BUTTONS,
@@ -4021,7 +4033,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CurricularBuilderdict,

@@ -66,10 +66,12 @@ const BUTTONS: any = {
 
 const CommonlyUsedDict: any = {
   EN: {
+    BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
   },
   ES: {
-    BACK_TO_LIST: 'Back to list',
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
   },
 };
 
@@ -496,6 +498,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Cohort Name',
     STUDENTS: 'Participants',
     ADD_STUDENT_PLACEHOLDER: 'Select new participant',
+    ADD_STUDENT_LABEL: 'Add participant to class',
+    ADD_STUDENT_FROM_REGSITER: 'Add participant from register to class',
     ADD_STUDENT_BUTTON: 'Add',
     GROUP: 'Group',
     GROUP_PLACEHOLDER: 'Select Group',
@@ -531,6 +535,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Nombre de la clase',
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
+    ADD_STUDENT_LABEL: 'TBD',
+    ADD_STUDENT_FROM_REGSITER: 'TBD',
     ADD_STUDENT_BUTTON: 'Añadir',
     GROUP: 'TBD',
     GROUP_PLACEHOLDER: 'TBD',
@@ -1242,7 +1248,7 @@ const Institute_class: any = {
   },
 };
 
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
@@ -1276,7 +1282,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Class Name',
     CLASS_NAME: 'Cohort Name',
     TEACHER: 'Facilitator',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     MXSTUDENTS: 'Max. Participants',
     ACTION: 'Actions',
     EDIT: 'edit',
@@ -1698,7 +1704,10 @@ const RoomEDITdict: any = {
     CONFERENCE_CALL_LINK_PLACEHOLDER: 'Enter zoom, teams or meets link here',
     LOCATION_LABEL: 'Classroom location',
     LOCATION_PLACEHOLDER: 'Enter location here',
-    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DETAILS_TAB_HEADING: 'Class Details',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom',
+    CLASS_STUDENT_TAB_HEADING: 'Students',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'Add students to classroom',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',
@@ -1719,6 +1728,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'Class name is required please enter name.',
       selectinstitute: 'Please select an organization to add Class.',
       selectteacher: 'Please select a teacher for the Class.',
+      selectCurriculum: 'Please select a course for the Class.',
       selectclass: 'Please select a cohort for the Class.',
       mxstudent: 'Please set Max participants limit for the Class.',
       oneclass: 'One Class can allow max. 30 participants.',
@@ -1771,6 +1781,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'TBD',
       selectinstitute: 'TBD',
       selectteacher: 'TBD',
+      selectCurriculum: 'TBD',
       selectclass: 'TBD',
       mxstudent: 'TBD',
       oneclass: 'TBD',
@@ -2777,6 +2788,11 @@ const UserInformationDict: any = {
     account: 'Account Created',
     ondemand: 'On-Demand',
     RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
+    MESSAGE:{
+      RESET_PASSWORD_SUCCESS: 'Password was reset',
+      RESET_PASSWORD_FAILURE: 'Error in resetting password',
+    }
   },
   ES: {
     heading: 'TBD',
@@ -2791,6 +2807,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD',
   },
 };
 
@@ -3742,6 +3759,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3758,6 +3776,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
@@ -3913,7 +3932,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CurricularBuilderdict,

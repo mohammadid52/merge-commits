@@ -17,11 +17,11 @@ import {
 } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
-import {BsCameraVideoFill} from 'react-icons/bs';
+import {BsArrowLeft, BsCameraVideoFill} from 'react-icons/bs';
 import {FaEdit} from 'react-icons/fa';
 import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
-import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
+import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -169,27 +169,27 @@ const User = ({instituteId}: IUserProps) => {
 
   const {id, t: tab} = urlState;
 
-  const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {CommonlyUsedDict} = useDictionary(clientKey);
 
   const mediaRef = React.useRef(null);
   const handleImage = () => mediaRef?.current?.click();
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-      url: '/dashboard/manage-users',
-      last: false,
-    },
-    {
-      title: [
-        user.preferredName ? user.preferredName : user.firstName,
-        user.lastName,
-      ].join(' '),
-      url: `${location.pathname}${location.search}`,
-      last: true,
-    },
-  ];
+  // const breadCrumsList = [
+  //   {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+  //   {
+  //     title: BreadcrumsTitles[userLanguage]['PEOPLE'],
+  //     url: '/dashboard/manage-users',
+  //     last: false,
+  //   },
+  //   {
+  //     title: [
+  //       user.preferredName ? user.preferredName : user.firstName,
+  //       user.lastName,
+  //     ].join(' '),
+  //     url: `${location.pathname}${location.search}`,
+  //     last: true,
+  //   },
+  // ];
 
   // ##################################################################### //
   // ######################### PROFILE QUESTIONS ######################### //
@@ -1405,14 +1405,22 @@ const User = ({instituteId}: IUserProps) => {
         <div className={`pl-12 max-w-256`}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
-            <div className="flex justify-end mb-4">
-              <Buttons
-                label="Go Back"
-                btnClass="mr-4"
-                onClick={history.goBack}
-                Icon={IoArrowUndoCircleOutline}
-              />
+            <div
+              className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+              onClick={history.goBack}>
+              <span className="w-auto mr-2">
+                <BsArrowLeft />
+              </span>
+              <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
             </div>
+            // <div className="flex justify-end mb-4">
+            //   <Buttons
+            //     label="Go Back"
+            //     btnClass="mr-4"
+            //     onClick={history.goBack}
+            //     Icon={IoArrowUndoCircleOutline}
+            //   />
+            // </div>
           )}
           <div className="flex justify-between items-center mb-4 py-4 w-auto">
             {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
@@ -1582,14 +1590,23 @@ const User = ({instituteId}: IUserProps) => {
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 {isTimelineOpen ? (
                   <Attendance
-                    id={id}
+                    id={userId}
                     goToClassroom={goToClassroom}
                     selectedRoomId={selectedRoomId}
+                    role={user.role}
                   />
                 ) : (
                   <AssociatedClasses list={user?.rooms} />
                 )}
               </div>
+            )}
+            {(user.role === 'TR' || user.role === 'FLW') && (
+              <Attendance
+                id={userId}
+                goToClassroom={goToClassroom}
+                selectedRoomId={selectedRoomId}
+                role={user.role}
+              />
             )}
           </AnimatedContainer>
           <AnimatedContainer show={onNotebookTab}>
@@ -1604,12 +1621,12 @@ const User = ({instituteId}: IUserProps) => {
             )}
           </AnimatedContainer>
 
-          {curTab === 'Timeline' && (
+          {/* {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
             </div>
-          )}
+          )} */}
         </div>
         {showCropper && (
           <ProfileCropModal

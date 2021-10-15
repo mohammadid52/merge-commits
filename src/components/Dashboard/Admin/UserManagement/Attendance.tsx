@@ -22,7 +22,14 @@ const pad = (num: any) => {
 
 const limit: number = 10;
 
-const Attendance = ({id, goToClassroom, selectedRoomId}: any) => {
+interface IAttendanceProps {
+  id: string;
+  goToClassroom: () => void;
+  selectedRoomId?: string;
+  role: string;
+}
+
+const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -157,15 +164,20 @@ const Attendance = ({id, goToClassroom, selectedRoomId}: any) => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mb-4">
-        <div
-          className="text-indigo-400 flex cursor-pointer w-auto"
-          onClick={goToClassroom}>
-          <span className="w-auto inline-flex items-center mr-2">
-            <IoMdArrowBack className="w-4 h-4" />
-          </span>
-          <span>Back to course list</span>
-        </div>
+      <div
+        className={`flex ${
+          role === 'ST' ? 'justify-between' : 'justify-end'
+        } items-center mb-4`}>
+        {role === 'ST' && (
+          <div
+            className="text-indigo-400 flex cursor-pointer w-auto"
+            onClick={goToClassroom}>
+            <span className="w-auto inline-flex items-center mr-2">
+              <IoMdArrowBack className="w-4 h-4" />
+            </span>
+            <span>Back to course list</span>
+          </div>
+        )}
         <div className="w-64 relative ulb-datepicker">
           <DatePicker
             dateFormat={'dd/MM/yyyy'}

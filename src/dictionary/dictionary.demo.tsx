@@ -66,10 +66,12 @@ const BUTTONS: any = {
 
 const CommonlyUsedDict: any = {
   EN: {
+    BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
   },
   ES: {
-    BACK_TO_LIST: 'Back to list',
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
   },
 };
 
@@ -1253,7 +1255,7 @@ const Institute_class: any = {
     },
   },
 };
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'INSTITUTE CURRICULAR',
     BUTTON: {
@@ -1286,7 +1288,7 @@ const InstitueRomms: any = {
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     TEACHER: 'Teacher',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
@@ -3724,6 +3726,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3740,6 +3743,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
@@ -3862,7 +3866,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CourseBuilderDict,

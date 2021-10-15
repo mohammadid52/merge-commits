@@ -24,7 +24,7 @@ const CurriculumList = ({
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
-  const {InstitueCurriculam} = useDictionary(clientKey);
+  const {InstitueCurriculum} = useDictionary(clientKey);
   const history = useHistory();
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
@@ -107,21 +107,21 @@ const CurriculumList = ({
                 Courses
               </h3>
               <AddButton
-                label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}
+                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
                 onClick={createNewCurricular}
               />
             </div>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculam[userLanguage]['NO']}</span>
+                  <span>{InstitueCurriculum[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
+                  <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
                 </div>
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
-                    {InstitueCurriculam[userLanguage]['ACTION']}
+                    {InstitueCurriculum[userLanguage]['ACTION']}
                   </span>
                 </div>
               </div>
@@ -154,13 +154,13 @@ const CurriculumList = ({
             <div className="flex justify-center mt-8">
               <AddButton
                 className="mx-4"
-                label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}
+                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
                 onClick={createNewCurricular}
               />
             </div>
             <p className="text-center p-16">
               {' '}
-              {InstitueCurriculam[userLanguage]['INFO']}
+              {InstitueCurriculum[userLanguage]['INFO']}
             </p>
           </Fragment>
         )}

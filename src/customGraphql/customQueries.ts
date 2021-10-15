@@ -2044,6 +2044,7 @@ export const listUniversalLessons = /* GraphQL */ `
             }
           }
         }
+        isUsed
       }
       nextToken
     }
@@ -2203,6 +2204,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
               interactionType
               tags
             }
+            isUsed
             darkMode
             rubrics
             createdAt
@@ -2216,6 +2218,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
         nextToken
       }
       universalLessonsSeq
+      lessonHistory
       designers
       status
       createdAt
@@ -4535,7 +4538,7 @@ export const getCurriculumForClasses = /* GraphQL */ `
                 unit
                 sequence
                 status
-                lesson{
+                lesson {
                   duration
                   title
                 }
@@ -4550,6 +4553,8 @@ export const getCurriculumForClasses = /* GraphQL */ `
               nextToken
             }
             universalLessonsSeq
+            isUsed
+            lessonHistory
             designers
             status
             createdAt

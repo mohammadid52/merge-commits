@@ -1,5 +1,7 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {useQuery} from '@customHooks/urlParam';
+import * as mutations from '@graphql/mutations';
 import {find} from 'lodash';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
@@ -166,7 +168,8 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
         const filteredList = getFilteredList(data, state.user.id);
 
-        setLessonsData(isTeacher ? filteredList : data);
+        // setLessonsData(isTeacher ? filteredList : data);
+        setLessonsData(data);
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
@@ -294,6 +297,64 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     }
   };
 
+  //  CHECK TO SEE IF LESSON CAN BE DELETED  //
+
+  /*************************************
+   * IF LESSON HAS EVER BEEN ACTIVATED *
+   *  AND HAS THE 'ISUSED' PROPERTY,   *
+   *       IT CAN NOT BE DELETED       *
+   *************************************/
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
+
+  const checkIfRemovable = (lessonObj: any) => {
+    if (lessonObj?.isUsed) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the lesson "${targetString}"?`,
+        action: () => handleDelete(itemObj),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      console.log('deleting...');
+      await API.graphql(
+        graphqlOperation(mutations.deleteUniversalLesson, {
+          input: {id: item.id},
+        })
+      );
+      updateLessonList(item);
+    } catch (e) {
+      console.error('error deleting...', e);
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const updateLessonList = (lessonObj: any) => {
+    setCurrentList(
+      currentList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
+    );
+  };
+
   {
     return (
       <div className={`w-full h-full`}>
@@ -410,7 +471,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                         <LessonListLoader />
                       </Fragment>
                     ))
-                ) : currentList && currentList.length ? (
+                ) : currentList?.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
                       setShowCloneModal={setShowCloneModal}
@@ -425,6 +486,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                           getLanguageString(item)
                         )
                       }
+                      lessonObject={lessonsObject}
+                      checkIfRemovable={checkIfRemovable}
+                      handleToggleDelete={handleToggleDelete}
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
                       zebraStripping={isInInstitution}
@@ -434,6 +498,15 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                   <div className="flex p-12 mx-auto text-gray-400 justify-center">
                     {LessonsListDict[userLanguage]['NORESULT']}
                   </div>
+                )}
+                {deleteModal.show && (
+                  <ModalPopUp
+                    closeAction={handleToggleDelete}
+                    saveAction={deleting ? () => {} : deleteModal.action}
+                    saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                    cancelLabel="CANCEL"
+                    message={deleteModal.message}
+                  />
                 )}
               </div>
 
