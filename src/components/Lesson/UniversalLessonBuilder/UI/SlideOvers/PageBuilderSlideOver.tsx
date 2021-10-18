@@ -617,17 +617,20 @@ const PageBuilderSlideOver = ({
 
   const onDeleteMode = actionMode === 'delete' && !notSelected;
   const onDeleteClick = async () => {
+    const currentPage = universalLessonDetails.lessonPlan[lessonState.currentPage];
+    const _pageContent = currentPage?.pageContent || [];
     if (!notSelected) {
-      let updatedList;
       forEach(selectedComponent?.extras, (obj, idx: number) => {
         const partContent = _pageContent[obj.pageContentIdx]?.partContent || [];
 
         const lastItem = partContent.length === 1;
 
         if (lastItem) {
-          remove(_pageContent, (pgContent) => pgContent.id === obj.pageContentID);
+          remove(_pageContent, (pgContent: any) => pgContent.id === obj.pageContentID);
+          setUniversalLessonDetails({...universalLessonDetails});
         } else {
-          remove(partContent, (partContent) => partContent.id === obj.partContentID);
+          remove(partContent, (partContent: any) => partContent.id === obj.partContentID);
+          setUniversalLessonDetails({...universalLessonDetails});
         }
 
         let updatedExtras = [...selectedComponent?.extras].splice(idx, 1);
@@ -636,7 +639,7 @@ const PageBuilderSlideOver = ({
 
       onCancel();
 
-      await addToDB(currentPage);
+      await addToDB(universalLessonDetails);
     }
   };
 
@@ -677,7 +680,6 @@ const PageBuilderSlideOver = ({
     universalLessonDetails.lessonPlan[lessonState.currentPage];
 
   const _pageContent = currentPage?.pageContent || [];
-  
 
   useEffect(() => {
     if (pageContentIdx >= 0) {

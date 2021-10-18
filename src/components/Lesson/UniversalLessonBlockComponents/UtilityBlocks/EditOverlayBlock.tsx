@@ -131,7 +131,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         } else {
           extras.splice(exists, 1);
         }
-        setSelectedComponent({...obj, extras});
+        setSelectedComponent({...obj, extras, pageContentID: null, partContentID: null});
       } else {
         setSelectedComponent({...obj, extras: null});
       }
