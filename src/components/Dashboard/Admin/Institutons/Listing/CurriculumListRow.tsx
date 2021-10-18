@@ -60,20 +60,25 @@ const CurriculumListRow = ({
             content={
               <dl className="grid grid-cols-1 gap-y-3">
                 <div className="col-span-1">
+                  <dt
+                    onClick={() => editCurrentCurricular(item.id)}
+                    className={`${textClass} cursor-pointer`}>
+                    View
+                  </dt>
+                </div>
+                <div className="col-span-1">
                   {checkIfRemovable(item) ? (
                     <dt
                       onClick={() => handleToggleDelete(item.name, item)}
                       className={`cursor-pointer text-red-500 hover:text-red-600`}>
-                      <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
+                      {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
+                      Delete
                     </dt>
                   ) : (
                     <dt
                       className={`text-center text-gray-500 flex flex-row text-xs pointer-events-none`}>
                       <span className="w-auto">
-                        <HiOutlineTrash className="w-4 h-4 pointer-events-none" />
-                      </span>
-                      <span className="w-auto">
-                        {InstitueCurriculum[userLanguage]['NO_DELETE']}
+                        Delete {InstitueCurriculum[userLanguage]['NO_DELETE']}
                       </span>
                     </dt>
                   )}

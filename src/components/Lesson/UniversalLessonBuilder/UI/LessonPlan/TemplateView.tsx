@@ -1,22 +1,25 @@
-import React, { useContext } from 'react';
-import { useHistory } from 'react-router';
+import React, {useContext} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
 
 import Buttons from '../../../../Atoms/Buttons';
 
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import { getAsset } from '../../../../../assets';
-import { useQuery } from '../../../../../customHooks/urlParam';
+import {getAsset} from '../../../../../assets';
+import {useQuery} from '../../../../../customHooks/urlParam';
 import PageTile from '../common/PageTile';
 
-const TemplateView = ({ universalLessonDetails }: any) => {
+const TemplateView = ({universalLessonDetails}: any) => {
   const history = useHistory();
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { LessonBuilderDict } = useDictionary(clientKey);
+  const {LessonBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
-  const pages = universalLessonDetails ?.lessonPlan;
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
+  const pages = universalLessonDetails?.lessonPlan;
   return (
     <div className="w-full m-auto">
       <div className="overflow-hidden mb-4">

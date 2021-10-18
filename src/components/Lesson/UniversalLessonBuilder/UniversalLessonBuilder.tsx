@@ -1,8 +1,10 @@
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {API, graphqlOperation} from 'aws-amplify';
+import {isEmpty} from 'lodash';
+import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
-import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory, useRouteMatch, useParams} from 'react-router';
+import {useHistory, useParams, useRouteMatch} from 'react-router';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../../customGraphql/customQueries';
@@ -16,13 +18,8 @@ import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import BreadCrums from '../../Atoms/BreadCrums';
-import Tooltip from '../../Atoms/Tooltip';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import BuilderWrapper from './views/BuilderWrapper';
-import update from 'lodash/update';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {isEmpty} from 'lodash';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -32,6 +29,7 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
   activeStep?: string;
   lessonName?: string;
   lessonType?: string;
+  instId: string;
 }
 
 interface NewLessonDataInterface {
@@ -84,7 +82,7 @@ const initialUniversalLessonPagePartContent: PartContent = {
 /*******************************************
  * THE BUILDER PARENT                      *
  *******************************************/
-const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
+const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
@@ -401,6 +399,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   //   setUniversalLessonDetails(temp);
   //   return temp;
   // };
+  console.log(
+    '🚀 ~ file: EditOverlayBlock.tsx ~ line 49 ~ EditOverlayBlock ~ selectedComponent',
+    selectedComponent
+  );
 
   const updateBlockContentULBHandler = (
     targetID: string,
@@ -444,7 +446,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
     customPageContentId?: string
   ) => {
-    const pos = selectedComponent.partContentIdx;
+    const pos = selectedComponent?.partContentIdx;
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
     const pageContent = lessonPlan[lessonState.currentPage].pageContent;
@@ -594,6 +596,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
             <BuilderWrapper
               mode={`building`}
+              instId={instId}
               deleteFromULBHandler={deleteULBHandler}
               updateFromULBHandler={updateULBHandler}
               createNewBlockULBHandler={createNewBlockULBHandler}

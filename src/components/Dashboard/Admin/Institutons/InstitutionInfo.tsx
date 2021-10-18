@@ -217,10 +217,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   useEffect(() => {
     getUrl();
-  }, [instProps?.institute.image]);
+  }, [instProps?.institute?.image]);
 
   async function getUrl() {
-    const imageUrl: any = await getImageFromS3(instProps?.institute.image);
+    const imageUrl: any = await getImageFromS3(instProps?.institute?.image);
     setImageUrl(imageUrl);
   }
 
@@ -231,10 +231,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image ? image : fileObj, institute.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, institute?.id, 'image/jpeg');
     const input = {
-      id: institute.id,
-      image: `instituteImages/institute_image_${institute.id}`,
+      id: institute?.id,
+      image: `instituteImages/institute_image_${institute?.id}`,
     };
     await API.graphql(
       graphqlOperation(customMutations.updateInstitution, {input: input})
@@ -270,18 +270,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const handleImageClick = () => mediaRef?.current?.click();
 
   const {
-    id,
-    name,
-    image,
-    type,
-    address,
-    addressLine2,
-    city,
-    state,
-    zip,
-    phone,
-    website,
-    isServiceProvider,
+    address = '',
+    addressLine2 = '',
+    city = '',
+    state = '',
+    zip = '',
+    phone = '',
+    website = '',
+    isServiceProvider = false,
   } = instProps?.institute;
 
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
@@ -317,7 +313,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   className={`w-20 h-20 md:w-40 md:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
                   <Loader />
                 </div>
-              ) : image ? (
+              ) : instProps?.institute?.image ? (
                 imageUrl ? (
                   <div className="relative">
                     <DroppableMedia
@@ -359,20 +355,20 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         style={{
                           /*  stylelint-disable */
                           background: `${
-                            name
+                            instProps?.institute?.name
                               ? stringToHslColor(
-                                  getInitialsFromString(name)[0] +
+                                  getInitialsFromString(instProps?.institute?.name)[0] +
                                     ' ' +
-                                    getInitialsFromString(name)[1]
+                                    getInitialsFromString(instProps?.institute?.name)[1]
                                 )
                               : null
                           }`,
                           textShadow: '0.2rem 0.2rem 3px #423939b3',
                         }}>
-                        {name &&
+                        {instProps?.institute?.name &&
                           initials(
-                            getInitialsFromString(name)[0],
-                            getInitialsFromString(name)[1]
+                            getInitialsFromString(instProps?.institute?.name)[0],
+                            getInitialsFromString(instProps?.institute?.name)[1]
                           )}
                       </div>
                     </div>
@@ -386,7 +382,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               )}
 
               <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
-                <p>{name ? name : ''}</p>
+                <p>{instProps?.institute?.name ? instProps?.institute?.name : ''}</p>
                 {/* <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                   <span
                     className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
@@ -398,7 +394,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </Tooltip> */}
               </div>
             </div>
-            {institute.id && (
+            {institute?.id && (
               <div className="my-5 px-4 mr-2 2xl:mr-4">
                 <div className="flex mt-2">
                   <span className="w-auto mr-2 mt-0.5">

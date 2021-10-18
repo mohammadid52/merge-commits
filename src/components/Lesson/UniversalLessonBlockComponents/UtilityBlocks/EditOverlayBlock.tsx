@@ -8,7 +8,7 @@ import {PartContentSub, UniversalLessonPage} from '@interfaces/UniversalLessonIn
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {IoLocationSharp} from 'react-icons/io5';
 
 interface IEditOverlayBlockProps extends RowWrapperProps {
@@ -58,6 +58,15 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     `lessonPlan[${pageIdx}]`,
     null
   );
+  const [$currentPage, setCurrentPage] = useState(currentPage);
+  useEffect(() => {
+    const currentPage: UniversalLessonPage = get(
+      universalLessonDetails,
+      `lessonPlan[${pageIdx}]`,
+      null
+    );
+    setCurrentPage(currentPage);
+  }, [pageIdx]);
 
   const onComponentCreateClick = () => {
     if (!isEmpty(selectedComponent)) {
@@ -82,13 +91,13 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   };
   // This function will select component position, for adding new component
   const onComponentSelect = (block = false) => {
-    if (currentPage) {
+    if ($currentPage) {
       const pageContentIdx = findIndex(
-        currentPage?.pageContent,
+        $currentPage?.pageContent,
         (d: any) => d.id === pageContentID
       );
 
-      const pageContent = currentPage.pageContent[pageContentIdx];
+      const pageContent = $currentPage.pageContent[pageContentIdx];
       const partContentIdx = findIndex(
         pageContent?.partContent,
         (d) => d.id === partContentID

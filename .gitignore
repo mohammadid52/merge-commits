@@ -31,6 +31,9 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 
+# hello
+.secret-*
+
 #amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
