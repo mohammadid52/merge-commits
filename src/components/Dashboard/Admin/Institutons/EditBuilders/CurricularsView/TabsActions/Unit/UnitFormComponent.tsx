@@ -10,7 +10,6 @@ import MultipleSelector from '../../../../../../../Atoms/Form/MultipleSelector';
 import {languageList} from '../../../../../../../../utilities/staticData';
 import * as mutations from '../../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../../assets';

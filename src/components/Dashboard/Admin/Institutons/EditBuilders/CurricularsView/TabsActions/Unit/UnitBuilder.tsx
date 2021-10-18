@@ -8,8 +8,6 @@ import {useQuery} from '../../../../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import {languageList} from '../../../../../../../../utilities/staticData';
 
-import PageWrapper from '../../../../../../../Atoms/PageWrapper';
-import SectionTitle from '../../../../../../../Atoms/SectionTitle';
 import StepComponent, {
   IStepElementInterface,
 } from '../../../../../../../Atoms/StepComponent';

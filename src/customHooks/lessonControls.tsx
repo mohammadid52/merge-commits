@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {GlobalContext} from '../contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '@graphql/mutations';
