@@ -161,6 +161,13 @@ const LessonControl = () => {
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  /*************************************************
+   * GETS THE INITIAL STUDENT DATA FOR EACH PAGE,  *
+   *    THEN SETS THE SUBSCRIPTION SO THAT EACH    *
+   * TIME A PAGE IS UPDATED, TEACHER RECEIVES THIS *
+   *                  INFORMATION                  *
+   *************************************************/
+
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
 
@@ -208,15 +215,22 @@ const LessonControl = () => {
   };
 
   useEffect(() => {
-    if (lessonState.studentViewing === '') {
-      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
-    }
+    if (lessonState.lessonData.type !== 'survey') {
+      if (lessonState.studentViewing === '') {
+        lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+      }
 
-    if (lessonState.studentViewing !== '') {
-      clearStudentData().then((_: void) =>
-        getStudentData(lessonState.studentViewing).then((_: void) =>
-          console.log('getStudentData teacher - ', 'getted')
-        )
+      if (lessonState.studentViewing !== '') {
+        clearStudentData().then((_: void) =>
+          getStudentData(lessonState.studentViewing).then((_: void) =>
+            console.log('getStudentData teacher - ', 'getted')
+          )
+        );
+      }
+    } else {
+      console.log(
+        'lesson control - ',
+        'not doing anything on view student because survey...'
       );
     }
   }, [lessonState.studentViewing]);
@@ -403,10 +417,6 @@ const LessonControl = () => {
       <div className={`relative w-full h-full flex flex-col`}>
         {/* QUICK REGISTER */}
 
-        {quickRegister && (
-          <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
-        )}
-
         {/* USER MANAGEMENT */}
         <div
           className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
@@ -467,7 +477,6 @@ const LessonControl = () => {
           handleLeavePopup={handleLeavePopup}
           handleHomePopup={handleHomePopup}
           handlePageChange={handlePageChange}
-          setQuickRegister={setQuickRegister}
         />
 
         {/* END TOP MENU */}
@@ -501,7 +510,6 @@ const LessonControl = () => {
 
               <HamburgerMenu
                 handleLeavePopup={handleLeavePopup}
-                setQuickRegister={setQuickRegister}
                 handleHomePopup={handleHomePopup}
               />
             </div> */}

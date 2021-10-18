@@ -15,14 +15,12 @@ interface TopMenuControlProps {
   handleLeavePopup: () => void;
   handleHomePopup: () => void;
   handlePageChange: any;
-  setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TopMenuControl: React.FC<TopMenuControlProps> = ({
   handleLeavePopup,
   handleHomePopup,
   handlePageChange,
-  setQuickRegister,
 }: TopMenuControlProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -79,7 +77,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
 
             <HamburgerMenu
               handleLeavePopup={handleLeavePopup}
-              setQuickRegister={setQuickRegister}
+              // setQuickRegister={setQuickRegister}
               handleHomePopup={handleHomePopup}
             />
           </div>
@@ -91,7 +89,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
           <LessonInfoTitleBar />
           <HamburgerMenu
             handleLeavePopup={handleLeavePopup}
-            setQuickRegister={setQuickRegister}
+            // setQuickRegister={setQuickRegister}
             handleHomePopup={handleHomePopup}
           />
         </div>
