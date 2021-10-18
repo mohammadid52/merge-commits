@@ -142,14 +142,16 @@ const Institution = (props: InstitutionProps) => {
       url: `/dashboard/manage-institutions/institution/${institutionId}/lessons`,
       last: true,
     };
-  } else if (pathname.indexOf('class') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSES'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
-      last: true,
-    };
-  } else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
+  }
+  //  else if (pathname.indexOf('class') > -1) {
+  //   heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSES'];
+  //   breadcrumbPathForSection = {
+  //     title: heroSectionTitle,
+  //     url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
+  //     last: true,
+  //   };
+  // }
+  else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
     breadcrumbPathForSection = {
       title: heroSectionTitle,

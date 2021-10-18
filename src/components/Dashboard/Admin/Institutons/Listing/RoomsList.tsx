@@ -100,9 +100,9 @@ const RoomsList = (props: RoomListProps) => {
                 <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                {/* <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
-                </div>
+                </div> */}
                 <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
@@ -130,9 +130,9 @@ const RoomsList = (props: RoomListProps) => {
                   <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
                     {item.name}
                   </div>
-                  <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
+                  {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                     {item.class?.name}
-                  </div>
+                  </div> */}
                   <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                     {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                   </div>
