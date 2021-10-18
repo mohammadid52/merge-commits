@@ -48,7 +48,12 @@ const Popover = ({
 
   return (
     <ClickAwayListener onClickAway={() => setShow(false)}>
-      <div onClick={() => setShow(!show)} className={`relative ${className}`}>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          setShow(!show);
+        }}
+        className={`relative ${className}`}>
         {children}
         <div onClick={(e: any) => e.stopPropagation()}>
           <Transition

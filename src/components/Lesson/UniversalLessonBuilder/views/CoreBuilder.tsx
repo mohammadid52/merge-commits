@@ -1,10 +1,10 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Tooltip from '@components/Atoms/Tooltip';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
 import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
+import PageBuilderLayout from '@components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
@@ -48,39 +48,6 @@ interface CoreBuilderProps extends ULBSelectionProps {
 
   activePageData: UniversalLessonPage;
 }
-
-const Layout = ({
-  children,
-  open,
-  width = '28rem',
-  style,
-  className = '',
-  overflowHidden = true,
-}: {
-  children: React.ReactNode;
-  open: boolean;
-  style?: any;
-  width?: string;
-  className?: string;
-  overflowHidden?: boolean;
-}) => {
-  return (
-    <div
-      style={{
-        zIndex: 9990,
-        maxWidth: open ? width : '0rem',
-        minWidth: open ? width : '0rem',
-        ...style,
-      }}
-      className={classNames(
-        overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
-        open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform  transition-all duration-300 rounded-lg absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-96 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
-      )}>
-      {children}
-    </div>
-  );
-};
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
@@ -382,8 +349,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     return replaceAllExistingIds;
   };
 
-  const route: any = useRouteMatch();
-
   return (
     <div className="relative">
       {activePageData && show && (
@@ -395,7 +360,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
 
-      <Layout width="40rem" open={newLessonPlanShow}>
+      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
         <NewLessonPlanSO
           instId={instId}
           editMode={editMode}
@@ -405,15 +370,18 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           setOpen={setNewLessonPlanShow}
           activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
         />
-      </Layout>
-      <Layout className="overflow-hidden" overflowHidden open={showLessonEditOverlay}>
+      </PageBuilderLayout>
+      <PageBuilderLayout
+        className="overflow-hidden"
+        overflowHidden
+        open={showLessonEditOverlay}>
         <PageBuilderSlideOver
           deleteFromULBHandler={deleteFromULBHandler}
           open={showLessonEditOverlay}
           handleEditBlockContent={handleEditBlockContent}
           handleModalPopToggle={handleModalPopToggle}
         />
-      </Layout>
+      </PageBuilderLayout>
       <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
 
       <div
