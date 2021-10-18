@@ -1714,6 +1714,7 @@ const RoomEDITdict: any = {
     CLASS_UNIT_PLANNER_TAB_HEADING: 'Unit Planner',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION:
       'Set the schedule for your class and confirm lesson dates',
+    TAB_DISABLED_TOOLTIP_TEXT: 'Add classroom details in step 1 to continue',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
       unabletofetch: 'Unable to fetch organization list. Please try again later.',
@@ -1769,6 +1770,7 @@ const RoomEDITdict: any = {
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
+    TAB_DISABLED_TOOLTIP_TEXT: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -2790,10 +2792,10 @@ const UserInformationDict: any = {
     ondemand: 'On-Demand',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
-    MESSAGE:{
+    MESSAGE: {
       RESET_PASSWORD_SUCCESS: 'Password was reset',
       RESET_PASSWORD_FAILURE: 'Error in resetting password',
-    }
+    },
   },
   ES: {
     heading: 'TBD',
