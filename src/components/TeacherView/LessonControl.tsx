@@ -215,7 +215,7 @@ const LessonControl = () => {
   };
 
   useEffect(() => {
-    if (lessonState.lessonData.type !== 'survey') {
+    if (lessonState.lessonData?.type !== 'survey') {
       if (lessonState.studentViewing === '') {
         lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
       }

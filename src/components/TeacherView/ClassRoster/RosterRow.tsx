@@ -69,7 +69,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
     const button = t.hasAttribute('aria-label');
 
     if (!button) {
-      handleViewStudentData(id);
+      if (lessonState.lessonData?.type !== 'survey') {
+        handleViewStudentData(id);
+      }
       if (!studentIsViewed()) {
         handlePageChange(parseInt(currentLocation));
       }
@@ -176,7 +178,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
             // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
             <div
               id={`${id}`}
-              data-studentID={id}
+              data-studentid={id}
               draggable={false}
               className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
                 active && activeHoverClass
@@ -189,7 +191,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
           // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
           <div
             id={`${id}`}
-            data-studentID={id}
+            data-studentid={id}
             draggable={false}
             className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
               active && activeHoverClass
