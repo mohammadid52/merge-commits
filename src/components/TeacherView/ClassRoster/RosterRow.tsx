@@ -43,6 +43,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ########################### SHARING CHECKS ########################## //
   // ##################################################################### //
 
+  const isLessonSurvey = lessonState.lessonData?.type === 'survey';
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
 
   const studentIsInLesson = () => {
@@ -160,47 +161,61 @@ const RosterRow: React.FC<RosterRowProps> = ({
       </div>
 
       {/* MR SHARE BUTTON */}
-      {studentIsInLesson() ? (
-        anyoneIsShared ? (
-          studentIsShared() ? (
-            // UNSHARE CURRENTLY SHARED STUDENT
-            <div
-              aria-label={`asd`}
-              id={`${id}`}
-              draggable={false}
-              className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
-                active && activeHoverClass
-              }`}
-              onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
-              <span id={`${id}`}>Unshare</span>
-            </div>
+      {!isLessonSurvey ? (
+        studentIsInLesson() ? (
+          anyoneIsShared ? (
+            studentIsShared() ? (
+              // UNSHARE CURRENTLY SHARED STUDENT
+              <div
+                aria-label={`asd`}
+                id={`${id}`}
+                draggable={false}
+                className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
+                  active && activeHoverClass
+                }`}
+                onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+                <span id={`${id}`}>Unshare</span>
+              </div>
+            ) : (
+              // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+              <div
+                id={`${id}`}
+                data-studentid={id}
+                draggable={false}
+                className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+                  active && activeHoverClass
+                }`}
+                onClick={() => {}}>
+                <span className="pointer-events-none">Share</span>
+              </div>
+            )
           ) : (
-            // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+            // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
             <div
               id={`${id}`}
               data-studentid={id}
               draggable={false}
-              className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+              className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
                 active && activeHoverClass
               }`}
-              onClick={() => {}}>
+              onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
               <span className="pointer-events-none">Share</span>
             </div>
           )
-        ) : (
-          // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
-          <div
-            id={`${id}`}
-            data-studentid={id}
-            draggable={false}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
-              active && activeHoverClass
-            }`}
-            onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
-            <span className="pointer-events-none">Share</span>
-          </div>
-        )
-      ) : null}
+        ) : null
+      ) : (
+        // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
+        <div
+          id={`${id}`}
+          data-studentid={id}
+          draggable={false}
+          className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+            active && activeHoverClass
+          }`}
+          onClick={() => {}}>
+          <span className="pointer-events-none">Share</span>
+        </div>
+      )}
     </div>
   );
 };
