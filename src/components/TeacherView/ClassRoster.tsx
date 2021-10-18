@@ -325,25 +325,33 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
-    if (sharedStudent === idStr) {
-      await resetViewAndShare();
-    } else {
-      lessonDispatch({
-        type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {
+    if (lessonState?.lessonData?.type !== 'survey') {
+      if (sharedStudent === idStr) {
+        await resetViewAndShare();
+      } else {
+        lessonDispatch({
+          type: 'SET_ROOM_SUBSCRIPTION_DATA',
+          payload: {
+            id: getRoomData.id,
+            displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+          },
+        });
+        setLocalStorageData('room_info', {
+          ...getRoomData,
+          displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+        });
+        await handleRoomUpdate({
           id: getRoomData.id,
           displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
-        },
-      });
-      setLocalStorageData('room_info', {
-        ...getRoomData,
-        displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
-      });
-      await handleRoomUpdate({
-        id: getRoomData.id,
-        displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
-      });
+        });
+      }
+    } else {
+      console.log(
+        'handleShareStudentData - ',
+        'Not sharing because lesson type is survey'
+      );
     }
+    
   };
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //

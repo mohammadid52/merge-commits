@@ -154,6 +154,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     selectedComponent,
     setShowLocationIcon,
     setNavState,
+    setActionMode,
     setActiveContentItem,
   } = usePageBuilderContext();
 
@@ -265,6 +266,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     if (showPopup) {
       setNavState('home');
       setActiveContentItem(null);
+      setActionMode('init');
 
       wait(700).then(() => {
         setSavingStatus('loading');

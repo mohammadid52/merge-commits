@@ -25,7 +25,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
 
-  const {selectedComponent} = usePageBuilderContext();
+  const {selectedComponent, actionMode} = usePageBuilderContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -50,6 +50,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+  const deleteMode = actionMode === 'delete';
+  const deleteModeCurrentComponentSelected = selectedComponent?.extras || [];
 
   return (
     <div>
@@ -66,9 +68,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 selectedComponent?.pageContentID && !selectedComponent?.partContentID
                   ? `opacity-${
                       pagePart.id === selectedComponent?.pageContentID ? '100' : '50'
-                    } transition-opacity duration-200`
+                    } `
                   : ''
-              }`}>
+              } transition-opacity duration-200`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}

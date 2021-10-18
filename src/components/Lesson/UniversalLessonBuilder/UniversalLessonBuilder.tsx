@@ -1,25 +1,23 @@
+import {GlobalContext} from '@contexts/GlobalContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {API, graphqlOperation} from 'aws-amplify';
-import {isEmpty} from 'lodash';
-import update from 'lodash/update';
-import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import * as customQueries from '../../../customGraphql/customQueries';
-import useDictionary from '../../../customHooks/dictionary';
-import {useQuery} from '../../../customHooks/urlParam';
-import {LessonPlansProps} from '../../../interfaces/LessonInterfaces';
-import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import * as customQueries from '@customGraphql/customQueries';
+import {useQuery} from '@customHooks/urlParam';
+import {LessonPlansProps} from '@interfaces/LessonInterfaces';
+import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
-  UniversalLesson,
   UniversalLessonPage,
-} from '../../../interfaces/UniversalLessonInterfaces';
-import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import BuilderWrapper from './views/BuilderWrapper';
+} from '@interfaces/UniversalLessonInterfaces';
+import {replaceTailwindClass} from '@lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
+import BuilderWrapper from '@lesson/UniversalLessonBuilder/views/BuilderWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
+import {findIndex, isEmpty} from 'lodash';
+import update from 'lodash/update';
+import {nanoid} from 'nanoid';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useParams} from 'react-router';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -32,47 +30,6 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
   instId: string;
 }
 
-interface NewLessonDataInterface {
-  title: string;
-  label: string;
-  summary: string;
-  lessonPlan?: any[];
-  type?: string;
-  institutionID?: string;
-}
-
-/*******************************************
- * INITIAL VALUES                          *
- *******************************************/
-const initialUniversalLessonData: UniversalLesson = {
-  id: '',
-  summary: '',
-  designers: [''],
-  teachers: [''],
-  categories: [''],
-  lessonPlan: [],
-};
-
-const initialUniversalLessonPage: UniversalLessonPage = {
-  id: '',
-  title: '',
-  description: '',
-  class: '',
-  pageContent: [],
-};
-const intitalLessonData: NewLessonDataInterface = {
-  title: '',
-  summary: '',
-  label: '',
-};
-
-const initialUniversalLessonPagePart: PagePart = {
-  id: '',
-  partType: 'default',
-  class: '',
-  partContent: [],
-};
-
 const initialUniversalLessonPagePartContent: PartContent = {
   id: '',
   type: '',
@@ -83,18 +40,14 @@ const initialUniversalLessonPagePartContent: PartContent = {
  * THE BUILDER PARENT                      *
  *******************************************/
 const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
-  const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, clientKey, userLanguage, lessonState} = useContext(
-    GlobalContext
-  );
+  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
 
   const {selectedComponent} = usePageBuilderContext();
 
-  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
     universalLessonDetails,
@@ -102,28 +55,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     selectedPageID,
     setFetchingLessonDetails,
     setSelectedPageID,
-    setEditMode,
-    setNewLessonPlanShow,
   } = useULBContext();
-
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
-      last: false,
-    },
-    {
-      title: universalLessonDetails.title || 'Loading...',
-      url: `/dashboard/lesson-builder/lesson/edit?lessonId=${universalLessonDetails.id}`,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSON_EDITOR'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
-      last: true,
-    },
-  ];
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -289,121 +221,6 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(updated);
   };
 
-  // const createNewBlockULBHandler = (
-  // targetID: string,
-  // propertyToTarget: string,
-  // contentType: string,
-  // inputObj: any,
-  // addBlockAtPosition: number,
-  // classString?: string,
-
-  // customPageContentId?: string
-  // ) => {
-  //   let temp = {...universalLessonDetails};
-  //   const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
-  //     (page: any) => page.id === selectedPageID
-  //   );
-
-  //   let lessonPages = [...universalLessonDetails.lessonPlan];
-  //   let pageContentData = [...lessonPages[activePageIndex].pageContent];
-
-  //   switch (propertyToTarget) {
-  //     case 'pageContent':
-  //       const pageContentId: string = `${nanoid(6)}_part_${pageContentData.length}${`${
-  //         customPageContentId ? `_${customPageContentId}` : ''
-  //       }`}`;
-  // pageContentData.splice(addBlockAtPosition, 0, {
-  //   class: 'rounded-lg',
-  //   id: pageContentId,
-  //   partContent: [
-  //     {
-  //       id: `${nanoid(6)}_${contentType}_1`,
-  //       type: contentType,
-  //       value: inputObj,
-  //       class: classString || '',
-  //     },
-  //   ],
-  //   partType: 'default',
-  // });
-  //       lessonPages[activePageIndex] = {
-  //         ...lessonPages[activePageIndex],
-  //         pageContent: pageContentData,
-  //       };
-  //       break;
-  //     case 'pageContentColumn':
-  //       const splittedPageContentIndex = pageContentData.findIndex(
-  //         (content: any) => content.id === targetID
-  //       );
-  //       if (splittedPageContentIndex > -1) {
-  //         let activePageContentData = pageContentData[splittedPageContentIndex];
-  //         // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent?.length}_${contentType}_0`;
-  //         const alreadyAddedPartContentLength: number =
-  //           activePageContentData.partContent?.length;
-  //         let activePagePartContentData = [...activePageContentData.partContent];
-  //         if (alreadyAddedPartContentLength < inputObj) {
-  //           activePagePartContentData = [
-  //             ...activePagePartContentData,
-  //             ...Array(inputObj - alreadyAddedPartContentLength)
-  //               .fill({})
-  //               .map((_, index: number) => ({
-  //                 id: `${selectedPageID}_part_${alreadyAddedPartContentLength + index}`,
-  //                 value: [],
-  //               })),
-  //           ];
-  //         }
-  //         pageContentData[splittedPageContentIndex] = {
-  //           ...pageContentData[splittedPageContentIndex],
-  //           class: replaceTailwindClass(activePageContentData.class, classString),
-  //           partContent: activePagePartContentData,
-  //         };
-  //         lessonPages[activePageIndex] = {
-  //           ...lessonPages[activePageIndex],
-  //           pageContent: pageContentData,
-  //         };
-  //       }
-  //       break;
-  //     case 'partContent':
-  //       const activePageContentIndex = pageContentData.findIndex(
-  //         (content: any) => content.id === targetID
-  //       );
-  //       if (activePageContentIndex > -1) {
-  //         let activePageContentData = pageContentData[activePageContentIndex];
-  //         let activePagePartContentData = [...activePageContentData.partContent];
-  //         const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${
-  //           activePagePartContentData.filter((item) => item.type === contentType).length
-  //         }`;
-  //         activePagePartContentData[addBlockAtPosition] = {
-  //           id: partContentId,
-  //           type: contentType,
-  //           value: inputObj,
-  //           class: classString || '',
-  //         };
-  //         pageContentData[activePageContentIndex] = {
-  //           ...pageContentData[activePageContentIndex],
-  //           partContent: activePagePartContentData,
-  //         };
-  //         lessonPages[activePageIndex] = {
-  //           ...lessonPages[activePageIndex],
-  //           pageContent: pageContentData,
-  //         };
-  //       }
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  //   temp = {
-  //     ...temp,
-  //     lessonPlan: lessonPages,
-  //   };
-  //   setUniversalLessonDetails(temp);
-  //   return temp;
-  // };
-  console.log(
-    '🚀 ~ file: EditOverlayBlock.tsx ~ line 49 ~ EditOverlayBlock ~ selectedComponent',
-    selectedComponent
-  );
-
   const updateBlockContentULBHandler = (
     targetID: string,
     propertyToTarget: string,
@@ -443,7 +260,6 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     inputObj: any,
     addBlockAtPosition: number,
     classString?: string,
-
     customPageContentId?: string
   ) => {
     const pos = selectedComponent?.partContentIdx;
@@ -451,7 +267,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
 
     const pageContent = lessonPlan[lessonState.currentPage].pageContent;
 
-    if (!isEmpty(selectedComponent)) {
+    if (!isEmpty(selectedComponent) && selectedComponent !== null) {
       const partContent = pageContent[selectedComponent.pageContentIdx].partContent;
       partContent.splice(
         pos + 1,
@@ -476,7 +292,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       const pageContentId: string = `${nanoid(6)}_part_${pageContent.length}${`${
         customPageContentId ? `_${customPageContentId}` : ''
       }`}`;
-      pageContent.splice(pos + 1, 0, {
+      pageContent.push({
         class: 'rounded-lg',
         id: pageContentId,
         partContent: [
@@ -500,75 +316,6 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     }
   };
 
-  // const updateBlockContentULBHandler = (
-  //   targetID: string,
-  //   propertyToTarget: string,
-  //   contentType: string,
-  //   inputObj: any,
-  //   addBlockAtPosition: number,
-  //   classString?: string
-  // ) => {
-  //   let temp = {...universalLessonDetails};
-  //   const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
-  //     (page: any) => page.id === selectedPageID
-  //   );
-  //   let lessonPages = [...universalLessonDetails.lessonPlan];
-  //   let pageContentData = [...lessonPages[activePageIndex].pageContent];
-
-  //   const activePageContentIndex = pageContentData.findIndex(
-  //     (content: any) => content.id === targetID
-  //   );
-
-  //   switch (propertyToTarget) {
-  //     case 'pageContent':
-  //       pageContentData[activePageContentIndex] = {
-  //         ...pageContentData[activePageContentIndex],
-  //         ...inputObj,
-  //       };
-  //       lessonPages[activePageIndex] = {
-  //         ...lessonPages[activePageIndex],
-  //         pageContent: pageContentData,
-  //       };
-
-  //       break;
-
-  //     case 'partContent':
-  //       if (activePageContentIndex > -1) {
-  //         let activePageContentData = pageContentData[activePageContentIndex];
-  //         let activePagePartContentData = activePageContentData.partContent;
-  // activePagePartContentData[addBlockAtPosition] = {
-  //   ...activePagePartContentData[addBlockAtPosition],
-  //   class: classString || activePagePartContentData[addBlockAtPosition].class,
-  //   type: contentType,
-  //   value: inputObj,
-  // };
-
-  //         pageContentData[activePageContentIndex] = {
-  //           ...pageContentData[activePageContentIndex],
-  //           partContent: activePagePartContentData,
-  //         };
-  //         lessonPages[activePageIndex] = {
-  //           ...lessonPages[activePageIndex],
-  //           pageContent: pageContentData,
-  //         };
-  //       }
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  //   temp = {
-  //     ...temp,
-  //     lessonPlan: lessonPages,
-  //   };
-  //   setUniversalLessonDetails(temp);
-  //   return temp;
-  // };
-
-  const onBack = () => {
-    history.goBack();
-  };
-
   return (
     /**
      *
@@ -588,10 +335,10 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         {/* <BreadCrums items={breadCrumsList} /> */}
 
         {/* Body */}
-        <div className="w-full h-full pb-8 m-auto">
+        <div className="w-full h-full m-auto">
           <div
             id={`universalLessonBuilder`}
-            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
+            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-x-hidden overflow-y-hidden mb-4">
             {/*{currentStepComp(universalBuilderStep)}*/}
 
             <BuilderWrapper
