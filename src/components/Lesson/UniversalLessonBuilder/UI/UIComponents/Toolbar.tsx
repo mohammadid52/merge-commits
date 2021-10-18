@@ -45,7 +45,7 @@ const Button = ({
           invert ? 'bg-indigo-600' : 'bg-transparent'
         } ${color} mx-2  w-auto  inline-flex justify-center items-center px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
         {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
-        {text}
+        <span className="hidden xl:block">{text}</span>
       </button>
     </Tooltip>
   );
@@ -112,7 +112,7 @@ const Toolbar = ({
             <div
               className={`${
                 previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-6 '
-              } space-x-6 transition-all transform`}>
+              } space-x-6 transition-all transform flex`}>
               {!previewMode && (
                 <>
                   <Button

@@ -22,7 +22,7 @@ import BuilderRowComposer from '@lesson/UniversalLessonBuilder/views/CoreBuilder
 import ModalPopUp from '@molecules/ModalPopUp';
 import Toolbar from '@uiComponents/Toolbar';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import {find, findLastIndex, map, remove} from 'lodash';
+import {find, findLastIndex, map, remove, isEmpty, findIndex} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory, useRouteMatch} from 'react-router';
@@ -108,15 +108,20 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const {
-    state: {
-      lessonPage: {themeSecBackgroundColor = 'bg-gray-700', themeTextColor = ''} = {},
-    },
-  } = useContext(GlobalContext);
-
+  const {lessonDispatch} = useContext(GlobalContext);
   const params = useQuery(location.search);
 
   const pageId = params.get('pageId');
+
+  useEffect(() => {
+    if (!isEmpty(universalLessonDetails) && pageId) {
+      const pageIdx = findIndex(
+        universalLessonDetails.lessonPlan,
+        (plan: UniversalLessonPage) => plan.id === pageId
+      );
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageIdx >= 0 ? pageIdx : 0});
+    }
+  }, [universalLessonDetails, pageId]);
 
   const {
     showLessonEditOverlay,
@@ -349,6 +354,21 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     return replaceAllExistingIds;
   };
 
+  const getResponsiveMargin = () => {
+    const width = window.screen.availWidth;
+    switch (true) {
+      case width <= 1200:
+        return '-12rem';
+      case width <= 1000:
+        return '-10rem';
+      case width <= 700:
+        return '-7rem';
+
+      default:
+        return '-15rem';
+    }
+  };
+
   return (
     <div className="relative">
       {activePageData && show && (
@@ -361,40 +381,49 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       )}
 
       <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
-        <NewLessonPlanSO
-          instId={instId}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-          open={newLessonPlanShow}
-          setOpen={setNewLessonPlanShow}
-          activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
-        />
+        {newLessonPlanShow && (
+          <div className="p-8">
+            <NewLessonPlanSO
+              instId={instId}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+              open={newLessonPlanShow}
+              setOpen={setNewLessonPlanShow}
+              activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+            />
+          </div>
+        )}
       </PageBuilderLayout>
       <PageBuilderLayout
         className="overflow-hidden"
         overflowHidden
         open={showLessonEditOverlay}>
-        <PageBuilderSlideOver
-          deleteFromULBHandler={deleteFromULBHandler}
-          open={showLessonEditOverlay}
-          handleEditBlockContent={handleEditBlockContent}
-          handleModalPopToggle={handleModalPopToggle}
-        />
+        {showLessonEditOverlay && (
+          <div className="p-8">
+            <PageBuilderSlideOver
+              deleteFromULBHandler={deleteFromULBHandler}
+              open={showLessonEditOverlay}
+              handleEditBlockContent={handleEditBlockContent}
+              handleModalPopToggle={handleModalPopToggle}
+            />
+          </div>
+        )}
       </PageBuilderLayout>
       <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
 
       <div
         id="core-builder"
-        style={{minHeight: '100vh'}}
-        className={`relative  grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
+        style={{minHeight: '100vh', maxHeight: '100vh'}}
+        className={`relative rounded-lg  grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
         <LessonSlideover />
 
         <div
           style={{
-            marginLeft: showLessonEditOverlay || newLessonPlanShow ? '-15rem' : '0rem',
+            marginLeft:
+              showLessonEditOverlay || newLessonPlanShow ? getResponsiveMargin() : '0rem',
           }}
           className={`col-start-2  items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (

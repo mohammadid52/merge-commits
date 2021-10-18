@@ -1,17 +1,22 @@
+import API, {graphqlOperation} from '@aws-amplify/api';
+import Storage from '@aws-amplify/storage';
+import Loader from '@components/Atoms/Loader';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import Csv from '@components/Dashboard/Csv/Csv';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
+import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+import * as customMutations from '@customGraphql/customMutations';
+import DroppableMedia from '@molecules/DroppableMedia';
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
+import {AiOutlineCamera} from 'react-icons/ai';
+import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {IoIosGlobe} from 'react-icons/io';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {AiOutlineCamera} from 'react-icons/ai';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import Storage from '@aws-amplify/storage';
-import API, {graphqlOperation} from '@aws-amplify/api';
-
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
-import * as customMutations from '@customGraphql/customMutations';
 import {getImageFromS3} from '../../../../utilities/services';
 import {
   formatPhoneNumber,
@@ -19,30 +24,21 @@ import {
   initials,
   stringToHslColor,
 } from '../../../../utilities/strings';
-import DroppableMedia from '@molecules/DroppableMedia';
+import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
+import User from '../UserManagement/User';
+import UserLookup from '../UserManagement/UserLookup';
+import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
+import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
+import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
+import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import UnitList from './EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 import ClassList from './Listing/ClassList';
 import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
-import ServiceProviders from './Listing/ServiceProviders';
 import StaffBuilder from './Listing/StaffBuilder';
-import GeneralInformation from './GeneralInformation';
-import LessonsList from '@components/Dashboard/Admin/LessonsBuilder/LessonsList';
-import Csv from '@components/Dashboard/Csv/Csv';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
-import UserLookup from '../UserManagement/UserLookup';
-import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
-import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import Loader from '@components/Atoms/Loader';
-import ClassBuilder from './Builders/ClassBuilder';
-import EditClass from './EditBuilders/EditClass';
-import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
-import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
-import User from '../UserManagement/User';
-import UnitList from './EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
-import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
 import Students from './Students';
+import {useParams} from 'react-router';
+import {useQuery} from '@customHooks/urlParam';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -76,6 +72,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute, tabProps} = instProps;
 
   const match = useRouteMatch();
+
+  const pathname = window.location.pathname;
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
   const [upImage, setUpImage] = useState(null);
@@ -306,7 +304,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
         <div className="flex-col md:flex-row flex justify-center md:justify-start">
-          <div className="w-auto border-r-0 border-gray-200">
+          <div
+            hidden={pathname.includes('page-builder')}
+            className="w-auto border-r-0 border-gray-200">
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
               {imageLoading ? (
                 <div
@@ -463,6 +463,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
+                  <UniversalLessonBuilderProvider>
+                    <Route
+                      path={`${match.url}/lessons`}
+                      render={() => <LessonsBuilderHome instId={institute?.id} />}
+                    />
+                  </UniversalLessonBuilderProvider>
+
                   <Route
                     path={`${match.url}/class`}
                     exact
@@ -598,12 +605,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     path={`${match.url}/course-builder/:courseId`}
                     render={() => <CourseBuilder instId={institute?.id} />} // Edit course
                   />
-                  <UniversalLessonBuilderProvider>
-                    <Route
-                      path={`${match.url}/lessons`}
-                      render={() => <LessonsBuilderHome instId={institute?.id} />}
-                    />
-                  </UniversalLessonBuilderProvider>
                 </Switch>
               </div>
             </div>

@@ -20,14 +20,14 @@ const PageBuilderLayout = ({
     <div
       style={{
         zIndex: 9990,
-        maxWidth: open ? width : '0rem',
-        minWidth: open ? width : '0rem',
+
         ...style,
       }}
+      id="scrollingDiv"
       className={classNames(
         overflowHidden ? '' : 'overflow-y-scroll dark-scroll',
         open ? 'translate-x-0 ' : 'translate-x-full',
-        'p-8 transform  transition-all duration-300 rounded-lg absolute right-0 inset-y-0 break-normal h-full bg-gray-100 dark:bg-gray-800 w-96 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
+        'transform max-w-80 min-w-80 lg:max-w-112 lg:min-w-112   transition-all duration-300 rounded-lg absolute right-0 inset-y-0 break-normal  overlfow-y-hidden bg-gray-100 dark:bg-gray-800 w-96 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
       )}>
       {children}
     </div>

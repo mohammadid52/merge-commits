@@ -32,7 +32,7 @@ const LessonPlanNavigation = ({
   const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
     universalLessonDetails || {};
   const {updateMovableList, fetchingLessonDetails} = useULBContext();
-  const {dispatch} = useContext(GlobalContext);
+  const {dispatch, lessonDispatch} = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
   // const lessonId = params.get('lessonId');
@@ -49,8 +49,10 @@ const LessonPlanNavigation = ({
     updateMovableList(items, 'page');
   };
 
-  const updatePage = (id: string) => {
+  const updatePage = (id: string, idx: number) => {
     setSelectedPageID(id);
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
+
     history.push(
       `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
@@ -150,7 +152,7 @@ const LessonPlanNavigation = ({
                         <li
                           key={index}
                           className="flex w-auto"
-                          onClick={() => updatePage(page.id)}
+                          onClick={() => updatePage(page.id, index)}
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}>

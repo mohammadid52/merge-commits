@@ -14,7 +14,7 @@ import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
 import {reorder} from '@utilities/strings';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import {isEmpty} from 'lodash';
+import {forEach, isEmpty, remove} from 'lodash';
 import map from 'lodash/map';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
@@ -618,15 +618,25 @@ const PageBuilderSlideOver = ({
   const onDeleteMode = actionMode === 'delete' && !notSelected;
   const onDeleteClick = async () => {
     if (!notSelected) {
-      const partContent = _pageContent[pageContentIdx]?.partContent || [];
-      const lastItem = partContent.length === 1;
+      let updatedList;
+      forEach(selectedComponent?.extras, (obj, idx: number) => {
+        const partContent = _pageContent[obj.pageContentIdx]?.partContent || [];
 
-      const updatedList = deleteFromULBHandler(
-        lastItem ? selectedComponent.pageContentID : selectedComponent.partContentID
-      );
+        const lastItem = partContent.length === 1;
+
+        if (lastItem) {
+          remove(_pageContent, (pgContent) => pgContent.id === obj.pageContentID);
+        } else {
+          remove(partContent, (partContent) => partContent.id === obj.partContentID);
+        }
+
+        let updatedExtras = [...selectedComponent?.extras].splice(idx, 1);
+        setSelectedComponent({...selectedComponent, extras: [...updatedExtras]});
+      });
+
       onCancel();
 
-      await addToDB(updatedList);
+      await addToDB(currentPage);
     }
   };
 
@@ -667,6 +677,7 @@ const PageBuilderSlideOver = ({
     universalLessonDetails.lessonPlan[lessonState.currentPage];
 
   const _pageContent = currentPage?.pageContent || [];
+  
 
   useEffect(() => {
     if (pageContentIdx >= 0) {
