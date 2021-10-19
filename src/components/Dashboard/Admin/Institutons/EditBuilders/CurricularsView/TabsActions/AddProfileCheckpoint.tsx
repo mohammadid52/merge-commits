@@ -2,7 +2,7 @@ import React, {useState, Fragment, useEffect, useContext} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import {getTypeString} from '../../../../../../../utilities/strings';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';

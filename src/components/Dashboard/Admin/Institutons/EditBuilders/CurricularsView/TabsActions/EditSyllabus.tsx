@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {FaTrash} from 'react-icons/fa';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums';

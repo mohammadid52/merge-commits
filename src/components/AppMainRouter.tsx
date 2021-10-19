@@ -1,4 +1,6 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';

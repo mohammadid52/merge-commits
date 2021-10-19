@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
 import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory} from 'react-router';
 import {BsCircleFill} from 'react-icons/bs';
 import {HiOutlineRefresh} from 'react-icons/hi';

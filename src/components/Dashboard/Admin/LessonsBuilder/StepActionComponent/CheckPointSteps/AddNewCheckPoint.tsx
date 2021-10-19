@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {remove} from 'lodash';
 import isEqual from 'lodash/isEqual';
 import React, {Fragment, useContext, useEffect, useState} from 'react';

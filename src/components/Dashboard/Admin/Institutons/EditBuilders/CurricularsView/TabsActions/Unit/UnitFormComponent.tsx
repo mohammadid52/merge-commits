@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useParams} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import Buttons from '../../../../../../../Atoms/Buttons';
 import FormInput from '../../../../../../../Atoms/Form/FormInput';

@@ -10,6 +10,7 @@ module.exports = {
     publicPath: '/',
   },
   mode: 'production',
+  node: {fs: 'empty'},
   optimization: {
     usedExports: true,
   },

@@ -14,7 +14,7 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import {UPLOAD_KEYS} from '../../../Lesson/constants';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import Buttons from '@components/Atoms/Buttons';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../../../graphql/mutations';
 
 // ##################################################################### //

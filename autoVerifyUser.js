@@ -4,8 +4,10 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const AWS = require('aws-sdk');
-const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' });
+// const AWS = require('aws-sdk');
+import { CognitoIdentityServiceProvider } from "@aws-sdk/client-cognito-identity";
+
+const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' });
 exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);

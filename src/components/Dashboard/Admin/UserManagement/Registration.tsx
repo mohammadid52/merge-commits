@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import axios from 'axios';
 

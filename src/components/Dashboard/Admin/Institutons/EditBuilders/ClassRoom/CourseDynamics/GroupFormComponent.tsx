@@ -1,7 +1,7 @@
 import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';

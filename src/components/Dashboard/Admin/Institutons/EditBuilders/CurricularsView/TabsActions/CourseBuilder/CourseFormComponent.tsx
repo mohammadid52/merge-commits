@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
@@ -378,14 +378,13 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
             courseData.languages.includes(item.value)
           ),
         });
-      }
-      else{
-        setCurricularData(prevData => ({
+      } else {
+        setCurricularData((prevData) => ({
           ...prevData,
           institute: {
             id: courseData.institution.id,
           },
-        }))
+        }));
       }
       const imageUrl: any = courseData.image
         ? await getImageFromS3(`instituteImages/curricular_image_${courseId}`)

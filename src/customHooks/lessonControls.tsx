@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '@graphql/mutations';
 
 const useLessonControls = () => {

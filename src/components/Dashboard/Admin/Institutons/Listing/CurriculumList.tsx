@@ -6,7 +6,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
 import CurriculumListRow from './CurriculumListRow';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};

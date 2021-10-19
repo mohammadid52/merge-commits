@@ -1,7 +1,7 @@
 import React from 'react';
 import * as customQueries from '../customGraphql/customQueries';
 import * as customMutations from '../customGraphql/customMutations';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 // query all syllabus lessons
 const getSyllabusLessons = async () => {

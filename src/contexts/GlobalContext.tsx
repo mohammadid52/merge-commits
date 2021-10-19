@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useReducer} from 'react';
 import * as mutations from '../graphql/mutations';
 import {globalReducer} from '../reducers/GlobalReducer';

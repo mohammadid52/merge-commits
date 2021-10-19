@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {useQuery} from '@customHooks/urlParam';
 import * as mutations from '@graphql/mutations';
