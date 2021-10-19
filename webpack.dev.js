@@ -1,8 +1,8 @@
-const common = require('./webpack.common.js');
+const common = require('./webpack.config.js');
 const {merge} = require('webpack-merge');
 const webpack = require('webpack');
 
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const smp = new SpeedMeasurePlugin();
 
