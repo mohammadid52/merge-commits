@@ -93,11 +93,11 @@ const RoomsList = (props: RoomListProps) => {
             </div>
 
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div className="flex justify-between bg-gray-50 pl-4 pr-6 py-2 whitespace-nowrap">
+              <div className={`flex justify-between bg-gray-50 pl-4 ${roomList.length > 4 ? 'pr-6' : 'pr-4'} py-2 whitespace-nowrap`}>
                 <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
                 {/* <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -107,7 +107,7 @@ const RoomsList = (props: RoomListProps) => {
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
 
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CURRICULUM']}</span>
                 </div>
 
@@ -124,10 +124,10 @@ const RoomsList = (props: RoomListProps) => {
                   className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 ${
                     i % 2 !== 0 ? 'bg-gray-50' : ''
                   }`}>
-                  <div className="flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
+                  <div className={"flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4"}>
                     {i + 1}.
                   </div>
-                  <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
+                  <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
                     {item.name}
                   </div>
                   {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
@@ -136,7 +136,7 @@ const RoomsList = (props: RoomListProps) => {
                   <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                     {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                   </div>
-                  <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
+                  <div className="flex w-3/10 items-center px-4 py-2 text-left text-s leading-4">
                     {item?.curricula?.items
                       ?.map((d: any) => {
                         return d?.curriculum?.name;
