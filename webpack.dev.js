@@ -3,7 +3,7 @@ const {merge} = require('webpack-merge');
 const webpack = require('webpack');
 
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const smp = new SpeedMeasurePlugin();
 
 module.exports = smp.wrap(
