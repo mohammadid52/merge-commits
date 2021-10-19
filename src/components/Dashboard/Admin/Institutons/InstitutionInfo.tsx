@@ -463,13 +463,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
-                  <UniversalLessonBuilderProvider>
-                    <Route
-                      path={`${match.url}/lessons`}
-                      render={() => <LessonsBuilderHome instId={institute?.id} />}
-                    />
-                  </UniversalLessonBuilderProvider>
-
                   <Route
                     path={`${match.url}/class`}
                     exact
@@ -605,6 +598,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     path={`${match.url}/course-builder/:courseId`}
                     render={() => <CourseBuilder instId={institute?.id} />} // Edit course
                   />
+                  <UniversalLessonBuilderProvider>
+                    <Route
+                      path={`${match.url}/lessons`}
+                      render={() => <LessonsBuilderHome instId={institute?.id} />}
+                    />
+                  </UniversalLessonBuilderProvider>
                 </Switch>
               </div>
             </div>
