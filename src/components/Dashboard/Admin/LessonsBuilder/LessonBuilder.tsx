@@ -447,13 +447,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           },
         })
       );
-      const insitutionRooms: any = await API.graphql(
+      const institutionRooms: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionsForCurricula)
       );
 
       const curriculumIds: any[] = [];
 
-      insitutionRooms?.data?.listInstitutions?.items.forEach((item: any) => {
+      institutionRooms?.data?.listInstitutions?.items.forEach((item: any) => {
         item?.rooms?.items?.forEach((item2: any) => {
           item2?.curricula?.items?.forEach((item3: any) => {
             curriculumIds.push({
@@ -468,7 +468,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           });
         });
       });
-
+      
       setInstitutionCollection(curriculumIds);
 
       const curriculums = list.data?.listCurriculums?.items;

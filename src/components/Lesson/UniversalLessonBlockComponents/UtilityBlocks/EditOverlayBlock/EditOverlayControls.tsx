@@ -19,6 +19,7 @@ import {AiOutlineBgColors, AiOutlineDelete, AiOutlineEdit} from 'react-icons/ai'
 import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
+import {useRouteMatch} from 'react-router';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -90,7 +91,10 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const partContentLen = pageContent?.partContent?.length;
 
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
 
   const DISABLE = {
     BLOCK_UP: pageContentIdx === 0,

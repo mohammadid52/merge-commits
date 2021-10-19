@@ -4,17 +4,19 @@ import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {FaTasks} from 'react-icons/fa';
 import {useHistory} from 'react-router';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import Loader from '../../../../Atoms/Loader';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Popover from '../../../../Atoms/Popover';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import {getAsset} from 'assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useDictionary from '@customHooks/dictionary';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import Buttons from '@atoms/Buttons';
+import Loader from '@atoms/Loader';
+import PageWrapper from '@atoms/PageWrapper';
+import Popover from '@atoms/Popover';
+import ModalPopUp from '@molecules/ModalPopUp';
+import PageBuilderLayout from '@components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
+import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -164,7 +166,8 @@ const LessonActivities = ({
 
   const lessonPagePreview = (id: string, preview: boolean = true) => {
     setPreviewMode(preview);
-    history.push(`/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+    history.push(
+      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 
@@ -194,292 +197,307 @@ const LessonActivities = ({
     // history.goBack();
   };
 
+  const {selectedPageID, getCurrentPage} = useULBContext();
+
   return (
-    <div className="flex m-auto justify-center">
-      <div className="">
-        <PageWrapper defaultClass="px-8 border-0 border-gray-200">
-          {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
+    <>
+      <PageBuilderLayout overflowHidden={false} width="40rem" open={newLessonPlanShow}>
+        <NewLessonPlanSO
+          instId={universalLessonDetails.institutionID}
+          editMode={false}
+          setEditMode={setEditMode}
+          pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+          open={newLessonPlanShow}
+          setOpen={setNewLessonPlanShow}
+          activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+        />
+      </PageBuilderLayout>
+      <div className="flex m-auto justify-center">
+        <div className="">
+          <PageWrapper defaultClass="px-8 border-0 border-gray-200">
+            {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
             {lessonName}
           </h3> */}
-          {loading ? (
-            <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
-              <div className="items-center flex justify-center flex-col">
-                <Loader color="rgba(160, 174, 192, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
-                  Loading Activities
-                </p>
+            {loading ? (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
+                <div className="items-center flex justify-center flex-col">
+                  <Loader color="rgba(160, 174, 192, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Loading Activities
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : true || pages.length > 0 ? (
-            <Fragment>
-              <div className="flex justify-between">
-                <div className="w-auto">
-                  <p className="w-auto px-4 font-bold text-lg flex items-center">
-                    <span className="inline-flex w-4 mr-2">
-                      <FaTasks size={16} />
-                    </span>
+            ) : true || pages.length > 0 ? (
+              <Fragment>
+                <div className="flex justify-between">
+                  <div className="w-auto">
+                    <p className="w-auto px-4 font-bold text-lg flex items-center">
+                      <span className="inline-flex w-4 mr-2">
+                        <FaTasks size={16} />
+                      </span>
+                      <span>
+                        {
+                          LessonBuilderDict[userLanguage][
+                            'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                          ]['HEADING']
+                        }
+                      </span>
+                    </p>
+                  </div>
+                  <span className="w-auto">
+                    <Buttons
+                      btnClass="mx-4"
+                      label={
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ADD_NEW_ACTIVITY']
+                      }
+                      onClick={addNewLessonPlan}
+                    />
+                  </span>
+                </div>
+                <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8 pr-3">
+                  {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>
+                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}
+                  </span>
+                </div> */}
+                  <div className="w-3/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
                           'LESSON_CLASSROOM_ACTIVITY_TABLE'
-                        ]['HEADING']
+                        ]['ACTIVITY_LABEL']
                       }
                     </span>
-                  </p>
-                </div>
-                <span className="w-auto">
-                  <Buttons
-                    btnClass="mx-4"
-                    label={
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ADD_NEW_ACTIVITY'
-                      ]
-                    }
-                    onClick={addNewLessonPlan}
-                  />
-                </span>
-              </div>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8 pr-3">
-                {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}
-                  </span>
-                </div> */}
-                <div className="w-3/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTIVITY_LABEL'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTIVITY_NAME'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-3/10 px-8 py-3 flex justify-start bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'INTERACTION_TYPE'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="flex justify-start w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'INSTRUCTION'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="flex justify-start w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ESTIMATED_TIME'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-center">
-                  <span className="text-center">
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTION'
-                      ]
-                    }
-                  </span>
-                </div>
-              </div>
-              {pages.length ? (
-                <div
-                  className={`${
-                    pages.length > 4 ? 'max-h-88 overflow-y-auto' : ''
-                  } mb-8 w-full m-auto`}>
-                  <DragDropContext onDragEnd={handleOnDragEnd}>
-                    <Droppable droppableId="partContent">
-                      {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {pages.map((page: any, index: number) => (
-                            <PageRow
-                              key={page.id}
-                              index={index}
-                              page={page}
-                              toggleDeleteModal={toggleDeleteModal}
-                              lessonPagePreview={lessonPagePreview}
-                            />
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
-                </div>
-              ) : (
-                <div className="text-center p-5">
-                  You don't have any classroom activity yet.
-                </div>
-              )}
-            </Fragment>
-          ) : (
-            <Fragment>
-              <div className="text-center text-lg text-gray-600 font-medium">
-                <p>You don't have any pages</p>
-              </div>
-              <div className="flex justify-center my-4">
-                <Buttons
-                  btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
-                  onClick={addNewLessonPlan}
-                />
-              </div>
-            </Fragment>
-          )}
-          <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`} />
-          {loading ? (
-            <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
-              <div className="items-center flex justify-center flex-col">
-                <Loader color="rgba(160, 174, 192, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
-                  Loading Activities
-                </p>
-              </div>
-            </div>
-          ) : true || pages.length > 0 ? (
-            <div className="mt-8">
-              <div className="flex justify-between">
-                <div className="w-auto">
-                  <p className="w-auto px-4 font-bold text-lg flex items-center">
-                    <span className="inline-flex w-4 mr-2">
-                      <FaTasks size={16} />
-                    </span>
+                  </div>
+                  <div className="w-5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>
                       {
-                        LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
-                          'HEADING'
-                        ]
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTIVITY_NAME']
                       }
                     </span>
-                  </p>
-                  {/* <p className="w-auto px-4 font-bold text-xs items-center text-gray-500">
-                    {lessonName}
-                  </p> */}
+                  </div>
+                  <div className="w-3/10 px-8 py-3 flex justify-start bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INTERACTION_TYPE']
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-start w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INSTRUCTION']
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-start w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ESTIMATED_TIME']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-center">
+                    <span className="text-center">
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTION']
+                      }
+                    </span>
+                  </div>
                 </div>
-                <span className="w-auto inline-flex items-center">
+                {pages.length ? (
+                  <div
+                    className={`${
+                      pages.length > 4 ? 'max-h-88 overflow-y-auto' : ''
+                    } mb-8 w-full m-auto`}>
+                    <DragDropContext onDragEnd={handleOnDragEnd}>
+                      <Droppable droppableId="partContent">
+                        {(provided) => (
+                          <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {pages.map((page: any, index: number) => (
+                              <PageRow
+                                key={page.id}
+                                index={index}
+                                page={page}
+                                toggleDeleteModal={toggleDeleteModal}
+                                lessonPagePreview={lessonPagePreview}
+                              />
+                            ))}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
+                  </div>
+                ) : (
+                  <div className="text-center p-5">
+                    You don't have any classroom activity yet.
+                  </div>
+                )}
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className="text-center text-lg text-gray-600 font-medium">
+                  <p>You don't have any pages</p>
+                </div>
+                <div className="flex justify-center my-4">
                   <Buttons
                     btnClass="mx-4"
-                    disabled={true}
-                    label={
-                      LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
-                        'ADD_NEW_ACTIVITY'
-                      ]
-                    }
-                    // onClick={addNewLessonPlan}
+                    label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
+                    onClick={addNewLessonPlan}
                   />
-                </span>
+                </div>
+              </Fragment>
+            )}
+            <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`} />
+            {loading ? (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
+                <div className="items-center flex justify-center flex-col">
+                  <Loader color="rgba(160, 174, 192, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Loading Activities
+                  </p>
+                </div>
               </div>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-                {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            ) : true || pages.length > 0 ? (
+              <div className="mt-8">
+                <div className="flex justify-between">
+                  <div className="w-auto">
+                    <p className="w-auto px-4 font-bold text-lg flex items-center">
+                      <span className="inline-flex w-4 mr-2">
+                        <FaTasks size={16} />
+                      </span>
+                      <span>
+                        {
+                          LessonBuilderDict[userLanguage][
+                            'LESSON_HOMEWORK_ACTIVITY_TABLE'
+                          ]['HEADING']
+                        }
+                      </span>
+                    </p>
+                    {/* <p className="w-auto px-4 font-bold text-xs items-center text-gray-500">
+                    {lessonName}
+                  </p> */}
+                  </div>
+                  <span className="w-auto inline-flex items-center">
+                    <Buttons
+                      btnClass="mx-4"
+                      disabled={true}
+                      label={
+                        LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
+                          'ADD_NEW_ACTIVITY'
+                        ]
+                      }
+                      // onClick={addNewLessonPlan}
+                    />
+                  </span>
+                </div>
+                <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+                  {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}
                   </span>
                 </div> */}
-                <div className="w-3/10 px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTIVITY_LABEL'
-                      ]
-                    }
-                  </span>
+                  <div className="w-3/10 px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTIVITY_LABEL']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTIVITY_NAME']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INTERACTION_TYPE']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INSTRUCTION']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ESTIMATED_TIME']
+                      }
+                    </span>
+                  </div>
+                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTION']
+                      }
+                    </span>
+                  </div>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTIVITY_NAME'
-                      ]
-                    }
-                  </span>
+                <div className="text-center p-5">
+                  You don't have any homework activities yet.
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'INTERACTION_TYPE'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'INSTRUCTION'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ESTIMATED_TIME'
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {
-                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                        'ACTION'
-                      ]
-                    }
-                  </span>
-                </div>
+                <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto"></div>
               </div>
-              <div className="text-center p-5">
-                You don't have any homework activities yet.
-              </div>
-              <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto"></div>
-            </div>
-          ) : (
-            <Fragment>
-              <div className="text-center text-lg text-gray-600 font-medium">
-                <p>You don't have any pages</p>
-              </div>
-              <div className="flex justify-center my-4">
-                <Buttons
-                  btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
-                  onClick={addNewLessonPlan}
-                />
-              </div>
-            </Fragment>
+            ) : (
+              <Fragment>
+                <div className="text-center text-lg text-gray-600 font-medium">
+                  <p>You don't have any pages</p>
+                </div>
+                <div className="flex justify-center my-4">
+                  <Buttons
+                    btnClass="mx-4"
+                    label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
+                    onClick={addNewLessonPlan}
+                  />
+                </div>
+              </Fragment>
+            )}
+          </PageWrapper>
+          {showDeleteModal && (
+            <ModalPopUp
+              message={
+                'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.'
+              }
+              closeAction={() => toggleDeleteModal(false)}
+              saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+              saveAction={() => deleteLessonPlan(idToBeRemoved)}
+            />
           )}
-        </PageWrapper>
-        {showDeleteModal && (
-          <ModalPopUp
-            message={
-              'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.'
-            }
-            closeAction={() => toggleDeleteModal(false)}
-            saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-            saveAction={() => deleteLessonPlan(idToBeRemoved)}
-          />
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

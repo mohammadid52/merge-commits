@@ -30,7 +30,7 @@ const HeaderMegaMenu = () => {
           title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
           key: 'general_information',
           redirectionUrl: `${baseUrl}/edit`,
-          active: location.pathname.indexOf('/edit') > -1,
+          active: location.pathname.indexOf(`${baseUrl}/edit`) > -1,
         },
         {
           title: Institute_info[userLanguage]['TABS']['STAFF'],

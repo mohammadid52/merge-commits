@@ -68,22 +68,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/institution/:institutionId`}
           render={() => <Institution tabProps={tabProps} />} // Institution info page
         />
-        {/* <Route
-          path={`${match.url}/class-edit`}
-          render={() => <EditClass />} // Edit current class
-        /> */}
-        {/* <Route
-          path={`${match.url}/room-edit`}
-          render={() => <ClassRoomBuilder />} // Edit current room.
-        /> */}
-        {/* <Route
-          path={`${match.url}/:institutionId/curricular/edit`}
-          render={() => <EditCurricular />} // Edit current curricular
-        /> */}
-        {/* <Route
-          path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/add`}
-          render={() => <AddLearningObjective />} // Add new topic to curricular
-        /> */}
+
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
           render={() => <EditLearningObjective />} // Edit curricular topic

@@ -7,11 +7,11 @@ import {AiOutlineHome} from 'react-icons/ai';
 interface HamburgerMenuProps {
   handleLeavePopup: () => void;
   handleHomePopup: () => void;
-  setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
+  // setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) => {
-  const {handleLeavePopup, setQuickRegister, handleHomePopup} = props;
+  const {handleLeavePopup, handleHomePopup} = props;
   const [hamburgerOpen, setHamburgerOpen] = useState<boolean>(false);
 
   return (

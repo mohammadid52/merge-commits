@@ -16,6 +16,7 @@ export const PageBuilderProvider = ({children}: any) => {
   const [activeContentItem, setActiveContentItem] = useState(null); // content type
   const [showLocationIcon, setShowLocationIcon] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
+  const [showingBlockPin, setShowingBlockPin] = useState(false);
 
   return (
     <PageBuilderContext.Provider
@@ -38,6 +39,8 @@ export const PageBuilderProvider = ({children}: any) => {
         setNavState,
         activeContentItem,
         setActiveContentItem,
+        showingBlockPin,
+        setShowingBlockPin,
       }}>
       {children}
     </PageBuilderContext.Provider>

@@ -1342,3 +1342,9 @@
 .modal-body {
   overflow-y: inherit !important;
 }
+
+.sticky-page-builder {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+}

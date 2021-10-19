@@ -8,7 +8,7 @@ import {PartContentSub, UniversalLessonPage} from '@interfaces/UniversalLessonIn
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {IoLocationSharp} from 'react-icons/io5';
 
 interface IEditOverlayBlockProps extends RowWrapperProps {
@@ -44,9 +44,12 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     actionMode,
     navState,
     selectedType,
+    showingBlockPin,
   } = usePageBuilderContext();
 
   const {setAddContentModal} = useOverlayContext();
+
+  const deleteMode = actionMode === 'delete';
 
   const {
     lessonState: {currentPage: pageIdx},
@@ -57,11 +60,22 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     `lessonPlan[${pageIdx}]`,
     null
   );
+  const [$currentPage, setCurrentPage] = useState(currentPage);
+
+  useEffect(() => {
+    const currentPage: UniversalLessonPage = get(
+      universalLessonDetails,
+      `lessonPlan[${pageIdx}]`,
+      null
+    );
+    setCurrentPage(currentPage);
+  }, [pageIdx]);
 
   const onComponentCreateClick = () => {
     if (!isEmpty(selectedComponent)) {
       setAddContentModal({show: true, type: selectedType});
       const position = selectedComponent.partContentIdx + 1; // this the position idx where the new component will go
+
       if (typeof handleModalPopToggle === 'function') {
         handleModalPopToggle(
           '',
@@ -79,26 +93,26 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     // setActionMode('init');
   };
   // This function will select component position, for adding new component
-  const onComponentSelect = () => {
-    if (currentPage) {
+  const onComponentSelect = (block = false) => {
+    if ($currentPage) {
       const pageContentIdx = findIndex(
-        currentPage?.pageContent,
+        $currentPage?.pageContent,
         (d: any) => d.id === pageContentID
       );
 
-      const pageContent = currentPage.pageContent[pageContentIdx];
+      const pageContent = $currentPage.pageContent[pageContentIdx];
       const partContentIdx = findIndex(
         pageContent?.partContent,
         (d) => d.id === partContentID
       );
 
       // setShowingPin(false);
-
       const obj = {
         pageContentIdx,
         partContentIdx,
         pageContentID,
         partContentID,
+        block: block,
         componentData: {
           type: contentType,
           class: classString,
@@ -106,7 +120,21 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         },
       };
 
-      setSelectedComponent(obj);
+      if (deleteMode) {
+        let extras: any[] = selectedComponent?.extras || [];
+        const exists = extras.findIndex(
+          (p: any) =>
+            p.pageContentID === pageContentID && p.partContentID === partContentID
+        );
+        if (exists === -1) {
+          extras.push({pageContentIdx, partContentIdx, pageContentID, partContentID});
+        } else {
+          extras.splice(exists, 1);
+        }
+        setSelectedComponent({...obj, extras, pageContentID: null, partContentID: null});
+      } else {
+        setSelectedComponent({...obj, extras: null});
+      }
 
       if (actionMode === 'edit') {
         onEditClick();
@@ -126,6 +154,8 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     selectedComponent?.pageContentID === pageContentID &&
     selectedComponent?.partContentID === partContentID;
 
+  const deleteModeCurrentComponentSelected = selectedComponent?.extras || [];
+
   return (
     <Fragment key={`${contentID}`}>
       {mode === 'building' ? (
@@ -140,7 +170,8 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             : ''
         }
         `}>
-          {isComponent &&
+          {!deleteMode &&
+            isComponent &&
             showingPin &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
@@ -151,10 +182,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
                 <button
                   onClick={() => onComponentSelect()}
-                  // onMouseLeave={() => setShowLocationIcon(false)}
-                  // onMouseEnter={() => {
-                  //   setShowLocationIcon(true);
-                  // }}
                   className={`py-1 px-4 ${
                     currentComponentSelected ? '' : 'border'
                   } transition-all duration-300 cursor-pointer`}>
@@ -166,23 +193,60 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 </button>
               </div>
             )}
-          {/* <EditOverlayControls
-            mode={mode}
-            contentID={contentID}
-            pageContentID={pageContentID}
-            classString={classString}
-            isActive={contentID === editedID}
-            isComponent={isComponent}
-            isPagePart={isPagePart}
-            updateContent={updateBlockContentULBHandler}
-            section={section}
-            partContentID={partContentID}
-            handleEditBlockContent={handleEditBlockContent}
-            handleEditBlockToggle={handleEditBlockToggle}
-            createNewBlockULBHandler={createNewBlockULBHandler}
-            deleteFromULBHandler={deleteFromULBHandler}
-            updateFromULBHandler={updateFromULBHandler}
-          /> */}
+          {deleteMode &&
+            isComponent &&
+            showingPin &&
+            !(actionMode === 'edit' && contentType === SPACER) && (
+              <div
+                id="editControlsWrapper"
+                style={{top: '10%', left: '-6%'}}
+                className={`absolute ${
+                  true ? 'active' : ''
+                } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
+                <button
+                  onClick={() => onComponentSelect()}
+                  className={`py-1 px-4 ${
+                    deleteModeCurrentComponentSelected.find(
+                      (p: any) =>
+                        p.pageContentID === pageContentID &&
+                        p.partContentID === partContentID
+                    )
+                      ? ''
+                      : 'border'
+                  } transition-all duration-300 cursor-pointer`}>
+                  {deleteModeCurrentComponentSelected.find(
+                    (p: any) =>
+                      p.pageContentID === pageContentID &&
+                      p.partContentID === partContentID
+                  ) ? (
+                    <IoLocationSharp className="text-2xl text-gray-400" />
+                  ) : (
+                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                  )}
+                </button>
+              </div>
+            )}
+          {showingBlockPin && !(actionMode === 'edit' && contentType === SPACER) && (
+            <div
+              id="editControlsWrapper"
+              style={{top: '10%', right: '-6%'}}
+              className={`absolute ${
+                true ? 'active' : ''
+              } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
+              <button
+                onClick={() => onComponentSelect(true)}
+                className={`py-1 px-4 ${
+                  deleteModeCurrentComponentSelected ? '' : 'border'
+                } transition-all duration-300 cursor-pointer`}>
+                {deleteModeCurrentComponentSelected ? (
+                  <IoLocationSharp className="text-2xl text-gray-400" />
+                ) : (
+                  <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                )}
+              </button>
+            </div>
+          )}
+
           <div>{children}</div>
         </div>
       ) : (

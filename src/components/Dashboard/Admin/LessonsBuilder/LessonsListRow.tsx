@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
+import {HiOutlineTrash} from 'react-icons/hi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import Popover from '../../../Atoms/Popover';
 
@@ -14,6 +17,9 @@ interface LessonsListRow {
   title: string;
   type: string;
   languages: string[];
+  lessonObject?: any;
+  checkIfRemovable?: any;
+  handleToggleDelete?: any;
   createdAt: Date;
   updatedAt: Date;
   zebraStripping?: boolean;
@@ -23,7 +29,8 @@ interface LessonsListRow {
 const LessonsListRow = (props: LessonsListRow) => {
   const match = useRouteMatch();
   const history = useHistory();
-  const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {LessonsListDict} = useDictionary(clientKey);
 
   const handleLessonsEdit = (type: string) => {
     // if (type === 'Lesson') {
@@ -40,6 +47,9 @@ const LessonsListRow = (props: LessonsListRow) => {
     title,
     type,
     languages,
+    lessonObject,
+    checkIfRemovable,
+    handleToggleDelete,
     setShowCloneModal,
     createdAt,
     updatedAt,
@@ -51,6 +61,9 @@ const LessonsListRow = (props: LessonsListRow) => {
     setShowCloneModal({show: true, lessonId: id});
     setShowMenu(false);
   };
+
+  const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
+  const textDisabledClass = ` line-through text-sm leading-5 text-gray-500 hover:text-gray-600 transition-all duration-50`;
 
   return (
     <div
@@ -96,7 +109,7 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div>
 
       <div
-        className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-sm leading-5 font-medium`}>
+        className={`w-1/10 flex justify-center items-center pr-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
             show={showMenu}
@@ -109,14 +122,33 @@ const LessonsListRow = (props: LessonsListRow) => {
             content={
               <dl className="grid grid-cols-1 gap-y-3">
                 <div className="col-span-1">
-                  <dt onClick={() => handleLessonsEdit(type)} className={`${textClass}`}>
+                  <dt
+                    onClick={() => handleLessonsEdit(type)}
+                    className={`${textClass} cursor-pointer`}>
                     Edit
                   </dt>
                 </div>
                 <div className="col-span-1">
-                  <dt onClick={onCloneLesson} className={`${textClass}`}>
+                  <dt onClick={onCloneLesson} className={`${textClass} cursor-pointer`}>
                     Clone Lesson
                   </dt>
+                </div>
+                <div className="col-span-1">
+                  {checkIfRemovable(lessonObject) ? (
+                    <dt
+                      onClick={() => handleToggleDelete(title, lessonObject)}
+                      className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                      {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
+                      Delete
+                    </dt>
+                  ) : (
+                    <dt
+                      className={`text-center text-gray-500 flex flex-row text-xs pointer-events-none`}>
+                      <span className="w-auto">
+                        Delete {LessonsListDict[userLanguage]['NO_DELETE']}
+                      </span>
+                    </dt>
+                  )}
                 </div>
               </dl>
             }>

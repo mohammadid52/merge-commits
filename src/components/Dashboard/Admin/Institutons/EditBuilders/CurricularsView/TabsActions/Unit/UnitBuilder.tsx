@@ -8,8 +8,6 @@ import {useQuery} from '../../../../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import {languageList} from '../../../../../../../../utilities/staticData';
 
-import PageWrapper from '../../../../../../../Atoms/PageWrapper';
-import SectionTitle from '../../../../../../../Atoms/SectionTitle';
 import StepComponent, {
   IStepElementInterface,
 } from '../../../../../../../Atoms/StepComponent';
@@ -27,6 +25,7 @@ interface IUnitData {
   purpose: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
+  lessonHistory: any;
 }
 
 interface IUIMessages {
@@ -57,7 +56,7 @@ const UnitBuilder = ({instId}: any) => {
     lessonError: false,
   });
 
-  const initialData = {
+  const initialData: IUnitData = {
     id: '',
     name: '',
     description: '',
@@ -66,6 +65,7 @@ const UnitBuilder = ({instId}: any) => {
     purpose: '',
     objectives: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
+    lessonHistory: undefined,
   };
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
 
@@ -111,6 +111,7 @@ const UnitBuilder = ({instId}: any) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
+          lessonHistory: savedData.lessonHistory,
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
         const associatedLessons = savedData.lessons?.items;
@@ -177,6 +178,7 @@ const UnitBuilder = ({instId}: any) => {
         return (
           <LessonPlanManager
             syllabusId={unitId}
+            syllabusDetails={syllabusData}
             institutionId={instId}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}

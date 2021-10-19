@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
@@ -16,6 +17,7 @@ interface ICoursePartnerProps {
 }
 
 const CoursePartner = ({roomData}: ICoursePartnerProps) => {
+  const history = useHistory();
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
@@ -120,6 +122,12 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
     setWarnModal((prevValues) => ({...prevValues, show: false}));
   };
 
+  const redirectToUserPage = (studentId: string) => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+    );
+  };
+
   return (
     <div>
       <div className="flex justify-end my-8">
@@ -144,6 +152,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
                 key={group.id}
                 handleEditClick={handleEditClick}
                 handleDelete={() => onDelete(group)}
+                redirectToUserPage={redirectToUserPage}
               />
             ))}
           </div>
