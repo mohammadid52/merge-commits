@@ -342,7 +342,7 @@ module.exports = {
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg': "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
+        'demo-bg': "url('https://selready.s3.us-east-2.amazonaws.com/login-min.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',

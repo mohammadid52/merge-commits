@@ -153,7 +153,7 @@ const StudentsTiles = (props: {
                           onClick={() => {
                             if (student.id && isTeacher) {
                               history.push(
-                                `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${student.id}`
+                                `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${student.id}?from=dashboard`
                               );
                             }
                           }}>

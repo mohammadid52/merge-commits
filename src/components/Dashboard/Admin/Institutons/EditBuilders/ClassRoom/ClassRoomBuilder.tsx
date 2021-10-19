@@ -187,68 +187,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     }
   };
 
-  const validateForm = async () => {
-    if (roomData.name.trim() === '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['classroomrequired'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData?.institute?.id === '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['selectinstitute'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.teacher.id === '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['selectteacher'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.classRoom.id === '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['selectclass'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.maxPersons == '') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
-        isError: true,
-      });
-      return false;
-    }
-    // else if (roomData.maxPersons > '256') {
-    //   setMessages({
-    //     show: true,
-    //     message: RoomEDITdict[userLanguage]['messages']['oneclass'],
-    //     isError: true,
-    //   });
-    //   return false;
-    // }
-    else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
-      const isUniq = await checkUniqRoomName();
-      if (!isUniq) {
-        setMessages({
-          show: true,
-          message: RoomEDITdict[userLanguage]['messages']['alreadyexist'],
-          isError: true,
-        });
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  };
-
   const filterCurricularData = (currId: string) => {
     const currentList = [...curricularList];
     const selectedCurr = currentList.find((item) => item.id === currId);
@@ -370,18 +308,21 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
       stepValue: 'students',
       disabled: !roomId,
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
       disabled: !roomId,
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
       disabled: !roomId,
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
     },
   ];
 
@@ -390,7 +331,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       case 'overview':
         return <ClassRoomForm instId={instId} />;
       case 'students':
-        return <EditClass instId={instId} classId={classID} roomData={roomData}/>;
+        return <EditClass instId={instId} classId={classID} roomData={roomData} />;
       case 'unit-planner':
         return <CourseSchedule roomData={roomData} />;
       case 'class-dynamics':

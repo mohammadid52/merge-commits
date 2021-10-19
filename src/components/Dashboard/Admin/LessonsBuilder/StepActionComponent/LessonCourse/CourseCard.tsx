@@ -1,15 +1,9 @@
 import React, {useState} from 'react';
-import {FaDoorOpen, FaGraduationCap, FaHotel, FaUser} from 'react-icons/fa';
-import {IoIosClose} from 'react-icons/io';
 import {API, graphqlOperation} from 'aws-amplify';
 
-import {getImageFromS3Static} from '../../../../../../utilities/services';
 import * as mutations from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 import {useHistory} from 'react-router';
-import {useEffect} from 'react';
 import {uniqBy} from 'lodash';
 
 const CourseCard = ({
@@ -102,7 +96,7 @@ const CourseCard = ({
             </span>
           ))}
         </div>
-        {uInstitutions.length > 0 && (
+        {uInstitutions.length ? (
           <>
             <div className="border-t-2"></div>
             <div className="mb-4 flex">
@@ -166,6 +160,8 @@ const CourseCard = ({
               </table>
             </div>
           </>
+        ) : (
+          <div>This course is not assigned to any room</div>
         )}
       </div>
     </div>

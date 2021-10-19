@@ -238,7 +238,6 @@ const Registration = ({
             );
           }
         }
-
       }
       handleMessage('success', 'User registered successfully');
       if (isInModalPopup) {
@@ -425,15 +424,17 @@ const Registration = ({
     });
   };
   const fetchInstitutions = async () => {
-    let institutions: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionsList)
-    );
-    institutions = institutions?.data.listInstitutions?.items || [];
-    let list = institutions.map((inst: any) => {
-      return {code: inst.id, name: inst.name};
-    });
-    setInstitutions([list[list.length - 1]]);
-    setInstitutionsData(institutions);
+    try {
+      let institutions: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionsList)
+      );
+      institutions = institutions?.data.listInstitutions?.items || [];
+      let list = institutions.map((inst: any) => {
+        return {code: inst.id, name: inst.name};
+      });
+      setInstitutions([list[list.length - 1]]);
+      setInstitutionsData(institutions);
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -441,11 +442,18 @@ const Registration = ({
   }, []);
 
   useEffect(() => {
-    if (institutionsData.length && instId) {
-      handleInstituteChange({
-        code: instId,
-        name: '',
-      });
+    if (instId) {
+      if (institutionsData.length) {
+        handleInstituteChange({
+          code: instId,
+          name: '',
+        });
+      } else {
+        setNewUserInputs((prevInput) => ({
+          ...prevInput,
+          institution: {id: instId, name: ''},
+        }));
+      }
     }
   }, [institutionsData, instId]);
 

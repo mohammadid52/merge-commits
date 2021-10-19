@@ -252,7 +252,8 @@ export const getClientKey = () => {
   const url = new URL(window.location.href);
   let hostname = url.hostname;
   if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
-  if (hostname.indexOf('demo') >= 0) return 'iconoclast';
+  if (hostname.indexOf('lms') >= 0) return 'demo';
+  if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (hostname.indexOf('curate') >= 0) return 'curate';
   else '';

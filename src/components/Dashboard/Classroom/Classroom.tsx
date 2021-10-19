@@ -69,13 +69,15 @@ export interface Lesson {
 
 export interface LessonProps extends DashboardProps {
   lessons: Lesson[];
+  syllabus?: any;
 }
 
 export interface LessonCardProps {
   isTeacher?: boolean;
   keyProps?: string;
   activeRoomInfo?: any;
-  lessonProps: Lesson;
+  lessonProps?: any;
+  syllabusProps?: any;
   accessible?: boolean;
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
@@ -146,13 +148,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ##################################################################### //
   // ########################## TAB LESSON COUNT ######################### //
   // ##################################################################### //
-  const [lessonGroupCount, setLessonGroupCount] = useState<{
-    open: number;
-    completed: number;
-  }>({
-    open: 0,
-    completed: 0,
-  });
+  // const [lessonGroupCount, setLessonGroupCount] = useState<{
+  //   open: number;
+  //   completed: number;
+  // }>({
+  //   open: 0,
+  //   completed: 0,
+  // });
+  const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
@@ -162,37 +165,57 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   /**
    * Open Lessons
    */
-  const openLessons =
-    state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
-      ? state.roomData.lessons.filter(
-          (lesson: Lesson) =>
-            activeRoomInfo?.completedLessons.findIndex(
-              (item: {lessonID?: string | null; time?: string | null}) =>
-                item.lessonID === lesson.lessonID
-            ) < 0
-        )
-      : [];
+  // const openLessons =
+  //   state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
+  //     ? state.roomData.lessons.filter(
+  //         (lesson: Lesson) =>
+  //           activeRoomInfo?.completedLessons.findIndex(
+  //             (item: {lessonID?: string | null; time?: string | null}) =>
+  //               item.lessonID === lesson.lessonID
+  //           ) < 0
+  //       )
+  //     : [];
 
   /**
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
    */
-  const completedLessons =
-    state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
-      ? state.roomData.lessons.filter(
-          (lesson: Lesson) =>
-            activeRoomInfo?.completedLessons.findIndex(
-              (item: {lessonID?: string | null; time?: string | null}) =>
-                item.lessonID === lesson.lessonID
-            ) > -1
-        )
-      : [];
+  // const completedLessons =
+  //   state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
+  //     ? state.roomData.lessons.filter(
+  //         (lesson: Lesson) =>
+  //           activeRoomInfo?.completedLessons.findIndex(
+  //             (item: {lessonID?: string | null; time?: string | null}) =>
+  //               item.lessonID === lesson.lessonID
+  //           ) > -1
+  //       )
+  //     : [];
+
+  // ~~~~~~~~~~~ EMPTY EVERYGHING ~~~~~~~~~~ //
 
   useEffect(() => {
     if (lessonLoading) {
       setLessonData([]);
     }
   }, [lessonLoading]);
+
+  // ~~~~~~~~~~~~~ SET SYLLABUS ~~~~~~~~~~~~ //
+
+  useEffect(() => {
+    if (state.activeSyllabus) {
+      const foundSyllabus =
+        state.roomData?.syllabus &&
+        state.roomData?.syllabus.find(
+          (syllabusObj: any) => syllabusObj.id === state.activeSyllabus
+        );
+      // console.log('foundSyllabus - ', foundSyllabus);
+      if (foundSyllabus) {
+        setSyllabusData(foundSyllabus);
+      }
+    }
+  }, [state.roomData?.syllabus]);
+
+  // ~~~~~~~~~~~~~~ SETLESSONS ~~~~~~~~~~~~~ //
 
   useEffect(() => {
     // reconstructing lesson data after adding some calculated fields
@@ -248,19 +271,19 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
-  useEffect(() => {
-    if (state.roomData.lessons?.length > 0) {
-      setLessonGroupCount({
-        open: openLessons.length,
-        completed: completedLessons.length,
-      });
-    } else {
-      setLessonGroupCount({
-        open: 0,
-        completed: 0,
-      });
-    }
-  }, [state.roomData.lessons]);
+  // useEffect(() => {
+  //   if (state.roomData.lessons?.length > 0) {
+  //     setLessonGroupCount({
+  //       open: openLessons.length,
+  //       completed: completedLessons.length,
+  //     });
+  //   } else {
+  //     setLessonGroupCount({
+  //       open: 0,
+  //       completed: 0,
+  //     });
+  //   }
+  // }, [state.roomData.lessons]);
 
   // ##################################################################### //
   // ###################### TEACHER SYLLABUS CONTROL ##################### //
@@ -404,6 +427,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       isTeacher={isTeacher}
                       lessonLoading={lessonLoading || settingLessons || syllabusLoading}
                       lessons={lessonData}
+                      syllabus={syllabusData}
                     />
                   </div>
                 </div>

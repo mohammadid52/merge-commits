@@ -3,6 +3,7 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
+import {HiOutlineTrash} from 'react-icons/hi';
 
 interface ICurriculumListRowProps {
   index: number;
@@ -22,7 +23,7 @@ const CurriculumListRow = ({
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculam, BreadcrumsTitles} = useDictionary(clientKey);
+  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -39,7 +40,9 @@ const CurriculumListRow = ({
       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
         {index + 1}.
       </div>
-      <div className="flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+      <div
+        onClick={() => editCurrentCurricular(item.id)}
+        className="cursor-pointer flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
         {item.name ? item.name : ''}
       </div>
 
@@ -57,25 +60,28 @@ const CurriculumListRow = ({
             content={
               <dl className="grid grid-cols-1 gap-y-3">
                 <div className="col-span-1">
-                  {checkIfRemovable(item) ? (
-                    <dt
-                      onClick={() => handleToggleDelete(item.name, item)}
-                      className={`${textClass} cursor-pointer`}>
-                      Delete
-                    </dt>
-                  ) : (
-                    <dt
-                      className={`${textDisabledClass} whitespace-normal break-normal pointer-events-none`}>
-                      Delete {InstitueCurriculam[userLanguage]['NO_DELETE']}
-                    </dt>
-                  )}
-                </div>
-                <div className="col-span-1">
                   <dt
                     onClick={() => editCurrentCurricular(item.id)}
                     className={`${textClass} cursor-pointer`}>
                     View
                   </dt>
+                </div>
+                <div className="col-span-1">
+                  {checkIfRemovable(item) ? (
+                    <dt
+                      onClick={() => handleToggleDelete(item.name, item)}
+                      className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                      {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
+                      Delete
+                    </dt>
+                  ) : (
+                    <dt
+                      className={`text-center text-gray-500 flex flex-row text-xs pointer-events-none`}>
+                      <span className="w-auto">
+                        Delete {InstitueCurriculum[userLanguage]['NO_DELETE']}
+                      </span>
+                    </dt>
+                  )}
                 </div>
               </dl>
             }>
