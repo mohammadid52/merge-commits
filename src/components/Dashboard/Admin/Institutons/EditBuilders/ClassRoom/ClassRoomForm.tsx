@@ -2,23 +2,23 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../../graphql/queries';
-import * as mutation from '../../../../../../graphql/mutations';
+import * as customQueries from '@customGraphql/customQueries';
+import * as customMutations from '@customGraphql/customMutations';
+import * as queries from '@graphql/queries';
+import * as mutation from '@graphql/mutations';
 
-import PageWrapper from '../../../../../Atoms/PageWrapper';
-import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../Atoms/Form/Selector';
-import SelectorWithAvatar from '../../../../../Atoms/Form/SelectorWithAvatar';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import PageWrapper from '@atoms/PageWrapper';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import Selector from '@atoms/Form/Selector';
+import SelectorWithAvatar from '@atoms/Form/SelectorWithAvatar';
+import MultipleSelector from '@atoms/Form/MultipleSelector';
+import ModalPopUp from '@molecules/ModalPopUp';
 
-import {getFilterORArray} from '../../../../../../utilities/strings';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
+import {getFilterORArray} from '@utilities/strings';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
 
 interface ClassRoomFormProps {
   instId: string;

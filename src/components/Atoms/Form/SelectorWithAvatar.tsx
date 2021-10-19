@@ -1,4 +1,6 @@
 import React, {useState, useRef, useContext} from 'react';
+import {IconContext} from 'react-icons';
+import {FaSpinner} from 'react-icons/fa';
 
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -13,6 +15,7 @@ interface selectorProps {
   list?: {id: number; name: string; avatar?: string}[];
   selectedItem?: {value?: string; id?: string};
   btnClass?: string;
+  loading?: boolean;
   arrowHidden?: boolean;
   placeholder: string;
   imageFromS3?: boolean;
@@ -28,6 +31,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
     placeholder,
     onChange,
     imageFromS3 = true,
+    loading,
   } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -43,9 +47,11 @@ const SelectorWithAvatar = (props: selectorProps) => {
   };
 
   const onFocus = () => {
-    if (!showList) {
-      window.addEventListener('click', handleOutsideClick, false);
-      setShowList(true);
+    if (!loading) {
+      if (!showList) {
+        window.addEventListener('click', handleOutsideClick, false);
+        setShowList(true);
+      }
     }
   };
 
@@ -98,24 +104,37 @@ const SelectorWithAvatar = (props: selectorProps) => {
           <span className="block truncate text-gray-700">
             {selectedItem?.value ? selectedItem.value : placeholder}
           </span>
-          <span
-            className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
-              arrowHidden ? 'hidden' : 'flex'
-            }`}>
-            {/* UPDOWN ARRAW */}
-            <svg
-              className="h-5 w-5 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor">
-              <path
-                d="M7 7l3-3 3 3m0 6l-3 3-3-3"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
+          {!loading && (
+            <span
+              className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
+                arrowHidden ? 'hidden' : 'flex'
+              }`}>
+              {/* UPDOWN ARRAW */}
+              <svg
+                className="h-5 w-5 text-gray-400"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor">
+                <path
+                  d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          )}
+
+          {loading && (
+            <IconContext.Provider
+              value={{
+                size: '1.2rem',
+                style: {},
+                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+              }}>
+              <FaSpinner />
+            </IconContext.Provider>
+          )}
         </button>
       </span>
       {showList && (

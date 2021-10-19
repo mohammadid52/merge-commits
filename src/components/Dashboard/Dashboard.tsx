@@ -1,6 +1,7 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
+import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import useNotifications from '@customHooks/notifications';
 import {Menu, Transition} from '@headlessui/react';
@@ -16,6 +17,7 @@ import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
 import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
 import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
+import EmojiFeedback from 'components/General/EmojiFeedback';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -29,8 +31,6 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-import EmojiFeedback from 'components/General/EmojiFeedback';
-import Community from '@components/Community/Community';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const CommunityForStudents = lazy(
   () => import('components/Community/CommunityForStudents')

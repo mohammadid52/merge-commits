@@ -22,6 +22,7 @@ interface RichTextEditorProps {
   withStyles?: boolean;
   maxHeight?: string;
   wrapperClass?: string;
+  placeholder?: string;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
@@ -38,6 +39,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     withStyles = false,
     maxHeight,
     wrapperClass = '',
+    placeholder,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -79,24 +81,24 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     setEditorState(editorState);
   };
 
-  useEffect(() => {
-    if (editorRef && editorRef?.current && withStyles) {
-      // @ts-ignore
-      editorRef?.current?.editor.editor.addEventListener('paste', function (e) {
-        // cancel paste
-        e.preventDefault();
+  // useEffect(() => {
+  //   if (editorRef && editorRef?.current && withStyles) {
+  //     // @ts-ignore
+  //     editorRef?.current?.editor.editor.addEventListener('paste', function (e) {
+  //       // cancel paste
+  //       e.preventDefault();
 
-        // get text representation of clipboard
-        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
-        // insert text manually
-        // this is also not the recommended way to add text but not the worst idea.
-        // If you find better way or in future draftjs provides a feature for this
-        // then replace this with that.
-        // @ts-ignore
-        editorRef.current.editor.editor.innerHTML = text;
-      });
-    }
-  }, []);
+  //       // get text representation of clipboard
+  //       var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+  //       // insert text manually
+  //       // this is also not the recommended way to add text but not the worst idea.
+  //       // If you find better way or in future draftjs provides a feature for this
+  //       // then replace this with that.
+  //       // @ts-ignore
+  //       editorRef.current.editor.editor.innerHTML = text;
+  //     });
+  //   }
+  // }, []);
 
   useEffect(() => {
     const html = initialValue ? initialValue : '<p></p>';
@@ -139,6 +141,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   return (
     <Editor
       ref={editorRef}
+      placeholder={placeholder}
       editorState={editorState}
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}
