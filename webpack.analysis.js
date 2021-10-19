@@ -8,12 +8,12 @@ const smp = new SpeedMeasurePlugin();
 
 module.exports = smp.wrap(
   merge(common, {
-    mode: 'development',
+    mode: 'production',
     watch: false,
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify('development'),
+          NODE_ENV: JSON.stringify('production'),
         },
       }),
       new BundleAnalyzerPlugin(),
