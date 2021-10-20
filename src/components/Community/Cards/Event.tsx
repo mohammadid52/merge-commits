@@ -1,21 +1,13 @@
 import FormInput from '@atoms/Form/FormInput';
-import Storage from '@aws-amplify/storage';
+import Label from '@atoms/Form/Label';
 import Buttons from '@components/Atoms/Buttons';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
+import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
-import File from '@components/Community/File';
-import {Transition} from '@headlessui/react';
-import {UPLOAD_KEYS} from '@lesson/constants';
-import {getAsset} from 'assets';
-import update from 'lodash/update';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
-import {nanoid} from 'nanoid';
-import React, {useCallback, useRef, useState} from 'react';
-import {useDropzone} from 'react-dropzone';
+import React, {useState} from 'react';
 import DatePicker from 'react-datepicker';
-import Label from '@atoms/Form/Label';
-
-const UPLOAD_KEY = UPLOAD_KEYS.COMMUNITY;
 
 const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
   const [file, setFile] = useState<IFile>();
@@ -28,6 +20,7 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
     date: null,
     address: '',
   });
+  const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{description: string; descriptionHtml: string}>({
     description: '',
@@ -40,113 +33,26 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
     fieldHtml: string,
     field: string
   ) => {
+    setError('');
     setUnsavedChanges(true);
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
-  const updateProgress = (file: IFile, progress: IFile['progress']) => {
-    update(file, `progress`, () => progress);
-    setFile({...file});
-  };
-
-  const updateStatus = (file: IFile, _status: IFile['_status']) => {
-    update(file, `_status`, () => _status);
-    setFile({...file});
-  };
-
-  const updateImgId = (file: IFile, fileKey: IFile['fileKey']) => {
-    update(file, `fileKey`, () => fileKey);
-    setFile({...file});
-  };
-
-  const uploadImageToS3 = async (
-    file: any,
-    id: string,
-    type: string,
-    currentFile: any
-  ) => {
-    // Upload file to s3 bucket
-    return new Promise((resolve, reject) => {
-      Storage.put(`${UPLOAD_KEY}${id}`, file, {
-        contentType: type,
-        ContentEncoding: 'base64',
-        progressCallback: ({loaded, total}: any) => {
-          const progress = (loaded * 100) / total;
-
-          updateStatus(currentFile, 'progress');
-
-          updateProgress(currentFile, progress.toFixed(0));
-        },
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          updateStatus(currentFile, 'success');
-          updateProgress(currentFile, null);
-          resolve(true);
-        })
-        .catch((err) => {
-          updateStatus(currentFile, 'failed');
-          updateProgress(currentFile, null);
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const uploadNewFiles = async (acceptedFile: any) => {
-    const id = nanoid(6);
-    const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
-
-    const initState: IFile = {
-      _status: 'progress',
-      progress: fakeInitProgress.toString(),
-      file: acceptedFile,
-      fileName: acceptedFile.name,
-      id,
-    };
-
-    setFile({...initState});
-    let temp = initState.file.name.split('.');
-    const extension = temp.pop();
-    const fileName = `${Date.now()}_${temp
-      .join(' ')
-      .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-    updateImgId(initState, fileName);
-    await uploadImageToS3(initState.file, fileName, initState.file.type, initState);
-  };
-
-  const uploadFile = useCallback(
-    async (acceptedFile) => {
-      await uploadNewFiles(acceptedFile);
-    },
-    [file]
-  );
-
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile,
-  });
-
-  const handleFileSelection = async (e: any) => {
-    if (e.target.files && e.target.files.length > 0) {
-      uploadFile(e.target.files[0]);
+  const _onSubmit = () => {
+    const isValid = validateFields();
+    if (isValid) {
+      const spotlightDetails = {
+        media: file.fileKey,
+        note: fields.description,
+      };
+      onSubmit(spotlightDetails);
+      onCancel();
     }
   };
 
-  const inputOther = useRef(null);
-  const openFilesExplorer = () => inputOther.current.click();
-
-  const fileIcon = getAsset('general', 'fileImg');
-
-  const _onSubmit = () => {
-    const spotlightDetails = {
-      media: file.fileKey,
-      note: fields.description,
-    };
-    onSubmit(spotlightDetails);
-    onCancel();
-  };
-
   const handleDateChange = (data: any, type: string) => {
+    setError('');
+
     if (type === 'startTime') {
       setDetails({...details, startTime: data});
     } else if (type === 'endTime') {
@@ -158,68 +64,37 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
     }
   };
 
+  const validateFields = () => {
+    let isValid = true;
+    if (isEmpty(file)) {
+      setError('Image or video not found');
+      isValid = false;
+    } else if (!overlayText) {
+      setError('Overlay text not found');
+      isValid = false;
+    } else if (!fields.description) {
+      setError('Description not found');
+      isValid = false;
+    } else {
+      setError('');
+      isValid = true;
+    }
+    return isValid;
+  };
+
   return (
     <div className="min-w-256 max-w-256">
-      <div className="px-3 py-4">
-        <Label label="Step 1: Add an image or video" />
+      <Media setError={setError} setFile={setFile} file={file} />
 
-        <div>
-          <div
-            {...getRootProps()}
-            className={`border-${
-              isDragActive ? 'blue' : 'gray'
-            }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
-            <input
-              {...getInputProps()}
-              ref={inputOther}
-              onChange={handleFileSelection}
-              type="file"
-              className="hidden"
-            />
-            <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
-            {isDragActive ? (
-              <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                Drop the files here
-              </p>
-            ) : (
-              <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                Drag 'n' drop your files here, or{' '}
-                <span
-                  onClick={openFilesExplorer}
-                  className="text-blue-500 cursor-pointer">
-                  browse
-                </span>
-              </p>
-            )}
-          </div>
-          <Transition
-            show={!isEmpty(file)}
-            enter="transition-opacity duration-500"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-500"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            className="mt-4 flex flex-col  gap-y-6">
-            {!isEmpty(file) && (
-              <File
-                fileKey={file?.fileKey || 'file'}
-                file={file.file}
-                id={file.id}
-                _status={file._status}
-                progress={file.progress}
-                fileName={file.fileName}
-              />
-            )}
-          </Transition>
-        </div>
-      </div>
       <div className="px-3 py-4">
         <div>
           <FormInput
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
-            onChange={(e) => setOverlayText(e.target.value)}
+            onChange={(e) => {
+              setError('');
+              setOverlayText(e.target.value);
+            }}
             value={overlayText}
           />
         </div>
@@ -303,7 +178,9 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
           </div>
         </div>
       </div>
-
+      <AnimatedContainer show={Boolean(error)}>
+        {error && <p className="text-red-500 text-xs">{error}</p>}
+      </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons

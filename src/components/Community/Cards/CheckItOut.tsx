@@ -1,23 +1,24 @@
+import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
-import Buttons from '@components/Atoms/Buttons';
-import Label from '@components/Atoms/Form/Label';
-import RichTextEditor from '@components/Atoms/RichTextEditor';
+import Label from '@atoms/Form/Label';
+import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
 import React, {useState} from 'react';
 
-const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
+const CheckItOut = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+
+  const [error, setError] = useState('');
+
   const [fields, setFields] = useState<{description: string; descriptionHtml: string}>({
     description: '',
     descriptionHtml: '',
   });
-
-  const [error, setError] = useState('');
 
   const onEditorStateChange = (
     html: string,
@@ -25,20 +26,19 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     fieldHtml: string,
     field: string
   ) => {
-    setUnsavedChanges(true);
     setError('');
+    setUnsavedChanges(true);
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const announcementsDetails = {
+      const spotlightDetails = {
         media: file.fileKey,
-        overlayText: overlayText,
-        description: fields.description,
+        note: fields.description,
       };
-      onSubmit(announcementsDetails);
+      onSubmit(spotlightDetails);
       onCancel();
     }
   };
@@ -64,16 +64,15 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
   return (
     <div className="min-w-256 max-w-256">
       <Media setError={setError} setFile={setFile} file={file} />
-
       <div className="px-3 py-4">
         <div>
           <FormInput
             label="Step 2: Add overlay text"
+            placeHolder="Overlay text"
             onChange={(e) => {
               setError('');
               setOverlayText(e.target.value);
             }}
-            placeHolder={'Overlay Text'}
             value={overlayText}
           />
         </div>
@@ -84,7 +83,7 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
         <div>
           <RichTextEditor
             placeholder={
-              'Why do you want people in the community to know about what is happening'
+              'What do you want people in the community to check out this video or image you uploaded?'
             }
             withStyles
             initialValue={fields.description}
@@ -107,7 +106,6 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
       <AnimatedContainer show={Boolean(error)}>
         {error && <p className="text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
-
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
@@ -123,4 +121,4 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
   );
 };
 
-export default Announcements;
+export default CheckItOut;

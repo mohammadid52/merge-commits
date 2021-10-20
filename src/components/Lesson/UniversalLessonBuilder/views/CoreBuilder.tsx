@@ -368,6 +368,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         return '-15rem';
     }
   };
+  const pathname = window.location.pathname;
 
   return (
     <div className="relative">
@@ -380,8 +381,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
 
-      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
-        {newLessonPlanShow && (
+      <PageBuilderLayout
+        width="40rem"
+        open={newLessonPlanShow && pathname.includes('page-builder')}>
+        {newLessonPlanShow && pathname.includes('page-builder') && (
           <div className="p-8">
             <NewLessonPlanSO
               instId={instId}

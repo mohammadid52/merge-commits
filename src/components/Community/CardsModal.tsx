@@ -1,6 +1,10 @@
 import Modal from '@components/Atoms/Modal';
 import Announcements from '@components/Community/Cards/Announcement';
-import {communityContent, NavStateTypes} from '@components/Community/constants.community';
+import {
+  communityContent,
+  NavStateTypes,
+  communityTypes,
+} from '@components/Community/constants.community';
 import Spotlight from '@components/Community/Cards/Spotlight';
 import Event from '@components/Community/Cards/Event';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
@@ -8,26 +12,27 @@ import {setState} from '@interfaces/index';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import React, {useState} from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import CheckItOut from '@components/Community/Cards/CheckItOut';
 
 const getModalHeader = (navState: NavStateTypes) => {
   switch (navState) {
-    case 'init':
+    case communityTypes.INIT:
       return 'Select Card';
 
-    case 'spotlight':
+    case communityTypes.SPOTLIGHT:
       return 'Spotlight Card';
 
-    case 'announcement':
+    case communityTypes.ANNOUNCEMENTS:
       return 'Announcement Card';
 
-    case 'event':
+    case communityTypes.EVENT:
       return 'Event Card';
 
-    case 'check_it_out':
+    case communityTypes.CHECK_IT_OUT:
       return 'Check It Out Card';
 
     default:
-      break;
+      return 'Select Card';
   }
 };
 
@@ -79,7 +84,12 @@ const CardsModal = ({
 }: {
   showCardsModal: boolean;
   instId: string;
-  functions: {onSpotlightSubmit: any; onAnnouncementSubmit: any; onEventSubmit: any};
+  functions: {
+    onSpotlightSubmit: any;
+    onAnnouncementSubmit: any;
+    onEventSubmit: any;
+    onCheckItOutSubmit: any;
+  };
   setShowCardsModal: setState['boolean'];
 }) => {
   const [navState, setNavState] = useState<NavStateTypes>('init');
@@ -88,7 +98,7 @@ const CardsModal = ({
   const onSpotlight = navState === 'spotlight';
   const onAnnouncement = navState === 'announcement';
   const onEvent = navState === 'event';
-  // const onCheckItOut = navState === 'check_it_out';
+  const onCheckItOut = navState === 'check_it_out';
 
   const onCancel = (): void => {
     setShowCardsModal(false);
@@ -138,6 +148,16 @@ const CardsModal = ({
               {onEvent && (
                 <div className="">
                   <Event onSubmit={() => functions.onEventSubmit()} onCancel={onCancel} />
+                </div>
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onCheckItOut} animationType="translateY">
+              {onCheckItOut && (
+                <div className="">
+                  <CheckItOut
+                    onSubmit={() => functions.onCheckItOutSubmit()}
+                    onCancel={onCancel}
+                  />
                 </div>
               )}
             </AnimatedContainer>

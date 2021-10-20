@@ -18,6 +18,8 @@ import {findIndex, isEmpty, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import FormInput from '@atoms/Form/FormInput';
+import Label from '@components/Atoms/Form/Label';
 
 const InputTag = ({
   tags,
@@ -107,6 +109,7 @@ interface NewLessonPlanSOInterface {
   pageDetails: any;
   activePageData: UniversalLessonPage;
   instId: string;
+  dark?: boolean;
 }
 
 interface ErrorInterface {
@@ -133,11 +136,20 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
   label: '',
 };
 
+const Block = ({children}: {children: React.ReactNode}) => {
+  return <div>{children}</div>;
+};
+
+const Container = ({children}: {children: React.ReactNode}) => {
+  return <div className="flex flex-col space-y-6 p-6">{children}</div>;
+};
+
 const NewLessonPlanSO = ({
   instId,
   open,
   setOpen,
   pageDetails,
+  dark,
 }: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -400,7 +412,9 @@ const NewLessonPlanSO = ({
           />
         </div>
         <div className="ml-3 text-sm">
-          <label htmlFor="group" className="font-medium dark:text-gray-300 text-gray-700">
+          <label
+            htmlFor="group"
+            className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
             {title}
           </label>
           <p className="text-sm whitespace-nowrap text-gray-500">{label}</p>
@@ -512,115 +526,83 @@ const NewLessonPlanSO = ({
           </div>
         </div>
 
-        {/* Divider container */}
-        <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+        <Container>
           {/* Activity name */}
-          <div
-            className={
-              'space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5'
-            }>
-            <div>
-              <label
-                htmlFor="project-name"
-                className="block text-sm font-medium dark:text-white text-gray-900 sm:mt-px sm:pt-2">
-                Activity name <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="sm:col-span-3">
-              <Input
-                placeholder="eg. What is Javascript?"
-                value={title}
-                onChange={onFieldChange}
-                id="title"
-                error={errors?.title}
-              />
-            </div>
-          </div>
+          <Block>
+            <FormInput
+              placeHolder="eg. What is Javascript?"
+              value={title}
+              label="Activity name"
+              isRequired
+              onChange={onFieldChange}
+              dark={dark}
+              id="title"
+              error={errors?.title}
+            />
+          </Block>
           {/* Activity label */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-name"
-                className="block text-sm font-medium text-gray-900 dark:text-white  sm:mt-px sm:pt-2">
-                Activity label <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="sm:col-span-3">
-              <Input
-                showCharacterUsage
-                maxLength={12}
-                placeholder="eg. Let's learn what is javascript"
-                value={label}
-                error={errors?.label}
-                onChange={onFieldChange}
-                id="label"
-              />
-            </div>
-          </div>
-
+          <Block>
+            <FormInput
+              showCharacterUsage
+              label="Activity label"
+              maxLength={12}
+              dark={dark}
+              isRequired
+              placeHolder="eg. Let's learn what is javascript"
+              value={label}
+              error={errors?.label}
+              onChange={onFieldChange}
+              id="label"
+            />
+          </Block>
           {/* Activity Instructions */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium text-gray-900  dark:text-white  sm:mt-px sm:pt-2">
-                Activity instructions
-              </label>
-            </div>
-            <div className="sm:col-span-3 " style={{maxWidth: '36rem'}}>
-              <RichTextEditor
-                initialValue={instructions}
-                onChange={(htmlContent, plainText) =>
-                  onEditorStateChange(
-                    htmlContent,
-                    plainText,
-                    'instructionsHtml',
-                    'instructions'
-                  )
-                }
-              />
-            </div>
-          </div>
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Activity instructions'} />
+            <RichTextEditor
+              initialValue={instructions}
+              onChange={(htmlContent, plainText) =>
+                onEditorStateChange(
+                  htmlContent,
+                  plainText,
+                  'instructionsHtml',
+                  'instructions'
+                )
+              }
+            />
+          </Block>
 
           {/* Interaction Type */}
-          <fieldset>
-            <div className="space-y-2 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:items-start sm:px-10 sm:py-5">
-              <div>
-                <legend className="text-sm font-medium text-gray-900 dark:text-white ">
-                  Interaction type
-                </legend>
-              </div>
-              <div className="w-48">
-                <Checkbox
-                  title={'Group'}
-                  label={'Working as a class to complete activity'}
-                  id={'group'}
-                />
-                <Checkbox
-                  title={'Small Group'}
-                  label={'Working in small groups to complete activity'}
-                  id={'smallGroup'}
-                />
-                <Checkbox
-                  title={'Individual'}
-                  label={'Working individually to complete activity'}
-                  id={'individual'}
-                />
+          <Block>
+            <Label className="mb-1" isRequired label={'Interaction type'} />
 
-                <hr className="border-gray-200" />
-              </div>
+            <div className="w-48">
+              <Checkbox
+                title={'Group'}
+                label={'Working as a class to complete activity'}
+                id={'group'}
+              />
+              <Checkbox
+                title={'Small Group'}
+                label={'Working in small groups to complete activity'}
+                id={'smallGroup'}
+              />
+              <Checkbox
+                title={'Individual'}
+                label={'Working individually to complete activity'}
+                id={'individual'}
+              />
+
+              <hr className="border-gray-200" />
             </div>
-          </fieldset>
+          </Block>
+
           {/* Estimated time */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium dark:text-white  text-gray-900 sm:mt-px sm:pt-2">
-                Estimated time
-              </label>
-            </div>
-            <div className="sm:col-span-3">
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Estimated time'} />
+
+            <div className="">
               <Selector
                 placeholder={'Select estimate time'}
                 list={estimatedTimeList}
@@ -628,17 +610,13 @@ const NewLessonPlanSO = ({
                 onChange={onSelectOption}
               />
             </div>
-          </div>
+          </Block>
           {/* Tags */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium dark:text-white  text-gray-900 sm:mt-px sm:pt-2">
-                Tags
-              </label>
-            </div>
-            <div className="sm:col-span-3">
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Tags'} />
+
+            <div className="sm:col-span-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -646,8 +624,9 @@ const NewLessonPlanSO = ({
                 <InputTag tags={tags} setTags={handleAddTags} />
               </form>
             </div>
-          </div>
-        </div>
+          </Block>
+        </Container>
+
         {/* <hr className="my-2 dark:text-gray-700 text-gray-500" /> */}
 
         {/* Action buttons */}

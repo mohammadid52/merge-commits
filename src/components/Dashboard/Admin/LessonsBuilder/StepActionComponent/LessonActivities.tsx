@@ -198,19 +198,28 @@ const LessonActivities = ({
   };
 
   const {selectedPageID, getCurrentPage} = useULBContext();
+  const pathname = window.location.pathname;
 
   return (
     <>
-      <PageBuilderLayout overflowHidden={false} width="40rem" open={newLessonPlanShow}>
-        <NewLessonPlanSO
-          instId={universalLessonDetails.institutionID}
-          editMode={false}
-          setEditMode={setEditMode}
-          pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-          open={newLessonPlanShow}
-          setOpen={setNewLessonPlanShow}
-          activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
-        />
+      <PageBuilderLayout
+        rounded="_"
+        dark={false}
+        overflowHidden={false}
+        width="40rem"
+        open={newLessonPlanShow && !pathname.includes('page-builder')}>
+        {newLessonPlanShow && !pathname.includes('page-builder') && (
+          <NewLessonPlanSO
+            instId={universalLessonDetails.institutionID}
+            editMode={false}
+            dark={false}
+            setEditMode={setEditMode}
+            pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+            open={newLessonPlanShow}
+            setOpen={setNewLessonPlanShow}
+            activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+          />
+        )}
       </PageBuilderLayout>
       <div className="flex m-auto justify-center">
         <div className="">

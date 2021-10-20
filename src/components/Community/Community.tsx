@@ -53,6 +53,10 @@ const Community = ({role}: {role: string}) => {
     cardList.push({...eventDetails, type: communityTypes.ANNOUNCEMENTS});
     setCardList((prev) => [...prev]);
   };
+  const onCheckItOutSubmit = (checkItOutDetails: any) => {
+    cardList.push({...checkItOutDetails, type: communityTypes.ANNOUNCEMENTS});
+    setCardList((prev) => [...prev]);
+  };
 
   return (
     <DashboardContainer
@@ -62,7 +66,12 @@ const Community = ({role}: {role: string}) => {
       bannerTitle={CommunityDict[userLanguage]['TITLE']}>
       {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
       <CardsModal
-        functions={{onSpotlightSubmit, onAnnouncementSubmit, onEventSubmit}}
+        functions={{
+          onSpotlightSubmit,
+          onAnnouncementSubmit,
+          onEventSubmit,
+          onCheckItOutSubmit,
+        }}
         instId={instId}
         showCardsModal={showCardsModal}
         setShowCardsModal={setShowCardsModal}
@@ -85,13 +94,13 @@ const Community = ({role}: {role: string}) => {
         <ContentCard
           hasBackground={false}
           additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
+          <AddNewCard onClick={() => setShowCardsModal(true)} />
+
           {/* Other Cards here */}
 
           {cardList.map((card) => (
             <Card cardDetails={card} />
           ))}
-
-          <AddNewCard onClick={() => setShowCardsModal(true)} />
         </ContentCard>
       </div>
     </DashboardContainer>

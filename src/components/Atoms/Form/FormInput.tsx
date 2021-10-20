@@ -77,7 +77,9 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           cols={cols}
           id={id}
           value={value}
-          className={`mt-1 max-w-256 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
+          className={`mt-1  ${
+            dark ? 'dark:border-gray-700  dark:text-white dark:bg-gray-800' : ''
+          } max-w-256 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
             theme.outlineNone
@@ -101,7 +103,9 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           maxLength={maxLength}
           name={name}
           onChange={onChange}
-          className={`mt-1 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
+          className={`mt-1 ${
+            dark ? 'dark:border-gray-700  dark:text-white dark:bg-gray-800' : ''
+          } block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
             theme.outlineNone

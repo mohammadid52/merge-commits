@@ -21,6 +21,7 @@ export const communityTypes = {
   ANNOUNCEMENTS: 'announcement',
   EVENT: 'event',
   CHECK_IT_OUT: 'check_it_out',
+  INIT: 'init',
 };
 
 export const communityContent = [
@@ -57,6 +58,9 @@ export const communityContent = [
     iconBackground: 'bg-blue-100',
   },
 ];
+
+export const COMMUNITY_UPLOAD_KEY = 'community/';
+
 export type NavStateTypes =
   | 'init'
   | 'spotlight'
