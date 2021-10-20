@@ -1,5 +1,6 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: path.join(__dirname, './'),
@@ -14,6 +15,45 @@ module.exports = {
   optimization: {
     usedExports: true,
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      templateContent: `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+          <!-- Links href and meta tags content are defined from the app based on the clientKey (iconoclast/project curate)  -->
+          <link rel="icon" type="image/png" sizes="32x32" id="favicon32x32" />
+          <link rel="icon" type="image/png" sizes="16x16" id="favicon16x16" />
+          <link rel="shortcut icon" id="faviconDefault" />
+          <link rel="manifest" id="manifest" />
+
+          <link rel="apple-touch-icon" sizes="180x180" id="appleTouchIcon" />
+          <link rel="mask-icon" id="maskIcon" color="#1c2c42" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+            rel="stylesheet"
+          />
+          <meta name="apple-mobile-web-app-title" />
+          <meta name="application-name" />
+          <meta name="msapplication-TileColor" content="#2b5797" />
+          <meta name="msapplication-TileImage" />
+          <meta name="msapplication-config" />
+          <meta name="theme-color" content="#ffffff" />
+          <title></title>
+        </head>
+        <body>
+          <div id="app" class="container font-open"></div>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        </body>
+      </html>
+      `,
+    }),
+  ],
   resolve: {
     plugins: [
       new TsconfigPathsPlugin({
