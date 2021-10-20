@@ -5955,6 +5955,7 @@ export const getCommunity = /* GraphQL */ `
   query GetCommunity($id: ID!) {
     getCommunity(id: $id) {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -6012,6 +6013,43 @@ export const getCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -6034,6 +6072,7 @@ export const listCommunitys = /* GraphQL */ `
     ) {
       items {
         id
+        institutionID
         cardName
         cardDate
         summary
@@ -6078,6 +6117,25 @@ export const listCommunitys = /* GraphQL */ `
         }
         chat {
           nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt

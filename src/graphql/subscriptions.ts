@@ -12128,6 +12128,7 @@ export const onCreateCommunity = /* GraphQL */ `
   subscription OnCreateCommunity {
     onCreateCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12184,6 +12185,43 @@ export const onCreateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12194,6 +12232,7 @@ export const onUpdateCommunity = /* GraphQL */ `
   subscription OnUpdateCommunity {
     onUpdateCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12250,6 +12289,43 @@ export const onUpdateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12260,6 +12336,7 @@ export const onDeleteCommunity = /* GraphQL */ `
   subscription OnDeleteCommunity {
     onDeleteCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12316,6 +12393,43 @@ export const onDeleteCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

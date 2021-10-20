@@ -1105,6 +1105,7 @@ type File {
 
 type Community @model @key(fields: ["id"]) {
   id: ID!
+  institutionID: ID!
   cardName: String,
   cardDate: AWSDate,
   summary: String,
@@ -1119,6 +1120,7 @@ type Community @model @key(fields: ["id"]) {
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
 type CommunityChat @model 

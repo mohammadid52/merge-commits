@@ -12371,6 +12371,7 @@ export const createCommunity = /* GraphQL */ `
   ) {
     createCommunity(input: $input, condition: $condition) {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12427,6 +12428,43 @@ export const createCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12440,6 +12478,7 @@ export const updateCommunity = /* GraphQL */ `
   ) {
     updateCommunity(input: $input, condition: $condition) {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12496,6 +12535,43 @@ export const updateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12509,6 +12585,7 @@ export const deleteCommunity = /* GraphQL */ `
   ) {
     deleteCommunity(input: $input, condition: $condition) {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12565,6 +12642,43 @@ export const deleteCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
