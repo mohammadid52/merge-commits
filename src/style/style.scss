@@ -1041,6 +1041,30 @@
   }
 }
 
+.event-details-datepicker {
+  .react-datepicker__input-container input {
+    border-radius: 6px;
+    font-size: 0.875rem;
+    border: 1px solid rgba(226, 232, 240, 1);
+    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+      var(--tw-shadow);
+    margin-top: 0.25rem;
+  }
+  .react-datepicker__close-icon {
+    &::after {
+      height: 20px;
+      width: 20px;
+      font-size: 14px;
+    }
+    width: auto;
+  }
+  .react-datepicker__navigation-icon::before {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .wrapperClassName.dark {
   background-color: rgba(50, 50, 62, 1);
   border: 1px solid rgba(50, 50, 62, 1);

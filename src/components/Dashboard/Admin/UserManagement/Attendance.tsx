@@ -1,20 +1,16 @@
-import React, {forwardRef, useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
-import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
-import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
-import DatePicker from 'react-datepicker';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
-
-import * as customQueries from '../../../../customGraphql/customQueries';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-
-import Loader from '../../../Atoms/Loader';
-import Buttons from '../../../Atoms/Buttons';
-
+import React, {forwardRef, useContext, useEffect, useState} from 'react';
+import DatePicker from 'react-datepicker';
+import {IconContext} from 'react-icons';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
+import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {getAsset} from '../../../../assets';
-import 'react-datepicker/dist/react-datepicker.css';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import Buttons from '../../../Atoms/Buttons';
+import Loader from '../../../Atoms/Loader';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
