@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect, Fragment} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
 
 import DropdownForm from './DropdownForm';

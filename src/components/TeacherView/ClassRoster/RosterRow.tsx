@@ -1,4 +1,4 @@
-import {PersonalizeEvents} from 'aws-sdk';
+// import {PersonalizeEvents} from 'aws-sdk';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 

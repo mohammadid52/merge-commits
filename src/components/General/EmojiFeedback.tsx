@@ -5,7 +5,7 @@ import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
 import Modal from '@atoms/Modal';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '@customGraphql/customQueries';
 import * as customMutations from '@customGraphql/customMutations';
 import {GlobalContext} from '@contexts/GlobalContext';

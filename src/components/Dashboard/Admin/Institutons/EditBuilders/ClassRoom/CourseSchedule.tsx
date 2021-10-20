@@ -4,7 +4,7 @@ import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 import {IoIosCalendar} from 'react-icons/io';
 // import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {FaCalendarDay} from 'react-icons/fa';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
 
 import * as mutation from '../../../../../../graphql/mutations';

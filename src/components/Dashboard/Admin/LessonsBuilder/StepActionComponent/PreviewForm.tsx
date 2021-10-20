@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect, Fragment} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
 import {BiChevronDown, BiChevronUp} from 'react-icons/bi';

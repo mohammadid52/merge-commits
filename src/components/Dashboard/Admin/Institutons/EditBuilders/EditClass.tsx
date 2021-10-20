@@ -2,7 +2,7 @@ import React, {Fragment, useState, useEffect, useContext} from 'react';
 import {useHistory} from 'react-router-dom';
 import {HiPencil} from 'react-icons/hi';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import AddButton from '@atoms/Buttons/AddButton';
 import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
