@@ -615,6 +615,7 @@ export const getRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -746,6 +747,7 @@ export const listRooms = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1053,6 +1055,7 @@ export const getClassroomGroups = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1317,6 +1320,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1591,6 +1595,7 @@ export const getClass = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4125,6 +4130,7 @@ export const getPersonLocation = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4506,6 +4512,7 @@ export const getAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -4521,6 +4528,7 @@ export const getAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -4623,6 +4631,7 @@ export const getAttendance = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4861,6 +4870,7 @@ export const getUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       homework {
         id
@@ -4883,6 +4893,7 @@ export const getUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       darkMode
       rubrics
@@ -4949,6 +4960,7 @@ export const listUniversalLessons = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -4964,6 +4976,7 @@ export const listUniversalLessons = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -5330,6 +5343,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -5345,6 +5359,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics

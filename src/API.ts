@@ -873,6 +873,7 @@ export type UniversalLessonPlan = {
   activityType?: string | null,
   interactionType?: Array< string | null > | null,
   tags?: Array< string | null > | null,
+  videoLink?: string | null,
 };
 
 export type UniversalpageContent = {
@@ -934,6 +935,7 @@ export type UniversalLessonFeedback = {
 
 export type StudentSharing = {
   __typename: "StudentSharing",
+  isTeacher?: boolean | null,
   studentAuthID?: string | null,
   lessonPageID?: string | null,
 };
@@ -1339,6 +1341,7 @@ export type CreateRoomInput = {
 };
 
 export type StudentSharingInput = {
+  isTeacher?: boolean | null,
   studentAuthID?: string | null,
   lessonPageID?: string | null,
 };
@@ -2959,6 +2962,7 @@ export type UniversalLessonPlanInput = {
   activityType?: string | null,
   interactionType?: Array< string | null > | null,
   tags?: Array< string | null > | null,
+  videoLink?: string | null,
 };
 
 export type UniversalpageContentInput = {
@@ -6188,6 +6192,7 @@ export type CreateRoomMutation = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -6430,6 +6435,7 @@ export type UpdateRoomMutation = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -6672,6 +6678,7 @@ export type DeleteRoomMutation = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -7213,6 +7220,7 @@ export type CreateClassroomGroupsMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -7404,6 +7412,7 @@ export type UpdateClassroomGroupsMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -7595,6 +7604,7 @@ export type DeleteClassroomGroupsMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -7789,6 +7799,7 @@ export type CreateRoomCoTeachersMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -7963,6 +7974,7 @@ export type UpdateRoomCoTeachersMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -8137,6 +8149,7 @@ export type DeleteRoomCoTeachersMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -8355,6 +8368,7 @@ export type CreateClassMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -8554,6 +8568,7 @@ export type UpdateClassMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -8753,6 +8768,7 @@ export type DeleteClassMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -14538,6 +14554,7 @@ export type CreatePersonLocationMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -14784,6 +14801,7 @@ export type UpdatePersonLocationMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -15030,6 +15048,7 @@ export type DeletePersonLocationMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -15404,6 +15423,7 @@ export type CreateAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -15420,6 +15440,7 @@ export type CreateAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -15529,6 +15550,7 @@ export type CreateAttendanceMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -15687,6 +15709,7 @@ export type UpdateAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -15703,6 +15726,7 @@ export type UpdateAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -15812,6 +15836,7 @@ export type UpdateAttendanceMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -15970,6 +15995,7 @@ export type DeleteAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -15986,6 +16012,7 @@ export type DeleteAttendanceMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16095,6 +16122,7 @@ export type DeleteAttendanceMutation = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -16246,6 +16274,7 @@ export type CreateUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16270,6 +16299,7 @@ export type CreateUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -16337,6 +16367,7 @@ export type UpdateUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16361,6 +16392,7 @@ export type UpdateUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -16428,6 +16460,7 @@ export type DeleteUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16452,6 +16485,7 @@ export type DeleteUniversalLessonMutation = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -17017,6 +17051,7 @@ export type CreateUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -17033,6 +17068,7 @@ export type CreateUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -17157,6 +17193,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -17173,6 +17210,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -17297,6 +17335,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -17313,6 +17352,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -19115,6 +19155,7 @@ export type GetRoomQuery = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -19259,6 +19300,7 @@ export type ListRoomsQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -19591,6 +19633,7 @@ export type GetClassroomGroupsQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -19875,6 +19918,7 @@ export type GetRoomCoTeachersQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -20177,6 +20221,7 @@ export type GetClassQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -22965,6 +23010,7 @@ export type GetPersonLocationQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -23373,6 +23419,7 @@ export type GetAttendanceQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -23389,6 +23436,7 @@ export type GetAttendanceQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -23498,6 +23546,7 @@ export type GetAttendanceQuery = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -23759,6 +23808,7 @@ export type GetUniversalLessonQuery = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -23783,6 +23833,7 @@ export type GetUniversalLessonQuery = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -23847,6 +23898,7 @@ export type ListUniversalLessonsQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -23863,6 +23915,7 @@ export type ListUniversalLessonsQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -24255,6 +24308,7 @@ export type GetUniversalSyllabusLessonQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -24271,6 +24325,7 @@ export type GetUniversalSyllabusLessonQuery = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -25692,6 +25747,7 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -25939,6 +25995,7 @@ export type OnDeletePersonLocationItemSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -26586,6 +26643,7 @@ export type OnChangeRoomSubscription = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -27822,6 +27880,7 @@ export type OnCreateRoomSubscription = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -28059,6 +28118,7 @@ export type OnUpdateRoomSubscription = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -28296,6 +28356,7 @@ export type OnDeleteRoomSubscription = {
     studentViewing?: string | null,
     displayData?:  Array< {
       __typename: "StudentSharing",
+      isTeacher?: boolean | null,
       studentAuthID?: string | null,
       lessonPageID?: string | null,
     } | null > | null,
@@ -28817,6 +28878,7 @@ export type OnCreateClassroomGroupsSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29003,6 +29065,7 @@ export type OnUpdateClassroomGroupsSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29189,6 +29252,7 @@ export type OnDeleteClassroomGroupsSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29378,6 +29442,7 @@ export type OnCreateRoomCoTeachersSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29547,6 +29612,7 @@ export type OnUpdateRoomCoTeachersSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29716,6 +29782,7 @@ export type OnDeleteRoomCoTeachersSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -29929,6 +29996,7 @@ export type OnCreateClassSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -30123,6 +30191,7 @@ export type OnUpdateClassSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -30317,6 +30386,7 @@ export type OnDeleteClassSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -35131,6 +35201,7 @@ export type OnCreatePersonLocationSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -35372,6 +35443,7 @@ export type OnUpdatePersonLocationSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -35613,6 +35685,7 @@ export type OnDeletePersonLocationSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -35967,6 +36040,7 @@ export type OnCreateAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -35983,6 +36057,7 @@ export type OnCreateAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -36092,6 +36167,7 @@ export type OnCreateAttendanceSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -36245,6 +36321,7 @@ export type OnUpdateAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -36261,6 +36338,7 @@ export type OnUpdateAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -36370,6 +36448,7 @@ export type OnUpdateAttendanceSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -36523,6 +36602,7 @@ export type OnDeleteAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -36539,6 +36619,7 @@ export type OnDeleteAttendanceSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -36648,6 +36729,7 @@ export type OnDeleteAttendanceSubscription = {
       studentViewing?: string | null,
       displayData?:  Array< {
         __typename: "StudentSharing",
+        isTeacher?: boolean | null,
         studentAuthID?: string | null,
         lessonPageID?: string | null,
       } | null > | null,
@@ -36779,6 +36861,7 @@ export type OnCreateUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -36803,6 +36886,7 @@ export type OnCreateUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -36865,6 +36949,7 @@ export type OnUpdateUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -36889,6 +36974,7 @@ export type OnUpdateUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -36951,6 +37037,7 @@ export type OnDeleteUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -36975,6 +37062,7 @@ export type OnDeleteUniversalLessonSubscription = {
       activityType?: string | null,
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
+      videoLink?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -37475,6 +37563,7 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -37491,6 +37580,7 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -37610,6 +37700,7 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -37626,6 +37717,7 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -37745,6 +37837,7 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -37761,6 +37854,7 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
         activityType?: string | null,
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
+        videoLink?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,

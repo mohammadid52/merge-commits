@@ -148,6 +148,7 @@ type Room
 }
 
 type StudentSharing {
+  isTeacher:Boolean
   studentAuthID: String
   lessonPageID: String
 }
@@ -882,6 +883,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   studentMaterials: String
   targetAudience: String
   isUsed: Boolean 
+
 }
 
 type UniversalLessonPlan {
@@ -899,6 +901,7 @@ type UniversalLessonPlan {
   activityType: String
   interactionType: [String]
   tags: [String]
+  videoLink: String
 }
 
 type UniversalpageContent {
