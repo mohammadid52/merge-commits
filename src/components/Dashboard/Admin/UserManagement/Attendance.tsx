@@ -3,7 +3,7 @@ import {IconContext} from 'react-icons';
 import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
 

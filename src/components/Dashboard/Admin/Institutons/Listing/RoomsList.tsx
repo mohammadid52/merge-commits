@@ -1,6 +1,6 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import {useHistory} from 'react-router-dom';

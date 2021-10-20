@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {API, graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import {nanoid} from 'nanoid';
 import {FaSpinner} from 'react-icons/fa';

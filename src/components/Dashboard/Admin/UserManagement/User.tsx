@@ -1,5 +1,5 @@
 import useUrlState from '@ahooksjs/use-url-state';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';

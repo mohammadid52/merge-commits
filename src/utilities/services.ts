@@ -1,14 +1,31 @@
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import Storage from '@aws-amplify/storage';
 import awsconfig from '../aws-exports';
 import awsmobile from '../aws-exports';
 
-AWS.config.update({
+// ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //
+const {S3Client, ListObjectsCommand} = require('@aws-sdk/client-s3');
+const {fromCognitoIdentityPool} = require('@aws-sdk/credential-providers');
+
+// ~~~~~~~~~~ CLIENT CONSTRUCTOR ~~~~~~~~~ //
+const s3Client = new S3Client({
   region: awsmobile.aws_cognito_region,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: awsmobile.aws_cognito_identity_pool_id,
+  // old way of providing credentials
+  // credentials: new AWS.CognitoIdentityCredentials({
+  //   IdentityPoolId: awsmobile.aws_cognito_identity_pool_id,
+  // }),
+  credentials: fromCognitoIdentityPool({
+    clientConfig: {region: awsmobile.aws_cognito_region},
+    identityPoolId: awsmobile.aws_cognito_identity_pool_id,
   }),
 });
+
+// AWS.config.update({
+//   region: awsmobile.aws_cognito_region,
+//   credentials: new AWS.CognitoIdentityCredentials({
+//     IdentityPoolId: awsmobile.aws_cognito_identity_pool_id,
+//   }),
+// });
 
 export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
   if (key) {
@@ -56,29 +73,38 @@ export const getImagesFromS3Folder = async (
   limit: number = 10
 ) => {
   try {
-    return new Promise((resolve, reject) => {
-      new AWS.S3().listObjectsV2(
-        {
-          Bucket: awsconfig.aws_user_files_s3_bucket,
-          Prefix: `public/${key}/`,
-          MaxKeys: limit,
-          StartAfter: startAfter,
-        },
-        function (err, data) {
-          // an error occurred
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          } // successful response
-        }
-      );
-    });
+    return await s3Client.send(
+      new ListObjectsCommand({
+        Bucket: awsconfig.aws_user_files_s3_bucket,
+        Prefix: `public/${key}/`,
+        MaxKeys: limit,
+        StartAfter: startAfter,
+      })
+    );
+
+    // return new Promise((resolve, reject) => {
+    //   new AWS.S3().listObjectsV2(
+    //     {
+    //       Bucket: awsconfig.aws_user_files_s3_bucket,
+    //       Prefix: `public/${key}/`,
+    //       MaxKeys: limit,
+    //       StartAfter: startAfter,
+    //     },
+    //     function (err, data) {
+    //       // an error occurred
+    //       if (err) {
+    //         reject(err);
+    //       } else {
+    //         resolve(data);
+    //       } // successful response
+    //     }
+    //   );
+    // });
 
     // const result = await Storage.list(`${key}/`, {
     //   // maxKeys: 2,
     // });
   } catch (error) {
-    return {};
+    console.error('getImagesFromS3Folder ', error);
   }
 };

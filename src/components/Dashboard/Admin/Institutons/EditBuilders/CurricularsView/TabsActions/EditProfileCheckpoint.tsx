@@ -1,5 +1,5 @@
 import React, {useState, Fragment, useEffect, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline, IoClose, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';

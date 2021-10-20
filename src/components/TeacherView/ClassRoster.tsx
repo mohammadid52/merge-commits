@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useLessonControls from '@customHooks/lessonControls';
 import usePrevious from '@customHooks/previousProps';
 import {access} from 'fs';
@@ -351,7 +351,6 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
         'Not sharing because lesson type is survey'
       );
     }
-    
   };
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //

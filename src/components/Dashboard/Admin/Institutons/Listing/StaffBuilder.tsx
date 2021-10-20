@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory, useRouteMatch} from 'react-router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 

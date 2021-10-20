@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import Loader from '@components/Atoms/Loader';
 import Registration from '@components/Dashboard/Admin/UserManagement/Registration';

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
 import FormInput from '../../../../../Atoms/Form/FormInput';

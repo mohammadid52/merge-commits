@@ -1,8 +1,8 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
-import {useHistory,useParams, useRouteMatch} from 'react-router-dom';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -90,7 +90,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     imageCaption: '',
     studentSummary: '',
     lessonPlan: [{}],
-    targetAudience: ''
+    targetAudience: '',
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -297,10 +297,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   }, [formData?.institution]);
 
   useEffect(() => {
-    if(instId && !lessonId){
-      fetchStaffByInstitution(instId)
+    if (instId && !lessonId) {
+      fetchStaffByInstitution(instId);
     }
-  }, [instId, lessonId])
+  }, [instId, lessonId]);
 
   const addCheckpointQuestions = async (
     quesId: string,
@@ -468,7 +468,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           });
         });
       });
-      
+
       setInstitutionCollection(curriculumIds);
 
       const curriculums = list.data?.listCurriculums?.items;
@@ -477,8 +477,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       curriculums.map((curriculum: any) => {
         const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
           (syllabus: any) =>
-            syllabus.unit?.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
-              .length
+            syllabus.unit?.lessons?.items.filter(
+              (lesson: any) => lesson.lessonID === lessonId
+            ).length
         );
         const isCourseAdded = Boolean(assignedSyllabi.length);
         if (isCourseAdded) {
@@ -804,131 +805,129 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       </h3>
       {/* Body */}
       {/* <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}> */}
-        <div className="w-full m-auto">
-          <StepComponent
-            steps={steps}
-            activeStep={activeStep}
-            handleTabSwitch={handleTabSwitch}
-          />
+      <div className="w-full m-auto">
+        <StepComponent
+          steps={steps}
+          activeStep={activeStep}
+          handleTabSwitch={handleTabSwitch}
+        />
 
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
-            {loading ? (
-              <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader />
-                  <p className="mt-2 text-center">
-                    Fetching lesson details please wait...
-                  </p>
-                </div>
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
+          {loading ? (
+            <div className="h-100 flex justify-center items-center">
+              <div className="w-5/10">
+                <Loader />
+                <p className="mt-2 text-center">Fetching lesson details please wait...</p>
               </div>
-            ) : (
-              <div className="">{currentStepComp(activeStep)}</div>
-              // <div>
-              //   <AnimatedContainer show={activeStep === 'overview'} {...animationProps}>
-              //     {activeStep === 'overview' && (
-              //       <AddNewLessonForm
-              //         lessonId={lessonId}
-              //         changeLessonType={changeLessonType}
-              //         formData={formData}
-              //         setFormData={setFormData}
-              //         designerListLoading={designerListLoading}
-              //         designersList={designersList}
-              //         selectedDesigners={selectedDesigners}
-              //         setSelectedDesigners={setSelectedDesigners}
-              //         postLessonCreation={postLessonCreation}
-              //         allMeasurement={measurementList}
-              //         institutionList={institutionList}
-              //         setUnsavedChanges={setUnsavedChanges}
-              //         fetchStaffByInstitution={fetchStaffByInstitution}
-              //       />
-              //     )}
-              //   </AnimatedContainer>
-              //   <AnimatedContainer show={activeStep === 'activities'} {...animationProps}>
-              //     {activeStep === 'activities' && (
-              //       <LessonActivities
-              //         loading={loading}
-              //         lessonId={lessonId}
-              //         lessonName={formData?.name}
-              //         universalLessonDetails={universalLessonDetails}
-              //       />
-              //     )}
-              //   </AnimatedContainer>
-              //   <AnimatedContainer show={activeStep === 'courses'} {...animationProps}>
-              //     {activeStep === 'courses' && (
-              //       <LessonCourse
-              //         institutionCollection={institutionCollection}
-              //         curriculumList={curriculumList}
-              //         fetchCurriculum={fetchCurriculum}
-              //         institution={formData?.institution}
-              //         lessonId={lessonId}
-              //         lessonPlans={universalLessonDetails?.lessonPlan}
-              //         lessonType={formData.type?.value}
-              //         loading={curriculumLoading}
-              //         selectedCurriculums={selectedCurriculumList}
-              //       />
-              //     )}
-              //   </AnimatedContainer>
-              //   <AnimatedContainer
-              //     show={activeStep === 'learning-evidence'}
-              //     {...animationProps}>
-              //     {activeStep === 'learning-evidence' && (
-              //       <LearningEvidence
-              //         fetchLessonRubrics={fetchLessonRubrics}
-              //         institutionId={formData?.institution?.id}
-              //         lessonId={lessonId}
-              //         selectedMeasurements={selectedMeasurements}
-              //         setSelectedMeasurements={setSelectedMeasurements}
-              //         setUnsavedChanges={setUnsavedChanges}
-              //         serverMessage={serverMessage}
-              //         updating={updating}
-              //         updateMeasurementList={updateMeasurementList}
-              //       />
-              //     )}
-              //   </AnimatedContainer>
-              // </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="">{currentStepComp(activeStep)}</div>
+            // <div>
+            //   <AnimatedContainer show={activeStep === 'overview'} {...animationProps}>
+            //     {activeStep === 'overview' && (
+            //       <AddNewLessonForm
+            //         lessonId={lessonId}
+            //         changeLessonType={changeLessonType}
+            //         formData={formData}
+            //         setFormData={setFormData}
+            //         designerListLoading={designerListLoading}
+            //         designersList={designersList}
+            //         selectedDesigners={selectedDesigners}
+            //         setSelectedDesigners={setSelectedDesigners}
+            //         postLessonCreation={postLessonCreation}
+            //         allMeasurement={measurementList}
+            //         institutionList={institutionList}
+            //         setUnsavedChanges={setUnsavedChanges}
+            //         fetchStaffByInstitution={fetchStaffByInstitution}
+            //       />
+            //     )}
+            //   </AnimatedContainer>
+            //   <AnimatedContainer show={activeStep === 'activities'} {...animationProps}>
+            //     {activeStep === 'activities' && (
+            //       <LessonActivities
+            //         loading={loading}
+            //         lessonId={lessonId}
+            //         lessonName={formData?.name}
+            //         universalLessonDetails={universalLessonDetails}
+            //       />
+            //     )}
+            //   </AnimatedContainer>
+            //   <AnimatedContainer show={activeStep === 'courses'} {...animationProps}>
+            //     {activeStep === 'courses' && (
+            //       <LessonCourse
+            //         institutionCollection={institutionCollection}
+            //         curriculumList={curriculumList}
+            //         fetchCurriculum={fetchCurriculum}
+            //         institution={formData?.institution}
+            //         lessonId={lessonId}
+            //         lessonPlans={universalLessonDetails?.lessonPlan}
+            //         lessonType={formData.type?.value}
+            //         loading={curriculumLoading}
+            //         selectedCurriculums={selectedCurriculumList}
+            //       />
+            //     )}
+            //   </AnimatedContainer>
+            //   <AnimatedContainer
+            //     show={activeStep === 'learning-evidence'}
+            //     {...animationProps}>
+            //     {activeStep === 'learning-evidence' && (
+            //       <LearningEvidence
+            //         fetchLessonRubrics={fetchLessonRubrics}
+            //         institutionId={formData?.institution?.id}
+            //         lessonId={lessonId}
+            //         selectedMeasurements={selectedMeasurements}
+            //         setSelectedMeasurements={setSelectedMeasurements}
+            //         setUnsavedChanges={setUnsavedChanges}
+            //         serverMessage={serverMessage}
+            //         updating={updating}
+            //         updateMeasurementList={updateMeasurementList}
+            //       />
+            //     )}
+            //   </AnimatedContainer>
+            // </div>
+          )}
         </div>
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={discardChanges}
-            saveAction={saveBeforeLeave}
-            saveLabel="Yes"
-            message={warnModal.message}
-            loading={updating}
-          />
-        )}
-        {warnModal2.show && (
-          <ModalPopUp
-            noButton="No"
-            noButtonAction={() => onCheckpointModalClose(false)}
-            closeAction={onCheckpointModalClose}
-            saveAction={saveNewCheckPoint}
-            saveLabel="Yes"
-            cancelLabel="Cancel"
-            message={warnModal2.message}
-            loading={savingUnsavedCP}
-            saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
-            noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
-            cancelTooltip={'Continue Editing'}
-          />
-        )}
-        {warnModal2.show && warnModal2.message.includes('required fields') && (
-          <ModalPopUp
-            closeAction={() => {
-              setActiveStep(warnModal2.stepOnHold);
-              setHistoryList([...historyList, warnModal2.stepOnHold]);
-              setWarnModal2({show: false, message: '', stepOnHold: ''});
-              setIndividualFieldEmpty(false);
-            }}
-            saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
-            saveLabel="Sure"
-            saveTooltip="Fill up required fields"
-            cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
-            cancelLabel="Discard"
-            message={warnModal2.message}
-          />
-        )}
+      </div>
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={discardChanges}
+          saveAction={saveBeforeLeave}
+          saveLabel="Yes"
+          message={warnModal.message}
+          loading={updating}
+        />
+      )}
+      {warnModal2.show && (
+        <ModalPopUp
+          noButton="No"
+          noButtonAction={() => onCheckpointModalClose(false)}
+          closeAction={onCheckpointModalClose}
+          saveAction={saveNewCheckPoint}
+          saveLabel="Yes"
+          cancelLabel="Cancel"
+          message={warnModal2.message}
+          loading={savingUnsavedCP}
+          saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
+          noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
+          cancelTooltip={'Continue Editing'}
+        />
+      )}
+      {warnModal2.show && warnModal2.message.includes('required fields') && (
+        <ModalPopUp
+          closeAction={() => {
+            setActiveStep(warnModal2.stepOnHold);
+            setHistoryList([...historyList, warnModal2.stepOnHold]);
+            setWarnModal2({show: false, message: '', stepOnHold: ''});
+            setIndividualFieldEmpty(false);
+          }}
+          saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+          saveLabel="Sure"
+          saveTooltip="Fill up required fields"
+          cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
+          cancelLabel="Discard"
+          message={warnModal2.message}
+        />
+      )}
       {/* </PageWrapper> */}
     </div>
   );

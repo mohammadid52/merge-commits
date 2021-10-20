@@ -9,7 +9,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import * as customQueries from '../../../customGraphql/customQueries';
 import * as customMutations from '../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {API, graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
 import {findIndex, update} from 'lodash';
 import {getAsset} from '../../../assets';

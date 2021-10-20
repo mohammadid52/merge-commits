@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import Selector from '@atoms/Form/Selector';
 import Tooltip from '@atoms/Tooltip';

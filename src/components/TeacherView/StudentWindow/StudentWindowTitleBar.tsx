@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';

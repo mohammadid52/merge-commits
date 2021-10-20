@@ -6,7 +6,7 @@ import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import Storage from '@aws-amplify/storage';
 import * as mutations from '../../../../graphql/mutations';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
 import {getImageFromS3} from '../../../../utilities/services';
