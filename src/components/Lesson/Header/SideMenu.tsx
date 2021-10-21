@@ -1,42 +1,54 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import useStudentTimer from '../../../customHooks/timer';
+import React, {useEffect, useRef} from 'react';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
-import HomeWidget from './SideMenu/HomeWidget';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {AiOutlineVideoCamera} from 'react-icons/ai';
+import ButtonsRound from '@components/Atoms/ButtonsRound';
+import {gsap} from 'gsap/all';
 
-const SideMenu = ({handlePopup}: LessonHeaderBarProps) => {
-  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+const SideMenu = ({
+  videoLink,
+  handleVideoLinkPopup,
+  videoLinkModalVisible,
+}: LessonHeaderBarProps) => {
+  const buttonContainerRef = useRef();
 
-  const initializeTimer = useStudentTimer();
+  const handleClickAnimation = () => {
+    gsap.fromTo(
+      buttonContainerRef.current,
+      {scaleX: 0.8, scaleY: 0.8},
+      {scaleX: 1, scaleY: 1, duration: 0.5, ease: 'elastic.out(1, 0.3)'}
+    );
+    handleVideoLinkPopup();
+  };
+
+  useEffect(() => {
+    const appearAnimation = gsap.fromTo(
+      buttonContainerRef.current,
+      {scaleX: 0.8, scaleY: 0.8},
+      {scaleX: 1, scaleY: 1, duration: 0.5, ease: 'elastic.out(1, 0.3)'}
+    );
+    return () => {
+      appearAnimation.kill();
+    };
+  }, [videoLink]);
 
   // @ts-ignore
   return (
     <>
-      <div className={`absolute w-16 content-end`}>
-        {/**
-         * AUTOSAVE
-         */}
-        {lessonState.viewing ? (
-          <div
-            className={`cursor-default flex flex-col justify-center items-center mb-4`}>
-            <div className="relative flex items-center justify-center h-4 w-4 m-1">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600" />
-            </div>
-            <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
-          </div>
-        ) : null}
-
-        {/**
-         * HOME
-         */}
-        <HomeWidget handlePopup={() => handlePopup(false)} />
-
-        {/**
-         * NOTES
-         */}
-        {/* <NotesWidget overlay={overlay} setOverlay={setOverlay} /> */}
+      <div
+        ref={buttonContainerRef}
+        className={`absolute w-16 left-1 transform translate-y-4`}>
+        <ButtonsRound
+          onClick={handleClickAnimation}
+          Icon={AiOutlineVideoCamera}
+          iconSizePX={24}
+          buttonWHClass={`w-8 h-8`}
+          containerBgClass={`${
+            videoLinkModalVisible ? 'bg-white bg-opacity-70' : 'bg-white'
+          } p-2 rounded-full`}
+          buttonBgClass={`bg-transparent`}
+          iconTxtColorClass={`text-green-500`}
+          disabled={videoLinkModalVisible}
+        />
       </div>
     </>
   );
