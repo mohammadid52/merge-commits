@@ -104,10 +104,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     setClassroomCurriculum,
     classroomCurriculum,
     isTeacher,
+    isOnDemandStudent,
     currentPage,
     activeRoomInfo,
     setActiveRoomInfo,
-    activeRoomName,
     lessonLoading,
     syllabusLoading,
     handleRoomSelection,
@@ -115,24 +115,29 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //
-  const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
-  const showClassDetails: boolean = !isEmpty(activeRoomInfo);
+  const gContext = useContext(GlobalContext);
+  const state = gContext.state;
+  const dispatch = gContext.dispatch;
+  const stateUser = gContext.stateUser;
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  const userLanguage = gContext.userLanguage;
+
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
-  const themeColor = getAsset(clientKey, 'themeClassName');
   const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   // ##################################################################### //
   // ########################### ROOM SWITCHING ########################## //
   // ##################################################################### //
   useEffect(() => {
-    if (state.user.role === 'ST') {
+    if (stateUser?.role === 'ST') {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
-    if (state.user.role === 'TR' || state.user.role === 'FLW') {
+    if (stateUser?.role === 'TR' || stateUser?.role === 'FLW') {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
     }
-  }, [state.user.role]);
+  }, [stateUser?.role]);
 
   const roomId = match?.params?.roomId;
 
@@ -344,8 +349,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   return (
     <>
       <DashboardContainer
+        user={stateUser}
+        theme={theme}
+        clientKey={clientKey}
         bannerImg={bannerImg}
-        currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
         <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
@@ -415,6 +422,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   subtitle={
                     isTeacher
                       ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                      : isOnDemandStudent
+                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
                       : 'To enter classroom, select open lesson for this week'
                   }
                 />

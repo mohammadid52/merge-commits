@@ -6,8 +6,8 @@
   "scripts": {
     "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx",
     "build": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.prod.js",
-    "build:dev": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.dev.js",
-    "build:prod": "webpack --config webpack.prod.js",
+    "build:dev": "NODE_ENV=development node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.dev.js ",
+    "build:prod": "NODE_ENV=production webpack --config webpack.prod.js ",
     "watch": "npm run build:dev && node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --watch  --inline --hot --progress --config webpack.dev.js",
     "start": "npx servor public index.html 8085 --reload",
     "analysis": "webpack --config webpack.analysis.js"
@@ -54,6 +54,7 @@
     "prettier": "2.2.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-icons": "^4.2.0",
+    "react-player": "^2.9.0",
     "sass": "^1.26.11",
     "sass-loader": "^8.0.2",
     "servor": "^4.0.2",
@@ -120,7 +121,6 @@
     "react-html-parser": "^2.0.2",
     "react-image-crop": "8.6.6",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-player": "^2.9.0",
     "react-router-dom": "^5.1.2",
     "react-tagsinput": "^3.19.0",
     "react-tiny-link": "^3.6.1",

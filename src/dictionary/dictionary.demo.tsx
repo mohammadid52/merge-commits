@@ -729,6 +729,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'Unit Manager',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -766,6 +768,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'TBD',
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
