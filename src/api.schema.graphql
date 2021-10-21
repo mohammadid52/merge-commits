@@ -148,6 +148,7 @@ type Room
 }
 
 type StudentSharing {
+  isTeacher:Boolean
   studentAuthID: String
   lessonPageID: String
 }
@@ -882,6 +883,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   studentMaterials: String
   targetAudience: String
   isUsed: Boolean 
+
 }
 
 type UniversalLessonPlan {
@@ -899,6 +901,7 @@ type UniversalLessonPlan {
   activityType: String
   interactionType: [String]
   tags: [String]
+  videoLink: String
 }
 
 type UniversalpageContent {
@@ -1102,6 +1105,7 @@ type File {
 
 type Community @model @key(fields: ["id"]) {
   id: ID!
+  institutionID: ID!
   cardName: String,
   cardDate: AWSDate,
   summary: String,
@@ -1116,6 +1120,7 @@ type Community @model @key(fields: ["id"]) {
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
 type CommunityChat @model 

@@ -1096,10 +1096,6 @@ const Dashboard = (props: DashboardProps) => {
               </UniversalLessonBuilderProvider> */}
             </Switch>
           </Suspense>
-          {/* <InformationalWalkThrough
-            open={openWalkThroughModal}
-            onCancel={() => setOpenWalkThroughModal(false)}
-          /> */}
         </div>
         {/* </ResizablePanels> */}
       </div>

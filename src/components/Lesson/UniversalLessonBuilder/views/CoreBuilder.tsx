@@ -380,7 +380,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-
       <PageBuilderLayout
         width="40rem"
         open={newLessonPlanShow && pathname.includes('page-builder')}>

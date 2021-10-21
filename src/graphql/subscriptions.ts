@@ -206,6 +206,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -438,6 +439,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1015,6 +1017,7 @@ export const onChangeRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -2139,6 +2142,7 @@ export const onCreateRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -2354,6 +2358,7 @@ export const onUpdateRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -2569,6 +2574,7 @@ export const onDeleteRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -3061,6 +3067,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -3233,6 +3240,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -3405,6 +3413,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -3580,6 +3589,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -3737,6 +3747,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -3894,6 +3905,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4088,6 +4100,7 @@ export const onCreateClass = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4263,6 +4276,7 @@ export const onUpdateClass = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4438,6 +4452,7 @@ export const onDeleteClass = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -8888,6 +8903,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -9112,6 +9128,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -9336,6 +9353,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -9663,6 +9681,7 @@ export const onCreateAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -9678,6 +9697,7 @@ export const onCreateAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -9780,6 +9800,7 @@ export const onCreateAttendance = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -9921,6 +9942,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -9936,6 +9958,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -10038,6 +10061,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -10179,6 +10203,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -10194,6 +10219,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -10296,6 +10322,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -10422,6 +10449,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       homework {
         id
@@ -10444,6 +10472,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       darkMode
       rubrics
@@ -10504,6 +10533,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       homework {
         id
@@ -10526,6 +10556,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       darkMode
       rubrics
@@ -10586,6 +10617,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       homework {
         id
@@ -10608,6 +10640,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       darkMode
       rubrics
@@ -11079,6 +11112,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -11094,6 +11128,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -11203,6 +11238,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -11218,6 +11254,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -11327,6 +11364,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -11342,6 +11380,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -12089,6 +12128,7 @@ export const onCreateCommunity = /* GraphQL */ `
   subscription OnCreateCommunity {
     onCreateCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12145,6 +12185,43 @@ export const onCreateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12155,6 +12232,7 @@ export const onUpdateCommunity = /* GraphQL */ `
   subscription OnUpdateCommunity {
     onUpdateCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12211,6 +12289,43 @@ export const onUpdateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -12221,6 +12336,7 @@ export const onDeleteCommunity = /* GraphQL */ `
   subscription OnDeleteCommunity {
     onDeleteCommunity {
       id
+      institutionID
       cardName
       cardDate
       summary
@@ -12277,6 +12393,43 @@ export const onDeleteCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
