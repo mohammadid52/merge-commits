@@ -28,12 +28,13 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
 
   // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+  const isPresenting = lessonState.displayData[0].isTeacher === true;
 
   return (
     <nav
       className="relative bg-white border-b h-16 lg:h-12 border-gray-200 flex"
       aria-label="Breadcrumb">
-      {anyoneIsShared && (
+      {anyoneIsShared && !isPresenting && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 disabled z-50">
           <p className="text-center font-bold text-sm">
             Disabled when sharing is active!

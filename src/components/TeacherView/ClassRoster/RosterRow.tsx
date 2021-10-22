@@ -1,4 +1,5 @@
 // import {PersonalizeEvents} from 'aws-sdk';
+import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
@@ -36,6 +37,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
@@ -126,7 +129,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
     <div
       id={`${id}`}
       draggable={false}
-      className={`w-full flex h-10 py-2 pl-2 pr-1 
+      className={`w-full flex h-10 border-t-0 border-gray-400
                     ${active && activeHoverClass} 
                     ${!active && inactiveTextClass}
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : ''} 
@@ -142,7 +145,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
         <div
           id={`${id}`}
           draggable={false}
-          className={`w-1/2 overflow-hidden mx-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
+          className={`w-1/2 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
             active && activeHoverClass
           } `}>
           {preferredName ? preferredName : firstName} {lastName}

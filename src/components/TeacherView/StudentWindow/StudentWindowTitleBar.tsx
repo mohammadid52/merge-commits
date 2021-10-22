@@ -6,6 +6,9 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as mutations from '../../../graphql/mutations';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
+import FullscreenToggle from './TitleBarSections/FullscreenToggle';
+import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
+import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
 
 interface StudentWindowTitleBarProps {
   handleFullscreen: () => void;
@@ -16,7 +19,11 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   props: StudentWindowTitleBarProps
 ) => {
   const {handleFullscreen, fullscreen} = props;
-  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const displayData = lessonState?.displayData;
+
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   useEffect(() => {
@@ -83,55 +90,30 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     }
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
+
   return (
     <div
-      className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10`}>
-      <div className="h-8 pl-2 align-middle font-bold text-xs leading-8 ">
-        <span className="mr-2">Workspace:</span>
+      className={`relative w-full h-8 top-0 flex flex-shrink-0 justify-between font-medium bg-light-gray bg-opacity-10`}>
+      {/* LEFT - TITLEBAR CONTROL */}
+      <OpenClosePagesToggle
+        currentPage={lessonState.currentPage}
+        activePageData={activePageData}
+        handleOpenCloseComponent={handleOpenCloseComponent}
+      />
 
-        {/**
-         *
-         * TITLEBAR LESSON CONTROL
-         *
-         * open/close & enable/disable buttons are only
-         * visible when teacher is NOT on the intro,
-         * and when you're NOT currently viewing a studento
-         *
-         */}
-        {lessonState.currentPage !== 0 &&
-        activePageData &&
-        activePageData.disabled !== true ? (
-          activePageData.open !== false ? (
-            <span
-              className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
-              Close Component
-            </span>
-          ) : (
-            <span
-              className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
-              Open Component
-            </span>
-          )
-        ) : null}
-      </div>
+      {/* CENTER - PRESENTATION MODE */}
+      <PresentationModeToggle
+        displayData={displayData}
+        lessonDispatch={lessonDispatch}
+        lessonData={lessonState.lessonData}
+        currentPage={lessonState.currentPage}
+      />
 
-      <div className="w-auto flex justify-between">
-        <div
-          className="w-8 mr-4 flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
-          onClick={handleFullscreen}>
-          <IconContext.Provider
-            value={{
-              size: '1.5rem',
-              style: {
-                zIndex: 50,
-              },
-            }}>
-            {fullscreen ? <FaCompress /> : <FaExpand />}
-          </IconContext.Provider>
-        </div>
-      </div>
+      {/* RIGHT - FULLSCREEN BUTTON */}
+      <FullscreenToggle fullscreen={fullscreen} handleFullscreen={handleFullscreen} />
     </div>
   );
 };

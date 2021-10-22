@@ -15,7 +15,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) 
   const [hamburgerOpen, setHamburgerOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-8 mr-4 flex flex-col content-between ">
+    <div className="w-8 flex flex-col content-between ">
       <div className="relative flex flex-col my-auto justify-around">
         <div className="hover:text-blueberry cursor-pointer" onClick={handleHomePopup}>
           <IconContext.Provider value={{size: '1.5rem'}}>

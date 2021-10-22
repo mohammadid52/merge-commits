@@ -105,7 +105,9 @@ const useLessonControlNotifications = () => {
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
   const studentIsViewed = lessonState.studentViewing !== '';
   const studentIsShared =
-    lessonState.displayData && lessonState.displayData[0].studentAuthID !== '';
+    lessonState.displayData &&
+    lessonState.displayData[0].studentAuthID !== '' &&
+    lessonState.displayData[0].isTeacher === false;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [

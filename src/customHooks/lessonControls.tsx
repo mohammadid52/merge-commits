@@ -43,24 +43,25 @@ const useLessonControls = () => {
         payload: {
           id: getRoomData.id,
           studentViewing: '',
-          displayData: [{studentAuthID: '', lessonPageID: ''}],
+          displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
         },
       });
 
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
       });
       await handleRoomUpdate({
         id: getRoomData.id,
         studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
       });
     }
   };
 
   return {
+    handleRoomUpdate: handleRoomUpdate,
     resetViewAndShare: resetViewAndShare,
   };
 };

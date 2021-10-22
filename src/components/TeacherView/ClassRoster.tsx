@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useLessonControls from '@customHooks/lessonControls';
 import usePrevious from '@customHooks/previousProps';
+import {getAsset} from 'assets';
 import {access} from 'fs';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
@@ -12,6 +13,7 @@ import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import RosterRow from './ClassRoster/RosterRow';
+import RosterRowEmpty from './ClassRoster/RosterRowEmpty';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -26,6 +28,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
+  const theme = gContext.theme;
   const controlState = gContext.controlState;
   const controlDispatch = gContext.controlDispatch;
   const clientKey = gContext.clientKey;
@@ -73,7 +76,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [{studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
       });
     };
   }, []);
@@ -333,16 +336,22 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
           type: 'SET_ROOM_SUBSCRIPTION_DATA',
           payload: {
             id: getRoomData.id,
-            displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+            displayData: [
+              {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
+            ],
           },
         });
         setLocalStorageData('room_info', {
           ...getRoomData,
-          displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+          displayData: [
+            {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
+          ],
         });
         await handleRoomUpdate({
           id: getRoomData.id,
-          displayData: [{studentAuthID: idStr, lessonPageID: pageIdStr}],
+          displayData: [
+            {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
+          ],
         });
       }
     } else {
@@ -387,19 +396,26 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   // useEffect(() => {
   //   handleStudentDisappear();
   // }, [personLocationStudents]);
-
+  const themeColor = getAsset(clientKey, 'themeClassName');
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
   return (
-    <div
-      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
-      {/* TABLE HEAD */}
+    <div className={`w-full h-full p-2 bg-gray-50 overflow-y-auto overflow-x-hidden`}>
+      {/* ROSTER TITLE */}
       <div
-        className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
+        className={`w-full h-8 py-2 pl-2 pr-1 flex items-center text-sm font-semibold text-gray-600 bg-transparent border-b-2 border-gray-50`}>
+        <span className="w-auto h-auto">
+          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
+        </span>
+      </div>
+
+      {/* ROSTER HEAD LABELS*/}
+      <div
+        className={`w-full h-8 flex py-2 pl-2 pr-1 ${theme.textColor[themeColor]} bg-transparent`}>
         <div
-          className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
+          className={`w-3.5/10  relative  flex items-center hover:underline cursor-pointer text-sm`}>
           <span className="w-auto">
             {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
           </span>
@@ -410,65 +426,59 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
           </span>
         </div>
         <div
-          className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>
+          className={`w-3.5/10  flex items-center overflow-hidden text-center text-xs `}>
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
         </div>
-        <div
-          className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>
+        <div className={`w-2/10  flex items-center justify-center rounded-lg text-xs`}>
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
         </div>
       </div>
 
       {/* ROWS */}
-      <div className={`w-full flex flex-col items-center`}>
-        {controlState.roster.length > 0 ? (
-          <div
-            className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-            {
-              lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
-                'IN_CLASS'
-              ]
-            }
-          </div>
-        ) : null}
-
+      <div className={`w-full px-2 flex flex-col items-center`}>
         {/* STUDENTS - Active */}
-        {controlState.roster.length > 0
-          ? controlState.roster.map((student: any, key: number) => (
-              <RosterRow
-                key={`rosterrow_${key}`}
-                number={key}
-                id={student.personAuthID}
-                active={true}
-                firstName={student.person?.firstName ? student.person?.firstName : ''}
-                lastName={student.person?.lastName ? student.person?.lastName : ''}
-                preferredName={
-                  student.person?.preferredName ? student.person?.preferredName : ''
-                }
-                role={student.person?.role ? student.person?.role : ''}
-                currentLocation={student.currentLocation}
-                lessonProgress={student.lessonProgress}
-                handleResetViewAndShare={resetViewAndShare}
-                handleViewStudentData={handleViewStudentData}
-                handleShareStudentData={handleShareStudentData}
-                viewedStudent={viewedStudent}
-                sharedStudent={sharedStudent}
-                handlePageChange={handlePageChange}
-              />
-            ))
-          : null}
+        {controlState.roster.length > 0 ? (
+          controlState.roster.map((student: any, key: number) => (
+            <RosterRow
+              key={`rosterrow_${key}`}
+              number={key}
+              id={student.personAuthID}
+              active={true}
+              firstName={student.person?.firstName ? student.person?.firstName : ''}
+              lastName={student.person?.lastName ? student.person?.lastName : ''}
+              preferredName={
+                student.person?.preferredName ? student.person?.preferredName : ''
+              }
+              role={student.person?.role ? student.person?.role : ''}
+              currentLocation={student.currentLocation}
+              lessonProgress={student.lessonProgress}
+              handleResetViewAndShare={resetViewAndShare}
+              handleViewStudentData={handleViewStudentData}
+              handleShareStudentData={handleShareStudentData}
+              viewedStudent={viewedStudent}
+              sharedStudent={sharedStudent}
+              handlePageChange={handlePageChange}
+            />
+          ))
+        ) : (
+          <RosterRowEmpty />
+        )}
+      </div>
 
-        {/* STUDENTS - INActive */}
-        {inactiveStudents.length > 0 ? (
-          <div
-            className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+      {/* STUDENTS - INActive */}
+      {inactiveStudents.length > 0 ? (
+        <div
+          className={`w-full h-8 py-2 pl-2 pr-1 flex items-center text-sm font-semibold text-gray-600 bg-transparent border-b-2 border-gray-50`}>
+          <span className="w-auto h-auto">
             {
               lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
                 'NOT_IN_CLASS'
               ]
             }
-          </div>
-        ) : null}
+          </span>
+        </div>
+      ) : null}
+      <div className={`w-full px-2 flex flex-col items-center`}>
         {inactiveStudents.length > 0
           ? inactiveStudents.map((student: any, key: number) => (
               <RosterRow
