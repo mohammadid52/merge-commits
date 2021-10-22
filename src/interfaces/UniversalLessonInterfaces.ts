@@ -151,3 +151,15 @@ export interface IFormBlockProps {
   inputID?: string;
   classString?: string;
 }
+export interface IFile {
+  _status: 'progress' | 'failed' | 'success' | 'other';
+  progress: number | string | null;
+  file: File;
+  id?: string;
+  fileKey?: string;
+  fileName?: string;
+}
+
+export interface IFileComponent extends IFile {
+  UPLOAD_KEY?: string;
+}

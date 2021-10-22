@@ -1,21 +1,27 @@
+import Storage from '@aws-amplify/storage';
+import File from '@components/Atoms/File';
 import Label from '@components/Atoms/Form/Label';
-import File from '@components/Community/File';
+import {Transition} from '@headlessui/react';
+import {IFile} from '@interfaces/UniversalLessonInterfaces';
 import {getAsset} from 'assets';
-import React, {useCallback, useRef} from 'react';
-import {useDropzone} from 'react-dropzone';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import Storage from '@aws-amplify/storage';
 import {nanoid} from 'nanoid';
-import {Transition} from '@headlessui/react';
+import React, {useCallback} from 'react';
+import {useDropzone} from 'react-dropzone';
 
 const UploadMedia = ({
   file,
   setFile,
   setError,
+  uploadKey,
+  customRef,
+  accept = 'image/x-png,image/gif,image/jpeg',
 }: {
+  uploadKey?: string;
   file: IFile;
+  accept?: string;
+  customRef: any;
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -42,7 +48,7 @@ const UploadMedia = ({
   ) => {
     // Upload file to s3 bucket
     return new Promise((resolve, reject) => {
-      Storage.put(`${COMMUNITY_UPLOAD_KEY}${id}`, file, {
+      Storage.put(`${uploadKey}${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
@@ -100,6 +106,7 @@ const UploadMedia = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
+    accept: accept,
   });
 
   const handleFileSelection = async (e: any) => {
@@ -108,8 +115,7 @@ const UploadMedia = ({
     }
   };
 
-  const inputOther = useRef(null);
-  const openFilesExplorer = () => inputOther.current.click();
+  const openFilesExplorer = () => customRef.current.click();
 
   const fileIcon = getAsset('general', 'fileImg');
 
@@ -125,7 +131,7 @@ const UploadMedia = ({
           }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
           <input
             {...getInputProps()}
-            ref={inputOther}
+            ref={customRef}
             onChange={handleFileSelection}
             type="file"
             className="hidden"

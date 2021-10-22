@@ -9,8 +9,9 @@ import * as customMutations from '@customGraphql/customMutations';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {IFile, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import ModalPopUp from '@molecules/ModalPopUp';
+import UploadMedia from '@molecules/UploadMedia';
 import Modal from '@atoms/Modal';
 import '@pathofdev/react-tag-input/build/index.css';
 import {estimatedTimeList} from '@utilities/staticData';
@@ -18,14 +19,43 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import {getImageFromS3Static} from '@utilities/services';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
 
-const VideoUploadComponent = () => {
+const VideoUploadComponent = ({
+  customRef,
+  closeAction,
+  file,
+  setFile,
+}: {
+  customRef: any;
+  closeAction: () => void;
+  file: IFile;
+  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+}) => {
+  const [error, setError] = useState('');
+  const showCloseButton = !isEmpty(file) && file._status === 'success';
+
   return (
-    <Modal showHeader={false} showFooter={false}>
-      <div>modal</div>
+    <Modal
+      closeAction={showCloseButton && closeAction}
+      showHeader={showCloseButton}
+      showFooter={false}>
+      <div>
+        <UploadMedia
+          file={file}
+          uploadKey={UPLOAD_KEYS.ULB}
+          setFile={setFile}
+          accept="video/mp4,video/x-m4v,video/*"
+          setError={setError}
+          customRef={customRef}
+        />
+
+        {error && <p>{error}</p>}
+      </div>
     </Modal>
   );
 };
@@ -273,6 +303,14 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
+  const [file, setFile] = useState<IFile>();
+
+  const uploadedVideoLink =
+    !isEmpty(file) && file._status === 'success'
+      ? getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey)
+      : null;
+  const isUploadedFromPC = Boolean(uploadedVideoLink);
+
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
     const isValidUrl = REGEX.URL.test(fields.videoLink);
@@ -299,14 +337,14 @@ const NewLessonPlanSO = ({
       // isValid = true;
     }
 
-    if (trimmedLen(fields.videoLink) <= 0) {
+    if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
       errors.videoLink = 'Video Link is mandatory';
       isValid = false;
     } else {
       errors.videoLink = '';
     }
 
-    if (!isValidUrl) {
+    if (!isValidUrl && !isUploadedFromPC) {
       errors.videoLink = 'Invalid video link';
       isValid = false;
     } else {
@@ -361,7 +399,7 @@ const NewLessonPlanSO = ({
             label: fields.label,
             estTime: Number(fields.estTime?.split(' ')[0]),
             tags: fields.tags,
-            videoLink: fields.videoLink,
+            videoLink: uploadedVideoLink || fields.videoLink,
             interactionType: fields.interactionType || [],
             activityType: classwork ? 'classwork' : 'homework',
           };
@@ -395,7 +433,7 @@ const NewLessonPlanSO = ({
                 interactionType: fields.interactionType || [],
                 activityType: classwork ? 'classwork' : 'homework',
                 pageContent: [],
-                videoLink: fields.videoLink,
+                videoLink: uploadedVideoLink || fields.videoLink,
                 disabled: false,
                 open: true,
               },
@@ -525,6 +563,9 @@ const NewLessonPlanSO = ({
 
   const [videoUploadModal, setVideoUploadModal] = useState(false);
 
+  const customRef = useRef();
+  const closeVideoUploadModal = () => setVideoUploadModal(false);
+
   return (
     <>
       {showModal.show && (
@@ -541,7 +582,14 @@ const NewLessonPlanSO = ({
           />
         </div>
       )}
-      {videoUploadModal && <VideoUploadComponent />}
+      {videoUploadModal && (
+        <VideoUploadComponent
+          closeAction={() => closeVideoUploadModal()}
+          file={file}
+          setFile={setFile}
+          customRef={customRef}
+        />
+      )}
       <div className="flex-1">
         {/* Header */}
         <div className="px-4 py-6 dark:bg-gray-800 bg-gray-50 sm:px-6">
@@ -610,16 +658,28 @@ const NewLessonPlanSO = ({
               value={fields.videoLink}
               label="Add video instructions"
               isRequired
+              disabled={isUploadedFromPC}
               onChange={onVideoLinkChange}
               dark={true}
               id="videoLink"
               error={errors?.videoLink}
             />
-            <div
-              className="text-gray-200 hover:underline"
-              onClick={() => setVideoUploadModal(true)}>
-              Or upload from your pc
-            </div>
+            {!isUploadedFromPC ? (
+              <div
+                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                onClick={() => setVideoUploadModal(true)}>
+                Or upload from your pc
+              </div>
+            ) : (
+              <div
+                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                onClick={() => {
+                  const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
+                  window.open(imageUrl, '_blank');
+                }}>
+                See video
+              </div>
+            )}
           </Block>
           {/* Activity Instructions */}
 
