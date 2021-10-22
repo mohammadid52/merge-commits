@@ -19,8 +19,6 @@ import {findIndex, isEmpty, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
-import FormInput from '@atoms/Form/FormInput';
-import Label from '@components/Atoms/Form/Label';
 
 const InputTag = ({
   tags,

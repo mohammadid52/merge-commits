@@ -4,16 +4,68 @@ import BreadCrums from '@components/Atoms/BreadCrums';
 import AddNewCard from '@components/Community/AddNewCard';
 import Card from '@components/Community/Card';
 import CardsModal from '@components/Community/CardsModal';
-import {communityTypes} from '@components/Community/constants.community';
+import {communityTypes, NavStateTypes} from '@components/Community/constants.community';
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {getAsset} from 'assets';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import * as mutations from '@graphql/mutations';
+import * as queries from '@graphql/queries';
+import {v4 as uuidV4} from 'uuid';
+import useAuth from '@customHooks/useAuth';
+import {
+  IAnnouncementInput,
+  ICheckItOutInput,
+  ICommunityCard,
+  IEventInput,
+  ISpotlightInput,
+} from '@interfaces/Community.interfaces';
+import {awsFormatDate, dateString} from '@utilities/time';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import useOnScreen from '@customHooks/useOnScreen';
+import {BsCardHeading} from 'react-icons/bs';
+import Loader from '@components/Atoms/Loader';
 
-const Community = ({role}: {role: string}) => {
+const Community = ({}: {role: string}) => {
   const {state, clientKey, userLanguage} = useGlobalContext();
   const instId = state.user.associateInstitute[0].institution.id;
+
+  const [list, setList] = useState<ICommunityCard[]>([]);
+
+  const [isFetched, setIsFetched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [error, setError] = useState('');
+  const {authId: personAuthID, email: personEmail} = useAuth();
+
+  const fetchCommunities = async () => {
+    try {
+      setIsLoading(true);
+      let payload: any = {
+        institutionID: instId,
+        limit: 12,
+      };
+      const res: any = await API.graphql(
+        graphqlOperation(queries.listCommunitys, payload)
+      );
+      const data = res.data.listCommunitys.items;
+      setList([...data]);
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+      setIsFetched(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!isFetched) {
+      fetchCommunities();
+    }
+  }, [isFetched]);
 
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
@@ -29,33 +81,145 @@ const Community = ({role}: {role: string}) => {
     },
   ];
 
-  const dummyInit = {
-    type: communityTypes.SPOTLIGHT,
-    media: 'community/1634651773858_f5256f22b9dea5d4eb80c41f91f87793.jpg',
-    person: {
-      id: 'd8ae581e-fce9-40ce-9107-969992d6717d',
-      name: 'aman test',
-      value: 'aman test',
-    },
-    note: 'Test note ',
-  };
-  const [cardList, setCardList] = useState([dummyInit]);
+  const [navState, setNavState] = useState<NavStateTypes>('init');
 
-  const onSpotlightSubmit = (spotlightDetails: any) => {
-    cardList.push({...spotlightDetails, type: communityTypes.SPOTLIGHT});
-    setCardList((prev) => [...prev]);
+  const onCancel = (): void => {
+    setShowCardsModal(false);
+    setNavState('init');
   };
-  const onAnnouncementSubmit = (announcementDetails: any) => {
-    cardList.push({...announcementDetails, type: communityTypes.ANNOUNCEMENTS});
-    setCardList((prev) => [...prev]);
+
+  const getCommonInput = (): {
+    id: string;
+    institutionID: any;
+    cardDate: string;
+    personAuthID: any;
+    personEmail: any;
+  } => ({
+    id: uuidV4(),
+    institutionID: instId,
+    cardDate: awsFormatDate(dateString('-', 'WORLD')),
+
+    personAuthID,
+    personEmail,
+  });
+
+  const onSpotlightSubmit = async (spotlightDetails: ISpotlightInput) => {
+    // @ts-ignore
+    list.push({...spotlightDetails, type: communityTypes.SPOTLIGHT});
+    setList((prev) => [...prev]);
+
+    const commonInput = getCommonInput();
+
+    const input = {
+      cardImageLink: spotlightDetails.cardImageLink,
+      summary: spotlightDetails.summary,
+      additionalLinks: spotlightDetails.additionalLinks,
+      ...commonInput,
+    };
+
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.createCommunity, {
+          input,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onCancel();
+    }
   };
-  const onEventSubmit = (eventDetails: any) => {
-    cardList.push({...eventDetails, type: communityTypes.ANNOUNCEMENTS});
-    setCardList((prev) => [...prev]);
+
+  const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
+    // @ts-ignore
+    list.push({...announcementDetails, type: communityTypes.ANNOUNCEMENTS});
+    setList((prev) => [...prev]);
+
+    const commonInput = getCommonInput();
+
+    const input = {
+      cardImageLink: announcementDetails.cardImageLink,
+      summary: announcementDetails.summary,
+      cardName: announcementDetails.cardName,
+
+      ...commonInput,
+    };
+
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.createCommunity, {
+          input,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onCancel();
+    }
   };
-  const onCheckItOutSubmit = (checkItOutDetails: any) => {
-    cardList.push({...checkItOutDetails, type: communityTypes.ANNOUNCEMENTS});
-    setCardList((prev) => [...prev]);
+
+  const onEventSubmit = async (eventDetails: IEventInput) => {
+    // @ts-ignore
+    list.push({...eventDetails, type: communityTypes.EVENT});
+    setList((prev) => [...prev]);
+
+    const commonInput = getCommonInput();
+
+    const input = {
+      ...eventDetails,
+      ...commonInput,
+    };
+
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.createCommunity, {
+          input,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onCancel();
+    }
+  };
+
+  const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
+    // @ts-ignore
+    list.push({...checkItOutDetails, type: communityTypes.CHECK_IT_OUT});
+    setList((prev) => [...prev]);
+
+    const commonInput = getCommonInput();
+
+    const input = {
+      ...checkItOutDetails,
+      ...commonInput,
+    };
+
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.createCommunity, {
+          input,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onCancel();
+    }
+  };
+
+  // Ref
+  const cardRef = useRef(null);
+  const isCardVisible = useOnScreen(cardRef);
+
+  const FAB = () => {
+    return (
+      <div
+        onClick={() => setShowCardsModal(true)}
+        className="fixed bottom-5 cursor-pointer flex items-center justify-center right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
+        <BsCardHeading className="text-white text-lg" />
+      </div>
+    );
   };
 
   return (
@@ -66,6 +230,8 @@ const Community = ({role}: {role: string}) => {
       bannerTitle={CommunityDict[userLanguage]['TITLE']}>
       {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
       <CardsModal
+        navState={navState}
+        setNavState={setNavState}
         functions={{
           onSpotlightSubmit,
           onAnnouncementSubmit,
@@ -94,13 +260,30 @@ const Community = ({role}: {role: string}) => {
         <ContentCard
           hasBackground={false}
           additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
-          <AddNewCard onClick={() => setShowCardsModal(true)} />
+          {/* Add new card */}
+          <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} />
+          {!isCardVisible && <FAB />}
+
+          {!Boolean(error) && isLoading && !isFetched && (
+            <Loader withText="Loading cards..." className="w-auto text-gray-400" />
+          )}
+
+          {/* Error */}
+          <AnimatedContainer show={Boolean(error)}>
+            {error && <p className="text-red-500 text-xs">{error}</p>}
+          </AnimatedContainer>
 
           {/* Other Cards here */}
-
-          {cardList.map((card) => (
-            <Card cardDetails={card} />
-          ))}
+          {!isLoading &&
+            isFetched &&
+            list &&
+            list.length > 0 &&
+            list.map((card, idx) => (
+              <Card
+                key={idx}
+                cardDetails={{...card, cardType: communityTypes.SPOTLIGHT}}
+              />
+            ))}
         </ContentCard>
       </div>
     </DashboardContainer>

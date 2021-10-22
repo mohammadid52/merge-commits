@@ -4,12 +4,19 @@ import Buttons from '@components/Atoms/Buttons';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
+import {IEventInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
 import React, {useState} from 'react';
 import DatePicker from 'react-datepicker';
 
-const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
+const Event = ({
+  onCancel,
+  onSubmit,
+}: {
+  onCancel: () => void;
+  onSubmit: (input: IEventInput) => void;
+}) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -22,9 +29,9 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
   });
   const [error, setError] = useState('');
 
-  const [fields, setFields] = useState<{description: string; descriptionHtml: string}>({
-    description: '',
-    descriptionHtml: '',
+  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
+    summary: '',
+    summaryHtml: '',
   });
 
   const onEditorStateChange = (
@@ -41,11 +48,13 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const spotlightDetails = {
-        media: file.fileKey,
-        note: fields.description,
+      const eventDetails: IEventInput = {
+        cardImageLink: file.fileKey,
+        summary: fields.summary,
+        cardName: overlayText,
+        ...details,
       };
-      onSubmit(spotlightDetails);
+      onSubmit(eventDetails);
       onCancel();
     }
   };
@@ -72,7 +81,7 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
     } else if (!overlayText) {
       setError('Overlay text not found');
       isValid = false;
-    } else if (!fields.description) {
+    } else if (!fields.summary) {
       setError('Description not found');
       isValid = false;
     } else {
@@ -108,7 +117,7 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
               'Why do you want people in the community to know about the event'
             }
             withStyles
-            initialValue={fields.description}
+            initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(
                 htmlContent,
@@ -119,9 +128,7 @@ const Event = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
             }
           />
 
-          <div className="text-right text-gray-400">
-            {fields.description.length} of 750
-          </div>
+          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
       <div className="px-3 py-4">

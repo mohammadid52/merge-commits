@@ -12,9 +12,9 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [fields, setFields] = useState<{description: string; descriptionHtml: string}>({
-    description: '',
-    descriptionHtml: '',
+  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
+    summary: '',
+    summaryHtml: '',
   });
 
   const [error, setError] = useState('');
@@ -34,9 +34,9 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     const isValid = validateFields();
     if (isValid) {
       const announcementsDetails = {
-        media: file.fileKey,
-        overlayText: overlayText,
-        description: fields.description,
+        cardImageLink: file.fileKey,
+        summary: fields.summary,
+        cardName: overlayText,
       };
       onSubmit(announcementsDetails);
       onCancel();
@@ -51,8 +51,8 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     } else if (!overlayText) {
       setError('Overlay text not found');
       isValid = false;
-    } else if (!fields.description) {
-      setError('Description not found');
+    } else if (!fields.summary) {
+      setError('Please add description');
       isValid = false;
     } else {
       setError('');
@@ -87,20 +87,13 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
               'Why do you want people in the community to know about what is happening'
             }
             withStyles
-            initialValue={fields.description}
+            initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                'descriptionHtml',
-                'description'
-              )
+              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
             }
           />
 
-          <div className="text-right text-gray-400">
-            {fields.description.length} of 750
-          </div>
+          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
 

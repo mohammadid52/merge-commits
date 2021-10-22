@@ -13,15 +13,15 @@ const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
   const {
     className = '',
     color = '#000000',
-    size = '1.5rem',
+    size = 'text-2xl',
     withText = false,
   } = loadingProps;
   return withText ? (
-    <div className={`flex ${className} items-center mr-2`}>
-      <div className={`animate-spin `}>
-        <IconContext.Provider value={{size, color: className || color}}>
-          <VscLoading />
-        </IconContext.Provider>
+    <div className={`flex ${className} items-center justify-center`}>
+      <div className={`animate-spin w-auto mr-2`}>
+        {/* <IconContext.Provider value={{size, color: className || color}}> */}
+        <VscLoading className={`${className} ${size}`} />
+        {/* </IconContext.Provider> */}
       </div>
       {withText}
     </div>

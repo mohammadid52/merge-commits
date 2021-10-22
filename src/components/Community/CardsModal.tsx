@@ -1,18 +1,24 @@
 import Modal from '@components/Atoms/Modal';
 import Announcements from '@components/Community/Cards/Announcement';
+import CheckItOut from '@components/Community/Cards/CheckItOut';
+import Event from '@components/Community/Cards/Event';
+import Spotlight from '@components/Community/Cards/Spotlight';
 import {
   communityContent,
-  NavStateTypes,
   communityTypes,
+  NavStateTypes,
 } from '@components/Community/constants.community';
-import Spotlight from '@components/Community/Cards/Spotlight';
-import Event from '@components/Community/Cards/Event';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {
+  ISpotlightInput,
+  IAnnouncementInput,
+  ICheckItOutInput,
+  IEventInput,
+} from '@interfaces/Community.interfaces';
 import {setState} from '@interfaces/index';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import React, {useState} from 'react';
+import React from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
-import CheckItOut from '@components/Community/Cards/CheckItOut';
 
 const getModalHeader = (navState: NavStateTypes) => {
   switch (navState) {
@@ -81,19 +87,21 @@ const CardsModal = ({
   setShowCardsModal,
   functions,
   instId,
+  navState,
+  setNavState,
 }: {
   showCardsModal: boolean;
   instId: string;
   functions: {
-    onSpotlightSubmit: any;
-    onAnnouncementSubmit: any;
-    onEventSubmit: any;
-    onCheckItOutSubmit: any;
+    onSpotlightSubmit: (input: ISpotlightInput) => void;
+    onAnnouncementSubmit: (input: IAnnouncementInput) => void;
+    onEventSubmit: (input: IEventInput) => void;
+    onCheckItOutSubmit: (input: ICheckItOutInput) => void;
   };
   setShowCardsModal: setState['boolean'];
+  navState: NavStateTypes;
+  setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
-  const [navState, setNavState] = useState<NavStateTypes>('init');
-
   const onInit = navState === 'init';
   const onSpotlight = navState === 'spotlight';
   const onAnnouncement = navState === 'announcement';
@@ -127,7 +135,9 @@ const CardsModal = ({
               {onSpotlight && (
                 <div className="">
                   <Spotlight
-                    onSubmit={() => functions.onSpotlightSubmit()}
+                    onSubmit={(input: ISpotlightInput) =>
+                      functions.onSpotlightSubmit(input)
+                    }
                     onCancel={onCancel}
                     instId={instId}
                   />
@@ -138,7 +148,9 @@ const CardsModal = ({
               {onAnnouncement && (
                 <div className="">
                   <Announcements
-                    onSubmit={() => functions.onAnnouncementSubmit()}
+                    onSubmit={(input: IAnnouncementInput) =>
+                      functions.onAnnouncementSubmit(input)
+                    }
                     onCancel={onCancel}
                   />
                 </div>
@@ -147,7 +159,10 @@ const CardsModal = ({
             <AnimatedContainer show={onEvent} animationType="translateY">
               {onEvent && (
                 <div className="">
-                  <Event onSubmit={() => functions.onEventSubmit()} onCancel={onCancel} />
+                  <Event
+                    onSubmit={(input: IEventInput) => functions.onEventSubmit(input)}
+                    onCancel={onCancel}
+                  />
                 </div>
               )}
             </AnimatedContainer>
@@ -155,7 +170,7 @@ const CardsModal = ({
               {onCheckItOut && (
                 <div className="">
                   <CheckItOut
-                    onSubmit={() => functions.onCheckItOutSubmit()}
+                    onSubmit={(input: IEventInput) => functions.onCheckItOutSubmit(input)}
                     onCancel={onCancel}
                   />
                 </div>

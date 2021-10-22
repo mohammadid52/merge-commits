@@ -4,20 +4,27 @@ import Label from '@atoms/Form/Label';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
+import {ICheckItOutInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
 import React, {useState} from 'react';
 
-const CheckItOut = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
+const CheckItOut = ({
+  onCancel,
+  onSubmit,
+}: {
+  onCancel: () => void;
+  onSubmit: (input: ICheckItOutInput) => void;
+}) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   const [error, setError] = useState('');
 
-  const [fields, setFields] = useState<{description: string; descriptionHtml: string}>({
-    description: '',
-    descriptionHtml: '',
+  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
+    summary: '',
+    summaryHtml: '',
   });
 
   const onEditorStateChange = (
@@ -34,11 +41,12 @@ const CheckItOut = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any})
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const spotlightDetails = {
-        media: file.fileKey,
-        note: fields.description,
+      const checkItOutDetails: ICheckItOutInput = {
+        cardImageLink: file.fileKey,
+        summary: fields.summary,
+        cardName: overlayText,
       };
-      onSubmit(spotlightDetails);
+      onSubmit(checkItOutDetails);
       onCancel();
     }
   };
@@ -51,7 +59,7 @@ const CheckItOut = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any})
     } else if (!overlayText) {
       setError('Overlay text not found');
       isValid = false;
-    } else if (!fields.description) {
+    } else if (!fields.summary) {
       setError('Description not found');
       isValid = false;
     } else {
@@ -86,20 +94,13 @@ const CheckItOut = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any})
               'What do you want people in the community to check out this video or image you uploaded?'
             }
             withStyles
-            initialValue={fields.description}
+            initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                'descriptionHtml',
-                'description'
-              )
+              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
             }
           />
 
-          <div className="text-right text-gray-400">
-            {fields.description.length} of 750
-          </div>
+          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
 

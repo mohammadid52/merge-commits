@@ -2,7 +2,7 @@ module.exports = {
   darkMode: 'class',
 
   purge: {
-    enabled: true,
+    enabled: false,
     content: [
       './src/**/*.html',
       './src/**/*.tsx',
