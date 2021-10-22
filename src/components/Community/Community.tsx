@@ -226,7 +226,6 @@ const Community = ({}: {role: string}) => {
     <DashboardContainer
       bannerImg={bannerImg}
       label={'Community'}
-      currentPage={state.currentPage}
       bannerTitle={CommunityDict[userLanguage]['TITLE']}>
       {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
       <CardsModal
