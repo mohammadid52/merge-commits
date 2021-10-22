@@ -27,6 +27,7 @@ import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import useOnScreen from '@customHooks/useOnScreen';
 import {BsCardHeading} from 'react-icons/bs';
 import Loader from '@components/Atoms/Loader';
+import orderBy from 'lodash/orderBy';
 
 const Community = ({}: {role: string}) => {
   const {state, clientKey, userLanguage} = useGlobalContext();
@@ -51,7 +52,10 @@ const Community = ({}: {role: string}) => {
         graphqlOperation(queries.listCommunitys, payload)
       );
       const data = res.data.listCommunitys.items;
-      setList([...data]);
+      if (data.length > 0) {
+        const orderedList = orderBy(data, ['createdAt'], 'desc');
+        setList([...orderedList]);
+      }
     } catch (error) {
       console.error(error);
       setError(error.message);
@@ -105,7 +109,7 @@ const Community = ({}: {role: string}) => {
 
   const onSpotlightSubmit = async (spotlightDetails: ISpotlightInput) => {
     // @ts-ignore
-    list.push({...spotlightDetails, type: communityTypes.SPOTLIGHT});
+    list.unshift({...spotlightDetails, type: communityTypes.SPOTLIGHT});
     setList((prev) => [...prev]);
 
     const commonInput = getCommonInput();
@@ -132,7 +136,7 @@ const Community = ({}: {role: string}) => {
 
   const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
     // @ts-ignore
-    list.push({...announcementDetails, type: communityTypes.ANNOUNCEMENTS});
+    list.unshift({...announcementDetails, type: communityTypes.ANNOUNCEMENTS});
     setList((prev) => [...prev]);
 
     const commonInput = getCommonInput();
@@ -141,7 +145,6 @@ const Community = ({}: {role: string}) => {
       cardImageLink: announcementDetails.cardImageLink,
       summary: announcementDetails.summary,
       cardName: announcementDetails.cardName,
-
       ...commonInput,
     };
 
@@ -160,7 +163,7 @@ const Community = ({}: {role: string}) => {
 
   const onEventSubmit = async (eventDetails: IEventInput) => {
     // @ts-ignore
-    list.push({...eventDetails, type: communityTypes.EVENT});
+    list.unshift({...eventDetails, type: communityTypes.EVENT});
     setList((prev) => [...prev]);
 
     const commonInput = getCommonInput();
@@ -185,7 +188,7 @@ const Community = ({}: {role: string}) => {
 
   const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
     // @ts-ignore
-    list.push({...checkItOutDetails, type: communityTypes.CHECK_IT_OUT});
+    list.unshift({...checkItOutDetails, type: communityTypes.CHECK_IT_OUT});
     setList((prev) => [...prev]);
 
     const commonInput = getCommonInput();
@@ -253,7 +256,7 @@ const Community = ({}: {role: string}) => {
           title={'Community'}
           fontSize="xl"
           fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-gray-900 "
           borderBottom
         />
         <ContentCard
@@ -267,7 +270,7 @@ const Community = ({}: {role: string}) => {
             <Loader withText="Loading cards..." className="w-auto text-gray-400" />
           )}
 
-          {/* Error */}
+          {/* Error--1213 */}
           <AnimatedContainer show={Boolean(error)}>
             {error && <p className="text-red-500 text-xs">{error}</p>}
           </AnimatedContainer>
@@ -280,7 +283,7 @@ const Community = ({}: {role: string}) => {
             list.map((card, idx) => (
               <Card
                 key={idx}
-                cardDetails={{...card, cardType: communityTypes.SPOTLIGHT}}
+                cardDetails={{...card, cardType: communityTypes.CHECK_IT_OUT}}
               />
             ))}
         </ContentCard>

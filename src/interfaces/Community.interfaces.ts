@@ -23,5 +23,7 @@ export interface ICommunityCard extends IEventInput {
     image: string;
     firstName: string;
     lastName: string;
+    role?: string;
   };
+  cardDate?: string;
 }

@@ -4,12 +4,13 @@ import {
 } from '@components/Community/constants.community';
 import {ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
+import moment from 'moment';
 import React from 'react';
 import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
 
 const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
   const media = getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink);
-
+  const person = cardDetails.person;
   return (
     <div className="">
       <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
@@ -21,17 +22,19 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
                   <img
                     className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
                     alt="User avatar"
-                    src="https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200"
+                    src={getImageFromS3Static(person.image)}
                   />
                 </div>
                 <div className="flex flex-col mb-2 ml-4 mt-1">
-                  <div className="text-gray-600 text-sm font-semibold">Sara Lauren</div>
+                  <div className="text-gray-600 text-sm font-semibold">
+                    {person.firstName} {person.lastName}
+                  </div>
                   <div className="flex  mt-1">
                     <div className="text-blue-700 w-auto font-base text-xs mr-1 cursor-pointer">
-                      UX Design
+                      {person.role}
                     </div>
-                    <div className="text-gray-400 font-thin w-auto text-xs">
-                      • 30 seconds ago
+                    <div className="text-gray-500 font-thin w-auto text-xs">
+                      • {moment(cardDetails.cardDate).fromNow()}
                     </div>
                   </div>
                 </div>
@@ -78,7 +81,7 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
                 <img
                   className="w-10 h-10 object-cover rounded-full shadow mr-2 cursor-pointer"
                   alt="User avatar"
-                  src="https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200"
+                  src={getImageFromS3Static(person.image)}
                 />
                 <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
                   <button
