@@ -7,7 +7,7 @@ const PageBuilderLayout = ({
   width = '28rem',
   style,
   className = '',
-  overflowHidden = true,
+  overflowHidden = false,
   dark = true,
   rounded = 'rounded-lg',
 }: {
