@@ -30,10 +30,12 @@ const VideoUploadComponent = ({
   closeAction,
   file,
   setFile,
+  setFields,
 }: {
   customRef: any;
   closeAction: () => void;
   file: IFile;
+  setFields: any;
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
 }) => {
   const [error, setError] = useState('');
@@ -47,6 +49,9 @@ const VideoUploadComponent = ({
       <div>
         <UploadMedia
           file={file}
+          onSuccess={() => {
+            setFields((prev: any) => ({...prev, videoLink: ''}));
+          }}
           uploadKey={UPLOAD_KEYS.ULB}
           setFile={setFile}
           accept="video/mp4,video/x-m4v,video/*"
@@ -337,19 +342,19 @@ const NewLessonPlanSO = ({
       // isValid = true;
     }
 
-    if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
-      errors.videoLink = 'Video Link is mandatory';
-      isValid = false;
-    } else {
-      errors.videoLink = '';
-    }
+    // if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
+    //   errors.videoLink = 'Video Link is mandatory';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
 
-    if (!isValidUrl && !isUploadedFromPC) {
-      errors.videoLink = 'Invalid video link';
-      isValid = false;
-    } else {
-      errors.videoLink = '';
-    }
+    // if (!isValidUrl && !isUploadedFromPC) {
+    //   errors.videoLink = 'Invalid video link';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
 
     setErrors({...errors});
     return isValid;
@@ -584,6 +589,7 @@ const NewLessonPlanSO = ({
       )}
       {videoUploadModal && (
         <VideoUploadComponent
+          setFields={setFields}
           closeAction={() => closeVideoUploadModal()}
           file={file}
           setFile={setFile}
@@ -657,7 +663,6 @@ const NewLessonPlanSO = ({
               placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
               value={fields.videoLink}
               label="Add video instructions"
-              isRequired
               disabled={isUploadedFromPC}
               onChange={onVideoLinkChange}
               dark={true}

@@ -16,12 +16,14 @@ const UploadMedia = ({
   setError,
   uploadKey,
   customRef,
+  onSuccess,
   accept = 'image/x-png,image/gif,image/jpeg',
 }: {
   uploadKey?: string;
   file: IFile;
   accept?: string;
   customRef: any;
+  onSuccess?: any;
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -65,6 +67,9 @@ const UploadMedia = ({
           updateProgress(currentFile, null);
           setError('');
           resolve(true);
+          if (onSuccess) {
+            onSuccess();
+          }
         })
         .catch((err) => {
           updateStatus(currentFile, 'failed');
