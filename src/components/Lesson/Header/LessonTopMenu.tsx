@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
 
@@ -23,88 +23,121 @@ const LessonTopMenu = ({
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
-  const validateRequired = (pageIdx: number) => {
-    if (PAGES) {
-      const thisPageData = lessonState?.studentData[pageIdx];
-      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-            return input;
-          }
-        });
-        // console.log('validate areAnyEmpty - ', areAnyEmpty);
-        if (areAnyEmpty.length > 0) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
+  // const validateRequired = (pageIdx: number) => {
+  //   if (PAGES) {
+  //     const thisPageData = lessonState?.studentData[pageIdx];
+  //     const thisPageRequired = lessonState?.requiredInputs[pageIdx];
+  //     if (thisPageData && thisPageData.length > 0) {
+  //       const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+  //         if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+  //           return input;
+  //         }
+  //       });
+  //       // console.log('validate areAnyEmpty - ', areAnyEmpty);
+  //       if (areAnyEmpty.length > 0) {
+  //         return false;
+  //       } else {
+  //         return true;
+  //       }
+  //     } else {
+  //       return true;
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
-  const canContinue = () => {
-    if (PAGES) {
-      return (
-        validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage < PAGES.length - 1 &&
-        PAGES[lessonState.currentPage + 1]?.open !== false
-      );
-    } else {
-      return false;
-    }
-  };
+  // const canContinue = () => {
+  //   if (PAGES) {
+  //     return (
+  //       validateRequired(lessonState.currentPage) &&
+  //       lessonState.currentPage < PAGES.length - 1 &&
+  //       PAGES[lessonState.currentPage + 1]?.open !== false
+  //     );
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === PAGES.length - 1;
-  };
+  // const userAtEnd = () => {
+  //   return lessonState.currentPage === PAGES.length - 1;
+  // };
 
   // ##################################################################### //
   // ############################# NAVIGATION ############################ //
   // ##################################################################### //
-  const handleForward = () => {
-    if (!userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      if (canContinue()) {
-        history.push(`${match.url}/${lessonState.currentPage + 1}`);
+
+  const getPageIndex = (pageID: string, pageArray: any[]) => {
+    console.log('find page id for - ', pageID);
+    if (pageID && pageArray) {
+      return pageArray.findIndex((pageObj: any) => pageObj.id === pageID);
+    }
+  };
+
+  // ~~~~~~~~ TEACHER IS PRESENTING ~~~~~~~~ //
+  const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
+  const presentedPageID = lessonState.displayData[0].lessonPageID;
+  useEffect(() => {
+    // console.log(getPageIndex(presentedPageID, lessonState.lessonData.lessonPlan));
+    if (teacherIsPresenting && presentedPageID) {
+      const getPresentedPagedIndex = getPageIndex(
+        presentedPageID,
+        lessonState.lessonData.lessonPlan
+      );
+      console.log('getPresentedPageIndex - ', getPresentedPagedIndex);
+      if (typeof getPresentedPagedIndex === 'number' && getPresentedPagedIndex >= 0) {
+        history.push(`${match.url}/${getPresentedPagedIndex}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1,
+          payload: getPresentedPagedIndex,
         });
-      } else {
-        handleRequiredNotification();
-      }
-    } else if (userAtEnd()) {
-      if (validateRequired(lessonState.currentPage)) {
-        handlePopup();
-      } else {
-        handleRequiredNotification();
       }
     }
-  };
+  }, [teacherIsPresenting, presentedPageID]);
 
-  const handleBack = () => {
-    if (userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      history.push(`${match.url}/${lessonState.currentPage - 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1,
-      });
-    } else if (!userAtEnd() && lessonState.currentPage > 0) {
-      if (isAtEnd) setisAtEnd(false);
-      history.push(`${match.url}/${lessonState.currentPage - 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1,
-      });
-    }
-  };
+  // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
+  // const handleForward = () => {
+  //   if (!userAtEnd()) {
+  //     if (isAtEnd) setisAtEnd(false);
+  //     if (canContinue()) {
+  //       history.push(`${match.url}/${lessonState.currentPage + 1}`);
+  //       lessonDispatch({
+  //         type: 'SET_CURRENT_PAGE',
+  //         payload: lessonState.currentPage + 1,
+  //       });
+  //     } else {
+  //       handleRequiredNotification();
+  //     }
+  //   } else if (userAtEnd()) {
+  //     if (validateRequired(lessonState.currentPage)) {
+  //       handlePopup();
+  //     } else {
+  //       handleRequiredNotification();
+  //     }
+  //   }
+  // };
 
+  // const handleBack = () => {
+  //   if (userAtEnd()) {
+  //     if (isAtEnd) setisAtEnd(false);
+  //     history.push(`${match.url}/${lessonState.currentPage - 1}`);
+  //     lessonDispatch({
+  //       type: 'SET_CURRENT_PAGE',
+  //       payload: lessonState.currentPage - 1,
+  //     });
+  //   } else if (!userAtEnd() && lessonState.currentPage > 0) {
+  //     if (isAtEnd) setisAtEnd(false);
+  //     history.push(`${match.url}/${lessonState.currentPage - 1}`);
+  //     lessonDispatch({
+  //       type: 'SET_CURRENT_PAGE',
+  //       payload: lessonState.currentPage - 1,
+  //     });
+  //   }
+  // };
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
   return (
     <>
       <div

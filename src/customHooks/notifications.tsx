@@ -103,6 +103,7 @@ const useLessonControlNotifications = () => {
   };
 
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
+  const isPresenting = lessonState.displayData[0].isTeacher === true;
   const studentIsViewed = lessonState.studentViewing !== '';
   const studentIsShared =
     lessonState.displayData &&
@@ -142,6 +143,19 @@ const useLessonControlNotifications = () => {
       cancel: () => {
         //
       },
+    },
+    {
+      check: isPresenting,
+      notification: {
+        label: 'You are now presenting a page',
+        message: null,
+        type: 'info',
+        cta: 'Stop Presenting',
+      },
+      action: () => {
+        resetViewAndShare();
+      },
+      cancel: () => {},
     },
   ];
 
@@ -238,13 +252,17 @@ const useLessonNotifications = () => {
     }
   };
 
-  // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //a
+  const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const iAmViewed = lessonState.studentViewing === user.authId;
   const iAmShared = lessonState.displayData[0].studentAuthID === user.authId;
-  const anyPageIsShared = lessonState.displayData[0].lessonPageID !== '';
+  const anyPageIsShared =
+    lessonState.displayData[0].lessonPageID !== '' &&
+    lessonState.displayData[0].isTeacher === false;
   const thisPageIsShared =
     lessonPlan &&
-    lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage].id;
+    !teacherIsPresenting &&
+    lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage]?.id;
   const canNavigateBack =
     !anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
 
@@ -323,11 +341,26 @@ const useLessonNotifications = () => {
       },
     },
     {
-      check: thisPageIsShared && !iAmShared,
+      check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
       notification: {
         label: 'You are viewing this page',
         message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'info',
+        cta: '',
+      },
+      action: () => {
+        //
+      },
+      cancel: () => {
+        //
+      },
+    },
+    {
+      check: teacherIsPresenting,
+      notification: {
+        label: 'The teacher is controlling the lesson',
+        message: null,
+        type: 'alert',
         cta: '',
       },
       action: () => {
@@ -351,7 +384,6 @@ const useLessonNotifications = () => {
     } else {
       return [];
     }
-   
   };
 
   return {lessonNotifications: collectNotifications(watchList)};

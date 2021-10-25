@@ -132,12 +132,20 @@ const RosterRow: React.FC<RosterRowProps> = ({
       <div
         id={`${id}`}
         draggable={false}
-        className={`w-full flex h-10 bg-white rounded shadow-sm px-1
+        className={`w-full flex h-10 rounded shadow-sm px-1
                     ${active && activeHoverClass} 
                     ${!active && inactiveTextClass}
                     ${number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''} 
-                    ${studentIsViewed() ? 'bg-white shadow' : ''}
-                    ${studentIsShared() ? `border-2 border-green-500 shadow` : ''}
+                    ${
+                      studentIsViewed()
+                        ? `bg-white border-l-4 ${theme.borderColor[themeColor]}`
+                        : ''
+                    }
+                    ${
+                      studentIsShared()
+                        ? `border-l-4 ${theme.borderColor[themeColor]}`
+                        : ''
+                    }
                     `}>
         {/* STUDENT NAME */}
         <div

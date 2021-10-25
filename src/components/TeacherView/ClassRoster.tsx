@@ -81,6 +81,19 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
     };
   }, []);
 
+  //  PAUSE SUBSCRIPTION WHEN TEACHER PRESENTING  //
+  // const isPresenting = lessonState && lessonState.displayData[0].isTeacher === true;
+  // const isPresentingPrevious = usePrevious(isPresenting);
+
+  // useEffect(() => {
+  //   if (isPresenting && subscription) {
+  //     subscription.unsubscribe();
+  //     // subscription = undefined;
+  //   } else if (isPresentingPrevious && !isPresenting && subscription === undefined) {
+  //     subscription = subscribeToPersonLocations();
+  //   }
+  // }, [isPresenting]);
+
   // ##################################################################### //
   // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
   // ##################################################################### //
@@ -369,7 +382,6 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       getSyllabusLessonStudents();
     }
   };
-
 
   const themeColor = getAsset(clientKey, 'themeClassName');
   // ##################################################################### //
