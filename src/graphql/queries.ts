@@ -5957,6 +5957,7 @@ export const getCommunity = /* GraphQL */ `
       id
       institutionID
       cardName
+      cardType
       cardDate
       summary
       cardImageLink
@@ -6074,6 +6075,7 @@ export const listCommunitys = /* GraphQL */ `
         id
         institutionID
         cardName
+        cardType
         cardDate
         summary
         cardImageLink
