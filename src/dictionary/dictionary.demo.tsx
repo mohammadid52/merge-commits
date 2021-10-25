@@ -815,12 +815,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Lesson Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Class',
+        IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
       },
     },

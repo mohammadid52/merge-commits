@@ -62,18 +62,27 @@ const CoopDisplay = () => {
 
   return (
     <div className="w-full h-full flex flex-col justify-between items-center">
-      <div className="w-full h-8.3/10 flex justify-between items-center">
+      <div className="w-full h-8.5/10 flex justify-between items-center">
         {/* self display */}
-        <div className={`${fullscreen ? 'hidden' : 'w-4.85/10'} h-full flex flex-col justify-between items-center`}>
-          <Banner title={displayProps.title} display="SELFinCOOP" fullscreen={fullscreen} />
+        <div
+          className={`${
+            fullscreen ? 'hidden' : 'w-4.85/10'
+          } h-full flex flex-col justify-between items-center`}>
+          <Banner
+            title={displayProps.title}
+            display="SELFinCOOP"
+            fullscreen={fullscreen}
+          />
 
-          <div className="w-full h-8.8/10 flex flex-col justify-between">
+          <div className="w-full h-9/10 flex flex-col justify-between">
             <div
               className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${
                 displayProps.additional ? 'md:w-full' : 'w-full'
               } md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
               {/* bg-lighter-blue shadow-inner-box  */}
-              <div className={`h-full rounded-lg font-light text-xl`}>{displayProps.story}</div>
+              <div className={`h-full rounded-lg font-light text-xl`}>
+                {displayProps.story}
+              </div>
             </div>
             <Modules additional={displayProps.additional} displayMode="SELFinCOOP" />
           </div>
@@ -87,13 +96,13 @@ const CoopDisplay = () => {
           <div className="w-full h-full flex flex-col justify-between items-center">
             <div
               className="absolute cursor-pointer w-full text-xl m-2"
-              style={{ bottom: 0, right: 0 }}
+              style={{bottom: 0, right: 0}}
               onClick={handleFullscreen}>
               <IconContext.Provider
                 value={{
                   color: '#E2E8F0',
                   size: '2rem',
-                  style: { width: 'auto', right: '0', bottom: '0', position: 'absolute' },
+                  style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'},
                 }}>
                 {fullscreen ? <FaCompress /> : <FaExpand />}
               </IconContext.Provider>
@@ -109,31 +118,45 @@ const CoopDisplay = () => {
                 display="COOP"
               />
 
-              <div className="absolute w-auto z-50" style={{ bottom: '-15px', right: 0 }}>
+              <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0}}>
                 <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
                   <p>
-                    by: {student ? (student.preferredName ? student.preferredName : student.firstName) : null}{' '}
+                    by:{' '}
+                    {student
+                      ? student.preferredName
+                        ? student.preferredName
+                        : student.firstName
+                      : null}{' '}
                     {student ? firstInitialFunc(student.lastName) : null}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="w-full h-8.8/10 flex md:flex-col justify-between">
+            <div className="w-full h-9/10 flex md:flex-col justify-between">
               <div
                 className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${
-                  teacherData && teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'
+                  teacherData &&
+                  teacherData.warmUpData &&
+                  teacherData.warmUpData.additional
+                    ? 'md:h-7.85/10'
+                    : 'h-full'
                 } ${
                   fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'
                 } md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                 {/* bg-lighter-blue shadow-inner-box  */}
-                <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
+                <div
+                  className={`${
+                    fullscreen ? 'text-3xl' : 'text-xl'
+                  } h-full rounded-lg font-light`}>
                   {teacherData && teacherData.warmUpData && teacherData.warmUpData.story}
                 </div>
               </div>
               <Modules
                 additional={
-                  teacherData && teacherData.warmUpData && teacherData.warmUpData.additional
+                  teacherData &&
+                  teacherData.warmUpData &&
+                  teacherData.warmUpData.additional
                     ? teacherData.warmUpData.additional
                     : null
                 }
@@ -143,7 +166,9 @@ const CoopDisplay = () => {
           </div>
         </div>
       </div>
-      <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions} />
+      <ReflectionQuestions
+        questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}
+      />
     </div>
   );
 };

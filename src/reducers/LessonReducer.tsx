@@ -37,7 +37,11 @@ export type LessonActions =
         createdAt?: string;
         currentPage?: number | null;
         disabledPages?: string[] | any;
-        displayData?: {studentAuthID?: string; lessonPageID?: string}[];
+        displayData?: {
+          isTeacher?: boolean;
+          studentAuthID?: string;
+          lessonPageID?: string;
+        }[];
         id: string;
         studentViewing?: string | '';
         updatedAt?: string;

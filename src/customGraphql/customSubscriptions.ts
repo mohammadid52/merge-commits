@@ -90,6 +90,7 @@ export const onChangeRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }

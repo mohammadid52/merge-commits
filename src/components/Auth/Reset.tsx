@@ -167,35 +167,33 @@ const Reset = () => {
   };
 
   return (
-    <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
-      <div className='w-auto h-auto flex flex-row rounded-xl shadow-2xl'>
-        <div className='login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0'>
-          <div className='h-.7/10  w-full rounded-tl-xl'></div>
-          <div className='relative h-9.3/10 flex flex-col items-center p-8'>
-            <div className='absolute text-center text-xs mb-4' style={{ bottom: '0' }}>
-            <p>© Copyright {new Date().getFullYear()}</p>
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm">
+      <div className="w-auto h-auto flex flex-row rounded-xl shadow-2xl">
+        <div className="login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0">
+          <div className="h-.7/10  w-full rounded-tl-xl"></div>
+          <div className="relative h-9.5/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}>
+              <p>© Copyright {new Date().getFullYear()}</p>
               <p>
-                <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
+                <NavLink
+                  className="underline text-sm hover:text-blue-500"
+                  to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
             </div>
-            <div className='h-24 w-56'>
-              <img
-                className=''
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt='Logo'
-              />
+            <div className="h-24 w-56">
+              <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="Logo" />
             </div>
 
-            <div className='w-full h-1/10 flex flex-col justify-around'>
-              <div className='text-center text-sm text-gray-700'>
+            <div className="w-full h-1/10 flex flex-col justify-around">
+              <div className="text-center text-sm text-gray-700">
                 Password must be at least 8 characters and include uppercase and lowercase
               </div>
             </div>
 
-            <div className='h-4.5/10 flex-grow flex flex-col justify-center'>
-              <div className='w-full h-1/10 flex flex-col justify-around items-center'>
+            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full h-1/10 flex flex-col justify-around items-center">
                 {message.show ? (
                   <p
                     className={`text-xs text-center ${
@@ -210,116 +208,116 @@ const Reset = () => {
                 ) : null}
               </div>
 
-              <div className='input pt-0'>
-                <div className='icon pt-0'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+              <div className="input pt-0">
+                <div className="icon pt-0">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <MdEmail />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='email'>
+                <label className="hidden" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='Email'
-                  type='text'
-                  id='email'
-                  name='email'
+                  className="w-full bg-off-white px-2 py-1 ml-2"
+                  placeholder="Email"
+                  type="text"
+                  id="email"
+                  name="email"
                   value={input.email}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
                 />
               </div>
 
-              <div className='input'>
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+              <div className="input">
+                <div className="icon">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <FaUnlockAlt />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='code'>
+                <label className="hidden" htmlFor="code">
                   Confirmation Code
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='Confirmation Code'
-                  type='text'
-                  id='code'
-                  name='code'
+                  className="w-full bg-off-white px-2 py-1 ml-2"
+                  placeholder="Confirmation Code"
+                  type="text"
+                  id="code"
+                  name="code"
                   value={input.code}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
                 />
               </div>
 
-              <div className='input relative w-full'>
-                <div style={{ right: 0 }} className='absolute w-6'>
+              <div className="input relative w-full">
+                <div style={{right: 0}} className="absolute w-6">
                   <div
                     onClick={() => setNewPassToggle(!newPassToggle)}
-                    className='text-gray-500 cursor-pointer hover:text-grayscale'>
+                    className="text-gray-500 cursor-pointer hover:text-grayscale">
                     {newPassToggle ? (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                      <IconContext.Provider value={{size: '1.5rem'}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                      <IconContext.Provider value={{size: '1.5rem'}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
 
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                <div className="icon">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <FaKey />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='password'>
+                <label className="hidden" htmlFor="password">
                   New Password
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='New Password'
+                  className="w-full bg-off-white px-2 py-1 ml-2"
+                  placeholder="New Password"
                   type={newPassToggle ? 'text' : 'password'}
-                  id='password'
-                  name='password'
+                  id="password"
+                  name="password"
                   value={input.password}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
                 />
               </div>
 
-              <div className='input relative w-full'>
-                <div style={{ right: 0 }} className='absolute w-6'>
+              <div className="input relative w-full">
+                <div style={{right: 0}} className="absolute w-6">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className='text-gray-500 cursor-pointer hover:text-grayscale'>
+                    className="text-gray-500 cursor-pointer hover:text-grayscale">
                     {passToggle ? (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                      <IconContext.Provider value={{size: '1.5rem'}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                      <IconContext.Provider value={{size: '1.5rem'}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
 
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                <div className="icon">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <FaKey />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='match'>
+                <label className="hidden" htmlFor="match">
                   Confirm Password
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='Confirm Password'
+                  className="w-full bg-off-white px-2 py-1 ml-2"
+                  placeholder="Confirm Password"
                   type={passToggle ? 'text' : 'password'}
-                  id='match'
-                  name='match'
+                  id="match"
+                  name="match"
                   value={input.match}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
@@ -327,16 +325,19 @@ const Reset = () => {
               </div>
             </div>
 
-            <div className='h-3/10 flex flex-col justify-center items-center'>
+            <div className="h-3/10 flex flex-col justify-center items-center">
               <div
-                className={`cursor-pointer text-center rounded-lg ${getAsset(clientKey, 'authButtonColor')} text-gray-200 mb-2`}
-                style={{ borderRadius: '2rem', padding: '0.75rem' }}
+                className={`cursor-pointer text-center rounded-lg ${getAsset(
+                  clientKey,
+                  'authButtonColor'
+                )} text-gray-200 mb-2`}
+                style={{borderRadius: '2rem', padding: '0.75rem'}}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 Reset Password
               </div>
-              <NavLink to='/forgot-password'>
-                <div className='text-bold text-center text-blueberry hover:text-blue-500'>
+              <NavLink to="/forgot-password">
+                <div className="text-bold text-center text-blueberry hover:text-blue-500">
                   Request another confirmation code!
                 </div>
               </NavLink>
@@ -344,8 +345,11 @@ const Reset = () => {
           </div>
         </div>
 
-        <div className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
-
+        <div
+          className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(
+            clientKey,
+            'authBackground'
+          )} bg-cover bg-center`}></div>
       </div>
     </div>
   );

@@ -74,6 +74,7 @@ const LessonHeaderBar = ({
   const leaveModalVisible = leaveModal.visible;
   const setLeaveModalVisible = leaveModal.setVisible;
 
+  const [videoLink, setVideoLink] = useState<string>('');
   const videoLinkModal = useOutsideAlerter(false);
   const videoLinkModalVisible = videoLinkModal.visible;
   const setVideoLinkModalVisible = videoLinkModal.setVisible;
@@ -86,8 +87,14 @@ const LessonHeaderBar = ({
     setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
-  const handleVideoLinkPopup = () => {
-    setVideoLinkModalVisible((prevState: any) => !prevState);
+  const handleVideoLinkPopup = (url?: string) => {
+    if (videoLinkModalVisible) {
+      // setVideoLink('');
+      setVideoLinkModalVisible(false);
+    } else {
+      // setVideoLink(url);
+      setVideoLinkModalVisible(true);
+    }
   };
 
   useEffect(() => {
@@ -95,12 +102,18 @@ const LessonHeaderBar = ({
       // const thisPageVideoLink = lessonState?.currentPage
       //   ? lessonState?.lessonData?.lessonPlan[lessonState?.currentPage]?.videoLink
       //   : '';
-      // if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
-      //   handleVideoLinkPopup();
-      // }
-      handleVideoLinkPopup();
+      const indexSelector = (lessonState?.currentPage + 1) % 2;
+      const thisPageVideoLink = [
+        'https://www.youtube.com/watch?v=XCdq_GQU0io',
+        'https://www.youtube.com/watch?v=_j6XgaTL46s',
+      ][indexSelector];
+
+      if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+        setVideoLink(thisPageVideoLink);
+        handleVideoLinkPopup(thisPageVideoLink);
+      }
     }
-  }, [lessonState.lessonProgress]);
+  }, [lessonState.currentPage]);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
@@ -132,7 +145,7 @@ const LessonHeaderBar = ({
       </div>
 
       {/* VIDEO POPUP */}
-      {/* <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
+      <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
         <Modal
           title={`Instruction Video`}
           showHeader={true}
@@ -140,9 +153,9 @@ const LessonHeaderBar = ({
           showFooter={false}
           scrollHidden={true}
           closeAction={() => handleVideoLinkPopup()}>
-          <ReactPlayer/>
+          <ReactPlayer url={videoLink} />
         </Modal>
-      </div> */}
+      </div>
 
       <LessonTopMenu
         handlePopup={handleLeavePopup}
@@ -158,6 +171,12 @@ const LessonHeaderBar = ({
        *
        *
        */}
+
+      <SideMenu
+        videoLink={videoLink}
+        videoLinkModalVisible={videoLinkModalVisible}
+        handleVideoLinkPopup={handleVideoLinkPopup}
+      />
 
       {/* {lessonDataLoaded && (
         <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />

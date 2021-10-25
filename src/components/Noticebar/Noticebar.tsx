@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {NotificationListItem} from '../../interfaces/GlobalInfoComponentsInterfaces';
 
 interface INoticebarProps {
@@ -6,16 +6,59 @@ interface INoticebarProps {
 }
 
 const Noticebar = ({notifications}: INoticebarProps) => {
-  const bgStyle = (notificationType: string) => {
+  // ~~~~~~ INDEX OF DISPLAYED NOTICE ~~~~~~ //
+  const [noticeIndex, setNoticeIndex] = useState<number>(null);
+  useEffect(() => {
+    if (notifications && notifications.length > 0 && noticeIndex === null) {
+      setNoticeIndex(notifications.length - 1);
+    }
+  }, [notifications]);
+
+  const nextIndex = (idx: number, maxNr: number) => {
+    if (idx < maxNr) {
+      setNoticeIndex(idx + 1);
+    }
+  };
+
+  const prevIndex = (idx: number, minNr: number) => {
+    if (idx > minNr) {
+      setNoticeIndex(idx - 1);
+    }
+  };
+
+  // ~~~~~~~~~~~ NEXT & PREVIOUS ~~~~~~~~~~~ //
+  const getNextPreviousControls = (
+    currentNr: number,
+    totalNr: number,
+    prevFn: Function,
+    nextFn: Function
+  ) => {
+    const startingNumber = currentNr + 1;
+    return (
+      <div className="w-auto flex flex-row text-white">
+        <span onClick={() => prevFn()} className="cursor-pointer mr-1">
+          &#9664;
+        </span>
+        <span>{startingNumber + '/' + totalNr}</span>
+        <span onClick={() => nextFn()} className="cursor-pointer ml-1">
+          &#9654;
+        </span>
+      </div>
+    );
+  };
+
+  // ~~~~~~~~~~~~~~~~ COLOR ~~~~~~~~~~~~~~~~ //
+  const bgStyle = (currentNr: number, noticeList: any[]) => {
+    const notificationType = noticeList[currentNr].notification.type;
     switch (notificationType) {
       case 'info':
-        return 'bg-indigo-500';
+        return 'bg-indigo-400';
       case 'positive':
-        return 'bg-green-500';
+        return 'bg-green-400';
       case 'alert':
-        return 'bg-mustard';
+        return 'bg-orange-400';
       case 'error':
-        return 'bg-ketchup';
+        return 'bg-red-400';
       default:
         return 'bg-dark-gray';
     }
@@ -26,34 +69,32 @@ const Noticebar = ({notifications}: INoticebarProps) => {
 
   return (
     <>
-      {notifications
-        ? notifications.map((notificationItem: NotificationListItem, idx: number) => {
-            return (
-              <div
-                key={idx}
-                className={`w-full h-8 p-2 ${bgStyle(
-                  notificationItem?.notification.type
-                )}`}>
-                <div className={`h-full flex flex-row items-center content-center`}>
-                  <div
-                    key={`notification_${idx}`}
-                    className={`px-2 flex flex-row ${basicStyle}`}>
-                    <span className={`w-auto`}>
-                      {notificationItem?.notification.label}
-                      {notificationItem?.notification.message &&
-                        ` - ${notificationItem?.notification.message}`}
-                    </span>
-                    <span
-                      className={`w-auto mx-2 ${linkColor}`}
-                      onClick={notificationItem?.action}>
-                      {notificationItem?.notification.cta}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        : null}
+      {notifications && notifications.length > 0 && noticeIndex !== null && (
+        <div className={`w-full h-8 p-2 ${bgStyle(noticeIndex, notifications)}`}>
+          <div className={`h-full flex flex-row items-center content-center`}>
+            <div className={`px-2 flex flex-row ${basicStyle}`}>
+              <span className={`w-auto`}>
+                {notifications[noticeIndex].notification.label}
+                {notifications[noticeIndex].notification.message &&
+                  ` - ${notifications[noticeIndex].notification.message}`}
+              </span>
+              <span
+                className={`w-auto mx-2 ${linkColor}`}
+                onClick={notifications[noticeIndex].action}>
+                {notifications[noticeIndex].notification.cta}
+              </span>
+            </div>
+            {notifications &&
+              notifications.length > 1 &&
+              getNextPreviousControls(
+                noticeIndex,
+                notifications.length,
+                () => prevIndex(noticeIndex, 0),
+                () => nextIndex(noticeIndex, notifications.length - 1)
+              )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
