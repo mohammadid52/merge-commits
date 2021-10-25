@@ -24,6 +24,8 @@ export const communityTypes = {
   INIT: 'init',
 };
 
+export type CardType = 'spotlight' | 'announcement' | 'check_it_out' | 'event';
+
 export const communityContent = [
   {
     subtitle: 'Feature a new student or celebrate an achievement',

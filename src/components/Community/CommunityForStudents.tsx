@@ -5,6 +5,7 @@ import React, {useContext} from 'react';
 import SectionTitleV3 from '@atoms/SectionTitleV3';
 import Buttons from '@atoms/Buttons';
 import ContentCard from '@components/Atoms/ContentCard';
+import CommanCommunityContent from '@components/Community/CommanCommunityContent';
 
 const Content = () => {
   return (
@@ -40,7 +41,7 @@ const CommunityForStudents = ({role}: {role: string}) => {
           Here is what is happening today
         </h2>
       </div>
-      <Content />
+      <CommanCommunityContent />
     </div>
   );
 };

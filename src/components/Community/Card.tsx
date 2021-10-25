@@ -2,15 +2,29 @@ import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
+import * as mutations from '@graphql/mutations';
 import {ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import moment from 'moment';
+import {API, graphqlOperation} from 'aws-amplify';
 import React from 'react';
 import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
 
 const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
   const media = getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink);
   const person = cardDetails.person;
+
+  const onDelete = async () => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.deleteCommunity, {input: {id: cardDetails.id}})
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  };
+
   return (
     <div className="">
       <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
@@ -44,12 +58,22 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
             <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
               {cardDetails.cardType === communityTypes.SPOTLIGHT ? 'Spotlight' : ''}
             </div>
-            <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
-              <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
-            </div>
-            {/* <div className="text-gray-600 font-semibold text-lg mb-2 mx-3 px-2">
-                {cardDetails.cardType === communityTypes.SPOTLIGHT ? 'Spotlight' : ''}
-              </div> */}
+            {cardDetails.cardName ? (
+              <div className="mb-7 mt-3 px-2">
+                <div className="content">
+                  <div className="content-overlay"></div>
+                  <img className="content-image" src={media} />
+                  <div className="content-details fadeIn-bottom">
+                    <h3 className="content-title text-xl">{cardDetails.cardName}</h3>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+                <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
+              </div>
+            )}
+
             <div className="text-gray-500 font-thin text-sm mb-6 mx-3 px-2">
               {cardDetails.summary}
             </div>
@@ -61,13 +85,21 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
                 <div className="rounded-full p-4 bg-blue-100 hover:bg-blue-200 w-auto cursor-pointer z-100 transition-all">
                   <AiOutlineLike className="text-blue-500 text-xl " />
                 </div>
+                {/* <div
+                  onClick={onDelete}
+                  className="rounded-full p-4 bg-blue-100 hover:bg-blue-200 w-auto cursor-pointer z-100 transition-all">
+                  <AiOutlineLike className="text-blue-500 text-xl " />
+                </div> */}
               </div>
             </div>
             <div className="flex w-full border-t border-gray-100">
               <div className="mt-3 mx-5 flex flex-row w-auto">
                 <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
                   Comments:
-                  <div className="ml-1 text-gray-400 font-thin text-ms"> 30</div>
+                  <div className="ml-1 text-gray-400 font-thin text-ms">
+                    {' '}
+                    {cardDetails.chat.length}
+                  </div>
                 </div>
               </div>
               <div className="mt-3 mx-5 w-full flex justify-end">
@@ -94,9 +126,9 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
                       viewBox="0 0 24 24"
                       stroke="currentColor">
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>

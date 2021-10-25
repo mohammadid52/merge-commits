@@ -1,20 +1,15 @@
-import ContentCard from '@atoms/ContentCard';
 import SectionTitleV3 from '@atoms/SectionTitleV3';
 import BreadCrums from '@components/Atoms/BreadCrums';
 import AddNewCard from '@components/Community/AddNewCard';
-import Card from '@components/Community/Card';
 import CardsModal from '@components/Community/CardsModal';
-import {communityTypes, NavStateTypes} from '@components/Community/constants.community';
+import CommanCommunityContent from '@components/Community/CommanCommunityContent';
+import {CardType, NavStateTypes} from '@components/Community/constants.community';
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-import {getAsset} from 'assets';
-import React, {useEffect, useRef, useState} from 'react';
-import {API, graphqlOperation} from 'aws-amplify';
-import * as mutations from '@graphql/mutations';
-import * as queries from '@graphql/queries';
-import {v4 as uuidV4} from 'uuid';
 import useAuth from '@customHooks/useAuth';
+import useOnScreen from '@customHooks/useOnScreen';
+import * as mutations from '@graphql/mutations';
 import {
   IAnnouncementInput,
   ICheckItOutInput,
@@ -23,11 +18,12 @@ import {
   ISpotlightInput,
 } from '@interfaces/Community.interfaces';
 import {awsFormatDate, dateString} from '@utilities/time';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import useOnScreen from '@customHooks/useOnScreen';
+import {getAsset} from 'assets';
+import {API, graphqlOperation} from 'aws-amplify';
+import React, {useRef, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
-import Loader from '@components/Atoms/Loader';
-import orderBy from 'lodash/orderBy';
+import {v4 as uuidV4} from 'uuid';
+import 'components/Community/community.scss';
 
 const Community = ({}: {role: string}) => {
   const {state, clientKey, userLanguage} = useGlobalContext();
@@ -35,41 +31,7 @@ const Community = ({}: {role: string}) => {
 
   const [list, setList] = useState<ICommunityCard[]>([]);
 
-  const [isFetched, setIsFetched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [error, setError] = useState('');
   const {authId: personAuthID, email: personEmail} = useAuth();
-
-  const fetchCommunities = async () => {
-    try {
-      setIsLoading(true);
-      let payload: any = {
-        institutionID: instId,
-        limit: 12,
-      };
-      const res: any = await API.graphql(
-        graphqlOperation(queries.listCommunitys, payload)
-      );
-      const data = res.data.listCommunitys.items;
-      if (data.length > 0) {
-        const orderedList = orderBy(data, ['createdAt'], 'desc');
-        setList([...orderedList]);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-      setIsFetched(true);
-    }
-  };
-
-  useEffect(() => {
-    if (!isFetched) {
-      fetchCommunities();
-    }
-  }, [isFetched]);
 
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
@@ -92,27 +54,30 @@ const Community = ({}: {role: string}) => {
     setNavState('init');
   };
 
-  const getCommonInput = (): {
+  const getCommonInput = (
+    cardType: CardType
+  ): {
     id: string;
-    institutionID: any;
+    institutionID: string;
     cardDate: string;
-    personAuthID: any;
-    personEmail: any;
+    cardType: CardType;
+    personAuthID: string;
+    personEmail: string;
   } => ({
     id: uuidV4(),
     institutionID: instId,
     cardDate: awsFormatDate(dateString('-', 'WORLD')),
-
+    cardType: cardType,
     personAuthID,
     personEmail,
   });
 
   const onSpotlightSubmit = async (spotlightDetails: ISpotlightInput) => {
     // @ts-ignore
-    list.unshift({...spotlightDetails, type: communityTypes.SPOTLIGHT});
+    list.unshift({...spotlightDetails});
     setList((prev) => [...prev]);
 
-    const commonInput = getCommonInput();
+    const commonInput = getCommonInput('spotlight');
 
     const input = {
       cardImageLink: spotlightDetails.cardImageLink,
@@ -136,10 +101,10 @@ const Community = ({}: {role: string}) => {
 
   const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
     // @ts-ignore
-    list.unshift({...announcementDetails, type: communityTypes.ANNOUNCEMENTS});
+    list.unshift({...announcementDetails});
     setList((prev) => [...prev]);
 
-    const commonInput = getCommonInput();
+    const commonInput = getCommonInput('announcement');
 
     const input = {
       cardImageLink: announcementDetails.cardImageLink,
@@ -163,10 +128,10 @@ const Community = ({}: {role: string}) => {
 
   const onEventSubmit = async (eventDetails: IEventInput) => {
     // @ts-ignore
-    list.unshift({...eventDetails, type: communityTypes.EVENT});
+    list.unshift({...eventDetails});
     setList((prev) => [...prev]);
 
-    const commonInput = getCommonInput();
+    const commonInput = getCommonInput('event');
 
     const input = {
       ...eventDetails,
@@ -188,10 +153,10 @@ const Community = ({}: {role: string}) => {
 
   const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
     // @ts-ignore
-    list.unshift({...checkItOutDetails, type: communityTypes.CHECK_IT_OUT});
+    list.unshift({...checkItOutDetails});
     setList((prev) => [...prev]);
 
-    const commonInput = getCommonInput();
+    const commonInput = getCommonInput('check_it_out');
 
     const input = {
       ...checkItOutDetails,
@@ -259,34 +224,16 @@ const Community = ({}: {role: string}) => {
           extraClass="leading-6 text-gray-900 "
           borderBottom
         />
-        <ContentCard
-          hasBackground={false}
-          additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
-          {/* Add new card */}
-          <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} />
-          {!isCardVisible && <FAB />}
 
-          {!Boolean(error) && isLoading && !isFetched && (
-            <Loader withText="Loading cards..." className="w-auto text-gray-400" />
-          )}
-
-          {/* Error--1213 */}
-          <AnimatedContainer show={Boolean(error)}>
-            {error && <p className="text-red-500 text-xs">{error}</p>}
-          </AnimatedContainer>
-
-          {/* Other Cards here */}
-          {!isLoading &&
-            isFetched &&
-            list &&
-            list.length > 0 &&
-            list.map((card, idx) => (
-              <Card
-                key={idx}
-                cardDetails={{...card, cardType: communityTypes.CHECK_IT_OUT}}
-              />
-            ))}
-        </ContentCard>
+        <CommanCommunityContent
+          contentOnlyForTeachers={
+            <div>
+              {/* Add new card */}
+              <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} />
+              {!isCardVisible && <FAB />}
+            </div>
+          }
+        />
       </div>
     </DashboardContainer>
   );

@@ -16,6 +16,7 @@ export interface IEventInput extends IAnnouncementInput {
 export interface ICheckItOutInput extends IAnnouncementInput {}
 
 export interface ICommunityCard extends IEventInput {
+  id: string;
   cardName?: string;
   cardType?: string;
   additionalInfo?: string;
@@ -26,4 +27,13 @@ export interface ICommunityCard extends IEventInput {
     role?: string;
   };
   cardDate?: string;
+  chat: IChat[];
+}
+
+export interface IChat {
+  id: string;
+  communityId: string;
+  personAuthID: string;
+  personEmail: string;
+  msg?: string | null;
 }
