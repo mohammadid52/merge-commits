@@ -206,7 +206,6 @@ const LessonActivities = ({
         rounded="_"
         dark={false}
         overflowHidden={false}
-        width="40rem"
         open={newLessonPlanShow && !pathname.includes('page-builder')}>
         {newLessonPlanShow && !pathname.includes('page-builder') && (
           <NewLessonPlanSO

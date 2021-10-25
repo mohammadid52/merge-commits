@@ -1355,6 +1355,7 @@
   #docx {
     .document-container {
       width: 100%;
+      overflow-x: hidden;
       ol li {
         * {
           max-width: 90%;
