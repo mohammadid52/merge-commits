@@ -11,10 +11,18 @@ import React, {useEffect, useState} from 'react';
 
 const CommanCommunityContent = ({
   contentOnlyForTeachers,
+  list,
 }: {
   contentOnlyForTeachers?: React.ReactNode;
+  list?: ICommunityCard[];
 }) => {
-  const [list, setList] = useState<ICommunityCard[]>([]);
+  const [commonList, setCommonList] = useState<ICommunityCard[]>([]);
+
+  useEffect(() => {
+    if (list && list?.length > 0) {
+      setCommonList([...list]);
+    }
+  }, [list]);
 
   const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +43,7 @@ const CommanCommunityContent = ({
       const data = res.data.listCommunitys.items;
       if (data.length > 0) {
         const orderedList = orderBy(data, ['createdAt'], 'desc');
-        setList([...orderedList]);
+        setCommonList([...orderedList]);
       }
     } catch (error) {
       console.error(error);
@@ -70,9 +78,9 @@ const CommanCommunityContent = ({
       {/* Other Cards here */}
       {!isLoading &&
         isFetched &&
-        list &&
-        list.length > 0 &&
-        list.map((card, idx) => <Card key={idx} cardDetails={card} />)}
+        commonList &&
+        commonList.length > 0 &&
+        commonList.map((card, idx) => <Card key={idx} cardDetails={card} />)}
     </ContentCard>
   );
 };

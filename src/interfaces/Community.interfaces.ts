@@ -10,7 +10,7 @@ export interface IAnnouncementInput extends ISpotlightInput {
 export interface IEventInput extends IAnnouncementInput {
   startTime: string;
   endTime: string;
-  date: string;
+  additionalInfo?: string;
   address?: string;
 }
 export interface ICheckItOutInput extends IAnnouncementInput {}
@@ -19,7 +19,7 @@ export interface ICommunityCard extends IEventInput {
   id: string;
   cardName?: string;
   cardType?: string;
-  additionalInfo?: string;
+
   person: {
     image: string;
     firstName: string;

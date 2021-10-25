@@ -226,6 +226,7 @@ const Community = ({}: {role: string}) => {
         />
 
         <CommanCommunityContent
+          list={list}
           contentOnlyForTeachers={
             <div>
               {/* Add new card */}

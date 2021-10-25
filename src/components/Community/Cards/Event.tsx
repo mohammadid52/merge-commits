@@ -52,7 +52,10 @@ const Event = ({
         cardImageLink: file.fileKey,
         summary: fields.summary,
         cardName: overlayText,
-        ...details,
+        startTime: details.startTime,
+        endTime: details.endTime,
+
+        additionalInfo: `${details.date} || ${details.address}`,
       };
       onSubmit(eventDetails);
       onCancel();
@@ -119,12 +122,7 @@ const Event = ({
             withStyles
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                'descriptionHtml',
-                'description'
-              )
+              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
             }
           />
 
