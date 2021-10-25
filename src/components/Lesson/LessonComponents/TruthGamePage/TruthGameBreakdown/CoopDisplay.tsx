@@ -65,19 +65,23 @@ const CoopDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions} />
+      <ReflectionQuestions
+        questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}
+      />
 
       {/* teacher display */}
       <div
         className={`relative ${
           fullscreen ? 'w-full' : ''
         } h-full flex flex-col justify-between items-center rounded-lg  border-0 p-2 my-4 bg-white bg-opacity-20`}>
-        <div className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2" onClick={handleFullscreen}>
+        <div
+          className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2"
+          onClick={handleFullscreen}>
           <IconContext.Provider
             value={{
               color: '#E2E8F0',
               size: '2rem',
-              style: { width: 'auto', right: '0', bottom: '0', position: 'absolute' },
+              style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'},
             }}>
             {fullscreen ? <FaCompress /> : <FaExpand />}
           </IconContext.Provider>
@@ -89,7 +93,11 @@ const CoopDisplay = () => {
               <span className="text-white">
                 by:{' '}
                 <span className="font-medium text-yellow-600">
-                  {student ? (student.preferredName ? student.preferredName : student.firstName) : null}{' '}
+                  {student
+                    ? student.preferredName
+                      ? student.preferredName
+                      : student.firstName
+                    : null}{' '}
                   {student ? firstInitialFunc(student.lastName) : null}
                 </span>
               </span>
@@ -97,11 +105,19 @@ const CoopDisplay = () => {
           </div>
         </div>
 
-        <Banner title={state.data.lesson.warmUp.title} display="COOP" fullscreen={fullscreen} />
+        <Banner
+          title={state.data.lesson.warmUp.title}
+          display="COOP"
+          fullscreen={fullscreen}
+        />
 
-        <div className="w-full h-8.8/10 flex md:flex-col justify-between">
+        <div className="w-full h-9/10 flex md:flex-col justify-between">
           <TruthGameOutput
-            truthGameData={teacherData && teacherData.warmUpData ? teacherData.warmUpData.truthGame : []}
+            truthGameData={
+              teacherData && teacherData.warmUpData
+                ? teacherData.warmUpData.truthGame
+                : []
+            }
           />
         </div>
       </div>
@@ -123,12 +139,16 @@ const CoopDisplay = () => {
         </div>
 
         <Banner
-          title={displayProps && displayProps.title ? displayProps.title : 'Your Truths and Lies'}
+          title={
+            displayProps && displayProps.title
+              ? displayProps.title
+              : 'Your Truths and Lies'
+          }
           display="SELFinCOOP"
           fullscreen={fullscreen}
         />
 
-        <div className="w-full h-8.8/10 flex flex-col justify-between">
+        <div className="w-full h-9/10 flex flex-col justify-between">
           <TruthGameOutput truthGameData={displayProps ? displayProps : []} />
         </div>
       </div>

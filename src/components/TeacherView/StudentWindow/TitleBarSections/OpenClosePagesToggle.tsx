@@ -6,21 +6,24 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import * as mutations from '@graphql/mutations';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 
-interface IOpenClosePagesToggle {
+interface IOpenClosePagesToggle extends StudentWindowTitleBarProps {
   currentPage?: number;
   activePageData?: any;
   handleOpenCloseComponent?: (pageNr: number) => void;
 }
 
 const OpenClosePagesToggle = ({
+  theme,
+  themeColor,
   currentPage,
   activePageData,
   handleOpenCloseComponent,
 }: IOpenClosePagesToggle) => {
   return (
-    <div className="w-1/3 flex justify-start h-8 pl-2 align-middle font-bold text-xs leading-8 ">
-      <span className="mr-2 w-auto">Workspace:</span>
+    <div className="w-1/3 flex justify-start h-8 align-middle leading-8 ">
+      <span className="mr-2 w-auto text-sm text-gray-600 font-bold">Workspace:</span>
       {/**
        *
        * TITLEBAR LESSON CONTROL
@@ -33,13 +36,13 @@ const OpenClosePagesToggle = ({
       {currentPage !== 0 && activePageData && activePageData.disabled !== true ? (
         activePageData.open !== false ? (
           <span
-            className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
+            className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
             onClick={() => handleOpenCloseComponent(currentPage)}>
             Close Component
           </span>
         ) : (
           <span
-            className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
+            className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
             onClick={() => handleOpenCloseComponent(currentPage)}>
             Open Component
           </span>

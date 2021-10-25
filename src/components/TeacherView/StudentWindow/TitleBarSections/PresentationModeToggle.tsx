@@ -3,8 +3,9 @@ import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage'
 import React from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 
-interface IFullscreenToggleProps {
+interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;
   lessonDispatch: any;
   lessonData: any;
@@ -12,6 +13,8 @@ interface IFullscreenToggleProps {
 }
 
 const PresentationModeToggle = ({
+  theme,
+  themeColor,
   displayData,
   lessonDispatch,
   lessonData,
@@ -64,10 +67,12 @@ const PresentationModeToggle = ({
   };
 
   return (
-    <div className="w-1/3 flex justify-center h-8 align-middle font-bold text-xs leading-8 ">
+    <div className="w-1/3 flex justify-center h-8 align-middle leading-8 ">
       <span
         onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
-        className="w-auto h-6 my-auto leading-4 text-xs text-white bg-blue-600 hover:bg-blue-500 hover:text-underline p-1 rounded-lg cursor-pointer">
+        className={`${
+          isPresenting ? 'text-red-500' : theme.textColor[themeColor]
+        } w-auto h-6 my-auto text-sm underline leading-4 transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}>
         {isPresenting ? 'Stop Presenting' : 'Start Presenting'}
       </span>
     </div>

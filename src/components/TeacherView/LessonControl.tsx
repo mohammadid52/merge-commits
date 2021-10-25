@@ -24,6 +24,8 @@ import LessonControlBar from './LessonControlBar/LessonControlBar';
 import LessonFrame from './StudentWindow/LessonFrame';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import TopMenu from './TopMenu';
+import LessonDetails from './TopMenu/LessonDetails';
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -412,6 +414,8 @@ const LessonControl = () => {
   useEffect(() => {
     if (isPresenting && !fullscreen) {
       setFullscreen(true);
+    } else {
+      setFullscreen(false);
     }
   }, [isPresenting]);
 
@@ -477,19 +481,9 @@ const LessonControl = () => {
 
         {/* START TOP MENU */}
 
-        <TopMenu
-          isSameStudentShared={isSameStudentShared}
-          handleQuitViewing={handleQuitViewing}
-          handleQuitShare={handleQuitShare}
-          handleLeavePopup={handleLeavePopup}
-          handleHomePopup={handleHomePopup}
-          handlePageChange={handlePageChange}
-        />
-
         {/* END TOP MENU */}
 
-        <div
-          className={`relative w-full h-full lg:h-9/10 flex flex-col lg:flex-row rounded-lg`}>
+        <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
           <RosterFrame fullscreen={fullscreen}>
             <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
@@ -517,7 +511,13 @@ const LessonControl = () => {
             handleFullscreen={handleFullscreen}
             anyoneIsViewed={anyoneIsViewed}
             anyoneIsShared={anyoneIsShared}
-            isPresenting={isPresenting}>
+            isPresenting={isPresenting}
+            isSameStudentShared={isSameStudentShared}
+            handleQuitShare={handleQuitShare}
+            handleQuitViewing={handleQuitViewing}
+            handlePageChange={handlePageChange}
+            handleLeavePopup={handleLeavePopup}
+            handleHomePopup={handleHomePopup}>
             <div
               className={`${
                 theme && theme.bg

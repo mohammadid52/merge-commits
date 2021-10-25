@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {gsap} from 'gsap/all';
 import usePrevious from '@customHooks/previousProps';
+import LessonDetails from '../TopMenu/LessonDetails';
+import LessonInfoTitleBar from '../TopMenu/LessonInfoTitleBar';
 
 interface IRosterFrame {
   children?: React.ReactNode;
@@ -12,18 +14,10 @@ const RosterFrame = ({children, fullscreen}: IRosterFrame) => {
   const frameRef = useRef();
 
   const slideOut = () => {
-    let slideOutAnimation = gsap.fromTo(
-      frameRef.current,
-      {x: 0},
-      {x: '-100%', duration: 1, ease: 'easeInOut'}
-    );
+    gsap.fromTo(frameRef.current, {x: 0}, {x: '-100%', duration: 1, ease: 'easeInOut'});
   };
   const slideIn = () => {
-    let slideOutAnimation = gsap.fromTo(
-      frameRef.current,
-      {x: '-100%'},
-      {x: 0, duration: 1, ease: 'easeInOut'}
-    );
+    gsap.fromTo(frameRef.current, {x: '-100%'}, {x: 0, duration: 1, ease: 'easeInOut'});
   };
 
   const previousFullscreen = usePrevious(fullscreen);
@@ -41,7 +35,9 @@ const RosterFrame = ({children, fullscreen}: IRosterFrame) => {
   return (
     <div
       ref={frameRef}
-      className={`absolute w-full lg:w-3/10 min-w-100 h-1/4 lg:h-full flex flex-col items-center `}>
+      className={`absolute bg-white w-full h-full lg:w-2.5/10 max-w-128 flex flex-col items-center`}>
+      {/* <LessonInfoTitleBar /> */}
+      <LessonDetails />
       <div className={`h-full w-full flex flex-col justify-between items-center`}>
         <div className={`h-full`}>{children}</div>
       </div>

@@ -10,15 +10,17 @@ import FullscreenToggle from './TitleBarSections/FullscreenToggle';
 import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
 import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
 
-interface StudentWindowTitleBarProps {
-  handleFullscreen: () => void;
-  fullscreen: boolean;
+export interface StudentWindowTitleBarProps {
+  theme?: any;
+  themeColor?: string;
+  handleFullscreen?: () => void;
+  fullscreen?: boolean;
 }
 
 const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   props: StudentWindowTitleBarProps
 ) => {
-  const {handleFullscreen, fullscreen} = props;
+  const {theme, themeColor, handleFullscreen, fullscreen} = props;
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
@@ -96,9 +98,11 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
 
   return (
     <div
-      className={`relative w-full h-8 top-0 flex flex-shrink-0 justify-between font-medium bg-light-gray bg-opacity-10`}>
+      className={`relative w-full py-1 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
       {/* LEFT - TITLEBAR CONTROL */}
       <OpenClosePagesToggle
+        theme={theme}
+        themeColor={themeColor}
         currentPage={lessonState.currentPage}
         activePageData={activePageData}
         handleOpenCloseComponent={handleOpenCloseComponent}
@@ -106,6 +110,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
 
       {/* CENTER - PRESENTATION MODE */}
       <PresentationModeToggle
+        theme={theme}
+        themeColor={themeColor}
         displayData={displayData}
         lessonDispatch={lessonDispatch}
         lessonData={lessonState.lessonData}
@@ -113,9 +119,14 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       />
 
       {/* RIGHT - FULLSCREEN BUTTON */}
-      <FullscreenToggle fullscreen={fullscreen} handleFullscreen={handleFullscreen} />
+      <FullscreenToggle
+        theme={theme}
+        themeColor={themeColor}
+        fullscreen={fullscreen}
+        handleFullscreen={handleFullscreen}
+      />
     </div>
   );
 };
 
-export default StudentWindowTitleBar;
+export default React.memo(StudentWindowTitleBar);

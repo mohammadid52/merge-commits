@@ -68,12 +68,12 @@ const StageButton = (props: StageButtonProps) => {
 
           <a
             href={page.href}
-            className={`  ${
+            className={` ${
               stageIsViewed && !stageIsClosed && !stageIsDisabled
                 ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
                 : null
-            }        ${stageIsDisabled ? null : 'text-gray-500 '}
-            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+            }    ${stageIsDisabled ? null : 'text-gray-500 '}
+      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page.label}
           </a>
         </div>
@@ -96,16 +96,16 @@ const StageButton = (props: StageButtonProps) => {
             className={`${
               stageIsDisabled || stageIsClosed ? 'line-through text-gray-500' : null
             }
-            
-            ${stageIsClosed ? 'hover:underline' : null}
-            ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
-            ${!stageIsClosed && !stageIsDisabled ? 'text-gray-500 ' : null}
-            ${
-              stageIsViewed && !stageIsClosed && !stageIsDisabled
-                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
-                : null
-            }
-            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+      
+      ${stageIsClosed ? 'hover:underline' : null}
+      ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
+      ${!stageIsClosed && !stageIsDisabled ? 'text-gray-500 ' : null}
+      ${
+        stageIsViewed && !stageIsClosed && !stageIsDisabled
+          ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+          : null
+      }
+      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page.label}
           </a>
         </div>
@@ -134,7 +134,7 @@ const StageButton = (props: StageButtonProps) => {
                 ? 'line-through text-gray-500'
                 : 'text-gray-500'
             }
-            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page.label}
           </a>
         </div>

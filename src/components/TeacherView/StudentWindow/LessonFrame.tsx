@@ -3,6 +3,9 @@ import {gsap} from 'gsap/all';
 import usePrevious from '@customHooks/previousProps';
 import useDeviceDetect from '@customHooks/deviceDetect';
 import StudentWindowTitleBar from './StudentWindowTitleBar';
+import TopMenu from '../TopMenu';
+import {getAsset} from 'assets';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 interface ILessonFrame {
   children?: React.ReactNode;
@@ -12,6 +15,12 @@ interface ILessonFrame {
   anyoneIsViewed?: boolean;
   anyoneIsShared?: boolean;
   isPresenting?: boolean;
+  isSameStudentShared?: boolean;
+  handleQuitShare?: any;
+  handleQuitViewing?: any;
+  handlePageChange?: any;
+  handleLeavePopup?: any;
+  handleHomePopup?: any;
 }
 
 const LessonFrame = ({
@@ -22,7 +31,17 @@ const LessonFrame = ({
   anyoneIsViewed,
   anyoneIsShared,
   isPresenting,
+  isSameStudentShared,
+  handleQuitShare,
+  handleQuitViewing,
+  handlePageChange,
+  handleLeavePopup,
+  handleHomePopup,
 }: ILessonFrame) => {
+  // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+  const clientKey = gContext.clientKey;
+
   // ~~~~~~~~~~~ LIVE VIEW STATE ~~~~~~~~~~~ //
   const [live, setLive] = useState<boolean>(false);
   useEffect(() => {
@@ -72,16 +91,16 @@ const LessonFrame = ({
   // ~~~~~~~~~ FULLSCREEN ANIMATION ~~~~~~~~ //
 
   const scaleDown = () => {
-    let scaleDownAnimation = gsap.fromTo(
+    gsap.fromTo(
       frameRef.current,
       {width: '100%'},
-      {width: '70%', scaleOrigin: 'right', duration: 1, ease: 'easeInOut'}
+      {width: '75%', scaleOrigin: 'right', duration: 1, ease: 'easeInOut'}
     );
   };
   const scaleUp = () => {
-    let scaleUpAnimation = gsap.fromTo(
+    gsap.fromTo(
       frameRef.current,
-      {width: '70%'},
+      {width: '75%'},
       {width: '100%', scaleOrigin: 'right', duration: 1, ease: 'easeInOut'}
     );
   };
@@ -97,16 +116,26 @@ const LessonFrame = ({
       }
     }
   }, [fullscreen]);
+
   const {mobile} = useDeviceDetect();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   return (
     <>
       <div
         ref={frameRef}
-        style={{width: '70%', height: mobile && !fullscreen ? 'calc(75% - 80px)' : ''}}
-        className={`absolute mr-0 right-0 h-full flex flex-col items-center`}>
-        <StudentWindowTitleBar
-          handleFullscreen={handleFullscreen}
+        style={{width: '75%', height: mobile && !fullscreen ? 'calc(75% - 80px)' : ''}}
+        className={`bg-gray-200 absolute mr-0 right-0 h-full flex flex-col items-center`}>
+        <TopMenu
+          themeColor={themeColor}
+          isSameStudentShared={isSameStudentShared}
+          handleQuitViewing={handleQuitViewing}
+          handleQuitShare={handleQuitShare}
+          handleLeavePopup={handleLeavePopup}
+          handleHomePopup={handleHomePopup}
+          handlePageChange={handlePageChange}
           fullscreen={fullscreen}
+          handleFullscreen={handleFullscreen}
         />
 
         <div ref={lessonWindowRef} className="flex-1 overflow-y-scroll">
