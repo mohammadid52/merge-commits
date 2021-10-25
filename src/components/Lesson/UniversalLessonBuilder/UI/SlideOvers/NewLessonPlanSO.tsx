@@ -2,23 +2,68 @@ import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
 import Selector from '@atoms/Form/Selector';
 import RichTextEditor from '@atoms/RichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import * as customMutations from '@customGraphql/customMutations';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {IFile, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import ModalPopUp from '@molecules/ModalPopUp';
+import UploadMedia from '@molecules/UploadMedia';
+import Modal from '@atoms/Modal';
 import '@pathofdev/react-tag-input/build/index.css';
 import {estimatedTimeList} from '@utilities/staticData';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import {getImageFromS3Static} from '@utilities/services';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
+
+const VideoUploadComponent = ({
+  customRef,
+  closeAction,
+  file,
+  setFile,
+  setFields,
+}: {
+  customRef: any;
+  closeAction: () => void;
+  file: IFile;
+  setFields: any;
+  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+}) => {
+  const [error, setError] = useState('');
+  const showCloseButton = !isEmpty(file) && file._status === 'success';
+
+  return (
+    <Modal
+      closeAction={showCloseButton && closeAction}
+      showHeader={showCloseButton}
+      showFooter={false}>
+      <div>
+        <UploadMedia
+          file={file}
+          onSuccess={() => {
+            setFields((prev: any) => ({...prev, videoLink: ''}));
+          }}
+          uploadKey={UPLOAD_KEYS.ULB}
+          setFile={setFile}
+          accept="video/mp4,video/x-m4v,video/*"
+          setError={setError}
+          customRef={customRef}
+        />
+
+        {error && <p>{error}</p>}
+      </div>
+    </Modal>
+  );
+};
 
 const InputTag = ({
   tags,
@@ -96,7 +141,7 @@ interface FieldsInterface {
   interactionType: string[];
   tags?: string[];
   estTime: string;
-
+  videoLink?: string;
   classwork: boolean;
 }
 
@@ -115,6 +160,7 @@ interface ErrorInterface {
   empty: string;
   title: string;
   label: string;
+  videoLink?: string;
 }
 
 const INITIAL_STATE: FieldsInterface = {
@@ -127,12 +173,14 @@ const INITIAL_STATE: FieldsInterface = {
   tags: [],
   estTime: '1 min',
   classwork: true,
+  videoLink: '',
 };
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
   empty: '',
   title: '',
   label: '',
+  videoLink: '',
 };
 
 const Block = ({children}: {children: React.ReactNode}) => {
@@ -205,6 +253,22 @@ const NewLessonPlanSO = ({
     }));
   };
 
+  const onVideoLinkChange = (e: any) => {
+    const {id, value = ''} = e.target;
+    setUnsavedChanges(true);
+
+    setFields((prevInputs: any) => ({
+      ...prevInputs,
+      [id]: value,
+    }));
+    const isValidUrl = REGEX.URL.test(value);
+    if (isValidUrl) {
+      setErrors((prev) => ({...prev, videoLink: ''}));
+    } else {
+      setErrors((prev) => ({...prev, videoLink: 'Invalid url'}));
+    }
+  };
+
   const onSelectOption = (_: any, name: string) => {
     setUnsavedChanges(true);
 
@@ -244,8 +308,17 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
+  const [file, setFile] = useState<IFile>();
+
+  const uploadedVideoLink =
+    !isEmpty(file) && file._status === 'success'
+      ? getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey)
+      : null;
+  const isUploadedFromPC = Boolean(uploadedVideoLink);
+
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
+    const isValidUrl = REGEX.URL.test(fields.videoLink);
     let isValid = true;
     if (empty) {
       errors.empty = 'Please fill in all the details';
@@ -268,6 +341,20 @@ const NewLessonPlanSO = ({
       errors.label = '';
       // isValid = true;
     }
+
+    // if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
+    //   errors.videoLink = 'Video Link is mandatory';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
+
+    // if (!isValidUrl && !isUploadedFromPC) {
+    //   errors.videoLink = 'Invalid video link';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
 
     setErrors({...errors});
     return isValid;
@@ -317,6 +404,7 @@ const NewLessonPlanSO = ({
             label: fields.label,
             estTime: Number(fields.estTime?.split(' ')[0]),
             tags: fields.tags,
+            videoLink: uploadedVideoLink || fields.videoLink,
             interactionType: fields.interactionType || [],
             activityType: classwork ? 'classwork' : 'homework',
           };
@@ -350,6 +438,7 @@ const NewLessonPlanSO = ({
                 interactionType: fields.interactionType || [],
                 activityType: classwork ? 'classwork' : 'homework',
                 pageContent: [],
+                videoLink: uploadedVideoLink || fields.videoLink,
                 disabled: false,
                 open: true,
               },
@@ -477,6 +566,11 @@ const NewLessonPlanSO = ({
     setNewLessonPlanShow(false);
   };
 
+  const [videoUploadModal, setVideoUploadModal] = useState(false);
+
+  const customRef = useRef();
+  const closeVideoUploadModal = () => setVideoUploadModal(false);
+
   return (
     <>
       {showModal.show && (
@@ -492,6 +586,15 @@ const NewLessonPlanSO = ({
             cancelAction={onModalCancelClick}
           />
         </div>
+      )}
+      {videoUploadModal && (
+        <VideoUploadComponent
+          setFields={setFields}
+          closeAction={() => closeVideoUploadModal()}
+          file={file}
+          setFile={setFile}
+          customRef={customRef}
+        />
       )}
       <div className="flex-1">
         {/* Header */}
@@ -534,7 +637,7 @@ const NewLessonPlanSO = ({
               label="Activity name"
               isRequired
               onChange={onFieldChange}
-              dark={dark}
+              dark={true}
               id="title"
               error={errors?.title}
             />
@@ -545,7 +648,7 @@ const NewLessonPlanSO = ({
               showCharacterUsage
               label="Activity label"
               maxLength={12}
-              dark={dark}
+              dark={true}
               isRequired
               placeHolder="eg. Let's learn what is javascript"
               value={label}
@@ -553,6 +656,35 @@ const NewLessonPlanSO = ({
               onChange={onFieldChange}
               id="label"
             />
+          </Block>
+          {/* Video Instructions */}
+          <Block>
+            <FormInput
+              placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
+              value={fields.videoLink}
+              label="Add video instructions"
+              disabled={isUploadedFromPC}
+              onChange={onVideoLinkChange}
+              dark={true}
+              id="videoLink"
+              error={errors?.videoLink}
+            />
+            {!isUploadedFromPC ? (
+              <div
+                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                onClick={() => setVideoUploadModal(true)}>
+                Or upload from your pc
+              </div>
+            ) : (
+              <div
+                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                onClick={() => {
+                  const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
+                  window.open(imageUrl, '_blank');
+                }}>
+                See video
+              </div>
+            )}
           </Block>
           {/* Activity Instructions */}
 

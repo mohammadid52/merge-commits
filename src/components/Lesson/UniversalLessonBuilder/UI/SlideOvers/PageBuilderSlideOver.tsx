@@ -780,7 +780,7 @@ const PageBuilderSlideOver = ({
           <div>
             <OverlayHeaderTitle showBackBtn={false} onBack={toHome} title="Edit page" />
             <AnimatedContainer
-              className={`my-6  w-auto`}
+              className={`my-2  w-auto`}
               animationType="opacity"
               show={notSelected && !onInit}>
               {notSelected && !onInit && (
@@ -794,7 +794,7 @@ const PageBuilderSlideOver = ({
               )}
             </AnimatedContainer>
             <AnimatedContainer
-              className={`my-6  w-auto`}
+              className={`my-2  w-auto`}
               animationType="custom"
               customAnimation={{
                 show: 'scale-100 opacity-100',
@@ -819,7 +819,7 @@ const PageBuilderSlideOver = ({
             </AnimatedContainer>
 
             <AnimatedContainer
-              className={`my-6  w-auto`}
+              className={`my-2  w-auto`}
               animationType="opacity"
               show={notSelected && showMovementBox}>
               {notSelected && showMovementBox && (
@@ -830,7 +830,7 @@ const PageBuilderSlideOver = ({
               )}
             </AnimatedContainer>
             <AnimatedContainer
-              className={` my-6  w-auto`}
+              className={` my-2  w-auto`}
               animationType="custom"
               customAnimation={{
                 show: 'scale-100 opacity-100',

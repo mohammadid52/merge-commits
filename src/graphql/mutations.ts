@@ -12373,6 +12373,7 @@ export const createCommunity = /* GraphQL */ `
       id
       institutionID
       cardName
+      cardType
       cardDate
       summary
       cardImageLink
@@ -12480,6 +12481,7 @@ export const updateCommunity = /* GraphQL */ `
       id
       institutionID
       cardName
+      cardType
       cardDate
       summary
       cardImageLink
@@ -12587,6 +12589,7 @@ export const deleteCommunity = /* GraphQL */ `
       id
       institutionID
       cardName
+      cardType
       cardDate
       summary
       cardImageLink

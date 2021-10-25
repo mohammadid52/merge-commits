@@ -19,7 +19,7 @@ import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
 import {CgNotes} from 'react-icons/cg';
 import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
-import {IoDocumentAttachOutline} from 'react-icons/io5';
+import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import {DIVIDER, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
@@ -109,6 +109,14 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
     },
   ];
   const mediaContent = [
+    {
+      name: 'Docs',
+      subtitle: 'Integrate .pdf .docx',
+      type: FORM_TYPES.DOCS,
+      icon: IoDocumentTextOutline,
+      iconForeground: 'text-green-700',
+      iconBackground: 'bg-green-100',
+    },
     {
       subtitle: 'Add image',
       name: 'Image',

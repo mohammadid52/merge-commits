@@ -5,4 +5,5 @@ export const UPLOAD_KEYS = {
   TEACHER_UPLOAD: 'ULB/teachers_upload/',
   getStudentDataUploadKey,
   COMMUNITY: 'community/',
+  ULB: 'ulb/',
 };
