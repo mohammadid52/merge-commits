@@ -153,7 +153,7 @@ const LessonHeaderBar = ({
           showFooter={false}
           scrollHidden={true}
           closeAction={() => handleVideoLinkPopup()}>
-          <ReactPlayer url={videoLink} />
+          <ReactPlayer url={videoLink} controls={true} pip={true} stopOnUnmount={false} />
         </Modal>
       </div>
 
