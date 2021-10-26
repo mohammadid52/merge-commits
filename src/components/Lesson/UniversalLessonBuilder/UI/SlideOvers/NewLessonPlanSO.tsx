@@ -227,6 +227,7 @@ const NewLessonPlanSO = ({
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         classwork: true,
+        videoLink: pageDetails?.videoLink || '',
       });
     } else {
       setFields(INITIAL_STATE);

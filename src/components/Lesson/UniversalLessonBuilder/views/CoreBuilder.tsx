@@ -421,14 +421,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         <div
-          // style={{
-          //   marginLeft:
-          //     showLessonEditOverlay || newLessonPlanShow ? getResponsiveMargin() : '0rem',
-          // }}
           className={`col-start-2 ${
-            showLessonEditOverlay || newLessonPlanShow
-              ? '-ml-48 lg:-ml-60 xl:-ml-60 '
-              : ''
+            showLessonEditOverlay || newLessonPlanShow ? '-ml-60 lg:-ml-40 md:ml-0' : ''
           } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar
