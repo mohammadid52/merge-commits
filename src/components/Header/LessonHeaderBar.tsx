@@ -18,6 +18,7 @@ const LessonHeaderBar = ({
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const theme = gContext.theme;
   const initializeTimer = useStudentTimer();
@@ -99,18 +100,20 @@ const LessonHeaderBar = ({
 
   useEffect(() => {
     if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
-      // const thisPageVideoLink = lessonState?.currentPage
-      //   ? lessonState?.lessonData?.lessonPlan[lessonState?.currentPage]?.videoLink
-      //   : '';
-      const indexSelector = (lessonState?.currentPage + 1) % 2;
-      const thisPageVideoLink = [
-        'https://www.youtube.com/watch?v=XCdq_GQU0io',
-        'https://www.youtube.com/watch?v=_j6XgaTL46s',
-      ][indexSelector];
+      const thisPageVideoLink = lessonState?.currentPage
+        ? lessonState?.lessonData?.lessonPlan[lessonState?.currentPage]?.videoLink
+        : '';
+      // const indexSelector = (lessonState?.currentPage + 1) % 2;
+      // const thisPageVideoLink = [
+      //   'https://www.youtube.com/watch?v=XCdq_GQU0io',
+      //   'https://www.youtube.com/watch?v=_j6XgaTL46s',
+      // ][indexSelector];
 
       if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
         setVideoLink(thisPageVideoLink);
-        handleVideoLinkPopup(thisPageVideoLink);
+        if (user.onDemand) {
+          handleVideoLinkPopup(thisPageVideoLink);
+        }
       }
     }
   }, [lessonState.currentPage]);
