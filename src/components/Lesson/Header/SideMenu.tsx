@@ -38,16 +38,26 @@ const SideMenu = ({
         ref={buttonContainerRef}
         className={`absolute w-16 left-1 transform translate-y-4`}>
         <ButtonsRound
-          onClick={handleClickAnimation}
+          onClick={videoLink ? () => handleClickAnimation : () => {}}
           Icon={AiOutlineVideoCamera}
           iconSizePX={24}
           buttonWHClass={`w-8 h-8`}
           containerBgClass={`${
-            videoLinkModalVisible ? 'bg-white bg-opacity-70' : 'bg-white'
+            videoLink
+              ? videoLinkModalVisible
+                ? 'bg-white bg-opacity-70'
+                : 'bg-white'
+              : 'bg-gray-700 bg-opacity-40 pointer-events-none'
           } p-2 rounded-full`}
           buttonBgClass={`bg-transparent`}
-          iconTxtColorClass={`text-green-500`}
-          disabled={videoLinkModalVisible}
+          iconTxtColorClass={`${
+            videoLink
+              ? videoLinkModalVisible
+                ? 'text-green-700'
+                : 'text-green-500'
+              : 'text-gray-900'
+          }`}
+          disabled={!videoLink}
         />
       </div>
     </>
