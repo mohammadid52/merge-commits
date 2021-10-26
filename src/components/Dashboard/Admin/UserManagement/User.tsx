@@ -1440,7 +1440,7 @@ const User = ({instituteId}: IUserProps) => {
   {
     return (
       <>
-        <div className={`pl-12 max-w-256`}>
+        <div className={`pl-0 lg:pl-12 max-w-256`}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div
@@ -1490,7 +1490,7 @@ const User = ({instituteId}: IUserProps) => {
           <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
               <div
-                className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+                className={`w-full overflow-hidden white_back px-2 lg:px-8 py-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 <div className="h-1/2 flex flex-col md:flex-row">
                   <div className="w-1/4 p-4 flex flex-col text-center items-center">
                     <div className="cursor-pointer">
@@ -1508,12 +1508,12 @@ const User = ({instituteId}: IUserProps) => {
                                   toggleCropper={toggleCropper}>
                                   {imageUrl ? (
                                     <img
-                                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                      className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                       src={imageUrl}
                                     />
                                   ) : (
                                     <div
-                                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                      className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                     />
                                   )}
                                 </DroppableMedia>

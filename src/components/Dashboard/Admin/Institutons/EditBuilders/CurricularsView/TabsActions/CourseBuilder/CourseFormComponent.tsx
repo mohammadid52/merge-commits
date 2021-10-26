@@ -409,7 +409,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   return (
     <div className="">
       <div className="w-9/10 m-auto">
-        <div className="h-9/10 flex flex-col md:flex-row">
+        <div className="h-9/10 flex flex-col lg:flex-row">
           <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
               <label className="cursor-pointer flex justify-center">

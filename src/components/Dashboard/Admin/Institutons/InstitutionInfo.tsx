@@ -91,128 +91,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {Institute_info} = useDictionary(clientKey);
   const mediaRef = useRef(null);
 
-  // const headerMenusForInstitution = [
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
-  //     key: 'institution',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
-  //         key: 'general_information',
-  //         redirectionUrl: `${match.url}/edit`,
-  //         active: location.pathname.indexOf('/edit') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['STAFF'],
-  //         key: 'staff',
-  //         redirectionUrl: `${match.url}/staff`,
-  //         active: location.pathname.indexOf('staff') > -1,
-  //       },
-  //       {
-  //         title: 'User registry',
-  //         key: 'user_registry',
-  //         redirectionUrl: `${match.url}/person`,
-  //         active: location.pathname.indexOf('register') > -1,
-  //       },
-  //       {
-  //         title: 'Register New User',
-  //         key: 'register',
-  //         redirectionUrl: `${match.url}/register-user`,
-  //         active: location.pathname.indexOf('register-user') > -1,
-  //       },
-  //     ].filter(Boolean),
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
-  //     key: 'course',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: 'Courses',
-  //         key: 'course',
-  //         redirectionUrl: `${match.url}/courses`,
-  //         active: location.pathname.indexOf('course') > -1,
-  //       },
-  //       {
-  //         title: 'Units',
-  //         key: 'unit',
-  //         redirectionUrl: `${match.url}/units`,
-  //         active: location.pathname.indexOf('units') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['LESSONS'],
-  //         key: 'lessons',
-  //         redirectionUrl: `${match.url}/lessons`,
-  //         active: location.pathname.indexOf('lessons') > -1,
-  //       },
-  //       {
-  //         title: 'Game Changers ',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
-  //     key: 'class',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['CLASSES'],
-  //         key: 'class',
-  //         redirectionUrl: `${match.url}/class`,
-  //         active: location.pathname.indexOf('class') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
-  //         key: 'class_room',
-  //         redirectionUrl: `${match.url}/class-rooms`,
-  //         active: location.pathname.indexOf('room') > -1,
-  //       },
-  //       (user.role === 'FLW' || user.role === 'TR') && {
-  //         title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
-  //         key: 'roaster',
-  //         redirectionUrl: `${match.url}/class-rooms`,
-  //         active: location.pathname.indexOf('room') > -1,
-  //       },
-  //     ].filter(Boolean),
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
-  //     key: 'community',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: 'New Person Spotlight',
-  //       },
-  //       {
-  //         title: 'Announcements & Events',
-  //       },
-  //       {
-  //         title: 'Front Page',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
-  //     key: 'research_and_analytics',
-  //     redirectionUrl: `${match.url}/research-and-analytics`,
-  //   },
-  // ];
-
-  const updateTab = ({key, redirectionUrl}: any) => {
-    // tabProps.setTabsData({...tabProps.tabsData, inst: key});
-    // if (redirectionUrl) {
-    //   history.push(redirectionUrl);
-    // }
-    // if (tab === 'user_registry') {
-    //   history.push(`/dashboard/manage-users`);
-    // } else if (tab === 'unit') {
-    //   // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
-    // } else {
-    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    // }
-  };
-
   useEffect(() => {
     getUrl();
   }, [instProps?.institute?.image]);
@@ -303,10 +181,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     <div>
       <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col md:flex-row flex justify-center md:justify-start">
+        <div className="flex-col lg:flex-row flex justify-center lg:justify-start">
           <div
             hidden={pathname.includes('page-builder')}
-            className="w-auto border-r-0 border-gray-200">
+            className="w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col">
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
               {imageLoading ? (
                 <div
@@ -324,7 +202,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       }}
                       toggleCropper={toggleCropper}>
                       <img
-                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                         src={imageUrl}
                       />
                     </DroppableMedia>
@@ -459,8 +337,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           </div>
 
           <div className="flex">
-            <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
-              <div className="overflow-hidden h-full">
+            <div className="bg-white border-l-none lg:border-l-0 border-gray-200 mb-4 flex-1">
+              <div className="overflow-x-scroll overflow-y-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
                 <Switch>
                   <Route

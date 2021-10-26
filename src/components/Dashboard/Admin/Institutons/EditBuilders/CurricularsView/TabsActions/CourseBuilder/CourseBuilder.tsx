@@ -231,7 +231,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 border-t-none py-8">
+            <div className="border-0 border-gray-200 lg:border-t-none py-8 mt-8 lg:mt-0">
               {currentStepComp(activeStep)}
             </div>
           )}

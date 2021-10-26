@@ -315,8 +315,8 @@ const InstitutionLookup: React.FC = () => {
           {/* List / Table */}
           <div className="flex flex-col">
             <div className="-my-2 py-2">
-              <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
-                <div className="h-8/10 px-4">
+              <div className="white_back py-4 px-2 lg:px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 w-screen">
+                <div className="h-8/10 px-4 w-screen overflow-x-scroll">
                   <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                     <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>

@@ -209,7 +209,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
           const savedData = result.data.getRoom;
-          const curricularId = savedData.curricula.items[0].curriculumID;
+          const curricularId = savedData.curricula.items[0]?.curriculumID;
 
           const coTeachers = savedData.coTeachers?.items;
           setRoomData({
@@ -389,8 +389,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
           />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
-            <div className="border-0 border-t-none border-gray-200">
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mt-8 lg:mt-0">
+            <div className="border-0 lg:border-t-none border-gray-200">
               {currentStepComp(activeStep)}
             </div>
           </div>

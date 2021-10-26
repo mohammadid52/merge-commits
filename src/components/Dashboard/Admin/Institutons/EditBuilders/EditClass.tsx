@@ -646,7 +646,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           </div>
 
           <div className="flex flex-col items-center justify-center w-9/10 2xl:w-6/10 m-auto px-2 mb-4">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div className="col-span-2">
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                   Add students to class
@@ -791,7 +791,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                             {'-'}
                           </div>
                         )} */}
-                        <div className="w-3/10 px-3">
+                        <div className="w-3/10 px-3 text-gray-900">
                           {item.createAt
                             ? new Date(item.createAt).toLocaleDateString()
                             : '--'}

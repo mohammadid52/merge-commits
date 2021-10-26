@@ -373,7 +373,7 @@ const UnitManager = ({
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">
-        <div className="my-8 w-6/10 m-auto flex items-center justify-center">
+        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
           <div className="mr-4">
             <Selector
               selectedItem={selectedSyllabus.value}

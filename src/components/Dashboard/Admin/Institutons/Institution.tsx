@@ -265,7 +265,7 @@ const Institution = (props: InstitutionProps) => {
         {/* <div className="flex justify-between">
         <SectionTitle title={`${institutionData.name} Dashboard`} />
       </div> */}
-        <PageWrapper wrapClass="overflow-x-auto">
+        <PageWrapper>
           <Switch>
             {/* <Route
             path={`${match.url}/edit`}

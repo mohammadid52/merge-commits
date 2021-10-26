@@ -33,7 +33,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
       <div
         className={`h-full border border-gray-200 ${
           stepValue === activeStep ? '' : 'border-b-0'
-        } lg:border-0 ${
+        } border-b-0 lg:border-0 ${
           index === 0
             ? 'lg:border-r-none'
             : index !== steps.length - 1

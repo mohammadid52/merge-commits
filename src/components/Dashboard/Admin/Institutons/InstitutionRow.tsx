@@ -62,7 +62,7 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
     <div
       id={instRowPrps.id}
       className="flex justify-between bg-white w-full border-b-0 border-gray-200">
-      <div className="w-3/10 px-8 py-4 whitespace-nowrap">
+      <div className="w-3/10 px-2 lg:px-8 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10 flex items-center">
             {instRowPrps.image ? (

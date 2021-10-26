@@ -174,7 +174,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
-    } catch {
+    } catch (err){console.log(err,'err inside catch')
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
@@ -233,7 +233,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         setTeachersList(filteredArray);
         setCoTeachersList(filteredArray.filter((item: any) => item.id !== teacher.id));
       }
-    } catch {
+    } catch (err){console.log(err,'err inside catch')
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
@@ -277,7 +277,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   //       }));
   //       setClassList(classList);
   //     }
-  //   } catch {
+  //   } catch (err){console.log(err,'err inside catch')
   //     setMessages({
   //       show: true,
   //       message: RoomEDITdict[userLanguage]['messages']['unableclass'],
@@ -305,7 +305,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         value: `${item.name ? item.name : ''}`,
       }));
       setCurricularList(curricularList);
-    } catch {
+    } catch (err){console.log(err,'err inside catch')
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
@@ -325,7 +325,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         })
       );
       return list.data.listRooms.items.length === 0 ? true : false;
-    } catch {
+    } catch (err){console.log(err,'err inside catch')
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
@@ -424,7 +424,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           message: RoomEDITdict[userLanguage]['messages']['classupdate'],
           isError: false,
         });
-      } catch {
+      } catch (err){console.log(err,'err inside catch')
         setLoading(false);
         setMessages({
           show: true,
@@ -461,7 +461,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         });
         setRoomData(initialData);
         setLoading(false);
-      } catch {
+      } catch (err){console.log(err,'err inside catch')
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
@@ -521,7 +521,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             graphqlOperation(mutation.updateRoom, {input: input})
           );
 
-          const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
+          const curriculaId = newRoom.data.updateRoom.curricula.items[0]?.id;
           await saveRoomTeachers(roomData.id);
           await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
           setUnsavedChanges(false);
@@ -588,7 +588,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             `/dashboard/manage-institutions/institution/${instId}/room-edit/${roomId}?step=students`
           );
         }
-      } catch {
+      } catch (err){console.log(err,'err inside catch')
         setLoading(false);
         setMessages({
           show: true,
@@ -670,7 +670,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
           const savedData = result.data.getRoom;
-          const curricularId = savedData.curricula.items[0].curriculumID;
+          const curricularId = savedData.curricula.items[0]?.curriculumID;
 
           const coTeachers = savedData.coTeachers?.items;
           setOriginalTeacher(
@@ -725,7 +725,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           });
           setPrevName(savedData.name);
           setSelectedCurrID(curricularId);
-        } catch {
+        } catch (err){console.log(err,'err inside catch')
           setMessages({
             show: true,
             message: RoomEDITdict[userLanguage]['messages']['errfetch'],

@@ -367,7 +367,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         {/* Header section */}
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
         <div
-          className={`flex justify-between ${
+          className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
             isInInstitution ? 'items-center px-8' : ''
           }`}>
           {isInInstitution ? (
@@ -432,7 +432,10 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
               className={`${
                 isInInstitution ? '' : 'white_back px-8'
               } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
-              <div className={`h-8/10 ${isInInstitution ? '' : 'px-4'}`}>
+              <div
+                className={`h-8/10 ${
+                  isInInstitution ? '' : 'px-4'
+                } w-screen lg:w-auto`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
@@ -514,17 +517,19 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
               {!searchInput.isActive && totalLessonNum > 0 && (
                 <div className="flex justify-center my-4">
                   <Fragment>
-                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                      {' '}
-                      {paginationPage(userLanguage, currentPage, totalPages)}
-                    </span>
-                    <Pagination
-                      currentPage={currentPage + 1}
-                      setNext={goNextPage}
-                      setPrev={goPrevPage}
-                      firstPage={firstPage}
-                      lastPage={lastPage}
-                    />
+                    <div className="flex justify-between flex-col lg:flex-row">
+                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
+                        {' '}
+                        {paginationPage(userLanguage, currentPage, totalPages)}
+                      </span>
+                      <Pagination
+                        currentPage={currentPage + 1}
+                        setNext={goNextPage}
+                        setPrev={goPrevPage}
+                        firstPage={firstPage}
+                        lastPage={lastPage}
+                      />
+                    </div>
                     <PageCountSelector
                       pageSize={pageCount}
                       setPageSize={(c: number) => setPageCount(c)}
