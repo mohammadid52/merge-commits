@@ -36,9 +36,9 @@ const SideMenu = ({
     <>
       <div
         ref={buttonContainerRef}
-        className={`absolute w-16 left-1 transform translate-y-4`}>
+        className={`absolute w-16 left-1 transform translate-y-4 flex flex-col`}>
         <ButtonsRound
-          onClick={videoLink ? () => handleClickAnimation : () => {}}
+          onClick={videoLink ? () => handleClickAnimation() : () => {}}
           Icon={AiOutlineVideoCamera}
           iconSizePX={24}
           buttonWHClass={`w-8 h-8`}
@@ -59,6 +59,14 @@ const SideMenu = ({
           }`}
           disabled={!videoLink}
         />
+        <p
+          className={
+            videoLink
+              ? 'w-12 text-xs text-center text-white'
+              : 'w-12 text-xs text-center text-gray-600'
+          }>
+          Video
+        </p>
       </div>
     </>
   );
