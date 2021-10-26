@@ -39,7 +39,7 @@ const VideoUploadComponent = ({
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
 }) => {
   const [error, setError] = useState('');
-  const showCloseButton = !isEmpty(file) && file._status === 'success';
+  const showCloseButton = isEmpty(file) || (!isEmpty(file) && file._status === 'success');
 
   return (
     <Modal
@@ -261,7 +261,7 @@ const NewLessonPlanSO = ({
       ...prevInputs,
       [id]: value,
     }));
-    const isValidUrl = REGEX.URL.test(value);
+    const isValidUrl = REGEX.Youtube.test(value);
     if (isValidUrl) {
       setErrors((prev) => ({...prev, videoLink: ''}));
     } else {
@@ -318,7 +318,7 @@ const NewLessonPlanSO = ({
 
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
-    const isValidUrl = REGEX.URL.test(fields.videoLink);
+    const isValidUrl = REGEX.Youtube.test(fields.videoLink);
     let isValid = true;
     if (empty) {
       errors.empty = 'Please fill in all the details';
@@ -676,13 +676,22 @@ const NewLessonPlanSO = ({
                 Or upload from your pc
               </div>
             ) : (
-              <div
-                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                onClick={() => {
-                  const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
-                  window.open(imageUrl, '_blank');
-                }}>
-                See video
+              <div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
+                    window.open(imageUrl, '_blank');
+                  }}>
+                  See video
+                </div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    setFile(null);
+                  }}>
+                  Clear
+                </div>
               </div>
             )}
           </Block>
