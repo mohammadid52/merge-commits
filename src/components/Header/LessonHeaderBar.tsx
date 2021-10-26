@@ -71,15 +71,19 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ########################## POPUPS & MODALS ########################## //
   // ##################################################################### //
+
+  // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
   const leaveModal = useOutsideAlerter(false);
   const leaveModalVisible = leaveModal.visible;
   const setLeaveModalVisible = leaveModal.setVisible;
 
+  // ~~ VIDEOLINK WHICH IS SHOWN TO USERS ~~ //
   const [videoLink, setVideoLink] = useState<string>('');
   const videoLinkModal = useOutsideAlerter(false);
   const videoLinkModalVisible = videoLinkModal.visible;
   const setVideoLinkModalVisible = videoLinkModal.setVisible;
 
+  // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
@@ -88,6 +92,7 @@ const LessonHeaderBar = ({
     setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
+  // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
   const handleVideoLinkPopup = (url?: string) => {
     if (videoLinkModalVisible) {
       // setVideoLink('');
@@ -98,25 +103,22 @@ const LessonHeaderBar = ({
     }
   };
 
+  const thisPageVideoLink = lessonState.lessonData.lessonPlan
+    ? lessonState.lessonData.lessonPlan[lessonState.currentPage]?.videoLink
+    : '';
   useEffect(() => {
-    if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
-      const thisPageVideoLink = lessonState?.currentPage
-        ? lessonState?.lessonData?.lessonPlan[lessonState?.currentPage]?.videoLink
-        : '';
-      // const indexSelector = (lessonState?.currentPage + 1) % 2;
-      // const thisPageVideoLink = [
-      //   'https://www.youtube.com/watch?v=XCdq_GQU0io',
-      //   'https://www.youtube.com/watch?v=_j6XgaTL46s',
-      // ][indexSelector];
+    if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+      setVideoLink(thisPageVideoLink);
 
-      if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
-        setVideoLink(thisPageVideoLink);
+      if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
         if (user.onDemand) {
           handleVideoLinkPopup(thisPageVideoLink);
         }
       }
+    } else {
+      setVideoLink('');
     }
-  }, [lessonState.currentPage]);
+  }, [lessonState.currentPage, thisPageVideoLink]);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

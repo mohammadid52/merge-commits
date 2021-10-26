@@ -2324,6 +2324,7 @@ export const getUniversalLesson = /* GraphQL */ `
         tags
         disabled
         interactionType
+        videoLink
         displayMode
         open
         estTime
