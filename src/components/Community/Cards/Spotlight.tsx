@@ -6,6 +6,7 @@ import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
+import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
 import {ISpotlightInput} from '@interfaces/Community.interfaces';
 import {getFilterORArray} from '@utilities/strings';
@@ -22,7 +23,10 @@ const Spotlight = ({
   onSubmit: (input: ISpotlightInput) => void;
 }) => {
   const [teachersList, setTeachersList] = useState([]);
+  const [loadingTeachers, setLoadingTeachers] = useState(false);
   const [file, setFile] = useState<IFile>();
+  const [studentsList, setStudentsList] = useState([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
@@ -48,20 +52,64 @@ const Spotlight = ({
   };
   const [roomData, setRoomData] = useState(initialData);
 
-  const [fetched, setFetched] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState({id: '', name: '', value: ''});
 
-  const selectTeacher = (val: string, name: string, id: string) => {
-    setRoomData({
-      ...roomData,
-      teacher: {
-        id: id,
-        name: name,
-        value: val,
-      },
-    });
+  const selectPerson = (val: string, name: string, id: string) => {
+    setSelectedPerson({id: id, name: name, value: val});
+  };
+
+  useEffect(() => {
+    fetchStudentList();
+  }, []);
+
+  const {authId} = useAuth();
+
+  const fetchStudentList = async () => {
+    setLoadingStudents(true);
+    const response: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardDataForTeachers, {
+        filter: {teacherAuthID: {eq: authId}},
+      })
+    );
+    const assignedRoomsAsCoTeacher: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        filter: {teacherAuthID: {eq: authId}},
+      })
+    );
+    const data = [
+      ...response?.data?.listRooms?.items,
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item: any) => ({
+        ...item,
+        ...item.room,
+        teacher: item.room?.teacher,
+      })),
+    ];
+
+    let list: any[] = [];
+    let uniqIds: string[] = [];
+
+    if (data?.length) {
+      data.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          if (!uniqIds.includes(student.student.id)) {
+            list.push({
+              id: student.student.id,
+              name: `${student.student.firstName} ${student.student.lastName}`,
+              image: student.student.image,
+              value: `${student.student.firstName} ${student.student.lastName}`,
+            });
+            uniqIds.push(student.student.id);
+          }
+        });
+      });
+    }
+
+    setStudentsList(list);
+    setLoadingStudents(false);
   };
 
   const getInstituteInfo = async (instId: string) => {
+    setLoadingTeachers(true);
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getInstitution, {
@@ -89,9 +137,7 @@ const Spotlight = ({
 
   useEffect(() => {
     if (roomData.institute.id) {
-      setFetched(false);
       fetchOtherList();
-      setFetched(true);
     }
   }, [roomData.institute.id]);
 
@@ -138,7 +184,10 @@ const Spotlight = ({
 
         setTeachersList(filteredArray);
       }
-    } catch {}
+    } catch {
+    } finally {
+      setLoadingTeachers(false);
+    }
   };
 
   const {teacher} = roomData;
@@ -184,11 +233,12 @@ const Spotlight = ({
         </label>
 
         <SelectorWithAvatar
-          selectedItem={teacher}
-          list={teachersList}
-          loading={!fetched && teachersList.length === 0}
+          selectedItem={selectedPerson}
+          list={[...teachersList, ...studentsList]}
+          imageFromS3
+          loading={loadingStudents || loadingTeachers}
           placeholder={'Select Person'}
-          onChange={selectTeacher}
+          onChange={selectPerson}
         />
       </div>
       <Media setError={setError} setFile={setFile} file={file} />

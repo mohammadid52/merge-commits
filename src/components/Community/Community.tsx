@@ -1,6 +1,5 @@
 import SectionTitleV3 from '@atoms/SectionTitleV3';
 import BreadCrums from '@components/Atoms/BreadCrums';
-import AddNewCard from '@components/Community/AddNewCard';
 import CardsModal from '@components/Community/CardsModal';
 import CommanCommunityContent from '@components/Community/CommanCommunityContent';
 import {CardType, NavStateTypes} from '@components/Community/constants.community';
@@ -20,10 +19,10 @@ import {
 import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
+import 'components/Community/community.scss';
 import React, {useRef, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {v4 as uuidV4} from 'uuid';
-import 'components/Community/community.scss';
 
 const Community = ({}: {role: string}) => {
   const {state, clientKey, userLanguage} = useGlobalContext();
@@ -192,8 +191,8 @@ const Community = ({}: {role: string}) => {
 
   return (
     <DashboardContainer
+      showTitleBanner={false}
       bannerImg={bannerImg}
-      label={'Community'}
       bannerTitle={CommunityDict[userLanguage]['TITLE']}>
       {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
       <CardsModal
@@ -230,8 +229,8 @@ const Community = ({}: {role: string}) => {
           contentOnlyForTeachers={
             <div>
               {/* Add new card */}
-              <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} />
-              {!isCardVisible && <FAB />}
+              {/* <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} /> */}
+              {<FAB />}
             </div>
           }
         />

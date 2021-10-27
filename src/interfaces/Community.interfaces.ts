@@ -31,7 +31,7 @@ export interface ICommunityCard extends IEventInput {
 }
 
 export interface IChat {
-  id: string;
+  id?: string;
   communityId: string;
   personAuthID: string;
   personEmail: string;

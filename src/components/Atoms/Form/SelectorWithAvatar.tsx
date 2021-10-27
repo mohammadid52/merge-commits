@@ -33,6 +33,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
     imageFromS3 = true,
     loading,
   } = props;
+
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const [teacherList, setTeacherList] = useState([]);
@@ -95,6 +96,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           type="button"
+          disabled={loading}
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
@@ -124,20 +126,19 @@ const SelectorWithAvatar = (props: selectorProps) => {
               </svg>
             </span>
           )}
-
           {loading && (
             <IconContext.Provider
               value={{
                 size: '1.2rem',
                 style: {},
-                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                className: `relative w-auto mr-4 animate-spin ${theme.textColor[themeColor]}`,
               }}>
               <FaSpinner />
             </IconContext.Provider>
           )}
         </button>
       </span>
-      {showList && (
+      {showList && !loading && (
         <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
           <ul
             role="listbox"
