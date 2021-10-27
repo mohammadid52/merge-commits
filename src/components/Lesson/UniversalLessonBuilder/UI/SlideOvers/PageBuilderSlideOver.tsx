@@ -323,7 +323,7 @@ const Item = ({
         selected
           ? 'iconoclast:border-500 curate:border-500'
           : `border-gray-300 dark:border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
-      } relative my-8 cursor-pointer form-button mt-4 form-button rounded-lg border-0  dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-5`}>
+      } relative my-6 2xl:my-8 cursor-pointer form-button mt-3 2xl:mt-4 form-button rounded-lg border-0 dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
           <Icon

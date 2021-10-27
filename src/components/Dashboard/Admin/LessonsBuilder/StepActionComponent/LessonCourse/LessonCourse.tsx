@@ -157,7 +157,7 @@ const LessonCourse = ({
               <Loader />
             </div>
           ) : titleList.length ? (
-            <div className="grid gap-5 md:grid-cols-2 grid-cols-2 xl:grid-cols-2 lg:max-w-none mt-8">
+            <div className="grid gap-5 lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 lg:max-w-none mt-8">
               {selectedCurriculumList.map((curriculum) => (
                 <CourseCard
                   institutionCollection={institutionCollection}
@@ -191,7 +191,7 @@ const LessonCourse = ({
             title={'Add Lesson to Syllabus'}
             closeOnBackdrop
             closeAction={onAddModalClose}>
-            <div className="min-w-256">
+            <div className="min-w-180 lg:min-w-256">
               <AddCourse
                 curriculumList={curriculumList}
                 institutionID={institution?.id}

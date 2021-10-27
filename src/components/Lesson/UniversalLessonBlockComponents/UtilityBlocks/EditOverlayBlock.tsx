@@ -189,7 +189,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   {currentComponentSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
                   )}
                 </button>
               </div>
@@ -223,7 +223,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   ) ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
                   )}
                 </button>
               </div>
@@ -245,7 +245,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   {deleteModeCurrentComponentSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
                   )}
                 </button>
               </div>

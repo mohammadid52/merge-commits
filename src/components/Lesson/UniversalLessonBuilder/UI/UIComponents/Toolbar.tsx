@@ -43,9 +43,9 @@ const Button = ({
         type="button"
         className={`${
           invert ? 'bg-indigo-600' : 'bg-transparent'
-        } ${color} mx-2  w-auto  inline-flex justify-center items-center px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
+        } ${color} mx-1 2xl:mx-2 w-auto inline-flex justify-center items-center px-1 2xl:px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
         {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
-        <span className="hidden xl:block">{text}</span>
+        <span className="hidden xl:block text-xs 2xl:text-base">{text}</span>
       </button>
     </Tooltip>
   );
@@ -55,7 +55,6 @@ const Toolbar = ({
   deleteLesson,
   setEditMode,
   setFields,
-
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
@@ -111,8 +110,8 @@ const Toolbar = ({
 
             <div
               className={`${
-                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-6 '
-              } space-x-6 transition-all transform flex`}>
+                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-2 2xl:ml-6 '
+              } space-x-2 2xl:space-x-6 transition-all transform flex`}>
               {!previewMode && (
                 <>
                   <Button

@@ -179,7 +179,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   return (
     <div>
-      <div className="h-9/10 flex px-0 md:px-4 flex-col">
+      <div className="h-9/10 flex px-0 2xl:px-4 flex-col">
         {/* Profile section */}
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start">
           <div
@@ -188,7 +188,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
               {imageLoading ? (
                 <div
-                  className={`w-20 h-20 md:w-40 md:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
+                  className={`w-20 h-20 lg:w-30 lg:h-30 2xl:w-40 2xl:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
                   <Loader />
                 </div>
               ) : instProps?.institute?.image ? (
@@ -202,14 +202,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       }}
                       toggleCropper={toggleCropper}>
                       <img
-                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        className={`profile w-20 h-20 lg:w-30 lg:h-30 2xl:w-40 2xl:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                         src={imageUrl}
                       />
                     </DroppableMedia>
                     <div
-                      className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                      className={`absolute w-8 h-8 2xl:w-12 2xl:h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} 2xl:right-2 right-2.5 bottom-0 p-1.5 2xl:p-3 cursor-pointer`}
                       onClick={handleImageClick}>
-                      <AiOutlineCamera className="w-6 h-6 text-white" />
+                      <AiOutlineCamera className="w-5 h-5 2xl:w-6 2xl:h-6 text-white" />
                     </div>
                   </div>
                 ) : (
@@ -259,7 +259,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </div>
               )}
 
-              <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
+              <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-40 2xl:w-48">
                 <p>{instProps?.institute?.name ? instProps?.institute?.name : ''}</p>
                 {/* <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                   <span

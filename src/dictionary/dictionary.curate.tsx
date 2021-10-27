@@ -947,7 +947,7 @@ const Institute_info: any = {
       CURRICULAR: 'Course',
       CLASSROOMS: 'Classroom Manager',
       GENERAL_INFORMATION: 'General Information',
-      LESSONS: 'Lesson Managers',
+      LESSONS: 'Lesson Manager',
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
