@@ -227,6 +227,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -460,6 +461,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -993,6 +995,7 @@ export const onChangeRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1049,6 +1052,7 @@ export const onChangeRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -1266,6 +1270,7 @@ export const onCreateInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1388,6 +1393,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1510,6 +1516,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2118,6 +2125,7 @@ export const onCreateRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2174,6 +2182,7 @@ export const onCreateRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -2334,6 +2343,7 @@ export const onUpdateRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2390,6 +2400,7 @@ export const onUpdateRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -2550,6 +2561,7 @@ export const onDeleteRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2606,6 +2618,7 @@ export const onDeleteRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -2646,6 +2659,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2767,6 +2781,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2888,6 +2903,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -3088,6 +3104,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3261,6 +3278,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3434,6 +3452,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3610,6 +3629,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3768,6 +3788,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3926,6 +3947,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4121,6 +4143,7 @@ export const onCreateClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4297,6 +4320,7 @@ export const onUpdateClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4473,6 +4497,7 @@ export const onDeleteClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4557,6 +4582,7 @@ export const onCreateClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4666,6 +4692,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4775,6 +4802,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -8924,6 +8952,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9149,6 +9178,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9374,6 +9404,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9821,6 +9852,7 @@ export const onCreateAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -10082,6 +10114,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -10343,6 +10376,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
