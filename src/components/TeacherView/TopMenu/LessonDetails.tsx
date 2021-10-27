@@ -3,7 +3,11 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {getLocalStorageData} from '@utilities/localStorage';
 
-const LessonDetails = () => {
+interface ILessonDetailProps {
+  hidden?: boolean;
+}
+
+const LessonDetails = ({hidden}: ILessonDetailProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
@@ -24,7 +28,10 @@ const LessonDetails = () => {
   };
 
   return (
-    <div className="min-h-30 flex flex-col justify-between px-4 pt-2">
+    <div
+      className={`${
+        hidden ? 'hidden' : 'block'
+      } min-h-30 flex flex-col justify-between px-4 pt-2`}>
       <div title="title" className="align-middle text-gray-600 text-sm leading-8 ">
         <span className="font-bold">{classRoomDict[userLanguage]['LESSON']}: </span>
         <span>{lessonState.lessonData.title}</span>
