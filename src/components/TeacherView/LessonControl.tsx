@@ -521,7 +521,7 @@ const LessonControl = () => {
             <div
               className={`${
                 theme && theme.bg
-              }  relative w-full border-t-2 border-black overflow-y-scroll overflow-x-hidden`}>
+              }  relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden`}>
               <Suspense
                 fallback={
                   <div className="min-h-screen w-full flex flex-col justify-center items-center">
