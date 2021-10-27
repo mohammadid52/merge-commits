@@ -259,7 +259,7 @@ const Institution = (props: InstitutionProps) => {
           <BreadcrumbsWithBanner items={breadCrumbsList} />
         </div>
       </div>
-      <div className="px-2 py-8 md:p-8">
+      <div className="px-2 py-8 md:px-4 lg:p-8">
         {/* Section Header */}
         {/* <BreadCrums items={breadCrumbsList} /> */}
         {/* <div className="flex justify-between">

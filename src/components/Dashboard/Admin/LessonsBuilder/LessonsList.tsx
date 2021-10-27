@@ -368,10 +368,10 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
         <div
           className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
-            isInInstitution ? 'items-center px-8' : ''
+            isInInstitution ? 'lg:items-center px-8' : ''
           }`}>
           {isInInstitution ? (
-            <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
+            <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto my-4 lg:mb-0">
               {LessonsListDict[userLanguage]['HEADING']}
             </h3>
           ) : (

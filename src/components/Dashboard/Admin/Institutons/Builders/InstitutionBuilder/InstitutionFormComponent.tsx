@@ -461,7 +461,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     label={InstitutionBuilderDict[userLanguage]['FORM']['PHONE_LABEL']}
                   />
                 </div>
-                <div className="sm:col-span-3 px-3 py-2 flex items-center">
+                <div className="col-span-6 lg:col-span-3 px-3 py-2 flex items-center">
                   <CheckBox
                     value={isServiceProvider}
                     onChange={handdleCheckBox}

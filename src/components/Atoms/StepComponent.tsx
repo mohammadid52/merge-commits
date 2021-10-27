@@ -105,7 +105,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
   };
   return (
     <div className="lg:border-t lg:border-b lg:border-gray-200">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Progress">
+      <nav className="mx-auto max-w-7xl px-2 lg:px-8" aria-label="Progress">
         <ol className="rounded-md lg:flex lg:border-l lg:border-r lg:border-gray-200 lg:rounded-none">
           {steps.map((step: any, index: number) => (
             <li

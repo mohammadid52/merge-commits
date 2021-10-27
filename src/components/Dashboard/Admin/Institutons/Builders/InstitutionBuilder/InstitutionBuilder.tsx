@@ -261,7 +261,7 @@ const InstitutionBuilder = ({
               activeStep={activeStep}
               handleTabSwitch={handleTabSwitch}
             />
-            <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-8`}>
+            <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4`}>
               {loading ? (
                 <div className="h-100 flex justify-center items-center">
                   <div className="w-5/10">
@@ -272,7 +272,7 @@ const InstitutionBuilder = ({
                   </div>
                 </div>
               ) : (
-                <div className="border-0 border-t-none border-gray-200">
+                <div className="border-0 lg:border-t-none border-gray-200">
                   {currentStepComp(activeStep)}
                 </div>
               )}

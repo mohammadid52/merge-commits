@@ -73,7 +73,7 @@ const LessonCard = ({
   const [onSetupTab, onPreviewTab] = helpers;
 
   return (
-    <div className="flex  flex-col w-auto">
+    <div className="flex flex-col w-auto">
       <Tabs2 curTab={curTab} setCurTab={setCurTab} tabs={tabs} />
       <div className="">
         <AnimatedContainer
@@ -89,7 +89,7 @@ const LessonCard = ({
                  *  LEFT SECTION IMAGE
                  */}
                 <DroppableMedia
-                  className="w-full md:h-56 h-48 sm:w-2.5/10  rounded-tl rounded-bl shadow cursor-pointer"
+                  className="w-full md:h-56 h-48 md:h-56 h-48 lg:w-2.5/10 md:w-4/12  rounded-tl rounded-bl shadow cursor-pointer"
                   mediaRef={imageRef}
                   setImage={(img: any, file: any) => {
                     setImage(img);
@@ -99,7 +99,7 @@ const LessonCard = ({
                   {imagePreviewUrl ? (
                     <div
                       onClick={handleImage}
-                      className={`w-full md:h-56 h-48   rounded-tl rounded-bl shadow`}
+                      className={`w-full md:h-56 h-48 rounded-tl rounded-bl shadow`}
                       style={{
                         /* stylelint-disable */
                         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${imagePreviewUrl})`,
@@ -117,8 +117,8 @@ const LessonCard = ({
                 {/**
                  *  RIGHT SECTION
                  */}
-                <div className={`w-full md:w-7.5/10 ml-4 flex flex-col rounded-b`}>
-                  <div className="pr-8 pt-5">
+                <div className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
+                  <div className="pr-2 lg:pr-8 pt-5">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
                       {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
                       <span className="text-red-500"> * </span>
@@ -138,7 +138,7 @@ const LessonCard = ({
                     </div>
                   </div>
 
-                  <div className="pr-8 pt-1">
+                  <div className="pr-2 lg:pr-8 pt-1">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                       {AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       <span className="text-red-500"> *</span>
