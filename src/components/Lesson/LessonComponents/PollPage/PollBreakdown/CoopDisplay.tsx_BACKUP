@@ -56,14 +56,14 @@ const CoopDisplay = () => {
 
     return (
             <div className="w-full h-full flex flex-col justify-between items-center">
-                <div className="w-full h-8.3/10 flex justify-between items-center">
+                <div className="w-full h-8.5/10 flex justify-between items-center">
 
                     {/* self display */}
                     <div className={`${fullscreen ? 'hidden' : 'w-4.85/10'} h-full flex flex-col justify-between items-center`}>
                         <Banner title={displayProps.title}
                             display='SELFinCOOP' fullscreen={fullscreen}/>
 
-                        <div className="w-full h-8.8/10 flex flex-col justify-between">
+                        <div className="w-full h-9/10 flex flex-col justify-between">
                             <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
@@ -110,7 +110,7 @@ const CoopDisplay = () => {
                             </div>
                             
 
-                            <div className="w-full h-8.8/10 flex md:flex-col justify-between">
+                            <div className="w-full h-9/10 flex md:flex-col justify-between">
                                 <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>

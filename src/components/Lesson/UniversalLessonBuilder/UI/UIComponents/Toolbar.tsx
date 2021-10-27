@@ -45,7 +45,7 @@ const Button = ({
           invert ? 'bg-indigo-600' : 'bg-transparent'
         } ${color} mx-2  w-auto  inline-flex justify-center items-center px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
         {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
-        <span className="hidden xl:block">{text}</span>
+        <span className="hidden text-xs 2xl:text-sm xl:block">{text}</span>
       </button>
     </Tooltip>
   );
@@ -90,14 +90,14 @@ const Toolbar = ({
       <div
         // hidden={previewMode}
         ref={toolbarRef}
-        style={{transform: previewMode ? 'translateX(40rem)' : 'translateX(0rem)'}}
+        style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
         className={` ${
           !toolbarOnTop
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
         } customShadow transform ${
           previewMode ? 'fixed' : ''
-        } rounded-lg toolbar bg-white dark:bg-gray-700 ease-out transition-all duration-200  w-auto p-2`}>
+        } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <div className="flex items-center w-auto">
             <Button
@@ -147,6 +147,17 @@ const Toolbar = ({
                         estTime: '1 min',
                         classwork: true,
                       });
+                    }}
+                    icon={AiOutlineFileAdd}
+                  />
+                  <Button
+                    text="Edit Page"
+                    color={themeTextColor}
+                    top
+                    tooltip="Edit this Page"
+                    onClick={() => {
+                      setNewLessonPlanShow(true);
+                      setEditMode(true);
                     }}
                     icon={AiOutlineFileAdd}
                   />

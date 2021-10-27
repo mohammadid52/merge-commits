@@ -368,6 +368,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         return '-15rem';
     }
   };
+  const pathname = window.location.pathname;
 
   return (
     <div className="relative">
@@ -379,9 +380,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-
-      <PageBuilderLayout width="40rem" open={newLessonPlanShow}>
-        {newLessonPlanShow && (
+      <PageBuilderLayout open={newLessonPlanShow && pathname.includes('page-builder')}>
+        {newLessonPlanShow && pathname.includes('page-builder') && (
           <div className="p-8">
             <NewLessonPlanSO
               instId={instId}
@@ -421,11 +421,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         <div
-          style={{
-            marginLeft:
-              showLessonEditOverlay || newLessonPlanShow ? getResponsiveMargin() : '0rem',
-          }}
-          className={`col-start-2  items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
+          className={`col-start-2 ${
+            showLessonEditOverlay || newLessonPlanShow ? '-ml-60 lg:-ml-40 md:ml-0' : ''
+          } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar
               setFields={setLessonPlanFields}

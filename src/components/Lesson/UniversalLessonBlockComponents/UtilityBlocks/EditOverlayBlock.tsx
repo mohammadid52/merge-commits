@@ -173,6 +173,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
           {!deleteMode &&
             isComponent &&
             showingPin &&
+            !previewMode &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
                 id="editControlsWrapper"
@@ -195,6 +196,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             )}
           {deleteMode &&
             isComponent &&
+            !previewMode &&
             showingPin &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
@@ -226,26 +228,28 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 </button>
               </div>
             )}
-          {showingBlockPin && !(actionMode === 'edit' && contentType === SPACER) && (
-            <div
-              id="editControlsWrapper"
-              style={{top: '10%', right: '-6%'}}
-              className={`absolute ${
-                true ? 'active' : ''
-              } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
-              <button
-                onClick={() => onComponentSelect(true)}
-                className={`py-1 px-4 ${
-                  deleteModeCurrentComponentSelected ? '' : 'border'
-                } transition-all duration-300 cursor-pointer`}>
-                {deleteModeCurrentComponentSelected ? (
-                  <IoLocationSharp className="text-2xl text-gray-400" />
-                ) : (
-                  <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
-                )}
-              </button>
-            </div>
-          )}
+          {!previewMode &&
+            showingBlockPin &&
+            !(actionMode === 'edit' && contentType === SPACER) && (
+              <div
+                id="editControlsWrapper"
+                style={{top: '10%', right: '-6%'}}
+                className={`absolute ${
+                  true ? 'active' : ''
+                } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
+                <button
+                  onClick={() => onComponentSelect(true)}
+                  className={`py-1 px-4 ${
+                    deleteModeCurrentComponentSelected ? '' : 'border'
+                  } transition-all duration-300 cursor-pointer`}>
+                  {deleteModeCurrentComponentSelected ? (
+                    <IoLocationSharp className="text-2xl text-gray-400" />
+                  ) : (
+                    <div className="w-auto p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                  )}
+                </button>
+              </div>
+            )}
 
           <div>{children}</div>
         </div>

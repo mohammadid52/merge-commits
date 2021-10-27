@@ -1,3 +1,4 @@
+import DocsBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
@@ -110,6 +111,8 @@ const composePartContent = (
     }));
 
     return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+  } else if (type.includes(FORM_TYPES.DOCS)) {
+    return <DocsBlock value={value} />;
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

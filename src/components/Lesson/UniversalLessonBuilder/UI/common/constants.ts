@@ -20,6 +20,7 @@ export const FORM_TYPES = {
   REVIEW_SLIDER: 'review-slider-input',
   HIGHLIGHTER: 'highlighter-input',
   WRITING_EXERCISE: 'writing-exercise-input',
+  DOCS: 'docs',
 };
 export const DIVIDER = 'divider';
 export const INPUT = 'Input';
@@ -32,3 +33,7 @@ export const DATE_PICKER = 'Date Picker';
 export const TABLE = 'table';
 export const PARAGRAPH = 'paragraph';
 export const SPACER = 'spacer';
+
+export const REGEX = {
+  Youtube: /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/gm,
+};

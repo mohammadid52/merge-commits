@@ -1,23 +1,69 @@
+import FormInput from '@atoms/Form/FormInput';
+import Label from '@atoms/Form/Label';
 import Selector from '@atoms/Form/Selector';
 import RichTextEditor from '@atoms/RichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import * as customMutations from '@customGraphql/customMutations';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {IFile, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import ModalPopUp from '@molecules/ModalPopUp';
+import UploadMedia from '@molecules/UploadMedia';
+import Modal from '@atoms/Modal';
 import '@pathofdev/react-tag-input/build/index.css';
-import Input from '@uiComponents/Input';
 import {estimatedTimeList} from '@utilities/staticData';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import {getImageFromS3Static} from '@utilities/services';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
+
+const VideoUploadComponent = ({
+  customRef,
+  closeAction,
+  file,
+  setFile,
+  setFields,
+}: {
+  customRef: any;
+  closeAction: () => void;
+  file: IFile;
+  setFields: any;
+  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+}) => {
+  const [error, setError] = useState('');
+  const showCloseButton = isEmpty(file) || (!isEmpty(file) && file._status === 'success');
+
+  return (
+    <Modal
+      closeAction={showCloseButton && closeAction}
+      showHeader={showCloseButton}
+      showFooter={false}>
+      <div>
+        <UploadMedia
+          file={file}
+          onSuccess={() => {
+            setFields((prev: any) => ({...prev, videoLink: ''}));
+          }}
+          uploadKey={UPLOAD_KEYS.ULB}
+          setFile={setFile}
+          accept="video/mp4,video/x-m4v,video/*"
+          setError={setError}
+          customRef={customRef}
+        />
+
+        {error && <p>{error}</p>}
+      </div>
+    </Modal>
+  );
+};
 
 const InputTag = ({
   tags,
@@ -95,7 +141,7 @@ interface FieldsInterface {
   interactionType: string[];
   tags?: string[];
   estTime: string;
-
+  videoLink?: string;
   classwork: boolean;
 }
 
@@ -107,12 +153,14 @@ interface NewLessonPlanSOInterface {
   pageDetails: any;
   activePageData: UniversalLessonPage;
   instId: string;
+  dark?: boolean;
 }
 
 interface ErrorInterface {
   empty: string;
   title: string;
   label: string;
+  videoLink?: string;
 }
 
 const INITIAL_STATE: FieldsInterface = {
@@ -125,12 +173,22 @@ const INITIAL_STATE: FieldsInterface = {
   tags: [],
   estTime: '1 min',
   classwork: true,
+  videoLink: '',
 };
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
   empty: '',
   title: '',
   label: '',
+  videoLink: '',
+};
+
+const Block = ({children}: {children: React.ReactNode}) => {
+  return <div>{children}</div>;
+};
+
+const Container = ({children}: {children: React.ReactNode}) => {
+  return <div className="flex flex-col space-y-6 p-6">{children}</div>;
 };
 
 const NewLessonPlanSO = ({
@@ -138,6 +196,7 @@ const NewLessonPlanSO = ({
   open,
   setOpen,
   pageDetails,
+  dark,
 }: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -168,6 +227,7 @@ const NewLessonPlanSO = ({
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         classwork: true,
+        videoLink: pageDetails?.videoLink || '',
       });
     } else {
       setFields(INITIAL_STATE);
@@ -192,6 +252,22 @@ const NewLessonPlanSO = ({
       ...prevInputs,
       [id]: value,
     }));
+  };
+
+  const onVideoLinkChange = (e: any) => {
+    const {id, value = ''} = e.target;
+    setUnsavedChanges(true);
+
+    setFields((prevInputs: any) => ({
+      ...prevInputs,
+      [id]: value,
+    }));
+    const isValidUrl = REGEX.Youtube.test(value);
+    if (isValidUrl) {
+      setErrors((prev) => ({...prev, videoLink: ''}));
+    } else {
+      setErrors((prev) => ({...prev, videoLink: 'Invalid url'}));
+    }
   };
 
   const onSelectOption = (_: any, name: string) => {
@@ -233,8 +309,17 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
+  const [file, setFile] = useState<IFile>();
+
+  const uploadedVideoLink =
+    !isEmpty(file) && file._status === 'success'
+      ? getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey)
+      : null;
+  const isUploadedFromPC = Boolean(uploadedVideoLink);
+
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
+    const isValidUrl = REGEX.Youtube.test(fields.videoLink);
     let isValid = true;
     if (empty) {
       errors.empty = 'Please fill in all the details';
@@ -257,6 +342,20 @@ const NewLessonPlanSO = ({
       errors.label = '';
       // isValid = true;
     }
+
+    // if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
+    //   errors.videoLink = 'Video Link is mandatory';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
+
+    // if (!isValidUrl && !isUploadedFromPC) {
+    //   errors.videoLink = 'Invalid video link';
+    //   isValid = false;
+    // } else {
+    //   errors.videoLink = '';
+    // }
 
     setErrors({...errors});
     return isValid;
@@ -306,6 +405,7 @@ const NewLessonPlanSO = ({
             label: fields.label,
             estTime: Number(fields.estTime?.split(' ')[0]),
             tags: fields.tags,
+            videoLink: uploadedVideoLink || fields.videoLink,
             interactionType: fields.interactionType || [],
             activityType: classwork ? 'classwork' : 'homework',
           };
@@ -339,6 +439,7 @@ const NewLessonPlanSO = ({
                 interactionType: fields.interactionType || [],
                 activityType: classwork ? 'classwork' : 'homework',
                 pageContent: [],
+                videoLink: uploadedVideoLink || fields.videoLink,
                 disabled: false,
                 open: true,
               },
@@ -400,7 +501,9 @@ const NewLessonPlanSO = ({
           />
         </div>
         <div className="ml-3 text-sm">
-          <label htmlFor="group" className="font-medium dark:text-gray-300 text-gray-700">
+          <label
+            htmlFor="group"
+            className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
             {title}
           </label>
           <p className="text-sm whitespace-nowrap text-gray-500">{label}</p>
@@ -464,6 +567,11 @@ const NewLessonPlanSO = ({
     setNewLessonPlanShow(false);
   };
 
+  const [videoUploadModal, setVideoUploadModal] = useState(false);
+
+  const customRef = useRef();
+  const closeVideoUploadModal = () => setVideoUploadModal(false);
+
   return (
     <>
       {showModal.show && (
@@ -479,6 +587,15 @@ const NewLessonPlanSO = ({
             cancelAction={onModalCancelClick}
           />
         </div>
+      )}
+      {videoUploadModal && (
+        <VideoUploadComponent
+          setFields={setFields}
+          closeAction={() => closeVideoUploadModal()}
+          file={file}
+          setFile={setFile}
+          customRef={customRef}
+        />
       )}
       <div className="flex-1">
         {/* Header */}
@@ -512,115 +629,121 @@ const NewLessonPlanSO = ({
           </div>
         </div>
 
-        {/* Divider container */}
-        <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+        <Container>
           {/* Activity name */}
-          <div
-            className={
-              'space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5'
-            }>
-            <div>
-              <label
-                htmlFor="project-name"
-                className="block text-sm font-medium dark:text-white text-gray-900 sm:mt-px sm:pt-2">
-                Activity name <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="sm:col-span-3">
-              <Input
-                placeholder="eg. What is Javascript?"
-                value={title}
-                onChange={onFieldChange}
-                id="title"
-                error={errors?.title}
-              />
-            </div>
-          </div>
+          <Block>
+            <FormInput
+              placeHolder="eg. What is Javascript?"
+              value={title}
+              label="Activity name"
+              isRequired
+              onChange={onFieldChange}
+              dark={true}
+              id="title"
+              error={errors?.title}
+            />
+          </Block>
           {/* Activity label */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-name"
-                className="block text-sm font-medium text-gray-900 dark:text-white  sm:mt-px sm:pt-2">
-                Activity label <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="sm:col-span-3">
-              <Input
-                showCharacterUsage
-                maxLength={12}
-                placeholder="eg. Let's learn what is javascript"
-                value={label}
-                error={errors?.label}
-                onChange={onFieldChange}
-                id="label"
-              />
-            </div>
-          </div>
-
+          <Block>
+            <FormInput
+              showCharacterUsage
+              label="Activity label"
+              maxLength={12}
+              dark={true}
+              isRequired
+              placeHolder="eg. Let's learn what is javascript"
+              value={label}
+              error={errors?.label}
+              onChange={onFieldChange}
+              id="label"
+            />
+          </Block>
+          {/* Video Instructions */}
+          <Block>
+            <FormInput
+              placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
+              value={fields.videoLink}
+              label="Add video instructions"
+              disabled={isUploadedFromPC}
+              onChange={onVideoLinkChange}
+              dark={true}
+              id="videoLink"
+              error={errors?.videoLink}
+            />
+            {!isUploadedFromPC ? (
+              <div
+                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                onClick={() => setVideoUploadModal(true)}>
+                Or upload from your pc
+              </div>
+            ) : (
+              <div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
+                    window.open(imageUrl, '_blank');
+                  }}>
+                  See video
+                </div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    setFile(null);
+                  }}>
+                  Clear
+                </div>
+              </div>
+            )}
+          </Block>
           {/* Activity Instructions */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium text-gray-900  dark:text-white  sm:mt-px sm:pt-2">
-                Activity instructions
-              </label>
-            </div>
-            <div className="sm:col-span-3 " style={{maxWidth: '36rem'}}>
-              <RichTextEditor
-                initialValue={instructions}
-                onChange={(htmlContent, plainText) =>
-                  onEditorStateChange(
-                    htmlContent,
-                    plainText,
-                    'instructionsHtml',
-                    'instructions'
-                  )
-                }
-              />
-            </div>
-          </div>
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Activity instructions'} />
+            <RichTextEditor
+              initialValue={instructions}
+              onChange={(htmlContent, plainText) =>
+                onEditorStateChange(
+                  htmlContent,
+                  plainText,
+                  'instructionsHtml',
+                  'instructions'
+                )
+              }
+            />
+          </Block>
 
           {/* Interaction Type */}
-          <fieldset>
-            <div className="space-y-2 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:items-start sm:px-10 sm:py-5">
-              <div>
-                <legend className="text-sm font-medium text-gray-900 dark:text-white ">
-                  Interaction type
-                </legend>
-              </div>
-              <div className="w-48">
-                <Checkbox
-                  title={'Group'}
-                  label={'Working as a class to complete activity'}
-                  id={'group'}
-                />
-                <Checkbox
-                  title={'Small Group'}
-                  label={'Working in small groups to complete activity'}
-                  id={'smallGroup'}
-                />
-                <Checkbox
-                  title={'Individual'}
-                  label={'Working individually to complete activity'}
-                  id={'individual'}
-                />
+          <Block>
+            <Label className="mb-1" isRequired label={'Interaction type'} />
 
-                <hr className="border-gray-200" />
-              </div>
+            <div className="w-48">
+              <Checkbox
+                title={'Group'}
+                label={'Working as a class to complete activity'}
+                id={'group'}
+              />
+              <Checkbox
+                title={'Small Group'}
+                label={'Working in small groups to complete activity'}
+                id={'smallGroup'}
+              />
+              <Checkbox
+                title={'Individual'}
+                label={'Working individually to complete activity'}
+                id={'individual'}
+              />
+
+              <hr className="border-gray-200" />
             </div>
-          </fieldset>
+          </Block>
+
           {/* Estimated time */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium dark:text-white  text-gray-900 sm:mt-px sm:pt-2">
-                Estimated time
-              </label>
-            </div>
-            <div className="sm:col-span-3">
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Estimated time'} />
+
+            <div className="">
               <Selector
                 placeholder={'Select estimate time'}
                 list={estimatedTimeList}
@@ -628,17 +751,13 @@ const NewLessonPlanSO = ({
                 onChange={onSelectOption}
               />
             </div>
-          </div>
+          </Block>
           {/* Tags */}
-          <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-            <div>
-              <label
-                htmlFor="project-description"
-                className="block text-sm font-medium dark:text-white  text-gray-900 sm:mt-px sm:pt-2">
-                Tags
-              </label>
-            </div>
-            <div className="sm:col-span-3">
+
+          <Block>
+            <Label className="mb-1" isRequired label={'Tags'} />
+
+            <div className="sm:col-span-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -646,8 +765,9 @@ const NewLessonPlanSO = ({
                 <InputTag tags={tags} setTags={handleAddTags} />
               </form>
             </div>
-          </div>
-        </div>
+          </Block>
+        </Container>
+
         {/* <hr className="my-2 dark:text-gray-700 text-gray-500" /> */}
 
         {/* Action buttons */}

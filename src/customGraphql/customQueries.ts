@@ -2015,6 +2015,7 @@ export const listUniversalLessons = /* GraphQL */ `
           active
           disabled
           displayMode
+          videoLink
           open
           estTime
           pageContent {
@@ -2324,9 +2325,11 @@ export const getUniversalLesson = /* GraphQL */ `
         tags
         disabled
         interactionType
+        videoLink
         displayMode
         open
         estTime
+        videoLink
         pageContent {
           id
           tags

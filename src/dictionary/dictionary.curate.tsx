@@ -678,6 +678,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'Module Manager',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -715,6 +717,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'TBD',
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -762,12 +766,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },
@@ -796,12 +800,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },
