@@ -40,22 +40,30 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   // ##################################################################### //
   // ######################### OPEN / CLOSE PAGES ######################## //
   // ##################################################################### //
-  const handleOpenCloseComponent = async (pageNr: number) => {
-    // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
-    const getRoomData = getLocalStorageData('room_info');
 
+  // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
+  const getRoomData = getLocalStorageData('room_info');
+
+  const handleOpenComponent = async (pageNr: number) => {
     // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
-    const getClosedPages = lessonState.lessonData.lessonPlan.reduce(
-      (acc: string[], lessonPlanObj: UniversalLessonPage) => {
-        console.log(lessonPlanObj.open);
-        if (lessonPlanObj.open === false) {
-          return [...acc, lessonPlanObj.id];
+    const getPagesBefore = lessonState.lessonData.lessonPlan.reduce(
+      (pagesBeforeAcc: string[], page: UniversalLessonPage, pageIdx: number) => {
+        if (pageIdx <= pageNr) {
+          return [...pagesBeforeAcc, page.id];
         } else {
-          return acc;
+          return pagesBeforeAcc;
         }
       },
       []
     );
+
+    //  ADD/REMOVE PAGEID FROM CLOSED PAGES ARRAY  //
+    const finalClosedPages =
+      getRoomData.ClosedPages.length > 0
+        ? getRoomData.ClosedPages.filter(
+            (pageID: string) => !getPagesBefore.includes(pageID)
+          )
+        : [];
 
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
@@ -63,17 +71,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       payload: pageNr,
     });
 
-    // ~ APPEND PAGE ID TO CLOSED PAGES ARRAY  //
-    const finalClosedPages = getClosedPages.includes(activePageData.id)
-      ? getClosedPages.filter((str: string) => str !== activePageData.id)
-      : [...getClosedPages, activePageData.id];
-
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
     setLocalStorageData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {
-      const updateOpenClosePages: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateRoom, {
           input: {
             id: getRoomData.id,
@@ -92,6 +95,50 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     }
   };
 
+  const handleCloseComponent = async (pageNr: number) => {
+    const getPagesAfter = lessonState.lessonData.lessonPlan.reduce(
+      (pagesAfterAcc: any[], page: any, pageIdx: number) => {
+        if (pageIdx >= pageNr) {
+          return [...pagesAfterAcc, page.id];
+        } else {
+          return pagesAfterAcc;
+        }
+      },
+      []
+    );
+    // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
+    lessonDispatch({
+      type: 'TOGGLE_CLOSE_PAGE',
+      payload: pageNr,
+    });
+
+    // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      ClosedPages: getPagesAfter,
+    });
+
+    // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: getRoomData.id,
+            institutionID: getRoomData.institutionID,
+            classID: getRoomData.classID,
+            teacherAuthID: getRoomData.teacherAuthID,
+            teacherEmail: getRoomData.teacherEmail,
+            name: getRoomData.name,
+            maxPersons: getRoomData.maxPersons,
+            ClosedPages: getPagesAfter,
+          },
+        })
+      );
+    } catch (e) {
+      console.error('handleClosePages - updateRoom mutation - ', e);
+    }
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -105,7 +152,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
         themeColor={themeColor}
         currentPage={lessonState.currentPage}
         activePageData={activePageData}
-        handleOpenCloseComponent={handleOpenCloseComponent}
+        handleOpenComponent={handleOpenComponent}
+        handleCloseComponent={handleCloseComponent}
       />
 
       {/* CENTER - PRESENTATION MODE */}

@@ -11,7 +11,8 @@ import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 interface IOpenClosePagesToggle extends StudentWindowTitleBarProps {
   currentPage?: number;
   activePageData?: any;
-  handleOpenCloseComponent?: (pageNr: number) => void;
+  handleOpenComponent?: (pageNr: number) => void;
+  handleCloseComponent?: (pageNr: number) => void;
 }
 
 const OpenClosePagesToggle = ({
@@ -19,7 +20,8 @@ const OpenClosePagesToggle = ({
   themeColor,
   currentPage,
   activePageData,
-  handleOpenCloseComponent,
+  handleOpenComponent,
+  handleCloseComponent,
 }: IOpenClosePagesToggle) => {
   return (
     <div className="w-1/3 flex justify-start h-8 align-middle leading-8 ">
@@ -37,13 +39,13 @@ const OpenClosePagesToggle = ({
         activePageData.open !== false ? (
           <span
             className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
-            onClick={() => handleOpenCloseComponent(currentPage)}>
+            onClick={() => handleCloseComponent(currentPage)}>
             Close Component
           </span>
         ) : (
           <span
             className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
-            onClick={() => handleOpenCloseComponent(currentPage)}>
+            onClick={() => handleOpenComponent(currentPage)}>
             Open Component
           </span>
         )
