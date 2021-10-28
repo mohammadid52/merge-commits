@@ -6,7 +6,6 @@ import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
-import useDeviceDetect from '../../customHooks/deviceDetect';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
@@ -21,12 +20,9 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
-import LessonControlBar from './LessonControlBar/LessonControlBar';
+import Frame from './Frame';
 import LessonFrame from './StudentWindow/LessonFrame';
-import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
-import TopMenu from './TopMenu';
-import LessonDetails from './TopMenu/LessonDetails';
-import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
+import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -57,6 +53,8 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
+
+  const [rightView, setRightView] = useState<'lesson' | 'lessonInfo'>('lesson');
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
@@ -490,7 +488,12 @@ const LessonControl = () => {
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
 
-          <RosterFrame fullscreen={fullscreen} theme={theme} clientKey={clientKey}>
+          <RosterFrame
+            fullscreen={fullscreen}
+            theme={theme}
+            clientKey={clientKey}
+            rightView={rightView}
+            setRightView={setRightView}>
             <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
@@ -498,48 +501,56 @@ const LessonControl = () => {
                 handleQuitViewing={handleQuitViewing}
                 handlePageChange={handlePageChange}
                 handleRoomUpdate={handleRoomUpdate}
+                rightView={rightView}
+                setRightView={setRightView}
               />
             </ErrorBoundary>
           </RosterFrame>
 
-          {/* FOR MOBILE */}
-          {/* <div className="block lg:hidden">
-            <div className="relative w-full h-16 lg:h-12 flex flex-col items-center z-100">
-              <LessonControlBar handlePageChange={handlePageChange} />
-            </div>
-          </div> */}
+          {/* RIGHT SECTION */}
+
+          <Frame visible={true} additionalClass="z-40">
+            <LessonFrame
+              theme={theme}
+              fullscreen={fullscreen}
+              handleFullscreen={handleFullscreen}
+              anyoneIsViewed={anyoneIsViewed}
+              anyoneIsShared={anyoneIsShared}
+              isPresenting={isPresenting}
+              isSameStudentShared={isSameStudentShared}
+              handleQuitShare={handleQuitShare}
+              handleQuitViewing={handleQuitViewing}
+              handlePageChange={handlePageChange}
+              handleLeavePopup={handleLeavePopup}
+              handleHomePopup={handleHomePopup}>
+              <div
+                className={`${
+                  theme && theme.bg
+                } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
+                <Suspense
+                  fallback={
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                      <ComponentLoading />
+                    </div>
+                  }>
+                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                    <CoreUniversalLesson />
+                  </ErrorBoundary>
+                </Suspense>
+              </div>
+            </LessonFrame>
+          </Frame>
+          {/* -- OR -- */}
 
           {/* RIGHT SECTION */}
 
-          <LessonFrame
-            theme={theme}
-            fullscreen={fullscreen}
-            handleFullscreen={handleFullscreen}
-            anyoneIsViewed={anyoneIsViewed}
-            anyoneIsShared={anyoneIsShared}
-            isPresenting={isPresenting}
-            isSameStudentShared={isSameStudentShared}
-            handleQuitShare={handleQuitShare}
-            handleQuitViewing={handleQuitViewing}
-            handlePageChange={handlePageChange}
-            handleLeavePopup={handleLeavePopup}
-            handleHomePopup={handleHomePopup}>
-            <div
-              className={`${
-                theme && theme.bg
-              } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
-              <Suspense
-                fallback={
-                  <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <ComponentLoading />
-                  </div>
-                }>
-                <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                  <CoreUniversalLesson />
-                </ErrorBoundary>
-              </Suspense>
-            </div>
-          </LessonFrame>
+          <Frame visible={rightView === 'lessonInfo'} additionalClass="z-50">
+            <LessonInfoFrame
+              visible={rightView === 'lessonInfo'}
+              rightView={rightView}
+              setRightView={setRightView}
+            />
+          </Frame>
         </div>
       </div>
     </div>

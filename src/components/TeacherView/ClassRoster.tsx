@@ -21,9 +21,16 @@ interface IClassRosterProps {
   isSameStudentShared: boolean;
   handlePageChange?: any;
   handleRoomUpdate?: (payload: any) => void;
+  rightView?: string;
+  setRightView?: any;
 }
 
-const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) => {
+const ClassRoster = ({
+  handlePageChange,
+  handleRoomUpdate,
+  rightView,
+  setRightView,
+}: IClassRosterProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -37,6 +44,7 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   const {lessonPlannerDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   // ##################################################################### //
   // ########################### LOADING STATE ########################### //
@@ -80,19 +88,6 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
       });
     };
   }, []);
-
-  //  PAUSE SUBSCRIPTION WHEN TEACHER PRESENTING  //
-  // const isPresenting = lessonState && lessonState.displayData[0].isTeacher === true;
-  // const isPresentingPrevious = usePrevious(isPresenting);
-
-  // useEffect(() => {
-  //   if (isPresenting && subscription) {
-  //     subscription.unsubscribe();
-  //     // subscription = undefined;
-  //   } else if (isPresentingPrevious && !isPresenting && subscription === undefined) {
-  //     subscription = subscribeToPersonLocations();
-  //   }
-  // }, [isPresenting]);
 
   // ##################################################################### //
   // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
@@ -383,7 +378,15 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
     }
   };
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  // ##################################################################### //
+  // ############################### OTHER ############################### //
+  // ##################################################################### //
+
+  const handleToggleLessonInfo = (rightViewString: string, fn: Function) => {
+    let toggleValue = rightView === 'lessonInfo' ? 'lesson' : 'lessonInfo';
+    fn(toggleValue);
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -391,16 +394,26 @@ const ClassRoster = ({handlePageChange, handleRoomUpdate}: IClassRosterProps) =>
   return (
     <div className={`w-full h-full px-4 pt-2 overflow-y-auto overflow-x-hidden`}>
       {/* ROSTER TITLE */}
-      <div
-        className={`w-full h-8 flex items-center text-sm font-semibold text-gray-600 bg-transparent`}>
-        <span className="w-auto h-auto">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
-        </span>
+      <div className={`w-full h-8 flex items-center bg-transparent`}>
+        <div className="relative w-full h-auto">
+          <span className="text-sm font-semibold text-gray-600">
+            {
+              lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+                'IN_CLASS'
+              ]
+            }
+          </span>
+          <span
+            className={`${theme.textColor[themeColor]} text-xs font-semibold hover:underline absolute cursor-pointer w-auto right-0 whitespace-pre overflow-hidden`}
+            onClick={() => handleToggleLessonInfo(rightView, setRightView)}>
+            (Sentiments 😀)
+          </span>
+        </div>
       </div>
 
       {/* ROSTER HEAD LABELS*/}
       <div
-        className={`w-full h-8 flex py-2  ${theme.textColor[themeColor]} bg-transparent`}>
+        className={`${theme.textColor[themeColor]} w-full h-8 flex py-2  bg-transparent`}>
         <div
           className={`w-3.5/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
           <span className="w-auto">
