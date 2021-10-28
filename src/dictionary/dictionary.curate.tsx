@@ -766,12 +766,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },
@@ -800,12 +800,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },

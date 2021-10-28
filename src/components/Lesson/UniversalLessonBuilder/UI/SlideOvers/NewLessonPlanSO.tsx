@@ -1,7 +1,9 @@
 import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
 import Selector from '@atoms/Form/Selector';
+import Modal from '@atoms/Modal';
 import RichTextEditor from '@atoms/RichTextEditor';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
 import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
@@ -9,11 +11,11 @@ import * as customMutations from '@customGraphql/customMutations';
 import useDictionary from '@customHooks/dictionary';
 import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
-import {IFile, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {IFile} from '@interfaces/UniversalLessonInterfaces';
 import ModalPopUp from '@molecules/ModalPopUp';
 import UploadMedia from '@molecules/UploadMedia';
-import Modal from '@atoms/Modal';
 import '@pathofdev/react-tag-input/build/index.css';
+import {getImageFromS3Static} from '@utilities/services';
 import {estimatedTimeList} from '@utilities/staticData';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
@@ -22,8 +24,6 @@ import {findIndex, isEmpty, remove, update} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
-import {getImageFromS3Static} from '@utilities/services';
-import {UPLOAD_KEYS} from '@components/Lesson/constants';
 
 const VideoUploadComponent = ({
   customRef,
@@ -39,7 +39,7 @@ const VideoUploadComponent = ({
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
 }) => {
   const [error, setError] = useState('');
-  const showCloseButton = !isEmpty(file) && file._status === 'success';
+  const showCloseButton = isEmpty(file) || (!isEmpty(file) && file._status === 'success');
 
   return (
     <Modal
@@ -147,12 +147,10 @@ interface FieldsInterface {
 
 interface NewLessonPlanSOInterface {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
-  editMode: boolean;
   pageDetails: any;
-  activePageData: UniversalLessonPage;
   instId: string;
+
   dark?: boolean;
 }
 
@@ -216,6 +214,8 @@ const NewLessonPlanSO = ({
     setUniversalLessonDetails,
   } = useULBContext();
 
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {
@@ -227,6 +227,7 @@ const NewLessonPlanSO = ({
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         classwork: true,
+        videoLink: pageDetails?.videoLink || '',
       });
     } else {
       setFields(INITIAL_STATE);
@@ -261,7 +262,7 @@ const NewLessonPlanSO = ({
       ...prevInputs,
       [id]: value,
     }));
-    const isValidUrl = REGEX.URL.test(value);
+    const isValidUrl = REGEX.Youtube.test(value);
     if (isValidUrl) {
       setErrors((prev) => ({...prev, videoLink: ''}));
     } else {
@@ -318,15 +319,9 @@ const NewLessonPlanSO = ({
 
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
-    const isValidUrl = REGEX.URL.test(fields.videoLink);
+    const isValidUrl = REGEX.Youtube.test(fields.videoLink);
     let isValid = true;
-    if (empty) {
-      errors.empty = 'Please fill in all the details';
-      isValid = false;
-    } else {
-      errors.empty = '';
-      // isValid = true;
-    }
+
     if (trimmedLen(title) <= 0) {
       errors.title = 'Title is mandatory';
       isValid = false;
@@ -360,19 +355,19 @@ const NewLessonPlanSO = ({
     return isValid;
   };
 
-  //@ts-ignore
-  const empty = Object.keys(fields).reduce((truthy: boolean, val: string) => {
-    if (truthy) {
-      //@ts-ignore
-      if (fields[val] === INITIAL_STATE[val]) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return truthy;
-    }
-  }, true);
+  // //@ts-ignore
+  // const empty = Object.keys(fields).reduce((truthy: boolean, val: string) => {
+  //   if (truthy) {
+  //     //@ts-ignore
+  //     if (fields[val] === INITIAL_STATE[val]) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } else {
+  //     return truthy;
+  //   }
+  // }, true);
 
   const route: any = useRouteMatch();
 
@@ -382,8 +377,23 @@ const NewLessonPlanSO = ({
 
   const [loading, setLoading] = useState(false); // loader for creating lesson
 
+  const onUnload = () => {
+    if (unsavedChanges) {
+      onTopRightButtonClick();
+      return 'You have unsaved changes on this page.';
+    }
+  };
+
+  useEffect(() => {
+    if (unsavedChanges) {
+      window.addEventListener('beforeunload', () => {
+        onUnload();
+      });
+    }
+  }, [unsavedChanges]);
+
   const onSave = async (e: any) => {
-    e.preventDefault();
+    e?.preventDefault();
     const isValid = validate();
     if (isValid) {
       try {
@@ -505,18 +515,27 @@ const NewLessonPlanSO = ({
             className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
             {title}
           </label>
-          <p className="text-sm whitespace-nowrap text-gray-500">{label}</p>
+          <p className="text-sm whitespace-pre-line text-gray-500">{label}</p>
         </div>
       </div>
     );
   };
 
   const [showModal, setShowModal] = useState({show: false, msg: ''});
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      // explicitly
+      setUnsavedChanges(false);
+    }
+    return () => {
+      setUnsavedChanges(false);
+    };
+  }, [open]);
 
   const onTopRightButtonClick = () => {
     if (unsavedChanges) {
-      setShowModal({show: true, msg: 'Do you want to discard changes?'});
+      setShowModal({show: true, msg: 'Do you want to save changes?'});
     } else {
       setShowModal({show: false, msg: ''});
       setOpen(false);
@@ -527,18 +546,14 @@ const NewLessonPlanSO = ({
 
   // Validation only needs to be on save
   const onSaveClick = (e: any) => {
-    e.preventDefault();
+    setUnsavedChanges(false);
+    e?.preventDefault();
     const valid = validate();
     if (valid) {
       onSave(e);
       setFields(INITIAL_STATE);
       setNewLessonPlanShow(false);
     }
-  };
-
-  const onModalNoClick = () => {
-    // continue work
-    setShowModal({show: false, msg: ''});
   };
 
   const onModalCancelClick = () => {
@@ -571,6 +586,11 @@ const NewLessonPlanSO = ({
   const customRef = useRef();
   const closeVideoUploadModal = () => setVideoUploadModal(false);
 
+  const onModalYesClick = () => {
+    setUnsavedChanges(false);
+    onSaveClick(undefined);
+  };
+
   return (
     <>
       {showModal.show && (
@@ -579,11 +599,14 @@ const NewLessonPlanSO = ({
             noButton="No"
             noTooltip="Continue Activity"
             cancelLabel="Yes"
+            className=""
             cancelTooltip="Discard changes and go back"
-            noButtonAction={onModalNoClick}
+            noButtonAction={onModalCancelClick}
             message={showModal.msg}
-            closeAction={onModalNoClick}
-            cancelAction={onModalCancelClick}
+            closeAction={() => {
+              setShowModal({show: false, msg: ''});
+            }}
+            cancelAction={onModalYesClick}
           />
         </div>
       )}
@@ -676,20 +699,29 @@ const NewLessonPlanSO = ({
                 Or upload from your pc
               </div>
             ) : (
-              <div
-                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                onClick={() => {
-                  const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
-                  window.open(imageUrl, '_blank');
-                }}>
-                See video
+              <div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
+                    window.open(imageUrl, '_blank');
+                  }}>
+                  See video
+                </div>
+                <div
+                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  onClick={() => {
+                    setFile(null);
+                  }}>
+                  Clear
+                </div>
               </div>
             )}
           </Block>
           {/* Activity Instructions */}
 
           <Block>
-            <Label className="mb-1" isRequired label={'Activity instructions'} />
+            <Label className="mb-1" label={'Activity instructions'} />
             <RichTextEditor
               initialValue={instructions}
               onChange={(htmlContent, plainText) =>
@@ -705,7 +737,7 @@ const NewLessonPlanSO = ({
 
           {/* Interaction Type */}
           <Block>
-            <Label className="mb-1" isRequired label={'Interaction type'} />
+            <Label className="mb-1" label={'Interaction type'} />
 
             <div className="w-48">
               <Checkbox
@@ -724,7 +756,7 @@ const NewLessonPlanSO = ({
                 id={'individual'}
               />
 
-              <hr className="border-gray-200" />
+              <hr className="border-gray-200 dark:border-gray-700" />
             </div>
           </Block>
 
@@ -745,7 +777,7 @@ const NewLessonPlanSO = ({
           {/* Tags */}
 
           <Block>
-            <Label className="mb-1" isRequired label={'Tags'} />
+            <Label className="mb-1" label={'Tags'} />
 
             <div className="sm:col-span-4">
               <form

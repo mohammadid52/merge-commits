@@ -143,6 +143,7 @@ type Room @model @key(name: "roomByInstitution", fields: ["institutionID"]) {
   weekDay: String
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
+  classSentiment: [String]
 }
 
 type StudentSharing {

@@ -354,20 +354,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     return replaceAllExistingIds;
   };
 
-  const getResponsiveMargin = () => {
-    const width = window.screen.availWidth;
-    switch (true) {
-      case width <= 1200:
-        return '-12rem';
-      case width <= 1000:
-        return '-10rem';
-      case width <= 700:
-        return '-7rem';
-
-      default:
-        return '-15rem';
-    }
-  };
   const pathname = window.location.pathname;
 
   return (
@@ -381,16 +367,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
       <PageBuilderLayout open={newLessonPlanShow && pathname.includes('page-builder')}>
-        {newLessonPlanShow && pathname.includes('page-builder') && (
-          <div className="p-8">
+        {pathname.includes('page-builder') && (
+          <div className="p-4 2xl:p-8">
             <NewLessonPlanSO
               instId={instId}
-              editMode={editMode}
-              setEditMode={setEditMode}
               pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
               open={newLessonPlanShow}
               setOpen={setNewLessonPlanShow}
-              activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
             />
           </div>
         )}
@@ -421,14 +404,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         <div
-          // style={{
-          //   marginLeft:
-          //     showLessonEditOverlay || newLessonPlanShow ? getResponsiveMargin() : '0rem',
-          // }}
           className={`col-start-2 ${
-            showLessonEditOverlay || newLessonPlanShow
-              ? '-ml-48 lg:-ml-60 xl:-ml-60 '
-              : ''
+            showLessonEditOverlay || newLessonPlanShow ? '-ml-60 lg:-ml-40 md:ml-0' : ''
           } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar

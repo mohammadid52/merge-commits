@@ -331,7 +331,7 @@ const Item = ({
               deleteBtn
                 ? 'text-red-500'
                 : 'group-hover:iconoclast:text-500 dark:text-white text-gray-900 group-hover:curate:text-500',
-              'h-6 w-6  transition-all'
+              'xl:h-6 h-2 w-4 xl:w-6  transition-all'
             )}
             aria-hidden="true"
           />
@@ -341,7 +341,7 @@ const Item = ({
         <p
           className={`${
             deleteBtn ? 'text-red-500' : 'text-gray-900 dark:text-white'
-          } text-sm font-medium w-auto `}>
+          } xl:text-sm text-xs font-medium w-auto `}>
           {label}
         </p>
         {subTitle && (

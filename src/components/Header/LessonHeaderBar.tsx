@@ -18,6 +18,7 @@ const LessonHeaderBar = ({
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const theme = gContext.theme;
   const initializeTimer = useStudentTimer();
@@ -70,14 +71,19 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ########################## POPUPS & MODALS ########################## //
   // ##################################################################### //
+
+  // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
   const leaveModal = useOutsideAlerter(false);
   const leaveModalVisible = leaveModal.visible;
   const setLeaveModalVisible = leaveModal.setVisible;
 
+  // ~~ VIDEOLINK WHICH IS SHOWN TO USERS ~~ //
+  const [videoLink, setVideoLink] = useState<string>('');
   const videoLinkModal = useOutsideAlerter(false);
   const videoLinkModalVisible = videoLinkModal.visible;
   const setVideoLinkModalVisible = videoLinkModal.setVisible;
 
+  // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
@@ -86,84 +92,120 @@ const LessonHeaderBar = ({
     setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
-  const handleVideoLinkPopup = () => {
-    setVideoLinkModalVisible((prevState: any) => !prevState);
+  // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
+  const handleVideoLinkPopup = (url?: string) => {
+    if (videoLinkModalVisible) {
+      // setVideoLink('');
+      setVideoLinkModalVisible(false);
+    } else {
+      // setVideoLink(url);
+      setVideoLinkModalVisible(true);
+    }
   };
 
-  useEffect(() => {
-    if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
-      // const thisPageVideoLink = lessonState?.currentPage
-      //   ? lessonState?.lessonData?.lessonPlan[lessonState?.currentPage]?.videoLink
-      //   : '';
-      // if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
-      //   handleVideoLinkPopup();
-      // }
-      handleVideoLinkPopup();
-    }
-  }, [lessonState.lessonProgress]);
+    const getPageLabel = (locationIndex: string) => {
+      if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+        if (locationIndex === '') {
+          return 'n/a';
+        } else {
+          return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+        }
+      }
+    };
 
-  // ##################################################################### //
-  // ############################### OUTPUT ############################## //
-  // ##################################################################### //
-  return (
-    <div
-      style={{zIndex: 3000}}
-      className={` relative center w-full 
+    const thisPageVideoLink = lessonState.lessonData.lessonPlan
+      ? lessonState.lessonData.lessonPlan[lessonState.currentPage]?.videoLink
+      : '';
+    useEffect(() => {
+      if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+        setVideoLink(thisPageVideoLink);
+
+        if (
+          lessonState.lessonProgress === lessonState.currentPage &&
+          !leaveModalVisible
+        ) {
+          if (user.onDemand) {
+            handleVideoLinkPopup(thisPageVideoLink);
+          }
+        }
+      } else {
+        setVideoLink('');
+      }
+    }, [lessonState.currentPage, thisPageVideoLink]);
+
+    // ##################################################################### //
+    // ############################### OUTPUT ############################## //
+    // ##################################################################### //
+    return (
+      <div
+        style={{zIndex: 3000}}
+        className={` relative center w-full 
         h-.7/10 text-gray-200 shadow-2xl
         ${theme.toolbar.bg} `}>
-      {/* LEAVE POPUP */}
-      <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
-        <PositiveAlert
-          alert={leaveModalVisible}
-          setAlert={setLeaveModalVisible}
-          header={
-            leaveAfterCompletion
-              ? 'Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?'
-              : 'This will take you out of the lesson.  Did you want to continue?'
-          }
-          button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
-          button2="Stay on lesson"
-          svg="question"
-          handleButton1={handleManualSave}
-          handleButton2={handleLeavePopup}
-          theme="dark"
-          fill="screen"
+        {/* LEAVE POPUP */}
+        <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
+          <PositiveAlert
+            alert={leaveModalVisible}
+            setAlert={setLeaveModalVisible}
+            header={
+              leaveAfterCompletion
+                ? 'Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?'
+                : 'This will take you out of the lesson.  Did you want to continue?'
+            }
+            button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
+            button2="Stay on lesson"
+            svg="question"
+            handleButton1={handleManualSave}
+            handleButton2={handleLeavePopup}
+            theme="dark"
+            fill="screen"
+          />
+        </div>
+
+        {/* VIDEO POPUP */}
+        <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
+          <Modal
+            title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
+            showHeader={true}
+            showHeaderBorder={false}
+            showFooter={false}
+            scrollHidden={true}
+            closeAction={() => handleVideoLinkPopup()}>
+            <ReactPlayer
+              url={videoLink}
+              controls={true}
+              pip={true}
+              stopOnUnmount={false}
+            />
+          </Modal>
+        </div>
+
+        <LessonTopMenu
+          handlePopup={handleLeavePopup}
+          isAtEnd={isAtEnd}
+          setisAtEnd={setisAtEnd}
+          handleRequiredNotification={handleRequiredNotification}
         />
-      </div>
 
-      {/* VIDEO POPUP */}
-      {/* <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
-        <Modal
-          title={`Instruction Video`}
-          showHeader={true}
-          showHeaderBorder={false}
-          showFooter={false}
-          scrollHidden={true}
-          closeAction={() => handleVideoLinkPopup()}>
-          <ReactPlayer/>
-        </Modal>
-      </div> */}
+        {/**
+         *
+         *
+         * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
+         *
+         *
+         */}
 
-      <LessonTopMenu
-        handlePopup={handleLeavePopup}
-        isAtEnd={isAtEnd}
-        setisAtEnd={setisAtEnd}
-        handleRequiredNotification={handleRequiredNotification}
-      />
+        <SideMenu
+          videoLink={videoLink}
+          videoLinkModalVisible={videoLinkModalVisible}
+          handleVideoLinkPopup={handleVideoLinkPopup}
+        />
 
-      {/**
-       *
-       *
-       * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
-       *
-       *
-       */}
-
-      {/* {lessonDataLoaded && (
+        {/* {lessonDataLoaded && (
         <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />
       )} */}
-    </div>
-  );
+      </div>
+    );
 };
 
 export default LessonHeaderBar;

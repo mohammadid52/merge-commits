@@ -270,11 +270,13 @@ const ConfirmCode = () => {
       <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
         <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
-          <div className="relative h-9.3/10 flex flex-col items-center p-8">
-            <div className="absolute text-center text-xs mb-4" style={{ bottom: '0' }}>
+          <div className="relative h-9.5/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}>
               <p>© Copyright 2021</p>
               <p>
-                <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
+                <NavLink
+                  className="underline text-xs hover:text-blue-500"
+                  to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
@@ -283,11 +285,15 @@ const ConfirmCode = () => {
               <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="Logo" />
             </div>
 
-            <div className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
+            <div
+              className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
               <p>Set New Password</p>
             </div>
             <div className={`text-center mb-4 leading-5 text-xs text-gray-600`}>
-              <p>Your password must be at least 8 characters long and include uppercase and lowercase</p>
+              <p>
+                Your password must be at least 8 characters long and include uppercase and
+                lowercase
+              </p>
             </div>
 
             <div className="h-3.5/10 flex-grow flex flex-col justify-center">
@@ -295,7 +301,11 @@ const ConfirmCode = () => {
                 {message.show ? (
                   <p
                     className={`text-xs text-center ${
-                      message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null
+                      message.type === 'success'
+                        ? 'text-green-500'
+                        : message.type === 'error'
+                        ? 'text-red-500'
+                        : null
                     }`}>
                     {message.message}
                   </p>
@@ -308,12 +318,12 @@ const ConfirmCode = () => {
                     onClick={() => setNewPassToggle(!newPassToggle)}
                     className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
                     {newPassToggle ? (
-                      <IconContext.Provider value={{ className: 'w-auto '}}>
-                        <AiOutlineEye size={24}/>
+                      <IconContext.Provider value={{className: 'w-auto '}}>
+                        <AiOutlineEye size={24} />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ className: 'w-auto '}}>
-                        <AiOutlineEyeInvisible  size={24}/>
+                      <IconContext.Provider value={{className: 'w-auto '}}>
+                        <AiOutlineEyeInvisible size={24} />
                       </IconContext.Provider>
                     )}
                   </div>
@@ -342,7 +352,9 @@ const ConfirmCode = () => {
                     checked={isChecked}
                     onChange={toggleCheckBox}
                   />
-                  <span className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>Remember Me</span>
+                  <span className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
+                    Remember Me
+                  </span>
                 </label>
               </div>
             </div>
@@ -350,12 +362,19 @@ const ConfirmCode = () => {
             <div className="relative h-4.5/10 flex flex-col justify-center items-center">
               <button
                 disabled={isLoading}
-                className={`p-3 mb-4 ${getAsset(clientKey, 'authButtonColor')} text-gray-200 rounded-xl font-semibold`}
+                className={`p-3 mb-4 ${getAsset(
+                  clientKey,
+                  'authButtonColor'
+                )} text-gray-200 rounded-xl font-semibold`}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 {isLoading ? (
                   <IconContext.Provider
-                    value={{ size: '1.5rem', color: '#ffffff', className: 'relative animate-spin' }}>
+                    value={{
+                      size: '1.5rem',
+                      color: '#ffffff',
+                      className: 'relative animate-spin',
+                    }}>
                     <AiOutlineLoading3Quarters />
                   </IconContext.Provider>
                 ) : (
@@ -364,7 +383,12 @@ const ConfirmCode = () => {
               </button>
 
               {isLoading && (
-                <IconContext.Provider value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
+                <IconContext.Provider
+                  value={{
+                    size: '1.5rem',
+                    color: '#488AC7',
+                    className: 'relative animate-spin',
+                  }}>
                   <AiOutlineLoading3Quarters />
                 </IconContext.Provider>
               )}
@@ -372,7 +396,11 @@ const ConfirmCode = () => {
           </div>
         </div>
 
-        <div className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
+        <div
+          className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(
+            clientKey,
+            'authBackground'
+          )} bg-cover bg-center`}></div>
       </div>
     </div>
   );

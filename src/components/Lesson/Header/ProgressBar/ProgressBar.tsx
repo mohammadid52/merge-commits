@@ -25,6 +25,7 @@ const ProgressBar = ({
   requiredInputs,
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
   const user = gContext.state.user;
   const isOnDemand = user.onDemand;
 
@@ -73,10 +74,20 @@ const ProgressBar = ({
    * state.currentPage = number of current page from 0 - total nr of pages
    */
 
+  // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
+  const isTeacherPresenting = lessonState.displayData[0].isTeacher === true;
+
   return (
     <nav
       className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
       aria-label="Breadcrumb">
+      {isTeacherPresenting && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
+          <p className="text-center font-bold text-sm">
+            Disabled when teacher is presenting!
+          </p>
+        </div>
+      )}
       <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
         {pages &&
           pages.map((page: UniversalLessonPage, key: number) => {
