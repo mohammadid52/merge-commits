@@ -3,7 +3,7 @@ import {
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
 import * as mutations from '@graphql/mutations';
-import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
+import {IChat, ICommunityCard, IPerson} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
@@ -13,13 +13,69 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
 import {v4 as uuidV4} from 'uuid';
 import {orderBy} from 'lodash';
+import Loader from '@components/Atoms/Loader';
+
+const Comment = ({chat, person}: {chat: IChat; person: IPerson}) => {
+  return (
+    <div className="antialiased mx-auto sm:max-w-screen">
+      <div className="space-y-4 mb-4">
+        <div className="flex">
+          <div className="flex-shrink-0 mr-3 w-auto">
+            <img
+              className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
+              src={getImageFromS3Static(person.image)}
+              alt=""
+            />
+          </div>
+          <div className="flex-1 border-0 rounded-lg border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+            <strong>{person.firstName}</strong>{' '}
+            <span className="text-xs text-gray-500">
+              {moment(chat.createdAt).format('LT')}
+            </span>
+            <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Comments = ({
+  chats,
+  person,
+  isLoading,
+}: {
+  chats: IChat[];
+  person: IPerson;
+  isLoading: boolean;
+}) => {
+  const orderedList = orderBy(chats, ['createdAt'], ['desc']);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-auto">
+        <Loader withText="Loading comments..." className=" text-gray-400" />
+      </div>
+    );
+  }
+  return (
+    <div className="w-auto mx-5">
+      <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
+
+      {orderedList.map((chat, idx) => (
+        <Comment key={idx} chat={chat} person={person} />
+      ))}
+    </div>
+  );
+};
 
 const BottomSection = ({
-  cardDetails,
+  setShowComments,
+  showComments,
   chatsLen,
 }: {
-  cardDetails: ICommunityCard;
   chatsLen: number;
+  showComments: boolean;
+  setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <>
@@ -52,9 +108,12 @@ const BottomSection = ({
           </div>
         </div>
       </div>
-      {chatsLen > 0 && (
-        <button className="text-blue-500 hover:underline text-sm">show comments</button>
-      )}
+
+      <button
+        onClick={() => setShowComments(!showComments)}
+        className={`text-blue-500 hover:underline text-sm w-auto mx-5`}>
+        {showComments ? 'hide' : 'show'} comments
+      </button>
     </>
   );
 };
@@ -124,7 +183,7 @@ const PostComment = ({
         </span>
         <input
           type="search"
-          className="w-full py-2 pl-4 pr-10 text-sm bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
+          className="w-full py-2 pl-4 pr-10 text-sm border-gray-400 bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
           placeholder="Post a comment..."
           autoComplete="off"
           value={postText}
@@ -147,6 +206,7 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
 
   const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const [error, setError] = useState('');
 
@@ -174,21 +234,25 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!isFetched && cardDetails.cardType === communityTypes.CHECK_IT_OUT) {
+    if (
+      !isFetched &&
+      showComments &&
+      cardDetails.cardType === communityTypes.CHECK_IT_OUT
+    ) {
       fetchChats();
     }
-  }, [isFetched]);
+  }, [isFetched, showComments]);
 
-  const onDelete = async () => {
-    try {
-      const res: any = await API.graphql(
-        graphqlOperation(mutations.deleteCommunity, {input: {id: cardDetails.id}})
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
-  };
+  // const onDelete = async () => {
+  //   try {
+  //     const res: any = await API.graphql(
+  //       graphqlOperation(mutations.deleteCommunity, {input: {id: cardDetails.id}})
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //   }
+  // };
 
   if (cardDetails.cardType === communityTypes.EVENT) {
     const date = cardDetails.additionalInfo.split(' || ')[0];
@@ -216,7 +280,13 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
             </div>
           </div>
         </div>
-        <BottomSection chatsLen={chats.length} cardDetails={cardDetails} />
+        {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
+          <BottomSection
+            showComments={showComments}
+            setShowComments={setShowComments}
+            chatsLen={chats.length}
+          />
+        )}
       </div>
     );
   } else
@@ -274,12 +344,23 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
               </div>
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
                 <div className="w-auto">
-                  <BottomSection chatsLen={chats.length} cardDetails={cardDetails} />
+                  <BottomSection
+                    showComments={showComments}
+                    setShowComments={setShowComments}
+                    chatsLen={chats.length}
+                  />
                   <PostComment
                     chats={chats}
                     setChats={setChats}
                     cardDetails={cardDetails}
                   />
+                  {showComments && (
+                    <Comments
+                      isLoading={isLoading}
+                      person={cardDetails.person}
+                      chats={chats}
+                    />
+                  )}
                 </div>
               )}
             </div>
