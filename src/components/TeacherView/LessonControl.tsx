@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useLessonControls from '@customHooks/lessonControls';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -35,6 +36,7 @@ const LessonControl = () => {
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
   const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -420,6 +422,12 @@ const LessonControl = () => {
   }, [isPresenting]);
 
   // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
+  // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
@@ -479,13 +487,10 @@ const LessonControl = () => {
           />
         </div>
 
-        {/* START TOP MENU */}
-
-        {/* END TOP MENU */}
-
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
-          <RosterFrame fullscreen={fullscreen}>
+
+          <RosterFrame fullscreen={fullscreen} theme={theme} clientKey={clientKey}>
             <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
@@ -496,12 +501,13 @@ const LessonControl = () => {
               />
             </ErrorBoundary>
           </RosterFrame>
+
           {/* FOR MOBILE */}
-          <div className="block lg:hidden">
+          {/* <div className="block lg:hidden">
             <div className="relative w-full h-16 lg:h-12 flex flex-col items-center z-100">
               <LessonControlBar handlePageChange={handlePageChange} />
             </div>
-          </div>
+          </div> */}
 
           {/* RIGHT SECTION */}
 
@@ -521,7 +527,7 @@ const LessonControl = () => {
             <div
               className={`${
                 theme && theme.bg
-              }  relative w-full border-t-2 border-black overflow-y-scroll overflow-x-hidden`}>
+              } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
               <Suspense
                 fallback={
                   <div className="min-h-screen w-full flex flex-col justify-center items-center">

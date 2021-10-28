@@ -1,3 +1,4 @@
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import useDictionary from '../../customHooks/dictionary';
@@ -35,8 +36,17 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
   const userLanguage = gContext.userLanguage;
   const {lessonPlannerDict} = useDictionary(clientKey);
 
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
   return (
-    <div className="min-h-30 px-4 flex flex-col">
+    <div
+      className={`${
+        breakpoint === 'xl' || breakpoint === '2xl' ? 'px-4' : 'px-2'
+      } h-auto flex flex-col`}>
       {/* LABELS */}
       <div className="hidden lg:block  h-8 py-1 mb-2">
         <div className={`relative font-medium bg-transparent flex flex-row items-center`}>
@@ -57,20 +67,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
           </div>
         </div>
       </div>
-      {/* for mobile */}
-      <div className="block lg:hidden h-8 ">
-        <div className="relative w-full h-full flex flex-row justify-center items-center bg-darker-gray bg-opacity-40">
-          <LessonInfoTitleBar />
-          <HamburgerMenu
-            theme={theme}
-            themeColor={themeColor}
-            handleLeavePopup={handleLeavePopup}
-            handleHomePopup={handleHomePopup}
-          />
-        </div>
-      </div>
       {/* BUTTONS & CONTENT */}
-      <div className="hidden lg:block h-12">
+      <div className="lg:block h-12">
         {/* CONTROL START */}
 
         <LessonControlBar handlePageChange={handlePageChange} />
