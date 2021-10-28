@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -140,6 +141,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   };
 
   // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
+  // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
@@ -167,12 +174,16 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       />
 
       {/* RIGHT - FULLSCREEN BUTTON */}
-      <FullscreenToggle
-        theme={theme}
-        themeColor={themeColor}
-        fullscreen={fullscreen}
-        handleFullscreen={handleFullscreen}
-      />
+      {breakpoint === 'xl' || breakpoint === '2xl' ? (
+        <FullscreenToggle
+          theme={theme}
+          themeColor={themeColor}
+          fullscreen={fullscreen}
+          handleFullscreen={handleFullscreen}
+        />
+      ) : (
+        <div className="w-1/3 flex justify-center h-8 align-middle leading-8 "></div>
+      )}
     </div>
   );
 };

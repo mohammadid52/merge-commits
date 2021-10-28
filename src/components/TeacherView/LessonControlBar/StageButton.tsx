@@ -133,8 +133,7 @@ const StageButton = (props: StageButtonProps) => {
               stageIsDisabled || stageIsClosed
                 ? 'line-through text-gray-500'
                 : 'text-gray-500'
-            }
-      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+            } ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page.label}
           </a>
         </div>
