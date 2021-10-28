@@ -175,10 +175,6 @@ const Community = ({}: {role: string}) => {
     }
   };
 
-  // Ref
-  const cardRef = useRef(null);
-  const isCardVisible = useOnScreen(cardRef);
-
   const FAB = () => {
     return (
       <div
@@ -226,13 +222,7 @@ const Community = ({}: {role: string}) => {
 
         <CommanCommunityContent
           list={list}
-          contentOnlyForTeachers={
-            <div>
-              {/* Add new card */}
-              {/* <AddNewCard cardRef={cardRef} onClick={() => setShowCardsModal(true)} /> */}
-              {<FAB />}
-            </div>
-          }
+          contentOnlyForTeachers={<div> {<FAB />}</div>}
         />
       </div>
     </DashboardContainer>

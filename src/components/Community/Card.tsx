@@ -45,15 +45,16 @@ const BottomSection = ({
             <div className="ml-1 text-gray-400 font-thin text-ms"> {chatsLen || 0}</div>
           </div>
         </div>
-        {chatsLen > 0 && (
-          <button className="text-blue-500 hover:underline text-sm">show comments</button>
-        )}
+
         <div className="mt-3 mx-5 w-full flex justify-end">
           <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
             Likes: <div className="ml-1 text-gray-400 font-thin text-ms"> 120k</div>
           </div>
         </div>
       </div>
+      {chatsLen > 0 && (
+        <button className="text-blue-500 hover:underline text-sm">show comments</button>
+      )}
     </>
   );
 };
@@ -271,8 +272,16 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
               <div className="text-gray-500 font-thin text-sm mb-6 mx-3 px-2">
                 {cardDetails.summary}
               </div>
-              <BottomSection chatsLen={chats.length} cardDetails={cardDetails} />
-              <PostComment chats={chats} setChats={setChats} cardDetails={cardDetails} />
+              {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
+                <div className="w-auto">
+                  <BottomSection chatsLen={chats.length} cardDetails={cardDetails} />
+                  <PostComment
+                    chats={chats}
+                    setChats={setChats}
+                    cardDetails={cardDetails}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
