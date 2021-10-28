@@ -198,7 +198,7 @@ const SpaceItems = ({
                 label: 'Custom position',
                 onClick: onCustomPosition,
               },
-              {label: 'Add to Botom"', onClick: onAddtoBottom, transparent: true},
+              {label: 'Add to Bottom', onClick: onAddtoBottom, transparent: true},
             ]}
             message={'Where do you want to add space?'}
           />
@@ -280,13 +280,13 @@ const OverlayHeaderTitle = ({
     <div className={'flex items-center justify-start'} id="page_builder_overlay--header">
       {showBackBtn && (
         <div className="w-auto" onClick={onBack}>
-          <AiOutlineArrowLeft className="text-gray-400 hover:text-gray-500 transition-all text-xl cursor-pointer" />
+          <AiOutlineArrowLeft className="text-gray-400 hover:text-gray-500 transition-all text-lg 2xl:text-xl cursor-pointer" />
         </div>
       )}
 
       <h4
         id="page_builder_overlay--header-title"
-        className="dark:text-white text-gray-900 font-semibold tracking-wide text-xl text-center">
+        className="dark:text-white text-gray-900 font-semibold tracking-wide text-lg 2xl:text-xl text-center">
         {title}
       </h4>
     </div>
@@ -780,7 +780,7 @@ const PageBuilderSlideOver = ({
           <div>
             <OverlayHeaderTitle showBackBtn={false} onBack={toHome} title="Edit page" />
             <AnimatedContainer
-              className={`my-2  w-auto`}
+              className={`my-2 w-auto`}
               animationType="opacity"
               show={notSelected && !onInit}>
               {notSelected && !onInit && (

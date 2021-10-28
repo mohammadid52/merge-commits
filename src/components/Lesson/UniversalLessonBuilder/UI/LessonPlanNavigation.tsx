@@ -125,11 +125,13 @@ const LessonPlanNavigation = ({
             <nav
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="bg-white border-b h-12 border-gray-200 flex"
+              className={`bg-white border-b ${
+                lessonPlan?.length ? 'h-14' : 'h-12'
+              } border-gray-200 flex w-10/12 overflow-x-scroll`}
               aria-label="Breadcrumb">
               <ol
                 key={nanoid(4)}
-                className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+                className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 items-center sm:px-6 lg:px-8">
                 <li className="flex w-auto">
                   <div className="flex items-center">
                     <a href="#" className="text-gray-600">
@@ -143,7 +145,7 @@ const LessonPlanNavigation = ({
                     Loading...
                   </p>
                 ) : (
-                  lessonPlan.map((page, index) => (
+                  [...lessonPlan, ...lessonPlan].map((page, index) => (
                     <Draggable
                       draggableId={`${page.id}`}
                       index={index}
@@ -173,7 +175,7 @@ const LessonPlanNavigation = ({
                                 selectedPageID === page.id
                                   ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
                                   : 'text-gray-600 hover:text-gray-700'
-                              }   ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+                              }   ml-4 cursor-pointer w-auto text-xs 2xl:text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
                               {page.label}
                             </a>
                           </div>
@@ -188,7 +190,10 @@ const LessonPlanNavigation = ({
         </Droppable>
       </DragDropContext>
 
-      <div className="ml-2 w-auto bg-white h-12 flex items-center p-4 mr-3">
+      <div
+        className={`ml-2 w-auto bg-white ${
+          lessonPlan?.length ? 'h-14' : 'h-12'
+        } flex items-center p-4 mr-3`}>
         <Tooltip text="Switch to homework" placement="bottom">
           <button
             type="button"

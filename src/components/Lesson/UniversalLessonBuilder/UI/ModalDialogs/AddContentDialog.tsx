@@ -308,7 +308,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
         }}
         className={`relative ${
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
-        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${
+        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-2 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -318,17 +318,17 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
                 className={classNames(
                   content.iconBackground,
                   content.iconForeground,
-                  'rounded-lg inline-flex p-3 w-auto'
+                  'rounded-lg inline-flex p-1.5 2xl:p-3 w-auto'
                 )}>
                 <content.icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <div className="flex-1 min-w-0 flex items-center justify-between">
                 <div className="focus:outline-none cursor-pointer">
                   <span className="absolute inset-0" aria-hidden="true" />
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-xs 2xl:text-sm font-medium text-gray-900 dark:text-white">
                     {content.name}
                   </p>
-                  <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">{content.subtitle}</p>
                 </div>
               </div>
 

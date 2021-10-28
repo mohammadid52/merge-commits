@@ -3076,6 +3076,16 @@ export const getLesson = /* GraphQL */ `
     }
   }
 `;
+
+export const getUniversalLessonBasicDetails = /* GraphQL */ `
+  query getUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      title
+    }
+  }
+`;
+
 export const listCheckpoints = /* GraphQL */ `
   query ListCheckpoints(
     $filter: ModelCheckpointFilterInput

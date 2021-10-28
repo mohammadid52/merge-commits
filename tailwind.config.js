@@ -735,6 +735,10 @@ module.exports = {
         'inner-box': 'inset 0 2px 4px 0 #191d25',
         container: '1px 1px 10px 1px #e0e0e0',
       },
+      translate: {
+        100: '25rem',
+        160: '40rem',
+      }
     },
   },
   variants: {

@@ -400,7 +400,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         overflowHidden
         open={showLessonEditOverlay}>
         {showLessonEditOverlay && (
-          <div className="p-8">
+          <div className="p-4 2xl:p-8">
             <PageBuilderSlideOver
               deleteFromULBHandler={deleteFromULBHandler}
               open={showLessonEditOverlay}
@@ -425,9 +425,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           //   marginLeft:
           //     showLessonEditOverlay || newLessonPlanShow ? getResponsiveMargin() : '0rem',
           // }}
-          className={`col-start-2 ${
+          className={`2xl:col-start-2 ${
             showLessonEditOverlay || newLessonPlanShow
-              ? '-ml-48 lg:-ml-60 xl:-ml-60 '
+              ? '-ml-48 2xl:-ml-60 '
               : ''
           } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (

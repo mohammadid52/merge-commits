@@ -181,14 +181,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     <div>
       <div className="h-9/10 flex px-0 2xl:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col lg:flex-row flex justify-center lg:justify-start">
+        <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <div
             hidden={pathname.includes('page-builder')}
-            className="w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col">
+            className="w-auto lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col">
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
               {imageLoading ? (
                 <div
-                  className={`w-20 h-20 lg:w-30 lg:h-30 2xl:w-40 2xl:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
+                  className={`w-20 h-20 md:w-30 md:h-30 2xl:w-40 2xl:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
                   <Loader />
                 </div>
               ) : instProps?.institute?.image ? (
@@ -202,7 +202,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       }}
                       toggleCropper={toggleCropper}>
                       <img
-                        className={`profile w-20 h-20 lg:w-30 lg:h-30 2xl:w-40 2xl:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        className={`profile w-20 h-20 md:w-30 md:h-30 2xl:w-40 2xl:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                         src={imageUrl}
                       />
                     </DroppableMedia>
@@ -336,7 +336,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             )}
           </div>
 
-          <div className="flex">
+          <div className="flex w-auto lg:w-10/12 2xl:w-full">
             <div className="bg-white border-l-none lg:border-l-0 border-gray-200 mb-4 flex-1">
               <div className="overflow-x-scroll overflow-y-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}

@@ -56,7 +56,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 open || menu.children.filter((item: any) => item.active).length
                   ? 'bg-indigo-300 text-indigo-700'
                   : ''
-              } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+              } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
               } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
               {menu.title}
@@ -91,7 +91,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
-                    <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
+                    <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-xs 2xl:text-base">
                       {item.title}
                     </div>
                   </Menu.Item>
