@@ -8,6 +8,7 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {
   AiOutlineCopy,
   AiOutlineDelete,
+  AiOutlineEdit,
   AiOutlineEye,
   AiOutlineEyeInvisible,
   AiOutlineFileAdd,
@@ -159,7 +160,7 @@ const Toolbar = ({
                       setNewLessonPlanShow(true);
                       setEditMode(true);
                     }}
-                    icon={AiOutlineFileAdd}
+                    icon={AiOutlineEdit}
                   />
                   <Button
                     color="text-red-400"
