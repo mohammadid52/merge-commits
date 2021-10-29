@@ -31,7 +31,12 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 
+<<<<<<< HEAD
 # test
+=======
+<<<<<<< HEAD
+.secret-*
+>>>>>>> master
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend

@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';

@@ -103,28 +103,26 @@ const Registration = () => {
   };
 
   return (
-    <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
-      <div className='w-auto h-auto flex flex-row rounded-xl'>
-        <div className='login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0'>
-          <div className='h-.7/10  w-full rounded-tl-xl'></div>
-          <div className='relative h-9.3/10 flex flex-col items-center p-8'>
-            <div className='absolute text-center text-xs mb-4' style={{ bottom: '0' }}>
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm">
+      <div className="w-auto h-auto flex flex-row rounded-xl">
+        <div className="login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0">
+          <div className="h-.7/10  w-full rounded-tl-xl"></div>
+          <div className="relative h-9.5/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}>
               <p>© Copyright 2021</p>
               <p>
-                <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
+                <NavLink
+                  className="underline text-sm hover:text-blue-500"
+                  to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
             </div>
-            <div className='h-24 w-56'>
-              <img
-                className=''
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt='Logo'
-              />
+            <div className="h-24 w-56">
+              <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="Logo" />
             </div>
-            <div className='h-4.5/10 flex-grow flex flex-col justify-center'>
-              <div className='w-full h-1/10 flex justify-center items-center'>
+            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full h-1/10 flex justify-center items-center">
                 {message.show ? (
                   <p
                     className={`text-sm text-center ${
@@ -138,51 +136,54 @@ const Registration = () => {
                   </p>
                 ) : null}
               </div>
-              
-              <div className='input'>
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+
+              <div className="input">
+                <div className="icon">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <MdEmail />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='email'>
+                <label className="hidden" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className='w-full px-2 py-1 ml-2 bg-off-white'
-                  placeholder='Email'
-                  type='text'
-                  id='email'
-                  name='email'
+                  className="w-full px-2 py-1 ml-2 bg-off-white"
+                  placeholder="Email"
+                  type="text"
+                  id="email"
+                  name="email"
                   value={input.email}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className='input'>
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
+              <div className="input">
+                <div className="icon">
+                  <IconContext.Provider value={{size: '1.5rem'}}>
                     <FaUnlockAlt />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='code'>
+                <label className="hidden" htmlFor="code">
                   Confirmation Code
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='Confirmation Code'
-                  type='text'
-                  id='code'
-                  name='code'
+                  className="w-full bg-off-white px-2 py-1 ml-2"
+                  placeholder="Confirmation Code"
+                  type="text"
+                  id="code"
+                  name="code"
                   value={input.code}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
-            <div className='h-3/10 flex flex-col justify-center items-center'>
+            <div className="h-3/10 flex flex-col justify-center items-center">
               <button
-                className={`${getAsset(clientKey, 'authButtonColor')} text-gray-200 rounded shadow-elem-light mb-4`}
+                className={`${getAsset(
+                  clientKey,
+                  'authButtonColor'
+                )} text-gray-200 rounded shadow-elem-light mb-4`}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 Confirm Code
@@ -191,8 +192,11 @@ const Registration = () => {
           </div>
         </div>
 
-        <div className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
-
+        <div
+          className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(
+            clientKey,
+            'authBackground'
+          )} bg-cover bg-center`}></div>
       </div>
     </div>
   );

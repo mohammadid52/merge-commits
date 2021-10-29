@@ -13,7 +13,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
 import {classNames} from './TextInput';
 
 const InputContainer = ({
@@ -588,7 +588,7 @@ const UniversalOption = ({
 
   return (
     <>
-      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
       <AnimatedContainer show={onSetupTab}>
         {onSetupTab && (
           <>

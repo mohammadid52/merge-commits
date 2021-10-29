@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useCallback, useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {IconContext} from 'react-icons';

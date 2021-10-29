@@ -41,7 +41,10 @@ const LessonPlan = () => {
   } = useULBContext();
 
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},

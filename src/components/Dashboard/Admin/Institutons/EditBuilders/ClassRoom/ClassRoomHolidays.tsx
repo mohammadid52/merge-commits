@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useParams} from 'react-router';
 import {HiPencil} from 'react-icons/hi';
 // import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import * as mutation from '../../../../../../graphql/mutations';
 import {useQuery} from '../../../../../../customHooks/urlParam';

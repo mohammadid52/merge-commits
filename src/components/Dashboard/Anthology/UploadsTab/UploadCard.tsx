@@ -1,5 +1,5 @@
 import Storage from '@aws-amplify/storage';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
 import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
 import {sortBy} from 'lodash';

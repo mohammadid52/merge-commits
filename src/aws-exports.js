@@ -8,7 +8,24 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_NfEBH7OYM",
     "aws_user_pools_web_client_id": "7d7gj6s5c670t568bnpcq515pg",
     "oauth": {},
-    "aws_appsync_graphqlEndpoint": "https://csmrjmdojvc5jjra7pde4vdn64.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_cognito_login_mechanisms": [
+        "EMAIL"
+    ],
+    "aws_cognito_signup_attributes": [
+        "EMAIL"
+    ],
+    "aws_cognito_mfa_configuration": "OFF",
+    "aws_cognito_mfa_types": [
+        "SMS"
+    ],
+    "aws_cognito_password_protection_settings": {
+        "passwordPolicyMinLength": 8,
+        "passwordPolicyCharacters": []
+    },
+    "aws_cognito_verification_mechanisms": [
+        "EMAIL"
+    ],
+    "aws_appsync_graphqlEndpoint": "https://m2cm45pahrh5hdf35cngjfdaui.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_user_files_s3_bucket": "curatereact-storage-dev104550-dev",

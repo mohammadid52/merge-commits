@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useHistory} from 'react-router-dom';
 import {LessonContext} from '../../../../contexts/LessonContext';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Popup from '../../../General/Popup';

@@ -106,9 +106,7 @@ type Staff
   institution: Institution @connection(fields: ["institutionID"])
 }
 
-type Room
-  @model
-  @key(name: "roomByInstitution", fields: ["institutionID"]) {
+type Room @model @key(name: "roomByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
   classID: ID
@@ -145,9 +143,11 @@ type Room
   weekDay: String
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
+  classSentiment: [String]
 }
 
 type StudentSharing {
+  isTeacher: Boolean
   studentAuthID: String
   lessonPageID: String
 }
@@ -255,7 +255,9 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
   universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
-  universalSyllabus: [curriculumUnits] @connection(keyName: "unitsbyCurriculum", fields: ["id"])
+  universalSyllabus: [curriculumUnits]
+    @connection(keyName: "unitsbyCurriculum", fields: ["id"])
+  syllabiHistory: [String]
 }
 
 type Topic
@@ -612,7 +614,7 @@ type Lesson @model @key(fields: ["id"]) {
   duration: Int
   resources: String
   notes: String
-  targetAudience:String
+  targetAudience: String
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
@@ -879,7 +881,8 @@ type UniversalLesson @model @key(fields: ["id"]) {
   smallGroupSize: Int
   smallGroupOption: String
   studentMaterials: String
-  targetAudience: String 
+  targetAudience: String
+  isUsed: Boolean
 }
 
 type UniversalLessonPlan {
@@ -897,6 +900,7 @@ type UniversalLessonPlan {
   activityType: String
   interactionType: [String]
   tags: [String]
+  videoLink: String
 }
 
 type UniversalpageContent {
@@ -905,7 +909,7 @@ type UniversalpageContent {
   partType: String
   class: String
   partContent: [UniversalPartContent]
-  showIfAsync:Boolean
+  showIfAsync: Boolean
 }
 
 type UniversalPartContent {
@@ -989,7 +993,7 @@ type StudentPageInput {
 
 type partInput {
   domID: String
-  options:[String]
+  options: [String]
   input: [String]
   comments: [InputComment]
 }
@@ -999,9 +1003,7 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus
-  @model
-  @key(fields: ["id"]) {
+type UniversalSyllabus @model @key(fields: ["id"]) {
   id: ID!
   name: String!
   type: String
@@ -1017,13 +1019,17 @@ type UniversalSyllabus
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
+  isUsed: Boolean
+  lessonHistory: [String]
 }
 
-type curriculumUnits @model @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
-    id: ID!
-    unitId: ID!
-    unit: UniversalSyllabus @connection(fields: ["unitId"]) 
-    curriculumId: ID!
+type curriculumUnits
+  @model
+  @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
+  id: ID!
+  unitId: ID!
+  unit: UniversalSyllabus @connection(fields: ["unitId"])
+  curriculumId: ID!
 }
 
 # Need to add universalStudentData field
@@ -1098,24 +1104,26 @@ type File {
 
 type Community @model @key(fields: ["id"]) {
   id: ID!
-  cardName: String,
-  cardDate: AWSDate,
-  summary: String,
-  cardImageLink: String,
-  startTime: AWSDateTime,
-  endTime: AWSDateTime,
-  location: String,
+  institutionID: ID!
+  cardName: String
+  cardType: String
+  cardDate: AWSDate
+  summary: String
+  cardImageLink: String
+  startTime: AWSDateTime
+  endTime: AWSDateTime
+  location: String
   geoLocation: String
-  additionalLinks: [String],
-  additionalInfo: String,
+  additionalLinks: [String]
+  additionalInfo: String
   personAuthID: String!
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
-type CommunityChat @model 
-@key(name: "chatByCommunity", fields: ["communityId"]) {
+type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"]) {
   id: ID!
   communityId: ID!
   personAuthID: String!
@@ -1137,10 +1145,7 @@ type Subscription {
     syllabusLessonID: ID!
     lessonID: ID!
     roomID: ID!
-  ): PersonLocation
-    @aws_subscribe(
-      mutations: ["deletePersonLocation"]
-    )
+  ): PersonLocation @aws_subscribe(mutations: ["deletePersonLocation"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson

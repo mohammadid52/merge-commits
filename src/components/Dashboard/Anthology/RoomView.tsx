@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '@customGraphql/customQueries';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import React, {useContext, useEffect, useState, useMemo, useCallback, memo} from 'react';

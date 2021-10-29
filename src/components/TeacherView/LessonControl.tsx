@@ -1,13 +1,12 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useLessonControls from '@customHooks/lessonControls';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {WASI} from 'wasi';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import useDeviceDetect from '../../customHooks/deviceDetect';
-import useDictionary from '../../customHooks/dictionary';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
@@ -16,16 +15,18 @@ import {
   UniversalLessonStudentData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import QuickRegister from '../Auth/QuickRegister';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
+import RosterFrame from './ClassRoster/RosterFrame';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import LessonFrame from './StudentWindow/LessonFrame';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import TopMenu from './TopMenu';
+import LessonDetails from './TopMenu/LessonDetails';
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -35,12 +36,12 @@ const LessonControl = () => {
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
   const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
 
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
-  const {mobile} = useDeviceDetect();
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -161,6 +162,13 @@ const LessonControl = () => {
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  /*************************************************
+   * GETS THE INITIAL STUDENT DATA FOR EACH PAGE,  *
+   *    THEN SETS THE SUBSCRIPTION SO THAT EACH    *
+   * TIME A PAGE IS UPDATED, TEACHER RECEIVES THIS *
+   *                  INFORMATION                  *
+   *************************************************/
+
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
 
@@ -208,15 +216,22 @@ const LessonControl = () => {
   };
 
   useEffect(() => {
-    if (lessonState.studentViewing === '') {
-      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
-    }
+    if (lessonState.lessonData?.type !== 'survey') {
+      if (lessonState.studentViewing === '') {
+        lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+      }
 
-    if (lessonState.studentViewing !== '') {
-      clearStudentData().then((_: void) =>
-        getStudentData(lessonState.studentViewing).then((_: void) =>
-          console.log('getStudentData teacher - ', 'getted')
-        )
+      if (lessonState.studentViewing !== '') {
+        clearStudentData().then((_: void) =>
+          getStudentData(lessonState.studentViewing).then((_: void) =>
+            console.log('getStudentData teacher - ', 'getted')
+          )
+        );
+      }
+    } else {
+      console.log(
+        'lesson control - ',
+        'not doing anything on view student because survey...'
       );
     }
   }, [lessonState.studentViewing]);
@@ -367,7 +382,6 @@ const LessonControl = () => {
   // ################### CLASSROOM AND PLANNER CONTROL ################### //
   // ##################################################################### //
 
-  const [quickRegister, setQuickRegister] = useState(false);
   const [leavePopup, setLeavePopup] = useState(false);
   const [homePopup, setHomePopup] = useState(false);
   const [userHasLeftPopup, setUserHasLeftPopup] = useState(false);
@@ -394,6 +408,25 @@ const LessonControl = () => {
     history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
+  // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
+  const anyoneIsViewed = lessonState.studentViewing !== '';
+  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+  const isPresenting = lessonState.displayData[0].isTeacher === true;
+
+  useEffect(() => {
+    if (isPresenting && !fullscreen) {
+      setFullscreen(true);
+    } else {
+      setFullscreen(false);
+    }
+  }, [isPresenting]);
+
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -402,10 +435,6 @@ const LessonControl = () => {
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/* QUICK REGISTER */}
-
-        {quickRegister && (
-          <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
-        )}
 
         {/* USER MANAGEMENT */}
         <div
@@ -458,94 +487,59 @@ const LessonControl = () => {
           />
         </div>
 
-        {/* START TOP MENU */}
-
-        <TopMenu
-          isSameStudentShared={isSameStudentShared}
-          handleQuitViewing={handleQuitViewing}
-          handleQuitShare={handleQuitShare}
-          handleLeavePopup={handleLeavePopup}
-          handleHomePopup={handleHomePopup}
-          handlePageChange={handlePageChange}
-          setQuickRegister={setQuickRegister}
-        />
-
-        {/* END TOP MENU */}
-
-        <div className={`w-full h-full lg:h-8.5/10 flex flex-col lg:flex-row rounded-lg`}>
+        <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
-          <div
-            className={`${
-              fullscreen ? 'hidden' : ''
-            } w-full lg:w-3/10 min-w-100 h-1/4 lg:h-full flex flex-col items-center `}>
-            <div className={`h-full w-full flex flex-col justify-between items-center`}>
-              <div className={`h-full`}>
-                <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
-                  <ClassRoster
-                    isSameStudentShared={isSameStudentShared}
-                    handleQuitShare={handleQuitShare}
-                    handleQuitViewing={handleQuitViewing}
-                    handlePageChange={handlePageChange}
-                    handleRoomUpdate={handleRoomUpdate}
-                  />
-                </ErrorBoundary>
-              </div>
-            </div>
-          </div>
-          {/* FOR MOBILE */}
-          <div className="block lg:hidden">
-            {/* <div className="relative w-full h-16 flex flex-row justify-center items-center pl-2 m-2.5">
-              <div className="h-8 align-middle font-bold text-xs leading-8 ">
-                {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
-              </div>
 
-              <HamburgerMenu
-                handleLeavePopup={handleLeavePopup}
-                setQuickRegister={setQuickRegister}
-                handleHomePopup={handleHomePopup}
+          <RosterFrame fullscreen={fullscreen} theme={theme} clientKey={clientKey}>
+            <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
+              <ClassRoster
+                isSameStudentShared={isSameStudentShared}
+                handleQuitShare={handleQuitShare}
+                handleQuitViewing={handleQuitViewing}
+                handlePageChange={handlePageChange}
+                handleRoomUpdate={handleRoomUpdate}
               />
-            </div> */}
+            </ErrorBoundary>
+          </RosterFrame>
+
+          {/* FOR MOBILE */}
+          {/* <div className="block lg:hidden">
             <div className="relative w-full h-16 lg:h-12 flex flex-col items-center z-100">
               <LessonControlBar handlePageChange={handlePageChange} />
             </div>
-          </div>
+          </div> */}
 
           {/* RIGHT SECTION */}
-          <div
-            className={`relative 
-            ${fullscreen ? 'w-full' : 'w-full lg:w-7/10'} 
-            h-full flex flex-col items-center`}
-            style={mobile && !fullscreen ? {height: 'calc(75% - 80px)'} : null}>
-            <StudentWindowTitleBar
-              handleFullscreen={handleFullscreen}
-              fullscreen={fullscreen}
-            />
 
+          <LessonFrame
+            theme={theme}
+            fullscreen={fullscreen}
+            handleFullscreen={handleFullscreen}
+            anyoneIsViewed={anyoneIsViewed}
+            anyoneIsShared={anyoneIsShared}
+            isPresenting={isPresenting}
+            isSameStudentShared={isSameStudentShared}
+            handleQuitShare={handleQuitShare}
+            handleQuitViewing={handleQuitViewing}
+            handlePageChange={handlePageChange}
+            handleLeavePopup={handleLeavePopup}
+            handleHomePopup={handleHomePopup}>
             <div
-              className={`${fullscreen ? 'h-full' : 'h-full'}
-                          ${theme.bg} 
-                          relative w-full  
-                          border-t-2 border-black
-                          overflow-y-scroll overflow-x-hidden`}>
-              {/**
-               *
-               * COMPONENT
-               *
-               * */}
-              <div className={`h-full p-4`}>
-                <Suspense
-                  fallback={
-                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                      <ComponentLoading />
-                    </div>
-                  }>
-                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                    <CoreUniversalLesson />
-                  </ErrorBoundary>
-                </Suspense>
-              </div>
+              className={`${
+                theme && theme.bg
+              } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
+              <Suspense
+                fallback={
+                  <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                    <ComponentLoading />
+                  </div>
+                }>
+                <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                  <CoreUniversalLesson />
+                </ErrorBoundary>
+              </Suspense>
             </div>
-          </div>
+          </LessonFrame>
         </div>
       </div>
     </div>

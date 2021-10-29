@@ -53,8 +53,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const getCurrentPage = (id: string) =>
     universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
 
-    console.log(universalLessonDetails,'universalLessonDetails');
-    
   const updateMovableList = (
     items: any,
     section: string = 'pageContent',

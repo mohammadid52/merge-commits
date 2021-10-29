@@ -64,14 +64,16 @@ const BUTTONS: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK: 'Back',
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
+  },
+};
 
 const EditQuestionModalDict: any = {
   EN: {
@@ -727,6 +729,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'Unit Manager',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -764,6 +768,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'TBD',
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -809,12 +815,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Lesson Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Class',
+        IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
       },
     },
@@ -960,6 +966,7 @@ const Institute_info: any = {
       LESSONS: 'Lessons',
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
+      COMMUNITY: 'Community',
       NOTEBOOK: 'Notebook',
     },
   },
@@ -974,9 +981,10 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'TBD',
       STAFF: 'TBD',
       CLASSES: 'TBD',
+      COMMUNITY: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      LIVE_CLASS_ROOM: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
@@ -1251,7 +1259,7 @@ const Institute_class: any = {
     },
   },
 };
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'INSTITUTE CURRICULAR',
     BUTTON: {
@@ -1262,6 +1270,7 @@ const InstitueCurriculam: any = {
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any curriculum. Please create a new curriculum.',
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -1273,6 +1282,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
@@ -1282,7 +1292,7 @@ const InstitueRomms: any = {
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Curriculum',
     TEACHER: 'Teacher',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
@@ -2778,6 +2788,7 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
+    RESET_PASSWORD: 'Reset password',
   },
   ES: {
     details: 'TDB',
@@ -2791,6 +2802,7 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
   },
 };
 const UserLookupDict: any = {
@@ -3514,21 +3526,25 @@ const QuestionBuilderDict: any = {
 
 const UnitLookupDict: any = {
   EN: {
-    HEADING: 'Assign Unit',
+    HEADING: 'Assign Module',
     NOTE:
-      'NOTE: Please select Curricular and then units to add current lesson to that unit.',
+      'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
-    CURRICULUMNAME: 'Curriculum Name',
-    UNITNAME: 'Unit Name',
+    CURRICULUMNAME: 'Course Name',
+    UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This lesson is not added to any curricular or units.',
-
+    NOTADDED: ' This session is not added to any course or modules.',
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
-      ADDED: 'Lesson added successfully.',
-      ADDERR: 'Error while adding lesson to unit, please try later.',
-      FETCHERR: 'Error while fetching units Data, Please try again later.',
+      ADDED: 'Session added successfully.',
+      ADDERR: 'Error while adding session to module, please try later.',
+      FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3539,12 +3555,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 
@@ -3710,6 +3730,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3726,6 +3747,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
@@ -3798,6 +3820,23 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const StudentDict: any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
+  },
+};
+
+const CommunityDict: any = {
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
+  },
+};
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3808,6 +3847,7 @@ export {
   AuthDict,
   CsvDict,
   paginationPage,
+  CommunityDict,
   BUTTONS,
   BreadcrumsTitles,
   DashboardDict,
@@ -3830,7 +3870,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CourseBuilderDict,
@@ -3862,6 +3902,7 @@ export {
   ProfileCheckpointlookupDict,
   RegistrationDict,
   SyllabusDict,
+  StudentDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3888,5 +3929,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   General,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

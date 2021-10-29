@@ -3,7 +3,7 @@
 
 // import { ClassroomControlProps } from '../Dashboard';
 // import { GlobalContext } from '../../../contexts/GlobalContext';
-// import { API, graphqlOperation } from '@aws-amplify/api';
+// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 // import * as customQueries from '../../../customGraphql/customQueries';
 // import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 // import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';

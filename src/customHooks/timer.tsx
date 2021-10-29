@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';

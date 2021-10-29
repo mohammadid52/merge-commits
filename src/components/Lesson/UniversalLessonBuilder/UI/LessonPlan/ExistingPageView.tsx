@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {FaCopy} from 'react-icons/fa';
 
 import Buttons from '../../../../Atoms/Buttons';
@@ -30,7 +30,10 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
   const {LessonBuilderDict} = useDictionary(clientKey);
   const [copiedPageId, setCopiedPageId] = useState<string>('');
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
 
   const pages = universalLessonDetails?.lessonPlan || [];
   const [otherPages, setOtherPages] = useState<UniversalLessonPage[]>([]);

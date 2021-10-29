@@ -1,4 +1,5 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -6,17 +7,26 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as mutations from '../../../graphql/mutations';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
+import FullscreenToggle from './TitleBarSections/FullscreenToggle';
+import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
+import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
 
-interface StudentWindowTitleBarProps {
-  handleFullscreen: () => void;
-  fullscreen: boolean;
+export interface StudentWindowTitleBarProps {
+  theme?: any;
+  themeColor?: string;
+  handleFullscreen?: () => void;
+  fullscreen?: boolean;
 }
 
 const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   props: StudentWindowTitleBarProps
 ) => {
-  const {handleFullscreen, fullscreen} = props;
-  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {theme, themeColor, handleFullscreen, fullscreen} = props;
+  const gContext = useContext(GlobalContext);
+  const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
+  const displayData = lessonState?.displayData;
+
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   useEffect(() => {
@@ -31,22 +41,30 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   // ##################################################################### //
   // ######################### OPEN / CLOSE PAGES ######################## //
   // ##################################################################### //
-  const handleOpenCloseComponent = async (pageNr: number) => {
-    // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
-    const getRoomData = getLocalStorageData('room_info');
 
+  // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
+  const getRoomData = getLocalStorageData('room_info');
+
+  const handleOpenComponent = async (pageNr: number) => {
     // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
-    const getClosedPages = lessonState.lessonData.lessonPlan.reduce(
-      (acc: string[], lessonPlanObj: UniversalLessonPage) => {
-        console.log(lessonPlanObj.open);
-        if (lessonPlanObj.open === false) {
-          return [...acc, lessonPlanObj.id];
+    const getPagesBefore = lessonState.lessonData.lessonPlan.reduce(
+      (pagesBeforeAcc: string[], page: UniversalLessonPage, pageIdx: number) => {
+        if (pageIdx <= pageNr) {
+          return [...pagesBeforeAcc, page.id];
         } else {
-          return acc;
+          return pagesBeforeAcc;
         }
       },
       []
     );
+
+    //  ADD/REMOVE PAGEID FROM CLOSED PAGES ARRAY  //
+    const finalClosedPages =
+      getRoomData.ClosedPages.length > 0
+        ? getRoomData.ClosedPages.filter(
+            (pageID: string) => !getPagesBefore.includes(pageID)
+          )
+        : [];
 
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
@@ -54,17 +72,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       payload: pageNr,
     });
 
-    // ~ APPEND PAGE ID TO CLOSED PAGES ARRAY  //
-    const finalClosedPages = getClosedPages.includes(activePageData.id)
-      ? getClosedPages.filter((str: string) => str !== activePageData.id)
-      : [...getClosedPages, activePageData.id];
-
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
     setLocalStorageData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {
-      const updateOpenClosePages: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateRoom, {
           input: {
             id: getRoomData.id,
@@ -83,57 +96,96 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     }
   };
 
+  const handleCloseComponent = async (pageNr: number) => {
+    const getPagesAfter = lessonState.lessonData.lessonPlan.reduce(
+      (pagesAfterAcc: any[], page: any, pageIdx: number) => {
+        if (pageIdx >= pageNr) {
+          return [...pagesAfterAcc, page.id];
+        } else {
+          return pagesAfterAcc;
+        }
+      },
+      []
+    );
+    // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
+    lessonDispatch({
+      type: 'TOGGLE_CLOSE_PAGE',
+      payload: pageNr,
+    });
+
+    // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      ClosedPages: getPagesAfter,
+    });
+
+    // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: getRoomData.id,
+            institutionID: getRoomData.institutionID,
+            classID: getRoomData.classID,
+            teacherAuthID: getRoomData.teacherAuthID,
+            teacherEmail: getRoomData.teacherEmail,
+            name: getRoomData.name,
+            maxPersons: getRoomData.maxPersons,
+            ClosedPages: getPagesAfter,
+          },
+        })
+      );
+    } catch (e) {
+      console.error('handleClosePages - updateRoom mutation - ', e);
+    }
+  };
+
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
+
   return (
     <div
-      className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10`}>
-      <div className="h-8 pl-2 align-middle font-bold text-xs leading-8 ">
-        <span className="mr-2">Workspace:</span>
+      className={`relative w-full py-1 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
+      {/* LEFT - TITLEBAR CONTROL */}
+      <OpenClosePagesToggle
+        theme={theme}
+        themeColor={themeColor}
+        currentPage={lessonState.currentPage}
+        activePageData={activePageData}
+        handleOpenComponent={handleOpenComponent}
+        handleCloseComponent={handleCloseComponent}
+      />
 
-        {/**
-         *
-         * TITLEBAR LESSON CONTROL
-         *
-         * open/close & enable/disable buttons are only
-         * visible when teacher is NOT on the intro,
-         * and when you're NOT currently viewing a studento
-         *
-         */}
-        {lessonState.currentPage !== 0 &&
-        activePageData &&
-        activePageData.disabled !== true ? (
-          activePageData.open !== false ? (
-            <span
-              className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
-              Close Component
-            </span>
-          ) : (
-            <span
-              className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
-              Open Component
-            </span>
-          )
-        ) : null}
-      </div>
+      {/* CENTER - PRESENTATION MODE */}
+      <PresentationModeToggle
+        theme={theme}
+        themeColor={themeColor}
+        displayData={displayData}
+        lessonDispatch={lessonDispatch}
+        lessonData={lessonState.lessonData}
+        currentPage={lessonState.currentPage}
+      />
 
-      <div className="w-auto flex justify-between">
-        <div
-          className="w-8 mr-4 flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
-          onClick={handleFullscreen}>
-          <IconContext.Provider
-            value={{
-              size: '1.5rem',
-              style: {
-                zIndex: 50,
-              },
-            }}>
-            {fullscreen ? <FaCompress /> : <FaExpand />}
-          </IconContext.Provider>
-        </div>
-      </div>
+      {/* RIGHT - FULLSCREEN BUTTON */}
+      {breakpoint === 'xl' || breakpoint === '2xl' ? (
+        <FullscreenToggle
+          theme={theme}
+          themeColor={themeColor}
+          fullscreen={fullscreen}
+          handleFullscreen={handleFullscreen}
+        />
+      ) : (
+        <div className="w-1/3 flex justify-center h-8 align-middle leading-8 "></div>
+      )}
     </div>
   );
 };
 
-export default StudentWindowTitleBar;
+export default React.memo(StudentWindowTitleBar);

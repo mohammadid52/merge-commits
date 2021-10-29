@@ -61,13 +61,11 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
 
   const {state} = useContext(GlobalContext);
 
-  const {min, max, bgColor, fgColor, rounded, cardBgColor} = extractValuesFromClassString(
-    classString
-  );
+  const values = extractValuesFromClassString(classString);
 
   const isDark = state.lessonPage.theme === 'dark';
 
-  const slideStyle = genSlideStyle(value, max);
+  const slideStyle = genSlideStyle(value, values?.max);
 
   return (
     <div className="p-4" id={id} key={id}>
@@ -77,7 +75,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
           border: !isDark ? '1px solid #ececec' : 'none',
           boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)',
         }}
-        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${cardBgColor} h-auto ${rounded} shadow`}>
+        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${values?.cardBgColor} h-auto ${values?.rounded} shadow`}>
         <div className="flex items-center justify-between">
           <p
             className={`${
@@ -92,16 +90,19 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
             {value}
           </p>
         </div>
-        <div className={`range relative rounded-full bg-${bgColor} mt-4`}>
-          <span className={`range-value bg-${fgColor}`} style={slideStyle.range} />
-          <span className={`circle bg-${fgColor}`} style={slideStyle.point} />
+        <div className={`range relative rounded-full bg-${values?.bgColor} mt-4`}>
+          <span
+            className={`range-value bg-${values?.fgColor}`}
+            style={slideStyle.range}
+          />
+          <span className={`circle bg-${values?.fgColor}`} style={slideStyle.point} />
           <input
             className={`range-slide`}
             name="range"
             type="range"
             id={inputID}
-            min={min}
-            max={max}
+            min={values?.min || 1}
+            max={values?.max || 5}
             disabled={disabled}
             value={value}
             step="1"

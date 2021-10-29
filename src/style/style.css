@@ -117,6 +117,10 @@
   border-radius: 2px;
 }
 
+.lesson .editorClassName {
+  height: 16rem !important;
+}
+
 /* .editorClassName h1 h2 h3 h4 h5 h6 {
   font-size: initial;
 } */

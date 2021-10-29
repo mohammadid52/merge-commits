@@ -1,6 +1,6 @@
 import React, {useContext, useState, Fragment, useEffect, useRef} from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -759,6 +759,7 @@ const UserEdit = (props: UserInfoProps) => {
                     userInfo={editUser.status}
                     label={UserEditDict[userLanguage]['status']}
                     id="status"
+                    isRequired
                     items={Status}
                   />
                 </div>
@@ -772,6 +773,7 @@ const UserEdit = (props: UserInfoProps) => {
                     label={UserEditDict[userLanguage]['role']}
                     listClassName="h-28"
                     id="role"
+                    isRequired
                     items={Role}
                   />
                 </div>
@@ -785,6 +787,7 @@ const UserEdit = (props: UserInfoProps) => {
                       userInfo={editUser?.onDemand ? 'Yes' : 'No'}
                       label={UserEditDict[userLanguage]['ondemand']}
                       id="ondemand"
+                      isRequired
                       items={OnDemand}
                     />
                   </div>

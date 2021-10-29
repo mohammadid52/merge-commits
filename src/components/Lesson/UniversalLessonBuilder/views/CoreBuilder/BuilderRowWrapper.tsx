@@ -1,19 +1,11 @@
-import React, {useContext, useEffect} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {getAsset} from '../../../../../assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {getAsset} from 'assets';
+import React, {useContext} from 'react';
 
 export const BuilderRowWrapper = (props: RowWrapperProps) => {
-  const {
-    mode,
-    hasContent,
-    dataIdAttribute,
-    contentID,
-    classString,
-    children,
-    pagePart,
-  } = props;
+  const {mode, dataIdAttribute, contentID, children} = props;
 
   const viewModeClass = ``;
 
@@ -41,12 +33,16 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const customBorder =
     selID?.pageContentID === contentID && !selID?.partContentID
       ? `border-0 ${themeBorder}`
-      : 'border-0 border-gray-400';
+      : 'border-0 border-gray-400 border-dashed';
 
   return (
-    <div id={contentID} data-id={dataIdAttribute} className={`relative my-4`}>
+    <div
+      id={contentID}
+      data-id={dataIdAttribute}
+      className={`relative transition-all`}
+      style={{margin: `${32}px 0px`}}>
       <div
-        className={`border-dashed builderWrapper transition-all duration-200 ${
+        className={` builderWrapper transition-all duration-200 ${
           mode === 'building' && !previewMode ? customBorder : viewModeClass
         } builderWrapper rounded-lg divide-y divide-gray-200 ${
           !previewMode ? 'shadow' : ''

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect, Fragment} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
 import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
@@ -314,7 +314,7 @@ const PreviewForm = (props: PreviewFormProps) => {
             className={`${
               isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
             } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between`}>
-            <p className="w-9.3/10" key={checkpItem.id}>
+            <p className="w-9.5/10" key={checkpItem.id}>
               <span>
                 {index + 1}. {checkpItem?.question?.question}{' '}
               </span>

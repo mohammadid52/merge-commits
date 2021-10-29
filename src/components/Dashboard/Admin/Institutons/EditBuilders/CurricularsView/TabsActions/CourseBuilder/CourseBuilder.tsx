@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {BsArrowLeft} from 'react-icons/bs';
 
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -37,7 +37,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const step = params.get('step');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, CommonlyUsedDict, CourseBuilderDict} = useDictionary(
+  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(
     clientKey
   );
   const [activeStep, setActiveStep] = useState('overview');
@@ -64,7 +64,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   }, [step]);
 
   const handleTabSwitch = (step: string) => {
-    const redirectionUrl = `${match.url}?step=${step}&id=${courseId}`;
+    const redirectionUrl = `${match.url}?step=${step}`;
     history.push(redirectionUrl);
   };
 
@@ -104,7 +104,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: CourseBuilderDict[userLanguage]['messages']['FETCH_COURSE_ERR'],
+          message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
           isError: true,
         });
         setFetchingDetails(false);
@@ -167,6 +167,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return (
           <UnitManager
             courseId={courseId}
+            courseData={courseData}
             institutionId={instId}
             savedSyllabusList={savedSyllabusList}
             setSavedSyllabusList={setSavedSyllabusList}

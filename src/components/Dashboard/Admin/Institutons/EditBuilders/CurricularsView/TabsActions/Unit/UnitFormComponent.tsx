@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useParams} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import Buttons from '../../../../../../../Atoms/Buttons';
 import FormInput from '../../../../../../../Atoms/Form/FormInput';
@@ -10,7 +10,6 @@ import MultipleSelector from '../../../../../../../Atoms/Form/MultipleSelector';
 import {languageList} from '../../../../../../../../utilities/staticData';
 import * as mutations from '../../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../../assets';

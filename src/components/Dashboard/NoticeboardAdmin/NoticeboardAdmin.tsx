@@ -1,4 +1,4 @@
-import {API, graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';

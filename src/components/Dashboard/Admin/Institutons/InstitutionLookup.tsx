@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import HeroBanner from '@components/Header/HeroBanner';
 import React, {Fragment, useContext, useEffect, useState} from 'react';

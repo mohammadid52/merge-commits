@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
@@ -45,10 +45,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
-  const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -66,7 +64,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     return new URLSearchParams(location.search);
   };
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary(clientKey);
+  const {RoomBuilderdict, RoomEDITdict} = useDictionary('curate');
 
   const params = useQuery();
 
@@ -351,6 +349,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         isError: true,
       });
       return false;
+    } else if (!roomData.curricular.id) {
+      setMessages({
+        show: true,
+        message: RoomEDITdict[userLanguage]['messages']['selectCurriculum'],
+        isError: true,
+      });
+      return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
@@ -359,6 +364,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       });
       return false;
     }
+
     // else if (roomData.classRoom.id === '') {
     //   setMessages({
     //     show: true,
@@ -491,9 +497,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     }
   };
   const saveRoomDetails = async () => {
-    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
+      setLoading(true);
       try {
         if (roomData.id) {
           const input = {
@@ -803,13 +809,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                </label>
                 <Selector
                   selectedItem={curricular.value}
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                  labelTextClass={'text-xs'}
                   list={curricularList}
+                  isRequired
                   onChange={selectCurriculum}
                 />
               </div>

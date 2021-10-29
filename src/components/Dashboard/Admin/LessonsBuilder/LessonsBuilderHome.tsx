@@ -1,12 +1,10 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import * as queries from '../../../../graphql/queries';
 import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
-import NewLessonPlanSO from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
@@ -18,15 +16,9 @@ interface ILessonBuilderHomeProps {
 
 const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
   const {dispatch} = useContext(GlobalContext);
-  const {
-    editMode,
-    setEditMode,
-    selectedPageID,
-    getCurrentPage,
-    newLessonPlanShow,
-    setNewLessonPlanShow,
-  } = useULBContext();
+
   const match = useRouteMatch();
+
   const [designersList, setDesignersList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
 
@@ -131,20 +123,11 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
           />
           <Route
             path={`${match.url}/:lessonId/page-builder`}
-            render={() => <UniversalLessonBuilder />}
+            render={() => <UniversalLessonBuilder instId={instId} />}
           />
         </Switch>
         {/*</UniversalLessonBuilderProvider>*/}
       </div>
-      <NewLessonPlanSO
-        editMode={editMode}
-        setEditMode={setEditMode}
-        pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-        open={newLessonPlanShow}
-        setOpen={setNewLessonPlanShow}
-        activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
-        instId={instId}
-      />
     </>
   );
 };

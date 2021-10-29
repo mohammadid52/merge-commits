@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '@graphql/mutations';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces';
@@ -103,9 +103,12 @@ const useLessonControlNotifications = () => {
   };
 
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
+  const isPresenting = lessonState.displayData[0].isTeacher === true;
   const studentIsViewed = lessonState.studentViewing !== '';
   const studentIsShared =
-    lessonState.displayData && lessonState.displayData[0].studentAuthID !== '';
+    lessonState.displayData &&
+    lessonState.displayData[0].studentAuthID !== '' &&
+    lessonState.displayData[0].isTeacher === false;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -141,16 +144,33 @@ const useLessonControlNotifications = () => {
         //
       },
     },
+    {
+      check: isPresenting,
+      notification: {
+        label: 'You are now presenting a page',
+        message: null,
+        type: 'info',
+        cta: 'Stop Presenting',
+      },
+      action: () => {
+        resetViewAndShare();
+      },
+      cancel: () => {},
+    },
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
-      if (val.check) {
-        return [...acc, val];
-      } else {
-        return acc;
-      }
-    }, []);
+    if (lessonState?.lessonData?.type === 'lesson') {
+      return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+        if (val.check) {
+          return [...acc, val];
+        } else {
+          return acc;
+        }
+      }, []);
+    } else {
+      return [];
+    }
   };
 
   return {lessonControlNotifications: collectNotifications(watchList)};
@@ -232,13 +252,17 @@ const useLessonNotifications = () => {
     }
   };
 
-  // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //a
+  const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const iAmViewed = lessonState.studentViewing === user.authId;
   const iAmShared = lessonState.displayData[0].studentAuthID === user.authId;
-  const anyPageIsShared = lessonState.displayData[0].lessonPageID !== '';
+  const anyPageIsShared =
+    lessonState.displayData[0].lessonPageID !== '' &&
+    lessonState.displayData[0].isTeacher === false;
   const thisPageIsShared =
     lessonPlan &&
-    lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage].id;
+    !teacherIsPresenting &&
+    lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage]?.id;
   const canNavigateBack =
     !anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
 
@@ -317,7 +341,7 @@ const useLessonNotifications = () => {
       },
     },
     {
-      check: thisPageIsShared && !iAmShared,
+      check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
       notification: {
         label: 'You are viewing this page',
         message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
@@ -331,16 +355,35 @@ const useLessonNotifications = () => {
         //
       },
     },
+    {
+      check: teacherIsPresenting,
+      notification: {
+        label: 'The teacher is controlling the lesson',
+        message: null,
+        type: 'alert',
+        cta: '',
+      },
+      action: () => {
+        //
+      },
+      cancel: () => {
+        //
+      },
+    },
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
-      if (val.check) {
-        return [...acc, val];
-      } else {
-        return acc;
-      }
-    }, []);
+    if (lessonState?.lessonData?.type === 'lesson') {
+      return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+        if (val.check) {
+          return [...acc, val];
+        } else {
+          return acc;
+        }
+      }, []);
+    } else {
+      return [];
+    }
   };
 
   return {lessonNotifications: collectNotifications(watchList)};

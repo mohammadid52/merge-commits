@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import * as mutations from '../../../../graphql/mutations';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {ITabViewProps} from '../TabView';
 
 interface IToggleProps extends ITabViewProps {

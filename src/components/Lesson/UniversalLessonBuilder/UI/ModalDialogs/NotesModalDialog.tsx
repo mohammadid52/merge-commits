@@ -6,7 +6,7 @@ import useDictionary from '@customHooks/dictionary';
 import {IOnChange} from '@interfaces/index';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import {Tabs3, useTabs} from '@uiComponents/Tabs/Tabs';
 import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
@@ -150,7 +150,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
 
   return (
     <div>
-      <Tabs curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
       <AnimatedContainer show={onSetupTab}>
         {onSetupTab && (
           <div>

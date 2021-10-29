@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaTrash} from 'react-icons/fa';
 import {useHistory} from 'react-router';

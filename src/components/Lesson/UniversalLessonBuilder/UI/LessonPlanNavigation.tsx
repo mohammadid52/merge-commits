@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {BiBook, BiSun} from 'react-icons/bi';
 import {BsMoon} from 'react-icons/bs';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {useQuery} from '../../../../customHooks/urlParam';
@@ -32,10 +32,13 @@ const LessonPlanNavigation = ({
   const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
     universalLessonDetails || {};
   const {updateMovableList, fetchingLessonDetails} = useULBContext();
-  const {dispatch} = useContext(GlobalContext);
+  const {dispatch, lessonDispatch} = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
-  const lessonId = params.get('lessonId');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
 
   const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -46,8 +49,10 @@ const LessonPlanNavigation = ({
     updateMovableList(items, 'page');
   };
 
-  const updatePage = (id: string) => {
+  const updatePage = (id: string, idx: number) => {
     setSelectedPageID(id);
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
+
     history.push(
       `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
@@ -147,7 +152,7 @@ const LessonPlanNavigation = ({
                         <li
                           key={index}
                           className="flex w-auto"
-                          onClick={() => updatePage(page.id)}
+                          onClick={() => updatePage(page.id, index)}
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}>

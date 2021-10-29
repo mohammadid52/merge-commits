@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useLocation, useHistory, useRouteMatch, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {BiNotepad} from 'react-icons/bi';

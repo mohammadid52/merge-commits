@@ -1,52 +1,42 @@
-import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import Auth from '@aws-amplify/auth';
-import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {useCookies} from 'react-cookie';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import moment, {Moment} from 'moment';
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/solid';
-
-import {GlobalContext} from '../../contexts/GlobalContext';
-
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
-import * as customQueries from '../../customGraphql/customQueries';
-import usePrevious from '../../customHooks/previousProps';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import {frequencyMapping} from '../../utilities/staticData';
-
-import ErrorBoundary from '../Error/ErrorBoundary';
-import EmojiFeedback from '../General/EmojiFeedback';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import Noticebar from '../Noticebar/Noticebar';
-import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
-import QuestionBank from './Admin/Questions/QuestionBank';
-import Csv from './Csv/Csv';
-import Home from './Home/Home';
-import HomeForTeachers from './Home/HomeForTeachers';
-import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import SideMenu from './Menu/SideMenu';
-import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
-import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import {getAsset} from '../../assets';
-import {AiOutlineUser} from 'react-icons/ai';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
 import SignOutButton from '@components/Auth/SignOut';
-import {getUserRoleString, stringToHslColor} from '@utilities/strings';
-import {getImageFromS3Static} from '@utilities/services';
-import {FiUser} from 'react-icons/fi';
+import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import useNotifications from '@customHooks/notifications';
-import HeaderMegaMenu from './Menu/HeaderMegaMenu';
-
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
+import {getImageFromS3Static} from '@utilities/services';
+import {getUserRoleString, stringToHslColor} from '@utilities/strings';
+import {getAsset} from 'assets';
+import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
+import Csv from 'components/Dashboard/Csv/Csv';
+import Home from 'components/Dashboard/Home/Home';
+import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
+import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
+import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
+import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import Noticebar from 'components/Noticebar/Noticebar';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
+import moment, {Moment} from 'moment';
+import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {FiUser} from 'react-icons/fi';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {frequencyMapping} from 'utilities/staticData';
+import EmojiFeedback from 'components/General/EmojiFeedback';
+import DropDownMenu from './DropDownMenu/DropDownMenu';
+import {userInfo} from 'os';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Community = lazy(() => import('components/Community/Community'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
-const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
 type userObject = {
   [key: string]: any;
@@ -58,9 +48,12 @@ export interface ICompletedLessons {
 }
 
 export interface DashboardProps {
+  setClassroomCurriculum?: any;
+  classroomCurriculum?: any;
   classRoomActiveSyllabus?: string;
   loading?: boolean;
   isTeacher?: boolean;
+  isOnDemandStudent?: boolean;
   updateAuthState?: Function;
   currentPageData?: any[];
   setCurrentPageData?: React.Dispatch<any>;
@@ -126,7 +119,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: '',
   });
-  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+  const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
+  const isOnDemandStudent = stateUser?.onDemand;
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -156,8 +150,8 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   async function getUser() {
-    const userEmail = state.user?.email ? state.user?.email : cookies.auth?.email;
-    const userAuthId = state.user?.authId ? state.user?.authId : cookies.auth?.authId;
+    const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
+    const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
     try {
       const queryObj = {
         name: 'queries.getPerson',
@@ -180,20 +174,20 @@ const Dashboard = (props: DashboardProps) => {
   }
 
   useEffect(() => {
-    if (!state.user.firstName) {
+    if (!stateUser?.firstName) {
       getUser();
     } else {
       setUserData({
-        role: state.user?.role,
-        image: state.user?.image,
+        role: stateUser?.role,
+        image: stateUser?.image,
       });
     }
-  }, [state.user.role]);
+  }, [stateUser?.role]);
 
   // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
 
   useEffect(() => {
-    const userRole = state.user.role;
+    const userRole = stateUser?.role;
     if (userRole === 'SUP' || userRole === 'ADM') {
       setRoomsLoading(true);
     }
@@ -217,6 +211,7 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
   const [curriculumIds, setCurriculumIds] = useState<string>('');
+  const [curriculumObj, setCurriculumObj] = useState<any>({});
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
@@ -257,9 +252,22 @@ const Dashboard = (props: DashboardProps) => {
           filter: {teacherAuthID: {eq: teacherAuthID}},
         })
       );
-
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      let arrayOfResponseObjects = [
+        ...response?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
+      ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
       });
@@ -273,15 +281,15 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
   useEffect(() => {
-    const authId = state.user.authId;
-    const email = state.user.email;
-    if (state.user.role === 'ST') {
+    const authId = stateUser?.authId;
+    const email = stateUser?.email;
+    if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
     }
     if (isTeacher) {
       getDashboardDataForTeachers(authId);
     }
-  }, [state.user.role, isTeacher]);
+  }, [stateUser?.role, isTeacher]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -302,7 +310,7 @@ const Dashboard = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
-    if (homeData && homeData.length > 0 && getClassList.length > 0) {
+    if (homeData?.length && getClassList.length) {
       setClassList(getClassList);
     }
   }, [homeData]);
@@ -319,7 +327,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     const studentRoomsList = getRoomsFromClassList();
-    console.log('studentRoomsList - ', studentRoomsList);
+    // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
@@ -347,11 +355,25 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await API.graphql(
+      const classIdFromRoomsFetch: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}},
+        })
+      );
       //@ts-ignore
-      const arrayOfResponseObjects = classIdFromRoomsFetch?.data?.listRooms?.items;
+      const arrayOfResponseObjects = [
+        ...classIdFromRoomsFetch?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher,
+          })
+        ),
+      ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
 
@@ -368,17 +390,18 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   useEffect(() => {
-    if (state.user.role === 'FLW' || state.user.role === 'TR') {
-      const teacherAuthID = state.user.authId;
+    if (stateUser?.role === 'FLW' || stateUser?.role === 'TR') {
+      const teacherAuthID = stateUser?.authId;
       listRoomTeacher(teacherAuthID);
     }
-  }, [state.user.role]);
+  }, [stateUser?.role]);
 
   /**********************************
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
   const listRoomCurriculums = async () => {
     console.log('listRoomCurriculums - ', '');
+    // removeLocalStorageData('curriculum_id');
     if (state.roomData.rooms.length > 0) {
       try {
         const queryObj = {
@@ -396,12 +419,14 @@ const Dashboard = (props: DashboardProps) => {
             },
           })
         );
+        console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
         const response = await roomCurriculumsFetch;
         // @ts-ignore
         const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
+          setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
         console.error('RoomCurriculums fetch ERR: ', e);
@@ -579,7 +604,6 @@ const Dashboard = (props: DashboardProps) => {
             .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
 
-
     return mapSyllabusToSequence;
   };
 
@@ -593,37 +617,22 @@ const Dashboard = (props: DashboardProps) => {
       );
       // @ts-ignore
       let response = await getCurriculum.data.getCurriculum;
-      
+
       let syllabi = response.universalSyllabus.items;
       let sequence = response.universalSyllabusSeq;
 
       let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
 
-      console.log('listSyllabus - ', mappedResponseObjects);
+      // console.log('listSyllabus - ', mappedResponseObjects);
 
       //TODO: combine these dispatches
       dispatch({
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           syllabus: mappedResponseObjects,
-          curriculum: {name: response.name},
+          curriculum: {id: response.id, name: response.name},
         },
       });
-
-      // ~~~~~~~~~~~~~~~ SCHEDULE ~~~~~~~~~~~~~~ //
-      // let scheduleDetails: any = await API.graphql(
-      //   graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
-      // );
-      // scheduleDetails = scheduleDetails?.data?.getRoom;
-
-      // if (
-      //   scheduleDetails &&
-      //   scheduleDetails.startDate &&
-      //   scheduleDetails.endDate &&
-      //   scheduleDetails.frequency
-      // ) {
-      //   const modifiedData = calculateSchedule(mappedResponseObjects, scheduleDetails);
-      // }
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
@@ -748,15 +757,9 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  const handleLink = (e: React.MouseEvent) => {
+  const handleLink = () => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
-  };
-
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase();
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return firstInitial + lastInitial;
   };
 
   const HomeSwitch = () =>
@@ -778,146 +781,37 @@ const Dashboard = (props: DashboardProps) => {
       />
     );
 
-  const DropDownMenu = () => {
-    const {theme} = useContext(GlobalContext);
-    return (
-      <Menu as="div" className="relative inline-block text-left w-auto">
-        {({open}) => (
-          <>
-            <div>
-              <Menu.Button
-                className={`${
-                  open ? 'bg-indigo-300 text-indigo-700' : ''
-                } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
-                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
-                <div className="w-auto inline-flex items-center">
-                  <div className="w-12 h-12">
-                    {state.user.image ? (
-                      <img
-                        className="inline-block rounded-full border-2 border-gray-400"
-                        style={{width: 48, height: 48}}
-                        src={getImageFromS3Static(state.user.image)}
-                        alt=""
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          /* stylelint-disable */
-                          background: `${
-                            state.user.firstName
-                              ? stringToHslColor(
-                                  state.user.firstName + ' ' + state.user.lastName
-                                )
-                              : '#272730'
-                          }`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3',
-                        }}
-                        className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
-                        {`${initials(state.user.firstName, state.user.lastName)}`}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* <span>{[state.user.firstName, state.user.lastName].join(' ')}</span> */}
-                  <ChevronDownIcon
-                    className="w-8 h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
-                    aria-hidden="true"
-                  />
-                </div>
-              </Menu.Button>
-            </div>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-1000">
-                <div className="px-1 py-1 shadow-lg">
-                  <Menu.Item key={'role'}>
-                    <div className="p-4 border-b-0 border-gray-400">
-                      <span>
-                        {[state.user.firstName, state.user.lastName].join(' ')} (
-                        {getUserRoleString(state.user.role)})
-                      </span>
-                    </div>
-                  </Menu.Item>
-                  <Menu.Item key={'profile'}>
-                    <div
-                      onClick={() => history.push('/dashboard/profile')}
-                      className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
-                      <div className="flex-shrink-0 group block">
-                        <div className="flex items-center">
-                          <IconContext.Provider
-                            value={{
-                              size: '24px',
-                              className: 'w-auto mr-1',
-                            }}>
-                            <FiUser className="cursor-pointer" />
-                          </IconContext.Provider>
-                          <p className="text-sm ml-2 font-medium">Edit Profile</p>
-                        </div>
-                      </div>
-                    </div>
-                  </Menu.Item>
-                  <Menu.Item key={'logout'}>
-                    <SignOutButton updateAuthState={updateAuthState} />
-                  </Menu.Item>
-                </div>
-              </Menu.Items>
-            </Transition>
-          </>
-        )}
-      </Menu>
-    );
-  };
-
   return (
     <>
       <div className="w-full bg-white">
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
-              onClick={handleLink}
+              onClick={stateUser?.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"
               src={getAsset(clientKey, 'loading_logo')}
               alt="Workflow"
             />
           </div>
           <HeaderMegaMenu />
-          <DropDownMenu />
+          <DropDownMenu
+            firstName={stateUser?.firstName}
+            lastName={stateUser?.lastName}
+            role={stateUser?.role}
+            image={stateUser?.image}
+            theme={theme}
+            updateAuthState={updateAuthState}
+          />
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background">
-        {state.user.role === 'ST' && <EmojiFeedback />}
+        {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
-        {/* <SideMenu
-          // setActiveRoomSyllabus={setActiveRoomSyllabus}
-          setLessonLoading={setLessonLoading}
-          setSyllabusLoading={setSyllabusLoading}
-          setActiveRoomName={setActiveRoomName}
-          updateAuthState={updateAuthState}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          role={userData.role}
-          handleRoomSelection={handleRoomSelection}
-        /> */}
 
         <div className="h-full overflow-y-auto">
           {/*<FloatingSideMenu />*/}
           <Noticebar notifications={notifications} />
-          {/* <div className="absolute z-100 w-6 right-1 top-0.5">
-            <span
-              className="w-auto cursor-pointer"
-              onClick={() => setOpenWalkThroughModal(true)}>
-              <BsFillInfoCircleFill
-                className={`h-5 w-5 ${theme.textColor[themeColor]}`}
-              />
-            </span>
-          </div> */}
+
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -935,12 +829,12 @@ const Dashboard = (props: DashboardProps) => {
                     } else if (userData.role === 'ST') {
                       return <Redirect to={`${match.url}/home`} />;
                     } else {
-                      return !state.user.associateInstitute?.length ||
-                        state.user.associateInstitute?.length > 1 ? (
+                      return !stateUser?.associateInstitute?.length ||
+                        stateUser?.associateInstitute?.length > 1 ? (
                         <Redirect to={`${match.url}/manage-institutions`} />
                       ) : (
                         <Redirect
-                          to={`${match.url}/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/staff`}
+                          to={`${match.url}/manage-institutions/institution/${stateUser?.associateInstitute[0].institution.id}/staff`}
                         />
                       );
                     }
@@ -963,6 +857,16 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
+              <Route
+                exact
+                path={`${match.url}/community`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
+                  </ErrorBoundary>
+                )}
+              />
+
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||
                 userData.role === 'TR' ||
@@ -977,8 +881,10 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
+                      isOnDemandStudent={isOnDemandStudent}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                       activeRoomInfo={activeRoomInfo}
@@ -1012,11 +918,6 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
               />
 
-              {/* <Route
-                path={`${match.url}/manage-users`}
-                render={() => <UserManagement />}
-              /> */}
-
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
 
               <Route
@@ -1029,14 +930,13 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      setClassroomCurriculum={setCurriculumObj}
+                      classroomCurriculum={curriculumObj}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                       activeRoomInfo={activeRoomInfo}
                       setActiveRoomInfo={setActiveRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
                       visibleLessonGroup={visibleLessonGroup}
                       setVisibleLessonGroup={setVisibleLessonGroup}
                       lessonLoading={lessonLoading}
@@ -1057,38 +957,12 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/question-bank`}
                 render={() => <QuestionBank />}
               />
-
-              {/* <UniversalLessonBuilderProvider>
-                <Route
-                  path={`${match.url}/lesson-builder`}
-                  render={() => <LessonsBuilderHome />}
-                />
-
-                <Route
-                  path={`${match.url}/universal-lesson-builder`}
-                  render={() => <UniversalLessonBuilder />}
-                />
-              </UniversalLessonBuilderProvider> */}
             </Switch>
           </Suspense>
-          {/* <InformationalWalkThrough
-            open={openWalkThroughModal}
-            onCancel={() => setOpenWalkThroughModal(false)}
-          /> */}
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900">
-        {/* <DropDownMenu /> */}
-
-        {/* <NavLink to="/dashboard"> */}
-        {/* <img
-          className="h-16 px-4 py-2"
-          src={getAsset(clientKey, 'main_logo')}
-          alt="Logo"
-        /> */}
-        {/* </NavLink> */}
-      </div>
+      <div className="w-full flex justify-center items-center bg-gray-900"></div>
     </>
   );
 };

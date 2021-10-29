@@ -173,7 +173,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           <span
             className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
-            }`}>
+            } w-auto`}>
             {/* UPDOWN ARROW */}
             <svg
               className="h-5 w-5 text-gray-400"

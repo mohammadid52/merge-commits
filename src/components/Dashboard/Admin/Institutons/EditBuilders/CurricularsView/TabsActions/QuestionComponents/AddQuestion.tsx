@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment, useContext} from 'react';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 import CheckBox from '../../../../../../../Atoms/Form/CheckBox';

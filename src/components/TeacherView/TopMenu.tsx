@@ -1,12 +1,15 @@
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import useDictionary from '../../customHooks/dictionary';
 import {getLocalStorageData} from '../../utilities/localStorage';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import HamburgerMenu from './TopMenu/HamburgerMenu';
 import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
 interface TopMenuControlProps {
+  themeColor?: string;
   isSameStudentShared: boolean;
   handleOpen?: () => void;
   handleComplete?: () => void;
@@ -15,115 +18,71 @@ interface TopMenuControlProps {
   handleLeavePopup: () => void;
   handleHomePopup: () => void;
   handlePageChange: any;
-  setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
+  fullscreen?: boolean;
+  handleFullscreen?: () => void;
 }
 
 const TopMenuControl: React.FC<TopMenuControlProps> = ({
+  themeColor,
   handleLeavePopup,
   handleHomePopup,
   handlePageChange,
-  setQuickRegister,
+  fullscreen,
+  handleFullscreen,
 }: TopMenuControlProps) => {
   const gContext = useContext(GlobalContext);
-  const lessonState = gContext.lessonState;
-  const controlState = gContext.controlState;
   const clientKey = gContext.clientKey;
+  const theme = gContext.theme;
   const userLanguage = gContext.userLanguage;
-
   const {lessonPlannerDict} = useDictionary(clientKey);
 
-  const getRoomData = getLocalStorageData('room_info');
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
 
-  const studentsOnline = () => {
-    if (controlState.roster) {
-      return controlState.roster.length;
-    } else {
-      return 0;
-    }
-  };
-
-  const basicDetailsElements = () => {
-    return (
-      <div className="w-full flex flex-col my-auto">
-        <p className="text-xs">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
-          {studentsOnline()}
-        </p>
-        <p className="text-xs">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
-          {`${getRoomData.name ? getRoomData.name : ''}`}
-        </p>
-        <p className="text-xs">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
-          {lessonState.lessonData?.duration}{' '}
-          {`${lessonState.lessonData?.duration > 1 ? 'weeks' : 'week'}`}
-        </p>
-      </div>
-    );
-  };
+  const {breakpoint} = useTailwindBreakpoint();
 
   return (
-    <>
+    <div
+      className={`${
+        breakpoint === 'xl' || breakpoint === '2xl' ? 'px-4' : 'px-2'
+      } h-auto flex flex-col`}>
       {/* LABELS */}
-      <div className="hidden lg:block">
-        <div
-          className={`relative h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b-0 border-gray-400 flex flex-row items-center`}>
+      <div className="hidden lg:block  h-8 py-1 mb-2">
+        <div className={`relative font-medium bg-transparent flex flex-row items-center`}>
           {/* LEFT */}
-          <LessonInfoTitleBar />
 
           {/* RIGHT */}
-          <div className="relative w-full lg:w-7/10 h-full flex flex-row justify-between items-center pl-2">
-            <div className="h-8 align-middle font-bold text-xs leading-8 ">
+          <div className="relative w-full h-full flex flex-row justify-between items-center ">
+            <div className="h-8 align-middle text-sm font-semibold text-gray-600 leading-8 ">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
             </div>
 
             <HamburgerMenu
+              theme={theme}
+              themeColor={themeColor}
               handleLeavePopup={handleLeavePopup}
-              setQuickRegister={setQuickRegister}
               handleHomePopup={handleHomePopup}
             />
           </div>
         </div>
       </div>
-      {/* for mobile */}
-      <div className="block lg:hidden">
-        <div className="relative w-full h-full flex flex-row justify-center items-center bg-darker-gray bg-opacity-40">
-          <LessonInfoTitleBar />
-          <HamburgerMenu
-            handleLeavePopup={handleLeavePopup}
-            setQuickRegister={setQuickRegister}
-            handleHomePopup={handleHomePopup}
-          />
-        </div>
-      </div>
       {/* BUTTONS & CONTENT */}
-      <div className="hidden lg:block">
-        <div
-          className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
-          {/* LEFT */}
-          <div className="h-full w-3/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
-            {basicDetailsElements()}
-          </div>
+      <div className="lg:block h-12">
+        {/* CONTROL START */}
 
-          {/* RIGHT */}
+        <LessonControlBar handlePageChange={handlePageChange} />
 
-          {/* CONTROL START */}
-          <div
-            className="relative 
-            w-full lg:w-7/10 h-20 flex flex-col items-center z-100">
-            <LessonControlBar handlePageChange={handlePageChange} />
-          </div>
-          {/* CONTROL END */}
-        </div>
+        {/* CONTROL END */}
       </div>
-      {/* For mobile */}
-      {/* <div
-        className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
-        <div className="h-full w-full border-r-0 border-white bg-light-gray bg-opacity-10 pl-2  flex-row justify-between block lg:hidden">
-          {basicDetailsElements()}
-        </div>
-      </div> */}
-    </>
+
+      <StudentWindowTitleBar
+        theme={theme}
+        themeColor={themeColor}
+        handleFullscreen={handleFullscreen}
+        fullscreen={fullscreen}
+      />
+    </div>
   );
 };
 

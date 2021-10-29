@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../customGraphql/customQueries';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getLocalStorageData} from '../../utilities/localStorage';

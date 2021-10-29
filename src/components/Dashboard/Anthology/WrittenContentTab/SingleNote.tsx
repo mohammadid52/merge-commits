@@ -1,7 +1,7 @@
 import {sortBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import * as queries from '../../../../graphql/queries';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../Atoms/Buttons';

@@ -21,6 +21,7 @@ interface RichTextEditorProps {
    */
   withStyles?: boolean;
   maxHeight?: string;
+  wrapperClass?: string;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
@@ -36,6 +37,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     theme,
     withStyles = false,
     maxHeight,
+    wrapperClass = '',
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -117,7 +119,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         } text-black`
       : 'toolbarClassName'
   }`;
-  const wrapperClassName = `${
+  const wrapperClassName = `${wrapperClass} ${
     customStyle
       ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} wrapperClassName ${
           previewMode ? 'previewMode' : ''

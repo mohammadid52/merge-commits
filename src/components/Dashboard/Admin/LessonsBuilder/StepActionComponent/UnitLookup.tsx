@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory} from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 

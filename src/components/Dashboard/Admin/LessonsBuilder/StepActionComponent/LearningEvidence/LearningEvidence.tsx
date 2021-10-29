@@ -104,7 +104,6 @@ const LearningEvidence = ({
       learningObjectiveSeqResult?.data?.getCSequences?.sequence || [];
 
     const learningObjectiveData = learningObjectives?.map((objective: any) => {
-      objective.index = learningObjectiveSeq.indexOf(objective.id);
       const associatedTopics = topicsList
         .filter((topic: any) => topic.learningObjectiveID === objective.id)
         .map((topic: any) => {
@@ -129,7 +128,7 @@ const LearningEvidence = ({
     return {
       learningObjectiveData,
       learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
-        a.index > b.index ? 1 : -1
+        a.measurementName.toLowerCase() > b.measurementName.toLowerCase() ? 1 : -1
       ),
     };
   };
@@ -149,8 +148,9 @@ const LearningEvidence = ({
       curriculums.map((curriculum: any) => {
         const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
           (syllabus: any) =>
-            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
-              .length
+            syllabus.unit.lessons?.items.filter(
+              (lesson: any) => lesson.lessonID === lessonId
+            ).length
         );
         const isCourseAdded = Boolean(assignedSyllabi.length);
         if (isCourseAdded) {
@@ -173,6 +173,8 @@ const LearningEvidence = ({
       setSelectedCurriculumList(selectedCurriculums);
       setLoading(false);
     } catch (error) {
+      console.log(error, 'errorerrorerrorerror');
+
       setLoading(false);
     }
   };

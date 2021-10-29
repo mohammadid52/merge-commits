@@ -1,6 +1,6 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 // import { reorder } from '../../../../../../../utilities/strings';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';

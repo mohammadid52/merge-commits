@@ -64,7 +64,7 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
   return (
     <div
       id={id}
-      className={`${animationClass} h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg`}
+      className={`${animationClass} h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-center rounded-lg`}
       style={{
         backgroundImage: ` url(${jumbotronInfo.src})`,
       }}>

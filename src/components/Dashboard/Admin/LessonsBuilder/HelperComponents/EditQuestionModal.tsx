@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {find, isEmpty} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';

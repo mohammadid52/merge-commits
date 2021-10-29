@@ -37,7 +37,11 @@ export type LessonActions =
         createdAt?: string;
         currentPage?: number | null;
         disabledPages?: string[] | any;
-        displayData?: {studentAuthID?: string; lessonPageID?: string}[];
+        displayData?: {
+          isTeacher?: boolean;
+          studentAuthID?: string;
+          lessonPageID?: string;
+        }[];
         id: string;
         studentViewing?: string | '';
         updatedAt?: string;
@@ -113,6 +117,10 @@ export type LessonActions =
     }
   | {
       type: 'TOGGLE_OPEN_PAGE';
+      payload: number;
+    }
+  | {
+      type: 'TOGGLE_CLOSE_PAGE';
       payload: number;
     }
   | {
@@ -354,16 +362,27 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
       };
     case 'TOGGLE_OPEN_PAGE':
-      const mappedPages = state.lessonData.lessonPlan.map(
+      const mappedOpenPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
-          if (idx !== action.payload) {
-            return page;
+          if (idx <= action.payload) {
+            return {...page, open: true};
           } else {
-            return {...page, open: page.open === false ? true : false};
+            return page;
           }
         }
       );
-      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedOpenPages}};
+    case 'TOGGLE_CLOSE_PAGE':
+      const mappedClosePages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (idx >= action.payload) {
+            return {...page, open: false};
+          } else {
+            return page;
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosePages}};
     case 'INCREMENT_SAVE_COUNT':
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':

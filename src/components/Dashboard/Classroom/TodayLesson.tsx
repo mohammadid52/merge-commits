@@ -21,6 +21,7 @@ const Today: React.FC<LessonProps> = ({
   isTeacher,
   lessonLoading,
   lessons,
+  syllabus,
 }: LessonProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -97,6 +98,7 @@ const Today: React.FC<LessonProps> = ({
                     keyProps={`todayLesson_${key}`}
                     activeRoomInfo={activeRoomInfo}
                     lessonProps={lesson}
+                    syllabusProps={syllabus}
                     accessible={accessible}
                     lessonType={lesson.type}
                   />

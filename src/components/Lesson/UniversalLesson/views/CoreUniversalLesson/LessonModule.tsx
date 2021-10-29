@@ -6,7 +6,7 @@ import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import Table from '../../../../Molecules/Table';
 import ThemeModal from '../../../../Molecules/ThemeModal';
 import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';

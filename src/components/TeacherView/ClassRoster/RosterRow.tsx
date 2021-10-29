@@ -1,4 +1,5 @@
-import {PersonalizeEvents} from 'aws-sdk';
+// import {PersonalizeEvents} from 'aws-sdk';
+import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
@@ -36,6 +37,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
@@ -43,6 +47,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ########################### SHARING CHECKS ########################## //
   // ##################################################################### //
 
+  const isLessonSurvey = lessonState.lessonData?.type === 'survey';
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
 
   const studentIsInLesson = () => {
@@ -69,7 +74,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
     const button = t.hasAttribute('aria-label');
 
     if (!button) {
-      handleViewStudentData(id);
+      if (lessonState.lessonData?.type !== 'survey') {
+        handleViewStudentData(id);
+      }
       if (!studentIsViewed()) {
         handlePageChange(parseInt(currentLocation));
       }
@@ -113,93 +120,126 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const activeHoverClass = 'hover:font-semibold cursor-pointer';
-  const inactiveTextClass = 'text-dark-gray text-opacity-20';
+  const inactiveTextClass = 'text-gray-600 text-opacity-20';
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
   return (
-    <div
-      id={`${id}`}
-      draggable={false}
-      className={`w-full flex h-10 py-2 pl-2 pr-1 
-                    ${active && activeHoverClass} 
-                    ${!active && inactiveTextClass}
-                    ${number % 2 === 0 ? 'bg-white bg-opacity-20' : ''} 
-                    ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : ''}
-                    ${studentIsShared() ? 'border-2 border-red-500' : ''}
-                    `}>
-      {/* STUDENT NAME */}
+    <>
+      <div className="border-t-0 border-gray-400 mb-1" />
       <div
         id={`${id}`}
-        onMouseDown={active ? handleRowSelection : undefined}
         draggable={false}
-        className={`w-8/10 flex flex-row select-none ${active && activeHoverClass} `}>
+        className={`w-full flex h-10 rounded shadow-sm px-1
+                    ${active && activeHoverClass} 
+                    ${!active && inactiveTextClass}
+                    ${number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''} 
+                    ${
+                      studentIsViewed()
+                        ? `bg-white border-l-4 ${theme.borderColor[themeColor]}`
+                        : ''
+                    }
+                    ${
+                      studentIsShared()
+                        ? `border-l-4 ${theme.borderColor[themeColor]}`
+                        : ''
+                    }
+                    `}>
+        {/* STUDENT NAME */}
         <div
           id={`${id}`}
+          onMouseDown={active ? handleRowSelection : undefined}
           draggable={false}
-          className={`w-1/2 overflow-hidden mx-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
-            active && activeHoverClass
-          } `}>
-          {preferredName ? preferredName : firstName} {lastName}
-        </div>
-
-        <div
-          id={`${id}`}
-          draggable={false}
-          className={`w-1/2 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-sm text-left ${
-            active && activeHoverClass
-          }`}>
-          <div id={id} draggable={false} className={`pointer-events-none`}>
-            {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
-          </div>
-        </div>
-      </div>
-
-      {/* MR SHARE BUTTON */}
-      {studentIsInLesson() ? (
-        anyoneIsShared ? (
-          studentIsShared() ? (
-            // UNSHARE CURRENTLY SHARED STUDENT
-            <div
-              aria-label={`asd`}
-              id={`${id}`}
-              draggable={false}
-              className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${
-                active && activeHoverClass
-              }`}
-              onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
-              <span id={`${id}`}>Unshare</span>
-            </div>
-          ) : (
-            // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
-            <div
-              id={`${id}`}
-              data-studentID={id}
-              draggable={false}
-              className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
-                active && activeHoverClass
-              }`}
-              onClick={() => {}}>
-              <span className="pointer-events-none">Share</span>
-            </div>
-          )
-        ) : (
-          // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
+          className={`w-7/10 flex flex-row select-none ${active && activeHoverClass} `}>
           <div
             id={`${id}`}
-            data-studentID={id}
             draggable={false}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-green-500 bg-opacity-20 text-sm ${
+            className={`w-1/2 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
+              active && activeHoverClass
+            } `}>
+            {preferredName ? preferredName : firstName} {lastName}
+          </div>
+
+          <div
+            id={`${id}`}
+            draggable={false}
+            className={`w-1/2 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
+              active && activeHoverClass
+            }`}>
+            <div id={id} draggable={false} className={`pointer-events-none`}>
+              {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
+            </div>
+          </div>
+        </div>
+
+        {/* MR SHARE BUTTON */}
+        {!isLessonSurvey ? (
+          studentIsInLesson() ? (
+            anyoneIsShared ? (
+              studentIsShared() ? (
+                // UNSHARE CURRENTLY SHARED STUDENT
+                <div
+                  aria-label={`asd`}
+                  id={`${id}`}
+                  draggable={false}
+                  className={`w-3/10 mx-auto flex items-center text-center  ${
+                    active && activeHoverClass
+                  }`}
+                  onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+                  <div className="p-1 rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm">
+                    <span id={`${id}`} className="">
+                      Unshare
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+                <div
+                  id={`${id}`}
+                  data-studentid={id}
+                  draggable={false}
+                  className={` w-3/10 mx-auto flex items-center text-center  ${
+                    active && activeHoverClass
+                  }`}
+                  onClick={() => {}}>
+                  <div className="p-1 rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm">
+                    <span className="pointer-events-none ">Share</span>
+                  </div>
+                </div>
+              )
+            ) : (
+              // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
+              <div
+                id={`${id}`}
+                data-studentid={id}
+                draggable={false}
+                className={`w-3/10 mx-auto flex items-center text-center  ${
+                  active && activeHoverClass
+                }`}
+                onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+                <div className="p-1  rounded-lg text-white bg-green-500 bg-opacity-20 hover:bg-opacity-80 text-sm">
+                  <span className="pointer-events-none">Share</span>
+                </div>
+              </div>
+            )
+          ) : null
+        ) : (
+          // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
+          <div
+            id={`${id}`}
+            data-studentid={id}
+            draggable={false}
+            className={`w-3/10 mx-auto flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+            onClick={() => {}}>
             <span className="pointer-events-none">Share</span>
           </div>
-        )
-      ) : null}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

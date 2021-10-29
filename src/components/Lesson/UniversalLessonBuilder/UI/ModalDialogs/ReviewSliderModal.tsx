@@ -9,7 +9,7 @@ import {FORM_TYPES} from '../common/constants';
 import {v4 as uuidv4} from 'uuid';
 import Selector from '../../../../Atoms/Form/Selector';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import Tabs, {useTabs} from '../UIComponents/Tabs/Tabs';
+import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
 import ReviewSliderBlock, {
   extractValuesFromClassString,
 } from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
@@ -183,7 +183,7 @@ const ReviewSliderModal = ({
 
   return (
     <>
-      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
+      <Tabs3 tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
 
       <AnimatedContainer show={onSetupTab}>
         {onSetupTab && (

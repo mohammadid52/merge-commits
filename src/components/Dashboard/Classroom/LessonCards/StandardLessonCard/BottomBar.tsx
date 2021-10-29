@@ -11,6 +11,7 @@ const BottomBar = (props: LessonCardProps) => {
     activeRoomInfo,
     roomID,
     lessonProps,
+    syllabusProps,
     accessible,
     lessonType,
   } = props;
@@ -87,6 +88,9 @@ const BottomBar = (props: LessonCardProps) => {
             accessible={accessible}
             type={lessonProps.lesson.type}
             activeRoomInfo={activeRoomInfo}
+            lessonProps={lessonProps?.lesson}
+            syllabusProps={syllabusProps}
+            isUsed={lessonProps?.lesson?.isUsed}
           />
         </div>
       </div>
@@ -107,6 +111,9 @@ const BottomBar = (props: LessonCardProps) => {
           accessible={accessible}
           type={lessonProps.lesson.type}
           activeRoomInfo={activeRoomInfo}
+          lessonProps={lessonProps?.lesson}
+          syllabusProps={syllabusProps}
+          isUsed={lessonProps?.lesson?.isUsed}
         />
       </div>
     </div>

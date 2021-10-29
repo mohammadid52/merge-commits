@@ -6,7 +6,7 @@ import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
 import {Auth} from '@aws-amplify/auth';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {standardTheme} from './GlobalContext';
 import {getClientKey} from '../utilities/strings';
 import {lessonStateOLD} from '../state/LessonStateOLD';

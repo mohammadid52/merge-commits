@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import Buttons from '@components/Atoms/Buttons';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';

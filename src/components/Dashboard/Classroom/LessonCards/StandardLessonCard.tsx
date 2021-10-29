@@ -13,6 +13,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     roomID,
     activeRoomInfo,
     lessonProps,
+    syllabusProps,
     accessible,
     lessonType,
     getImageFromS3 = true,
@@ -41,6 +42,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           accessible={accessible}
           roomID={roomID}
           lessonProps={lessonProps}
+          syllabusProps={syllabusProps}
           lessonType={lessonType}
         />
       </div>

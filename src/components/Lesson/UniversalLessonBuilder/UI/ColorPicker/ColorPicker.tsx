@@ -62,7 +62,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     dynamicColors.map((color: ColorObject, idx: number) => {
       return (
         <div key={`${color.value}_${idx}`} className={`w-auto h-auto my-1`}>
-          <div className={`${customColors ? 'flex ' : 'grid grid-cols-10'} `}>
+          <div className={`${customColors ? 'flex ' : 'grid grid-cols-9'} `}>
             {dynamicValues.map((code: ColorObject, idx2: number) => {
               return (
                 <div
@@ -111,9 +111,9 @@ const ColorPicker = (props: ColorPickerProps) => {
         style={styles.svgTransform}>
         <FaSortUp size="40" />
       </div>
-      <div className={`bg-white shadow-lg  my-3 rounded-lg p-4`}>
-        <div className="flex items-center justify-between">
-          <p className={`text-black w-auto text-2xl`}>Select a color</p>
+      <div className={`bg-white shadow-lg  my-3 rounded-lg p-6`}>
+        <div className="flex items-center mb-2 justify-between">
+          <p className={`text-gray-900 w-auto font-medium text-2xl`}>Select a color</p>
           {noneLabel && (
             <Buttons
               onClick={onNoneClick}

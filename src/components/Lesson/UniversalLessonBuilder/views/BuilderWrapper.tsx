@@ -1,8 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
+import ContentModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
+import DocsModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
 import {GlobalContext} from '@contexts/GlobalContext';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {useQuery} from '@customHooks/urlParam';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -49,6 +52,9 @@ import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import ImageGallery from '@UlbUI/ImageGallery';
 import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
 import {capitalizeFirstLetter, wait} from '@utilities/functions';
+import isEmpty from 'lodash/isEmpty';
+import React, {useContext, useEffect, useState} from 'react';
+import {useRouteMatch} from 'react-router';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -56,6 +62,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
+  instId: string;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -67,6 +74,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
+    instId,
   } = props;
   const {
     state: {user},
@@ -85,27 +93,29 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   } = useULBContext();
 
   const params = useQuery(location.search);
-  const isNewPage = params.get('isNewPage');
-  const lessonId = params.get('lessonId');
+  // const isNewPage = params.get('isNewPage');
+  // const lessonId = params.get('lessonId');
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
+  const isNewPage = route.params.isNewPage;
 
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
 
-  // Modal popIn
-  const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-
-  const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+  const {
+    currentModalDialog,
+    setCurrentModalDialog,
+    addContentModal,
+    setAddContentModal,
+    modalPopVisible,
+    setModalPopVisible,
+  } = useOverlayContext();
 
   // Manage image gallery component
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
-
-  // This state handles all the modal components
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
-  });
 
   useEffect(() => {
     if (isNewPage === 'true') {
@@ -140,6 +150,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setAddContentModal({type: '', show: false});
     setCurrentModalDialog('');
   };
+  const {
+    setSelectedComponent,
+    selectedComponent,
+    setShowLocationIcon,
+    setNavState,
+    setActionMode,
+    setActiveContentItem,
+  } = usePageBuilderContext();
+
+  useEffect(() => {
+    if (!isEmpty(selectedComponent)) {
+      setBlockConfig({
+        ...blockConfig,
+        position: selectedComponent.partContentIdx,
+      });
+    }
+  }, [selectedComponent]);
 
   const handleModalPopToggle = (
     dialogToToggle: string,
@@ -151,19 +178,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
-    if (!modalPopVisible) {
-      setBlockConfig({
-        section,
-        position,
-        targetId,
-        isEditingMode: false,
-      });
-      setModalPopVisible(true);
-    }
+    setBlockConfig({
+      section,
+      position,
+      targetId,
+      isEditingMode: false,
+    });
     // Toggle Which Dialog is Shown
-    if (currentModalDialog !== dialogToToggle) {
-      setCurrentModalDialog(dialogToToggle);
-    }
+    // if (currentModalDialog !== dialogToToggle) {
+    //   setCurrentModalDialog(dialogToToggle);
+    // }
   };
 
   const handleEditBlockContent = (
@@ -218,21 +242,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      // case dialogLabelList.VIEW_PAGES:
-      //   return (
-      //     <PageSelector
-      //       universalLessonDetails={universalLessonDetails}
-      //       deleteFromULBHandler={deleteFromULBHandler}
-      //       universalBuilderDict={UniversalBuilderDict}
-      //       userLanguage={userLanguage}
-      //       galleryVisible={galleryVisible}
-      //       loading={loading}
-      //       selectedPageID={selectedPageID}
-      //       setSelectedPageID={setSelectedPageID}
-      //       handleModalPopToggle={handleModalPopToggle}
-      //       hideAllModals={hideAllModals}
-      //     />
-      //   );
       case dialogLabelList.NEW_PAGE:
         return (
           <NewPageDialog
@@ -243,27 +252,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
-        return (
-          <AddContentDialog
-            hideAllModals={hideAllModals}
-            addContentModal={addContentModal}
-            setAddContentModal={setAddContentModal}
-          />
-        );
+        return <AddContentDialog />;
 
       default:
-        return (
-          <NewPageDialog
-            universalLessonDetails={universalLessonDetails}
-            closeAction={hideAllModals}
-          />
-        );
+        return null;
     }
   };
 
   const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
+    setSelectedComponent(null);
+    setShowLocationIcon(false);
+
     if (showPopup) {
+      setNavState('home');
+      setActiveContentItem(null);
+      setActionMode('init');
+
       wait(700).then(() => {
         setSavingStatus('loading');
         wait(1000).then(() => {
@@ -281,6 +286,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
    * If you want to add a modal component,
    * first add constant type in constants.tsx and add component here
    */
+
   const modalByType = (type: string) => {
     const {
       position = 0,
@@ -333,7 +339,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
       setUnsavedChanges,
-      askBeforeClose,
+      askBeforeClose: () => closeAction(false),
       setSavingStatus,
     };
 
@@ -449,6 +455,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.REVIEW_SLIDER:
         return <ReviewSliderModal {...commonProps} />;
 
+      case FORM_TYPES.DOCS:
+        return <DocsModal {...commonProps} />;
+
       default:
         return (
           <div className="flex items-center justify-center">
@@ -543,17 +552,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
       {addContentModal.show && (
-        <Modal
+        <ContentModal
           showHeader={true}
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={askBeforeClose}>
+          closeAction={closeAction}>
           <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>
-          <UnsavedModal />
-        </Modal>
+          {/* <UnsavedModal /> */}
+        </ContentModal>
       )}
 
       {suggestionModal.show && (
@@ -612,6 +621,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        instId={instId}
         createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}

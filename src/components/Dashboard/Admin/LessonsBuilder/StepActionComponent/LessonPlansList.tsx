@@ -35,12 +35,6 @@ const LessonPlansList = ({
 
   const pages = universalLessonDetails.lessonPlan;
 
-  const addNewLessonPage = () => {
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&isNewPage=${true}`
-    );
-  };
-
   const addNewLessonPlan = () => {
     history.push(
       `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/lesson-plan`

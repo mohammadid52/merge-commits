@@ -75,20 +75,20 @@ const curate_assets: any = {
 };
 
 const demo_assets: any = {
-  appTitle: 'Demo',
-  main_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
-  login_page_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
-  loading_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
-  logo_symbol: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  faviconDefault: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  favicon16x16: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  favicon32x32: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+  appTitle: 'Edges First',
+  main_logo: 'https://selready.s3.us-east-2.amazonaws.com/EFF2.png',
+  login_page_logo: 'https://selready.s3.us-east-2.amazonaws.com/EFLBlue.png',
+  loading_logo: 'https://selready.s3.us-east-2.amazonaws.com/EFLBlue.png',
+  logo_symbol: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  faviconDefault: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  favicon16x16: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  favicon32x32: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
   manifest: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/site.webmanifest',
   appleTouchIcon:
     'https://zoiqclients.s3.amazonaws.com/demo/demologos/apple-touch-icon.png',
   maskIcon: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/safari-pinned-tab.svg',
-  webAppTitle: 'ISP Demo',
-  appName: 'ISP Demo',
+  webAppTitle: 'Edges First',
+  appName: 'Edges First',
   tileImage: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/mstile-150x150.png',
   msapplicationConfig:
     'https://zoiqclients.s3.amazonaws.com/demo/demologos/browserconfig.xml',

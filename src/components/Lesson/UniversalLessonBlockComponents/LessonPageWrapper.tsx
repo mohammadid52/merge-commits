@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 interface PageWrapperProps {
   children?: React.ReactNode;

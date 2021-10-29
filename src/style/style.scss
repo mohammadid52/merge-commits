@@ -992,6 +992,23 @@
     opacity: 0;
     transition: opacity 0.1s linear, transform 0.3s linear;
   }
+  &:hover .arrow-icon2 {
+    visibility: visible;
+    opacity: 1;
+    &.rotateArrow {
+      transform: translateY(-5px);
+    }
+    transform: translateX(-5px);
+  }
+  & .arrow-icon2 {
+    &.rotateArrow {
+      transform: translateX(-10px);
+    }
+    transform: translateX(-10px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s linear, transform 0.3s linear;
+  }
 }
 
 .customShadow {
@@ -1311,5 +1328,33 @@
     height: 2px;
     border-radius: 999px;
     width: 7%;
+  }
+}
+
+//  Modal
+
+.modal-body {
+  overflow-y: inherit !important;
+}
+
+.sticky-page-builder {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> Doc Viewer
+
+#pg-viewer {
+  #docx {
+    .document-container {
+      width: 100%;
+      overflow-x: hidden;
+      ol li {
+        * {
+          max-width: 90%;
+        }
+      }
+    }
   }
 }

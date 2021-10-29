@@ -9,7 +9,7 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import Tooltip from '../../../../Atoms/Tooltip';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 interface ILessonInputs {
   id: string;

@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {findIndex, remove} from 'lodash';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';

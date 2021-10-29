@@ -172,6 +172,7 @@ export const getInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -190,6 +191,7 @@ export const getInstitution = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -590,6 +592,7 @@ export const getRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -614,6 +617,7 @@ export const getRoom = /* GraphQL */ `
       disabledPages
       studentViewing
       displayData {
+        isTeacher
         studentAuthID
         lessonPageID
       }
@@ -645,6 +649,7 @@ export const getRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -745,6 +750,7 @@ export const listRooms = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -765,6 +771,7 @@ export const listRooms = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -807,6 +814,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1052,6 +1060,7 @@ export const getClassroomGroups = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1072,6 +1081,7 @@ export const getClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -1172,6 +1182,7 @@ export const listClassroomGroupss = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1316,6 +1327,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1336,6 +1348,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -1417,6 +1430,7 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1590,6 +1604,7 @@ export const getClass = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -1610,6 +1625,7 @@ export const getClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -1691,6 +1707,7 @@ export const listClasss = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1766,6 +1783,7 @@ export const getClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1965,6 +1983,7 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabiHistory
       createdAt
       updatedAt
     }
@@ -2025,6 +2044,7 @@ export const listCurriculums = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2078,6 +2098,7 @@ export const getTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2131,6 +2152,7 @@ export const listTopics = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -2252,6 +2274,7 @@ export const getRubric = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -2365,6 +2388,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -2396,6 +2420,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4117,6 +4142,7 @@ export const getPersonLocation = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4137,6 +4163,7 @@ export const getPersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4243,6 +4270,7 @@ export const listPersonLocations = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4437,6 +4465,7 @@ export const getAttendance = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        syllabiHistory
         createdAt
         updatedAt
       }
@@ -4457,6 +4486,8 @@ export const getAttendance = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -4495,6 +4526,7 @@ export const getAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -4510,6 +4542,7 @@ export const getAttendance = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -4520,6 +4553,7 @@ export const getAttendance = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -4611,6 +4645,7 @@ export const getAttendance = /* GraphQL */ `
         disabledPages
         studentViewing
         displayData {
+          isTeacher
           studentAuthID
           lessonPageID
         }
@@ -4631,6 +4666,7 @@ export const getAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -4668,6 +4704,7 @@ export const listAttendances = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -4685,6 +4722,8 @@ export const listAttendances = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -4718,6 +4757,7 @@ export const listAttendances = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -4748,6 +4788,7 @@ export const listAttendances = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4845,6 +4886,7 @@ export const getUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       homework {
         id
@@ -4867,6 +4909,7 @@ export const getUniversalLesson = /* GraphQL */ `
         activityType
         interactionType
         tags
+        videoLink
       }
       darkMode
       rubrics
@@ -4877,6 +4920,7 @@ export const getUniversalLesson = /* GraphQL */ `
       smallGroupOption
       studentMaterials
       targetAudience
+      isUsed
       createdAt
       updatedAt
     }
@@ -4932,6 +4976,7 @@ export const listUniversalLessons = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -4947,6 +4992,7 @@ export const listUniversalLessons = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -4957,6 +5003,7 @@ export const listUniversalLessons = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -5143,6 +5190,8 @@ export const getUniversalSyllabus = /* GraphQL */ `
       universalLessonsSeq
       designers
       status
+      isUsed
+      lessonHistory
       createdAt
       updatedAt
     }
@@ -5180,6 +5229,8 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -5209,6 +5260,8 @@ export const getCurriculumUnits = /* GraphQL */ `
         universalLessonsSeq
         designers
         status
+        isUsed
+        lessonHistory
         createdAt
         updatedAt
       }
@@ -5246,6 +5299,8 @@ export const listCurriculumUnitss = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -5304,6 +5359,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         homework {
           id
@@ -5319,6 +5375,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           activityType
           interactionType
           tags
+          videoLink
         }
         darkMode
         rubrics
@@ -5329,6 +5386,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         smallGroupOption
         studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -5431,6 +5489,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -5505,6 +5564,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -5911,7 +5971,9 @@ export const getCommunity = /* GraphQL */ `
   query GetCommunity($id: ID!) {
     getCommunity(id: $id) {
       id
+      institutionID
       cardName
+      cardType
       cardDate
       summary
       cardImageLink
@@ -5968,6 +6030,43 @@ export const getCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -5990,7 +6089,9 @@ export const listCommunitys = /* GraphQL */ `
     ) {
       items {
         id
+        institutionID
         cardName
+        cardType
         cardDate
         summary
         cardImageLink
@@ -6034,6 +6135,25 @@ export const listCommunitys = /* GraphQL */ `
         }
         chat {
           nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -6335,6 +6455,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -6384,6 +6505,7 @@ export const attendanceByStudent = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
+          syllabiHistory
           createdAt
           updatedAt
         }
@@ -6401,6 +6523,8 @@ export const attendanceByStudent = /* GraphQL */ `
           universalLessonsSeq
           designers
           status
+          isUsed
+          lessonHistory
           createdAt
           updatedAt
         }
@@ -6434,6 +6558,7 @@ export const attendanceByStudent = /* GraphQL */ `
           smallGroupOption
           studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -6464,6 +6589,7 @@ export const attendanceByStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }

@@ -2,7 +2,7 @@ module.exports = {
   darkMode: 'class',
 
   purge: {
-    enabled: false,
+    enabled: process.env.NODE_ENV === 'production' ? true : false,
     content: [
       './src/**/*.html',
       './src/**/*.tsx',
@@ -10,6 +10,7 @@ module.exports = {
       './src/**/*.js',
       './src/**/*.jsx',
     ],
+    safelist: ['hover:text-indigo-600'],
   },
   corePlugins: {
     translate: true,
@@ -98,6 +99,8 @@ module.exports = {
       75: 75,
       100: 100,
       1000: 1000,
+      10000: 10000,
+      max: 9999999,
       auto: 'auto',
     },
     opacity: {
@@ -340,7 +343,7 @@ module.exports = {
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg': "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
+        'demo-bg': "url('https://selready.s3.us-east-2.amazonaws.com/login-min.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -560,18 +563,14 @@ module.exports = {
         '8/10': '80%',
         '8.1/10': '81%',
         '8.2/10': '82%',
-        '8.3/10': '83%',
         '8.5/10': '85%',
-        '8.7/10': '87%',
-        '8.8/10': '88%',
         '9/10': '90%',
-        '9.28/10': '92.8%',
         '9.5/10': '95%',
-        '19/20': '95%',
-        '9.3/10': '93%',
       },
       minHeight: {
         16: '4rem',
+        28: '7rem',
+        30: '7.5rem',
         32: '8rem',
         48: '12rem',
         52: '13rem',

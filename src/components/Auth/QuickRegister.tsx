@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Auth} from '@aws-amplify/auth';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../graphql/mutations';
 import * as customMutations from '../../customGraphql/customMutations';
 import {useCookies} from 'react-cookie';

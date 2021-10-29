@@ -1,4 +1,4 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
@@ -914,7 +914,10 @@ const LessonApp = () => {
 
   return (
     <>
-      <FloatingSideMenu />
+      {/* 
+      TODO: Add this again later
+      */}
+      {/* <FloatingSideMenu /> */}
       <div
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>

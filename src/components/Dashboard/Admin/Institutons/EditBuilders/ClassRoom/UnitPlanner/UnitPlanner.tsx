@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment, {Moment} from 'moment';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';

@@ -64,14 +64,16 @@ const BUTTONS: any = {
   },
 };
 
-const CommonlyUsedDict:any = {
-  EN:{
-    BACK_TO_LIST: 'Back to list'
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK: 'Back',
+    BACK_TO_LIST: 'Back to list',
   },
-  ES:{
-    BACK_TO_LIST: 'Back to list'
-  }
-}
+  ES: {
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
+  },
+};
 
 // Breadcrumbs
 const BreadcrumsTitles: any = {
@@ -106,6 +108,7 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'Add Checkpoint',
     EditTopic: 'Edit Topic',
     AddExistingCheckpoint: 'Add Existing Checkpoint',
+    STAFF: 'Project Team',
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
     UserInfo: 'User Information',
@@ -147,6 +150,7 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'TBD',
     EditTopic: 'TBD',
     AddExistingCheckpoint: 'TBD',
+    STAFF: 'TBD',
     PeopleManagment: 'TBD',
     AddNewUser: 'TBD',
     UserInfo: 'TBD',
@@ -494,6 +498,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Cohort Name',
     STUDENTS: 'Participants',
     ADD_STUDENT_PLACEHOLDER: 'Select new participant',
+    ADD_STUDENT_LABEL: 'Add participant to class',
+    ADD_STUDENT_FROM_REGSITER: 'Add participant from register to class',
     ADD_STUDENT_BUTTON: 'Add',
     GROUP: 'Group',
     GROUP_PLACEHOLDER: 'Select Group',
@@ -529,6 +535,8 @@ const editClassDict: any = {
     NAME_INPUT_LABEL: 'Nombre de la clase',
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
+    ADD_STUDENT_LABEL: 'TBD',
+    ADD_STUDENT_FROM_REGSITER: 'TBD',
     ADD_STUDENT_BUTTON: 'Añadir',
     GROUP: 'TBD',
     GROUP_PLACEHOLDER: 'TBD',
@@ -670,6 +678,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'Module Manager',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -707,6 +717,8 @@ const classRoomDict: any = {
     UNIT_TITLE: 'TBD',
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
+    LESSON_SUB_TITLE_ASYNC:
+      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -754,12 +766,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },
@@ -788,12 +800,12 @@ const lessonPlannerDict: any = {
       EST_TIME: 'Estimated Time',
       LESSON_CONTROL: 'Session Control',
       COLUMN: {
-        ONE: 'Student Name',
+        ONE: 'Name',
         TWO: 'Current Page',
         THREE: 'Action',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'In Session',
+        IN_CLASS: 'Participant Roster',
         NOT_IN_CLASS: 'Not In Session',
       },
     },
@@ -923,21 +935,23 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
-      UNITS: 'Units',
-      CLASS_MANAGER: 'Class Manager',
-      LIVE_CLASS_ROOM: "Live Classroom",
-      COURSE_MANAGER: 'Course Manager',
+      CLASS_MANAGER: 'Classroom Builder',
+      LIVE_CLASS_ROOM: 'Live Classroom',
+      COURSE_MANAGER: 'Course Builder',
+      COURSES: 'Course Manager',
+      UNITS: 'Unit Manager',
       COMMUNITY_MANAGER: 'Community Manager',
       INSTITUTION_MANAGER: 'Institution Manager',
-      CLASSES: 'Cohorts',
-      CURRICULAR: 'Curricular',
-      CLASSROOMS: 'Classes',
+      CLASSES: 'Classes',
       STUDENT_ROASTER: 'Student Roster',
+      CURRICULAR: 'Course',
+      CLASSROOMS: 'Classroom Manager',
       GENERAL_INFORMATION: 'General Information',
-      LESSONS: 'Lessons',
+      LESSONS: 'Lesson Managers',
       RESEARCH_AND_ANALYTICS: 'Research & Analytics',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
+      COMMUNITY: 'Community',
     },
   },
   ES: {
@@ -951,13 +965,15 @@ const Institute_info: any = {
       SERVICE_PROVIDER: 'TBD',
       STAFF: 'TBD',
       CLASSES: 'TBD',
-      LIVE_CLASS_ROOM: "TBD",
+      COURSES: 'TBD',
+      LIVE_CLASS_ROOM: 'TBD',
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
       STUDENT_ROASTER: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
+      COMMUNITY: 'TBD',
       HOME: 'TBD',
       NOTEBOOK: 'TBD',
     },
@@ -1236,7 +1252,7 @@ const Institute_class: any = {
   },
 };
 
-const InstitueCurriculam: any = {
+const InstitueCurriculum: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
@@ -1246,8 +1262,8 @@ const InstitueCurriculam: any = {
     NAME: 'Course Name',
     ACTION: 'Actions',
     VIEW: 'View',
-    INFO:
-      'This organization does not have any course. Please create a new course.',
+    INFO: 'This organization does not have any course. Please create a new course.',
+    NO_DELETE: '(Course in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -1259,6 +1275,7 @@ const InstitueCurriculam: any = {
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
+    NO_DELETE: 'TBD',
   },
 };
 
@@ -1269,7 +1286,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Class Name',
     CLASS_NAME: 'Cohort Name',
     TEACHER: 'Facilitator',
-    CURRICULAM: 'Curriculam',
+    CURRICULUM: 'Course',
     MXSTUDENTS: 'Max. Participants',
     ACTION: 'Actions',
     EDIT: 'edit',
@@ -1526,6 +1543,7 @@ const RoomBuilderdict: any = {
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
+    CO_TEACHER_LABEL: 'Co-Teachers',
     TEACHER_PLACEHOLDER: 'Select teacher',
     CLASS_NAME_LABEL: 'Cohort Name',
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
@@ -1574,6 +1592,7 @@ const RoomBuilderdict: any = {
     NAME_LABEL: 'TBD',
     NAME_PLACEHOLDER: 'TBD',
     TEACHER_LABEL: 'TBD',
+    CO_TEACHER_LABEL: 'TBD',
     TEACHER_PLACEHOLDER: 'TBD',
     CLASS_NAME_LABEL: 'TBD',
     CLASS_NAME_PLACEHOLDER: 'TBD',
@@ -1670,13 +1689,15 @@ const EditCurriculardict: any = {
 
 const RoomEDITdict: any = {
   EN: {
-    TITLE: 'Edit Class',
-    SUBTITLE: 'Edit Class information',
+    TITLE: 'Edit Classroom',
+    SUBTITLE: 'Edit Classroom information',
     HEADING: 'Classroom information',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
     TEACHER_PLACEHOLDER: 'Select teacher',
+    CO_TEACHER_LABEL: 'Co-Facilitator',
+    CO_TEACHER_PLACEHOLDER: 'Select Co-facilitator',
     CLASS_NAME_LABEL: 'Cohort Name',
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
     CURRICULUM_LABEL: 'Course',
@@ -1687,13 +1708,17 @@ const RoomEDITdict: any = {
     CONFERENCE_CALL_LINK_PLACEHOLDER: 'Enter zoom, teams or meets link here',
     LOCATION_LABEL: 'Classroom location',
     LOCATION_PLACEHOLDER: 'Enter location here',
-    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom & course schedule',
+    CLASS_DETAILS_TAB_HEADING: 'Class Details',
+    CLASS_DETAILS_TAB_DESCRIPTION: 'Create a classroom',
+    CLASS_STUDENT_TAB_HEADING: 'Students',
+    CLASS_STUDENT_TAB_DESCRIPTION: 'Add students to classroom',
     CLASS_DYNAMICS_TAB_HEADING: 'Class Dynamics(optional)',
     CLASS_DYNAMICS_TAB_DESCRIPTION:
       'Manage subject proficiency & create course partners and student groups',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'Unit Planner',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION:
       'Set the schedule for your class and confirm lesson dates',
+    TAB_DISABLED_TOOLTIP_TEXT: 'Add classroom details in step 1 to continue',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
       unabletofetch: 'Unable to fetch organization list. Please try again later.',
@@ -1708,6 +1733,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'Class name is required please enter name.',
       selectinstitute: 'Please select an organization to add Class.',
       selectteacher: 'Please select a teacher for the Class.',
+      selectCurriculum: 'Please select a course for the Class.',
       selectclass: 'Please select a cohort for the Class.',
       mxstudent: 'Please set Max participants limit for the Class.',
       oneclass: 'One Class can allow max. 30 participants.',
@@ -1748,6 +1774,7 @@ const RoomEDITdict: any = {
     CLASS_DYNAMICS_TAB_DESCRIPTION: 'TBD',
     CLASS_UNIT_PLANNER_TAB_HEADING: 'TBD',
     CLASS_UNIT_PLANNER_TAB_DESCRIPTION: 'TBD',
+    TAB_DISABLED_TOOLTIP_TEXT: 'TBD',
     messages: {
       institutebefor: 'TBD',
       unabletofetch: 'TBD',
@@ -1760,6 +1787,7 @@ const RoomEDITdict: any = {
       classroomrequired: 'TBD',
       selectinstitute: 'TBD',
       selectteacher: 'TBD',
+      selectCurriculum: 'TBD',
       selectclass: 'TBD',
       mxstudent: 'TBD',
       oneclass: 'TBD',
@@ -2286,10 +2314,10 @@ const AddSyllabusDict: any = {
     policy: 'Policies',
     save: 'Save',
     saving: 'Saving...',
-
     messages: {
       fetcherr: 'Error while fetching Developers list Please try again later.',
       uintsave: 'New module has been saved.',
+      unitupdate: 'Module details has been updated.',
       unablesave: 'Unable to save new module please try again later.',
       namerequired: 'Module name is required please enter name.',
     },
@@ -2314,6 +2342,7 @@ const AddSyllabusDict: any = {
     messages: {
       fetcherr: 'TBD',
       uintsave: 'TBD',
+      unitupdate: 'TBD',
       unablesave: 'TBD',
       namerequired: 'TBD',
     },
@@ -2765,6 +2794,12 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'On-Demand',
+    RESET_PASSWORD: 'Reset password',
+    RESETTING_PASSWORD: 'Resetting password',
+    MESSAGE: {
+      RESET_PASSWORD_SUCCESS: 'Password was reset',
+      RESET_PASSWORD_FAILURE: 'Error in resetting password',
+    },
   },
   ES: {
     heading: 'TBD',
@@ -2778,6 +2813,8 @@ const UserInformationDict: any = {
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
+    RESET_PASSWORD: 'TBD',
+    RESETTING_PASSWORD: 'TBD',
   },
 };
 
@@ -3514,6 +3551,7 @@ const UnitLookupDict: any = {
       ADDERR: 'Error while adding session to module, please try later.',
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
+    NO_DELETE: '(Unit in use)',
   },
   ES: {
     HEADING: 'TBD',
@@ -3524,12 +3562,16 @@ const UnitLookupDict: any = {
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
-
+    NEW_UNIT: 'New Unit',
+    UNIT_DETAILS: 'View Unit details',
+    VIEW: 'View',
+    INFO: 'This institute does not have any unit. Please create a new unit.',
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
     },
+    NO_DELETE: '(Unit in use)',
   },
 };
 
@@ -3724,6 +3766,7 @@ const LessonsListDict: any = {
       START_CLONING: 'Start cloning',
       CLONING: 'cloning',
     },
+    NO_DELETE: '(Lesson in use)',
   },
   ES: {
     TITLE: 'TBD',
@@ -3740,6 +3783,7 @@ const LessonsListDict: any = {
       START_CLONING: 'TBD',
       CLONING: 'TBD',
     },
+    NO_DELETE: '(Lesson in use)',
   },
 };
 
@@ -3847,6 +3891,24 @@ const LearningEvidenceDict: any = {
   },
 };
 
+const StudentDict: any = {
+  EN: {
+    NO_STUDENT: 'No Student Found',
+  },
+  ES: {
+    NO_STUDENT: 'TBD',
+  },
+};
+
+const CommunityDict: any = {
+  EN: {
+    HEADER: 'Here is what is happening today',
+  },
+  ES: {
+    HEADER: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3855,6 +3917,7 @@ function paginationPage(lang: string, page: number, total: number) {
 
 export {
   AuthDict,
+  CommunityDict,
   General,
   CsvDict,
   DashboardDict,
@@ -3876,7 +3939,7 @@ export {
   InstitutionAddDict,
   InstitutionBuilderDict,
   Institute_class,
-  InstitueCurriculam,
+  InstitueCurriculum,
   InstitueRomms,
   classBuilderdict,
   CurricularBuilderdict,
@@ -3911,6 +3974,7 @@ export {
   ProfileCheckpointlookupDict,
   RegistrationDict,
   SyllabusDict,
+  StudentDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3937,5 +4001,5 @@ export {
   EditQuestionModalDict,
   LearningEvidenceDict,
   CourseBuilderDict,
-  CommonlyUsedDict
+  CommonlyUsedDict,
 };

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext, Fragment} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';

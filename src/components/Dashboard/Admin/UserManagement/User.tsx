@@ -1,5 +1,5 @@
 import useUrlState from '@ahooksjs/use-url-state';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
@@ -17,11 +17,11 @@ import {
 } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
-import {BsCameraVideoFill} from 'react-icons/bs';
+import {BsArrowLeft, BsCameraVideoFill} from 'react-icons/bs';
 import {FaEdit} from 'react-icons/fa';
 import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
-import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
+import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -53,6 +53,7 @@ import Attendance from './Attendance';
 import Feedback from './Feedback';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
+import UserTabs from './User/UserTabs';
 
 export interface UserInfo {
   authId: string;
@@ -168,27 +169,27 @@ const User = ({instituteId}: IUserProps) => {
 
   const {id, t: tab} = urlState;
 
-  const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {CommonlyUsedDict} = useDictionary(clientKey);
 
   const mediaRef = React.useRef(null);
   const handleImage = () => mediaRef?.current?.click();
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-      url: '/dashboard/manage-users',
-      last: false,
-    },
-    {
-      title: [
-        user.preferredName ? user.preferredName : user.firstName,
-        user.lastName,
-      ].join(' '),
-      url: `${location.pathname}${location.search}`,
-      last: true,
-    },
-  ];
+  // const breadCrumsList = [
+  //   {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+  //   {
+  //     title: BreadcrumsTitles[userLanguage]['PEOPLE'],
+  //     url: '/dashboard/manage-users',
+  //     last: false,
+  //   },
+  //   {
+  //     title: [
+  //       user.preferredName ? user.preferredName : user.firstName,
+  //       user.lastName,
+  //     ].join(' '),
+  //     url: `${location.pathname}${location.search}`,
+  //     last: true,
+  //   },
+  // ];
 
   // ##################################################################### //
   // ######################### PROFILE QUESTIONS ######################### //
@@ -232,62 +233,6 @@ const User = ({instituteId}: IUserProps) => {
 
   const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
-
-  // ~~~~ GET SEQUENCE OF CHP QUESTIONS ~~~~ //
-
-  // const getCheckpointSequences: any = async (
-  //   checkpointIDS: string[],
-  //   nextToken: string,
-  //   loopLimit: 10,
-  //   output: any[]
-  // ) => {
-  //   if (checkpointIDS && checkpointIDS.length > 0) {
-  //     try {
-  //       let modifiedIds = checkpointIDS.map((idStr: string) => `Ch_Ques_${idStr}`);
-  //       let compoundQuery = {
-  //         filter: createFilterToFetchSpecificItemsOnly(modifiedIds, 'id'),
-  //         limit: 100,
-  //       };
-  //       let queryWithNextToken = {...compoundQuery, nextToken: nextToken};
-
-  //       let getAllCheckpointSequences: any = await API.graphql(
-  //         graphqlOperation(
-  //           queries.listCSequencess,
-  //           nextToken ? queryWithNextToken : compoundQuery
-  //         )
-  //       );
-
-  //       let theNextToken = getAllCheckpointSequences?.data?.listCSequencess?.nextToken;
-
-  //       let responseItems = getAllCheckpointSequences?.data?.listCSequencess?.items;
-  //       // return responseItems;
-
-  //       if (theNextToken !== null && loopLimit > 0) {
-  //         console.log(nextToken);
-  //         getCheckpointSequences(checkpointIDS, theNextToken, loopLimit - 1, [
-  //           ...output,
-  //           ...responseItems,
-  //         ]);
-  //       } else {
-  //         return [...output, responseItems];
-  //       }
-  //     } catch (e) {
-  //       console.error('getCheckpointSequences - ', e);
-  //       return [];
-  //     }
-  //   } else {
-  //     return [];
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (allCheckpointIds.length > 0) {
-  //     const getAllSequences = getCheckpointSequences(allCheckpointIds, null, 10, []);
-  //     Promise.resolve(getAllSequences).then((output: any) => {
-  //       console.log('all checkpoint sequences - ', output);
-  //     });
-  //   }
-  // }, [allCheckpointIds]);
 
   async function getUserProfile(id: string) {
     try {
@@ -360,14 +305,52 @@ const User = ({instituteId}: IUserProps) => {
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
-      const demographicCheckpoints = uniqCheckpoints.filter(
-        (checkpoint: any) => checkpoint.scope !== 'private'
-      );
-      // .reverse();
-      const privateCheckpoints = uniqCheckpoints.filter(
-        (checkpoint: any) => checkpoint.scope === 'private'
-      );
-      // .reverse();
+      const demographicCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope !== 'private')
+        .map((checkpoint: any) => {
+          if (checkpoint?.questionSeq) {
+            return {
+              ...checkpoint,
+              questions: {
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, []),
+              },
+            };
+          } else {
+            return checkpoint;
+          }
+        });
+      const privateCheckpoints = uniqCheckpoints
+        .filter((checkpoint: any) => checkpoint.scope === 'private')
+        .map((checkpoint: any) => {
+          if (checkpoint?.questionSeq) {
+            return {
+              ...checkpoint,
+              questions: {
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, []),
+              },
+            };
+          } else {
+            return checkpoint;
+          }
+        });
 
       const personalInfo: any = {...userData};
 
@@ -529,11 +512,11 @@ const User = ({instituteId}: IUserProps) => {
   // Useeffect to load student data and process it
   useEffect(() => {
     const initializeStudentData = async () => {
-      if (user.authId) {
-        await listStudentData();
-      }
+      await listStudentData();
     };
-    initializeStudentData();
+    if (!isTeacher && !isAdmin && user.authId) {
+      initializeStudentData();
+    }
   }, [user.authId]);
 
   if (status !== 'done') {
@@ -635,49 +618,6 @@ const User = ({instituteId}: IUserProps) => {
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    );
-  };
-
-  const Tabs = () => {
-    const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
-
-    return (
-      <div className="w-8/10 bg-white rounded-lg p-2">
-        <div className="sm:hidden">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
-          <select
-            id="tabs"
-            name="tabs"
-            className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-            defaultValue={curTab}>
-            {tabsData.map((tab) => (
-              <option className="transition-all" key={tab.name}>
-                {tab.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden sm:block">
-          <nav className="flex user__profile-tabs space-x-4" aria-label="Tabs">
-            {tabsData.map((tab) => (
-              <div
-                key={tab.name}
-                onClick={() => {
-                  setCurTab(tab.name);
-                }}
-                className={`px-3 ${
-                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
-                  tab.name === curTab ? 'active' : ''
-                }`}>
-                {tab.name}
-              </div>
-            ))}
-          </nav>
         </div>
       </div>
     );
@@ -1503,19 +1443,35 @@ const User = ({instituteId}: IUserProps) => {
         <div className={`pl-12 max-w-256`}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
-            <div className="flex justify-end mb-4">
-              <Buttons
-                label="Go Back"
-                btnClass="mr-4"
-                onClick={history.goBack}
-                Icon={IoArrowUndoCircleOutline}
-              />
+            <div
+              className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+              onClick={history.goBack}>
+              <span className="w-auto mr-2">
+                <BsArrowLeft />
+              </span>
+              <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
             </div>
+            // <div className="flex justify-end mb-4">
+            //   <Buttons
+            //     label="Go Back"
+            //     btnClass="mr-4"
+            //     onClick={history.goBack}
+            //     Icon={IoArrowUndoCircleOutline}
+            //   />
+            // </div>
           )}
           <div className="flex justify-between items-center mb-4 py-4 w-auto">
             {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
 
-            <Tabs />
+            <UserTabs
+              tabs={tabs}
+              currentTab={curTab}
+              viewedUser={user}
+              setCurrentTab={setCurTab}
+              isTeacher={isTeacher}
+              isAdmin={isAdmin}
+              theme={theme}
+            />
 
             <div className="flex justify-end w-auto">
               {currentPath !== 'edit' && onUserInformationTab && (
@@ -1672,14 +1628,23 @@ const User = ({instituteId}: IUserProps) => {
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 {isTimelineOpen ? (
                   <Attendance
-                    id={id}
+                    id={userId}
                     goToClassroom={goToClassroom}
                     selectedRoomId={selectedRoomId}
+                    role={user.role}
                   />
                 ) : (
                   <AssociatedClasses list={user?.rooms} />
                 )}
               </div>
+            )}
+            {(user.role === 'TR' || user.role === 'FLW') && (
+              <Attendance
+                id={userId}
+                goToClassroom={goToClassroom}
+                selectedRoomId={selectedRoomId}
+                role={user.role}
+              />
             )}
           </AnimatedContainer>
           <AnimatedContainer show={onNotebookTab}>
@@ -1694,12 +1659,12 @@ const User = ({instituteId}: IUserProps) => {
             )}
           </AnimatedContainer>
 
-          {curTab === 'Timeline' && (
+          {/* {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
             </div>
-          )}
+          )} */}
         </div>
         {showCropper && (
           <ProfileCropModal

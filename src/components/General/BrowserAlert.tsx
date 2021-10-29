@@ -1,8 +1,8 @@
+import Tooltip from '@atoms/Tooltip';
+import {useOutsideAlerter} from 'components/General/hooks/outsideAlerter';
 import React from 'react';
 import {FaCopy} from 'react-icons/fa';
 import {FiAlertCircle} from 'react-icons/fi';
-import Tooltip from '../Atoms/Tooltip';
-import {useOutsideAlerter} from './hooks/outsideAlerter';
 
 const BrowserAlert = (props: any) => {
   const {closeTab, onContinue} = props;

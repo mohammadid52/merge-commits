@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import {GlobalContext} from '../contexts/GlobalContext';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../customGraphql/customQueries';
 
 const useLoadRooms = () => {
