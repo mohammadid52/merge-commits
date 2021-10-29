@@ -12,7 +12,7 @@ import {AiOutlineCloseCircle} from 'react-icons/ai';
 interface ILessonInfoFrame {
   children?: React.ReactNode;
   visible?: boolean;
-  rightView?: 'lesson' | 'lessonInfo';
+  rightView?: {view: string; option?: string};
   setRightView?: any;
 }
 
@@ -126,7 +126,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ######################### TOGGLE SENTIMENTS ######################### //
   // ##################################################################### //
   const handleSentimentToggle = () => {
-    setRightView('lesson');
+    setRightView({view: 'lesson', option: ''});
   };
 
   // ##################################################################### //

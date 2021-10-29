@@ -15,7 +15,7 @@ interface IClassRosterProps {
   isSameStudentShared: boolean;
   handlePageChange?: any;
   handleRoomUpdate?: (payload: any) => void;
-  rightView?: string;
+  rightView?: {view: string; option?: string};
   setRightView?: any;
 }
 
@@ -30,6 +30,7 @@ const ClassRoster = ({
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
+  const roster = controlState.roster;
   const controlDispatch = gContext.controlDispatch;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
@@ -48,7 +49,6 @@ const ClassRoster = ({
   // ############################ ALL STUDENTS ########################### //
   // ##################################################################### //
 
-  const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
   const [deletedStudent, setDeletedStudent] = useState<any>({});
@@ -160,7 +160,6 @@ const ClassRoster = ({
           saveType: '',
         };
       });
-      setClassStudents(initClassStudentList);
       controlDispatch({
         type: 'UPDATE_STUDENT_ROSTER',
         payload: {students: initClassStudentList},
@@ -189,7 +188,7 @@ const ClassRoster = ({
       const syllabusLessonStudentList =
         syllabusLessonStudents.data.listPersonLocations.items;
       const studentsFromThisClass = syllabusLessonStudentList.filter((student: any) => {
-        const findStudentInClasslist = classStudents.find(
+        const findStudentInClasslist = roster.find(
           (student2: any) => student2.personEmail === student.personEmail
         );
         if (findStudentInClasslist) {
@@ -198,7 +197,7 @@ const ClassRoster = ({
       });
       setPersonLocationStudents(studentsFromThisClass);
       controlDispatch({
-        type: 'UPDATE_STUDENT_ROSTER',
+        type: 'UPDATE_ACTIVE_ROSTER',
         payload: {students: studentsFromThisClass},
       });
       subscription = subscribeToPersonLocations();
@@ -210,9 +209,15 @@ const ClassRoster = ({
     }
   };
 
+  useEffect(() => {
+    if (roster.length > 0) {
+      getActiveClassStudents();
+    }
+  }, [roster]);
+
   // ~~~ FILTER INACTIVE // ON-DEMAND ST ~~~ //
 
-  const inactiveStudents = classStudents.reduce(
+  const inactiveStudents = roster.reduce(
     (studentAcc: {notInClass: any[]; onDemand: any[]}, student: any) => {
       let isOnDemand = student.person.onDemand;
       let isInStateRoster = controlState.roster.find(
@@ -231,12 +236,6 @@ const ClassRoster = ({
       onDemand: [],
     }
   );
-
-  useEffect(() => {
-    if (classStudents.length > 0) {
-      getActiveClassStudents();
-    }
-  }, [classStudents]);
 
   // ##################################################################### //
   // ####################### ROSTER UPDATE / DELETE ###################### //
@@ -260,14 +259,14 @@ const ClassRoster = ({
       });
       setPersonLocationStudents(existRoster);
       controlDispatch({
-        type: 'UPDATE_STUDENT_ROSTER',
+        type: 'UPDATE_ACTIVE_ROSTER',
         payload: {students: existRoster},
       });
       setUpdatedStudent({});
     } else {
       const newRoster = [...personLocationStudents, newStudent];
       setPersonLocationStudents(newRoster);
-      controlDispatch({type: 'UPDATE_STUDENT_ROSTER', payload: {students: newRoster}});
+      controlDispatch({type: 'UPDATE_ACTIVE_ROSTER', payload: {students: newRoster}});
       setUpdatedStudent({});
     }
   };
@@ -299,7 +298,7 @@ const ClassRoster = ({
       );
       setPersonLocationStudents(deleteRoster);
       controlDispatch({
-        type: 'UPDATE_STUDENT_ROSTER',
+        type: 'UPDATE_ACTIVE_ROSTER',
         payload: {students: deleteRoster},
       });
       setDeletedStudent({});
@@ -387,9 +386,13 @@ const ClassRoster = ({
   // ############################### OTHER ############################### //
   // ##################################################################### //
 
-  const handleToggleLessonInfo = (rightViewString: string, fn: Function) => {
-    let toggleValue = rightView === 'lessonInfo' ? 'lesson' : 'lessonInfo';
-    fn(toggleValue);
+  const handleToggleRightView = (rightViewObj: {view: string; option: string}) => {
+    console.log('toggle toggle');
+    let toggleValue =
+      rightView.view === rightViewObj.view
+        ? {...rightViewObj, view: 'lesson'}
+        : {...rightViewObj, view: rightViewObj.view};
+    setRightView(toggleValue);
   };
 
   // ##################################################################### //
@@ -403,10 +406,10 @@ const ClassRoster = ({
         hot={true}
         handleManualRefresh={handleManualRefresh}
         loading={loading}
-        handleToggleLessonInfo={handleToggleLessonInfo}
+        handleToggleRightView={handleToggleRightView}
         rightView={rightView}
         setRightView={setRightView}
-        studentList={controlState.roster}
+        studentList={controlState.rosterActive}
         handleResetViewAndShare={resetViewAndShare}
         handleViewStudentData={handleViewStudentData}
         handleShareStudentData={handleShareStudentData}
@@ -422,7 +425,7 @@ const ClassRoster = ({
       <RosterSection
         hot={false}
         handleManualRefresh={handleManualRefresh}
-        handleToggleLessonInfo={handleToggleLessonInfo}
+        handleToggleRightView={handleToggleRightView}
         rightView={rightView}
         setRightView={setRightView}
         studentList={inactiveStudents?.notInClass}
@@ -444,7 +447,7 @@ const ClassRoster = ({
       <RosterSection
         hot={false}
         handleManualRefresh={handleManualRefresh}
-        handleToggleLessonInfo={handleToggleLessonInfo}
+        handleToggleRightView={handleToggleRightView}
         rightView={rightView}
         setRightView={setRightView}
         studentList={inactiveStudents?.onDemand}

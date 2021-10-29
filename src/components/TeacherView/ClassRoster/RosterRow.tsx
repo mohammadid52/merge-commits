@@ -2,6 +2,7 @@
 import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
 
 interface RosterRowProps extends IRosterSectionProps {
@@ -29,6 +30,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
   viewedStudent,
   sharedStudent,
   handlePageChange,
+  rightView,
+  setRightView,
+  handleToggleRightView,
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -127,27 +131,19 @@ const RosterRow: React.FC<RosterRowProps> = ({
       <div
         id={`${id}`}
         draggable={false}
-        className={`w-full flex h-10 rounded shadow-sm px-1
-                    ${active && activeHoverClass} 
-                    ${!active && inactiveTextClass}
-                    ${number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''} 
-                    ${
-                      studentIsViewed()
-                        ? `bg-white border-l-4 ${theme.borderColor[themeColor]}`
-                        : ''
-                    }
-                    ${
-                      studentIsShared()
-                        ? `border-l-4 ${theme.borderColor[themeColor]}`
-                        : ''
-                    }
-                    `}>
+        className={`w-full flex h-10 rounded shadow-sm px-1 ${
+          active && activeHoverClass
+        }  ${!active && inactiveTextClass} ${
+          number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
+        } ${
+          studentIsViewed() ? `bg-white border-l-4 ${theme.borderColor[themeColor]}` : ''
+        } ${studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''} `}>
         {/* STUDENT NAME */}
         <div
           id={`${id}`}
           onMouseDown={active ? handleRowSelection : undefined}
           draggable={false}
-          className={`w-7/10 flex flex-row select-none ${active && activeHoverClass} `}>
+          className={`w-6/10 flex flex-row select-none ${active && activeHoverClass} `}>
           <div
             id={`${id}`}
             draggable={false}
@@ -183,7 +179,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     active && activeHoverClass
                   }`}
                   onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
-                  <div className="p-1 rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm">
+                  <div className="p-1 rounded text-white bg-dark-red hover:bg-red-500 text-sm">
                     <span id={`${id}`} className="">
                       Unshare
                     </span>
@@ -199,7 +195,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     active && activeHoverClass
                   }`}
                   onClick={() => {}}>
-                  <div className="p-1 rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm">
+                  <div className="p-1 rounded text-white bg-dark-gray bg-opacity-20 text-sm">
                     <span className="pointer-events-none ">Share</span>
                   </div>
                 </div>
@@ -214,7 +210,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                   active && activeHoverClass
                 }`}
                 onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
-                <div className="p-1  rounded-lg text-white bg-green-500 bg-opacity-20 hover:bg-opacity-80 text-sm">
+                <div className="p-1  rounded text-white bg-green-500 bg-opacity-20 hover:bg-opacity-80 text-sm">
                   <span className="pointer-events-none">Share</span>
                 </div>
               </div>
@@ -226,13 +222,35 @@ const RosterRow: React.FC<RosterRowProps> = ({
             id={`${id}`}
             data-studentid={id}
             draggable={false}
-            className={`w-3/10 mx-auto flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
+            className={`w-3/10 mx-auto flex items-center text-center rounded text-white bg-dark-gray bg-opacity-20 text-sm ${
               active && activeHoverClass
             }`}
             onClick={() => {}}>
             <span className="pointer-events-none">Share</span>
           </div>
         )}
+
+        {/* INFO BUTTON */}
+
+        <div
+          id={`${id}`}
+          draggable={false}
+          className={`w-1/10 mx-auto flex items-center text-center ${
+            active && activeHoverClass
+          }`}
+          onClick={() => handleShareStudentData(id, getPageID(currentLocation))}>
+          <div
+            className={`hover:${theme.textColor[themeColor]} pl-1 text-white hover:bg-opacity-80 text-sm`}>
+            <DotMenu
+              menuItems={[
+                {
+                  label: 'Profile',
+                  action: () => handleToggleRightView({view: 'profile', option: id}),
+                },
+              ]}
+            />
+          </div>
+        </div>
       </div>
     </>
   );

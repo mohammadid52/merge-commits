@@ -13,7 +13,7 @@ interface IRosterFrame {
   fullscreen?: boolean;
   theme?: any;
   clientKey?: string;
-  rightView?: string;
+  rightView?: {view: string; option?: string};
   setRightView?: any;
 }
 

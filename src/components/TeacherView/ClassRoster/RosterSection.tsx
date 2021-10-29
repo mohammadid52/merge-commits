@@ -12,8 +12,8 @@ export interface IRosterSectionProps {
   hot?: boolean;
   handleManualRefresh?: () => void;
   loading?: boolean;
-  handleToggleLessonInfo?: (rightViewString: string, fn: Function) => void;
-  rightView?: string;
+  handleToggleRightView?: (rightViewObj: {view: string; option?: string}) => void;
+  rightView?: {view: string; option?: string};
   setRightView?: any;
   studentList?: any[];
   handleResetViewAndShare?: () => void;
@@ -30,9 +30,8 @@ const RosterSection = ({
   hot,
   handleManualRefresh,
   loading,
-  handleToggleLessonInfo,
+  handleToggleRightView,
   rightView,
-  setRightView,
   studentList,
   handleResetViewAndShare,
   handleViewStudentData,
@@ -105,7 +104,7 @@ const RosterSection = ({
           {hot && (
             <span
               className={`${theme.textColor[themeColor]} text-xs font-semibold hover:underline absolute cursor-pointer w-auto right-0 whitespace-pre overflow-hidden`}
-              onClick={() => handleToggleLessonInfo(rightView, setRightView)}>
+              onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}>
               (Sentiments 😀)
             </span>
           )}
@@ -117,7 +116,7 @@ const RosterSection = ({
         <div
           className={`${theme.textColor[themeColor]} w-full h-8 flex py-2  bg-transparent`}>
           <div
-            className={`w-3.5/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
+            className={`w-3/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
             </span>
@@ -128,7 +127,7 @@ const RosterSection = ({
             </span>
           </div>
           <div
-            className={`w-3.5/10  flex items-center justify-center rounded-lg text-center text-xs`}>
+            className={`w-3/10  flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
             </span>
@@ -139,6 +138,9 @@ const RosterSection = ({
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
             </span>
           </div>
+          <div
+            className={`w-1/10 flex items-center justify-center rounded-lg text-center text-xs`}
+          />
         </div>
       )}
 
@@ -164,6 +166,8 @@ const RosterSection = ({
               viewedStudent={viewedStudent}
               sharedStudent={sharedStudent}
               handlePageChange={handlePageChange}
+              rightView={rightView}
+              handleToggleRightView={handleToggleRightView}
             />
           ))
         ) : (
