@@ -27,7 +27,7 @@ import useDictionary from '../../../../customHooks/dictionary';
 import UserListLoader from './UserListLoader';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
-const UserLookup = ({isInInstitute}: any) => {
+const UserLookup = ({isInInstitute, instituteId}: any) => {
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
@@ -94,7 +94,9 @@ const UserLookup = ({isInInstitute}: any) => {
   };
 
   const handleLink = () => {
-    history.push(`/dashboard/registration`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${instituteId}/register-user`
+    );
   };
 
   const searchUserFromList = async () => {
@@ -379,9 +381,11 @@ const UserLookup = ({isInInstitute}: any) => {
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-between items-center">
         {isInInstitute ? (
-          <h3 className="text-lg leading-6 text-gray-600 w-auto">Users</h3>
+          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
+            Users
+          </h3>
         ) : (
           <SectionTitle
             title={UserLookupDict[userLanguage]['title']}
@@ -432,7 +436,10 @@ const UserLookup = ({isInInstitute}: any) => {
             className={`${
               isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
             } mb-8 align-middle rounded-lg"`}>
-            <div className={`h-8/10 ${isInInstitute ? '' : 'px-4'}`}>
+            <div
+              className={`h-8/10 w-screen lg:w-full overflow-x-scroll lg:overflow-x-hidden ${
+                isInInstitute ? '' : 'px-4'
+              }`}>
               <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UserLookupDict[userLanguage]['name']}</span>

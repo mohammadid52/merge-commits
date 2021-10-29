@@ -416,7 +416,7 @@ const LessonPlanManager = ({
   };
 
   return (
-    <div className="bg-white shadow-5 mb-4">
+    <div className="bg-white shadow-5 mb-4 overflow-x-auto lg:overflow-x-hidden">
       {/* *************** SECTION HEADER ************ */}
       <div
         className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
@@ -432,7 +432,7 @@ const LessonPlanManager = ({
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">
-        <div className="my-8 w-6/10 m-auto flex items-center justify-center">
+        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
           <div className="mr-4">
             <Selector
               selectedItem={selecetedLesson.value}
@@ -469,7 +469,7 @@ const LessonPlanManager = ({
           ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
             <div>
               {/* *************** LESSONS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 w-screen lg:w-full">
                 <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
@@ -487,7 +487,7 @@ const LessonPlanManager = ({
                 </div>
               </div>
 
-              <div className="max-h-88 overflow-y-auto mb-10">
+              <div className="max-h-88 w-screen lg:w-full overflow-y-auto overflow-x-hidden mb-10">
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="droppable">
                     {(provided1, snapshot) => (

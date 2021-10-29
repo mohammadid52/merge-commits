@@ -172,14 +172,6 @@ const Institution = (props: InstitutionProps) => {
       ];
     }
   }
-  //  else if (pathname.indexOf('class') > -1) {
-  //   heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSES'];
-  //   breadcrumbPathForSection = [{
-  //     title: heroSectionTitle,
-  //     url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
-  //     last: true,
-  //   }];
-  // }
   else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
     heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
     breadcrumbPathForSection = [
@@ -320,25 +312,8 @@ const Institution = (props: InstitutionProps) => {
         </div>
       </div>
       <div className="px-2 py-8 md:px-4 lg:p-8">
-        {/* Section Header */}
-        {/* <BreadCrums items={breadCrumbsList} /> */}
-        {/* <div className="flex justify-between">
-        <SectionTitle title={`${institutionData.name} Dashboard`} />
-      </div> */}
         <PageWrapper>
           <Switch>
-            {/* <Route
-            path={`${match.url}/edit`}
-            exact
-            render={() => (
-              <InstitutionBuilder
-                institute={institutionData}
-                loading={fetchingDetails}
-                toggleUpdateState={toggleUpdateState}
-                updateServiceProviders={updateServiceProviders}
-              />
-            )}
-          /> */}
             <Route
               path={`${match.url}/`}
               render={() => (

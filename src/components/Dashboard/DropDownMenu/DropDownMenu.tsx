@@ -41,11 +41,11 @@ const DropDownMenu = ({
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
                 <div className="w-auto inline-flex items-center">
-                  <div className="w-12 h-12">
+                  <div className="w-8 h-8 2xl:w-12 2xl:h-12">
                     {image ? (
                       <img
-                        className="inline-block rounded-full border-2 border-gray-400"
-                        style={{width: 48, height: 48}}
+                        className="inline-block rounded-full border-2 border-gray-400 w-8 h-8 2xl:w-12 2xl:h-12"
+                        // style={{width: 48, height: 48}}
                         src={getImageFromS3Static(image)}
                         alt=""
                       />
@@ -68,7 +68,7 @@ const DropDownMenu = ({
 
                   {/* <span>{[firstName, lastName].join(' ')}</span> */}
                   <ChevronDownIcon
-                    className="w-8 h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+                    className="w-6 h-6 2xl:w-8 2xl:h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                     aria-hidden="true"
                   />
                 </div>

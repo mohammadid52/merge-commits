@@ -211,7 +211,7 @@ const UnitBuilder = ({instId}: any) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 my-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">

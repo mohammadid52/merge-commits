@@ -15,7 +15,7 @@ const HeaderMegaMenu = () => {
   } = useContext(GlobalContext);
   const {Institute_info} = useDictionary(clientKey);
 
-  const baseUrl = user.associateInstitute?.length
+  const baseUrl = user.role === "SUP" ? `/dashboard/manage-institutions`: user.associateInstitute?.length
     ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
     : '';
 

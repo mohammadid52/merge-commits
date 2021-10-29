@@ -1,30 +1,38 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
+
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import HeroBanner from '@components/Header/HeroBanner';
+import useDictionary from '@customHooks/dictionary';
+import {breadcrumbsRoutes} from '@utilities/breadcrumb';
+import {getAsset} from 'assets';
+
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
+import NavBarRouter from '../NavBarRouter';
 // Institute info tabs.
-import ClassBuilder from './Builders/ClassBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
-import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
 import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
 import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
 import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
 import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
 import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import EditClass from './EditBuilders/EditClass';
 import Institution from './Institution';
-import InstitutionAdd from './InstitutionAdd';
 // Instituttion
 import InstitutionLookup from './InstitutionLookup';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const {state, dispatch} = useContext(GlobalContext);
+  const {clientKey, state, theme, userLanguage, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
+  const {pathname} = useLocation();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
+  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [tabsData, setTabsData] = useState({inst: 'staff', instCurr: 0});
   const tabProps = {tabsData, setTabsData};
   // TODO: Need to setup route separately if required,
@@ -36,6 +44,17 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
   }, [state.user.role]);
+
+  const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
+    breadcrumbsTitles: BreadcrumsTitles[userLanguage],
+    instituteTabTitles: Institute_info[userLanguage],
+    pathname,
+  });
+
+  const breadCrumbsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    ...breadcrumbPathForSection,
+  ].filter(Boolean);
 
   return (
     <div className={`w-full h-full flex justify-center`}>
@@ -49,60 +68,26 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/add`}
           render={() => <InstitutionBuilder />} // Create New institution.
         />
-        {/* <Route
-          path={`${match.url}/institution/class-creation`}
-          render={() => <ClassBuilder />} // Create new class
-        /> */}
         <Route
           path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />} // Create new curricular
         />
-        {/* <Route
-          path={`${match.url}/institution/:institutionId/course-builder`}
-          exact
-          render={() => <CourseBuilder />} // Create new course
-        /> */}
-        {/* <Route
-          path={`${match.url}/institution/:institutionId/course-builder/:courseId`}
-          render={() => <CourseBuilder />} // Create new course
-        /> */}
-        {/* <Route
-          path={`${match.url}/institution/room-creation`}
-          render={() => <ClassRoomBuilder />} // Create new room
-        /> */}
         <Route
           path={`${match.url}/institution/:institutionId`}
           render={() => <Institution tabProps={tabProps} />} // Institution info page
         />
-
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
           render={() => <EditLearningObjective />} // Edit curricular topic
         />
-        {/* <Route
-          path={`${match.url}/curricular/:curricularId/topic/add`}
-          render={() => <AddTopic />} // Add new topic to curricular
-        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
           render={() => <EditTopic />} // Edit curricular topic
         />
-        {/* <Route
-          path={`${match.url}/curricular/:curricularId/measurement/add`}
-          render={() => <AddMeasurement />} // Add new measurement to curricular
-        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
           render={() => <EditMeasurement />} // Edit curricular measurement
         />
-        {/* <Route
-          path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
-          render={() => <UnitBuilder />} // Add new syllabus to curricular
-        /> */}
-        {/* <Route
-          path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
-          render={() => <AddSyllabus />} // Add new syllabus to curricular
-        /> */}
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
           render={() => <UnitBuilder />} // Edit curricular syllabus
@@ -123,6 +108,21 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/:institutionId/curricular`}
           render={() => <CurricularView tabProps={tabProps} />} // Curricular information view.
         />
+        {pathname.indexOf('/manage-institutions/institution') === -1 && (
+          <div className={`w-full h-full`}>
+            <div className="relative">
+              <HeroBanner imgUrl={bannerImage} title={heroSectionTitle} />
+              <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
+                <BreadcrumbsWithBanner items={breadCrumbsList} />
+              </div>
+            </div>
+            <div className="px-2 py-8 md:px-4 lg:p-8">
+              <PageWrapper>
+                <NavBarRouter />
+              </PageWrapper>
+            </div>
+          </div>
+        )}
       </Switch>
     </div>
   );

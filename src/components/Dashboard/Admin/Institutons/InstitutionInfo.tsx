@@ -1,19 +1,16 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
-import Loader from '@components/Atoms/Loader';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
-import Csv from '@components/Dashboard/Csv/Csv';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
-import * as customMutations from '@customGraphql/customMutations';
-import DroppableMedia from '@molecules/DroppableMedia';
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
-import {AiOutlineCamera} from 'react-icons/ai';
+import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {IoIosGlobe} from 'react-icons/io';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {HiPencil} from 'react-icons/hi';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Storage from '@aws-amplify/storage';
+
+import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+import * as customMutations from '@customGraphql/customMutations';
+import DroppableMedia from '@molecules/DroppableMedia';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
@@ -24,6 +21,7 @@ import {
   initials,
   stringToHslColor,
 } from '../../../../utilities/strings';
+
 import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
 import User from '../UserManagement/User';
 import UserLookup from '../UserManagement/UserLookup';
@@ -37,8 +35,13 @@ import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
 import StaffBuilder from './Listing/StaffBuilder';
 import Students from './Students';
-import {useParams} from 'react-router';
-import {useQuery} from '@customHooks/urlParam';
+
+import Loader from '@components/Atoms/Loader';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import Csv from '@components/Dashboard/Csv/Csv';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
+import Tooltip from '@components/Atoms/Tooltip';
+import NavBarRouter from '../NavBarRouter';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -184,8 +187,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <div
             hidden={pathname.includes('page-builder')}
-            className="w-auto lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col">
-            <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
+            className="w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col"
+            onClick={handleImageClick}>
+            <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col flex-shrink-0">
               {imageLoading ? (
                 <div
                   className={`w-20 h-20 md:w-30 md:h-30 2xl:w-40 2xl:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
@@ -193,7 +197,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </div>
               ) : instProps?.institute?.image ? (
                 imageUrl ? (
-                  <div className="relative">
+                  <div className="relative flex justify-center">
                     <DroppableMedia
                       mediaRef={mediaRef}
                       setImage={(img: any, file: any) => {
@@ -206,11 +210,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                         src={imageUrl}
                       />
                     </DroppableMedia>
-                    <div
+                    {/* <div
                       className={`absolute w-8 h-8 2xl:w-12 2xl:h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} 2xl:right-2 right-2.5 bottom-0 p-1.5 2xl:p-3 cursor-pointer`}
                       onClick={handleImageClick}>
                       <AiOutlineCamera className="w-5 h-5 2xl:w-6 2xl:h-6 text-white" />
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
                   <div
@@ -251,25 +255,27 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       </div>
                     </div>
                   </DroppableMedia>
-                  <div
-                    className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                  {/* <div
+                    className={`absolute w-8 h-8 2xl:w-12 2xl:h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
                     onClick={handleImageClick}>
-                    <AiOutlineCamera className="w-6 h-6 text-white" />
-                  </div>
+                    <AiOutlineCamera className="w-5 h-5 2xl:w-6 2xl:h-6 text-white" />
+                  </div> */}
                 </div>
               )}
 
-              <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-40 2xl:w-48">
-                <p>{instProps?.institute?.name ? instProps?.institute?.name : ''}</p>
-                {/* <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
+              <div className="text-xl font-bold flex items-center justify-center text-gray-900 mt-4 w-auto 2xl:w-48">
+                <p className="w-min">
+                  {instProps?.institute?.name ? instProps?.institute?.name : ''}
+                </p>
+                <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                   <span
                     className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
                     <HiPencil
                       className="w-6 h-6 pl-2"
-                      onClick={() => history.push(`${match.url}/edit?id=${id}`)}
+                      // onClick={() => history.push(`${match.url}/edit?id=${id}`)}
                     />
                   </span>
-                </Tooltip> */}
+                </Tooltip>
               </div>
             </div>
             {institute?.id && (
@@ -340,7 +346,12 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             <div className="bg-white border-l-none lg:border-l-0 border-gray-200 mb-4 flex-1">
               <div className="overflow-x-scroll overflow-y-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
-                <Switch>
+                <NavBarRouter
+                  {...instProps}
+                  updateCurricularList={updateCurricularList}
+                  curricular={curricular}
+                />
+                {/* <Switch>
                   <Route
                     path={`${match.url}/class`}
                     exact
@@ -352,26 +363,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       />
                     )}
                   />
-                  {/* <Route
-                    path={`${match.url}/class-creation`}
-                    exact
-                    render={() => (
-                      <ClassBuilder
-                        instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )} // Create new class
-                  /> */}
-                  {/* <Route
-                    path={`${match.url}/class-edit/:classId`}
-                    exact
-                    render={() => (
-                      <EditClass
-                        instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )} // Edit current class
-                  /> */}
                   <Route
                     path={`${match.url}/class-rooms`}
                     exact
@@ -482,7 +473,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       render={() => <LessonsBuilderHome instId={institute?.id} />}
                     />
                   </UniversalLessonBuilderProvider>
-                </Switch>
+                </Switch> */}
               </div>
             </div>
           </div>

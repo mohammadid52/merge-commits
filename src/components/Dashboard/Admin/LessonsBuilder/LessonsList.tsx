@@ -151,7 +151,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const getLessonsList = async () => {
     try {
       let condition = {};
-      if (instId) {
+      if (instId && state.user.role !== 'SUP') {
         condition = {
           filter: {
             institutionID: {eq: instId},

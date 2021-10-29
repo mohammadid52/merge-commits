@@ -1,8 +1,6 @@
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import * as mutations from '../../../../../graphql/mutations';
-import {graphqlOperation, API} from 'aws-amplify';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';

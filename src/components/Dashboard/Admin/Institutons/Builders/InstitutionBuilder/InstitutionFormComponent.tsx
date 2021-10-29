@@ -305,7 +305,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     toggleCropper={toggleCropper}>
                     <img
                       onClick={handleImage}
-                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                       src={imageUrl}
                     />
                   </DroppableMedia>
