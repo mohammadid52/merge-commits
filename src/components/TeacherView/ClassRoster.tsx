@@ -1,19 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useLessonControls from '@customHooks/lessonControls';
-import usePrevious from '@customHooks/previousProps';
-import {getAsset} from 'assets';
-import {access} from 'fs';
 import React, {useContext, useEffect, useState} from 'react';
-import {IoMdRefresh} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useParams} from 'react-router-dom';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import useDictionary from '../../customHooks/dictionary';
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import RosterRow from './ClassRoster/RosterRow';
-import RosterRowEmpty from './ClassRoster/RosterRowEmpty';
+import RosterSection from './ClassRoster/RosterSection';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -35,7 +29,6 @@ const ClassRoster = ({
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
-  const theme = gContext.theme;
   const controlState = gContext.controlState;
   const controlDispatch = gContext.controlDispatch;
   const clientKey = gContext.clientKey;
@@ -44,7 +37,6 @@ const ClassRoster = ({
   const {lessonPlannerDict} = useDictionary(clientKey);
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   // ##################################################################### //
   // ########################### LOADING STATE ########################### //
@@ -142,6 +134,7 @@ const ClassRoster = ({
   // ##################################################################### //
 
   // ~~~~~~~~~ FETCH CLASS STUDENTS ~~~~~~~~ //
+
   const getClassStudents = async (sessionClassID: string) => {
     try {
       const classStudents: any = await API.graphql(
@@ -177,11 +170,11 @@ const ClassRoster = ({
     }
   };
 
-  // ~~~~ FETCH STUDENTS IN THIS LESSON ~~~~ //
+  // ~~~ GET ACTIVE ST // PERSONLOCATION ~~~ //
 
   const {lessonID} = urlParams;
 
-  const getSyllabusLessonStudents = async () => {
+  const getActiveClassStudents = async () => {
     setLoading(true);
     try {
       const syllabusLessonStudents: any = await API.graphql(
@@ -203,7 +196,6 @@ const ClassRoster = ({
           return findStudentInClasslist;
         }
       });
-      // console.log('studentsFromThisClass - ', studentsFromThisClass);
       setPersonLocationStudents(studentsFromThisClass);
       controlDispatch({
         type: 'UPDATE_STUDENT_ROSTER',
@@ -212,24 +204,37 @@ const ClassRoster = ({
       subscription = subscribeToPersonLocations();
       deleteSubscription = subscribeToDeletePersonLocations();
     } catch (e) {
-      console.error('getSyllabusLessonstudents - ', e);
+      console.error('getActiveClassStudents - ', e);
     } finally {
       setLoading(false);
     }
   };
 
-  const inactiveStudents = classStudents.filter((student: any) => {
-    const isInStateRoster = controlState.roster.find(
-      (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
-    );
-    if (isInStateRoster === undefined) {
-      return student;
+  // ~~~ FILTER INACTIVE // ON-DEMAND ST ~~~ //
+
+  const inactiveStudents = classStudents.reduce(
+    (studentAcc: {notInClass: any[]; onDemand: any[]}, student: any) => {
+      let isOnDemand = student.person.onDemand;
+      let isInStateRoster = controlState.roster.find(
+        (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
+      );
+      if (isInStateRoster === undefined) {
+        if (isOnDemand) {
+          return {...studentAcc, onDemand: [...studentAcc.onDemand, student]};
+        } else {
+          return {...studentAcc, notInClass: [...studentAcc.notInClass, student]};
+        }
+      }
+    },
+    {
+      notInClass: [],
+      onDemand: [],
     }
-  });
+  );
 
   useEffect(() => {
     if (classStudents.length > 0) {
-      getSyllabusLessonStudents();
+      getActiveClassStudents();
     }
   }, [classStudents]);
 
@@ -374,7 +379,7 @@ const ClassRoster = ({
 
   const handleManualRefresh = () => {
     if (loading === false) {
-      getSyllabusLessonStudents();
+      getActiveClassStudents();
     }
   };
 
@@ -393,121 +398,67 @@ const ClassRoster = ({
 
   return (
     <div className={`w-full h-full px-4 pt-2 overflow-y-auto overflow-x-hidden`}>
-      {/* ROSTER TITLE */}
-      <div className={`w-full h-8 flex items-center bg-transparent`}>
-        <div className="relative w-full h-auto">
-          <span className="text-sm font-semibold text-gray-600">
-            {
-              lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
-                'IN_CLASS'
-              ]
-            }
-          </span>
-          <span
-            className={`${theme.textColor[themeColor]} text-xs font-semibold hover:underline absolute cursor-pointer w-auto right-0 whitespace-pre overflow-hidden`}
-            onClick={() => handleToggleLessonInfo(rightView, setRightView)}>
-            (Sentiments 😀)
-          </span>
-        </div>
-      </div>
+      {/* STUDENTS - IN CLASS */}
+      <RosterSection
+        hot={true}
+        handleManualRefresh={handleManualRefresh}
+        loading={loading}
+        handleToggleLessonInfo={handleToggleLessonInfo}
+        rightView={rightView}
+        setRightView={setRightView}
+        studentList={controlState.roster}
+        handleResetViewAndShare={resetViewAndShare}
+        handleViewStudentData={handleViewStudentData}
+        handleShareStudentData={handleShareStudentData}
+        viewedStudent={viewedStudent}
+        sharedStudent={sharedStudent}
+        handlePageChange={handlePageChange}
+        sectionTitle={
+          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']
+        }
+        emptyMessage={'No students are in class'}
+      />
+      {/* STUDENTS - NOT IN CLASS */}
+      <RosterSection
+        hot={false}
+        handleManualRefresh={handleManualRefresh}
+        handleToggleLessonInfo={handleToggleLessonInfo}
+        rightView={rightView}
+        setRightView={setRightView}
+        studentList={inactiveStudents?.notInClass}
+        handleResetViewAndShare={resetViewAndShare}
+        handleViewStudentData={handleViewStudentData}
+        handleShareStudentData={handleShareStudentData}
+        viewedStudent={viewedStudent}
+        sharedStudent={sharedStudent}
+        handlePageChange={handlePageChange}
+        sectionTitle={
+          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+            'NOT_IN_CLASS'
+          ]
+        }
+        emptyMessage={'...'}
+      />
 
-      {/* ROSTER HEAD LABELS*/}
-      <div
-        className={`${theme.textColor[themeColor]} w-full h-8 flex py-2  bg-transparent`}>
-        <div
-          className={`w-3.5/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
-          <span className="w-auto">
-            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
-          </span>
-          <span className={`w-8`} onClick={handleManualRefresh}>
-            <IconContext.Provider value={{color: '#EDF2F7'}}>
-              <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
-            </IconContext.Provider>
-          </span>
-        </div>
-        <div
-          className={`w-3.5/10  flex items-center justify-center rounded-lg text-center text-xs`}>
-          <span className="w-auto">
-            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
-          </span>
-        </div>
-        <div
-          className={`w-3/10 flex items-center justify-center rounded-lg text-center text-xs`}>
-          <span className="w-auto">
-            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
-          </span>
-        </div>
-      </div>
-
-      {/* ROWS */}
-      <div className={`w-full flex flex-col items-center`}>
-        {/* STUDENTS - Active */}
-        {controlState.roster.length > 0 ? (
-          controlState.roster.map((student: any, key: number) => (
-            <RosterRow
-              key={`rosterrow_${key}`}
-              number={key}
-              id={student.personAuthID}
-              active={true}
-              firstName={student.person?.firstName ? student.person?.firstName : ''}
-              lastName={student.person?.lastName ? student.person?.lastName : ''}
-              preferredName={
-                student.person?.preferredName ? student.person?.preferredName : ''
-              }
-              role={student.person?.role ? student.person?.role : ''}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleResetViewAndShare={resetViewAndShare}
-              handleViewStudentData={handleViewStudentData}
-              handleShareStudentData={handleShareStudentData}
-              viewedStudent={viewedStudent}
-              sharedStudent={sharedStudent}
-              handlePageChange={handlePageChange}
-            />
-          ))
-        ) : (
-          <RosterRowEmpty />
-        )}
-      </div>
-
-      {/* STUDENTS - INActive */}
-      <div
-        className={`w-full h-8 mt-2 flex items-center text-sm font-semibold text-gray-600 bg-transparent`}>
-        <span className="w-auto h-auto">
-          {
-            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
-              'NOT_IN_CLASS'
-            ]
-          }
-        </span>
-      </div>
-      <div className={`w-full flex flex-col items-center`}>
-        {inactiveStudents.length > 0 ? (
-          inactiveStudents.map((student: any, key: number) => (
-            <RosterRow
-              key={`rosterrow_inactive_${key}`}
-              number={key}
-              id={student.personAuthID}
-              active={false}
-              firstName={student.person?.firstName ? student.person?.firstName : ''}
-              lastName={student.person?.lastName ? student.person?.lastName : ''}
-              preferredName={
-                student.person?.preferredName ? student.person?.preferredName : ''
-              }
-              role={student.person?.role ? student.person?.role : ''}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleResetViewAndShare={resetViewAndShare}
-              handleViewStudentData={handleViewStudentData}
-              handleShareStudentData={handleShareStudentData}
-              viewedStudent={viewedStudent}
-              sharedStudent={sharedStudent}
-            />
-          ))
-        ) : (
-          <RosterRowEmpty message={'All students are in class'} />
-        )}
-      </div>
+      {/* STUDENTS - ON DEMAND*/}
+      <RosterSection
+        hot={false}
+        handleManualRefresh={handleManualRefresh}
+        handleToggleLessonInfo={handleToggleLessonInfo}
+        rightView={rightView}
+        setRightView={setRightView}
+        studentList={inactiveStudents?.onDemand}
+        handleResetViewAndShare={resetViewAndShare}
+        handleViewStudentData={handleViewStudentData}
+        handleShareStudentData={handleShareStudentData}
+        viewedStudent={viewedStudent}
+        sharedStudent={sharedStudent}
+        handlePageChange={handlePageChange}
+        sectionTitle={
+          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['ON_DEMAND']
+        }
+        emptyMessage={'No on-demand students'}
+      />
     </div>
   );
 };

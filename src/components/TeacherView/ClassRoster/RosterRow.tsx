@@ -2,8 +2,9 @@
 import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import {IRosterSectionProps} from './RosterSection';
 
-interface RosterRowProps {
+interface RosterRowProps extends IRosterSectionProps {
   number: number;
   id: string;
   active: boolean;
@@ -13,12 +14,6 @@ interface RosterRowProps {
   role: string;
   currentLocation: string;
   lessonProgress: string;
-  handleResetViewAndShare?: () => void;
-  handleViewStudentData?: (id: string) => void;
-  handleShareStudentData?: (idStr: string, pageIdStr: string) => void;
-  viewedStudent: string;
-  sharedStudent: string;
-  handlePageChange?: any;
 }
 
 const RosterRow: React.FC<RosterRowProps> = ({
