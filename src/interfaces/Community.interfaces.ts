@@ -25,7 +25,7 @@ export interface ICommunityCard extends IEventInput {
   id: string;
   cardName?: string;
   cardType?: string;
-
+  personAuthID?: string;
   person?: IPerson;
   cardDate?: string;
   chat: IChat[];

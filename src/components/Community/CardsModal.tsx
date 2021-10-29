@@ -9,6 +9,7 @@ import {
   NavStateTypes,
 } from '@components/Community/constants.community';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import useAuth from '@customHooks/useAuth';
 import {
   ISpotlightInput,
   IAnnouncementInput,
@@ -93,14 +94,14 @@ const CardsModal = ({
   showCardsModal: boolean;
   instId: string;
   functions: {
-    onSpotlightSubmit: (input: ISpotlightInput) => void;
-    onAnnouncementSubmit: (input: IAnnouncementInput) => void;
-    onEventSubmit: (input: IEventInput) => void;
-    onCheckItOutSubmit: (input: ICheckItOutInput) => void;
+    onSpotlightSubmit?: (input: ISpotlightInput) => void;
+    onAnnouncementSubmit?: (input: IAnnouncementInput) => void;
+    onEventSubmit?: (input: IEventInput) => void;
+    onCheckItOutSubmit?: (input: ICheckItOutInput) => void;
   };
   setShowCardsModal: setState['boolean'];
-  navState: NavStateTypes;
-  setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
+  navState?: NavStateTypes;
+  setNavState?: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
   const onInit = navState === 'init';
   const onSpotlight = navState === 'spotlight';
@@ -112,6 +113,11 @@ const CardsModal = ({
     setShowCardsModal(false);
     setNavState('init');
   };
+  const {isStudent} = useAuth();
+
+  let cardList = isStudent
+    ? communityContent.filter((d) => d.type === communityTypes.CHECK_IT_OUT)
+    : communityContent;
 
   return (
     <div>
@@ -124,8 +130,11 @@ const CardsModal = ({
           <>
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2  px-2 my-4">
-                  {communityContent.map((content, idx) => (
+                <div
+                  className={`grid grid-cols-1 ${
+                    cardList.length > 1 ? 'sm:grid-cols-2' : ''
+                  } gap-4   px-2 my-4`}>
+                  {cardList.map((content, idx) => (
                     <Item setNavState={setNavState} key={idx} content={content} />
                   ))}
                 </div>

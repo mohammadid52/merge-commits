@@ -851,10 +851,7 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
-              {(userData.role === 'SUP' ||
-                userData.role === 'ADM' ||
-                userData.role === 'TR' ||
-                userData.role === 'FLW') && (
+              {
                 <Route
                   exact
                   path={`${match.url}/community`}
@@ -864,18 +861,7 @@ const Dashboard = (props: DashboardProps) => {
                     </ErrorBoundary>
                   )}
                 />
-              )}
-              {userData.role === 'ST' && (
-                <Route
-                  exact
-                  path={`${match.url}/community`}
-                  render={() => (
-                    <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
-                      <CommunityForStudents role={userData.role} />
-                    </ErrorBoundary>
-                  )}
-                />
-              )}
+              }
 
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||

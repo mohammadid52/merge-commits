@@ -10,17 +10,22 @@ import orderBy from 'lodash/orderBy';
 import React, {useEffect, useState} from 'react';
 
 const CommanCommunityContent = ({
-  contentOnlyForTeachers,
+  customContent,
   list,
+  setList,
+  onDelete,
 }: {
-  contentOnlyForTeachers?: React.ReactNode;
+  customContent?: React.ReactNode;
   list?: ICommunityCard[];
+  setList?: React.Dispatch<React.SetStateAction<ICommunityCard[]>>;
+  onDelete?: (cardId: string, fileKey: string) => void;
 }) => {
   const [commonList, setCommonList] = useState<ICommunityCard[]>([]);
 
   useEffect(() => {
     if (list && list?.length > 0) {
       setCommonList([...list]);
+      setList([...list]);
     }
   }, [list]);
 
@@ -28,7 +33,7 @@ const CommanCommunityContent = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState('');
-  const {instId, isStudent} = useAuth();
+  const {instId} = useAuth();
 
   const fetchCommunities = async () => {
     try {
@@ -64,7 +69,7 @@ const CommanCommunityContent = ({
     <ContentCard
       hasBackground={false}
       additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
-      {!isStudent && contentOnlyForTeachers}
+      {customContent}
 
       {!Boolean(error) && isLoading && !isFetched && (
         <Loader withText="Loading cards..." className="w-auto text-gray-400" />
@@ -80,7 +85,9 @@ const CommanCommunityContent = ({
         isFetched &&
         commonList &&
         commonList.length > 0 &&
-        commonList.map((card, idx) => <Card key={idx} cardDetails={card} />)}
+        commonList.map((card, idx) => (
+          <Card onDelete={onDelete} key={idx} cardDetails={card} />
+        ))}
     </ContentCard>
   );
 };

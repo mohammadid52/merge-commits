@@ -12,12 +12,30 @@ import {API, graphqlOperation} from 'aws-amplify';
 import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
 import {v4 as uuidV4} from 'uuid';
-import {orderBy} from 'lodash';
+import {orderBy, remove} from 'lodash';
 import Loader from '@components/Atoms/Loader';
+import Popover from '@components/Atoms/Popover';
+import {BiDotsVerticalRounded} from 'react-icons/bi';
+import useGraphqlMutation from '@graphql/useGraphqlMutation';
 
-const Comment = ({chat, person}: {chat: IChat; person: IPerson}) => {
+const Comment = ({
+  chat,
+  person,
+  onChatDelete,
+  authId,
+  email,
+}: {
+  chat: IChat;
+  person: IPerson;
+  authId: string;
+  email: string;
+  onChatDelete: (chatId: string) => void;
+}) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const iAmOwnerOfTheChat = authId === chat.personAuthID || email === chat.personEmail;
+
   return (
-    <div className="antialiased mx-auto sm:max-w-screen">
+    <div className="antialiased rela mx-auto sm:max-w-screen">
       <div className="space-y-4 mb-4">
         <div className="flex">
           <div className="flex-shrink-0 mr-3 w-auto">
@@ -27,12 +45,46 @@ const Comment = ({chat, person}: {chat: IChat; person: IPerson}) => {
               alt=""
             />
           </div>
-          <div className="flex-1 border-0 rounded-lg border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+          <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
             <strong>{person.firstName}</strong>{' '}
             <span className="text-xs text-gray-500">
               {moment(chat.createdAt).format('LT')}
             </span>
             <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
+            {iAmOwnerOfTheChat && (
+              <div className="w-auto absolute inset-y-0 right-0 p-4">
+                <Popover
+                  show={showMenu}
+                  bottom={0.6}
+                  dir={'top'}
+                  minWidth={32}
+                  minHeight={11}
+                  // containerClass="min-h-8 min-w-24"
+                  rounded="lg"
+                  setShow={setShowMenu}
+                  content={
+                    <dl className="grid grid-cols-1  gap-y-3">
+                      <div className="col-span-1">
+                        <dt
+                          onClick={() => {
+                            onChatDelete(chat.id);
+                            setShowMenu(false);
+                          }}
+                          className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                          Delete
+                        </dt>
+                      </div>
+                    </dl>
+                  }>
+                  <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+                    <BiDotsVerticalRounded
+                      title="show menu"
+                      className="h-full w-full text-lg text-gray-500"
+                    />
+                  </span>
+                </Popover>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -44,10 +96,16 @@ const Comments = ({
   chats,
   person,
   isLoading,
+  onChatDelete,
+  authId,
+  email,
 }: {
   chats: IChat[];
   person: IPerson;
   isLoading: boolean;
+  onChatDelete: (chatId: string) => void;
+  authId: string;
+  email: string;
 }) => {
   const orderedList = orderBy(chats, ['createdAt'], ['desc']);
   if (isLoading) {
@@ -62,7 +120,14 @@ const Comments = ({
       <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
 
       {orderedList.map((chat, idx) => (
-        <Comment key={idx} chat={chat} person={person} />
+        <Comment
+          email={email}
+          authId={authId}
+          key={idx}
+          onChatDelete={onChatDelete}
+          chat={chat}
+          person={person}
+        />
       ))}
     </div>
   );
@@ -122,8 +187,10 @@ const PostComment = ({
   cardDetails,
   chats,
   setChats,
+  setShowComments,
 }: {
   cardDetails: ICommunityCard;
+  setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
   chats: IChat[];
   setChats: React.Dispatch<React.SetStateAction<IChat[]>>;
 }) => {
@@ -141,6 +208,7 @@ const PostComment = ({
     };
     chats.push(chatObject);
     setChats([...chats]);
+    setShowComments(true);
 
     try {
       const res: any = await API.graphql(
@@ -150,7 +218,6 @@ const PostComment = ({
       );
     } catch (error) {
       console.error(error);
-    } finally {
     }
   };
 
@@ -199,10 +266,71 @@ const PostComment = ({
   );
 };
 
-const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
+const Menu = ({
+  showMenu,
+  setShowMenu,
+  onDelete,
+  cardId,
+  fileKey,
+}: {
+  showMenu: boolean;
+  cardId: string;
+  fileKey: string;
+  onDelete?: (cardId: string, fileKey?: string) => void;
+  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
+
+  return (
+    <div className="w-auto absolute top-0 right-0 p-4">
+      <Popover
+        show={showMenu}
+        bottom={0.6}
+        dir={'top'}
+        minWidth={48}
+        minHeight={16}
+        rounded="lg"
+        setShow={setShowMenu}
+        content={
+          <dl className="grid grid-cols-1 gap-y-3">
+            <div className="col-span-1">
+              <dt
+                onClick={() => onDelete(cardId, fileKey)}
+                className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                Delete
+              </dt>
+            </div>
+          </dl>
+        }>
+        <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+          <BiDotsVerticalRounded
+            title="show menu"
+            className="h-full w-full text-lg text-gray-500"
+          />
+        </span>
+      </Popover>
+    </div>
+  );
+};
+
+const Card = ({
+  cardDetails,
+  onDelete,
+}: {
+  cardDetails: ICommunityCard;
+  onDelete: (cardId: string, fileKey: string) => void;
+}): JSX.Element => {
   const media = getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink);
   const person = cardDetails.person;
   const [chats, setChats] = useState([]);
+
+  const {mutate} = useGraphqlMutation('deleteCommunityChat');
+
+  const onChatDelete = (chatId: string) => {
+    remove(chats, ['id', chatId]);
+    setChats([...chats]);
+    mutate({input: {id: chatId}});
+  };
 
   const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -243,22 +371,27 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
     }
   }, [isFetched, showComments]);
 
-  // const onDelete = async () => {
-  //   try {
-  //     const res: any = await API.graphql(
-  //       graphqlOperation(mutations.deleteCommunity, {input: {id: cardDetails.id}})
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //   }
-  // };
+  const [showMenu, setShowMenu] = useState(false);
+  const {authId, email} = useAuth();
+  const iAmOwnerOfTheCard = cardDetails.personAuthID === authId;
+
+  const MenuOptions = iAmOwnerOfTheCard && (
+    <Menu
+      fileKey={cardDetails.cardImageLink}
+      onDelete={onDelete}
+      cardId={cardDetails.id}
+      showMenu={showMenu}
+      setShowMenu={setShowMenu}
+    />
+  );
 
   if (cardDetails.cardType === communityTypes.EVENT) {
     const date = cardDetails.additionalInfo.split(' || ')[0];
     const addres = cardDetails.additionalInfo.split(' || ')[1];
     return (
-      <div className="flex-col max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+      <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+        {MenuOptions}
+
         <div className=" w-full lg:max-w-full lg:flex">
           <div
             className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
@@ -291,7 +424,9 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
     );
   } else
     return (
-      <div className="">
+      <div className="relative">
+        {MenuOptions}
+
         <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
@@ -352,10 +487,14 @@ const Card = ({cardDetails}: {cardDetails: ICommunityCard}): JSX.Element => {
                   <PostComment
                     chats={chats}
                     setChats={setChats}
+                    setShowComments={setShowComments}
                     cardDetails={cardDetails}
                   />
                   {showComments && (
                     <Comments
+                      email={email}
+                      authId={authId}
+                      onChatDelete={onChatDelete}
                       isLoading={isLoading}
                       person={cardDetails.person}
                       chats={chats}
