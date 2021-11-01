@@ -95,38 +95,31 @@ const ProfileFrame = ({
   // ############################ PROFILE EDIT ########################### //
   // ##################################################################### //
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [userLoading, setUserLoading] = useState<boolean>(false);
-
-  const [editUser, setEditUser] = useState(user);
-
-  const gobackToPreviousStep = () => {
-    // history.push('/dashboard/profile');
-  };
 
   async function updatePerson() {
     const input = {
-      id: editUser.id,
-      authId: editUser.authId,
-      firstName: editUser.firstName,
-      grade: editUser.grade,
-      image: editUser.image,
-      language: editUser.language,
-      lastName: editUser.lastName,
-      preferredName: editUser.preferredName,
-      role: editUser.role,
-      status: editUser.status,
-      phone: editUser.phone,
-      birthdate: editUser.birthdate,
-      email: editUser.email,
+      id: user.id,
+      authId: user.authId,
+      firstName: user.firstName,
+      grade: user.grade,
+      image: user.image,
+      language: user.language,
+      lastName: user.lastName,
+      preferredName: user.preferredName,
+      role: user.role,
+      status: user.status,
+      phone: user.phone,
+      birthdate: user.birthdate,
+      email: user.email,
     };
 
     try {
       const update: any = await API.graphql(
         graphqlOperation(customMutations.updatePerson, {input: input})
       );
-      setEditUser(update.data.updatePerson);
+      setUser(update.data.updatePerson);
 
-      gobackToPreviousStep();
+      setIsEditing(false);
     } catch (error) {
       console.error(error);
     }
@@ -139,18 +132,18 @@ const ProfileFrame = ({
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    setEditUser(() => {
+    setUser(() => {
       return {
-        ...editUser,
+        ...user,
         [id]: value,
       };
     });
   };
 
   const handleChangeLanguage = (lang: {name: string; code: string}) => {
-    setEditUser(() => {
+    setUser(() => {
       return {
-        ...editUser,
+        ...user,
         language: lang.code,
       };
     });
@@ -194,9 +187,9 @@ const ProfileFrame = ({
           ? dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']
           : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
         {!isEditing ? (
-          // <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
-          <Buttons label="Edit" disabled Icon={FaEdit} />
-        ) : null}
+          <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+        ) : // <Buttons label="Edit" disabled Icon={FaEdit} />
+        null}
       </div>
     );
   };

@@ -41,13 +41,13 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
     <div
       className={`${
         hidden ? 'hidden' : 'block'
-      } min-h-30 flex flex-col justify-between px-4 pt-2 rounded`}>
+      } min-h-30 flex flex-col justify-between px-4 pt-2`}>
       <div title="title" className="align-middle text-gray-600 text-sm leading-8 ">
         <span className="font-bold">{classRoomDict[userLanguage]['LESSON']}: </span>
         <span>{lessonState.lessonData.title}</span>
       </div>
 
-      <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm">
+      <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
         {/* <ButtonsRound
           Icon={AiOutlineInfoCircle}
           onClick={() => handleSentimentToggle()}
