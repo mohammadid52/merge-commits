@@ -6,19 +6,16 @@ import AddButton from '@atoms/Buttons/AddButton';
 import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
 
-import * as queries from '@graphql/queries';
 import * as customQueries from '@customGraphql/customQueries';
 import Loader from '@components/Atoms/Loader';
-import Tooltip from '@components/Atoms/Tooltip';
 import {getAsset} from 'assets';
-import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
 import UnitListRow from './UnitListRow';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {UnitLookupDict} = useDictionary(clientKey);
 
@@ -34,7 +31,7 @@ export const UnitList = ({instId}: any) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabuss, {
-          filter: {
+          filter: state.user.role === 'SUP' ? undefined : {
             institutionID: {eq: instId},
           },
         })

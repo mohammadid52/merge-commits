@@ -6,7 +6,6 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
-import PageWrapper from '../../../../Atoms/PageWrapper';
 import {reorder} from '../../../../../utilities/strings';
 
 import {
@@ -109,12 +108,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const redirectToRegistrationPage = () => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${instituteId}/register-user?from=staff`
-    );
-  };
-
   const getPersonsList = async (role: string) => {
     try {
       if (role === 'SUP') {
@@ -128,7 +121,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             ? {role: {eq: role}}
             : user.role === 'SUP'
             ? {role: {eq: 'SUP'}}
-            // ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
             : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
@@ -178,10 +170,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     try {
       // get service providers of the institute and create a list and fetch the staff
       const {
-        serviceProviders: {items},
+        serviceProviders: {items} = {},
         instituteId,
       } = props;
-      const institutions = [instituteId];
+      const institutions =
+        user.role === 'SUP'
+          ? user.associateInstitute.length
+            ? user.associateInstitute.map((institute: any) => institute.institution.id)
+            : []
+          : [instituteId];
 
       // ********
       // Hiding staff details for other institutions they will be available on dropdown only.
@@ -190,12 +187,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
       const staff: any = await API.graphql(
         graphqlOperation(queries.listStaffs, {
-          filter: {
-            ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
-          },
+          filter: institutions.length
+            ? {
+                ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
+              }
+            : {},
         })
       );
-      // We are removing duplicate staff memebers across institution and service providers.
+      
+      // We are removing duplicate staff members across institution and service providers.
       // confirm with Mike. If we have to show multiple entries with institute name
       // remove this staffUserIds logic and add institute name in the oject
       const staffUserIds: Array<string> = [];
@@ -310,7 +310,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   useEffect(() => {
-    if (instituteId) {
+    if (instituteId || user.role === 'SUP') {
       fetchStaffData();
     }
   }, [instituteId]);

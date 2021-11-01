@@ -18,6 +18,7 @@ import UnitFormComponent from './UnitFormComponent';
 
 interface IUnitData {
   id: string;
+  institutionID?: string;
   name: string;
   description: string;
   methodology: string;
@@ -38,7 +39,6 @@ interface IUIMessages {
 const UnitBuilder = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const urlParams: any = useParams();
   const params = useQuery(location.search);
   const step = params.get('step');
   const {unitId}: any = useParams();
@@ -101,6 +101,7 @@ const UnitBuilder = ({instId}: any) => {
         const savedData = result.data.getUniversalSyllabus;
         setSyllabusData({
           ...syllabusData,
+          institutionID: savedData.institutionID,
           id: savedData.id,
           name: savedData.name,
           languages: languageList.filter((item) =>
@@ -179,7 +180,7 @@ const UnitBuilder = ({instId}: any) => {
           <LessonPlanManager
             syllabusId={unitId}
             syllabusDetails={syllabusData}
-            institutionId={instId}
+            institutionId={instId || syllabusData?.institutionID}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}
             lessonsIds={lessonsIds}

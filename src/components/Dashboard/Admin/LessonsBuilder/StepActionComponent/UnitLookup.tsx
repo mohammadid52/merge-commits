@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory} from 'react-router-dom';
-import isEqual from 'lodash/isEqual';
 
 import Buttons from '../../../../Atoms/Buttons';
 import Selector from '../../../../Atoms/Form/Selector';

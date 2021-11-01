@@ -15,9 +15,12 @@ const HeaderMegaMenu = () => {
   } = useContext(GlobalContext);
   const {Institute_info} = useDictionary(clientKey);
 
-  const baseUrl = user.role === "SUP" ? `/dashboard/manage-institutions`: user.associateInstitute?.length
-    ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
-    : '';
+  const baseUrl =
+    user.role === 'SUP'
+      ? `/dashboard/manage-institutions`
+      : user.associateInstitute?.length
+      ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
+      : '';
 
   // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
@@ -29,7 +32,8 @@ const HeaderMegaMenu = () => {
         {
           title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
           key: 'general_information',
-          redirectionUrl: `${baseUrl}/edit`,
+          redirectionUrl:
+            user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
           active: location.pathname.indexOf(`${baseUrl}/edit`) > -1,
         },
         {

@@ -1,6 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import HeroBanner from '@components/Header/HeroBanner';
+import {useQuery} from '@customHooks/urlParam';
+import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoBusinessSharp} from 'react-icons/io5';
@@ -28,6 +30,10 @@ import InstitutionRowLoader from './InstitutionRowLoader';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
+
+  const params = useQuery(location.search);
+  const alert = params.get('alert');
+
   const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
   const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -41,6 +47,7 @@ const InstitutionLookup: React.FC = () => {
   const [firstPage, setFirstPage] = useState(false);
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [searchInput, setSearchInput] = useState({
     value: '',
@@ -218,6 +225,12 @@ const InstitutionLookup: React.FC = () => {
   };
 
   useEffect(() => {
+    if (alert) {
+      setShowAlert(true);
+    }
+  }, [alert]);
+
+  useEffect(() => {
     getInstitutionsData();
   }, []);
 
@@ -311,7 +324,20 @@ const InstitutionLookup: React.FC = () => {
             )}
           </div>
           {/* </div> */}
-
+          {showAlert && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert">
+              <span className="block sm:inline">
+                {'Click on institution to see information'}
+              </span>
+              <span
+                className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
+                onClick={() => setShowAlert(false)}>
+                <XIcon className="h-6 w-6" aria-hidden="true" />
+              </span>
+            </div>
+          )}
           {/* List / Table */}
           <div className="flex flex-col">
             <div className="-my-2 py-2">

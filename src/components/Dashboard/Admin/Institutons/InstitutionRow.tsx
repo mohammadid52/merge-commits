@@ -37,7 +37,7 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
   const [imageUrl, setImageUrl] = useState();
 
   const handleInstitutionView = () => {
-    history.push(`${match.url}/institution/${instRowProps.id}/staff`);
+    history.push(`${match.url}/institution/${instRowProps.id}/edit`);
   };
 
   useEffect(() => {

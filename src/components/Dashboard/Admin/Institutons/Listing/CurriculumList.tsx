@@ -104,7 +104,7 @@ const CurriculumList = ({
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
-                Courses
+                {InstitueCurriculum[userLanguage]['TITLE']}
               </h3>
               <AddButton
                 label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}

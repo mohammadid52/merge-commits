@@ -12,7 +12,6 @@ import * as customMutations from '../../../../../../../../customGraphql/customMu
 
 import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
 import Selector from '../../../../../../../Atoms/Form/Selector';
-import {DeleteActionBtn} from '../../../../../../../Atoms/Buttons/DeleteActionBtn';
 import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';

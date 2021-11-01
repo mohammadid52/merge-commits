@@ -2151,6 +2151,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies

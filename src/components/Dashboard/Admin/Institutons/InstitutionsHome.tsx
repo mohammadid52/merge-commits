@@ -53,7 +53,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const breadCrumbsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    ...breadcrumbPathForSection,
+    ...(breadcrumbPathForSection || []),
   ].filter(Boolean);
 
   return (
