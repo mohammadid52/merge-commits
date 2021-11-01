@@ -12,7 +12,7 @@ import {AiOutlineCloseCircle} from 'react-icons/ai';
 interface ILessonInfoFrame {
   children?: React.ReactNode;
   visible?: boolean;
-  rightView?: 'lesson' | 'lessonInfo';
+  rightView?: {view: string; option?: string};
   setRightView?: any;
 }
 
@@ -117,7 +117,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
 
   // ~~~~~~~~~ FIRST VISIBILITY GET ~~~~~~~~ //
   useEffect(() => {
-    if (visible && Object.keys(sentimentStore).length === 0) {
+    if (visible && Object.keys(sentimentStore).length === 0 && roster.length >= 5) {
       handleGetSentiments();
     }
   }, [visible]);
@@ -126,7 +126,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ######################### TOGGLE SENTIMENTS ######################### //
   // ##################################################################### //
   const handleSentimentToggle = () => {
-    setRightView('lesson');
+    setRightView({view: 'lesson', option: ''});
   };
 
   // ##################################################################### //
@@ -168,41 +168,50 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             </p>
           </div>
           <ul>
-            {sentimentStore &&
-              !loading &&
-              Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
-                return (
+            {roster && roster.length >= 5 ? (
+              sentimentStore && !loading ? (
+                Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
+                  return (
+                    <li
+                      key={`sentimentRow_${idx}`}
+                      className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                      <span className="w-2/10 text-right h-auto flex">
+                        {EMOJIS[sentimentKey] ? (
+                          <img
+                            src={EMOJIS[sentimentKey]}
+                            className="w-auto h-8 object-contain"
+                          />
+                        ) : null}
+                      </span>
+                      <span className="w-3/10 text-left whitespace-pre overflow-hidden">
+                        {sentimentKey === '_'
+                          ? "Didn't Answer"
+                          : keywordCapitilizer(sentimentKey)}
+                        :
+                      </span>
+                      <span className="w-2/10 text-right">
+                        {sentimentStore[sentimentKey]}
+                      </span>
+                      <span className="w-2/10 text-center">
+                        {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
+                      </span>
+                    </li>
+                  );
+                })
+              ) : (
+                loading && (
                   <li
-                    key={`sentimentRow_${idx}`}
+                    key={`sentimentRow_loading`}
                     className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                    <span className="w-2/10 text-right h-auto flex">
-                      {EMOJIS[sentimentKey] ? (
-                        <img
-                          src={EMOJIS[sentimentKey]}
-                          className="w-auto h-8 object-contain"
-                        />
-                      ) : null}
-                    </span>
-                    <span className="w-3/10 text-left whitespace-pre overflow-hidden">
-                      {sentimentKey === '_'
-                        ? "Didn't Answer"
-                        : keywordCapitilizer(sentimentKey)}
-                      :
-                    </span>
-                    <span className="w-2/10 text-right">
-                      {sentimentStore[sentimentKey]}
-                    </span>
-                    <span className="w-2/10 text-center">
-                      {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
-                    </span>
+                    Loading
                   </li>
-                );
-              })}
-            {loading && (
+                )
+              )
+            ) : (
               <li
                 key={`sentimentRow_loading`}
-                className="w-full h-8 flex flex-row bg-white rounded mb-2">
-                Loading
+                className="w-full p-2 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                You need at least 5 students in-class to check sentiments 😀
               </li>
             )}
           </ul>

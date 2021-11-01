@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import UserInformation from '@components/Dashboard/Admin/UserManagement/UserInformation';
 import useLessonControls from '@customHooks/lessonControls';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
@@ -23,6 +24,7 @@ import RosterFrame from './ClassRoster/RosterFrame';
 import Frame from './Frame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
+import ProfileFrame from './StudentWindow/ProfileFrame';
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -31,6 +33,7 @@ const LessonControl = () => {
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
+  const roster = controlState.roster;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
 
@@ -54,7 +57,11 @@ const LessonControl = () => {
     });
   };
 
-  const [rightView, setRightView] = useState<'lesson' | 'lessonInfo'>('lesson');
+  // view: 'lesson' | 'lessonInfo' | 'profile';
+  const [rightView, setRightView] = useState<{
+    view: string;
+    option?: string;
+  }>({view: 'lesson', option: ''});
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
@@ -544,11 +551,21 @@ const LessonControl = () => {
 
           {/* RIGHT SECTION */}
 
-          <Frame visible={rightView === 'lessonInfo'} additionalClass="z-50">
+          <Frame visible={rightView.view === 'lessonInfo'} additionalClass="z-50">
             <LessonInfoFrame
-              visible={rightView === 'lessonInfo'}
+              visible={rightView.view === 'lessonInfo'}
               rightView={rightView}
               setRightView={setRightView}
+            />
+          </Frame>
+
+          <Frame visible={rightView.view === 'profile'} additionalClass="z-50">
+            <ProfileFrame
+              visible={rightView.view === 'profile'}
+              rightView={rightView}
+              setRightView={setRightView}
+              personAuthID={rightView.option}
+              roster={roster}
             />
           </Frame>
         </div>

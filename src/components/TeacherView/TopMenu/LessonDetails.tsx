@@ -7,7 +7,7 @@ interface ILessonDetailProps {
   hidden?: boolean;
   theme?: any;
   themeColor?: any;
-  rightView?: string;
+  rightView?: {view: string; option?: string};
   setRightView?: any;
 }
 
