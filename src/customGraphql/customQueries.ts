@@ -1751,6 +1751,30 @@ export const listCurriculums = /* GraphQL */ `
   }
 `;
 
+export const listCurriculumsForSuperAdmin = /* GraphQL */ `
+  query ListCurriculums(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculums(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listCurriculumsForLessons = /* GraphQL */ `
   query ListCurriculums(
     $id: ID

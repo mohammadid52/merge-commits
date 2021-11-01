@@ -1,15 +1,16 @@
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
+import * as customQueries from '@customGraphql/customQueries';
 import * as mutations from '@graphql/mutations';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import AddButton from '../../../../Atoms/Buttons/AddButton';
 import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 interface CurriculumListProps {
-  curricular: {items: {name?: string; id: string}[]};
+  curricular?: {items: {name?: string; id: string}[]};
   updateCurricularList?: any;
   instId: string;
   instName: string;
@@ -26,6 +27,7 @@ const CurriculumList = ({
   const userLanguage = gContext.userLanguage;
   const {InstitueCurriculum} = useDictionary(clientKey);
   const history = useHistory();
+  const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
 
@@ -40,6 +42,28 @@ const CurriculumList = ({
     message: '',
     action: () => {},
   });
+
+  useEffect(() => {
+    if (gContext.state.user.role === 'SUP') {
+      fetchCurriculums();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (curricular?.items?.length) {
+      setCourseList(curricular.items);
+    }
+  }, [curricular?.items?.length]);
+
+  const fetchCurriculums = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
+      );
+      console.log(list, 'listlist');
+      setCourseList(list.data?.listCurriculums?.items);
+    } catch (error) {}
+  };
 
   const checkIfRemovable = (curriculumObj: any) => {
     if (
@@ -100,7 +124,7 @@ const CurriculumList = ({
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        {curricular.items && curricular.items.length > 0 ? (
+        {courseList?.length ? (
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
@@ -128,7 +152,7 @@ const CurriculumList = ({
             </div>
 
             <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {curricular.items.map((item, index) => (
+              {courseList.map((item, index) => (
                 <CurriculumListRow
                   key={`curr_list_row_${index}`}
                   index={index}
