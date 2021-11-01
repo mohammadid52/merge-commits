@@ -31,9 +31,12 @@ export const UnitList = ({instId}: any) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabuss, {
-          filter: state.user.role === 'SUP' ? undefined : {
-            institutionID: {eq: instId},
-          },
+          filter:
+            state.user.role === 'SUP'
+              ? undefined
+              : {
+                  institutionID: {eq: instId},
+                },
         })
       );
       setUnits(result.data?.listUniversalSyllabuss.items);
@@ -129,10 +132,12 @@ export const UnitList = ({instId}: any) => {
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-              <AddButton
-                label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                onClick={handleAdd}
-              />
+              {state.user.role !== 'SUP' && (
+                <AddButton
+                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+                  onClick={handleAdd}
+                />
+              )}
             </div>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
@@ -172,13 +177,15 @@ export const UnitList = ({instId}: any) => {
           </Fragment>
         ) : (
           <>
-            <div className="flex justify-center mt-8">
-              <AddButton
-                className="mx-4"
-                label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                onClick={handleAdd}
-              />
-            </div>
+            {state.user.role !== 'SUP' && (
+              <div className="flex justify-center mt-8">
+                <AddButton
+                  className="mx-4"
+                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+                  onClick={handleAdd}
+                />
+              </div>
+            )}
             <p className="text-center p-16"> {UnitLookupDict[userLanguage]['INFO']}</p>
           </>
         )}

@@ -420,12 +420,12 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               </button>
             </>
           )}
-          <Buttons
+          {state.user.role !== 'SUP' && <Buttons
             label={UserLookupDict[userLanguage]['button']['add']}
             onClick={handleLink}
             btnClass={isInInstitute ? '' : 'mr-4 w-full'}
             Icon={AiOutlineUsergroupAdd}
-          />
+          />}
         </div>
       </div>
 

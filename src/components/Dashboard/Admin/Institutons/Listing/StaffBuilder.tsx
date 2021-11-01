@@ -169,10 +169,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const getStaff = async () => {
     try {
       // get service providers of the institute and create a list and fetch the staff
-      const {
-        serviceProviders: {items} = {},
-        instituteId,
-      } = props;
+      const {serviceProviders: {items} = {}, instituteId} = props;
       const institutions =
         user.role === 'SUP'
           ? user.associateInstitute.length
@@ -194,7 +191,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             : {},
         })
       );
-      
+
       // We are removing duplicate staff members across institution and service providers.
       // confirm with Mike. If we have to show multiple entries with institute name
       // remove this staffUserIds logic and add institute name in the oject
@@ -359,20 +356,22 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             {dictionary['TITLE']}
           </h3>
           {!showAddSection ? (
-            <div className="w-auto">
-              <AddButton
-                className="ml-4 py-1"
-                label={'Staff member'}
-                onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
-              />
-              {/*{user.role === 'SUP' && (
+            state.user.role !== 'SUP' && (
+              <div className="w-auto">
+                <AddButton
+                  className="ml-4 py-1"
+                  label={'Staff member'}
+                  onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
+                />
+                {/*{user.role === 'SUP' && (
                 <div
                   className="text-sm text-right text-gray-400 cursor-pointer mt-1"
                   onClick={() => showAddStaffSection('SUP')}>
                   + {dictionary.ADD_SUPER_ADMIN}
                 </div>
               )} */}
-            </div>
+              </div>
+            )
           ) : (
             <Buttons
               btnClass="ml-4 py-1"

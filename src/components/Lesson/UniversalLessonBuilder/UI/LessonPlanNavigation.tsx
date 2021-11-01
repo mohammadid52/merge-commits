@@ -145,7 +145,7 @@ const LessonPlanNavigation = ({
                     Loading...
                   </p>
                 ) : (
-                  [...lessonPlan, ...lessonPlan].map((page, index) => (
+                  lessonPlan.map((page, index) => (
                     <Draggable
                       draggableId={`${page.id}`}
                       index={index}
