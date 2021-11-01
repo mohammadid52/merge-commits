@@ -11,6 +11,7 @@ import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
 import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
 import Buttons from '@components/Atoms/Buttons';
 import {FaEdit} from 'react-icons/fa';
+import Modal from '@components/Atoms/Modal';
 
 interface IProfileFrame {
   personAuthID: string;
@@ -33,6 +34,7 @@ const ProfileFrame = ({
 }: IProfileFrame) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
   const {UserInformationDict} = useDictionary(clientKey);
 
   // ~~~~~~~~~~~~~~~~ THEME ~~~~~~~~~~~~~~~~ //
@@ -183,6 +185,22 @@ const ProfileFrame = ({
   // ⬆️ Ends here ⬆️
 
   // ##################################################################### //
+  // ############################## OTHER UI ############################# //
+  // ##################################################################### //
+  const customTitle = () => {
+    return (
+      <div className="w-full flex flex-row justify-between items-center">
+        {!isEditing
+          ? dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']
+          : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
+        {!isEditing ? (
+          <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+        ) : null}
+      </div>
+    );
+  };
+
+  // ##################################################################### //
   // ########################### ANIMATION REF ########################### //
   // ##################################################################### //
   const frameRef = useRef();
@@ -199,30 +217,42 @@ const ProfileFrame = ({
         width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
       }}
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-      <div
-        onClick={() => setRightView({view: 'lesson', option: ''})}
-        className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
+      {rightView.view === 'profile' && (
+        <>
+          <div
+            onClick={() => setRightView({view: 'lesson', option: ''})}
+            className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
 
-      {!isEditing ? (
-        <ProfileFrameInfo
-          user={user}
-          created={created}
-          loading={loading}
-          resetPasswordServerResponse={resetPasswordServerResponse}
-          resetPassword={resetPassword}
-          onAlertClose={onAlertClose}
-          setIsEditing={setIsEditing}
-        />
-      ) : (
-        <ProfileFrameEdit
-          user={user}
-          loading={loading}
-          onChange={onChange}
-          handleChangeLanguage={handleChangeLanguage}
-          gobackToPreviousStep={() => setIsEditing(false)}
-          saveProfileInformation={saveProfileInformation}
-          language={language}
-        />
+          <Modal
+            customTitle={customTitle()}
+            showHeader={true}
+            showHeaderBorder={false}
+            showFooter={false}
+            scrollHidden={true}
+            closeAction={() => setRightView({view: 'lesson', option: ''})}>
+            {!isEditing ? (
+              <ProfileFrameInfo
+                user={user}
+                created={created}
+                loading={loading}
+                resetPasswordServerResponse={resetPasswordServerResponse}
+                resetPassword={resetPassword}
+                onAlertClose={onAlertClose}
+                setIsEditing={setIsEditing}
+              />
+            ) : (
+              <ProfileFrameEdit
+                user={user}
+                loading={loading}
+                onChange={onChange}
+                handleChangeLanguage={handleChangeLanguage}
+                gobackToPreviousStep={() => setIsEditing(false)}
+                saveProfileInformation={saveProfileInformation}
+                language={language}
+              />
+            )}
+          </Modal>
+        </>
       )}
     </div>
   );

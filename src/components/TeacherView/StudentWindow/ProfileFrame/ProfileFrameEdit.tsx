@@ -36,12 +36,12 @@ const ProfileFrameEdit = ({
   const {UserInformationDict} = useDictionary(clientKey);
 
   return (
-    <div className="w-3/4 m-auto p-2 bg-white rounded z-50">
-      <div className="flex justify-end py-2 mb-2 w-full">
+    <div className="m-auto p-2 bg-white rounded z-50">
+      {/* <div className="flex justify-end py-2 mb-2 w-full">
         <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
           {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
         </h3>
-      </div>
+      </div> */}
       {/* SAVE */}
       <form>
         <div className="h-full">

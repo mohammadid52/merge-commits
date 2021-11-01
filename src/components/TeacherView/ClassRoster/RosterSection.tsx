@@ -7,6 +7,7 @@ import useDictionary from '@customHooks/dictionary';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
 import gsap from 'gsap/all';
+import Buttons from '@components/Atoms/Buttons';
 
 export interface IRosterSectionProps {
   hot?: boolean;
@@ -91,8 +92,8 @@ const RosterSection = ({
 
   return (
     <>
-      <div className={`w-full h-8 flex items-center bg-transparent`}>
-        <div className="relative w-full h-auto">
+      <div className={`w-full h-10 flex items-center bg-transparent`}>
+        <div className="relative w-full h-auto flex flex-row items-center">
           <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
           <span
             className="text-sm font-bold text-gray-600 cursor-pointer p-2"
@@ -101,13 +102,16 @@ const RosterSection = ({
             }>
             {minimized === true ? '+' : '−'}
           </span>
-          {hot && (
-            <span
-              className={`${theme.textColor[themeColor]} text-xs font-semibold hover:underline absolute cursor-pointer w-auto right-0 whitespace-pre overflow-hidden`}
-              onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}>
-              (Sentiments 😀)
-            </span>
-          )}
+          <span className="relative mr-0 flex justify-end">
+            {hot && (
+              <Buttons
+                overrideClass
+                btnClass={`${theme.btn[themeColor]} h-8 font-bold uppercase text-xs p-1 rounded items-center w-auto`}
+                label="Sentiments"
+                onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}
+              />
+            )}
+          </span>
         </div>
       </div>
 
