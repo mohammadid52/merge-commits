@@ -29,7 +29,7 @@ const CurriculumList = ({
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const {InstitueCurriculum} = useDictionary(clientKey);
-  const isSuperAdmin: boolean = gContext.state.user.role === 'SUP'
+  const isSuperAdmin: boolean = gContext.state.user.role === 'SUP';
   const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
   const [loading, setLoading] = useState(isSuperAdmin);
 

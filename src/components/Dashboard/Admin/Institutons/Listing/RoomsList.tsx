@@ -20,6 +20,7 @@ const RoomsList = (props: RoomListProps) => {
   const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
+  const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState(true);
   const {InstitueRomms} = useDictionary(clientKey);
@@ -30,11 +31,19 @@ const RoomsList = (props: RoomListProps) => {
     isError: false,
   });
   const createNewRoom = () => {
-    history.push(`/dashboard/manage-institutions/institution/${instId}/room-creation`);
+    history.push(
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/room-creation`
+        : `/dashboard/manage-institutions/institution/${instId}/room-creation`
+    );
   };
 
   const editCurrentRoom = (id: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${instId}/room-edit/${id}`);
+    history.push(
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/room-edit/${id}`
+        : `/dashboard/manage-institutions/institution/${instId}/room-edit/${id}`
+    );
   };
 
   const fetchRoomList = async () => {

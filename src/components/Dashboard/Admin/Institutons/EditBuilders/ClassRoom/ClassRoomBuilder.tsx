@@ -261,9 +261,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   };
 
   const fetchOtherList = async () => {
-    const items: any = await getInstituteInfo(instId);
+    const items: any = await getInstituteInfo(roomData.institute?.id);
     const serviceProviders = items.map((item: any) => item.providerID);
-    const allInstiId = [...serviceProviders, instId];
+    const allInstiId = [...serviceProviders, roomData.institute?.id];
     getTeachersList(allInstiId);
     getCurricularList(allInstiId);
   };
