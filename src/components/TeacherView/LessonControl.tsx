@@ -22,7 +22,7 @@ import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLe
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
 import Frame from './Frame';
-import AttendanceFrame from './StudentWindow/AttendanceFrame';
+// import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
