@@ -220,7 +220,7 @@ const ClassRoster = ({
   const inactiveStudents = roster.reduce(
     (studentAcc: {notInClass: any[]; onDemand: any[]}, student: any) => {
       let isOnDemand = student.person.onDemand;
-      let isInStateRoster = controlState.roster.find(
+      let isInStateRoster = controlState.rosterActive.find(
         (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
       );
       if (isInStateRoster === undefined) {
@@ -229,6 +229,8 @@ const ClassRoster = ({
         } else {
           return {...studentAcc, notInClass: [...studentAcc.notInClass, student]};
         }
+      } else {
+        return studentAcc;
       }
     },
     {

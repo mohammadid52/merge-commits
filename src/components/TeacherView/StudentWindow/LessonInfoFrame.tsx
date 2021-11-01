@@ -8,6 +8,7 @@ import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import {keywordCapitilizer} from '@utilities/strings';
 import ButtonsRound from '@components/Atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
+import Loader from '@components/Atoms/Loader';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -90,7 +91,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   ) => {
     let prepare = {
       ...sentimentObjTemplate,
-      _: sentimentArr.length - rosterArr.length,
+      _: rosterArr.length - sentimentArr.length,
       total: rosterArr.length,
     };
     return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
@@ -117,7 +118,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
 
   // ~~~~~~~~~ FIRST VISIBILITY GET ~~~~~~~~ //
   useEffect(() => {
-    if (visible && Object.keys(sentimentStore).length === 0 && roster.length >= 5) {
+    if (visible && Object.keys(sentimentStore).length === 0 && roster.length > 0) {
       handleGetSentiments();
     }
   }, [visible]);
@@ -168,7 +169,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             </p>
           </div>
           <ul>
-            {roster && roster.length >= 5 ? (
+            {roster && roster.length > 0 ? (
               sentimentStore && !loading ? (
                 Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
                   return (
@@ -203,7 +204,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                   <li
                     key={`sentimentRow_loading`}
                     className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                    Loading
+                    <Loader />
                   </li>
                 )
               )
