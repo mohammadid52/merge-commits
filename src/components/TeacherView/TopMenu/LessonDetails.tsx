@@ -3,7 +3,18 @@ import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {getLocalStorageData} from '@utilities/localStorage';
 
-const LessonDetails = () => {
+interface ILessonDetailProps {
+  hidden?: boolean;
+  theme?: any;
+  themeColor?: any;
+  rightView?: {view: string; option?: string};
+  setRightView?: any;
+}
+
+// ##################################################################### //
+// ############################# COMPONENT ############################# //
+// ##################################################################### //
+const LessonDetails = ({hidden}: ILessonDetailProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
@@ -23,14 +34,30 @@ const LessonDetails = () => {
     }
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
   return (
-    <div className="min-h-30 flex flex-col justify-between px-4 pt-2">
+    <div
+      className={`${
+        hidden ? 'hidden' : 'block'
+      } min-h-30 flex flex-col justify-between px-4 pt-2`}>
       <div title="title" className="align-middle text-gray-600 text-sm leading-8 ">
         <span className="font-bold">{classRoomDict[userLanguage]['LESSON']}: </span>
         <span>{lessonState.lessonData.title}</span>
       </div>
 
-      <div className="w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm">
+      <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
+        {/* <ButtonsRound
+          Icon={AiOutlineInfoCircle}
+          onClick={() => handleSentimentToggle()}
+          iconSizePX={24}
+          buttonWHClass={``}
+          containerBgClass={`bg-transparent p-2`}
+          containerWHClass={`absolute h-auto w-auto top-0 right-0`}
+          buttonBgClass={`bg-transparent`}
+          iconTxtColorClass={theme.textColor[themeColor]}
+        /> */}
         <p className="">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
           {studentsOnline()}

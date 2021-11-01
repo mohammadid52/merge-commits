@@ -210,13 +210,10 @@ const LessonActivities = ({
         {newLessonPlanShow && !pathname.includes('page-builder') && (
           <NewLessonPlanSO
             instId={universalLessonDetails.institutionID}
-            editMode={false}
             dark={false}
-            setEditMode={setEditMode}
             pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
             open={newLessonPlanShow}
             setOpen={setNewLessonPlanShow}
-            activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
           />
         )}
       </PageBuilderLayout>

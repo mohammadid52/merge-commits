@@ -20,6 +20,7 @@ interface ModalProps {
   cancelTooltip?: string;
   noTooltip?: string;
   titleButton?: React.ReactElement;
+  className?: string;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -40,6 +41,7 @@ const ModalPopUp = (props: ModalProps) => {
     noTooltip,
     saveTooltip,
     titleButton,
+    className = 'w-168',
   } = props;
   return (
     <Modal
@@ -49,7 +51,7 @@ const ModalPopUp = (props: ModalProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="w-168 text-center my-8">
+      <div className={`${className} text-center my-8`}>
         <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
         <div className="flex justify-center mt-16 w-full mx-auto">
           {!onlyInfo && (

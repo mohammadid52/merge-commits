@@ -822,6 +822,7 @@ const lessonPlannerDict: any = {
       STUDENT_SECTION: {
         IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
+        ON_DEMAND: 'On Demand',
       },
     },
     ACCESS_BUTTONS: {
@@ -854,8 +855,9 @@ const lessonPlannerDict: any = {
         THREE: 'TBD',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'TBD',
-        NOT_IN_CLASS: 'TBD',
+        IN_CLASS: 'Student Roster',
+        NOT_IN_CLASS: 'Not In Class',
+        ON_DEMAND: 'On Demand',
       },
     },
     ACCESS_BUTTONS: {

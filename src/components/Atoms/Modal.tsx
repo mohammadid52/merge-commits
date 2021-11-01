@@ -21,6 +21,7 @@ interface ModalProps {
   titleButton?: React.ReactElement;
   customTitle?: React.ReactNode;
   outerCloseBtn?: boolean;
+  position?: 'absolute' | 'relative' | 'fixed';
 }
 
 const ModalBody = (bodyProps: {
@@ -84,6 +85,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     scrollHidden = false,
     outerCloseBtn = false,
     customTitle,
+    position,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -107,9 +109,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
       <div
         style={{zIndex: 10000}}
         onClick={() => closeOnBackdrop && closeAction()}
-        className={
-          'fixed modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none'
-        }>
+        className={`${
+          position ? position : 'fixed'
+        } modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none`}>
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {

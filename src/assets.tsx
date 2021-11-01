@@ -102,7 +102,7 @@ const demo_assets: any = {
     'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
 };
 
-const general: any = {
+export const general: any = {
   emoji: {
     awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
     bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
