@@ -408,12 +408,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                 </button>
               </>
             )}
-            <Buttons
+            {state.user.role !== 'SUP' && <Buttons
               label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
               onClick={buildLesson}
               btnClass={isInInstitution ? '' : 'mr-4 w-full'}
               Icon={IoMdAddCircleOutline}
-            />
+            />}
             {params.get('from') ? (
               <Buttons
                 label="Go back"
