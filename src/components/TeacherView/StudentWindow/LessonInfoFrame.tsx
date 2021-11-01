@@ -108,19 +108,27 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ~~~~~~~~ ONCLICK AND USEEFFECT ~~~~~~~~ //
   const handleGetSentiments = async () => {
     if (studentAuthIDArray && dateString) {
-      setLoading(true);
-      let fetchResults = await fetchStudentSentiments(studentAuthIDArray, dateString[0]);
-      let sentimentArray = fetchResults.map(
-        (sentimentObj: any) => sentimentObj.responseText
-      );
-      let output = countSentiments(SENTIMENT_TEMPLATE, roster, sentimentArray);
-      setSentimentStore(output);
+      try {
+        setLoading(true);
+        let fetchResults = await fetchStudentSentiments(
+          studentAuthIDArray,
+          dateString[0]
+        );
+        let sentimentArray =
+          roster && roster.length >= 5
+            ? fetchResults.map((sentimentObj: any) => sentimentObj.responseText)
+            : [];
+        let output = countSentiments(SENTIMENT_TEMPLATE, roster, sentimentArray);
+        setSentimentStore(output);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   // ~~~~~~~~~ FIRST VISIBILITY GET ~~~~~~~~ //
   useEffect(() => {
-    if (visible && Object.keys(sentimentStore).length === 0 && roster.length > 0) {
+    if (visible && Object.keys(sentimentStore).length === 0) {
       handleGetSentiments();
     }
   }, [visible]);
@@ -176,68 +184,51 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
               position="absolute"
               width="w-full"
               maxWidth="max-w-128">
-              {/* <div className="align-middle text-center text-sm font-semibold text-gray-600 leading-8">
-                <p>Class Sentiments</p>
-                <p
-                  onClick={() => handleGetSentiments()}
-                  className={`cursor-pointer underline ${theme.textColor[themeColor]}`}>
-                  (Refresh)
-                </p>
-              </div> */}
               <ul className="rounded border-0 border-gray-400 border-opacity-20">
-                {roster && roster.length > 0 ? (
-                  sentimentStore && !loading ? (
-                    Object.keys(sentimentStore).map(
-                      (sentimentKey: string, idx: number) => {
-                        console.log('idx % 2 ', idx % 2);
-                        return (
-                          <li
-                            key={`sentimentRow_${idx}`}
-                            className={`${
-                              idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'
-                            } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}>
-                            <span className="w-2.5/10 h-auto flex justify-center">
-                              {EMOJIS[sentimentKey] ? (
-                                <img
-                                  src={EMOJIS[sentimentKey]}
-                                  className="w-auto h-8 object-contain"
-                                />
-                              ) : null}
-                            </span>
-                            <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
-                              {sentimentKey === '_'
-                                ? "Didn't Answer"
-                                : keywordCapitilizer(sentimentKey)}
-                              :
-                            </span>
-                            <span className="w-2.5/10 flex justify-center">
-                              {sentimentStore[sentimentKey]}
-                            </span>
-                            <span className="w-2.5/10 flex justify-center">
-                              {(sentimentStore[sentimentKey] / sentimentStore.total) *
-                                100}
-                              %
-                            </span>
-                          </li>
-                        );
-                      }
-                    )
-                  ) : (
-                    loading && (
-                      <li
-                        key={`sentimentRow_loading`}
-                        className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                        <Loader />
-                      </li>
-                    )
-                  )
-                ) : (
-                  <li
-                    key={`sentimentRow_loading`}
-                    className="w-full p-2 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                    You need at least 5 students in-class to check sentiments 😀
+                {roster && roster.length < 5 && (
+                  <li className="w-full p-2 flex flex-row text-center bg-white rounded mb-2 text-sm text-gray-600">
+                    You need at least 5 students in-class to check sentiments.
                   </li>
                 )}
+
+                {loading ? (
+                  <li
+                    key={`sentimentRow_loading`}
+                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                    <Loader />
+                  </li>
+                ) : roster && roster.length > 0 && sentimentStore ? (
+                  Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
+                    return (
+                      <li
+                        key={`sentimentRow_${idx}`}
+                        className={`${
+                          idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'
+                        } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}>
+                        <span className="w-2.5/10 h-auto flex justify-center">
+                          {EMOJIS[sentimentKey] ? (
+                            <img
+                              src={EMOJIS[sentimentKey]}
+                              className="w-auto h-8 object-contain"
+                            />
+                          ) : null}
+                        </span>
+                        <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
+                          {sentimentKey === '_'
+                            ? "Didn't Answer"
+                            : keywordCapitilizer(sentimentKey)}
+                          :
+                        </span>
+                        <span className="w-2.5/10 flex justify-center">
+                          {sentimentStore[sentimentKey]}
+                        </span>
+                        <span className="w-2.5/10 flex justify-center">
+                          {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
+                        </span>
+                      </li>
+                    );
+                  })
+                ) : null}
               </ul>
               {/* </div> */}
             </Modal>
