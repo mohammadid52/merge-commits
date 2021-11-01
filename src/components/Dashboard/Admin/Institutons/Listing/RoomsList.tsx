@@ -16,8 +16,8 @@ interface RoomListProps {
 }
 
 const RoomsList = (props: RoomListProps) => {
-  const {instId, instName} = props;
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {instId} = props;
+  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [roomList, setRoomList] = useState([]);
@@ -40,11 +40,16 @@ const RoomsList = (props: RoomListProps) => {
   const fetchRoomList = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard, {
-          filter: {
-            institutionID: {eq: instId},
-          },
-        })
+        graphqlOperation(
+          customQueries.listRoomsDashboard,
+          state.user.role !== 'SUP'
+            ? {
+                filter: {
+                  institutionID: {eq: instId},
+                },
+              }
+            : {}
+        )
       );
       const newList = list.data.listRooms.items;
       setRoomList(newList);
@@ -93,7 +98,10 @@ const RoomsList = (props: RoomListProps) => {
             </div>
 
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div className={`flex justify-between bg-gray-50 pl-4 ${roomList.length > 4 ? 'pr-6' : 'pr-4'} py-2 whitespace-nowrap`}>
+              <div
+                className={`flex justify-between bg-gray-50 pl-4 ${
+                  roomList.length > 4 ? 'pr-6' : 'pr-4'
+                } py-2 whitespace-nowrap`}>
                 <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
@@ -124,7 +132,10 @@ const RoomsList = (props: RoomListProps) => {
                   className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 ${
                     i % 2 !== 0 ? 'bg-gray-50' : ''
                   }`}>
-                  <div className={"flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4"}>
+                  <div
+                    className={
+                      'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
+                    }>
                     {i + 1}.
                   </div>
                   <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
