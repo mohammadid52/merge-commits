@@ -154,7 +154,8 @@ const RosterSection = ({
             <RosterRow
               key={`rosterrow_inactive_${key}`}
               number={key}
-              id={student.personAuthID}
+              personAuthID={student.personAuthID}
+              studentID={student.person.id}
               active={false}
               firstName={student.person?.firstName ? student.person?.firstName : ''}
               lastName={student.person?.lastName ? student.person?.lastName : ''}

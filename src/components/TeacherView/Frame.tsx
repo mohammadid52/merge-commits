@@ -53,7 +53,10 @@ const Frame = ({children, visible, additionalClass}: IFrameProps) => {
   }, [visible]);
 
   return (
-    <div ref={frameRef} className={additionalClass}>
+    <div
+      ref={frameRef}
+      style={{visibility: visible ? 'visible' : 'hidden'}}
+      className={additionalClass}>
       {children}
     </div>
   );

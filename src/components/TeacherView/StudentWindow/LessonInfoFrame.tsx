@@ -9,6 +9,8 @@ import {keywordCapitilizer} from '@utilities/strings';
 import ButtonsRound from '@components/Atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import Loader from '@components/Atoms/Loader';
+import Modal from '@components/Atoms/Modal';
+import Buttons from '@components/Atoms/Buttons';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -131,6 +133,18 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   };
 
   // ##################################################################### //
+  // ############################## OTHER UI ############################# //
+  // ##################################################################### //
+  const customTitle = () => {
+    return (
+      <div className="w-full flex flex-row justify-between items-center">
+        Class Sentiments
+        <Buttons label="Refresh" onClick={() => handleGetSentiments()} />
+      </div>
+    );
+  };
+
+  // ##################################################################### //
   // ############################# ANIMATION ############################# //
   // ##################################################################### //
   const frameRef = useRef();
@@ -149,74 +163,86 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
         }}
         className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-        <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
-        <div className="w-1/3 relative m-auto min-w-100 max-w-128 bg-gray-200 p-4 rounded z-50">
-          <ButtonsRound
-            Icon={AiOutlineCloseCircle}
-            onClick={() => handleSentimentToggle()}
-            iconSizePX={24}
-            buttonWHClass={`w-8 h-8`}
-            containerBgClass={`absolute right-0 top-0 bg-transparent`}
-            buttonBgClass={`bg-transparent`}
-            iconTxtColorClass={theme.textColor[themeColor]}
-          />
-          <div className="align-middle text-center text-sm font-semibold text-gray-600 leading-8">
-            <p>Class Sentiments</p>
-            <p
-              onClick={() => handleGetSentiments()}
-              className={`cursor-pointer underline ${theme.textColor[themeColor]}`}>
-              (Refresh)
-            </p>
-          </div>
-          <ul>
-            {roster && roster.length > 0 ? (
-              sentimentStore && !loading ? (
-                Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
-                  return (
-                    <li
-                      key={`sentimentRow_${idx}`}
-                      className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                      <span className="w-2/10 text-right h-auto flex">
-                        {EMOJIS[sentimentKey] ? (
-                          <img
-                            src={EMOJIS[sentimentKey]}
-                            className="w-auto h-8 object-contain"
-                          />
-                        ) : null}
-                      </span>
-                      <span className="w-3/10 text-left whitespace-pre overflow-hidden">
-                        {sentimentKey === '_'
-                          ? "Didn't Answer"
-                          : keywordCapitilizer(sentimentKey)}
-                        :
-                      </span>
-                      <span className="w-2/10 text-right">
-                        {sentimentStore[sentimentKey]}
-                      </span>
-                      <span className="w-2/10 text-center">
-                        {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
-                      </span>
-                    </li>
-                  );
-                })
-              ) : (
-                loading && (
+        {rightView.view === 'lessonInfo' && (
+          <>
+            <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
+            <Modal
+              customTitle={customTitle()}
+              showHeader={true}
+              showHeaderBorder={false}
+              showFooter={false}
+              scrollHidden={true}
+              closeAction={() => setRightView({view: 'lesson', option: ''})}
+              position="absolute"
+              width="w-full"
+              maxWidth="max-w-128">
+              {/* <div className="align-middle text-center text-sm font-semibold text-gray-600 leading-8">
+                <p>Class Sentiments</p>
+                <p
+                  onClick={() => handleGetSentiments()}
+                  className={`cursor-pointer underline ${theme.textColor[themeColor]}`}>
+                  (Refresh)
+                </p>
+              </div> */}
+              <ul className="rounded border-0 border-gray-400 border-opacity-20">
+                {roster && roster.length > 0 ? (
+                  sentimentStore && !loading ? (
+                    Object.keys(sentimentStore).map(
+                      (sentimentKey: string, idx: number) => {
+                        console.log('idx % 2 ', idx % 2);
+                        return (
+                          <li
+                            key={`sentimentRow_${idx}`}
+                            className={`${
+                              idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'
+                            } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}>
+                            <span className="w-2.5/10 h-auto flex justify-center">
+                              {EMOJIS[sentimentKey] ? (
+                                <img
+                                  src={EMOJIS[sentimentKey]}
+                                  className="w-auto h-8 object-contain"
+                                />
+                              ) : null}
+                            </span>
+                            <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
+                              {sentimentKey === '_'
+                                ? "Didn't Answer"
+                                : keywordCapitilizer(sentimentKey)}
+                              :
+                            </span>
+                            <span className="w-2.5/10 flex justify-center">
+                              {sentimentStore[sentimentKey]}
+                            </span>
+                            <span className="w-2.5/10 flex justify-center">
+                              {(sentimentStore[sentimentKey] / sentimentStore.total) *
+                                100}
+                              %
+                            </span>
+                          </li>
+                        );
+                      }
+                    )
+                  ) : (
+                    loading && (
+                      <li
+                        key={`sentimentRow_loading`}
+                        className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                        <Loader />
+                      </li>
+                    )
+                  )
+                ) : (
                   <li
                     key={`sentimentRow_loading`}
-                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                    <Loader />
+                    className="w-full p-2 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                    You need at least 5 students in-class to check sentiments 😀
                   </li>
-                )
-              )
-            ) : (
-              <li
-                key={`sentimentRow_loading`}
-                className="w-full p-2 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
-                You need at least 5 students in-class to check sentiments 😀
-              </li>
-            )}
-          </ul>
-        </div>
+                )}
+              </ul>
+              {/* </div> */}
+            </Modal>
+          </>
+        )}
       </div>
     </>
   );
