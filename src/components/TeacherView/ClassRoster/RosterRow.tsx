@@ -256,11 +256,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
                   action: () =>
                     handleToggleRightView({view: 'profile', option: personAuthID}),
                 },
-                {
-                  label: 'Attendance',
-                  action: () =>
-                    handleToggleRightView({view: 'attendance', option: studentID}),
-                },
+                // {
+                //   label: 'Attendance',
+                //   action: () =>
+                //     handleToggleRightView({view: 'attendance', option: studentID}),
+                // },
               ]}
             />
           </div>
