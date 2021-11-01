@@ -16,6 +16,7 @@ interface RosterRowProps extends IRosterSectionProps {
   role: string;
   currentLocation: string;
   lessonProgress: string;
+  hot?: boolean;
 }
 
 const RosterRow: React.FC<RosterRowProps> = ({
@@ -35,6 +36,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   rightView,
   setRightView,
   handleToggleRightView,
+  hot,
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -168,7 +170,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
         </div>
 
         {/* MR SHARE BUTTON */}
-        {!isLessonSurvey ? (
+        {!isLessonSurvey && hot ? (
           studentIsInLesson() ? (
             anyoneIsShared ? (
               studentIsShared() ? (
@@ -228,11 +230,13 @@ const RosterRow: React.FC<RosterRowProps> = ({
             id={`${personAuthID}`}
             data-studentid={personAuthID}
             draggable={false}
-            className={`w-3/10 mx-auto flex items-center text-center rounded text-white bg-dark-gray bg-opacity-20 text-sm ${
+            className={`w-3/10 mx-auto flex items-center text-center ${
               active && activeHoverClass
             }`}
             onClick={() => {}}>
-            <span className="pointer-events-none">Share</span>
+            <div className="p-1 rounded text-white bg-dark-gray bg-opacity-20 text-sm">
+              <span className="pointer-events-none">Share</span>
+            </div>
           </div>
         )}
 

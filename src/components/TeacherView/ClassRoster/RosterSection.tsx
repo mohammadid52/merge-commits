@@ -173,6 +173,7 @@ const RosterSection = ({
               handlePageChange={handlePageChange}
               rightView={rightView}
               handleToggleRightView={handleToggleRightView}
+              hot={hot}
             />
           ))
         ) : (
