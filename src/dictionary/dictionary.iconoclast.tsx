@@ -1218,6 +1218,7 @@ const InstitueCurriculum: any = {
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
+    LOADING: 'Loading Courses...',
   },
   ES: {
     TITLE: 'TBD',
@@ -1230,6 +1231,7 @@ const InstitueCurriculum: any = {
     VIEW: 'TBD',
     INFO: 'TBD',
     NO_DELETE: 'TBD',
+    LOADING: 'TBD',
   },
 };
 

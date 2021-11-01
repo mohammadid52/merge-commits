@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import * as customQueries from '@customGraphql/customQueries';
 import * as mutations from '@graphql/mutations';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -8,6 +8,7 @@ import AddButton from '../../../../Atoms/Buttons/AddButton';
 import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import Loader from '@components/Atoms/Loader';
 
 interface CurriculumListProps {
   curricular?: {items: {name?: string; id: string}[]};
@@ -21,13 +22,16 @@ const CurriculumList = ({
   updateCurricularList,
   instId,
 }: CurriculumListProps) => {
+  const match = useRouteMatch();
+  const history = useHistory();
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const {InstitueCurriculum} = useDictionary(clientKey);
-  const history = useHistory();
+  const isSuperAdmin: boolean = gContext.state.user.role === 'SUP'
   const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
+  const [loading, setLoading] = useState(isSuperAdmin);
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
 
@@ -44,7 +48,7 @@ const CurriculumList = ({
   });
 
   useEffect(() => {
-    if (gContext.state.user.role === 'SUP') {
+    if (isSuperAdmin) {
       fetchCurriculums();
     }
   }, []);
@@ -60,9 +64,11 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
-      console.log(list, 'listlist');
       setCourseList(list.data?.listCurriculums?.items);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false)
+    }
   };
 
   const checkIfRemovable = (curriculumObj: any) => {
@@ -109,11 +115,11 @@ const CurriculumList = ({
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
 
   const createNewCurricular = () => {
-    history.push(`/dashboard/manage-institutions/institution/${instId}/course-builder`);
+    history.push(isSuperAdmin ? `/dashboard/manage-institutions/course-builder`: `/dashboard/manage-institutions/institution/${instId}/course-builder`);
   };
 
   const editCurrentCurricular = (id: string) => {
-    history.push(
+    history.push(isSuperAdmin ? `/dashboard/manage-institutions/course-builder/${id}`: 
       `/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`
     );
   };
@@ -124,7 +130,16 @@ const CurriculumList = ({
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        {courseList?.length ? (
+        {loading ? (
+          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+            <div className="w-5/10">
+              <Loader color="rgba(107, 114, 128, 1)" />
+              <p className="mt-2 text-center text-lg text-gray-500">
+                {InstitueCurriculum[userLanguage]['LOADING']}
+              </p>
+            </div>
+          </div>
+        ) : courseList?.length ? (
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">

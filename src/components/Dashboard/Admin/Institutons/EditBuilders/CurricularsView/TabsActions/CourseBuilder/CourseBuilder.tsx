@@ -37,9 +37,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const step = params.get('step');
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(clientKey);
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState([]);
@@ -73,8 +71,10 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   }, [courseId]);
 
   useEffect(() => {
-    getBasicInstitutionInfo();
-  }, [instId]);
+    if (courseData?.institution?.id) {
+      getBasicInstitutionInfo();
+    }
+  }, [courseData?.institution?.id]);
 
   const fetchCourseData = async () => {
     if (courseId) {
