@@ -194,7 +194,8 @@ const ProfileFrame = ({
           ? dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']
           : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
         {!isEditing ? (
-          <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+          // <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+          <Buttons label="Edit" disabled Icon={FaEdit} />
         ) : null}
       </div>
     );
