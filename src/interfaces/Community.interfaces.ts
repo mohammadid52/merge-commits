@@ -29,12 +29,15 @@ export interface ICommunityCard extends IEventInput {
   person?: IPerson;
   cardDate?: string;
   chat: IChat[];
+  likes?: string[];
+  chatCount?: number;
 }
 
 export interface IChat {
   id?: string;
   communityId: string;
   createdAt?: string;
+  person?: IPerson;
   personAuthID: string;
   personEmail: string;
   msg?: string | null;

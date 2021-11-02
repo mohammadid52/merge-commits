@@ -1,3 +1,5 @@
+import FormInput from '@atoms/Form/FormInput';
+import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import Popover from '@components/Atoms/Popover';
 import Comments from '@components/Community/Components/Comments';
@@ -5,11 +7,9 @@ import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
-import useAuth from '@customHooks/useAuth';
-import * as mutations from '@graphql/mutations';
-import FormInput from '@atoms/Form/FormInput';
-import * as queries from '@graphql/queries';
 import * as customQueries from '@customGraphql/customQueries';
+import useAuth from '@customHooks/useAuth';
+import * as queries from '@graphql/queries';
 import useGraphqlMutation from '@graphql/useGraphqlMutation';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
@@ -17,48 +17,74 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
+import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
-import Buttons from '@components/Atoms/Buttons';
 
 const BottomSection = ({
   setShowComments,
   showComments,
-  chatsLen,
+
+  cardDetails,
 }: {
-  chatsLen: number;
+  cardDetails: ICommunityCard;
   showComments: boolean;
+
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  let copyLikes = cardDetails.likes || [];
+  const {authId} = useAuth();
+  const likeIdx = copyLikes?.findIndex((d) => d === authId);
+  const isLiked = likeIdx !== -1;
+
+  const community = useGraphqlMutation('updateCommunity');
+  const likeAction = () => {
+    let payload: any = {id: cardDetails.id};
+    if (isLiked) {
+      // dislike
+      copyLikes.splice(likeIdx, 1);
+      payload = {...payload, likes: copyLikes};
+    } else {
+      // like
+      copyLikes.push(authId);
+      payload = {...payload, likes: copyLikes};
+    }
+    community.mutate({input: payload});
+  };
+
   return (
     <>
       <div className="flex justify-start mb-4 border-t-0 border-gray-200">
         <div className="flex w-full mt-1 pt-2 space-x-4 pl-5">
-          <div className="rounded-full p-4 bg-pink-100 hover:bg-pink-200 w-auto cursor-pointer z-100 transition-all">
-            <AiOutlineHeart className="text-pink-500 text-xl " />
+          <div
+            onClick={() => likeAction()}
+            className={`${
+              isLiked
+                ? 'bg-pink-500 text-white'
+                : 'bg-pink-100 hover:bg-pink-200 text-pink-500'
+            } rounded-full p-2  w-auto cursor-pointer z-100 transition-all`}>
+            <AiOutlineHeart className=" text-xl " />
           </div>
-          <div className="rounded-full p-4 bg-blue-100 hover:bg-blue-200 w-auto cursor-pointer z-100 transition-all">
-            <AiOutlineLike className="text-blue-500 text-xl " />
-          </div>
-          {/* <div
-                  onClick={onDelete}
-                  className="rounded-full p-4 bg-blue-100 hover:bg-blue-200 w-auto cursor-pointer z-100 transition-all">
-                  <AiOutlineLike className="text-blue-500 text-xl " />
-                </div> */}
         </div>
       </div>
       <div className="flex w-full border-t border-gray-100">
         <div className="mt-3 mx-5 flex flex-row w-auto">
           <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
             Comments:
-            <div className="ml-1 text-gray-400 font-thin text-ms"> {chatsLen || 0}</div>
+            <div className="ml-1 text-gray-400 font-thin text-ms">
+              {' '}
+              {cardDetails?.chatCount || 0}
+            </div>
           </div>
         </div>
 
         <div className="mt-3 mx-5 w-full flex justify-end">
           <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
-            Likes: <div className="ml-1 text-gray-400 font-thin text-ms"> 120k</div>
+            Likes:{' '}
+            <div className="ml-1 text-gray-400 font-thin text-ms">
+              {' '}
+              {cardDetails?.likes?.length || 0}
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +110,15 @@ const PostComment = ({
   setChats: React.Dispatch<React.SetStateAction<IChat[]>>;
 }) => {
   const [postText, setPostText] = useState('');
-  const {authId: personAuthID, email: personEmail} = useAuth();
+  const {authId: personAuthID, email: personEmail, user} = useAuth();
+
+  const community = useGraphqlMutation('updateCommunity');
+
+  const {mutate} = useGraphqlMutation('createCommunityChat', {
+    onSuccess: () => {
+      community.mutate({input: {id: cardDetails.id, chatCount: chats.length}});
+    },
+  });
 
   const onPost = async () => {
     setPostText('');
@@ -94,20 +128,15 @@ const PostComment = ({
       personAuthID: personAuthID,
       msg: postText,
       personEmail: personEmail,
+      person: user,
     };
     chats.push(chatObject);
     setChats([...chats]);
     setShowComments(true);
 
-    try {
-      const res: any = await API.graphql(
-        graphqlOperation(mutations.createCommunityChat, {
-          input: {...chatObject},
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    mutate({
+      input: {...chatObject},
+    });
   };
 
   return (
@@ -244,12 +273,23 @@ const Card = ({
       );
       const data = res.data.listCommunityChats.items;
       if (data.length > 0) {
-        const orderedList = orderBy(data, ['createdAt'], 'desc');
-        const persons: any = await API.graphql(
+        let orderedList = orderBy(data, ['createdAt'], 'desc');
+        const filterArray = orderedList.map((item) => ({
+          authId: {
+            eq: item.personAuthID,
+          },
+        }));
+
+        const _res: any = await API.graphql(
           graphqlOperation(customQueries.listPersons, {
-            authId: {between: orderedList.map((d) => d.personAuthID)},
+            filter: {or: filterArray},
           })
         );
+        const persons = _res.data.listPersons.items;
+        orderedList = orderedList.map((d) => ({
+          ...d,
+          person: persons.find((p: any) => p.authId === d.personAuthID),
+        }));
         setChats([...orderedList]);
       }
     } catch (error) {
@@ -404,9 +444,9 @@ const Card = ({
         </div>
         {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
           <BottomSection
+            cardDetails={cardDetails}
             showComments={showComments}
             setShowComments={setShowComments}
-            chatsLen={chats.length}
           />
         )}
       </div>
@@ -470,9 +510,9 @@ const Card = ({
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
                 <div className="w-auto">
                   <BottomSection
+                    cardDetails={cardDetails}
                     showComments={showComments}
                     setShowComments={setShowComments}
-                    chatsLen={chats.length}
                   />
                   <PostComment
                     chats={chats}
@@ -487,7 +527,6 @@ const Card = ({
                       authId={authId}
                       onChatDelete={onChatDelete}
                       isLoading={isLoading}
-                      person={cardDetails.person}
                       chats={chats}
                     />
                   )}

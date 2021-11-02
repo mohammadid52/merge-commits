@@ -1,6 +1,6 @@
 import Loader from '@components/Atoms/Loader';
 import Popover from '@components/Atoms/Popover';
-import {IChat, IPerson} from '@interfaces/Community.interfaces';
+import {IChat} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {orderBy} from 'lodash';
 import moment from 'moment';
@@ -9,14 +9,14 @@ import {BiDotsVerticalRounded} from 'react-icons/bi';
 
 const Comment = ({
   chat,
-  person,
+
   onChatDelete,
   authId,
   email,
   onEdit,
 }: {
   chat: IChat;
-  person: IPerson;
+
   authId: string;
   email: string;
   onChatDelete: (chatId: string) => void;
@@ -32,18 +32,21 @@ const Comment = ({
           <div className="flex-shrink-0 mr-3 w-auto">
             <img
               className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
-              src={getImageFromS3Static(person.image)}
+              src={getImageFromS3Static(chat.person.image)}
               alt=""
             />
           </div>
           <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>{person.firstName}</strong>{' '}
+            <strong>{chat.person.firstName}</strong>{' '}
             <span className="text-xs text-gray-600">
               {moment(chat.createdAt).format('LT')}
             </span>
             {chat.isEditedChat && (
               <span className="text-xs text-gray-500 ml-2">(edited)</span>
             )}
+            <span className="text-blue-700 w-auto font-base text-xs ml-2 cursor-pointer">
+              {chat.person.role}
+            </span>
             <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
             {iAmOwnerOfTheChat && (
               <div className="w-auto absolute inset-y-0 right-0 p-4">
@@ -95,7 +98,7 @@ const Comment = ({
 
 const Comments = ({
   chats,
-  person,
+
   isLoading,
   onChatDelete,
   onEdit,
@@ -103,7 +106,7 @@ const Comments = ({
   email,
 }: {
   chats: IChat[];
-  person: IPerson;
+
   isLoading: boolean;
   onChatDelete: (chatId: string) => void;
   onEdit: (chatId: string, chatValue: string) => void;
@@ -130,7 +133,6 @@ const Comments = ({
           onChatDelete={onChatDelete}
           onEdit={onEdit}
           chat={chat}
-          person={person}
         />
       ))}
     </div>

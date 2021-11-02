@@ -13,6 +13,7 @@ const useAuth = (): {
   lastName: any;
   image: any;
   instId: string;
+  user: any;
 } => {
   const context = useGlobalContext();
 
@@ -39,6 +40,7 @@ const useAuth = (): {
     lastName,
     image,
     instId,
+    user,
   };
 };
 
