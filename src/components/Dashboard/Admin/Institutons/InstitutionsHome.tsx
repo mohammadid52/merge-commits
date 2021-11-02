@@ -49,6 +49,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     breadcrumbsTitles: BreadcrumsTitles[userLanguage],
     instituteTabTitles: Institute_info[userLanguage],
     pathname,
+    baseUrl: '/dashboard/manage-institutions',
   });
 
   const breadCrumbsList = [

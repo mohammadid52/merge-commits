@@ -88,17 +88,27 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
   const {pathname} = location;
+  const baseUrl = isSuperAdmin
+      ? `/dashboard/manage-institutions`
+      : `/dashboard/manage-institutions/institution/${institutionId}`;
   const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
     breadcrumbsTitles: BreadcrumsTitles[userLanguage],
     instituteTabTitles: Institute_info[userLanguage],
     pathname,
-    institutionId,
+    baseUrl,
   });
 
   const breadCrumbsList = [

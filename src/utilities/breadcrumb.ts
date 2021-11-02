@@ -1,17 +1,18 @@
 export const breadcrumbsRoutes = ({
     breadcrumbsTitles,
     instituteTabTitles,
-    institutionId,
     lessonData,
-    pathname
+    pathname,
+    baseUrl
 }:any) => {
   let heroSectionTitle, breadcrumbPathForSection;
+  
   if (pathname.indexOf('unit') > -1) {
     heroSectionTitle = breadcrumbsTitles['UNITS'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
+        url: `${baseUrl}/units`,
         last: true,
       },
     ];
@@ -20,7 +21,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+        url: `${baseUrl}/staff`,
         last: true,
       },
     ];
@@ -32,7 +33,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+        url: `${baseUrl}/staff`,
         last: true,
       },
     ];
@@ -41,7 +42,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
+        url: `${baseUrl}/courses`,
         last: true,
       },
     ];
@@ -50,7 +51,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/students`,
+        url: `${baseUrl}/students`,
         last: true,
       },
     ];
@@ -59,7 +60,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
+        url: `${baseUrl}/units`,
         last: true,
       },
     ];
@@ -68,7 +69,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/lessons`,
+        url: `${baseUrl}/lessons`,
         last: lessonData?.id ? false : true,
       },
     ];
@@ -78,7 +79,7 @@ export const breadcrumbsRoutes = ({
         ...breadcrumbPathForSection,
         {
           title: lessonData?.title,
-          url: `/dashboard/manage-institutions/institution/${institutionId}/lessons/${lessonData?.id}`,
+          url: `${baseUrl}/lessons/${lessonData?.id}`,
           last: true,
         },
       ];
@@ -89,7 +90,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`,
+        url: `${baseUrl}/class-rooms`,
         last: true,
       },
     ];
@@ -98,7 +99,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/research-and-analytics`,
+        url: `${baseUrl}/research-and-analytics`,
         last: true,
       },
     ];
@@ -107,7 +108,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
+        url: `${baseUrl}/edit`,
         last: true,
       },
     ];
