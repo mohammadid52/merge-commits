@@ -29,7 +29,7 @@ const CurriculumList = ({
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const {InstitueCurriculum} = useDictionary(clientKey);
-  const isSuperAdmin: boolean = gContext.state.user.role === 'SUP';
+  const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
   const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
   const [loading, setLoading] = useState(isSuperAdmin);
 
@@ -163,9 +163,17 @@ const CurriculumList = ({
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculum[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div
+                  className={`${
+                    isSuperAdmin ? 'w-4/10' : 'w-8/10'
+                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
                 </div>
+                {isSuperAdmin && (
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                    <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
+                  </div>
+                )}
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculum[userLanguage]['ACTION']}
@@ -179,6 +187,7 @@ const CurriculumList = ({
                 <CurriculumListRow
                   key={`curr_list_row_${index}`}
                   index={index}
+                  isSuperAdmin={isSuperAdmin}
                   item={item}
                   checkIfRemovable={checkIfRemovable}
                   handleToggleDelete={handleToggleDelete}

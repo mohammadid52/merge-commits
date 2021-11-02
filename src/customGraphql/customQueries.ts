@@ -1769,6 +1769,10 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
       items {
         id
         name
+        institution {
+          id
+          name
+        }
       }
       nextToken
     }

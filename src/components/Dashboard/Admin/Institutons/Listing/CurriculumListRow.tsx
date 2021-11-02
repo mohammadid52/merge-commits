@@ -8,6 +8,7 @@ import {HiOutlineTrash} from 'react-icons/hi';
 interface ICurriculumListRowProps {
   index: number;
   item: any;
+  isSuperAdmin: boolean;
   checkIfRemovable: any;
   handleToggleDelete: any;
   editCurrentCurricular: any;
@@ -15,6 +16,7 @@ interface ICurriculumListRowProps {
 
 const CurriculumListRow = ({
   index,
+  isSuperAdmin,
   item,
   checkIfRemovable,
   handleToggleDelete,
@@ -42,10 +44,16 @@ const CurriculumListRow = ({
       </div>
       <div
         onClick={() => editCurrentCurricular(item.id)}
-        className="cursor-pointer flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+        className={`cursor-pointer flex ${
+          isSuperAdmin ? 'w-4/10' : 'w-8/10'
+        } items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-nowrap`}>
         {item.name ? item.name : ''}
       </div>
-
+      {isSuperAdmin && (
+        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-nowrap">
+          {item.institution?.name}
+        </div>
+      )}
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
