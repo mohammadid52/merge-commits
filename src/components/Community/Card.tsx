@@ -49,6 +49,7 @@ const BottomSection = ({
       copyLikes.push(authId);
       payload = {...payload, likes: copyLikes};
     }
+    update(cardDetails, `likes`, () => copyLikes);
     community.mutate({input: payload});
   };
 
