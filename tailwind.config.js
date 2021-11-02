@@ -10,7 +10,13 @@ module.exports = {
       './src/**/*.js',
       './src/**/*.jsx',
     ],
-    safelist: ['hover:text-indigo-600'],
+    safelist: [
+      'hover:bg-teal-100',
+      'hover:bg-red-100',
+      'hover:bg-yellow-100',
+      'hover:bg-blue-100',
+      'hover: text-indigo-600',
+    ],
   },
   corePlugins: {
     translate: true,

@@ -1,5 +1,4 @@
 import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
-import {AddNewBlock} from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
@@ -25,7 +24,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
 
-  const {selectedComponent, actionMode} = usePageBuilderContext();
+  const {selectedComponent} = usePageBuilderContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -50,8 +49,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
-  const deleteMode = actionMode === 'delete';
-  const deleteModeCurrentComponentSelected = selectedComponent?.extras || [];
 
   return (
     <div>
