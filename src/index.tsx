@@ -15,8 +15,25 @@ const Page: React.FC = () => {
   return <App />;
 };
 
+// const initMap = () => {
+//   // The location of Uluru
+//   const uluru = {lat: -25.344, lng: 131.036};
+//   // The map, centered at Uluru
+//   const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+//     zoom: 4,
+//     center: uluru,
+//   });
+
+//   // The marker, positioned at Uluru
+//   const marker = new google.maps.Marker({
+//     position: uluru,
+//     map: map,
+//   });
+// };
+
 ReactDOM.render(<Page />, document.getElementById('app'));
 
+// export {initMap};
 // TODO merge atoms generals and stanards directory.
 //
 // increased node_env on aws

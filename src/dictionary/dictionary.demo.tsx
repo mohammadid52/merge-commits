@@ -177,6 +177,7 @@ const BreadcrumsTitles: any = {
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
     LOADING: 'Loading...',
+    COMMUNTIY: 'S/B Community Builder',
   },
   ES: {
     HOME: 'CASA',
@@ -214,6 +215,7 @@ const BreadcrumsTitles: any = {
     LESSONPLANBUILDER: 'TBD',
     LESSON_EDITOR: 'TBD',
     STUDENTS: 'Students',
+    COMMUNTIY: 'TBD',
     STUDENTS_NOTEBOOK: 'Students Notebook',
   },
 };
@@ -3828,15 +3830,13 @@ const StudentDict: any = {
     NO_STUDENT: 'TBD',
   },
 };
-
 const CommunityDict: any = {
   EN: {
     TITLE: 'Community',
     HEADER: 'Here is what is happening today',
     TABS: {
       FRONT_PAGE: 'Front page',
-      NEW_PERSON_SPOTLIGHT: 'New Person Spotlight',
-      ANNOUNCEMENTS: 'Announcements & Events',
+      COMMUNITY_BUILDER: 'Community Builder',
     },
   },
   ES: {
@@ -3844,11 +3844,11 @@ const CommunityDict: any = {
     HEADER: 'TBD',
     TABS: {
       FRONT_PAGE: 'TBD',
-      NEW_PERSON_SPOTLIGHT: 'TBD',
-      ANNOUNCEMENTS: 'TBD',
+      COMMUNITY_BUILDER: 'TBD',
     },
   },
 };
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;

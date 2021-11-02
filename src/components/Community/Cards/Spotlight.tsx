@@ -273,7 +273,12 @@ const Spotlight = ({
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={'Save'}
+            disabled={isEmpty(file)}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>

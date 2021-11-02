@@ -88,6 +88,7 @@ const BreadcrumsTitles: any = {
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
     LOADING: 'Loading...',
+    COMMUNTIY: 'S/B Community Builder',
   },
   ES: {
     HOME: 'CASA',
@@ -111,6 +112,7 @@ const BreadcrumsTitles: any = {
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
+    COMMUNTIY: 'TBD',
     AddCheckpint: 'TBD',
     UnitBuilder: 'TBD',
     AddTopic: 'TBD',
@@ -4006,8 +4008,7 @@ const CommunityDict: any = {
     HEADER: 'Here is what is happening today',
     TABS: {
       FRONT_PAGE: 'Front page',
-      NEW_PERSON_SPOTLIGHT: 'New Person Spotlight',
-      ANNOUNCEMENTS: 'Announcements & Events',
+      COMMUNITY_BUILDER: 'Community Builder',
     },
   },
   ES: {
@@ -4015,8 +4016,7 @@ const CommunityDict: any = {
     HEADER: 'TBD',
     TABS: {
       FRONT_PAGE: 'TBD',
-      NEW_PERSON_SPOTLIGHT: 'TBD',
-      ANNOUNCEMENTS: 'TBD',
+      COMMUNITY_BUILDER: 'TBD',
     },
   },
 };

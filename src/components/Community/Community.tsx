@@ -7,7 +7,6 @@ import Card from '@components/Community/Card';
 import CardsModal from '@components/Community/CardsModal';
 import {
   CardType,
-  communityTypes,
   COMMUNITY_UPLOAD_KEY,
   NavStateTypes,
 } from '@components/Community/constants.community';
@@ -22,8 +21,8 @@ import useGraphqlMutation from '@graphql/useGraphqlMutation';
 import useGraphqlQuery from '@graphql/useGraphqlQuery';
 import {
   IAnnouncementInput,
-  ICommunityCard,
   ICheckItOutInput,
+  ICommunityCard,
   IEventInput,
   ISpotlightInput,
 } from '@interfaces/Community.interfaces';
@@ -32,7 +31,9 @@ import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
-import {filter, findIndex, orderBy, remove} from 'lodash';
+import filter from 'lodash/filter';
+import orderBy from 'lodash/orderBy';
+import remove from 'lodash/remove';
 import React, {useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {v4 as uuidV4} from 'uuid';
@@ -50,7 +51,7 @@ const Community = ({}: {role: string}) => {
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
-      title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
+      title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
       url: `/dashboard/`,
       last: true,
     },

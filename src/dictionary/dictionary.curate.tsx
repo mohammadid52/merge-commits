@@ -119,6 +119,7 @@ const BreadcrumsTitles: any = {
     STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
     LOADING: 'Loading...',
+    COMMUNTIY: 'S/B Community Builder',
   },
   ES: {
     HOME: 'CASA',
@@ -159,6 +160,7 @@ const BreadcrumsTitles: any = {
     LESSON_EDITOR: 'TBD',
     STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
+    COMMUNTIY: 'TBD',
   },
 };
 // Profile Display and edit section
@@ -3906,8 +3908,7 @@ const CommunityDict: any = {
     HEADER: 'Here is what is happening today',
     TABS: {
       FRONT_PAGE: 'Front page',
-      NEW_PERSON_SPOTLIGHT: 'New Person Spotlight',
-      ANNOUNCEMENTS: 'Announcements & Events',
+      COMMUNITY_BUILDER: 'Community Builder',
     },
   },
   ES: {
@@ -3915,8 +3916,7 @@ const CommunityDict: any = {
     HEADER: 'TBD',
     TABS: {
       FRONT_PAGE: 'TBD',
-      NEW_PERSON_SPOTLIGHT: 'TBD',
-      ANNOUNCEMENTS: 'TBD',
+      COMMUNITY_BUILDER: 'TBD',
     },
   },
 };

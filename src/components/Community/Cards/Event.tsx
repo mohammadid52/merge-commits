@@ -4,11 +4,13 @@ import Buttons from '@components/Atoms/Buttons';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
+import useScript from '@customHooks/useScript';
 import {IEventInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
+const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
 
 const Event = ({
   onCancel,
@@ -33,6 +35,10 @@ const Event = ({
     summary: '',
     summaryHtml: '',
   });
+
+  const status = useScript(
+    `https://maps.googleapis.com/maps/api/js?key=${api}&callback=initMap&libraries=&v=weekly`
+  );
 
   const onEditorStateChange = (
     html: string,
@@ -181,6 +187,7 @@ const Event = ({
               value={details.address}
             />
           </div>
+          {/* <div id="map"></div> */}
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>

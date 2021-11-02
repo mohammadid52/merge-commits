@@ -280,7 +280,7 @@ const Menu = ({
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
-
+  const onEdit = (cardId: string) => {};
   return (
     <div className="w-auto absolute top-0 right-0 p-4">
       <Popover
@@ -295,8 +295,15 @@ const Menu = ({
           <dl className="grid grid-cols-1 gap-y-3">
             <div className="col-span-1">
               <dt
+                onClick={() => onEdit(cardId)}
+                className={`cursor-pointer text-gray-900 hover:text-white  transition-all hover:iconoclast:bg-main hover:curate:bg-main`}>
+                Edit
+              </dt>
+            </div>
+            <div className="col-span-1">
+              <dt
                 onClick={() => onDelete(cardId, fileKey)}
-                className={`cursor-pointer text-red-500 hover:text-red-600`}>
+                className={`cursor-pointer text-red-500 hover:text-white hover:bg-red-500 transition-all`}>
                 Delete
               </dt>
             </div>
@@ -385,7 +392,40 @@ const Card = ({
     />
   );
 
-  if (cardDetails.cardType === communityTypes.EVENT) {
+  if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
+    return (
+      <div className="relative">
+        {MenuOptions}
+
+        <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+          <div className="flex items-center w-full">
+            <div className="w-full">
+              <div className="border-b-0 bg-red-600 text-white p-4 border-gray-200">
+                <div className="text-white font-semibold text-lg  px-2">
+                  Announcement: {cardDetails.summary}
+                </div>
+              </div>
+              {cardDetails.cardName ? (
+                <div className="mb-7 mt-3 px-2">
+                  <div className="content">
+                    <div className="content-overlay"></div>
+                    <img className="content-image" src={media} />
+                    <div className="content-details fadeIn-bottom">
+                      <h3 className="content-title text-xl">{cardDetails.cardName}</h3>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+                  <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (cardDetails.cardType === communityTypes.EVENT) {
     const date = cardDetails.additionalInfo.split(' || ')[0];
     const addres = cardDetails.additionalInfo.split(' || ')[1];
     return (

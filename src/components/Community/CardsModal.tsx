@@ -120,7 +120,7 @@ const CardsModal = ({
     : communityContent;
 
   return (
-    <div>
+    <div style={{zIndex: 99999}}>
       {showCardsModal && (
         <Modal
           showHeader

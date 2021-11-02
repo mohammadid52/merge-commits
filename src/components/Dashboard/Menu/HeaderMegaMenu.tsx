@@ -117,17 +117,12 @@ const HeaderMegaMenu = () => {
       type: 'dropdown',
       children: [
         {
-          key: 'new_person_spotlight',
-          redirectionUrl: `/dashboard/new-person-spotlight`,
-          active: location.pathname.indexOf('new-person-spotlight') > -1,
-          title: CommunityDict[userLanguage]['TABS']['NEW_PERSON_SPOTLIGHT'],
+          key: 'community_builder',
+          redirectionUrl: `/dashboard/community-builder`,
+          active: location.pathname.indexOf('community-builder') > -1,
+          title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER'],
         },
-        {
-          key: 'announcements_and_events',
-          redirectionUrl: `/dashboard/announcements-and-events`,
-          active: location.pathname.indexOf('announcements-and-events') > -1,
-          title: CommunityDict[userLanguage]['TABS']['ANNOUNCEMENTS'],
-        },
+
         {
           key: 'front_page',
           redirectionUrl: `/dashboard/community`,
