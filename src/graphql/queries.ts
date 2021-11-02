@@ -6069,6 +6069,8 @@ export const getCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -6158,6 +6160,8 @@ export const listCommunitys = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        likes
+        chatCount
         createdAt
         updatedAt
       }
