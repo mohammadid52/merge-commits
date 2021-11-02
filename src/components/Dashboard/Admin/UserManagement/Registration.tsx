@@ -99,8 +99,10 @@ const Registration = ({
 
   const Roles = [
     state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
-    state.user.role === 'SUP' && {code: 'ADM', name: 'Admin'},
-    {code: 'SUP', name: 'Super Admin'},
+    (state.user.role === 'SUP' || state.user.role === 'ADM') && {
+      code: 'ADM',
+      name: 'Admin',
+    },
     {code: 'BLD', name: 'Builder'},
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},

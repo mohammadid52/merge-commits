@@ -12176,6 +12176,7 @@ export const onCreateCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12217,6 +12218,7 @@ export const onCreateCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
@@ -12258,6 +12260,8 @@ export const onCreateCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12281,6 +12285,7 @@ export const onUpdateCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12322,6 +12327,7 @@ export const onUpdateCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
@@ -12363,6 +12369,8 @@ export const onUpdateCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12386,6 +12394,7 @@ export const onDeleteCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12427,6 +12436,7 @@ export const onDeleteCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
@@ -12468,6 +12478,8 @@ export const onDeleteCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12482,6 +12494,7 @@ export const onCreateCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
@@ -12495,6 +12508,7 @@ export const onUpdateCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
@@ -12508,6 +12522,7 @@ export const onDeleteCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
