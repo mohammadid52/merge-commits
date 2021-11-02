@@ -5,7 +5,7 @@ import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 
 interface IDotMenuProps {
-  menuItems?: [{label: string; action: Function}];
+  menuItems?: {label: string; action: Function}[];
 }
 
 const DotMenu = ({menuItems}: IDotMenuProps) => {
@@ -37,7 +37,7 @@ const DotMenu = ({menuItems}: IDotMenuProps) => {
       padding={2}
       rounded="lg"
       setShow={setShowMenu}
-      containerClass={`flex items-center`}
+      containerClass={`flex flex-col items-center`}
       content={
         menuItems &&
         menuItems.length > 0 &&

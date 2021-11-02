@@ -160,21 +160,6 @@ const ProfileFrame = ({
     },
   ];
 
-  // Code for Other Field
-  const hasOther = (val: string | string[], other: string) => {
-    try {
-      return val ? val.toString().includes(other) : false;
-    } catch (err) {
-      console.log('errrr', err);
-      return false;
-    }
-  };
-
-  const isOther = (val: any) => {
-    if (hasOther(val, 'Other')) {
-      return true;
-    } else return false;
-  };
   // ⬆️ Ends here ⬆️
 
   // ##################################################################### //
@@ -223,7 +208,8 @@ const ProfileFrame = ({
             showHeaderBorder={false}
             showFooter={false}
             scrollHidden={true}
-            closeAction={() => setRightView({view: 'lesson', option: ''})}>
+            closeAction={() => setRightView({view: 'lesson', option: ''})}
+            position={'absolute'}>
             {!isEditing ? (
               <ProfileFrameInfo
                 user={user}

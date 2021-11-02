@@ -388,7 +388,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
       setSurveyQuestions(questions);
       let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
-      await getStudentsSurveyQuestionsResponse(syllabusLes.syllabusLessonID, lessonId);
+      await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
       setIsCSVReady(true);
     } catch (err) {
       console.log('list questions error', err);
@@ -499,23 +499,39 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const getStudentsSurveyQuestionsResponse = async (
-    syllabusLessonID: string,
-    lessonId: String
+    lessonId: String,
+    nextToken?: string,
+    outArray?: any[]
   ) => {
     let studsEmails = classStudents.map((stu: any) => stu.email);
     let universalLessonStudentData: any = await API.graphql(
       graphqlOperation(customQueries.getStudentSurveyResponse, {
+        nextToken: nextToken,
         filter: {
-          // ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
           lessonID: {eq: lessonId},
-          // syllabusLessonID: { eq: syllabusLessonID },
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
         },
       })
     );
     let studentsAnswersSurveyQuestionsData =
       universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
-    setSCQAnswers(studentsAnswersSurveyQuestionsData);
+    let theNextToken =
+      universalLessonStudentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+    /**
+     * combination of last fetch results
+     * && current fetch results
+     */
+    let combined = [...studentsAnswersSurveyQuestionsData, ...outArray];
+
+    // console.log('combined - - - -', combined);
+
+    if (theNextToken) {
+      getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
+    } else {
+      setSCQAnswers(combined);
+    }
+
     return;
   };
 

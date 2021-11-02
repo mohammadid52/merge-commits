@@ -22,6 +22,8 @@ interface ModalProps {
   customTitle?: React.ReactNode;
   outerCloseBtn?: boolean;
   position?: 'absolute' | 'relative' | 'fixed';
+  width?: string;
+  maxWidth?: string;
 }
 
 const ModalBody = (bodyProps: {
@@ -86,6 +88,8 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     outerCloseBtn = false,
     customTitle,
     position,
+    width,
+    maxWidth,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -118,7 +122,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               e.stopPropagation();
             }
           }}
-          className="relative w-auto my-4 mx-auto max-w-lg ">
+          className={`${width ? width : 'w-auto'} ${
+            maxWidth ? maxWidth : 'max-w-lg'
+          } relative my-4 mx-auto`}>
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button
