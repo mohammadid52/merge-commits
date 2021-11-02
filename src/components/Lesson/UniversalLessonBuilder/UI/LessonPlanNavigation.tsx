@@ -32,7 +32,9 @@ const LessonPlanNavigation = ({
   const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
     universalLessonDetails || {};
   const {updateMovableList, fetchingLessonDetails} = useULBContext();
-  const {dispatch, lessonDispatch} = useContext(GlobalContext);
+  const {dispatch, lessonDispatch, state: {
+    user: {isSuperAdmin},
+  },} = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
   // const lessonId = params.get('lessonId');
@@ -53,8 +55,12 @@ const LessonPlanNavigation = ({
     setSelectedPageID(id);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
 
+    const baseUrl = isSuperAdmin
+      ? `/dashboard/manage-institutions`
+      : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
+
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+      `${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

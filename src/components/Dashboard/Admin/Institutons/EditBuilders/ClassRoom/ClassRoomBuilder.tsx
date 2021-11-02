@@ -31,7 +31,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, state, userLanguage} = useContext(GlobalContext);
+  const isSuperAdmin: boolean = state.user.role === 'SUP';
+
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
   const [curricularList, setCurricularList] = useState([]);
@@ -371,7 +373,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
             history.push(
-              `/dashboard/manage-institutions/institution/${instId}/class-rooms`
+              isSuperAdmin ? `/dashboard/manage-institutions/class-rooms` : `/dashboard/manage-institutions/institution/${instId}/class-rooms`
             )
           }>
           <span className="w-auto mr-2">

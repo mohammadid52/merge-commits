@@ -121,7 +121,8 @@ const LessonActivities = ({
   universalLessonDetails,
 }: LessonPlansListProps) => {
   const history = useHistory();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
+  const {isSuperAdmin} = state.user;
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {
@@ -167,7 +168,9 @@ const LessonActivities = ({
   const lessonPagePreview = (id: string, preview: boolean = true) => {
     setPreviewMode(preview);
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}/page-builder?pageId=${id}`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

@@ -100,10 +100,12 @@ const RoomsList = (props: RoomListProps) => {
                   {InstitueRomms[userLanguage]['TITLE']}
                 </h3>
               </div>
-              <AddButton
-                label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewRoom}
-              />
+              {!isSuperAdmin && (
+                <AddButton
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
+                  onClick={createNewRoom}
+                />
+              )}
             </div>
 
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
@@ -138,9 +140,10 @@ const RoomsList = (props: RoomListProps) => {
               {roomList.map((item: any, i: number) => (
                 <div
                   key={i}
-                  className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 ${
+                  className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 cursor-pointer ${
                     i % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}>
+                  }`}
+                  onClick={() => editCurrentRoom(item.id)}>
                   <div
                     className={
                       'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
@@ -176,13 +179,15 @@ const RoomsList = (props: RoomListProps) => {
           </Fragment>
         ) : (
           <Fragment>
-            <div className="flex justify-center mt-8">
-              <AddButton
-                className="mx-4"
-                label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewRoom}
-              />
-            </div>
+            {!isSuperAdmin && (
+              <div className="flex justify-center mt-8">
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
+                  onClick={createNewRoom}
+                />
+              </div>
+            )}
 
             <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
               {messages.message}

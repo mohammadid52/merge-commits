@@ -26,7 +26,14 @@ const LessonPlansList = ({
   universalLessonDetails,
 }: LessonPlansListProps) => {
   const history = useHistory();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
   const {setPreviewMode, updateMovableList} = useULBContext();
@@ -35,21 +42,26 @@ const LessonPlansList = ({
 
   const addNewLessonPlan = () => {
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/lesson-plan`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}/lesson-plan`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/lesson-plan`
     );
   };
 
   const editLessonPage = (id: string) => {
     setPreviewMode(false);
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}/page-builder?pageId=${id}`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 
   const lessonPagePreview = (id: string) => {
     setPreviewMode(true);
+    const baseUrl = isSuperAdmin ? '/dashboard/manage-institutions' : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+      `${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 

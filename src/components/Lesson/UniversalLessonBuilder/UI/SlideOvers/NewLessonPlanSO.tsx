@@ -196,7 +196,13 @@ const NewLessonPlanSO = ({
   pageDetails,
   dark,
 }: NewLessonPlanSOInterface) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const {BUTTONS} = useDictionary(clientKey);
@@ -470,7 +476,9 @@ const NewLessonPlanSO = ({
 
           if (data.id && !editMode) {
             history.push(
-              `/dashboard/manage-institutions/institution/${instId}/lessons/${lessonId}/page-builder?pageId=${pageId}`
+              isSuperAdmin
+                ? `/dashboard/manage-institutions/lessons/${lessonId}/page-builder?pageId=${pageId}`
+                : `/dashboard/manage-institutions/institution/${instId}/lessons/${lessonId}/page-builder?pageId=${pageId}`
             );
           }
         }

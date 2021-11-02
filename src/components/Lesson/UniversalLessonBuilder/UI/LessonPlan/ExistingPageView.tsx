@@ -25,7 +25,13 @@ import {debounce} from 'lodash';
 
 const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPlan) => {
   const history = useHistory();
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    userLanguage,
+  } = useContext(GlobalContext);
 
   const {LessonBuilderDict} = useDictionary(clientKey);
   const [copiedPageId, setCopiedPageId] = useState<string>('');
@@ -114,9 +120,10 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
     });
     // add to database
     addExistingPageToDB();
-    history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
-    );
+    const baseUrl = isSuperAdmin
+      ? `/dashboard/manage-institutions`
+      : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
+    history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
 
   const onCopyPageContent = (selectedPageId: string) => {

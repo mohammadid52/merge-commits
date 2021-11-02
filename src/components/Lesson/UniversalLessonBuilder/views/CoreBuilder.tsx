@@ -89,7 +89,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     newLessonPlanShow,
   } = useULBContext();
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    userLanguage,
+  } = useContext(GlobalContext);
 
   const LessonSlideover = () => {
     return (
@@ -157,7 +163,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const goToLessonPlan = () => {
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}?step=activities`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
     );
   };
 
@@ -404,10 +412,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonSlideover />
 
         <div
-        // className={`2xl:col-start-2 ${
-        //   showLessonEditOverlay || newLessonPlanShow
-        //     ? '-ml-48 2xl:-ml-60 '
-        //     : ''
+          // className={`2xl:col-start-2 ${
+          //   showLessonEditOverlay || newLessonPlanShow
+          //     ? '-ml-48 2xl:-ml-60 '
+          //     : ''
           className={`col-start-2 ${
             showLessonEditOverlay || newLessonPlanShow ? '-ml-60 lg:-ml-40 md:ml-0' : ''
           } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>

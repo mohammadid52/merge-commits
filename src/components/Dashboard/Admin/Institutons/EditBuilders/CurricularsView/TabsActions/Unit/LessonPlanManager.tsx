@@ -36,7 +36,14 @@ const LessonPlanManager = ({
 }: any) => {
   const history = useHistory();
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    clientKey,
+    userLanguage,
+  } = useContext(GlobalContext);
   const {SyllabusDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -409,7 +416,9 @@ const LessonPlanManager = ({
       // setEditLesson({type, id});
     } else {
       history.push(
-        `/dashboard/manage-institutions/institution/${institutionId}/lessons/${id}`
+        isSuperAdmin
+          ? `/dashboard/manage-institutions/lessons/${id}`
+          : `/dashboard/manage-institutions/institution/${institutionId}/lessons/${id}`
       );
     }
   };
@@ -422,12 +431,14 @@ const LessonPlanManager = ({
         {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
           {SyllabusDict[userLanguage]['LESSON_PLAN_HEADING']}
         </h3> */}
-        <div className="flex justify-end">
-          <AddButton
-            label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
-            onClick={createNewLesson}
-          />
-        </div>
+        {!isSuperAdmin && (
+          <div className="flex justify-end">
+            <AddButton
+              label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
+              onClick={createNewLesson}
+            />
+          </div>
+        )}
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">

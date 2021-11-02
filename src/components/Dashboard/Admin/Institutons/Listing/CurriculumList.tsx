@@ -67,7 +67,7 @@ const CurriculumList = ({
       setCourseList(list.data?.listCurriculums?.items);
       setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -115,12 +115,18 @@ const CurriculumList = ({
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
 
   const createNewCurricular = () => {
-    history.push(isSuperAdmin ? `/dashboard/manage-institutions/course-builder`: `/dashboard/manage-institutions/institution/${instId}/course-builder`);
+    history.push(
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/course-builder`
+        : `/dashboard/manage-institutions/institution/${instId}/course-builder`
+    );
   };
 
   const editCurrentCurricular = (id: string) => {
-    history.push(isSuperAdmin ? `/dashboard/manage-institutions/course-builder/${id}`: 
-      `/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`
+    history.push(
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/course-builder/${id}`
+        : `/dashboard/manage-institutions/institution/${instId}/course-builder/${id}`
     );
   };
 
@@ -145,10 +151,12 @@ const CurriculumList = ({
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
                 {InstitueCurriculum[userLanguage]['TITLE']}
               </h3>
-              <AddButton
-                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewCurricular}
-              />
+              {!isSuperAdmin && (
+                <AddButton
+                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                  onClick={createNewCurricular}
+                />
+              )}
             </div>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
@@ -190,13 +198,15 @@ const CurriculumList = ({
           </Fragment>
         ) : (
           <Fragment>
-            <div className="flex justify-center mt-8">
-              <AddButton
-                className="mx-4"
-                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewCurricular}
-              />
-            </div>
+            {!isSuperAdmin && (
+              <div className="flex justify-center mt-8">
+                <AddButton
+                  className="mx-4"
+                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                  onClick={createNewCurricular}
+                />
+              </div>
+            )}
             <p className="text-center p-16">
               {' '}
               {InstitueCurriculum[userLanguage]['INFO']}

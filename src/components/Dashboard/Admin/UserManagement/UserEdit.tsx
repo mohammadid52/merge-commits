@@ -60,6 +60,7 @@ const UserEdit = (props: UserInfoProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const isSuperAdmin = state.user.role === 'SUP';
   const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(clientKey);
   const [checkpointData, setCheckpointData] = useState<any>({});
   console.log(
@@ -116,7 +117,7 @@ const UserEdit = (props: UserInfoProps) => {
       setUpdating(false);
       // setStatus('loading');
 
-      history.push(`/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
+      history.push(isSuperAdmin ? `/dashboard/manage-institutions/manage-users` : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
     } catch (error) {
       console.error(error);
     }
