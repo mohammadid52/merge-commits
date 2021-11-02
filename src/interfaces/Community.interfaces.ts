@@ -38,4 +38,5 @@ export interface IChat {
   personAuthID: string;
   personEmail: string;
   msg?: string | null;
+  isEditedChat?: boolean;
 }

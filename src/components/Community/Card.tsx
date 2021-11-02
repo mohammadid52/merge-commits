@@ -9,6 +9,7 @@ import useAuth from '@customHooks/useAuth';
 import * as mutations from '@graphql/mutations';
 import FormInput from '@atoms/Form/FormInput';
 import * as queries from '@graphql/queries';
+import * as customQueries from '@customGraphql/customQueries';
 import useGraphqlMutation from '@graphql/useGraphqlMutation';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
@@ -244,6 +245,11 @@ const Card = ({
       const data = res.data.listCommunityChats.items;
       if (data.length > 0) {
         const orderedList = orderBy(data, ['createdAt'], 'desc');
+        const persons: any = await API.graphql(
+          graphqlOperation(customQueries.listPersons, {
+            authId: {between: orderedList.map((d) => d.personAuthID)},
+          })
+        );
         setChats([...orderedList]);
       }
     } catch (error) {
@@ -295,17 +301,19 @@ const Card = ({
     const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
 
     const onEditedChatSave = () => {
-      mutate({input: {id: chatConfig.chatId, msg: value}});
+      mutate({input: {id: chatConfig.chatId, msg: value, isEditedChat: true}});
     };
 
     const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
       onSuccess: () => {
         const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
         update(chats[idx], `msg`, () => value);
+        update(chats[idx], `isEditedChat`, () => true);
         setChats([...chats]);
         closeAction();
       },
     });
+
     const disableSaveBtn =
       chatConfig.chatValue === value || value.length === 0 || isLoading;
 

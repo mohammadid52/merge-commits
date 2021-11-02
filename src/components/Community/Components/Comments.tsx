@@ -38,9 +38,12 @@ const Comment = ({
           </div>
           <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
             <strong>{person.firstName}</strong>{' '}
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-600">
               {moment(chat.createdAt).format('LT')}
             </span>
+            {chat.isEditedChat && (
+              <span className="text-xs text-gray-500 ml-2">(edited)</span>
+            )}
             <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
             {iAmOwnerOfTheChat && (
               <div className="w-auto absolute inset-y-0 right-0 p-4">
