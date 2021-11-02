@@ -21,6 +21,9 @@ interface ModalProps {
   titleButton?: React.ReactElement;
   customTitle?: React.ReactNode;
   outerCloseBtn?: boolean;
+  position?: 'absolute' | 'relative' | 'fixed';
+  width?: string;
+  maxWidth?: string;
 }
 
 const ModalBody = (bodyProps: {
@@ -84,6 +87,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     scrollHidden = false,
     outerCloseBtn = false,
     customTitle,
+    position,
+    width,
+    maxWidth,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -107,16 +113,18 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
       <div
         style={{zIndex: 10000}}
         onClick={() => closeOnBackdrop && closeAction()}
-        className={
-          'fixed modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none'
-        }>
+        className={`${
+          position ? position : 'fixed'
+        } modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none`}>
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {
               e.stopPropagation();
             }
           }}
-          className="relative w-auto my-4 mx-auto max-w-lg ">
+          className={`${width ? width : 'w-auto'} ${
+            maxWidth ? maxWidth : 'max-w-lg'
+          } relative my-4 mx-auto`}>
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button

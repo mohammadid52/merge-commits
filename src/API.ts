@@ -3636,6 +3636,9 @@ export type CreateCommunityInput = {
   additionalInfo?: string | null,
   personAuthID: string,
   personEmail: string,
+  isEditedCard?: boolean | null,
+  likes?: Array< string | null > | null,
+  chatCount?: number | null,
 };
 
 export type ModelCommunityConditionInput = {
@@ -3653,6 +3656,9 @@ export type ModelCommunityConditionInput = {
   additionalInfo?: ModelStringInput | null,
   personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
+  isEditedCard?: ModelBooleanInput | null,
+  likes?: ModelStringInput | null,
+  chatCount?: ModelIntInput | null,
   and?: Array< ModelCommunityConditionInput | null > | null,
   or?: Array< ModelCommunityConditionInput | null > | null,
   not?: ModelCommunityConditionInput | null,
@@ -3675,9 +3681,12 @@ export type Community = {
   additionalInfo?: string | null,
   personAuthID?: string,
   personEmail?: string,
+  isEditedCard?: boolean | null,
   person?: Person,
   chat?: ModelCommunityChatConnection,
   institution?: Institution,
+  likes?: Array< string | null > | null,
+  chatCount?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3696,6 +3705,7 @@ export type CommunityChat = {
   personEmail?: string,
   msg?: string | null,
   createdAt?: string | null,
+  isEditedChat?: boolean | null,
   updatedAt?: string,
 };
 
@@ -3715,6 +3725,9 @@ export type UpdateCommunityInput = {
   additionalInfo?: string | null,
   personAuthID?: string | null,
   personEmail?: string | null,
+  isEditedCard?: boolean | null,
+  likes?: Array< string | null > | null,
+  chatCount?: number | null,
 };
 
 export type DeleteCommunityInput = {
@@ -3728,6 +3741,7 @@ export type CreateCommunityChatInput = {
   personEmail: string,
   msg?: string | null,
   createdAt?: string | null,
+  isEditedChat?: boolean | null,
 };
 
 export type ModelCommunityChatConditionInput = {
@@ -3736,6 +3750,7 @@ export type ModelCommunityChatConditionInput = {
   personEmail?: ModelStringInput | null,
   msg?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  isEditedChat?: ModelBooleanInput | null,
   and?: Array< ModelCommunityChatConditionInput | null > | null,
   or?: Array< ModelCommunityChatConditionInput | null > | null,
   not?: ModelCommunityChatConditionInput | null,
@@ -3748,6 +3763,7 @@ export type UpdateCommunityChatInput = {
   personEmail?: string | null,
   msg?: string | null,
   createdAt?: string | null,
+  isEditedChat?: boolean | null,
 };
 
 export type DeleteCommunityChatInput = {
@@ -4577,6 +4593,9 @@ export type ModelCommunityFilterInput = {
   additionalInfo?: ModelStringInput | null,
   personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
+  isEditedCard?: ModelBooleanInput | null,
+  likes?: ModelStringInput | null,
+  chatCount?: ModelIntInput | null,
   and?: Array< ModelCommunityFilterInput | null > | null,
   or?: Array< ModelCommunityFilterInput | null > | null,
   not?: ModelCommunityFilterInput | null,
@@ -4595,6 +4614,7 @@ export type ModelCommunityChatFilterInput = {
   personEmail?: ModelStringInput | null,
   msg?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  isEditedChat?: ModelBooleanInput | null,
   and?: Array< ModelCommunityChatFilterInput | null > | null,
   or?: Array< ModelCommunityChatFilterInput | null > | null,
   not?: ModelCommunityChatFilterInput | null,
@@ -18270,6 +18290,7 @@ export type CreateCommunityMutation = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -18315,6 +18336,7 @@ export type CreateCommunityMutation = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -18363,6 +18385,8 @@ export type CreateCommunityMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18391,6 +18415,7 @@ export type UpdateCommunityMutation = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -18436,6 +18461,7 @@ export type UpdateCommunityMutation = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -18484,6 +18510,8 @@ export type UpdateCommunityMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18512,6 +18540,7 @@ export type DeleteCommunityMutation = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -18557,6 +18586,7 @@ export type DeleteCommunityMutation = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -18605,6 +18635,8 @@ export type DeleteCommunityMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18624,6 +18656,7 @@ export type CreateCommunityChatMutation = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -18642,6 +18675,7 @@ export type UpdateCommunityChatMutation = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -18660,6 +18694,7 @@ export type DeleteCommunityChatMutation = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -25176,6 +25211,7 @@ export type GetCommunityQuery = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -25221,6 +25257,7 @@ export type GetCommunityQuery = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -25269,6 +25306,8 @@ export type GetCommunityQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -25302,6 +25341,7 @@ export type ListCommunitysQuery = {
       additionalInfo?: string | null,
       personAuthID: string,
       personEmail: string,
+      isEditedCard?: boolean | null,
       person?:  {
         __typename: "Person",
         id: string,
@@ -25357,6 +25397,8 @@ export type ListCommunitysQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      likes?: Array< string | null > | null,
+      chatCount?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -25377,6 +25419,7 @@ export type GetCommunityChatQuery = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -25398,6 +25441,7 @@ export type ListCommunityChatsQuery = {
       personEmail: string,
       msg?: string | null,
       createdAt?: string | null,
+      isEditedChat?: boolean | null,
       updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
@@ -38965,6 +39009,7 @@ export type OnCreateCommunitySubscription = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -39010,6 +39055,7 @@ export type OnCreateCommunitySubscription = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -39058,6 +39104,8 @@ export type OnCreateCommunitySubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39081,6 +39129,7 @@ export type OnUpdateCommunitySubscription = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -39126,6 +39175,7 @@ export type OnUpdateCommunitySubscription = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -39174,6 +39224,8 @@ export type OnUpdateCommunitySubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39197,6 +39249,7 @@ export type OnDeleteCommunitySubscription = {
     additionalInfo?: string | null,
     personAuthID: string,
     personEmail: string,
+    isEditedCard?: boolean | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -39242,6 +39295,7 @@ export type OnDeleteCommunitySubscription = {
         personEmail: string,
         msg?: string | null,
         createdAt?: string | null,
+        isEditedChat?: boolean | null,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -39290,6 +39344,8 @@ export type OnDeleteCommunitySubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    likes?: Array< string | null > | null,
+    chatCount?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39304,6 +39360,7 @@ export type OnCreateCommunityChatSubscription = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -39317,6 +39374,7 @@ export type OnUpdateCommunityChatSubscription = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -39330,6 +39388,7 @@ export type OnDeleteCommunityChatSubscription = {
     personEmail: string,
     msg?: string | null,
     createdAt?: string | null,
+    isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
 };

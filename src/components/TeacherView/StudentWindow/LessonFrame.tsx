@@ -22,6 +22,7 @@ interface ILessonFrame {
   handlePageChange?: any;
   handleLeavePopup?: any;
   handleHomePopup?: any;
+  visible?: boolean;
 }
 
 const LessonFrame = ({

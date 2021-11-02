@@ -5985,6 +5985,7 @@ export const getCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -6026,6 +6027,7 @@ export const getCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
@@ -6067,6 +6069,8 @@ export const getCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -6103,6 +6107,7 @@ export const listCommunitys = /* GraphQL */ `
         additionalInfo
         personAuthID
         personEmail
+        isEditedCard
         person {
           id
           authId
@@ -6155,6 +6160,8 @@ export const listCommunitys = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        likes
+        chatCount
         createdAt
         updatedAt
       }
@@ -6171,6 +6178,7 @@ export const getCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
@@ -6189,6 +6197,7 @@ export const listCommunityChats = /* GraphQL */ `
         personEmail
         msg
         createdAt
+        isEditedChat
         updatedAt
       }
       nextToken

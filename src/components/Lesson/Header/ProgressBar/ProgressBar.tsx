@@ -27,7 +27,6 @@ const ProgressBar = ({
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const user = gContext.state.user;
-  const isOnDemand = user.onDemand;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
@@ -75,13 +74,14 @@ const ProgressBar = ({
    */
 
   // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
+  const isOnDemand = user.onDemand;
   const isTeacherPresenting = lessonState.displayData[0].isTeacher === true;
 
   return (
     <nav
       className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
       aria-label="Breadcrumb">
-      {isTeacherPresenting && (
+      {isTeacherPresenting && !isOnDemand && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
           <p className="text-center font-bold text-sm">
             Disabled when teacher is presenting!
