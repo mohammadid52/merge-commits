@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import HeroBanner from '@components/Header/HeroBanner';
 import useDictionary from '@customHooks/dictionary';
+import * as customQueries from '@customGraphql/customQueries';
 import {breadcrumbsRoutes} from '@utilities/breadcrumb';
 import {getAsset} from 'assets';
 
@@ -33,6 +35,10 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
+  const [lessonData, setLessonData] = useState<{
+    id?: string;
+    title?: string;
+  }>({});
   const [tabsData, setTabsData] = useState({inst: 'staff', instCurr: 0});
   const tabProps = {tabsData, setTabsData};
   // TODO: Need to setup route separately if required,
@@ -45,11 +51,41 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
   }, [state.user.role]);
 
+  const getLessonData = async () => {
+    try {
+      // To extract lesson id from path name
+      const splitUrl = pathname.split('/lessons/')?.length
+        ? pathname.split('/lessons/')[1]
+        : '';
+      if (splitUrl.indexOf('add') === -1) {
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+            id: splitUrl.split('/')[0],
+          })
+        );
+        setLessonData(result.data?.getUniversalLesson);
+      } else {
+        setLessonData({});
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (state.user.isSuperAdmin) {
+      if (pathname.indexOf('lessons/') > -1) {
+        getLessonData();
+      }
+    }
+  }, [pathname]);
+
   const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
     breadcrumbsTitles: BreadcrumsTitles[userLanguage],
     instituteTabTitles: Institute_info[userLanguage],
     pathname,
     baseUrl: '/dashboard/manage-institutions',
+    otherValues: {
+      lessonData,
+    },
   });
 
   const breadCrumbsList = [
@@ -111,12 +147,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
           <div className={`w-full h-full`}>
-            <div className="relative">
-              <HeroBanner imgUrl={bannerImage} title={heroSectionTitle} />
-              <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-                <BreadcrumbsWithBanner items={breadCrumbsList} />
-              </div>
-            </div>
+            <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
             <div className="px-2 py-8 md:px-4 lg:p-8">
               <PageWrapper>
                 <NavBarRouter />

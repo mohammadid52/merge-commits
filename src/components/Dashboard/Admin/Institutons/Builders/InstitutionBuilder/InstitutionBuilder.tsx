@@ -64,7 +64,12 @@ const InstitutionBuilder = ({
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {clientKey, state:{user}, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {user},
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const {BreadcrumsTitles, InstitutionBuilderDict} = useDictionary(clientKey);
@@ -147,10 +152,10 @@ const InstitutionBuilder = ({
 
   useEffect(() => {
     // For checking Authorized user is trying to access add institution or not
-    if(user.role !== 'SUP' && !institutionId){
+    if (user.role !== 'SUP' && !institutionId) {
       history.push('/dashboard');
     }
-  },[institutionId])
+  }, [institutionId]);
 
   const getInstitutionData = async () => {
     try {
@@ -223,15 +228,11 @@ const InstitutionBuilder = ({
           {InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']}
         </h3>
       ) : (
-        <div className="relative">
-          <HeroBanner
-            imgUrl={bannerImage}
-            title={InstitutionBuilderDict[userLanguage]['TITLE']}
-          />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-            <BreadcrumbsWithBanner items={breadCrumbsList} />
-          </div>
-        </div>
+        <BreadcrumbsWithBanner
+          items={breadCrumbsList}
+          bannerImage={bannerImage}
+          title={InstitutionBuilderDict[userLanguage]['TITLE']}
+        />
       )}
       {/* <div className={'flex justify-between px-8'}>
         <SectionTitle
@@ -261,7 +262,8 @@ const InstitutionBuilder = ({
               activeStep={activeStep}
               handleTabSwitch={handleTabSwitch}
             />
-            <div className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4 lg:mt-0`}>
+            <div
+              className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4 lg:mt-0`}>
               {loading ? (
                 <div className="h-100 flex justify-center items-center">
                   <div className="w-5/10">

@@ -81,6 +81,10 @@ const Institution = (props: InstitutionProps) => {
     id?: string;
     title?: string;
   }>({});
+  const [roomData, setRoomData] = useState<{
+    id?: string;
+    title?: string;
+  }>({});
   const [isNewUpdate, setISNewUpdate] = useState(false);
   const history = useHistory();
   const match = useRouteMatch();
@@ -102,13 +106,17 @@ const Institution = (props: InstitutionProps) => {
 
   const {pathname} = location;
   const baseUrl = isSuperAdmin
-      ? `/dashboard/manage-institutions`
-      : `/dashboard/manage-institutions/institution/${institutionId}`;
+    ? `/dashboard/manage-institutions`
+    : `/dashboard/manage-institutions/institution/${institutionId}`;
   const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
     breadcrumbsTitles: BreadcrumsTitles[userLanguage],
     instituteTabTitles: Institute_info[userLanguage],
     pathname,
     baseUrl,
+    otherValues: {
+      lessonData,
+      roomData,
+    },
   });
 
   const breadCrumbsList = [
@@ -180,8 +188,25 @@ const Institution = (props: InstitutionProps) => {
           })
         );
         setLessonData(result.data?.getUniversalLesson);
-      } else {
-        setLessonData({});
+      }
+    } catch (error) {}
+  };
+
+  const getRoomData = async () => {
+    try {
+      // To extract room id from path name
+      const roomId = pathname.split('/room-edit/')?.length
+        ? pathname.split('/room-edit/')[1]
+        : '';
+
+      if (roomId) {
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getRoomBasicDetails, {
+            id: roomId,
+          })
+        );
+
+        setRoomData(result.data?.getRoom);
       }
     } catch (error) {}
   };
@@ -193,6 +218,8 @@ const Institution = (props: InstitutionProps) => {
   useEffect(() => {
     if (pathname.indexOf('lessons/') > -1) {
       getLessonData();
+    } else if (pathname.indexOf('room') > -1) {
+      getRoomData();
     }
   }, [pathname]);
 
@@ -215,12 +242,12 @@ const Institution = (props: InstitutionProps) => {
 
   return (
     <div className={`w-full h-full`}>
-      <div className="relative">
-        <HeroBanner imgUrl={bannerImage} title={heroSectionTitle} />
-        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-          <BreadcrumbsWithBanner items={breadCrumbsList} />
-        </div>
-      </div>
+      <BreadcrumbsWithBanner
+        bannerImage={bannerImage}
+        institutionData={institutionData}
+        institutionId={institutionId}
+        forInstitution
+      />
       <div className="px-2 py-8 md:px-4 lg:p-8">
         <PageWrapper>
           <Switch>

@@ -381,12 +381,11 @@ const Profile = (props: ProfilePageProps) => {
   {
     return (
       <div className="relative">
-        <div className="relative">
-          <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-            <BreadcrumbsWithBanner items={breadCrumsList} />
-          </div>
-        </div>
+        <BreadcrumbsWithBanner
+          items={breadCrumsList}
+          bannerImage={profileBanner1}
+          title={'Profile'}
+        />
         {/* Hero Section */}
         {/* <div>
           <HeroBanner imgUrl={profileBanner1} title={'Profile'} />

@@ -1,10 +1,11 @@
 export const breadcrumbsRoutes = ({
-    breadcrumbsTitles,
-    instituteTabTitles,
-    lessonData,
-    pathname,
-    baseUrl
+  breadcrumbsTitles,
+  instituteTabTitles,
+  pathname,
+  baseUrl,
+  otherValues
 }:any) => {
+  const {courseData={}, lessonData={}, roomData={}, unitData={}} = otherValues || {}
   let heroSectionTitle, breadcrumbPathForSection;
   
   if (pathname.indexOf('unit') > -1) {
@@ -43,9 +44,19 @@ export const breadcrumbsRoutes = ({
       {
         title: heroSectionTitle,
         url: `${baseUrl}/courses`,
-        last: true,
+        last: !courseData?.id,
       },
     ];
+    if(courseData?.id){
+      breadcrumbPathForSection = [
+        ...breadcrumbPathForSection,
+        {
+          title: courseData?.name,
+          url: `${baseUrl}/course-builder/${courseData?.id}`,
+          last: true,
+        },
+      ];
+    }
   } else if (pathname.indexOf('students') > -1) {
     heroSectionTitle = instituteTabTitles['TABS']['STUDENT_ROASTER'];
     breadcrumbPathForSection = [
@@ -64,6 +75,17 @@ export const breadcrumbsRoutes = ({
         last: true,
       },
     ];
+    // for edit
+    if (unitData?.id) {
+      breadcrumbPathForSection = [
+        ...breadcrumbPathForSection,
+        {
+          title: unitData?.title,
+          url: `${baseUrl}/units/${unitData?.id}`,
+          last: !unitData?.id,
+        },
+      ];
+    }
   } else if (pathname.indexOf('lessons') > -1) {
     heroSectionTitle = instituteTabTitles['TABS']['LESSONS'];
     breadcrumbPathForSection = [
@@ -91,9 +113,19 @@ export const breadcrumbsRoutes = ({
       {
         title: heroSectionTitle,
         url: `${baseUrl}/class-rooms`,
-        last: true,
+        last: !roomData?.id,
       },
     ];
+    if(roomData?.id){
+      breadcrumbPathForSection = [
+        ...breadcrumbPathForSection,
+        {
+          title: roomData?.name,
+          url: `${baseUrl}/room-edit/${roomData?.id}`,
+          last: true,
+        },
+      ];
+    }
   } else if (pathname.indexOf('research-and-analytics') > -1) {
     heroSectionTitle = instituteTabTitles['TABS']['RESEARCH_AND_ANALYTICS'];
     breadcrumbPathForSection = [

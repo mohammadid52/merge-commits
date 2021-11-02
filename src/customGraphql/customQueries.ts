@@ -2253,6 +2253,15 @@ export const getUniversalSyllabus = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabusBasicDetails = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
 export const listUniversalSyllabuss = /* GraphQL */ `
   query ListUniversalSyllabuss(
     $id: ID
@@ -3057,6 +3066,15 @@ export const getCurriculum = /* GraphQL */ `
       syllabiHistory
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getCurriculumBasicDetails = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      name
     }
   }
 `;
@@ -4640,6 +4658,15 @@ export const getScheduleDetails = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+    }
+  }
+`;
+
+export const getRoomBasicDetails = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      name
     }
   }
 `;

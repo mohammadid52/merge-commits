@@ -276,12 +276,11 @@ const InstitutionLookup: React.FC = () => {
     return (
       <div className={`w-full h-full`}>
         {/* Header section */}
-        <div className="relative">
-          <HeroBanner imgUrl={bannerImage} title={`Institutions`} />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-            <BreadcrumbsWithBanner items={breadCrumbsList} />
-          </div>
-        </div>
+        <BreadcrumbsWithBanner
+          items={breadCrumbsList}
+          bannerImage={bannerImage}
+          title={'Institutions'}
+        />
         {/* <BreadCrums items={breadCrumsList} /> */}
         <div className="px-2 py-8 md:p-8">
           {/* <div className="flex justify-between"> */}
