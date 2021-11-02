@@ -118,14 +118,14 @@ const HeaderMegaMenu = () => {
       children: [
         {
           key: 'community_builder',
-          redirectionUrl: `/dashboard/community-builder`,
-          active: location.pathname.indexOf('community-builder') > -1,
+          redirectionUrl: `/dashboard/community/builder`,
+          active: false,
           title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER'],
         },
 
         {
           key: 'front_page',
-          redirectionUrl: `/dashboard/community`,
+          redirectionUrl: `/dashboard/community/front`,
           active: location.pathname.indexOf('community') > -1,
           title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE'],
         },

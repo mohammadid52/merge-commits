@@ -55,8 +55,8 @@ const BottomSection = ({
 
   return (
     <>
-      <div className="flex justify-start mb-4 border-t-0 border-gray-200">
-        <div className="flex w-full mt-1 pt-2 space-x-4 pl-5">
+      <div className="flex justify-end mb-4 border-t-0 border-gray-200">
+        <div className="flex w-auto mt-1 pt-2 space-x-4 pr-5">
           <div
             onClick={() => likeAction()}
             className={`${
@@ -72,7 +72,7 @@ const BottomSection = ({
         <div className="mt-3 mx-5 flex flex-row w-auto">
           <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
             Comments:
-            <div className="ml-1 text-gray-400 font-thin text-ms">
+            <div className="ml-1 text-gray-500 font-medium text-sm">
               {' '}
               {cardDetails?.chatCount || 0}
             </div>
@@ -82,7 +82,7 @@ const BottomSection = ({
         <div className="mt-3 mx-5 w-full flex justify-end">
           <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
             Likes:{' '}
-            <div className="ml-1 text-gray-400 font-thin text-ms">
+            <div className="ml-1 text-gray-500 font-medium text-sm">
               {' '}
               {cardDetails?.likes?.length || 0}
             </div>
@@ -461,6 +461,11 @@ const Card = ({
         <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
+              <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
+                {cardDetails.cardType === communityTypes.SPOTLIGHT
+                  ? 'Spotlight'
+                  : 'Check It Out'}
+              </div>
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
                 <div className="flex flex-row mt-2 px-2 py-3 mx-3">
                   <div className="w-auto h-auto rounded-full">
@@ -485,10 +490,7 @@ const Card = ({
                   </div>
                 </div>
               )}
-              <div className="border-b-0 border-gray-200"></div>
-              <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
-                {cardDetails.cardType === communityTypes.SPOTLIGHT ? 'Spotlight' : ''}
-              </div>
+
               {cardDetails.cardName ? (
                 <div className="mb-7 mt-3 px-2">
                   <div className="content">

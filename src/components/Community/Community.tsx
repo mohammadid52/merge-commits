@@ -34,8 +34,9 @@ import 'components/Community/community.scss';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
+import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
 
 const Community = ({}: {role: string}) => {
@@ -43,10 +44,29 @@ const Community = ({}: {role: string}) => {
 
   const {authId: personAuthID, email: personEmail, instId, isStudent} = useAuth();
 
+  const route: any = useRouteMatch();
+
+  const action = route.params.action;
+  const [showCardsModal, setShowCardsModal] = useState(false);
+
+  useEffect(() => {
+    if (action === 'builder') {
+      if (!showCardsModal) {
+        setShowCardsModal(true);
+      }
+    }
+  }, [action, showCardsModal]);
+
+  useEffect(() => {
+    if (!showCardsModal && action === 'builder') {
+      history.push(`/dashboard/community/front`);
+    }
+  }, [showCardsModal, action]);
+
+  const history = useHistory();
+
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
-
-  const [showCardsModal, setShowCardsModal] = useState(false);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -58,20 +78,16 @@ const Community = ({}: {role: string}) => {
   ];
   const payloadForCommunities = {institutionID: instId, limit: 12};
 
-  const {
-    data: list,
-    setData: setList,
-
-    error,
-
-    isFetched,
-    isLoading,
-  } = useGraphqlQuery('listCommunitys', payloadForCommunities, {
-    onSuccess: (data, cb) => {
-      const orderedList = orderBy(data, ['createdAt'], 'desc');
-      cb(orderedList);
-    },
-  });
+  const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery(
+    'listCommunitys',
+    payloadForCommunities,
+    {
+      onSuccess: (data, cb) => {
+        const orderedList = orderBy(data, ['createdAt'], 'desc');
+        cb(orderedList);
+      },
+    }
+  );
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
 

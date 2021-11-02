@@ -853,8 +853,8 @@ const Dashboard = (props: DashboardProps) => {
 
               {
                 <Route
-                  exact
-                  path={`${match.url}/community`}
+                  // exact
+                  path={`${match.url}/community/:action`}
                   render={() => (
                     <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
                       <Community role={userData.role} />
