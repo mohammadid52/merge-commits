@@ -1,137 +1,25 @@
+import Modal from '@components/Atoms/Modal';
+import Popover from '@components/Atoms/Popover';
+import Comments from '@components/Community/Components/Comments';
 import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
-import * as mutations from '@graphql/mutations';
-import {IChat, ICommunityCard, IPerson} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
 import useAuth from '@customHooks/useAuth';
+import * as mutations from '@graphql/mutations';
+import FormInput from '@atoms/Form/FormInput';
 import * as queries from '@graphql/queries';
-import moment from 'moment';
+import useGraphqlMutation from '@graphql/useGraphqlMutation';
+import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
+import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
+import {orderBy, remove, update} from 'lodash';
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart, AiOutlineLike} from 'react-icons/ai';
-import {v4 as uuidV4} from 'uuid';
-import {orderBy, remove} from 'lodash';
-import Loader from '@components/Atoms/Loader';
-import Popover from '@components/Atoms/Popover';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import useGraphqlMutation from '@graphql/useGraphqlMutation';
-
-const Comment = ({
-  chat,
-  person,
-  onChatDelete,
-  authId,
-  email,
-}: {
-  chat: IChat;
-  person: IPerson;
-  authId: string;
-  email: string;
-  onChatDelete: (chatId: string) => void;
-}) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const iAmOwnerOfTheChat = authId === chat.personAuthID || email === chat.personEmail;
-
-  return (
-    <div className="antialiased rela mx-auto sm:max-w-screen">
-      <div className="space-y-4 mb-4">
-        <div className="flex">
-          <div className="flex-shrink-0 mr-3 w-auto">
-            <img
-              className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
-              src={getImageFromS3Static(person.image)}
-              alt=""
-            />
-          </div>
-          <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>{person.firstName}</strong>{' '}
-            <span className="text-xs text-gray-500">
-              {moment(chat.createdAt).format('LT')}
-            </span>
-            <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
-            {iAmOwnerOfTheChat && (
-              <div className="w-auto absolute inset-y-0 right-0 p-4">
-                <Popover
-                  show={showMenu}
-                  bottom={0.6}
-                  dir={'top'}
-                  minWidth={32}
-                  minHeight={11}
-                  // containerClass="min-h-8 min-w-24"
-                  rounded="lg"
-                  setShow={setShowMenu}
-                  content={
-                    <dl className="grid grid-cols-1  gap-y-3">
-                      <div className="col-span-1">
-                        <dt
-                          onClick={() => {
-                            onChatDelete(chat.id);
-                            setShowMenu(false);
-                          }}
-                          className={`cursor-pointer text-red-500 hover:text-red-600`}>
-                          Delete
-                        </dt>
-                      </div>
-                    </dl>
-                  }>
-                  <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
-                    <BiDotsVerticalRounded
-                      title="show menu"
-                      className="h-full w-full text-lg text-gray-500"
-                    />
-                  </span>
-                </Popover>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Comments = ({
-  chats,
-  person,
-  isLoading,
-  onChatDelete,
-  authId,
-  email,
-}: {
-  chats: IChat[];
-  person: IPerson;
-  isLoading: boolean;
-  onChatDelete: (chatId: string) => void;
-  authId: string;
-  email: string;
-}) => {
-  const orderedList = orderBy(chats, ['createdAt'], ['desc']);
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center w-auto">
-        <Loader withText="Loading comments..." className=" text-gray-400" />
-      </div>
-    );
-  }
-  return (
-    <div className="w-auto mx-5">
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
-
-      {orderedList.map((chat, idx) => (
-        <Comment
-          email={email}
-          authId={authId}
-          key={idx}
-          onChatDelete={onChatDelete}
-          chat={chat}
-          person={person}
-        />
-      ))}
-    </div>
-  );
-};
+import {v4 as uuidV4} from 'uuid';
+import Buttons from '@components/Atoms/Buttons';
 
 const BottomSection = ({
   setShowComments,
@@ -279,7 +167,6 @@ const Menu = ({
   onDelete?: (cardId: string, fileKey?: string) => void;
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
   const onEdit = (cardId: string) => {};
   return (
     <div className="w-auto absolute top-0 right-0 p-4">
@@ -296,14 +183,14 @@ const Menu = ({
             <div className="col-span-1">
               <dt
                 onClick={() => onEdit(cardId)}
-                className={`cursor-pointer text-gray-900 hover:text-white  transition-all hover:iconoclast:bg-main hover:curate:bg-main`}>
+                className={`cursor-pointer text-gray-900  transition-all `}>
                 Edit
               </dt>
             </div>
             <div className="col-span-1">
               <dt
                 onClick={() => onDelete(cardId, fileKey)}
-                className={`cursor-pointer text-red-500 hover:text-white hover:bg-red-500 transition-all`}>
+                className={`cursor-pointer text-red-500 transition-all`}>
                 Delete
               </dt>
             </div>
@@ -382,6 +269,14 @@ const Card = ({
   const {authId, email} = useAuth();
   const iAmOwnerOfTheCard = cardDetails.personAuthID === authId;
 
+  const [chatConfig, setChatConfig] = useState({chatId: '', chatValue: ''});
+
+  const [chatEditModal, setChatEditModal] = useState(false);
+  const onEditChat = (chatId: string, chatValue: string) => {
+    setChatEditModal(true);
+    setChatConfig({...chatConfig, chatId, chatValue});
+  };
+
   const MenuOptions = iAmOwnerOfTheCard && (
     <Menu
       fileKey={cardDetails.cardImageLink}
@@ -391,6 +286,51 @@ const Card = ({
       setShowMenu={setShowMenu}
     />
   );
+
+  const EditChatModal = () => {
+    const closeAction = () => {
+      setChatEditModal(false);
+      setValue('');
+    };
+    const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
+
+    const onEditedChatSave = () => {
+      mutate({input: {id: chatConfig.chatId, msg: value}});
+    };
+
+    const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
+      onSuccess: () => {
+        const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
+        update(chats[idx], `msg`, () => value);
+        setChats([...chats]);
+        closeAction();
+      },
+    });
+    const disableSaveBtn =
+      chatConfig.chatValue === value || value.length === 0 || isLoading;
+
+    return (
+      chatEditModal && (
+        <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
+          <div className="min-w-132">
+            <FormInput
+              label="Comment"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </div>
+          <div className="flex mt-8 justify-end">
+            <Buttons
+              btnClass="py-1 px-8 text-xs ml-2"
+              disabled={disableSaveBtn}
+              label={'Save'}
+              onClick={onEditedChatSave}
+            />
+          </div>
+        </Modal>
+      )
+    );
+  };
 
   if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
     return (
@@ -431,6 +371,7 @@ const Card = ({
     return (
       <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
         {MenuOptions}
+        <EditChatModal />
 
         <div className=" w-full lg:max-w-full lg:flex">
           <div
@@ -466,6 +407,7 @@ const Card = ({
     return (
       <div className="relative">
         {MenuOptions}
+        <EditChatModal />
 
         <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
           <div className="flex items-center w-full">
@@ -533,6 +475,7 @@ const Card = ({
                   {showComments && (
                     <Comments
                       email={email}
+                      onEdit={onEditChat}
                       authId={authId}
                       onChatDelete={onChatDelete}
                       isLoading={isLoading}
