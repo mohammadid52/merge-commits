@@ -12260,6 +12260,8 @@ export const onCreateCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12367,6 +12369,8 @@ export const onUpdateCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12474,6 +12478,8 @@ export const onDeleteCommunity = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
