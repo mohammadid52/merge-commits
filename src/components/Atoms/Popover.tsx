@@ -10,6 +10,7 @@ interface IPopOver {
   className?: string;
   content: children;
   containerClass?: string;
+  padding?: number;
   /**
    * Tailwind classes
    * 1 = 1rem
@@ -31,6 +32,7 @@ interface IPopOver {
 const Popover = ({
   show,
   containerClass,
+  padding = 4,
   minHeight = 32,
   minWidth = 140,
   setShow,
@@ -66,7 +68,7 @@ const Popover = ({
             style={{...dynamicDir}}
             className={`${containerClass} z-100 w-auto bg-white select-none ${
               rounded ? `rounded-${rounded}` : 'rounded'
-            } customShadow absolute right-${right} border-0 border-gray-200 min-h-${minHeight} min-w-${minWidth} p-4`}
+            } customShadow absolute right-${right} border-0 border-gray-200 min-h-${minHeight} min-w-${minWidth} p-${padding}`}
             show={show}>
             {content}
           </Transition>

@@ -5,8 +5,15 @@ import {getLocalStorageData} from '@utilities/localStorage';
 
 interface ILessonDetailProps {
   hidden?: boolean;
+  theme?: any;
+  themeColor?: any;
+  rightView?: {view: string; option?: string};
+  setRightView?: any;
 }
 
+// ##################################################################### //
+// ############################# COMPONENT ############################# //
+// ##################################################################### //
 const LessonDetails = ({hidden}: ILessonDetailProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -27,6 +34,9 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
     }
   };
 
+  // ##################################################################### //
+  // ############################### OUTPUT ############################## //
+  // ##################################################################### //
   return (
     <div
       className={`${
@@ -37,7 +47,17 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
         <span>{lessonState.lessonData.title}</span>
       </div>
 
-      <div className="w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm">
+      <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
+        {/* <ButtonsRound
+          Icon={AiOutlineInfoCircle}
+          onClick={() => handleSentimentToggle()}
+          iconSizePX={24}
+          buttonWHClass={``}
+          containerBgClass={`bg-transparent p-2`}
+          containerWHClass={`absolute h-auto w-auto top-0 right-0`}
+          buttonBgClass={`bg-transparent`}
+          iconTxtColorClass={theme.textColor[themeColor]}
+        /> */}
         <p className="">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
           {studentsOnline()}
