@@ -958,6 +958,24 @@ type UniversalLessonStudentData
   exerciseData: [ExerciseData]
 }
 
+
+type UniversalSurveyStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  roomID: String
+  currentLocation: String
+  lessonProgress: String
+  surveyData: [[partInput]]
+}
+
 type ExerciseData {
   id: String!
   entryData: [JournalEntryData]

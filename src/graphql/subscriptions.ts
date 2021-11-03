@@ -10862,6 +10862,87 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUniversalSurveyStudentData = /* GraphQL */ `
+  subscription OnCreateUniversalSurveyStudentData {
+    onCreateUniversalSurveyStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalSurveyStudentData = /* GraphQL */ `
+  subscription OnUpdateUniversalSurveyStudentData {
+    onUpdateUniversalSurveyStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalSurveyStudentData = /* GraphQL */ `
+  subscription OnDeleteUniversalSurveyStudentData {
+    onDeleteUniversalSurveyStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUniversalJournalData = /* GraphQL */ `
   subscription OnCreateUniversalJournalData {
     onCreateUniversalJournalData {
