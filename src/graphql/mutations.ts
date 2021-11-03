@@ -11036,7 +11036,6 @@ export const createUniversalSurveyStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
-      lessonPageID
       studentID
       studentAuthID
       studentEmail
@@ -11066,7 +11065,6 @@ export const updateUniversalSurveyStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
-      lessonPageID
       studentID
       studentAuthID
       studentEmail
@@ -11096,7 +11094,6 @@ export const deleteUniversalSurveyStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
-      lessonPageID
       studentID
       studentAuthID
       studentEmail

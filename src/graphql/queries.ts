@@ -5118,7 +5118,6 @@ export const getUniversalSurveyStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
-      lessonPageID
       studentID
       studentAuthID
       studentEmail
@@ -5158,7 +5157,6 @@ export const listUniversalSurveyStudentDatas = /* GraphQL */ `
         id
         syllabusLessonID
         lessonID
-        lessonPageID
         studentID
         studentAuthID
         studentEmail
