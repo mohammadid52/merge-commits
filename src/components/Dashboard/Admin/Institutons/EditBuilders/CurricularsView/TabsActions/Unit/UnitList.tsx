@@ -213,7 +213,7 @@ export const UnitList = ({instId}: any) => {
                   />
                   {isSuperAdmin && (
                     <Selector
-                      placeholder={'Select Institution'}
+                      placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
                       list={institutionList}
                       selectedItem={selectedInstitution?.name}
                       onChange={instituteChange}

@@ -1222,6 +1222,7 @@ const InstitueCurriculum: any = {
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
     LOADING: 'Loading Courses...',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     TITLE: 'TBD',
@@ -1236,6 +1237,7 @@ const InstitueCurriculum: any = {
     INFO: 'TBD',
     NO_DELETE: 'TBD',
     LOADING: 'TBD',
+    SELECT_INSTITUTION: 'TBD'
   },
 };
 
@@ -1260,6 +1262,8 @@ const InstitueRomms: any = {
       ADD: 'New Classroom',
     },
     LOADING: 'Loading Classrooms...',
+    SELECT_STAFF: 'Select Staff',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     TITLE: 'TBD',
@@ -1280,6 +1284,8 @@ const InstitueRomms: any = {
       ADD: 'TBD',
     },
     LOADING: 'Cargando aulas...',
+    SELECT_STAFF: 'TBD',
+    SELECT_INSTITUTION: 'TBD'
   },
 };
 
@@ -3627,6 +3633,7 @@ const UnitLookupDict: any = {
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
     NO_DELETE: '(Unit in use)',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     HEADING: 'TBD',
@@ -3648,6 +3655,8 @@ const UnitLookupDict: any = {
       FETCHERR: 'TBD',
     },
     NO_DELETE: '(Unit in use)',
+    SELECT_STAFF: 'TBD',
+    SELECT_INSTITUTION: 'TBD'
   },
 };
 

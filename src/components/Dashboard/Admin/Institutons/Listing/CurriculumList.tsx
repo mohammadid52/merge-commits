@@ -218,7 +218,7 @@ const CurriculumList = ({
               />
               {isSuperAdmin && (
                 <Selector
-                  placeholder={'Select Institution'}
+                  placeholder={InstitueCurriculum[userLanguage]['SELECT_INSTITUTION']}
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
