@@ -6,7 +6,7 @@ export const breadcrumbsRoutes = ({
   otherValues
 }:any) => {
   const {courseData={}, lessonData={}, roomData={}, unitData={}} = otherValues || {}
-  let heroSectionTitle, breadcrumbPathForSection;
+  let heroSectionTitle, breadcrumbPathForSection:{title: string; url?: string; last: boolean; goBack?: boolean}[]=[];
   
   if (pathname.indexOf('unit') > -1) {
     heroSectionTitle = breadcrumbsTitles['UNITS'];

@@ -173,7 +173,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       lessonData,
       roomData,
       courseData,
-      unitData
+      unitData,
     },
   });
 
@@ -197,7 +197,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
           : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
       last: false,
     },
-    ...breadcrumbPathForSection,
+    ...(breadcrumbPathForSection || []),
   ].filter(Boolean);
 
   return (
