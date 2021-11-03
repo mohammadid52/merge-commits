@@ -11027,6 +11027,93 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalSurveyStudentData = /* GraphQL */ `
+  mutation CreateUniversalSurveyStudentData(
+    $input: CreateUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    createUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalSurveyStudentData = /* GraphQL */ `
+  mutation UpdateUniversalSurveyStudentData(
+    $input: UpdateUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    updateUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalSurveyStudentData = /* GraphQL */ `
+  mutation DeleteUniversalSurveyStudentData(
+    $input: DeleteUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    deleteUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUniversalJournalData = /* GraphQL */ `
   mutation CreateUniversalJournalData(
     $input: CreateUniversalJournalDataInput!

@@ -3217,6 +3217,66 @@ export type DeleteUniversalLessonStudentDataInput = {
   id: string,
 };
 
+export type CreateUniversalSurveyStudentDataInput = {
+  id?: string | null,
+  syllabusLessonID: string,
+  lessonID: string,
+  studentID: string,
+  studentAuthID: string,
+  studentEmail: string,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  surveyData?: Array< PartInputInput | null > | null,
+};
+
+export type ModelUniversalSurveyStudentDataConditionInput = {
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  and?: Array< ModelUniversalSurveyStudentDataConditionInput | null > | null,
+  or?: Array< ModelUniversalSurveyStudentDataConditionInput | null > | null,
+  not?: ModelUniversalSurveyStudentDataConditionInput | null,
+};
+
+export type UniversalSurveyStudentData = {
+  __typename: "UniversalSurveyStudentData",
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  surveyData?:  Array<partInput | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateUniversalSurveyStudentDataInput = {
+  id: string,
+  syllabusLessonID?: string | null,
+  lessonID?: string | null,
+  studentID?: string | null,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  surveyData?: Array< PartInputInput | null > | null,
+};
+
+export type DeleteUniversalSurveyStudentDataInput = {
+  id: string,
+};
+
 export type CreateUniversalJournalDataInput = {
   id?: string | null,
   studentID: string,
@@ -4431,6 +4491,27 @@ export type ModelUniversalLessonStudentDataFilterInput = {
 export type ModelUniversalLessonStudentDataConnection = {
   __typename: "ModelUniversalLessonStudentDataConnection",
   items?:  Array<UniversalLessonStudentData | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelUniversalSurveyStudentDataFilterInput = {
+  id?: ModelIDInput | null,
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  and?: Array< ModelUniversalSurveyStudentDataFilterInput | null > | null,
+  or?: Array< ModelUniversalSurveyStudentDataFilterInput | null > | null,
+  not?: ModelUniversalSurveyStudentDataFilterInput | null,
+};
+
+export type ModelUniversalSurveyStudentDataConnection = {
+  __typename: "ModelUniversalSurveyStudentDataConnection",
+  items?:  Array<UniversalSurveyStudentData | null > | null,
   nextToken?: string | null,
 };
 
@@ -16771,6 +16852,105 @@ export type DeleteUniversalLessonStudentDataMutation = {
   } | null,
 };
 
+export type CreateUniversalSurveyStudentDataMutationVariables = {
+  input?: CreateUniversalSurveyStudentDataInput,
+  condition?: ModelUniversalSurveyStudentDataConditionInput | null,
+};
+
+export type CreateUniversalSurveyStudentDataMutation = {
+  createUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUniversalSurveyStudentDataMutationVariables = {
+  input?: UpdateUniversalSurveyStudentDataInput,
+  condition?: ModelUniversalSurveyStudentDataConditionInput | null,
+};
+
+export type UpdateUniversalSurveyStudentDataMutation = {
+  updateUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUniversalSurveyStudentDataMutationVariables = {
+  input?: DeleteUniversalSurveyStudentDataInput,
+  condition?: ModelUniversalSurveyStudentDataConditionInput | null,
+};
+
+export type DeleteUniversalSurveyStudentDataMutation = {
+  deleteUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateUniversalJournalDataMutationVariables = {
   input?: CreateUniversalJournalDataInput,
   condition?: ModelUniversalJournalDataConditionInput | null,
@@ -24524,6 +24704,73 @@ export type ListUniversalLessonStudentDatasQuery = {
         id: string,
         feedbacks?: Array< string | null > | null,
         shared?: boolean | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUniversalSurveyStudentDataQueryVariables = {
+  id?: string,
+};
+
+export type GetUniversalSurveyStudentDataQuery = {
+  getUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUniversalSurveyStudentDatasQueryVariables = {
+  id?: string | null,
+  filter?: ModelUniversalSurveyStudentDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUniversalSurveyStudentDatasQuery = {
+  listUniversalSurveyStudentDatas?:  {
+    __typename: "ModelUniversalSurveyStudentDataConnection",
+    items?:  Array< {
+      __typename: "UniversalSurveyStudentData",
+      id: string,
+      syllabusLessonID: string,
+      lessonID: string,
+      studentID: string,
+      studentAuthID: string,
+      studentEmail: string,
+      roomID?: string | null,
+      currentLocation?: string | null,
+      lessonProgress?: string | null,
+      surveyData?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        options?: Array< string | null > | null,
+        input?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -37965,6 +38212,90 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
       } | null > | null,
       feedbacks?: Array< string | null > | null,
       shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUniversalSurveyStudentDataSubscription = {
+  onCreateUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUniversalSurveyStudentDataSubscription = {
+  onUpdateUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUniversalSurveyStudentDataSubscription = {
+  onDeleteUniversalSurveyStudentData?:  {
+    __typename: "UniversalSurveyStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    surveyData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
