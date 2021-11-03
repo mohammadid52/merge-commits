@@ -11,6 +11,8 @@ import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
 import UnitListRow from './UnitListRow';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import Selector from '@components/Atoms/Form/Selector';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -28,10 +30,15 @@ export const UnitList = ({instId}: any) => {
 
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
+  const [institutionList, setInstitutionList] = useState<any>([]);
+  const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   useEffect(() => {
     fetchSyllabusList();
+    fetchInstitutions();
   }, []);
 
   const fetchSyllabusList = async () => {
@@ -47,6 +54,7 @@ export const UnitList = ({instId}: any) => {
         })
       );
       setUnits(result.data?.listUniversalSyllabuss.items);
+      setAllUnits(result.data?.listUniversalSyllabuss.items);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -122,6 +130,57 @@ export const UnitList = ({instId}: any) => {
     history.push(`${match.url}/${unitId}/edit`);
   };
 
+  const fetchInstitutions = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutionOptions)
+      );
+      setInstitutionList(list.data?.listInstitutions?.items);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const instituteChange = (_: string, name: string, value: string) => {
+    setSelectedInstitution({name, id: value});
+    onSearch(searchInput, value);
+  };
+
+  const onSearch = (searchValue: string, institutionId?: string) => {
+    if (searchValue && institutionId) {
+      setUnits(
+        allUnits.filter(
+          (item: any) =>
+            item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
+            item.institution?.id === institutionId
+        )
+      );
+    } else if (institutionId) {
+      setUnits(
+        allUnits.filter((item: any) => item.institution?.id === institutionId)
+      );
+    } else if (searchValue) {
+      setUnits(
+        allUnits.filter((item: any) =>
+          item.name?.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+    } else {
+      setUnits(allUnits);
+    }
+  };
+
+  const removeSearchAction = () => {
+    setSearchInput('');
+    onSearch('', selectedInstitution?.id);
+  };
+
+  const onInstitutionSelectionRemove = () => {
+    setSelectedInstitution({});
+    onSearch(searchInput, '');
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -139,12 +198,35 @@ export const UnitList = ({instId}: any) => {
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-              {!isSuperAdmin && (
+              <div className={`flex justify-end`}>
+            <div className={`flex justify-between w-auto ${isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'}`}>
+              <SearchInput
+                value={searchInput}
+                onChange={(value) => setSearchInput(value)}
+                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
+                closeAction={removeSearchAction}
+                style={`mr-4 w-auto lg:w-48`}
+              />
+              {isSuperAdmin && (
+                <Selector
+                  placeholder={'Select Institution'}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={'w-auto lg:w-48'}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
+            </div>
+            {!isSuperAdmin && (
                 <AddButton
                   label={UnitLookupDict[userLanguage]['NEW_UNIT']}
                   onClick={handleAdd}
                 />
               )}
+          </div>
             </div>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
