@@ -13,7 +13,7 @@ const HeaderMegaMenu = () => {
     userLanguage,
     state: {user},
   } = useContext(GlobalContext);
-  const {Institute_info} = useDictionary(clientKey);
+  const {Institute_info, CommunityDict} = useDictionary(clientKey);
 
   const baseUrl =
     user.role === 'SUP'
@@ -121,13 +121,17 @@ const HeaderMegaMenu = () => {
       type: 'dropdown',
       children: [
         {
-          title: 'New Person Spotlight',
+          key: 'community_builder',
+          redirectionUrl: `/dashboard/community/builder`,
+          active: false,
+          title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER'],
         },
+
         {
-          title: 'Announcements & Events',
-        },
-        {
-          title: 'Front Page',
+          key: 'front_page',
+          redirectionUrl: `/dashboard/community/front`,
+          active: location.pathname.indexOf('community') > -1,
+          title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE'],
         },
       ],
     },
@@ -147,12 +151,12 @@ const HeaderMegaMenu = () => {
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active: location.pathname.indexOf('home') > -1,
     },
-    // {
-    //   title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
-    //   key: 'community',
-    //   redirectionUrl: `${baseUrl}/dashboard/community`,
-    //   active: location.pathname.indexOf('community') > -1,
-    // },
+    {
+      title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
+      key: 'community',
+      redirectionUrl: `${baseUrl}/dashboard/community`,
+      active: location.pathname.indexOf('community') > -1,
+    },
     {
       title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
       key: 'notebook',

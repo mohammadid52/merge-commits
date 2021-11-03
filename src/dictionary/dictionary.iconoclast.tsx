@@ -88,6 +88,7 @@ const BreadcrumsTitles: any = {
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
     LOADING: 'Loading...',
+    COMMUNTIY: 'S/B Community Builder',
   },
   ES: {
     HOME: 'CASA',
@@ -111,6 +112,7 @@ const BreadcrumsTitles: any = {
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
+    COMMUNTIY: 'TBD',
     AddCheckpint: 'TBD',
     UnitBuilder: 'TBD',
     AddTopic: 'TBD',
@@ -2805,7 +2807,7 @@ const UserInformationDict: any = {
     account: 'TBD',
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
-    RESETTING_PASSWORD: 'TBD'
+    RESETTING_PASSWORD: 'TBD',
   },
 };
 
@@ -4012,10 +4014,20 @@ const StudentDict: any = {
 
 const CommunityDict: any = {
   EN: {
+    TITLE: 'Community',
     HEADER: 'Here is what is happening today',
+    TABS: {
+      FRONT_PAGE: 'Front page',
+      COMMUNITY_BUILDER: 'Community Builder',
+    },
   },
   ES: {
+    TITLE: 'TBD',
     HEADER: 'TBD',
+    TABS: {
+      FRONT_PAGE: 'TBD',
+      COMMUNITY_BUILDER: 'TBD',
+    },
   },
 };
 

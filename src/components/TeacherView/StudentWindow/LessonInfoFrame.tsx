@@ -42,8 +42,9 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   let studentAuthIDArray = roster.map((st: any) => st.personAuthID);
-  let lastLoggedIn = user.lastLoggedIn;
-  let dateString = lastLoggedIn.match(DATE_REGEX);
+  let lastLoggedIn = user?.lastLoggedIn;
+  let dateString = lastLoggedIn ? lastLoggedIn.match(DATE_REGEX) : '';
+  // let dateString: any = undefined;
 
   // ##################################################################### //
   // ######################### SENTIMENT FETCHING ######################## //
@@ -237,6 +238,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       </div>
     </>
   );
-};
+};;
 
 export default LessonInfoFrame;

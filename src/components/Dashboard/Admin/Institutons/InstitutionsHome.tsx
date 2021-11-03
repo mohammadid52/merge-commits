@@ -12,8 +12,6 @@ import {getAsset} from 'assets';
 
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
-import NavBarRouter from '../NavBarRouter';
-// Institute info tabs.
 import CurricularBuilder from './Builders/CurricularBuilder';
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
