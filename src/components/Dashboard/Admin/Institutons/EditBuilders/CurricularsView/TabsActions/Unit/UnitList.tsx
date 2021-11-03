@@ -45,12 +45,11 @@ export const UnitList = ({instId}: any) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabuss, {
-          filter:
-          isSuperAdmin
-              ? undefined
-              : {
-                  institutionID: {eq: instId},
-                },
+          filter: isSuperAdmin
+            ? undefined
+            : {
+                institutionID: {eq: instId},
+              },
         })
       );
       setUnits(result.data?.listUniversalSyllabuss.items);
@@ -135,7 +134,11 @@ export const UnitList = ({instId}: any) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionOptions)
       );
-      setInstitutionList(list.data?.listInstitutions?.items);
+      setInstitutionList(
+        list.data?.listInstitutions?.items.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        )
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -157,9 +160,7 @@ export const UnitList = ({instId}: any) => {
         )
       );
     } else if (institutionId) {
-      setUnits(
-        allUnits.filter((item: any) => item.institution?.id === institutionId)
-      );
+      setUnits(allUnits.filter((item: any) => item.institution?.id === institutionId));
     } else if (searchValue) {
       setUnits(
         allUnits.filter((item: any) =>
@@ -199,41 +200,47 @@ export const UnitList = ({instId}: any) => {
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
               <div className={`flex justify-end`}>
-            <div className={`flex justify-between w-auto ${isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'}`}>
-              <SearchInput
-                value={searchInput}
-                onChange={(value) => setSearchInput(value)}
-                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
-                closeAction={removeSearchAction}
-                style={`mr-4 w-auto lg:w-48`}
-              />
-              {isSuperAdmin && (
-                <Selector
-                  placeholder={'Select Institution'}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
-                />
-              )}
-            </div>
-            {!isSuperAdmin && (
-                <AddButton
-                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={handleAdd}
-                />
-              )}
-          </div>
+                <div
+                  className={`flex justify-between w-auto ${
+                    isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'
+                  }`}>
+                  <SearchInput
+                    value={searchInput}
+                    onChange={(value) => setSearchInput(value)}
+                    onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
+                    closeAction={removeSearchAction}
+                    style={`mr-4 w-auto lg:w-48`}
+                  />
+                  {isSuperAdmin && (
+                    <Selector
+                      placeholder={'Select Institution'}
+                      list={institutionList}
+                      selectedItem={selectedInstitution?.name}
+                      onChange={instituteChange}
+                      arrowHidden={true}
+                      additionalClass={'w-auto lg:w-48'}
+                      isClearable
+                      onClear={onInstitutionSelectionRemove}
+                    />
+                  )}
+                </div>
+                {!isSuperAdmin && (
+                  <AddButton
+                    label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+                    onClick={handleAdd}
+                  />
+                )}
+              </div>
             </div>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NO']}</span>
                 </div>
-                <div className={`${isSuperAdmin ? 'w-4/10' : 'w-8/10'} px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                <div
+                  className={`${
+                    isSuperAdmin ? 'w-4/10' : 'w-8/10'
+                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (

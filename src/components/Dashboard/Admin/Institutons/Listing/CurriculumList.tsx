@@ -124,7 +124,11 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionOptions)
       );
-      setInstitutionList(list.data?.listInstitutions?.items);
+      setInstitutionList(
+        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        )
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -201,7 +205,10 @@ const CurriculumList = ({
             {InstitueCurriculum[userLanguage]['TITLE']}
           </h3>
           <div className={`flex justify-end`}>
-            <div className={`flex justify-between w-auto ${isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'}`}>
+            <div
+              className={`flex justify-between w-auto ${
+                isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'
+              }`}>
               <SearchInput
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
