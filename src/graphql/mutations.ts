@@ -9792,6 +9792,25 @@ export const createAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -10057,6 +10076,25 @@ export const updateAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -10322,6 +10360,25 @@ export const deleteAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11061,6 +11118,43 @@ export const createUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11105,6 +11199,43 @@ export const updateUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11149,6 +11280,43 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11196,6 +11364,25 @@ export const createCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11232,6 +11419,25 @@ export const updateCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11268,6 +11474,25 @@ export const deleteCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -12403,6 +12628,43 @@ export const createCommunity = /* GraphQL */ `
     createCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12462,43 +12724,6 @@ export const createCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
       }
       likes
       chatCount
@@ -12515,6 +12740,43 @@ export const updateCommunity = /* GraphQL */ `
     updateCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12574,43 +12836,6 @@ export const updateCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
       }
       likes
       chatCount
@@ -12627,6 +12852,43 @@ export const deleteCommunity = /* GraphQL */ `
     deleteCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12686,43 +12948,6 @@ export const deleteCommunity = /* GraphQL */ `
           updatedAt
         }
         nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
       }
       likes
       chatCount

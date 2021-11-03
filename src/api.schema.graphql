@@ -1003,11 +1003,13 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus @model @key(fields: ["id"]) {
+type UniversalSyllabus @model @key(fields: ["id"]) 
+{
   id: ID!
   name: String!
   type: String
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   description: String
   methodology: String
   policies: String
@@ -1105,6 +1107,7 @@ type File {
 type Community @model @key(fields: ["id"]) {
   id: ID!
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   cardName: String
   cardType: String
   cardDate: AWSDate
@@ -1121,7 +1124,7 @@ type Community @model @key(fields: ["id"]) {
   isEditedCard: Boolean 
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
-  institution: Institution @connection(fields: ["institutionID"])
+ 
   likes:[String]
   chatCount:Int
 }
