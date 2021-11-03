@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import LessonApp from './LessonApp';
 import Noticebar from '@components/Noticebar/Noticebar';
 import useNotifications from '@customHooks/notifications';
@@ -10,6 +10,7 @@ import * as queries from '../../graphql/queries';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {GlobalContext} from '@contexts/GlobalContext';
 import SurveyApp from './SurveyApp';
+import {useParams} from 'react-router-dom';
 
 export interface ILessonSurveyApp {
   getSyllabusLesson: (lessonID?: string) => Promise<void>;
@@ -21,10 +22,12 @@ const Lesson = () => {
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
+  const urlParams: any = useParams();
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const getSyllabusLesson = async (lessonID?: string) => {
     try {
@@ -43,10 +46,25 @@ const Lesson = () => {
       }, []);
       setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+      setLoaded(true);
     } catch (e) {
+      setLoaded(false);
       console.error('error getting lesson - ', lessonID, ' ', e);
     }
   };
+
+  useEffect(() => {
+    const {lessonID} = urlParams;
+    if (lessonID) {
+      lessonDispatch({
+        type: 'SET_INITIAL_STATE',
+        payload: {universalLessonID: lessonID},
+      });
+      getSyllabusLesson(lessonID).then((_: void) => {
+        //
+      });
+    }
+  }, []);
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
@@ -54,11 +72,13 @@ const Lesson = () => {
   return (
     <>
       <Noticebar notifications={notifications} />
-      {isSurvey ? (
-        <SurveyApp getSyllabusLesson={getSyllabusLesson} />
-      ) : (
-        <LessonApp getSyllabusLesson={getSyllabusLesson} />
-      )}
+      {loaded ? (
+        isSurvey ? (
+          <SurveyApp getSyllabusLesson={getSyllabusLesson} />
+        ) : (
+          <LessonApp getSyllabusLesson={getSyllabusLesson} />
+        )
+      ) : null}
     </>
   );
 };

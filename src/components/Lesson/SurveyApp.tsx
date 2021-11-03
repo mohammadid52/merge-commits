@@ -58,19 +58,10 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
-    const {lessonID} = urlParams;
-
     const leaveUnload = () => {
       lessonDispatch({type: 'CLEANUP'});
     };
-
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) => {
-        //
-      });
-    }
-
+    console.log('survey loaded....');
     return () => {
       leaveUnload();
     };
@@ -102,14 +93,13 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
 
-  const initializeStudentData = async () => {
+  const initializeSurveyData = async () => {
     if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.reduce(
         (
           inputs: {
             required: any[];
             initialized: any[];
-            exercises: any[];
           },
           page: UniversalLessonPage
         ) => {
@@ -119,7 +109,6 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
               pageInputsAcc: {
                 requiredIdAcc: string[];
                 pageInputAcc: StudentPageInput[];
-                pageExerciseAcc: any[];
               },
               pagePart: PagePart
             ) => {
@@ -129,14 +118,12 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                     partInputAcc: {
                       requiredIdAcc: string[];
                       pageInputAcc: any[];
-                      pageExerciseAcc: any[];
                     },
                     partContent: PartContent
                   ) => {
                     //  CHECK WHICH INPUT TYPE  //
                     const isForm = /form/g.test(partContent.type);
                     const isOtherInput = /input/g.test(partContent.type);
-                    const isExercise = /exercise/g.test(partContent.type);
 
                     // -------- IF FORM ------- //
                     if (isForm) {
@@ -162,11 +149,6 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                         {reqId: [], pgInput: []}
                       );
 
-                      const exerciseObj = {
-                        id: partContent.id,
-                        entryData: formSubInputs.pgInput,
-                      };
-
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
@@ -176,9 +158,6 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                           ...partInputAcc.pageInputAcc,
                           ...formSubInputs.pgInput,
                         ],
-                        pageExerciseAcc: isExercise
-                          ? [...partInputAcc.pageExerciseAcc, exerciseObj]
-                          : partInputAcc.pageExerciseAcc,
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -194,13 +173,12 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                             input: [''],
                           },
                         ],
-                        pageExerciseAcc: partInputAcc.pageExerciseAcc,
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
+                  {requiredIdAcc: [], pageInputAcc: []}
                 );
 
                 return {
@@ -212,26 +190,21 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                     ...pageInputsAcc.pageInputAcc,
                     ...partInputs.pageInputAcc,
                   ],
-                  pageExerciseAcc: [
-                    ...pageInputsAcc.pageExerciseAcc,
-                    ...partInputs.pageExerciseAcc,
-                  ],
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
+            {requiredIdAcc: [], pageInputAcc: []}
           );
 
           return {
             required: [...inputs.required, reducedPageInputs.requiredIdAcc],
-            initialized: [...inputs.initialized, reducedPageInputs.pageInputAcc],
-            exercises: [...inputs.exercises, reducedPageInputs.pageExerciseAcc],
+            initialized: [...inputs.initialized, ...reducedPageInputs.pageInputAcc],
           };
         },
 
-        {required: [], initialized: [], exercises: []}
+        {required: [], initialized: []}
       );
 
       // console.log('mappedPages - ', mappedPages);
@@ -241,7 +214,6 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         payload: {
           requiredInputs: mappedPages.required,
           studentData: mappedPages.initialized,
-          exerciseData: mappedPages.exercises,
         },
       });
       setStudentDataInitialized(true);
@@ -253,30 +225,15 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ##################################################################### //
 
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
-  const studentDataIdArray = (studentDataArray: any[]) => {
-    const idArr = studentDataArray
-      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
-        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-          (lessonPlanPage: UniversalLessonPage) =>
-            lessonPlanPage.id === studentDataIdObj.lessonPageID
-        );
-        const idObj = {
-          id: studentDataIdObj.id,
-          pageIdx: indexOfPage,
-          lessonPageID: studentDataIdObj.lessonPageID,
-          update: false,
-        };
-        return [...acc, idObj];
-      }, [])
-      .sort((dataID1: any, dataID2: any) => {
-        if (dataID1.pageIdx < dataID2.pageIdx) {
-          return -1;
-        }
-        if (dataID1.pageIdx > dataID2.pageIdx) {
-          return 1;
-        }
-      });
-    return idArr;
+  const surveyDataId = (surveyDataRowObj: any) => {
+    return [
+      {
+        id: surveyDataRowObj.id,
+        pageIdx: 0,
+        lessonPageID: '',
+        update: false,
+      },
+    ];
   };
 
   // ~~~~~~~~ FILTER EXTRA QUESTIONS ~~~~~~~ //
@@ -326,13 +283,14 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         surveyData: initialDataFlattened,
       };
 
-      const newStudentData: any = await API.graphql(
+      const newSurveyData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalSurveyStudentData, {
           input,
         })
       );
 
-      const returnedData = newStudentData.data.createUniversalSurveyStudentData;
+      const returnedData = newSurveyData.data.createUniversalSurveyStudentData;
+      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -355,13 +313,13 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     if (filterObj) {
       try {
         let surveyData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          graphqlOperation(queries.listUniversalSurveyStudentDatas, {
             ...filterObj,
             nextToken: nextToken,
           })
         );
-        let surveyDataRow = surveyData.data.listUniversalLessonStudentDatas.items[0];
-        let theNextToken = surveyData.data.listUniversalLessonStudentDatas?.nextToken;
+        let surveyDataRow = surveyData.data.listUniversalSurveyStudentDatas.items[0];
+        let theNextToken = surveyData.data.listUniversalSurveyStudentDatas?.nextToken;
 
         if (surveyDataRow && theNextToken) {
           console.log('nextToken fetching more - ', nextToken);
@@ -378,15 +336,7 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
-  const getOrCreateStudentData = async () => {
-    // flatten all questions first
-    const initialDataFlattened = lessonState?.studentData.reduce(
-      (inputAcc: partInput[], pageInputData: partInput[]) => {
-        return [...inputAcc, ...pageInputData];
-      },
-      []
-    );
-
+  const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
       const listFilter = {
@@ -400,31 +350,35 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       // existing student rows
       const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
-      const surveyDataResponses =
-        surveyDataRow.data.listUniversalSurveyData.items[0]?.surveyData; // flat 1D - array
-      const extraQuestions = filterExtraQuestions(initialDataFlattened, surveyDataRow); //  flat 1D - array
+      const surveyDataResponses = surveyDataRow?.surveyData
+        ? surveyDataRow.surveyData
+        : []; // flat 1D - array
+      const extraQuestions = filterExtraQuestions(
+        lessonState?.studentData,
+        surveyDataResponses
+      ); //  flat 1D - array
 
-      if (surveyDataRow?.length === 0) {
+      if (surveyDataRow === undefined) {
         const createNewRecords = await createSurveyData(
-          initialDataFlattened,
+          lessonState?.studentData,
           lessonID,
           user.authId,
           user.email
         );
         lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
+          type: 'LOAD_SURVEY_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray(createNewRecords),
+            dataIdReferences: surveyDataId(createNewRecords),
           },
         });
-      } else if (surveyDataRow?.length > 0) {
+      } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
-
+        // console.log('loaded finaldata - ', finalData);
         lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
+          type: 'LOAD_SURVEY_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray(surveyDataRow),
-            filteredStudentData: finalData,
+            dataIdReferences: surveyDataId(surveyDataRow),
+            surveyData: finalData,
           },
         });
       }
@@ -441,18 +395,19 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       lessonState.lessonData.lessonPlan &&
       lessonState.lessonData.lessonPlan.length > 0
     ) {
-      initializeStudentData();
+      initializeSurveyData();
     }
   }, [lessonState.lessonData.lessonPlan]);
 
   // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
+
   useEffect(() => {
     if (
       !lessonState.loaded &&
       lessonState.studentData &&
-      lessonState.studentData?.length === PAGES?.length
+      lessonState.studentData?.length > 0
     ) {
-      getOrCreateStudentData();
+      getOrCreateSurveyData();
     }
   }, [lessonState.studentData]);
 

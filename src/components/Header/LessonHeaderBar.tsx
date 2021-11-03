@@ -23,9 +23,9 @@ const LessonHeaderBar = ({
   const theme = gContext.theme;
   const history = useHistory();
 
-  // const initializeTimer = useStudentTimer();
-  // if (initializeTimer) {
-  // }
+  const initializeTimer = useStudentTimer();
+  if (initializeTimer) {
+  }
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //

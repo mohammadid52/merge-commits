@@ -1,8 +1,8 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -23,9 +23,9 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import { ILessonSurveyApp } from './Lesson';
+import {ILessonSurveyApp} from './Lesson';
 
-const LessonApp = ({getSyllabusLesson}:ILessonSurveyApp) => {
+const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -65,7 +65,6 @@ const LessonApp = ({getSyllabusLesson}:ILessonSurveyApp) => {
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ----------- 1 ---------- //
-
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
@@ -110,8 +109,6 @@ const LessonApp = ({getSyllabusLesson}:ILessonSurveyApp) => {
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
-    const {lessonID} = urlParams;
-
     const leaveUnload = () => {
       const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
       Promise.resolve(leaveRoom).then((_: void) => {
@@ -122,12 +119,7 @@ const LessonApp = ({getSyllabusLesson}:ILessonSurveyApp) => {
       });
     };
 
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) => {
-        //
-      });
-    }
+    console.log('lesson loaded....');
 
     return () => {
       leaveUnload();

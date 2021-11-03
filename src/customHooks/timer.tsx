@@ -4,6 +4,7 @@ import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {getLocalStorageData} from '../utilities/localStorage';
+import {partInput} from 'API';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
@@ -43,7 +44,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 6000;
+  const STANDARD_INTERVAL = 4000;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -81,20 +82,23 @@ const useStudentTimer = () => {
 
   const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   useEffect(() => {
     if (currentSaveCount < lessonState.saveCount) {
       setCurrentSaveCount(lessonState.saveCount);
     }
 
     if (iAmViewed) {
-      const viewedUpdate = updateStudentData();
+      const viewedUpdate = updateStudentLessonData();
 
       Promise.resolve(viewedUpdate).then((_: void) => {
         clearUpdateCycle();
         console.log('viewedUpdate - ', 'done');
       });
     } else {
-      const standardUpdate = updateStudentData();
+      const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
 
       Promise.resolve(standardUpdate).then((_: void) => {
         clearUpdateCycle();
@@ -126,7 +130,7 @@ const useStudentTimer = () => {
   };
 
   // ~~~~~~~~~~ UPDATE DB RECORDS ~~~~~~~~~~ //
-  const updateStudentData = async () => {
+  const updateStudentLessonData = async () => {
     return lessonState.universalStudentDataID.reduce(
       async (p: any, currentIdObj: any, idx: number) => {
         if (currentIdObj.update) {
@@ -139,10 +143,10 @@ const useStudentTimer = () => {
           };
 
           try {
-            let updatedStudentData: any = await API.graphql(
+            await API.graphql(
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
-            console.log('updateStudentData - timer - ', data);
+            console.log('updateStudentLessonData - timer - ', data);
           } catch (e) {
             console.error('update universal student data - ', encodeURI);
           } finally {
@@ -156,12 +160,32 @@ const useStudentTimer = () => {
     );
   };
 
+  const updateSurveyData = async () => {
+    let data = {
+      id: lessonState.universalStudentDataID[0]?.id,
+      surveyData: lessonState.studentData,
+      roomID: getRoomData.id,
+    };
+
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
+      );
+      console.log('updateSurveyData - timer - ', data);
+    } catch (e) {
+      console.error('update universal student data - ', encodeURI);
+    } finally {
+      return Promise.resolve();
+    }
+  };
+
   return {
     iAmViewed,
     savePending,
     currentSaveCount,
     clearUpdateCycle,
-    updateStudentData,
+    updateStudentLessonData,
+    updateSurveyData,
   };
 };
 
