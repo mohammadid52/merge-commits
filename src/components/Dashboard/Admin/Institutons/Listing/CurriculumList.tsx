@@ -9,6 +9,8 @@ import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import Loader from '@components/Atoms/Loader';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import Selector from '@components/Atoms/Form/Selector';
 
 interface CurriculumListProps {
   curricular?: {items: {name?: string; id: string}[]};
@@ -31,7 +33,11 @@ const CurriculumList = ({
   const {InstitueCurriculum} = useDictionary(clientKey);
   const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
   const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
+  const [allCourses, setAllCourses] = useState<Array<{name?: string; id: string}>>();
+  const [institutionList, setInstitutionList] = useState<any>();
   const [loading, setLoading] = useState(isSuperAdmin);
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
 
@@ -50,12 +56,19 @@ const CurriculumList = ({
   useEffect(() => {
     if (isSuperAdmin) {
       fetchCurriculums();
+      fetchInstitutions();
     }
   }, []);
+
+  const instituteChange = (_: string, name: string, value: string) => {
+    setSelectedInstitution({name, id: value});
+    onSearch(searchInput, value);
+  };
 
   useEffect(() => {
     if (curricular?.items?.length) {
       setCourseList(curricular.items);
+      setAllCourses(curricular.items);
     }
   }, [curricular?.items?.length]);
 
@@ -65,6 +78,53 @@ const CurriculumList = ({
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
       setCourseList(list.data?.listCurriculums?.items);
+      setAllCourses(list.data?.listCurriculums?.items);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const onSearch = (searchValue: string, institutionId?: string) => {
+    if (searchValue && institutionId) {
+      setCourseList(
+        [...allCourses].filter(
+          (item: any) =>
+            item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
+            item.institution?.id === institutionId
+        )
+      );
+    } else if (institutionId) {
+      setCourseList(
+        [...allCourses].filter((item: any) => item.institution?.id === institutionId)
+      );
+    } else if (searchValue) {
+      setCourseList(
+        [...allCourses].filter((item: any) =>
+          item.name?.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+    } else {
+      setCourseList(allCourses);
+    }
+  };
+
+  const removeSearchAction = () => {
+    setSearchInput('');
+    onSearch('', selectedInstitution?.id);
+  };
+
+  const onInstitutionSelectionRemove = () => {
+    setSelectedInstitution({});
+    onSearch(searchInput, '');
+  };
+
+  const fetchInstitutions = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutionOptions)
+      );
+      setInstitutionList(list.data?.listInstitutions?.items);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -136,6 +196,40 @@ const CurriculumList = ({
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
+        <div className="flex justify-between items-center w-full m-auto">
+          <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
+            {InstitueCurriculum[userLanguage]['TITLE']}
+          </h3>
+          <div className={`flex justify-end`}>
+            <div className={`flex justify-between w-auto ${isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'}`}>
+              <SearchInput
+                value={searchInput}
+                onChange={(value) => setSearchInput(value)}
+                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
+                closeAction={removeSearchAction}
+                style={`mr-4 w-auto lg:w-48`}
+              />
+              {isSuperAdmin && (
+                <Selector
+                  placeholder={'Select Institution'}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={'w-auto lg:w-48'}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
+            </div>
+            {!isSuperAdmin && (
+              <AddButton
+                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                onClick={createNewCurricular}
+              />
+            )}
+          </div>
+        </div>
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -146,18 +240,7 @@ const CurriculumList = ({
             </div>
           </div>
         ) : courseList?.length ? (
-          <Fragment>
-            <div className="flex justify-between items-center w-full m-auto">
-              <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
-                {InstitueCurriculum[userLanguage]['TITLE']}
-              </h3>
-              {!isSuperAdmin && (
-                <AddButton
-                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                  onClick={createNewCurricular}
-                />
-              )}
-            </div>
+          <>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -170,7 +253,7 @@ const CurriculumList = ({
                   <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                     <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
@@ -204,7 +287,7 @@ const CurriculumList = ({
                 message={deleteModal.message}
               />
             )}
-          </Fragment>
+          </>
         ) : (
           <Fragment>
             {!isSuperAdmin && (

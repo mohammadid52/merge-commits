@@ -15,7 +15,14 @@ import ModalPopUp from '@components/Molecules/ModalPopUp';
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {UnitLookupDict} = useDictionary(clientKey);
 
@@ -32,7 +39,7 @@ export const UnitList = ({instId}: any) => {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabuss, {
           filter:
-            state.user.role === 'SUP'
+          isSuperAdmin
               ? undefined
               : {
                   institutionID: {eq: instId},
@@ -132,7 +139,7 @@ export const UnitList = ({instId}: any) => {
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
               <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-              {state.user.role !== 'SUP' && (
+              {!isSuperAdmin && (
                 <AddButton
                   label={UnitLookupDict[userLanguage]['NEW_UNIT']}
                   onClick={handleAdd}
@@ -144,9 +151,14 @@ export const UnitList = ({instId}: any) => {
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className={`${isSuperAdmin ? 'w-4/10' : 'w-8/10'} px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
+                {isSuperAdmin && (
+                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                    <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
+                  </div>
+                )}
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
@@ -162,6 +174,7 @@ export const UnitList = ({instId}: any) => {
                   checkIfRemovable={checkIfRemovable}
                   handleToggleDelete={handleToggleDelete}
                   editCurrentUnit={handleView}
+                  isSuperAdmin
                 />
               ))}
             </div>
@@ -177,7 +190,7 @@ export const UnitList = ({instId}: any) => {
           </Fragment>
         ) : (
           <>
-            {state.user.role !== 'SUP' && (
+            {!isSuperAdmin && (
               <div className="flex justify-center mt-8">
                 <AddButton
                   className="mx-4"

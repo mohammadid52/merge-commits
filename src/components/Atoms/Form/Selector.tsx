@@ -2,7 +2,7 @@ import React, {useState, useRef, useContext, useEffect} from 'react';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaSpinner} from 'react-icons/fa';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
 
 interface SelectorProps {
@@ -21,6 +21,8 @@ interface SelectorProps {
   noOptionMessage?: string;
   width?: string;
   error?: string;
+  isClearable?: boolean;
+  onClear?: () => void;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -28,7 +30,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     label,
     list,
     selectedItem,
-    additionalClass,
+    additionalClass = '',
     btnClass,
     disabled,
     arrowHidden,
@@ -40,6 +42,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     noOptionMessage = '',
     labelTextClass = 'text-xs',
     width = 'w-full',
+    isClearable = false,
+    onClear,
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -141,6 +145,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 }}>
                 <FaSpinner />
               </IconContext.Provider>
+            )}
+            {isClearable && selectedItem && (
+              <FaTimes className="relative mr-4" onClick={onClear} />
             )}
             {error.length > 0 && (
               <ExclamationCircleIcon

@@ -50,7 +50,7 @@ const CurriculumListRow = ({
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (
-        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-nowrap">
+        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
           {item.institution?.name}
         </div>
       )}

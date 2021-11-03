@@ -3611,6 +3611,7 @@ const UnitLookupDict: any = {
       'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
+    NAME: 'Name',
     INSTITUTION_NAME: 'Institution Name',
     UNITNAME: 'Module Name',
     STATUS: 'Status',

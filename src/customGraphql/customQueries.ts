@@ -2099,6 +2099,10 @@ export const listUniversalSyllabusOptions = /* GraphQL */ `
         name
         type
         institutionID
+        institution{
+          id
+          name
+        }
       }
       nextToken
     }
@@ -2286,6 +2290,10 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         name
         type
         institutionID
+        institution{
+          id
+          name
+        }
         description
         methodology
         policies
@@ -4919,6 +4927,30 @@ export const listClassroomGroupssOptions = /* GraphQL */ `
         classRoomID
         groupName
         groupType
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listInstitutionOptions = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
       }
       nextToken
     }

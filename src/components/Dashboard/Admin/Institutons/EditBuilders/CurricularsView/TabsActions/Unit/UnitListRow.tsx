@@ -4,10 +4,10 @@ import useDictionary from '@customHooks/dictionary';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {HiOutlineTrash} from 'react-icons/hi';
 
 interface IUnitListRowProps {
   index: number;
+  isSuperAdmin?: boolean;
   item: any;
   checkIfRemovable: any;
   handleToggleDelete: any;
@@ -16,6 +16,7 @@ interface IUnitListRowProps {
 
 const UnitListRow = ({
   index,
+  isSuperAdmin,
   item,
   checkIfRemovable,
   handleToggleDelete,
@@ -24,7 +25,6 @@ const UnitListRow = ({
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -43,9 +43,14 @@ const UnitListRow = ({
       </div>
       <div
         onClick={() => editCurrentUnit(item.id)}
-        className="cursor-pointer flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+        className={`cursor-pointer flex ${isSuperAdmin ? 'w-4/10' : 'w-8/10'} items-center px-8 py-3 text-left text-s leading-4 font-medium`}>
         {item.name ? item.name : ''}
       </div>
+      {isSuperAdmin && (
+        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
+          {item.institution?.name}
+        </div>
+      )}
 
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>

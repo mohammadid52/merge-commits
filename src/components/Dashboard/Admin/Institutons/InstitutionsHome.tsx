@@ -25,6 +25,7 @@ import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBui
 import Institution from './Institution';
 // Instituttion
 import InstitutionLookup from './InstitutionLookup';
+import NavBarRouter from '../NavBarRouter';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {clientKey, state, theme, userLanguage, dispatch} = useContext(GlobalContext);

@@ -17,10 +17,16 @@ interface RoomListProps {
 
 const RoomsList = (props: RoomListProps) => {
   const {instId} = props;
-  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState(true);
   const {InstitueRomms} = useDictionary(clientKey);
@@ -51,7 +57,7 @@ const RoomsList = (props: RoomListProps) => {
       const list: any = await API.graphql(
         graphqlOperation(
           customQueries.listRoomsDashboard,
-          state.user.role !== 'SUP'
+          !isSuperAdmin
             ? {
                 filter: {
                   institutionID: {eq: instId},
@@ -116,6 +122,11 @@ const RoomsList = (props: RoomListProps) => {
                 <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
+                {isSuperAdmin && (
+                  <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{InstitueRomms[userLanguage]['INSTITUTION_NAME']}</span>
+                  </div>
+                )}
                 <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
@@ -150,6 +161,11 @@ const RoomsList = (props: RoomListProps) => {
                     }>
                     {i + 1}.
                   </div>
+                  {isSuperAdmin && (
+                    <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
+                      {item.institution?.name}
+                    </div>
+                  )}
                   <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
                     {item.name}
                   </div>
