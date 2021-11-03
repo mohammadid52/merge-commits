@@ -28,19 +28,49 @@ const ProgressBar = ({
   const lessonState = gContext.lessonState;
   const user = gContext.state.user;
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
     if (pages) {
-      const thisPageData = studentData && studentData[pageIdx];
-      const thisPageRequired = requiredInputs && requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+      let inputResponseData =
+        studentData && !isSurvey ? studentData[pageIdx] : studentData;
+
+      let thisPageRequired = requiredInputs && requiredInputs[pageIdx]; // ['a','b','id_123']
+
+      // IF SURVEY = false
+      if (!isSurvey && inputResponseData && inputResponseData.length > 0) {
+        let areAnyEmpty = inputResponseData.filter((input: StudentPageInput) => {
           if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
             return input;
           }
         });
-        // console.log('validate areAnyEmpty - ', areAnyEmpty);
         if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+        // IF SURVEY
+      } else if (isSurvey && inputResponseData && inputResponseData.length > 0) {
+        let areAnyEmpty2 = thisPageRequired.reduce(
+          (truth: boolean, requiredId: string) => {
+            let findInSurveyData = inputResponseData.find(
+              (inputObj: any) => inputObj.domID === requiredId && inputObj.input[0] === ''
+            );
+            if (truth === true) {
+              return true;
+            } else {
+              if (findInSurveyData !== undefined && findInSurveyData !== null) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          },
+          false
+        );
+        if (areAnyEmpty2) {
           return false;
         } else {
           return true;
