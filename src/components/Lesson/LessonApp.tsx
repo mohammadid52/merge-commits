@@ -23,8 +23,9 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import { ILessonSurveyApp } from './Lesson';
 
-const LessonApp = () => {
+const LessonApp = ({getSyllabusLesson}:ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -64,18 +65,7 @@ const LessonApp = () => {
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ----------- 1 ---------- //
-  //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
 
-  // useEffect(() => {
-  //   if (lessonState.lessonData.id) {
-  //     lessonDispatch({
-  //       type: 'SET_SUBSCRIBE_FUNCTION',
-  //       payload: {
-  //         subscribeFunc: subscribeToRoom,
-  //       },
-  //     });
-  //   }
-  // }, [lessonState.lessonData.id]);
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
@@ -117,32 +107,6 @@ const LessonApp = () => {
       updateOnIncomingSubscriptionData(subscriptionData);
     }
   }, [subscriptionData]);
-
-  // ##################################################################### //
-  // ############################ LESSON FETCH ########################### //
-  // ##################################################################### //
-
-  const getSyllabusLesson = async (lessonID?: string) => {
-    try {
-      const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
-      );
-      const response = universalLesson.data.getUniversalLesson;
-      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
-        return [
-          ...acc,
-          {
-            id: page.id,
-            label: page.label,
-          },
-        ];
-      }, []);
-      setLocalStorageData('lesson_plan', lessonPlan);
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
-    } catch (e) {
-      console.error('error getting lesson - ', lessonID, ' ', e);
-    }
-  };
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
