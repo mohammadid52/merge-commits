@@ -560,6 +560,10 @@ const LessonApp = () => {
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  /******************************************
+   * GETS THE PREVIOUSLY SAVED STUDENT DATA *
+   * IF THERE IS ANY, AND SETS IT IN STATE  *
+   ******************************************/
 
   const loopFetchStudentData = async (
     filterObj: any,
@@ -600,7 +604,7 @@ const LessonApp = () => {
   };
 
   const getOrCreateStudentData = async () => {
-    const syllabusID = getRoomData.activeSyllabus;
+    // const syllabusID = getRoomData.activeSyllabus;
 
     // console.log('getOrCreateData - user - ', user);
 

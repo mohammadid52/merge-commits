@@ -175,45 +175,86 @@ const LessonControl = () => {
    *                  INFORMATION                  *
    *************************************************/
 
-  const getStudentData = async (studentAuthId: string) => {
-    const {lessonID} = urlParams;
+    const loopFetchStudentData = async (
+      filterObj: any,
+      nextToken: string,
+      outArray: any[]
+    ) => {
+      if (filterObj) {
+        try {
+          let studentData: any = await API.graphql(
+            graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+              ...filterObj,
+              nextToken: nextToken,
+            })
+          );
+          let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+          let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
 
-    try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: studentAuthId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id},
-        },
-      };
-      const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
-      );
+          /**
+           * combination of last fetch results
+           * && current fetch results
+           */
+          let combined = [...outArray, ...studentDataRows];
 
-      // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-
-      if (studentDataRows.length > 0) {
-        subscription = subscribeToStudent();
-
-        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
-        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
-
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredData,
-          },
-        });
+          if (theNextToken) {
+            console.log('nextToken fetching more - ', nextToken);
+            loopFetchStudentData(filterObj, theNextToken, combined);
+          } else {
+            // console.log('no more - ', combined);
+            return combined;
+          }
+        } catch (e) {
+          console.error('loopFetchStudentData - ', e);
+          return [];
+        }
       } else {
-        throw 'No student data records for this lesson...';
+        return [];
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    };
+
+    const getStudentData = async (studentAuthId: string) => {
+      const {lessonID} = urlParams;
+
+      try {
+        const listFilter = {
+          filter: {
+            studentAuthID: {eq: studentAuthId},
+            lessonID: {eq: lessonID},
+            syllabusLessonID: {eq: getRoomData.activeSyllabus},
+            roomID: {eq: getRoomData.id},
+          },
+        };
+        // const studentData: any = await API.graphql(
+        //   graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+        // );
+
+        // existing student rows
+        const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+
+        if (studentDataRows.length > 0) {
+          subscription = subscribeToStudent();
+
+          const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+          const filteredData = filterStudentData(
+            existStudentDataIdArray,
+            studentDataRows
+          );
+
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: existStudentDataIdArray,
+              filteredStudentData: filteredData,
+            },
+          });
+        } else {
+          throw 'No student data records for this lesson...';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
 
