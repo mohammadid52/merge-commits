@@ -560,8 +560,51 @@ const LessonApp = () => {
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  /******************************************
+   * GETS THE PREVIOUSLY SAVED STUDENT DATA *
+   * IF THERE IS ANY, AND SETS IT IN STATE  *
+   ******************************************/
+
+  const loopFetchStudentData = async (
+    filterObj: any,
+    nextToken: string,
+    outArray: any[]
+  ) => {
+    if (filterObj) {
+      try {
+        let studentData: any = await API.graphql(
+          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+            ...filterObj,
+            nextToken: nextToken,
+          })
+        );
+        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+        let combined = [...outArray, ...studentDataRows];
+
+        if (theNextToken) {
+          console.log('nextToken fetching more - ', nextToken);
+          loopFetchStudentData(filterObj, theNextToken, combined);
+        } else {
+          // console.log('no more - ', combined);
+          return combined;
+        }
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    } else {
+      return [];
+    }
+  };
+
   const getOrCreateStudentData = async () => {
-    const syllabusID = getRoomData.activeSyllabus;
+    // const syllabusID = getRoomData.activeSyllabus;
 
     // console.log('getOrCreateData - user - ', user);
 
@@ -575,12 +618,12 @@ const LessonApp = () => {
         },
       };
 
-      const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
-      );
+      // const studentData: any = await API.graphql(
+      //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+      // );
 
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
       const filteredData = filterExtraPages(PAGES, studentDataRows);
       const extraPages = filteredData.extraPages;

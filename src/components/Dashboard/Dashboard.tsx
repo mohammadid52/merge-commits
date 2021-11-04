@@ -1,12 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-// import {BsFillInfoCircleFill} from 'react-icons/bs';
-import SignOutButton from '@components/Auth/SignOut';
+import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import useNotifications from '@customHooks/notifications';
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/solid';
-import {getImageFromS3Static} from '@utilities/services';
-import {getUserRoleString, stringToHslColor} from '@utilities/strings';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
 import Csv from 'components/Dashboard/Csv/Csv';
@@ -16,24 +11,23 @@ import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
 import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
 import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
+import EmojiFeedback from 'components/General/EmojiFeedback';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 import moment, {Moment} from 'moment';
-import React, {Fragment, lazy, Suspense, useContext, useEffect, useState} from 'react';
+import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {FiUser} from 'react-icons/fi';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-import EmojiFeedback from 'components/General/EmojiFeedback';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
-import {userInfo} from 'os';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
-const Community = lazy(() => import('components/Community/Community'));
+const CommunityForStudents = lazy(
+  () => import('components/Community/CommunityForStudents')
+);
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -857,15 +851,17 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
-              <Route
-                exact
-                path={`${match.url}/community`}
-                render={() => (
-                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
-                    <Community role={userData.role} />
-                  </ErrorBoundary>
-                )}
-              />
+              {
+                <Route
+                  // exact
+                  path={`${match.url}/community/:action`}
+                  render={() => (
+                    <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                      <Community role={userData.role} />
+                    </ErrorBoundary>
+                  )}
+                />
+              }
 
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||

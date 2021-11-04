@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 import Selector from '../../Atoms/Form/Selector';
 import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
@@ -121,7 +122,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getInstitutionBasicInfo, {
-          id: institutionId
+          id: institutionId,
         })
       );
       setSelectedInst({
@@ -129,9 +130,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         name: result?.data?.getInstitution.name,
         value: result?.data?.getInstitution.name,
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -153,7 +152,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
-        cr.curricula?.items && Array.isArray(cr.curricula?.items)
+        cr.curricula?.items &&
+        Array.isArray(cr.curricula?.items) &&
+        cr.curricula?.items.length > 0
           ? cr.curricula?.items[0].curriculum
           : null;
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
@@ -170,46 +171,46 @@ const Csv = ({institutionId}: ICsvProps) => {
     setClassRoomLoading(false);
   };
 
-  const onInstSelect = async (id: string, name: string, value: string) => {
-    setClassRoomLoading(true);
-    try {
-      let sInst = selectedInst;
-      let inst = {id, name, value};
-      setSelectedInst(inst);
-      if (!sInst || sInst.id !== inst.id) {
-        resetInstitution();
-        let instCRs: any = [];
-        // fetch inst classrooms.
-        let classrooms: any = await API.graphql(
-          graphqlOperation(customQueries.getInstClassRooms, {
-            id: inst.id,
-          })
-        );
-        classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
-        classrooms = classrooms.map((cr: any) => {
-          let curriculum =
-            cr.curricula?.items && Array.isArray(cr.curricula?.items)
-              ? cr.curricula?.items[0].curriculum
-              : null;
-          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-          return {
-            id: cr.id,
-            name: cr.name,
-            value: cr.name,
-            class: {...cr.class},
-            curriculum,
-          };
-        });
-        setClassRoomsList(classrooms);
-        setInstClassRooms(instCRs);
-        setClassRoomLoading(false);
-      } else {
-        // console.log('institution already selected');
-      }
-    } catch (err) {
-      console.log('inst select, fetch classrooms err', err);
-    }
-  };
+  // const onInstSelect = async (id: string, name: string, value: string) => {
+  //   setClassRoomLoading(true);
+  //   try {
+  //     let sInst = selectedInst;
+  //     let inst = {id, name, value};
+  //     setSelectedInst(inst);
+  //     if (!sInst || sInst.id !== inst.id) {
+  //       resetInstitution();
+  //       let instCRs: any = [];
+  //       // fetch inst classrooms.
+  //       let classrooms: any = await API.graphql(
+  //         graphqlOperation(customQueries.getInstClassRooms, {
+  //           id: inst.id,
+  //         })
+  //       );
+  //       classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+  //       classrooms = classrooms.map((cr: any) => {
+  //         let curriculum =
+  //           cr.curricula?.items && Array.isArray(cr.curricula?.items)
+  //             ? cr.curricula?.items[0].curriculum
+  //             : null;
+  //         instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+  //         return {
+  //           id: cr.id,
+  //           name: cr.name,
+  //           value: cr.name,
+  //           class: {...cr.class},
+  //           curriculum,
+  //         };
+  //       });
+  //       setClassRoomsList(classrooms);
+  //       setInstClassRooms(instCRs);
+  //       setClassRoomLoading(false);
+  //     } else {
+  //       // console.log('institution already selected');
+  //     }
+  //   } catch (err) {
+  //     console.log('inst select, fetch classrooms err', err);
+  //   }
+  // };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
@@ -244,7 +245,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       let units = curriculumUnits?.data.listCurriculumUnitss?.items || [];
       units = units.map((syl: any) => {
         let unitData = syl.unit;
-        return { id: unitData.id, name: unitData.name, value: unitData.name };
+        return {id: unitData.id, name: unitData.name, value: unitData.name};
       });
       // console.log('units', units)
       setUnits(units);
@@ -362,33 +363,35 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const listQuestions = async (lessonId: string) => {
-    try {      
+    try {
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
-      let questionsListdata = await getQuestionListFromLesson(lessonObject)
-      let questionList = questionsListdata.questionList
+      let questionsListdata = await getQuestionListFromLesson(lessonObject);
+      let questionList = questionsListdata.questionList;
       // console.log('questionList', questionList)
       let questions: any = [];
       if (questionList) {
         questionList.map((listItem: any) => {
           listItem.map((item: any) => {
-            questions.push({ question: {
-              id: item.questionID, 
-              question: item.questionString,
-              type: item.type,
-              options: item.options,
-            }})
-          })
-        })
+            questions.push({
+              question: {
+                id: item.questionID,
+                question: item.questionString,
+                type: item.type,
+                options: item.options,
+              },
+            });
+          });
+        });
       }
 
       setSurveyQuestions(questions);
       let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
-      await getStudentsSurveyQuestionsResponse(syllabusLes.syllabusLessonID, lessonId);
+      await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
       setIsCSVReady(true);
     } catch (err) {
       console.log('list questions error', err);
@@ -412,7 +415,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               },
               pagePart: any
             ) => {
-              if (pagePart.hasOwnProperty("partContent")) {
+              if (pagePart.hasOwnProperty('partContent')) {
                 const partInputs = pagePart.partContent.reduce(
                   (
                     partInputAcc: {
@@ -423,17 +426,14 @@ const Csv = ({institutionId}: ICsvProps) => {
                     //  CHECK WHICH INPUT TYPE  //
                     const isForm = /form/g.test(partContent.type);
                     const isOtherInput = /input/g.test(partContent.type);
-  
+
                     // -------- IF FORM ------- //
                     if (isForm) {
                       const formSubInputs = partContent.value.reduce(
-                        (
-                          subPartAcc: { pgInput: any[] },
-                          partContentSub: any
-                        ) => {
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
                           return {
                             ...subPartAcc,
-  
+
                             pgInput: [
                               ...subPartAcc.pgInput,
                               {
@@ -445,9 +445,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                             ],
                           };
                         },
-                        { pgInput: [] }
+                        {pgInput: []}
                       );
-  
+
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
@@ -472,9 +472,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                       return partInputAcc;
                     }
                   },
-                  { pageInputAcc: [] }
+                  {pageInputAcc: []}
                 );
-  
+
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
@@ -485,44 +485,132 @@ const Csv = ({institutionId}: ICsvProps) => {
                 return pageInputsAcc;
               }
             },
-            { pageInputAcc: [] }
+            {pageInputAcc: []}
           );
-  
+
           return {
-            questionList: [
-              ...inputs.questionList,
-              reducedPageInputs.pageInputAcc,
-            ],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
           };
         },
-  
-        { questionList: [] }
+
+        {questionList: []}
       );
-  
+
       // console.log(JSON.stringify(mappedPages));
       return mappedPages;
     }
   };
-  
 
-  const getStudentsSurveyQuestionsResponse = async (
-    syllabusLessonID: string,
-    lessonId: String
-  ) => {
-      let studsEmails = classStudents.map((stu: any) => stu.email);
-      let universalLessonStudentData: any = await API.graphql(
-        graphqlOperation(customQueries.getStudentSurveyResponse, {
-          filter: {
-            // ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-            lessonID: { eq: lessonId },
-            // syllabusLessonID: { eq: syllabusLessonID },
-            ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
-          }
+  // ##################################################################### //
+  // ############################# TEMP CODE ############################# //
+  // ##################################################################### //
+
+  const createNewSurveyDataRecord = async (surveyObj: any) => {
+    try {
+      let surveyData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalSurveyStudentData, {
+          input: {
+            ...surveyObj,
+          },
         })
       );
-      let studentsAnswersSurveyQuestionsData = universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
-      setSCQAnswers(studentsAnswersSurveyQuestionsData);
-      return;
+      console.log('surveyData', surveyData);
+    } catch (err) {
+      console.log('createNewSurveyDataRecord error', err);
+    }
+  };
+
+  const adaptStudentDataToSurveyData = async (studentData: any[]) => {
+    let studentDataAdapted = studentData.reduce(
+      (acc: {[key: string]: any}, studentDataObj: any) => {
+        let keyExists = acc[studentDataObj.studentID];
+
+        if (keyExists) {
+          return {
+            ...acc,
+            [studentDataObj.studentID]: {
+              ...acc[studentDataObj.studentID],
+              currentLocation: studentDataObj.currentLocation,
+              lessonProgress: studentDataObj.lessonProgress,
+              surveyData: [
+                ...acc[studentDataObj.studentID].surveyData,
+                ...studentDataObj.pageData,
+              ],
+            },
+          };
+        } else {
+          return {
+            ...acc,
+            [studentDataObj.studentID]: {
+              syllabusLessonID: studentDataObj.syllabusLessonID,
+              lessonID: studentDataObj.lessonID,
+              studentID: studentDataObj.studentID,
+              studentAuthID: studentDataObj.studentAuthID,
+              studentEmail: studentDataObj.studentEmail,
+              roomID: studentDataObj.roomID,
+              currentLocation: studentDataObj.currentLocation,
+              lessonProgress: studentDataObj.lessonProgress,
+              surveyData: [...studentDataObj.pageData],
+            },
+          };
+        }
+      },
+      {}
+    );
+    console.log('studentDataAdapted', studentDataAdapted);
+
+    if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
+      let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
+        async (studentID: string) => {
+          await createNewSurveyDataRecord(studentDataAdapted[studentID]);
+        }
+      );
+      Promise.all(loopOverAdaptedData).then(() => {
+        console.log('loopOverAdaptedData - done');
+      });
+    }
+  };
+
+  // ##################################################################### //
+  // ########################## END OF TEMP CODE ######################### //
+  // ##################################################################### //
+
+  const getStudentsSurveyQuestionsResponse = async (
+    lessonId: String,
+    nextToken?: string,
+    outArray?: any[]
+  ) => {
+    let studsEmails = classStudents.map((stu: any) => stu.email);
+    let universalLessonStudentData: any = await API.graphql(
+      graphqlOperation(customQueries.getStudentSurveyResponse, {
+        nextToken: nextToken,
+        filter: {
+          lessonID: {eq: lessonId},
+          ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
+        },
+      })
+    );
+    let studentsAnswersSurveyQuestionsData =
+      universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+    let theNextToken =
+      universalLessonStudentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+    /**
+     * combination of last fetch results
+     * && current fetch results
+     */
+    let combined = [...studentsAnswersSurveyQuestionsData, ...outArray];
+
+    // console.log('combined - - - -', combined);
+
+    if (theNextToken) {
+      getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
+    } else {
+      adaptStudentDataToSurveyData(combined);
+      // setSCQAnswers(combined);
+    }
+
+    return;
   };
 
   const getCSVReady = async () => {
@@ -532,17 +620,17 @@ const Csv = ({institutionId}: ICsvProps) => {
       let qids: any = [];
       let takenSurvey = 0;
       let notTakenSurvey = 0;
-      let surveyDates: any = []
+      let surveyDates: any = [];
       // creating an array of question Ids and creating a object to store all question options.
       let surveyQuestionOptions: any = {};
       let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         surveyQuestionOptions[ques.question.id] = ques.question.options;
-        return { label: `${ques.question.question}`, key: `${ques.question.id}` };
+        return {label: `${ques.question.question}`, key: `${ques.question.id}`};
       });
-  
+
       /* Enable this code if demographics questions */
-  
+
       let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         return {
@@ -550,52 +638,62 @@ const Csv = ({institutionId}: ICsvProps) => {
           key: `${ques.question.id}`,
         };
       });
-  
+
       setCSVHeaders([
-        { label: 'AuthId', key: 'authId' },
-        { label: 'Email', key: 'email' },
-        { label: 'First Name', key: 'firstName' },
-        { label: 'Last Name', key: 'lastName' },
-        { label: 'Institute', key: 'institute' },
-        { label: 'Curriculum', key: 'curriculum' },
-        { label: 'Unit', key: 'unit' },
-        { label: 'Classroom', key: 'classroom' },
-        { label: 'Survey name', key: 'surveyName' },
+        {label: 'AuthId', key: 'authId'},
+        {label: 'Email', key: 'email'},
+        {label: 'First Name', key: 'firstName'},
+        {label: 'Last Name', key: 'lastName'},
+        {label: 'Institute', key: 'institute'},
+        {label: 'Curriculum', key: 'curriculum'},
+        {label: 'Unit', key: 'unit'},
+        {label: 'Classroom', key: 'classroom'},
+        {label: 'Survey name', key: 'surveyName'},
         ...demographicsQuestionHeaders, // Enable this line for demographics question
         ...surveyQuestionHeaders,
       ]);
-  
+
       let data = students.map((stu: any) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
-  
+
         SCQAnswers.map((ans: any) => {
           if (ans.studentID === stu.authId) {
             hasTakenSurvey = true;
             ans.pageData.map((page: any) => {
               if (qids.indexOf(page.domID) >= 0) {
-
                 surveyAnswerDates.push(ans.updatedAt);
-                surveyDates.push(ans.updatedAt)
-                if (surveyQuestionOptions[page.domID] && Array.isArray(surveyQuestionOptions[page.domID]) && surveyQuestionOptions[page.domID].length) {
-                  if (Array.isArray(page.input) && page.input.length && page.input[0].length) {
-                    let selectedOption = surveyQuestionOptions[page.domID].filter((option: any) => {
-                      return option.id === page.input[0]
-                    });
+                surveyDates.push(ans.updatedAt);
+                if (
+                  surveyQuestionOptions[page.domID] &&
+                  Array.isArray(surveyQuestionOptions[page.domID]) &&
+                  surveyQuestionOptions[page.domID].length
+                ) {
+                  if (
+                    Array.isArray(page.input) &&
+                    page.input.length &&
+                    page.input[0].length
+                  ) {
+                    let selectedOption = surveyQuestionOptions[page.domID].filter(
+                      (option: any) => {
+                        return option.id === page.input[0];
+                      }
+                    );
                     if (Array.isArray(selectedOption) && selectedOption.length) {
                       studentAnswers[page.domID] = selectedOption[0].text;
                     } else {
-                      studentAnswers[page.domID] = '';  
+                      studentAnswers[page.domID] = '';
                     }
                   } else {
                     studentAnswers[page.domID] = '';
                   }
                 } else {
-                  studentAnswers[page.domID] = Array.isArray(page.input) && page.input.length ? page.input[0] : ''; 
+                  studentAnswers[page.domID] =
+                    Array.isArray(page.input) && page.input.length ? page.input[0] : '';
                 }
               }
-            })
+            });
             // ans.responseObject.map((resp: any) => {
             //   if (qids.indexOf(resp.qid) >= 0) {
             //     surveyAnswerDates.push(ans.updatedAt);
@@ -608,7 +706,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             // });
           }
         });
-  
+
         /* Enable this code if demographics questions */
         DCQAnswers.map((ans: any) => {
           if (ans.person.id === stu.id) {
@@ -622,19 +720,18 @@ const Csv = ({institutionId}: ICsvProps) => {
             });
           }
         });
-  
+
         surveyAnswerDates = surveyAnswerDates.sort(
           // @ts-ignore
           (a: any, b: any) => new Date(b) - new Date(a)
         );
-  
+
         if (hasTakenSurvey) {
-          takenSurvey++
-        }
-        else {
+          takenSurvey++;
+        } else {
           notTakenSurvey++;
         }
-  
+
         return {
           ...stu,
           institute: selectedInst.name,
@@ -662,17 +759,15 @@ const Csv = ({institutionId}: ICsvProps) => {
       );
       setCSVData(orderBy(data, ['firstName'], ['asc']));
       setStatistics({
-        surveyFirst: (surveyDates[surveyDates.length - 1] &&
-          new Date(surveyDates[surveyDates.length - 1]).toLocaleString(
-            'en-US'
-          )) ||
-        '-',
-        surveyLast: (surveyDates[0] &&
-          new Date(surveyDates[0]).toLocaleString('en-US')) ||
-        '-',
+        surveyFirst:
+          (surveyDates[surveyDates.length - 1] &&
+            new Date(surveyDates[surveyDates.length - 1]).toLocaleString('en-US')) ||
+          '-',
+        surveyLast:
+          (surveyDates[0] && new Date(surveyDates[0]).toLocaleString('en-US')) || '-',
         takenSurvey,
-        notTakenSurvey
-      })
+        notTakenSurvey,
+      });
       setIsCSVDownloadReady(true);
       setCsvGettingReady(false);
     } catch (err) {

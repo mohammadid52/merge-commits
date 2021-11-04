@@ -18,7 +18,7 @@ export const standardTheme = {
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
   banner: '',
   section:
-    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
+    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center ',
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',

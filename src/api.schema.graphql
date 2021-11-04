@@ -958,6 +958,21 @@ type UniversalLessonStudentData
   exerciseData: [ExerciseData]
 }
 
+type UniversalSurveyStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  roomID: String
+  currentLocation: String
+  lessonProgress: String
+  surveyData: [partInput]
+  }
 type ExerciseData {
   id: String!
   entryData: [JournalEntryData]
@@ -1003,11 +1018,13 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus @model @key(fields: ["id"]) {
+type UniversalSyllabus @model @key(fields: ["id"]) 
+{
   id: ID!
   name: String!
   type: String
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   description: String
   methodology: String
   policies: String
@@ -1105,6 +1122,7 @@ type File {
 type Community @model @key(fields: ["id"]) {
   id: ID!
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   cardName: String
   cardType: String
   cardDate: AWSDate
@@ -1118,10 +1136,14 @@ type Community @model @key(fields: ["id"]) {
   additionalInfo: String
   personAuthID: String!
   personEmail: String!
+  isEditedCard: Boolean 
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
-  institution: Institution @connection(fields: ["institutionID"])
+ 
+  likes:[String]
+  chatCount:Int
 }
+
 
 type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"]) {
   id: ID!
@@ -1130,6 +1152,7 @@ type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"])
   personEmail: String!
   msg: String
   createdAt: AWSDateTime
+  isEditedChat: Boolean
 }
 
 type Subscription {

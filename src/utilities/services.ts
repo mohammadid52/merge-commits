@@ -52,6 +52,22 @@ export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
   return '';
 };
 
+export const deleteImageFromS3 = (key: string) => {
+  // Remove image from bucket
+  return new Promise((resolve, reject) => {
+    Storage.remove(key)
+      .then((result) => {
+        console.log('deleted: ', key);
+        resolve(result);
+      })
+      .catch((err) => {
+        console.error(err.message);
+
+        reject(err);
+      });
+  });
+};
+
 export const getImageFromS3Static = (key: string, isPrivate?: boolean): string => {
   if (key) {
     // Needs to fetch full URL to support image editing without refresh.

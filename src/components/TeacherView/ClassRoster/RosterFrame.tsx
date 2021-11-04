@@ -13,9 +13,18 @@ interface IRosterFrame {
   fullscreen?: boolean;
   theme?: any;
   clientKey?: string;
+  rightView?: {view: string; option?: string};
+  setRightView?: any;
 }
 
-const RosterFrame = ({children, fullscreen, theme, clientKey}: IRosterFrame) => {
+const RosterFrame = ({
+  children,
+  fullscreen,
+  theme,
+  clientKey,
+  rightView,
+  setRightView,
+}: IRosterFrame) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [miniOut, setMiniOut] = useState<boolean>(false);
   // ~~~~~~~~~ LIVE VIEW ANIMATION ~~~~~~~~~ //
@@ -72,7 +81,13 @@ const RosterFrame = ({children, fullscreen, theme, clientKey}: IRosterFrame) => 
         style={{display: breakpoint === 'xl' || breakpoint === '2xl' ? 'block' : 'none'}}>
         {/* <LessonInfoTitleBar /> */}
 
-        <LessonDetails hidden={breakpoint !== 'xl' && breakpoint !== '2xl'} />
+        <LessonDetails
+          hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}
+          theme={theme}
+          themeColor={themeColor}
+          rightView={rightView}
+          setRightView={setRightView}
+        />
         <div className={`h-full w-full flex flex-col justify-between items-center z-100`}>
           <div className={`h-full`}>{children}</div>
         </div>
@@ -110,7 +125,7 @@ const RosterFrame = ({children, fullscreen, theme, clientKey}: IRosterFrame) => 
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={theme.textColor[themeColor]}
         />
-        <LessonDetails />
+        <LessonDetails theme={theme} themeColor={themeColor} />
         <div className={`h-full w-full flex flex-col justify-between items-center`}>
           <div className={`h-full`}>{children}</div>
         </div>
