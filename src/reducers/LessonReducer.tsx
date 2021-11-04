@@ -73,6 +73,18 @@ export type LessonActions =
       };
     }
   | {
+      type: 'LOAD_SURVEY_DATA';
+      payload: {
+        dataIdReferences: {
+          id: string;
+          pageIdx: number;
+          lessonPageID: string;
+          update: boolean;
+        }[];
+        surveyData?: [StudentPageInput[]];
+      };
+    }
+  | {
       type: 'LOAD_STUDENT_SUBSCRIPTION_DATA';
       payload: {
         stDataIdx: number;
@@ -102,6 +114,10 @@ export type LessonActions =
   | {
       type: 'UPDATE_STUDENT_DATA';
       payload: {pageIdx: number; data: StudentPageInput};
+    }
+  | {
+      type: 'UPDATE_SURVEY_DATA';
+      payload: {data: StudentPageInput};
     }
   | {
       type: 'COMPLETE_STUDENT_UPDATE';
@@ -200,6 +216,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const requiredInputs = action.payload.requiredInputs;
       const studentData = action.payload.studentData;
       const exerciseData = action.payload.exerciseData;
+      console.log('SET_INITIAL_STUDENT_DATA - ', action.payload);
       return {
         ...state,
         requiredInputs: requiredInputs,
@@ -227,6 +244,15 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         exerciseData: action.payload.filteredExerciseData
           ? action.payload.filteredExerciseData
           : state.exerciseData,
+      };
+    case 'LOAD_SURVEY_DATA':
+      return {
+        ...state,
+        loaded: true,
+        universalStudentDataID: action.payload.dataIdReferences,
+        studentData: action.payload.surveyData
+          ? action.payload.surveyData
+          : state.studentData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
@@ -345,6 +371,21 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: mappedStudentData,
         exerciseData: mappedExerciseData,
       };
+    case 'UPDATE_SURVEY_DATA':
+      const surveyDomID = action.payload.data.domID;
+      const newSurveyInput = action.payload.data.input;
+
+      const updatedSurveyStudentData = state.studentData.map((obj: any) =>
+        obj.domID === surveyDomID ? {...obj, input: newSurveyInput} : obj
+      );
+
+      return {
+        ...state,
+        updated: true,
+        universalStudentDataID: [{...state.universalStudentDataID[0], update: true}],
+        studentData: updatedSurveyStudentData,
+      };
+
     case 'COMPLETE_STUDENT_UPDATE':
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
