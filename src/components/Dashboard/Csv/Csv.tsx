@@ -3,6 +3,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
+import * as queries from '@graphql/queries';
 import Selector from '../../Atoms/Form/Selector';
 import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import {CSVLink} from 'react-csv';
@@ -505,71 +506,71 @@ const Csv = ({institutionId}: ICsvProps) => {
   // ############################# TEMP CODE ############################# //
   // ##################################################################### //
 
-  const createNewSurveyDataRecord = async (surveyObj: any) => {
-    try {
-      let surveyData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalSurveyStudentData, {
-          input: {
-            ...surveyObj,
-          },
-        })
-      );
-      console.log('surveyData', surveyData);
-    } catch (err) {
-      console.log('createNewSurveyDataRecord error', err);
-    }
-  };
+  // const createNewSurveyDataRecord = async (surveyObj: any) => {
+  //   try {
+  //     let surveyData: any = await API.graphql(
+  //       graphqlOperation(mutations.createUniversalSurveyStudentData, {
+  //         input: {
+  //           ...surveyObj,
+  //         },
+  //       })
+  //     );
+  //     console.log('surveyData', surveyData);
+  //   } catch (err) {
+  //     console.log('createNewSurveyDataRecord error', err);
+  //   }
+  // };
 
-  const adaptStudentDataToSurveyData = async (studentData: any[]) => {
-    let studentDataAdapted = studentData.reduce(
-      (acc: {[key: string]: any}, studentDataObj: any) => {
-        let keyExists = acc[studentDataObj.studentID];
+  // const adaptStudentDataToSurveyData = async (studentData: any[]) => {
+  //   let studentDataAdapted = studentData.reduce(
+  //     (acc: {[key: string]: any}, studentDataObj: any) => {
+  //       let keyExists = acc[studentDataObj.studentID];
 
-        if (keyExists) {
-          return {
-            ...acc,
-            [studentDataObj.studentID]: {
-              ...acc[studentDataObj.studentID],
-              currentLocation: studentDataObj.currentLocation,
-              lessonProgress: studentDataObj.lessonProgress,
-              surveyData: [
-                ...acc[studentDataObj.studentID].surveyData,
-                ...studentDataObj.pageData,
-              ],
-            },
-          };
-        } else {
-          return {
-            ...acc,
-            [studentDataObj.studentID]: {
-              syllabusLessonID: studentDataObj.syllabusLessonID,
-              lessonID: studentDataObj.lessonID,
-              studentID: studentDataObj.studentID,
-              studentAuthID: studentDataObj.studentAuthID,
-              studentEmail: studentDataObj.studentEmail,
-              roomID: studentDataObj.roomID,
-              currentLocation: studentDataObj.currentLocation,
-              lessonProgress: studentDataObj.lessonProgress,
-              surveyData: [...studentDataObj.pageData],
-            },
-          };
-        }
-      },
-      {}
-    );
-    console.log('studentDataAdapted', studentDataAdapted);
+  //       if (keyExists) {
+  //         return {
+  //           ...acc,
+  //           [studentDataObj.studentID]: {
+  //             ...acc[studentDataObj.studentID],
+  //             currentLocation: studentDataObj.currentLocation,
+  //             lessonProgress: studentDataObj.lessonProgress,
+  //             surveyData: [
+  //               ...acc[studentDataObj.studentID].surveyData,
+  //               ...studentDataObj.pageData,
+  //             ],
+  //           },
+  //         };
+  //       } else {
+  //         return {
+  //           ...acc,
+  //           [studentDataObj.studentID]: {
+  //             syllabusLessonID: studentDataObj.syllabusLessonID,
+  //             lessonID: studentDataObj.lessonID,
+  //             studentID: studentDataObj.studentID,
+  //             studentAuthID: studentDataObj.studentAuthID,
+  //             studentEmail: studentDataObj.studentEmail,
+  //             roomID: studentDataObj.roomID,
+  //             currentLocation: studentDataObj.currentLocation,
+  //             lessonProgress: studentDataObj.lessonProgress,
+  //             surveyData: [...studentDataObj.pageData],
+  //           },
+  //         };
+  //       }
+  //     },
+  //     {}
+  //   );
+  //   console.log('studentDataAdapted', studentDataAdapted);
 
-    if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
-      let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
-        async (studentID: string) => {
-          await createNewSurveyDataRecord(studentDataAdapted[studentID]);
-        }
-      );
-      Promise.all(loopOverAdaptedData).then(() => {
-        console.log('loopOverAdaptedData - done');
-      });
-    }
-  };
+  //   if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
+  //     let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
+  //       async (studentID: string) => {
+  //         await createNewSurveyDataRecord(studentDataAdapted[studentID]);
+  //       }
+  //     );
+  //     Promise.all(loopOverAdaptedData).then(() => {
+  //       console.log('loopOverAdaptedData - done');
+  //     });
+  //   }
+  // };
 
   // ##################################################################### //
   // ########################## END OF TEMP CODE ######################### //
@@ -581,8 +582,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     outArray?: any[]
   ) => {
     let studsEmails = classStudents.map((stu: any) => stu.email);
-    let universalLessonStudentData: any = await API.graphql(
-      graphqlOperation(customQueries.getStudentSurveyResponse, {
+    let universalSurveyStudentData: any = await API.graphql(
+      graphqlOperation(queries.listUniversalSurveyStudentDatas, {
         nextToken: nextToken,
         filter: {
           lessonID: {eq: lessonId},
@@ -591,9 +592,9 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let studentsAnswersSurveyQuestionsData =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas.items;
     let theNextToken =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas?.nextToken;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas?.nextToken;
 
     /**
      * combination of last fetch results
@@ -606,8 +607,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (theNextToken) {
       getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
     } else {
-      adaptStudentDataToSurveyData(combined);
-      // setSCQAnswers(combined);
+      console.log('fetched from universalSurveyData');
+      setSCQAnswers(combined);
     }
 
     return;
@@ -661,7 +662,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         SCQAnswers.map((ans: any) => {
           if (ans.studentID === stu.authId) {
             hasTakenSurvey = true;
-            ans.pageData.map((page: any) => {
+            ans.surveyData.map((page: any) => {
               if (qids.indexOf(page.domID) >= 0) {
                 surveyAnswerDates.push(ans.updatedAt);
                 surveyDates.push(ans.updatedAt);
