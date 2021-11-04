@@ -24,9 +24,8 @@ import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {partInput} from 'API';
-import {ILessonSurveyApp} from './Lesson';
 
-const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
+const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);

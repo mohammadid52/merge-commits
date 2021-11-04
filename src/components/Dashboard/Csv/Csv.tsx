@@ -532,7 +532,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (theNextToken) {
       getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
     } else {
-      // console.log('fetch done - ', combined);
+      console.log('fetched from universalSurveyData');
       setSCQAnswers(combined);
     }
 

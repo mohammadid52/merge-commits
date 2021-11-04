@@ -45,21 +45,6 @@ const ProgressBar = ({
 
       let thisPageRequired = requiredInputs && requiredInputs[pageIdx]; // ['a','b','id_123']
 
-      // IF SURVEY = false
-      // if (!isSurvey && inputResponseData && inputResponseData.length > 0) {
-      //   let areAnyEmpty = inputResponseData.filter((input: StudentPageInput) => {
-      //     if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-      //       return input;
-      //     }
-      //   });
-      //   if (areAnyEmpty.length > 0) {
-      //     return false;
-      //   } else {
-      //     return true;
-      //   }
-      //   // IF SURVEY
-      // } else
-
       if (inputResponseData && inputResponseData.length > 0) {
         let areAnyEmpty2 =
           thisPageRequired && thisPageRequired.length > 0
