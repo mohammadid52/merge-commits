@@ -865,7 +865,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       lessonProgress: updatedLocationObj.lessonProgress,
     };
     try {
-      const newPersonLocationMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
       );
       setLocalStorageData('person_location', locationUpdateProps);
@@ -876,7 +876,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
-      const deletePersonLocationMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,

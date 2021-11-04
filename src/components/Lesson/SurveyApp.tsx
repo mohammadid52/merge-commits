@@ -43,6 +43,7 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const getRoomData = getLocalStorageData('room_info');
   const urlParams: any = useParams();
   const {lessonID} = urlParams;
+  const isOnDemand = user.onDemand;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -207,7 +208,7 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         {required: [], initialized: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
+      console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
@@ -241,15 +242,16 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const filterExtraQuestions = (initialDataFlattened: any[], surveyData: any[]) => {
     //@ts-ignore
     const extraQuestionsArray = initialDataFlattened.reduce(
-      (extraQuestionArray: any[], question: partInput) => {
+      (extraQuestions: any[], question: partInput) => {
         const findInStudentDataRecords = surveyData.find(
           //@ts-ignore
           (data: partInput) => data.domID === question.domID
         );
+
         if (findInStudentDataRecords === undefined) {
-          return [...extraQuestionArray, question];
+          return [...extraQuestions, question];
         } else {
-          return extraQuestionsArray;
+          return extraQuestions;
         }
       },
       []
@@ -410,6 +412,159 @@ const SurveyApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       getOrCreateSurveyData();
     }
   }, [lessonState.studentData]);
+
+  // ##################################################################### //
+  // ####################### MANAGE PERSON LOCATION ###################### //
+  // ##################################################################### //
+
+  const [getted, setGetted] = useState(false);
+  const [cleared, setCleared] = useState(false);
+  const [created, setCreated] = useState(false);
+
+  const getLocationData = getLocalStorageData('person_location');
+
+  const [personLocationObj, setPersonLocationObj] = useState<any>({
+    id: '',
+    personAuthID: '',
+    personEmail: '',
+    lessonID: '',
+    syllabusLessonID: '',
+    roomID: '',
+    currentLocation: '',
+    lessonProgress: '',
+  });
+
+  // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
+
+  useEffect(() => {
+    if (!isOnDemand && personLocationObj.id === '') {
+      initializeLocation();
+    }
+  }, [lessonState.lessonData.id]);
+
+  // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
+
+  useEffect(() => {
+    if (!isOnDemand && created && lessonState.currentPage >= 0) {
+      const pageChangeLocation = {
+        ...getLocationData,
+        currentLocation: lessonState.currentPage,
+        lessonProgress: lessonState.lessonProgress,
+      };
+      setPersonLocationObj(pageChangeLocation);
+      updatePersonLocation(pageChangeLocation);
+      setLocalStorageData('person_location', pageChangeLocation);
+      //@ts-ignore
+      topLessonRef?.current?.scrollIntoView();
+    }
+  }, [created, lessonState.currentPage]);
+
+  const initializeLocation = async () => {
+    if (!getted) {
+      const getLocation = await getPersonLocation();
+
+      if (getLocation === undefined || getLocation === null) {
+        await createPersonLocation();
+      } else {
+        if (getLocation.lessonID === lessonID) {
+          await updatePersonLocation(getLocation);
+        } else {
+          await leaveRoomLocation(user.authId, user.email);
+          await createPersonLocation();
+        }
+      }
+    }
+  };
+
+  // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
+
+  const getPersonLocation = async () => {
+    try {
+      const getUserLocation: any = await API.graphql(
+        graphqlOperation(queries.getPersonLocation, {
+          personEmail: user.email,
+          personAuthID: user.authId,
+        })
+      );
+      const response = getUserLocation.data.getPersonLocation;
+
+      return response;
+    } catch (e) {
+      // console.error('createPersonLocation - ', e);
+    } finally {
+      setGetted(true);
+    }
+  };
+
+  const createPersonLocation = async () => {
+    const {lessonID} = urlParams;
+
+    const newLocation = {
+      personAuthID: user?.authId,
+      personEmail: user?.email,
+      syllabusLessonID: getRoomData.activeSyllabus,
+      lessonID: lessonID,
+      roomID: getRoomData.id,
+      currentLocation: '0',
+      lessonProgress: '0',
+    };
+    try {
+      const newUserLocation: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+      );
+      const response = newUserLocation.data.createPersonLocation;
+      const newLocationObj = {
+        ...newLocation,
+        id: response.id,
+      };
+      setPersonLocationObj(newLocationObj);
+      setLocalStorageData('person_location', newLocationObj);
+    } catch (e) {
+      // console.error('createPersonLocation - ', e);
+    } finally {
+      setCreated(true);
+    }
+  };
+
+  // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
+
+  const updatePersonLocation = async (updatedLocationObj: any) => {
+    const locationUpdateProps = {
+      id: updatedLocationObj.id,
+      personAuthID: updatedLocationObj.personAuthID,
+      personEmail: updatedLocationObj.personEmail,
+      lessonID: updatedLocationObj.lessonID,
+      syllabusLessonID: updatedLocationObj.syllabusLessonID,
+      roomID: updatedLocationObj.roomID,
+      currentLocation: updatedLocationObj.currentLocation,
+      lessonProgress: updatedLocationObj.lessonProgress,
+    };
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
+      );
+      setLocalStorageData('person_location', locationUpdateProps);
+    } catch (e) {
+      console.error('updatePersonLocation - ', e);
+    }
+  };
+
+  const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.deletePersonLocation, {
+          input: {
+            personEmail: inputEmail,
+            personAuthID: inputAuthId,
+          },
+        })
+      );
+    } catch (e) {
+      console.error('error deleting location record - ', e);
+    } finally {
+      setCleared(true);
+    }
+  };
 
   // ##################################################################### //
   // ######################### NAVIGATION CONTROL ######################## //
