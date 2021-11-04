@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../../customGraphql/customQueries';
+import * as queries from '@graphql/queries';
 import Selector from '../../Atoms/Form/Selector';
 import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import {CSVLink} from 'react-csv';
@@ -151,7 +152,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
-        cr.curricula?.items && Array.isArray(cr.curricula?.items)
+        cr.curricula?.items &&
+        Array.isArray(cr.curricula?.items) &&
+        cr.curricula?.items.length > 0
           ? cr.curricula?.items[0].curriculum
           : null;
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
@@ -168,46 +171,46 @@ const Csv = ({institutionId}: ICsvProps) => {
     setClassRoomLoading(false);
   };
 
-  const onInstSelect = async (id: string, name: string, value: string) => {
-    setClassRoomLoading(true);
-    try {
-      let sInst = selectedInst;
-      let inst = {id, name, value};
-      setSelectedInst(inst);
-      if (!sInst || sInst.id !== inst.id) {
-        resetInstitution();
-        let instCRs: any = [];
-        // fetch inst classrooms.
-        let classrooms: any = await API.graphql(
-          graphqlOperation(customQueries.getInstClassRooms, {
-            id: inst.id,
-          })
-        );
-        classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
-        classrooms = classrooms.map((cr: any) => {
-          let curriculum =
-            cr.curricula?.items && Array.isArray(cr.curricula?.items)
-              ? cr.curricula?.items[0].curriculum
-              : null;
-          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-          return {
-            id: cr.id,
-            name: cr.name,
-            value: cr.name,
-            class: {...cr.class},
-            curriculum,
-          };
-        });
-        setClassRoomsList(classrooms);
-        setInstClassRooms(instCRs);
-        setClassRoomLoading(false);
-      } else {
-        // console.log('institution already selected');
-      }
-    } catch (err) {
-      console.log('inst select, fetch classrooms err', err);
-    }
-  };
+  // const onInstSelect = async (id: string, name: string, value: string) => {
+  //   setClassRoomLoading(true);
+  //   try {
+  //     let sInst = selectedInst;
+  //     let inst = {id, name, value};
+  //     setSelectedInst(inst);
+  //     if (!sInst || sInst.id !== inst.id) {
+  //       resetInstitution();
+  //       let instCRs: any = [];
+  //       // fetch inst classrooms.
+  //       let classrooms: any = await API.graphql(
+  //         graphqlOperation(customQueries.getInstClassRooms, {
+  //           id: inst.id,
+  //         })
+  //       );
+  //       classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+  //       classrooms = classrooms.map((cr: any) => {
+  //         let curriculum =
+  //           cr.curricula?.items && Array.isArray(cr.curricula?.items)
+  //             ? cr.curricula?.items[0].curriculum
+  //             : null;
+  //         instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+  //         return {
+  //           id: cr.id,
+  //           name: cr.name,
+  //           value: cr.name,
+  //           class: {...cr.class},
+  //           curriculum,
+  //         };
+  //       });
+  //       setClassRoomsList(classrooms);
+  //       setInstClassRooms(instCRs);
+  //       setClassRoomLoading(false);
+  //     } else {
+  //       // console.log('institution already selected');
+  //     }
+  //   } catch (err) {
+  //     console.log('inst select, fetch classrooms err', err);
+  //   }
+  // };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
@@ -504,8 +507,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     outArray?: any[]
   ) => {
     let studsEmails = classStudents.map((stu: any) => stu.email);
-    let universalLessonStudentData: any = await API.graphql(
-      graphqlOperation(customQueries.getStudentSurveyResponse, {
+    let universalSurveyStudentData: any = await API.graphql(
+      graphqlOperation(queries.listUniversalSurveyStudentDatas, {
         nextToken: nextToken,
         filter: {
           lessonID: {eq: lessonId},
@@ -514,9 +517,9 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let studentsAnswersSurveyQuestionsData =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas.items;
     let theNextToken =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas?.nextToken;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas?.nextToken;
 
     /**
      * combination of last fetch results
@@ -529,6 +532,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (theNextToken) {
       getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
     } else {
+      // console.log('fetch done - ', combined);
       setSCQAnswers(combined);
     }
 
@@ -583,7 +587,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         SCQAnswers.map((ans: any) => {
           if (ans.studentID === stu.authId) {
             hasTakenSurvey = true;
-            ans.pageData.map((page: any) => {
+            ans.surveyData.map((page: any) => {
               if (qids.indexOf(page.domID) >= 0) {
                 surveyAnswerDates.push(ans.updatedAt);
                 surveyDates.push(ans.updatedAt);

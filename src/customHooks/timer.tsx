@@ -95,14 +95,12 @@ const useStudentTimer = () => {
 
       Promise.resolve(viewedUpdate).then((_: void) => {
         clearUpdateCycle();
-        console.log('viewedUpdate - ', 'done');
       });
     } else {
       const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
 
       Promise.resolve(standardUpdate).then((_: void) => {
         clearUpdateCycle();
-        console.log('standardUpdate - ', 'done');
       });
     }
   }, [lessonState.saveCount]);
@@ -146,9 +144,8 @@ const useStudentTimer = () => {
             await API.graphql(
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
-            console.log('updateStudentLessonData - timer - ', data);
           } catch (e) {
-            console.error('update universal student data - ', encodeURI);
+            console.error('update universal student data - ', e);
           } finally {
             if (idx === lessonState.universalStudentDataID.length - 1) {
               return Promise.resolve();
@@ -171,9 +168,8 @@ const useStudentTimer = () => {
       await API.graphql(
         graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
       );
-      console.log('updateSurveyData - timer - ', data);
     } catch (e) {
-      console.error('update universal student data - ', encodeURI);
+      console.error('updateSurveyData - ', e);
     } finally {
       return Promise.resolve();
     }
