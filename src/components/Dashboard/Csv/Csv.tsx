@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 import Selector from '../../Atoms/Form/Selector';
 import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
@@ -151,7 +152,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
-        cr.curricula?.items && Array.isArray(cr.curricula?.items)
+        cr.curricula?.items &&
+        Array.isArray(cr.curricula?.items) &&
+        cr.curricula?.items.length > 0
           ? cr.curricula?.items[0].curriculum
           : null;
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
@@ -168,46 +171,46 @@ const Csv = ({institutionId}: ICsvProps) => {
     setClassRoomLoading(false);
   };
 
-  const onInstSelect = async (id: string, name: string, value: string) => {
-    setClassRoomLoading(true);
-    try {
-      let sInst = selectedInst;
-      let inst = {id, name, value};
-      setSelectedInst(inst);
-      if (!sInst || sInst.id !== inst.id) {
-        resetInstitution();
-        let instCRs: any = [];
-        // fetch inst classrooms.
-        let classrooms: any = await API.graphql(
-          graphqlOperation(customQueries.getInstClassRooms, {
-            id: inst.id,
-          })
-        );
-        classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
-        classrooms = classrooms.map((cr: any) => {
-          let curriculum =
-            cr.curricula?.items && Array.isArray(cr.curricula?.items)
-              ? cr.curricula?.items[0].curriculum
-              : null;
-          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-          return {
-            id: cr.id,
-            name: cr.name,
-            value: cr.name,
-            class: {...cr.class},
-            curriculum,
-          };
-        });
-        setClassRoomsList(classrooms);
-        setInstClassRooms(instCRs);
-        setClassRoomLoading(false);
-      } else {
-        // console.log('institution already selected');
-      }
-    } catch (err) {
-      console.log('inst select, fetch classrooms err', err);
-    }
-  };
+  // const onInstSelect = async (id: string, name: string, value: string) => {
+  //   setClassRoomLoading(true);
+  //   try {
+  //     let sInst = selectedInst;
+  //     let inst = {id, name, value};
+  //     setSelectedInst(inst);
+  //     if (!sInst || sInst.id !== inst.id) {
+  //       resetInstitution();
+  //       let instCRs: any = [];
+  //       // fetch inst classrooms.
+  //       let classrooms: any = await API.graphql(
+  //         graphqlOperation(customQueries.getInstClassRooms, {
+  //           id: inst.id,
+  //         })
+  //       );
+  //       classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+  //       classrooms = classrooms.map((cr: any) => {
+  //         let curriculum =
+  //           cr.curricula?.items && Array.isArray(cr.curricula?.items)
+  //             ? cr.curricula?.items[0].curriculum
+  //             : null;
+  //         instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+  //         return {
+  //           id: cr.id,
+  //           name: cr.name,
+  //           value: cr.name,
+  //           class: {...cr.class},
+  //           curriculum,
+  //         };
+  //       });
+  //       setClassRoomsList(classrooms);
+  //       setInstClassRooms(instCRs);
+  //       setClassRoomLoading(false);
+  //     } else {
+  //       // console.log('institution already selected');
+  //     }
+  //   } catch (err) {
+  //     console.log('inst select, fetch classrooms err', err);
+  //   }
+  // };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
@@ -498,6 +501,80 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  // ##################################################################### //
+  // ############################# TEMP CODE ############################# //
+  // ##################################################################### //
+
+  const createNewSurveyDataRecord = async (surveyObj: any) => {
+    try {
+      let surveyData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalSurveyStudentData, {
+          input: {
+            ...surveyObj,
+          },
+        })
+      );
+      console.log('surveyData', surveyData);
+    } catch (err) {
+      console.log('createNewSurveyDataRecord error', err);
+    }
+  };
+
+  const adaptStudentDataToSurveyData = async (studentData: any[]) => {
+    let studentDataAdapted = studentData.reduce(
+      (acc: {[key: string]: any}, studentDataObj: any) => {
+        let keyExists = acc[studentDataObj.studentID];
+
+        if (keyExists) {
+          return {
+            ...acc,
+            [studentDataObj.studentID]: {
+              ...acc[studentDataObj.studentID],
+              currentLocation: studentDataObj.currentLocation,
+              lessonProgress: studentDataObj.lessonProgress,
+              surveyData: [
+                ...acc[studentDataObj.studentID].surveyData,
+                ...studentDataObj.pageData,
+              ],
+            },
+          };
+        } else {
+          return {
+            ...acc,
+            [studentDataObj.studentID]: {
+              syllabusLessonID: studentDataObj.syllabusLessonID,
+              lessonID: studentDataObj.lessonID,
+              studentID: studentDataObj.studentID,
+              studentAuthID: studentDataObj.studentAuthID,
+              studentEmail: studentDataObj.studentEmail,
+              roomID: studentDataObj.roomID,
+              currentLocation: studentDataObj.currentLocation,
+              lessonProgress: studentDataObj.lessonProgress,
+              surveyData: [...studentDataObj.pageData],
+            },
+          };
+        }
+      },
+      {}
+    );
+    console.log('studentDataAdapted', studentDataAdapted);
+
+    if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
+      let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
+        async (studentID: string) => {
+          await createNewSurveyDataRecord(studentDataAdapted[studentID]);
+        }
+      );
+      Promise.all(loopOverAdaptedData).then(() => {
+        console.log('loopOverAdaptedData - done');
+      });
+    }
+  };
+
+  // ##################################################################### //
+  // ########################## END OF TEMP CODE ######################### //
+  // ##################################################################### //
+
   const getStudentsSurveyQuestionsResponse = async (
     lessonId: String,
     nextToken?: string,
@@ -529,7 +606,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (theNextToken) {
       getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
     } else {
-      setSCQAnswers(combined);
+      adaptStudentDataToSurveyData(combined);
+      // setSCQAnswers(combined);
     }
 
     return;

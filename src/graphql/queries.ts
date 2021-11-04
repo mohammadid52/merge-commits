@@ -4474,6 +4474,25 @@ export const getAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -5093,6 +5112,69 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
     }
   }
 `;
+export const getUniversalSurveyStudentData = /* GraphQL */ `
+  query GetUniversalSurveyStudentData($id: ID!) {
+    getUniversalSurveyStudentData(id: $id) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalSurveyStudentDatas = /* GraphQL */ `
+  query ListUniversalSurveyStudentDatas(
+    $id: ID
+    $filter: ModelUniversalSurveyStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSurveyStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUniversalJournalData = /* GraphQL */ `
   query GetUniversalJournalData($id: ID!) {
     getUniversalJournalData(id: $id) {
@@ -5163,6 +5245,43 @@ export const getUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -5217,6 +5336,25 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -5248,6 +5386,25 @@ export const getCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -5972,6 +6129,43 @@ export const getCommunity = /* GraphQL */ `
     getCommunity(id: $id) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -6032,43 +6226,6 @@ export const getCommunity = /* GraphQL */ `
         }
         nextToken
       }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
       likes
       chatCount
       createdAt
@@ -6094,6 +6251,25 @@ export const listCommunitys = /* GraphQL */ `
       items {
         id
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         cardName
         cardType
         cardDate
@@ -6140,25 +6316,6 @@ export const listCommunitys = /* GraphQL */ `
         }
         chat {
           nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
         }
         likes
         chatCount
