@@ -41,7 +41,7 @@ const AttendanceList = ({
     <div className="rounded shadow-5">
       <div className="flex flex-row bg-gray-100 flex-shrink-0">
         <div
-          className="w-2/10 text-center  px-2 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+          className="w-2/10 text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
           onClick={() =>
             handleOrderBy(
               'roomName',
@@ -55,7 +55,7 @@ const AttendanceList = ({
           {withOrderBy('ClassName', 'roomName')}
         </div>
         <div
-          className="w-2/10 text-center px-2 py-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
+          className="w-2/10 text-left p-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
           onClick={() =>
             handleOrderBy(
               'curriculumName',
@@ -69,7 +69,7 @@ const AttendanceList = ({
           {withOrderBy('Curriculum', 'curriculumName')}
         </div>
         <div
-          className="w-3/10 text-center px-2 py-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
+          className="w-3/10 text-left p-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
           onClick={() =>
             handleOrderBy(
               'lessonName',
@@ -84,12 +84,12 @@ const AttendanceList = ({
         </div>
         <div
           style={{width: '15%'}}
-          className="text-center  px-2 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          className="text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
           Date
         </div>
         <div
           style={{width: '15%'}}
-          className="text-center  px-2 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          className="text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
           Time
         </div>
       </div>
@@ -117,23 +117,23 @@ const AttendanceList = ({
               <div
                 key={`${item.class?.name}_${idx}`}
                 className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'} flex flex-row`}>
-                <div className="w-2/10 text-center px-2 py-3 overflow-hidden text-sm font-bold text-gray-600">
+                <div className="w-2/10 text-left p-3 overflow-hidden text-sm font-bold text-gray-600">
                   {item.roomName || '-'}
                 </div>
-                <div className="w-2/10 text-center px-2 py-3 overflow-hidden text-sm text-gray-500">
+                <div className="w-2/10 text-left p-3 overflow-hidden text-sm text-gray-500">
                   {item.curriculumName || '-'}
                 </div>
-                <div className="w-3/10 text-center px-2 py-3 overflow-hidden text-sm text-gray-500">
+                <div className="w-3/10 text-left p-3 overflow-hidden text-sm text-gray-500">
                   {item.lessonName || '-'}
                 </div>
                 <div
                   style={{width: '15%'}}
-                  className="text-center px-2 py-3 overflow-hidden text-sm text-gray-500">
+                  className="text-left p-3 overflow-hidden text-sm text-gray-500">
                   {new Date(item.date).toLocaleDateString()}
                 </div>
                 <div
                   style={{width: '15%'}}
-                  className="text-center px-2 py-3 overflow-hidden text-sm text-gray-500">
+                  className="text-left p-3 overflow-hidden text-sm text-gray-500">
                   {moment(item?.time, 'HH:mm:ss').format('hh:mm A')}
                 </div>
               </div>
@@ -149,7 +149,7 @@ const AttendanceList = ({
         <div className="relative flex flex-shrink-0 justify-center w-full">
           <Buttons
             label={loading ? 'loading' : 'Load more'}
-            btnClass="text-center my-2"
+            btnClass="text-left my-2"
             disabled={loading}
             onClick={onLoadMore}
           />

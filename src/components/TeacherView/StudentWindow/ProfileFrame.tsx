@@ -199,6 +199,19 @@ const ProfileFrame = ({
     stateUser.role === 'FLW' ||
     stateUser.role === 'ADM' ||
     stateUser.role === 'SUP';
+  
+  const getTitle = (preferredName: string, editing: boolean) => {
+    let part1 = preferredName ? `Profile for ${user.preferredName}` : 'Profile';
+    let part2 = !editing ? (
+      <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+    ) : null;
+    return (
+      <div className="w-full flex flex-row items-center justify-between">
+        {part1}
+        {part2}
+      </div>
+    );
+  };
 
   // ##################################################################### //
   // ########################### ANIMATION REF ########################### //
@@ -224,7 +237,7 @@ const ProfileFrame = ({
             className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
 
           <Modal
-            customTitle={user ? `Profile for ${user.preferredName}` : 'Attendance'}
+            customTitle={user ? getTitle(user.preferredName, isEditing) : ''}
             showHeader={true}
             showHeaderBorder={false}
             showFooter={false}
