@@ -14,14 +14,25 @@ const useStudentDataValue = () => {
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState?.currentPage;
 
-  // ~~~~~~~~~~~~~ DATA SOURCE ~~~~~~~~~~~~~ //
-  const originalStudentData = lessonState.studentData[lessonState.currentPage];
-  const sharedData = lessonState.sharedData;
-
   // ~~~~~~~~~~~~~~ USER ROLES ~~~~~~~~~~~~~ //
   const isStudent = user.role === 'ST';
   const isTeacher = user.role === 'TR' || user.role === 'FLW';
   const isInLesson = useInLessonCheck();
+
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
+  // ~~~~~~~~~~~~~ DATA SOURCE ~~~~~~~~~~~~~ //
+  /**********************************************
+   * STUDENT'S LESSON INPUT DATA IS STORED LIKE *
+   *    [[{}], [{}]] AKA.AN ARRAY OF ARRAYS     *
+   * STUDENT'S SURVEY INPUT DATA IS STORED LIKE *
+   *        [{},{},{}] AKA. MUCH FLATTER        *
+   **********************************************/
+  const originalStudentData = isSurvey
+    ? lessonState.studentData
+    : lessonState.studentData[lessonState.currentPage];
+  const sharedData = lessonState.sharedData;
 
   // ~~~~~~~~~~~~ SHARING STATUS ~~~~~~~~~~~ //
   const isOtherStudent = lessonState.displayData[0]?.studentAuthID !== user.authId;
@@ -73,16 +84,28 @@ const useStudentDataValue = () => {
   // ##################################################################### //
   const setStudentDataValue = (domID: string, input: string[]) => {
     if (isStudent && isInLesson) {
-      lessonDispatch({
-        type: 'UPDATE_STUDENT_DATA',
-        payload: {
-          pageIdx: lessonState.currentPage,
-          data: {
-            domID: domID,
-            input: input,
+      if (!isSurvey) {
+        lessonDispatch({
+          type: 'UPDATE_STUDENT_DATA',
+          payload: {
+            pageIdx: lessonState.currentPage,
+            data: {
+              domID: domID,
+              input: input,
+            },
           },
-        },
-      });
+        });
+      } else {
+        lessonDispatch({
+          type: 'UPDATE_SURVEY_DATA',
+          payload: {
+            data: {
+              domID: domID,
+              input: input,
+            },
+          },
+        });
+      }
     }
   };
 

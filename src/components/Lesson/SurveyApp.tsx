@@ -1,8 +1,8 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -23,15 +23,14 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {ILessonSurveyApp} from './Lesson';
+import {partInput} from 'API';
 
-const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
+const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
-  const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
 
@@ -57,91 +56,18 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const topLessonRef = useRef();
 
-  // ##################################################################### //
-  // ######################### SUBSCRIPTION SETUP ######################## //
-  // ##################################################################### //
-
-  let subscription: any;
-  const [subscriptionData, setSubscriptionData] = useState<any>();
-
-  // ----------- 1 ---------- //
-
-  // ----------- 2 ---------- //
-  //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
-
-  const subscribeToRoom = () => {
-    const roomSubscription = API.graphql(
-      graphqlOperation(customSubscriptions.onChangeRoom, {id: getRoomData.id})
-      // @ts-ignore
-    ).subscribe({
-      next: (roomData: any) => {
-        const updatedRoomData = roomData.value.data.onChangeRoom;
-        setSubscriptionData(updatedRoomData);
-      },
-    });
-
-    return roomSubscription;
-  };
-
-  // ----------- 3 ---------- //
-
-  const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
-    setLocalStorageData('room_info', {
-      ...getRoomData,
-      ClosedPages: subscriptionData.ClosedPages,
-    });
-    lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
-  };
-
-  // ----------- 4 ---------- //
-  /**
-   * Once step 2 updates subscriptionData,
-   * this useEffect will invoke the function
-   * at step 3
-   *
-   */
-
-  useEffect(() => {
-    if (subscriptionData) {
-      updateOnIncomingSubscriptionData(subscriptionData);
-    }
-  }, [subscriptionData]);
-
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const leaveUnload = () => {
-      const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
-      Promise.resolve(leaveRoom).then((_: void) => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-        lessonDispatch({type: 'CLEANUP'});
-      });
+      lessonDispatch({type: 'CLEANUP'});
     };
-
-    console.log('lesson loaded....');
-
+    console.log('survey loaded....');
     return () => {
       leaveUnload();
     };
   }, []);
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
-
-  // ~~~~~~~~~~~~~~~ GET ROOM ~~~~~~~~~~~~~~ //
-
-  const getRoomSetup = async (roomID: string) => {
-    try {
-      const initialRoomSetup = await API.graphql(
-        graphqlOperation(customQueries.getRoomSetup, {id: roomID})
-      );
-      //@ts-ignore
-      const response = initialRoomSetup.data.getRoom;
-      setSubscriptionData(response);
-    } catch (e) {
-      console.error('error gettingRoom - ', e);
-    }
-  };
 
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
@@ -157,17 +83,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
         history.push(`${match.url}/${0}`);
       }
-
-      // Initialize closed pages based on room-configuration
-
-      if (
-        !isOnDemand &&
-        lessonState.lessonData.lessonPlan &&
-        lessonState.lessonData.lessonPlan.length > 0
-      ) {
-        getRoomSetup(getRoomData.id);
-        subscription = subscribeToRoom();
-      }
     }
   }, [lessonState.lessonData.id]);
 
@@ -178,14 +93,13 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
 
-  const initializeStudentData = async () => {
+  const initializeSurveyData = async () => {
     if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.reduce(
         (
           inputs: {
             required: any[];
             initialized: any[];
-            exercises: any[];
           },
           page: UniversalLessonPage
         ) => {
@@ -195,7 +109,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
               pageInputsAcc: {
                 requiredIdAcc: string[];
                 pageInputAcc: StudentPageInput[];
-                pageExerciseAcc: any[];
               },
               pagePart: PagePart
             ) => {
@@ -205,14 +118,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                     partInputAcc: {
                       requiredIdAcc: string[];
                       pageInputAcc: any[];
-                      pageExerciseAcc: any[];
                     },
                     partContent: PartContent
                   ) => {
                     //  CHECK WHICH INPUT TYPE  //
                     const isForm = /form/g.test(partContent.type);
                     const isOtherInput = /input/g.test(partContent.type);
-                    const isExercise = /exercise/g.test(partContent.type);
 
                     // -------- IF FORM ------- //
                     if (isForm) {
@@ -238,11 +149,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                         {reqId: [], pgInput: []}
                       );
 
-                      const exerciseObj = {
-                        id: partContent.id,
-                        entryData: formSubInputs.pgInput,
-                      };
-
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
@@ -252,9 +158,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                           ...partInputAcc.pageInputAcc,
                           ...formSubInputs.pgInput,
                         ],
-                        pageExerciseAcc: isExercise
-                          ? [...partInputAcc.pageExerciseAcc, exerciseObj]
-                          : partInputAcc.pageExerciseAcc,
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -270,13 +173,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                             input: [''],
                           },
                         ],
-                        pageExerciseAcc: partInputAcc.pageExerciseAcc,
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
+                  {requiredIdAcc: [], pageInputAcc: []}
                 );
 
                 return {
@@ -288,36 +190,30 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
                     ...pageInputsAcc.pageInputAcc,
                     ...partInputs.pageInputAcc,
                   ],
-                  pageExerciseAcc: [
-                    ...pageInputsAcc.pageExerciseAcc,
-                    ...partInputs.pageExerciseAcc,
-                  ],
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
+            {requiredIdAcc: [], pageInputAcc: []}
           );
 
           return {
             required: [...inputs.required, reducedPageInputs.requiredIdAcc],
-            initialized: [...inputs.initialized, reducedPageInputs.pageInputAcc],
-            exercises: [...inputs.exercises, reducedPageInputs.pageExerciseAcc],
+            initialized: [...inputs.initialized, ...reducedPageInputs.pageInputAcc],
           };
         },
 
-        {required: [], initialized: [], exercises: []}
+        {required: [], initialized: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
+      console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
           requiredInputs: mappedPages.required,
           studentData: mappedPages.initialized,
-          exerciseData: mappedPages.exercises,
         },
       });
       setStudentDataInitialized(true);
@@ -329,190 +225,79 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ##################################################################### //
 
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
-  const studentDataIdArray = (studentDataArray: any[]) => {
-    const idArr = studentDataArray
-      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
-        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-          (lessonPlanPage: UniversalLessonPage) =>
-            lessonPlanPage.id === studentDataIdObj.lessonPageID
-        );
-        const idObj = {
-          id: studentDataIdObj.id,
-          pageIdx: indexOfPage,
-          lessonPageID: studentDataIdObj.lessonPageID,
-          update: false,
-        };
-        return [...acc, idObj];
-      }, [])
-      .sort((dataID1: any, dataID2: any) => {
-        if (dataID1.pageIdx < dataID2.pageIdx) {
-          return -1;
-        }
-        if (dataID1.pageIdx > dataID2.pageIdx) {
-          return 1;
-        }
-      });
-    return idArr;
-  };
-
-  // ~ FILTER/MERGE PAGEDATA & EXERCISEDATA  //
-  // ------- FILTERING ------ //
-  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
-    return studentDataIdArray.reduce(
-      (
-        acc: {pageData: StudentPageInput[]; exerciseData: StudentExerciseData[]},
-        dataIdObj: any
-      ) => {
-        const findPageData = studentDataArray.find(
-          (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
-        )?.pageData;
-        const findExerciseData = studentDataArray.find(
-          (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
-        )?.exerciseData;
-
-        return {
-          pageData: Array.isArray(findPageData)
-            ? [...acc.pageData, findPageData]
-            : [...acc.pageData, []],
-          exerciseData: Array.isArray(findExerciseData)
-            ? [...acc.exerciseData, findExerciseData]
-            : [...acc.exerciseData, []],
-        };
-      },
+  const surveyDataId = (surveyDataRowObj: any) => {
+    return [
       {
-        pageData: [],
-        exerciseData: [],
-      }
-    );
-  };
-
-  // -------- MERGING ------- //
-  const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
-    const differenceData = studentDataArray.reduce(
-      //@ts-ignore
-      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
-        const notYetSavedData = initStudentDataArray[pageIdx].reduce(
-          (diffPageData: any[], initPageData: any) => {
-            const foundInLoaded = loadedInput.find(
-              (inputObj: any) => inputObj.domID === initPageData.domID
-            );
-            if (foundInLoaded) {
-              return diffPageData;
-            } else {
-              return [...diffPageData, initPageData];
-            }
-          },
-          []
-        );
-
-        return [...diffArray, [...loadedInput, ...notYetSavedData]];
+        id: surveyDataRowObj.id,
+        pageIdx: 0,
+        lessonPageID: '',
+        update: false,
       },
-      []
-    );
-
-    return differenceData;
+    ];
   };
 
-  // ~~~ CHECK AD MERGE NEW EXERCISE DATA ~~ //
-  const mergedExerciseData = (exerciseDataArray: any[], initExerciseDataArray: any[]) => {
-    const differenceData = exerciseDataArray.reduce(
-      //@ts-ignore
-      (diffArray: any[], loadedInput: StudentExerciseData[] | [], pageIdx: number) => {
-        const notYetSavedData = initExerciseDataArray[pageIdx].reduce(
-          (diffExerciseData: any[], initExerciseData: any) => {
-            const foundInLoaded = loadedInput.find(
-              (inputObj: any) => inputObj.id === initExerciseData.id
-            );
-            if (foundInLoaded) {
-              return diffExerciseData;
-            } else {
-              return [...diffExerciseData, initExerciseData];
-            }
-          },
-          []
-        );
+  // ~~~~~~~~ FILTER EXTRA QUESTIONS ~~~~~~~ //
 
-        return [...diffArray, [...loadedInput, ...notYetSavedData]];
-      },
-      []
-    );
-
-    return differenceData;
-  };
-
-  // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
-  const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
-    const extraPagesArray = lessonPlanPages.reduce(
-      (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
-        const findInStudentDataRecords = studentDataRecords.find(
+  const filterExtraQuestions = (initialDataFlattened: any[], surveyData: any[]) => {
+    //@ts-ignore
+    const extraQuestionsArray = initialDataFlattened.reduce(
+      (extraQuestions: any[], question: partInput) => {
+        const findInStudentDataRecords = surveyData.find(
           //@ts-ignore
-          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+          (data: partInput) => data.domID === question.domID
         );
+
         if (findInStudentDataRecords === undefined) {
-          return [...extraPageArray, lessonPage];
+          return [...extraQuestions, question];
         } else {
-          return extraPageArray;
+          return extraQuestions;
         }
       },
       []
     );
-    const currentLessonRecords = studentDataRecords.reduce(
-      (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
-        const isStudentDataFromLesson = lessonPlanPages.find(
-          //@ts-ignore
-          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
-        );
-        if (isStudentDataFromLesson !== undefined) {
-          return [...currentLessonRecords, studentData];
-        } else {
-          return currentLessonRecords;
-        }
-      },
-      []
-    );
-    return {
-      extraPages: extraPagesArray,
-      currentRecords: currentLessonRecords,
-    };
+
+    if (extraQuestionsArray) {
+      return extraQuestionsArray;
+    } else {
+      return [];
+    }
   };
 
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
-  const loopCreateStudentData = async (
-    lessonPages: any[],
+
+  const createSurveyData = async (
+    initialDataFlattened: any[],
     lessonID: string,
     authId: string,
     email: string
   ) => {
-    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
-      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
-      );
+    try {
       const input = {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
-        lessonPageID: lessonPage.id,
         studentID: authId,
         studentAuthID: authId,
         studentEmail: email,
         roomID: getRoomData.id,
-        currentLocation: indexOfPage,
+        currentLocation: '0',
         lessonProgress: '0',
-        pageData: lessonState.studentData[indexOfPage],
-        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage],
+        surveyData: initialDataFlattened,
       };
 
-      const newStudentData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalLessonStudentData, {
+      const newSurveyData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalSurveyStudentData, {
           input,
         })
       );
-      const returnedData = newStudentData.data.createUniversalLessonStudentData;
+
+      const returnedData = newSurveyData.data.createUniversalSurveyStudentData;
+      console.log('createSurveyData', returnedData);
+
       return returnedData;
-    });
-    return createdRecords;
+    } catch (e) {
+      console.error('error creating survey data - ', e);
+      return {};
+    }
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
@@ -521,34 +306,27 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
-  const loopFetchStudentData = async (
+  const fetchSurveyDataRow = async (
     filterObj: any,
     nextToken: string,
     outArray: any[]
   ) => {
     if (filterObj) {
       try {
-        let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+        let surveyData: any = await API.graphql(
+          graphqlOperation(queries.listUniversalSurveyStudentDatas, {
             ...filterObj,
             nextToken: nextToken,
           })
         );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+        let surveyDataRow = surveyData.data.listUniversalSurveyStudentDatas.items[0];
+        let theNextToken = surveyData.data.listUniversalSurveyStudentDatas?.nextToken;
 
-        /**
-         * combination of last fetch results
-         * && current fetch results
-         */
-        let combined = [...outArray, ...studentDataRows];
-
-        if (theNextToken) {
+        if (surveyDataRow && theNextToken) {
           console.log('nextToken fetching more - ', nextToken);
-          loopFetchStudentData(filterObj, theNextToken, combined);
+          fetchSurveyDataRow(filterObj, theNextToken, []);
         } else {
-          // console.log('no more - ', combined);
-          return combined;
+          return surveyDataRow;
         }
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
@@ -559,11 +337,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
-  const getOrCreateStudentData = async () => {
-    // const syllabusID = getRoomData.activeSyllabus;
-
-    // console.log('getOrCreateData - user - ', user);
-
+  const getOrCreateSurveyData = async () => {
+    // TRY TRY TRY
     try {
       const listFilter = {
         filter: {
@@ -574,88 +349,37 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         },
       };
 
-      // const studentData: any = await API.graphql(
-      //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
-      // );
-
       // existing student rows
-      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+      const surveyDataResponses = surveyDataRow?.surveyData
+        ? surveyDataRow.surveyData
+        : []; // flat 1D - array
+      const extraQuestions = filterExtraQuestions(
+        lessonState?.studentData,
+        surveyDataResponses
+      ); //  flat 1D - array
 
-      const filteredData = filterExtraPages(PAGES, studentDataRows);
-      const extraPages = filteredData.extraPages;
-      const currentStudentData = filteredData.currentRecords;
-
-      /**
-       * NEW RECORD CREATION LOGIC:
-       *   - if no student records for this lesson, make all new records per page
-       *   - if student records exist, but an additional page has been added, create records for these pages
-       */
-      if (studentDataRows?.length === 0) {
-        const createNewRecords = await loopCreateStudentData(
-          PAGES,
+      if (surveyDataRow === undefined) {
+        const createNewRecords = await createSurveyData(
+          lessonState?.studentData,
           lessonID,
           user.authId,
           user.email
         );
-        const newRecords = await Promise.all(createNewRecords);
         lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
+          type: 'LOAD_SURVEY_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray(newRecords),
+            dataIdReferences: surveyDataId(createNewRecords),
           },
         });
-      } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
-        const createExtraRecords = await loopCreateStudentData(
-          extraPages,
-          lessonID,
-          user.authId,
-          user.email
-        );
-        const extraRecords = await Promise.all(createExtraRecords);
-        const combinedRecords = [...extraRecords, ...currentStudentData];
-        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
-        const filteredData = filterStudentData(
-          combinedStudentDataIdArray,
-          combinedRecords
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
+      } else {
+        const finalData = [...surveyDataResponses, ...extraQuestions];
+        // console.log('loaded finaldata - ', finalData);
         lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
+          type: 'LOAD_SURVEY_DATA',
           payload: {
-            dataIdReferences: combinedStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
-          },
-        });
-      } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-        const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-        const filteredData = filterStudentData(
-          existStudentDataIdArray,
-          currentStudentData
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
+            dataIdReferences: surveyDataId(surveyDataRow),
+            surveyData: finalData,
           },
         });
       }
@@ -665,78 +389,28 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   // ~~ INITIALIZE STUDENT DATA STRUCTURE ~~ //
+
   useEffect(() => {
     if (
       !lessonState.loaded &&
       lessonState.lessonData.lessonPlan &&
       lessonState.lessonData.lessonPlan.length > 0
     ) {
-      initializeStudentData();
+      initializeSurveyData();
     }
   }, [lessonState.lessonData.lessonPlan]);
 
   // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
+
   useEffect(() => {
     if (
       !lessonState.loaded &&
       lessonState.studentData &&
-      lessonState.studentData?.length === PAGES?.length
+      lessonState.studentData?.length > 0
     ) {
-      getOrCreateStudentData();
+      getOrCreateSurveyData();
     }
   }, [lessonState.studentData]);
-
-  // ##################################################################### //
-  // ############### GET OTHER STUDENT SHARED DATA RECORDS ############### //
-  // ##################################################################### //
-
-  const getSharedStudentData = async (inputAuthID: string, inputPageID: string) => {
-    try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: inputAuthID},
-          lessonID: {eq: lessonID},
-          lessonPageID: {eq: inputPageID},
-          roomID: {eq: getRoomData.id},
-        },
-      };
-
-      const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
-      );
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-
-      if (studentDataRows.length > 0) {
-        lessonDispatch({
-          type: 'LOAD_STUDENT_SHARE_DATA',
-          payload: [...studentDataRows[0].pageData],
-        });
-      }
-    } catch (e) {
-      console.error('getSharedStudentData - ', e);
-    }
-  };
-
-  const clearShareData = () => {
-    lessonDispatch({type: 'UNLOAD_STUDENT_SHARE_DATA'});
-  };
-
-  useEffect(() => {
-    const sharedAuthID = displayData[0].studentAuthID;
-    const sharedPageID = displayData[0].lessonPageID;
-    const isOtherStudent = sharedAuthID !== user.authId;
-    if (
-      displayData[0].studentAuthID &&
-      displayData[0].studentAuthID !== '' &&
-      isOtherStudent
-    ) {
-      getSharedStudentData(sharedAuthID, sharedPageID);
-    } else {
-      if (lessonState.sharedData && lessonState.sharedData.length > 0) {
-        clearShareData();
-      }
-    }
-  }, [displayData]);
 
   // ##################################################################### //
   // ####################### MANAGE PERSON LOCATION ###################### //
@@ -969,4 +643,4 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   );
 };
 
-export default LessonApp;
+export default SurveyApp;

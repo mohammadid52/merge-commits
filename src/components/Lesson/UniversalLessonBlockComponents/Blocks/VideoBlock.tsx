@@ -8,15 +8,16 @@ interface VideoBlockProps extends RowWrapperProps {
 }
 
 export const VideoBlock = (props: VideoBlockProps) => {
-  const {id, dataIdAttribute, value} = props;
-  const {value: url, height = '560', width = '315'} = value;
+  const {id, dataIdAttribute} = props;
+
+  const {value: url, height = '560', width = '315'} = props.value[0];
 
   return (
     <div
       id={id}
       data-id={dataIdAttribute}
       className={`px-4 py-5 sm:p-6 flex justify-center`}>
-      <ReactPlayer url={url} width={`${width}px`} height={`${height}px`} />
+      {url && <ReactPlayer url={url} width={`${width}px`} height={`${height}px`} />}
     </div>
   );
 };
