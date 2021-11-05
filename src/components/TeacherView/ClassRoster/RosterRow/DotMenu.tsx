@@ -19,13 +19,10 @@ const DotMenu = ({menuItems}: IDotMenuProps) => {
 
   const textClass = `text-sm text-gray-600 hover:${theme.textColor[themeColor]} transition-all duration-50`;
 
-  // <dl className="grid grid-cols-1 gap-y-3 border-0 border-gray-400 border-opacity-20 rounded">
-  //   <div className="col-span-1">
-  //     <dt onClick={() => {}} className={`${textClass} cursor-pointer`}>
-  //       Profile
-  //     </dt>
-  //   </div>
-  // </dl>;
+  const handleItemClick = (fn: Function, fn2: Function) => {
+    fn();
+    fn2();
+  };
 
   return (
     <Popover
@@ -48,7 +45,7 @@ const DotMenu = ({menuItems}: IDotMenuProps) => {
               className="grid grid-cols-1 gap-y-3 border-0 border-gray-400 border-opacity-20 rounded">
               <div className="col-span-1">
                 <dt
-                  onClick={() => item.action()}
+                  onClick={() => handleItemClick(item.action, () => setShowMenu(false))}
                   className={`${textClass} cursor-pointer`}>
                   {item.label}
                 </dt>

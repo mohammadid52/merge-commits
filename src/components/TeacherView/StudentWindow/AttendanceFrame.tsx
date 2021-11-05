@@ -1,16 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
-import React, {forwardRef, useContext, useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import {IconContext} from 'react-icons';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import Buttons from '../../../Atoms/Buttons';
-import Loader from '../../../Atoms/Loader';
+import {getAsset} from 'assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import AttendanceList from './AttendanceFrame/AttendanceList';
+import Buttons from '@components/Atoms/Buttons';
+import Modal from '@components/Atoms/Modal';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -19,23 +22,46 @@ const pad = (num: any) => {
 const limit: number = 10;
 
 interface IAttendanceProps {
-  id: string;
-  goToClassroom?: () => void;
   selectedRoomId?: string;
   role?: string;
-  isModal?: boolean;
+  visible?: boolean;
+  rightView?: {view: string; option?: string};
+  setRightView?: any;
+  studentID?: string;
+  roster?: any[];
 }
 
 const Attendance = ({
-  id,
-  goToClassroom,
   selectedRoomId,
   role,
-  isModal,
+  visible,
+  rightView,
+  setRightView,
+  studentID,
+  roster,
 }: IAttendanceProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  // ##################################################################### //
+  // ############################ LOADING USER ########################### //
+  // ##################################################################### //
+  // ~~~~~~~~~~ LOADING AND STATUS ~~~~~~~~~ //
+  const [user, setUser] = useState<any>();
+  useEffect(() => {
+    if (visible && studentID && roster) {
+      const findPersonInRoster = roster.find(
+        (person: any) => person.person.id === studentID
+      );
+      if (findPersonInRoster?.person) {
+        setUser(findPersonInRoster.person);
+      }
+    }
+  }, [visible, studentID, roster]);
+
+  // ##################################################################### //
+  // ######################### LOADING ATTENDACE ######################### //
+  // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
   const [date, setDate] = useState(null);
@@ -49,10 +75,10 @@ const Attendance = ({
   const [nextToken, setNextToken] = useState<string>('');
 
   useEffect(() => {
-    if (id) {
+    if (studentID) {
       fetchAttendance();
     }
-  }, [id]);
+  }, [studentID]);
 
   const fetchAttendance = async (
     date?: Date | null,
@@ -61,7 +87,8 @@ const Attendance = ({
     try {
       setLoading(true);
       let payload: any = {
-        studentID: id,
+        studentID: studentID,
+        roomID: selectedRoomId,
         sortDirection: 'DESC',
         date,
         limit,
@@ -121,9 +148,9 @@ const Attendance = ({
 
   const withOrderBy = (columnName: string, fieldName: string) => {
     return (
-      <span className="flex items-center">
+      <span className="w-auto mx-auto">
         <span className="w-auto">{columnName}</span>
-        <span className="inline-flex items-center ml-1 cursor-pointer">
+        <span className="w-auto inline-flex items-center ml-1 cursor-pointer">
           <span
             className={`w-auto ${
               fieldName === sortConfig.fieldName && sortConfig.order === 'desc'
@@ -165,124 +192,46 @@ const Attendance = ({
     </div>
   ));
 
+  // ##################################################################### //
+  // ########################### ANIMATION REF ########################### //
+  // ##################################################################### //
+  const frameRef = useRef();
+
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+  const {breakpoint} = useTailwindBreakpoint();
+
   return (
-    <div className="relative h-full flex">
-      <div
-        className={`flex flex-col ${
-          role === 'ST' ? 'justify-between' : 'justify-end'
-        } items-center mb-4`}></div>
-      <div className="relative min-w-full flex-1 overflow-y-auto max-h-7.5/10 ">
-        <table className="divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                onClick={() =>
-                  handleOrderBy(
-                    'roomName',
-                    sortConfig.fieldName === 'roomName'
-                      ? sortConfig.order === 'desc'
-                        ? 'asc'
-                        : 'desc'
-                      : 'desc'
-                  )
-                }>
-                {withOrderBy('ClassName', 'roomName')}
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                onClick={() =>
-                  handleOrderBy(
-                    'curriculumName',
-                    sortConfig.fieldName === 'curriculumName'
-                      ? sortConfig.order === 'desc'
-                        ? 'asc'
-                        : 'desc'
-                      : 'desc'
-                  )
-                }>
-                {withOrderBy('Curriculum', 'curriculumName')}
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                onClick={() =>
-                  handleOrderBy(
-                    'lessonName',
-                    sortConfig.fieldName === 'lessonName'
-                      ? sortConfig.order === 'desc'
-                        ? 'asc'
-                        : 'desc'
-                      : 'desc'
-                  )
-                }>
-                {withOrderBy('Lesson', 'lessonName')}
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Time
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading && !attendanceList.length ? (
-              <tr>
-                <td colSpan={5} className="py-4">
-                  <Loader />
-                </td>
-              </tr>
-            ) : attendanceList.length ? (
-              attendanceList.map((item: any, idx: number) => {
-                return (
-                  <tr
-                    key={`${item.class?.name}_${idx}`}
-                    className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                    <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-bold text-gray-600">
-                      {item.roomName || '-'}
-                    </td>
-                    <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                      {item.curriculumName || '-'}
-                    </td>
-                    <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                      {item.lessonName || '-'}
-                    </td>
-                    <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                      {new Date(item.date).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                      {moment(item?.time, 'HH:mm:ss').format('hh:mm A')}
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan={5} className="py-4 text-dark-gray text-center">
-                  No records found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      {nextToken ? (
-        <div className="relative flex flex-shrink-0 justify-center w-full">
-          <Buttons
-            label={loading ? 'loading' : 'Load more'}
-            btnClass="text-center my-2"
-            disabled={loading}
-            onClick={onLoadMore}
+    <div
+      ref={frameRef}
+      style={{
+        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+      }}
+      className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
+      {visible && (
+        <Modal
+          customTitle={user ? `Attendance for ${user.preferredName}` : 'Attendance'}
+          showHeader={true}
+          showHeaderBorder={false}
+          showFooter={false}
+          scrollHidden={true}
+          closeAction={() => setRightView({view: 'lesson', option: ''})}
+          position={'absolute'}>
+          <AttendanceList
+            loading={loading}
+            attendanceList={attendanceList}
+            nextToken={nextToken}
+            role={role}
+            onLoadMore={onLoadMore}
+            handleDateChange={handleDateChange}
+            handleOrderBy={handleOrderBy}
+            withOrderBy={withOrderBy}
+            sortConfig={sortConfig}
           />
-        </div>
-      ) : null}
+        </Modal>
+      )}
+      ;
     </div>
   );
 };
