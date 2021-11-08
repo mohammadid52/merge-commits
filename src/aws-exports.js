@@ -30,7 +30,26 @@ const awsmobile = {
     },
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
-    ]
+    ],
+    "aws_appsync_graphqlEndpoint": "https://xcvfgyl75nhcnaaay35kmqvuka.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_region": "us-east-1",
+    "aws_appsync_authenticationType": "API_KEY",
+    "aws_appsync_apiKey": "da2-7j4nhhaq7nbgrbt42zn6spmx5m",
+    "aws_user_files_s3_bucket": "iconoclaststorage83444-uatenv",
+    "aws_user_files_s3_bucket_region": "us-east-1",
+    "geo": {
+        "amazon_location_service": {
+            "region": "us-east-1",
+            "maps": {
+                "items": {
+                    "lmsMap-uatenv": {
+                        "style": "VectorEsriLightGrayCanvas"
+                    }
+                },
+                "default": "lmsMap-uatenv"
+            }
+        }
+    }
 };
 
 
