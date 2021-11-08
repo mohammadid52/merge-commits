@@ -16,6 +16,8 @@ module.exports = {
       'hover:bg-yellow-100',
       'hover:bg-blue-100',
       'hover: text-indigo-600',
+      'tracking-wider',
+      'whitespace-nowrap',
     ],
   },
   corePlugins: {

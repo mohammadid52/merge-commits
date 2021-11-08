@@ -1,7 +1,9 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import * as mutations from '../../../graphql/mutations';
 import * as customQueries from '../../../customGraphql/customQueries';
+import * as queries from '@graphql/queries';
 import Selector from '../../Atoms/Form/Selector';
 import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import {CSVLink} from 'react-csv';
@@ -151,8 +153,10 @@ const Csv = ({institutionId}: ICsvProps) => {
     classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
-        cr.curricula?.items && Array.isArray(cr.curricula?.items)
-          ? cr.curricula?.items[0]?.curriculum
+        cr.curricula?.items &&
+        Array.isArray(cr.curricula?.items) &&
+        cr.curricula?.items.length > 0
+          ? cr.curricula?.items[0].curriculum
           : null;
     instCRs.push({id: cr.id, name: cr.name, value: cr.name});
       return {
@@ -395,6 +399,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  // ##################################################################### //
+  // ########## LOOP OVER LESSONPLAN AND GENERATE QUESTION LIST ########## //
+  // ##################################################################### //
   const getQuestionListFromLesson = async (lessonObj: any) => {
     if (lessonObj?.lessonPlan) {
       const mappedPages = lessonObj?.lessonPlan.reduce(
@@ -498,14 +505,88 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  // ##################################################################### //
+  // ############################# TEMP CODE ############################# //
+  // ##################################################################### //
+
+  // const createNewSurveyDataRecord = async (surveyObj: any) => {
+  //   try {
+  //     let surveyData: any = await API.graphql(
+  //       graphqlOperation(mutations.createUniversalSurveyStudentData, {
+  //         input: {
+  //           ...surveyObj,
+  //         },
+  //       })
+  //     );
+  //     console.log('surveyData', surveyData);
+  //   } catch (err) {
+  //     console.log('createNewSurveyDataRecord error', err);
+  //   }
+  // };
+
+  // const adaptStudentDataToSurveyData = async (studentData: any[]) => {
+  //   let studentDataAdapted = studentData.reduce(
+  //     (acc: {[key: string]: any}, studentDataObj: any) => {
+  //       let keyExists = acc[studentDataObj.studentID];
+
+  //       if (keyExists) {
+  //         return {
+  //           ...acc,
+  //           [studentDataObj.studentID]: {
+  //             ...acc[studentDataObj.studentID],
+  //             currentLocation: studentDataObj.currentLocation,
+  //             lessonProgress: studentDataObj.lessonProgress,
+  //             surveyData: [
+  //               ...acc[studentDataObj.studentID].surveyData,
+  //               ...studentDataObj.pageData,
+  //             ],
+  //           },
+  //         };
+  //       } else {
+  //         return {
+  //           ...acc,
+  //           [studentDataObj.studentID]: {
+  //             syllabusLessonID: studentDataObj.syllabusLessonID,
+  //             lessonID: studentDataObj.lessonID,
+  //             studentID: studentDataObj.studentID,
+  //             studentAuthID: studentDataObj.studentAuthID,
+  //             studentEmail: studentDataObj.studentEmail,
+  //             roomID: studentDataObj.roomID,
+  //             currentLocation: studentDataObj.currentLocation,
+  //             lessonProgress: studentDataObj.lessonProgress,
+  //             surveyData: [...studentDataObj.pageData],
+  //           },
+  //         };
+  //       }
+  //     },
+  //     {}
+  //   );
+  //   console.log('studentDataAdapted', studentDataAdapted);
+
+  //   if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
+  //     let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
+  //       async (studentID: string) => {
+  //         await createNewSurveyDataRecord(studentDataAdapted[studentID]);
+  //       }
+  //     );
+  //     Promise.all(loopOverAdaptedData).then(() => {
+  //       console.log('loopOverAdaptedData - done');
+  //     });
+  //   }
+  // };
+
+  // ##################################################################### //
+  // ########################## END OF TEMP CODE ######################### //
+  // ##################################################################### //
+
   const getStudentsSurveyQuestionsResponse = async (
     lessonId: String,
     nextToken?: string,
     outArray?: any[]
   ) => {
     let studsEmails = classStudents.map((stu: any) => stu.email);
-    let universalLessonStudentData: any = await API.graphql(
-      graphqlOperation(customQueries.getStudentSurveyResponse, {
+    let universalSurveyStudentData: any = await API.graphql(
+      graphqlOperation(queries.listUniversalSurveyStudentDatas, {
         nextToken: nextToken,
         filter: {
           lessonID: {eq: lessonId},
@@ -514,9 +595,9 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let studentsAnswersSurveyQuestionsData =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas.items;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas.items;
     let theNextToken =
-      universalLessonStudentData.data.listUniversalLessonStudentDatas?.nextToken;
+      universalSurveyStudentData.data.listUniversalSurveyStudentDatas?.nextToken;
 
     /**
      * combination of last fetch results
@@ -529,10 +610,27 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (theNextToken) {
       getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
     } else {
+      console.log('fetched from universalSurveyData');
       setSCQAnswers(combined);
     }
 
     return;
+  };
+
+  // regex match double spaces and replace with single space
+  const removeDoubleSpaces = (str: string) => {
+    return str.replace(/\s{2,}/g, ' ');
+  };
+
+  // regex match double quotations and replace with single quotations
+  const removeDoubleQuotes = (str: string) => {
+    return str.replace(/\"/g, "'");
+  };
+
+  const pipeFn = (...fns: any[]) => (arg: any) => fns.reduce((acc, fn) => fn(acc), arg);
+
+  const cleanString = (str: string) => {
+    return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
   };
 
   const getCSVReady = async () => {
@@ -580,52 +678,48 @@ const Csv = ({institutionId}: ICsvProps) => {
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
 
-        SCQAnswers.map((ans: any) => {
-          if (ans.studentID === stu.authId) {
+        SCQAnswers.map((answerArray: any) => {
+          if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
-            ans.pageData.map((page: any) => {
-              if (qids.indexOf(page.domID) >= 0) {
-                surveyAnswerDates.push(ans.updatedAt);
-                surveyDates.push(ans.updatedAt);
+            answerArray.surveyData.map((singleAnswer: any) => {
+              if (qids.indexOf(singleAnswer.domID) >= 0) {
+                surveyAnswerDates.push(answerArray.updatedAt);
+                surveyDates.push(answerArray.updatedAt);
                 if (
-                  surveyQuestionOptions[page.domID] &&
-                  Array.isArray(surveyQuestionOptions[page.domID]) &&
-                  surveyQuestionOptions[page.domID].length
+                  surveyQuestionOptions[singleAnswer.domID] &&
+                  Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
+                  surveyQuestionOptions[singleAnswer.domID].length
                 ) {
                   if (
-                    Array.isArray(page.input) &&
-                    page.input.length &&
-                    page.input[0].length
+                    Array.isArray(singleAnswer.input) &&
+                    singleAnswer.input.length &&
+                    singleAnswer.input[0].length
                   ) {
-                    let selectedOption = surveyQuestionOptions[page.domID].filter(
+                    let selectedOption = surveyQuestionOptions[singleAnswer.domID].filter(
                       (option: any) => {
-                        return option.id === page.input[0];
+                        return option.id === singleAnswer.input[0];
                       }
                     );
                     if (Array.isArray(selectedOption) && selectedOption.length) {
-                      studentAnswers[page.domID] = selectedOption[0].text;
+                      // cleanup here
+                      studentAnswers[singleAnswer.domID] = cleanString(
+                        selectedOption[0].text
+                      );
                     } else {
-                      studentAnswers[page.domID] = '';
+                      studentAnswers[singleAnswer.domID] = '';
                     }
                   } else {
-                    studentAnswers[page.domID] = '';
+                    studentAnswers[singleAnswer.domID] = '';
                   }
                 } else {
-                  studentAnswers[page.domID] =
-                    Array.isArray(page.input) && page.input.length ? page.input[0] : '';
+                  // cleanup here
+                  studentAnswers[singleAnswer.domID] =
+                    Array.isArray(singleAnswer.input) && singleAnswer.input.length
+                      ? cleanString(singleAnswer.input[0])
+                      : '';
                 }
               }
             });
-            // ans.responseObject.map((resp: any) => {
-            //   if (qids.indexOf(resp.qid) >= 0) {
-            //     surveyAnswerDates.push(ans.updatedAt);
-            //     surveyDates.push(ans.updatedAt)
-            //     studentAnswers[resp.qid] =
-            //       Array.isArray(resp.response) && resp.response.length
-            //         ? resp.response[0]
-            //         : '';
-            //   }
-            // });
           }
         });
 
@@ -636,7 +730,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               if (qids.indexOf(resp.qid) >= 0) {
                 studentAnswers[resp.qid] =
                   Array.isArray(resp.response) && resp.response.length
-                    ? resp.response[0]
+                    ? cleanString(resp.response[0])
                     : '';
               }
             });
@@ -731,7 +825,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       <div className="flex flex-col">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
-            <div className="shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div className="flex flex-1 overflow-scroll shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
@@ -803,7 +897,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const isSuperAdmin = state.user.role === 'SUP';
 
   return (
-    <div className="w-full h-full px-8 py-4">
+    <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 text-gray-600 w-auto">

@@ -22,6 +22,7 @@ import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLe
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
 import Frame from './Frame';
+import AttendanceFrame from './StudentWindow/AttendanceFrame';
 // import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
@@ -175,6 +176,44 @@ const LessonControl = () => {
    *                  INFORMATION                  *
    *************************************************/
 
+  const loopFetchStudentData = async (
+    filterObj: any,
+    nextToken: string,
+    outArray: any[]
+  ) => {
+    if (filterObj) {
+      try {
+        let studentData: any = await API.graphql(
+          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+            ...filterObj,
+            nextToken: nextToken,
+          })
+        );
+        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+        let combined = [...outArray, ...studentDataRows];
+
+        if (theNextToken) {
+          console.log('nextToken fetching more - ', nextToken);
+          loopFetchStudentData(filterObj, theNextToken, combined);
+        } else {
+          // console.log('no more - ', combined);
+          return combined;
+        }
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    } else {
+      return [];
+    }
+  };
+
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
 
@@ -187,12 +226,12 @@ const LessonControl = () => {
           roomID: {eq: getRoomData.id},
         },
       };
-      const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
-      );
+      // const studentData: any = await API.graphql(
+      //   graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+      // );
 
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
       if (studentDataRows.length > 0) {
         subscription = subscribeToStudent();
@@ -569,15 +608,17 @@ const LessonControl = () => {
               roster={roster}
             />
           </Frame>
-          {/* 
+
           <Frame visible={rightView.view === 'attendance'} additionalClass="z-50">
             <AttendanceFrame
+              selectedRoomId={getRoomData.id}
               visible={rightView.view === 'attendance'}
               rightView={rightView}
               setRightView={setRightView}
               studentID={rightView.option}
+              roster={roster}
             />
-          </Frame> */}
+          </Frame>
         </div>
       </div>
     </div>

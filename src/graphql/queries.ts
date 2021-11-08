@@ -5112,6 +5112,69 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
     }
   }
 `;
+export const getUniversalSurveyStudentData = /* GraphQL */ `
+  query GetUniversalSurveyStudentData($id: ID!) {
+    getUniversalSurveyStudentData(id: $id) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalSurveyStudentDatas = /* GraphQL */ `
+  query ListUniversalSurveyStudentDatas(
+    $id: ID
+    $filter: ModelUniversalSurveyStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalSurveyStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUniversalJournalData = /* GraphQL */ `
   query GetUniversalJournalData($id: ID!) {
     getUniversalJournalData(id: $id) {

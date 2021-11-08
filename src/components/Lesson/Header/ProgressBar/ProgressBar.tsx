@@ -28,19 +28,45 @@ const ProgressBar = ({
   const lessonState = gContext.lessonState;
   const user = gContext.state.user;
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  /************************************************
+   * THIS CAN PROBABLY BE REFACTORED SO THAT ONLY *
+   *  THE CODE FROM THE ELSE - IF AFTER LINE 58   *
+   *     IS USED FOR CHECKING REQUIRED FIELDS     *
+   ************************************************/
+
   const validateRequired = (pageIdx: number) => {
     if (pages) {
-      const thisPageData = studentData && studentData[pageIdx];
-      const thisPageRequired = requiredInputs && requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-            return input;
-          }
-        });
-        // console.log('validate areAnyEmpty - ', areAnyEmpty);
-        if (areAnyEmpty.length > 0) {
+      let inputResponseData =
+        studentData && !isSurvey ? studentData[pageIdx] : studentData;
+
+      let thisPageRequired = requiredInputs && requiredInputs[pageIdx]; // ['a','b','id_123']
+
+      if (inputResponseData && inputResponseData.length > 0) {
+        let areAnyEmpty2 =
+          thisPageRequired && thisPageRequired.length > 0
+            ? thisPageRequired.reduce((truth: boolean, requiredId: string) => {
+                let findInSurveyData = inputResponseData.find(
+                  (inputObj: any) =>
+                    (inputObj.domID === requiredId && inputObj.input[0] === '') ||
+                    (inputObj.domID === requiredId && inputObj.input[0] === undefined)
+                );
+                if (truth === true) {
+                  return true;
+                } else {
+                  if (findInSurveyData !== undefined && findInSurveyData !== null) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }
+              }, false)
+            : false;
+
+        if (areAnyEmpty2) {
           return false;
         } else {
           return true;

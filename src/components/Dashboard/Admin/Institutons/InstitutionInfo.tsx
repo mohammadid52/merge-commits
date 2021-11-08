@@ -342,9 +342,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             )}
           </div>
 
-          <div className="flex w-auto lg:w-10/12 2xl:w-full">
-            <div className="bg-white border-l-none lg:border-l-0 border-gray-200 mb-4 flex-1">
-              <div className="overflow-x-scroll overflow-y-hidden h-full">
+          <div className="flex flex-1 overflow-auto">
+            <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
+              <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
                 <NavBarRouter
                   {...instProps}

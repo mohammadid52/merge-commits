@@ -228,8 +228,7 @@ const User = ({instituteId}: IUserProps) => {
 
   // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
 
-  const [allCheckpointIds, setAllCheckpointIds] = useState([]);
-  const [allCheckpointQuesSeq, setAllCheckpointQuesSeq] = useState();
+
 
   const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
@@ -368,7 +367,6 @@ const User = ({instituteId}: IUserProps) => {
       });
 
       if (uniqCheckpointIDs?.length > 0) {
-        setAllCheckpointIds(uniqCheckpointIDs);
         getQuestionData(uniqCheckpointIDs, userData);
       }
     } catch (error) {
