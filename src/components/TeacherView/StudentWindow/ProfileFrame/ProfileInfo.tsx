@@ -38,18 +38,7 @@ const ProfileFrameInfo = ({
   const {UserInformationDict} = useDictionary(clientKey);
 
   return (
-    <div className="m-auto p-2 bg-white rounded z-50">
-      {/* <div className="flex justify-end py-2 mb-2 w-full">
-        <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
-          {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}
-        </h3>
-        <Buttons
-          btnClass="mr-0"
-          label="Edit"
-          onClick={() => setIsEditing(true)}
-          Icon={FaEdit}
-        />
-      </div> */}
+    <div className="m-auto p-2 bg-white shadow-5 rounded z-50">
       {/* USER INFO FIRST TAB */}
 
       <div className="bg-white overflow-hidden sm:rounded-lg">

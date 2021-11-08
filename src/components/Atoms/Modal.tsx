@@ -45,7 +45,9 @@ const ModalBody = (bodyProps: {
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto modal-body`}>
+      } flex-auto overflow-hidden modal-body`}>
+      {' '}
+      {/* // flex-auto changed to flex-1 overflow-hidden */}
       {children}
     </div>
   );
