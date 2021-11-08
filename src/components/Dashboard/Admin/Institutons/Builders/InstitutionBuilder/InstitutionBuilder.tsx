@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {BsArrowLeft} from 'react-icons/bs';
 
-import BreadCrums from '@atoms/BreadCrums';
 import PageWrapper from '@atoms/PageWrapper';
-import SectionTitle from '@atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
 import Loader from '@atoms/Loader';
 import {useQuery} from '@customHooks/urlParam';
@@ -15,9 +15,7 @@ import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import HeroBanner from '@components/Header/HeroBanner';
 import Buttons from '@components/Atoms/Buttons';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -63,6 +61,7 @@ const InstitutionBuilder = ({
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
+  const back = params.get('back');
 
   const {
     clientKey,
@@ -72,7 +71,9 @@ const InstitutionBuilder = ({
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-  const {BreadcrumsTitles, InstitutionBuilderDict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, CommonlyUsedDict, InstitutionBuilderDict} = useDictionary(
+    clientKey
+  );
   const [activeStep, setActiveStep] = useState('overview');
   const [institutionInfo, setInstitutionInfo] = useState({
     id: institutionId || '',
@@ -221,8 +222,16 @@ const InstitutionBuilder = ({
 
   return (
     <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} px-0`}>
-      {/* Section Header */}
-      {/* {!isEditPage && <BreadCrums items={breadCrumbsList} />} */}
+      {back && (
+        <div
+          className="px-8 flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() => history.push(back)}>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
+        </div>
+      )}
       {isEditPage ? (
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize py-4 px-12">
           {InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']}

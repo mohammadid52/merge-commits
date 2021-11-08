@@ -197,7 +197,7 @@ const CurriculumList = ({
   };
 
   const redirectToInstitution = (institutionId: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit`);
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`);
   };
 
   // ##################################################################### //

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Fragment, useContext} from 'react';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 import {getAsset} from '../../../../../assets';
@@ -27,6 +27,7 @@ const RoomsList = (props: RoomListProps) => {
     theme,
     userLanguage,
   } = useContext(GlobalContext);
+  const match = useRouteMatch();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const {CommonlyUsedDict, InstitueRomms} = useDictionary(clientKey);
@@ -325,7 +326,7 @@ const RoomsList = (props: RoomListProps) => {
                   {isSuperAdmin && (
                     <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal" onClick={(e) => {
                       e.stopPropagation();
-                      history.push(`/dashboard/manage-institutions/institution/${item.institution?.id}/edit`)
+                      history.push(`/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`)
                     }}>
                       {item.institution?.name}
                     </div>
