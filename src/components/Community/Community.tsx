@@ -17,8 +17,8 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import * as mutations from '@graphql/mutations';
-import useGraphqlMutation from '@graphql/useGraphqlMutation';
-import useGraphqlQuery from '@graphql/useGraphqlQuery';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {
   IAnnouncementInput,
   ICheckItOutInput,
@@ -31,6 +31,7 @@ import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
+import {isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
@@ -50,7 +51,7 @@ const Community = ({}: {role: string}) => {
   const [showCardsModal, setShowCardsModal] = useState(false);
 
   useEffect(() => {
-    if (action === 'builder') {
+    if (action === 'builder' && !isStudent) {
       if (!showCardsModal) {
         setShowCardsModal(true);
       }
@@ -58,10 +59,10 @@ const Community = ({}: {role: string}) => {
   }, [action, showCardsModal]);
 
   useEffect(() => {
-    if (!showCardsModal && action === 'builder') {
+    if ((!showCardsModal && action === 'builder') || (isStudent && !showCardsModal)) {
       history.push(`/dashboard/community/front`);
     }
-  }, [showCardsModal, action]);
+  }, [showCardsModal, isStudent, action]);
 
   const history = useHistory();
 
@@ -90,6 +91,7 @@ const Community = ({}: {role: string}) => {
   );
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
+  const [filteredList, setFilteredList] = useState([]);
 
   const onCancel = (): void => {
     setShowCardsModal(false);
@@ -199,6 +201,10 @@ const Community = ({}: {role: string}) => {
   };
 
   const CommonList = () => {
+    let data =
+      isEmpty(selectedFilterType) || selectedFilterType.value === 'all'
+        ? list
+        : filteredList;
     return (
       <ContentCard
         hasBackground={false}
@@ -217,9 +223,9 @@ const Community = ({}: {role: string}) => {
         {/* Other Cards here */}
         {!isLoading &&
           isFetched &&
-          list &&
-          list.length > 0 &&
-          list.map((card: ICommunityCard, idx: number) => (
+          data &&
+          data.length > 0 &&
+          data.map((card: ICommunityCard, idx: number) => (
             <Card onDelete={onDelete} key={idx} cardDetails={card} />
           ))}
       </ContentCard>
@@ -227,22 +233,47 @@ const Community = ({}: {role: string}) => {
   };
 
   const changeFilter = (val: string, name: string, id: string) => {
-    const filtered = filter(list, (d: ICommunityCard) => {
-      return d.cardType === name;
-    });
+    if (val !== 'all') {
+      const filtered = filter(list, (d: ICommunityCard) => {
+        return d.cardType === val;
+      });
 
-    setList([...filtered]);
+      setFilteredList([...filtered]);
+    }
     setSelectedFilterType({id: id, name: name, value: val});
   };
 
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
 
   const filterList = [
-    {id: 1, name: 'Spotlight'},
-    {id: 2, name: 'Announcement'},
-    {id: 3, name: 'Event'},
-    {id: 4, name: 'Check It Out'},
+    {id: 1434, name: 'All', value: 'all'},
+    {id: 1, name: 'Spotlight', value: 'spotlight'},
+    {id: 2, name: 'Announcement', value: 'announcement'},
+    {id: 3, name: 'Event', value: 'event'},
+    {id: 4, name: 'Check It Out', value: 'check_it_out'},
   ];
+
+  const TitleBar = () => (
+    <SectionTitleV3
+      extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
+      title={'Community'}
+      fontSize="xl"
+      fontStyle="semibold"
+      extraClass="leading-6 text-gray-900"
+      borderBottom
+      withButton={
+        <div className="w-auto">
+          <Selector
+            selectedItem={selectedFilterType.name}
+            list={filterList}
+            additionalClass="w-56"
+            placeholder={'All '}
+            onChange={changeFilter}
+          />
+        </div>
+      }
+    />
+  );
 
   if (isStudent) {
     return (
@@ -256,25 +287,7 @@ const Community = ({}: {role: string}) => {
             Here is what is happening today
           </h2>
         </div>
-        <SectionTitleV3
-          extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-          title={'Community'}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
-          borderBottom
-          withButton={
-            <div className="w-auto">
-              <Selector
-                selectedItem={selectedFilterType.name}
-                list={filterList}
-                additionalClass="w-56"
-                placeholder={'Show all'}
-                onChange={changeFilter}
-              />
-            </div>
-          }
-        />
+        <TitleBar />
         <CardsModal
           navState={navState}
           setNavState={setNavState}
@@ -317,14 +330,8 @@ const Community = ({}: {role: string}) => {
         </div>
       </div>
       <div>
-        <SectionTitleV3
-          extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-          title={'Community'}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900 "
-          borderBottom
-        />
+        <TitleBar />
+
         <CommonList />
       </div>
     </DashboardContainer>

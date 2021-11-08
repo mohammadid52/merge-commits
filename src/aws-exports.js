@@ -8,12 +8,6 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_Q4lW9SZze",
     "aws_user_pools_web_client_id": "5ie1ftc9f6gq6055fn0lkqt8gn",
     "oauth": {},
-    "aws_appsync_graphqlEndpoint": "https://jascbglp3fhn7mwaoyxk3pvjra.appsync-api.us-east-1.amazonaws.com/graphql",
-    "aws_appsync_region": "us-east-1",
-    "aws_appsync_authenticationType": "API_KEY",
-    "aws_appsync_apiKey": "da2-iw3a5eu3svhfzjkahvvtcgdzeq",
-    "aws_user_files_s3_bucket": "iconoclaststorage203627-demosite",
-    "aws_user_files_s3_bucket_region": "us-east-1",
     "aws_cognito_login_mechanisms": [
         "EMAIL"
     ],
@@ -30,7 +24,26 @@ const awsmobile = {
     },
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
-    ]
+    ],
+    "aws_appsync_graphqlEndpoint": "https://m2cm45pahrh5hdf35cngjfdaui.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_region": "us-east-1",
+    "aws_appsync_authenticationType": "API_KEY",
+    "aws_appsync_apiKey": "da2-nugdxn4bwzhizjsrr2pv2m64ne",
+    "aws_user_files_s3_bucket": "iconoclaststorage143306-dev",
+    "aws_user_files_s3_bucket_region": "us-east-1",
+    "geo": {
+        "amazon_location_service": {
+            "region": "us-east-1",
+            "maps": {
+                "items": {
+                    "lmsMap-uatenv": {
+                        "style": "VectorEsriLightGrayCanvas"
+                    }
+                },
+                "default": "lmsMap-uatenv"
+            }
+        }
+    }
 };
 
 

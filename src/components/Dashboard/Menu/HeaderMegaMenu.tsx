@@ -150,7 +150,7 @@ const HeaderMegaMenu = () => {
     {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
       key: 'community',
-      redirectionUrl: `${baseUrl}/dashboard/community`,
+      redirectionUrl: `${baseUrl}/dashboard/community/front`,
       active: location.pathname.indexOf('community') > -1,
     },
     {

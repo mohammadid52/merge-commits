@@ -12,6 +12,8 @@ import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
 import Buttons from '@components/Atoms/Buttons';
 import {FaEdit} from 'react-icons/fa';
 import Modal from '@components/Atoms/Modal';
+import UserTabs from '@components/Dashboard/Admin/UserManagement/User/UserTabs';
+import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
 
 interface IProfileFrame {
   personAuthID: string;
@@ -33,7 +35,9 @@ const ProfileFrame = ({
   setRightView,
 }: IProfileFrame) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const gContext = useContext(GlobalContext);
+  const {state, theme, userLanguage, clientKey} = gContext;
+  const stateUser = state.user;
   const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
   const {UserInformationDict} = useDictionary(clientKey);
 
@@ -126,8 +130,7 @@ const ProfileFrame = ({
   }
 
   async function saveProfileInformation() {
-    const updateUser = await updatePerson();
-    // const get = await getUser();
+    await updatePerson();
   }
 
   const onChange = (e: any) => {
@@ -165,16 +168,47 @@ const ProfileFrame = ({
   // ##################################################################### //
   // ############################## OTHER UI ############################# //
   // ##################################################################### //
-  const customTitle = () => {
+
+  const [tabs, setTabs] = useState([
+    {name: 'Personal Information', current: true},
+    {name: 'Demographics', current: false},
+    {name: 'Private', current: false},
+  ]);
+
+  const openTab = tabs.find((tabObj: any) => tabObj.current);
+
+  const handleSetCurrentTab = (tabName: string) => {
+    let updatedTabs = tabs.map((tabObj: any, idx: number) => {
+      if (tabObj.name === tabName) {
+        return {
+          ...tabObj,
+          current: true,
+        };
+      } else {
+        return {
+          ...tabObj,
+          current: false,
+        };
+      }
+    });
+    setTabs(updatedTabs);
+  };
+
+  const isTeacher =
+    stateUser.role === 'TR' ||
+    stateUser.role === 'FLW' ||
+    stateUser.role === 'ADM' ||
+    stateUser.role === 'SUP';
+  
+  const getTitle = (preferredName: string, editing: boolean) => {
+    let part1 = preferredName ? `Profile for ${user.preferredName}` : 'Profile';
+    let part2 = !editing ? (
+      <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
+    ) : null;
     return (
-      <div className="w-full flex flex-row justify-between items-center">
-        {!isEditing
-          ? dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']
-          : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-        {!isEditing ? (
-          <Buttons label="Edit" onClick={() => setIsEditing(true)} Icon={FaEdit} />
-        ) : // <Buttons label="Edit" disabled Icon={FaEdit} />
-        null}
+      <div className="w-full flex flex-row items-center justify-between">
+        {part1}
+        {part2}
       </div>
     );
   };
@@ -203,34 +237,58 @@ const ProfileFrame = ({
             className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
 
           <Modal
-            customTitle={customTitle()}
+            customTitle={user ? getTitle(user.preferredName, isEditing) : ''}
             showHeader={true}
             showHeaderBorder={false}
             showFooter={false}
             scrollHidden={true}
             closeAction={() => setRightView({view: 'lesson', option: ''})}
             position={'absolute'}>
-            {!isEditing ? (
-              <ProfileFrameInfo
-                user={user}
-                created={created}
-                loading={loading}
-                resetPasswordServerResponse={resetPasswordServerResponse}
-                resetPassword={resetPassword}
-                onAlertClose={onAlertClose}
-                setIsEditing={setIsEditing}
+            <div
+              className={`${
+                breakpoint === '2xl'
+                  ? 'h-96 w-192'
+                  : breakpoint === 'xl'
+                  ? 'h-88 w-176'
+                  : breakpoint === 'lg'
+                  ? 'h-80 w-160'
+                  : 'h-64 w-128'
+              }`}>
+              <UserTabs
+                tabs={tabs}
+                currentTab={openTab?.name}
+                viewedUser={user}
+                setCurrentTab={handleSetCurrentTab}
+                isTeacher={isTeacher}
+                theme={theme}
               />
-            ) : (
-              <ProfileFrameEdit
-                user={user}
-                loading={loading}
-                onChange={onChange}
-                handleChangeLanguage={handleChangeLanguage}
-                gobackToPreviousStep={() => setIsEditing(false)}
-                saveProfileInformation={saveProfileInformation}
-                language={language}
-              />
-            )}
+              {openTab?.name === 'Personal Information' ? (
+                !isEditing ? (
+                  <ProfileFrameInfo
+                    user={user}
+                    created={created}
+                    loading={loading}
+                    resetPasswordServerResponse={resetPasswordServerResponse}
+                    resetPassword={resetPassword}
+                    onAlertClose={onAlertClose}
+                    setIsEditing={setIsEditing}
+                  />
+                ) : (
+                  <ProfileFrameEdit
+                    user={user}
+                    loading={loading}
+                    onChange={onChange}
+                    handleChangeLanguage={handleChangeLanguage}
+                    gobackToPreviousStep={() => setIsEditing(false)}
+                    saveProfileInformation={saveProfileInformation}
+                    language={language}
+                  />
+                )
+              ) : null}
+              {openTab?.name === 'Demographics' || openTab?.name === 'Private' ? (
+                <ProfileFrameDemographics studentID={user.id} currentTab={openTab.name} />
+              ) : null}
+            </div>
           </Modal>
         </>
       )}

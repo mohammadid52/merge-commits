@@ -856,6 +856,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   label: String
   title: String!
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   language: [Language!]
   designers: [String]
   objectives: [String]
@@ -940,6 +941,25 @@ type UniversalContentOptions {
 }
 
 type UniversalLessonStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  roomID: String
+  currentLocation: String
+  lessonProgress: String
+  pageData: [partInput]
+  hasExerciseData: Boolean
+  exerciseData: [ExerciseData]
+}
+
+type UniversalArchiveData
   @model
   @key(fields: ["id"])
   @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
