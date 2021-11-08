@@ -3218,6 +3218,77 @@ export type DeleteUniversalLessonStudentDataInput = {
   id: string,
 };
 
+export type CreateUniversalArchiveDataInput = {
+  id?: string | null,
+  syllabusLessonID: string,
+  lessonID: string,
+  lessonPageID: string,
+  studentID: string,
+  studentAuthID: string,
+  studentEmail: string,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?: Array< PartInputInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?: Array< ExerciseDataInput | null > | null,
+};
+
+export type ModelUniversalArchiveDataConditionInput = {
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  lessonPageID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  hasExerciseData?: ModelBooleanInput | null,
+  and?: Array< ModelUniversalArchiveDataConditionInput | null > | null,
+  or?: Array< ModelUniversalArchiveDataConditionInput | null > | null,
+  not?: ModelUniversalArchiveDataConditionInput | null,
+};
+
+export type UniversalArchiveData = {
+  __typename: "UniversalArchiveData",
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  lessonPageID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?:  Array<partInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?:  Array<ExerciseData | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateUniversalArchiveDataInput = {
+  id: string,
+  syllabusLessonID?: string | null,
+  lessonID?: string | null,
+  lessonPageID?: string | null,
+  studentID?: string | null,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  roomID?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?: Array< PartInputInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?: Array< ExerciseDataInput | null > | null,
+};
+
+export type DeleteUniversalArchiveDataInput = {
+  id: string,
+};
+
 export type CreateUniversalSurveyStudentDataInput = {
   id?: string | null,
   syllabusLessonID: string,
@@ -4492,6 +4563,29 @@ export type ModelUniversalLessonStudentDataFilterInput = {
 export type ModelUniversalLessonStudentDataConnection = {
   __typename: "ModelUniversalLessonStudentDataConnection",
   items?:  Array<UniversalLessonStudentData | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelUniversalArchiveDataFilterInput = {
+  id?: ModelIDInput | null,
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  lessonPageID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  roomID?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  hasExerciseData?: ModelBooleanInput | null,
+  and?: Array< ModelUniversalArchiveDataFilterInput | null > | null,
+  or?: Array< ModelUniversalArchiveDataFilterInput | null > | null,
+  not?: ModelUniversalArchiveDataFilterInput | null,
+};
+
+export type ModelUniversalArchiveDataConnection = {
+  __typename: "ModelUniversalArchiveDataConnection",
+  items?:  Array<UniversalArchiveData | null > | null,
   nextToken?: string | null,
 };
 
@@ -17045,6 +17139,147 @@ export type DeleteUniversalLessonStudentDataMutation = {
   } | null,
 };
 
+export type CreateUniversalArchiveDataMutationVariables = {
+  input?: CreateUniversalArchiveDataInput,
+  condition?: ModelUniversalArchiveDataConditionInput | null,
+};
+
+export type CreateUniversalArchiveDataMutation = {
+  createUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUniversalArchiveDataMutationVariables = {
+  input?: UpdateUniversalArchiveDataInput,
+  condition?: ModelUniversalArchiveDataConditionInput | null,
+};
+
+export type UpdateUniversalArchiveDataMutation = {
+  updateUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUniversalArchiveDataMutationVariables = {
+  input?: DeleteUniversalArchiveDataInput,
+  condition?: ModelUniversalArchiveDataConditionInput | null,
+};
+
+export type DeleteUniversalArchiveDataMutation = {
+  deleteUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateUniversalSurveyStudentDataMutationVariables = {
   input?: CreateUniversalSurveyStudentDataInput,
   condition?: ModelUniversalSurveyStudentDataConditionInput | null,
@@ -25019,6 +25254,95 @@ export type ListUniversalLessonStudentDatasQuery = {
     __typename: "ModelUniversalLessonStudentDataConnection",
     items?:  Array< {
       __typename: "UniversalLessonStudentData",
+      id: string,
+      syllabusLessonID: string,
+      lessonID: string,
+      lessonPageID: string,
+      studentID: string,
+      studentAuthID: string,
+      studentEmail: string,
+      roomID?: string | null,
+      currentLocation?: string | null,
+      lessonProgress?: string | null,
+      pageData?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        options?: Array< string | null > | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+      hasExerciseData?: boolean | null,
+      exerciseData?:  Array< {
+        __typename: "ExerciseData",
+        id: string,
+        feedbacks?: Array< string | null > | null,
+        shared?: boolean | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUniversalArchiveDataQueryVariables = {
+  id?: string,
+};
+
+export type GetUniversalArchiveDataQuery = {
+  getUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUniversalArchiveDatasQueryVariables = {
+  id?: string | null,
+  filter?: ModelUniversalArchiveDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUniversalArchiveDatasQuery = {
+  listUniversalArchiveDatas?:  {
+    __typename: "ModelUniversalArchiveDataConnection",
+    items?:  Array< {
+      __typename: "UniversalArchiveData",
       id: string,
       syllabusLessonID: string,
       lessonID: string,
@@ -38728,6 +39052,132 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
 export type OnDeleteUniversalLessonStudentDataSubscription = {
   onDeleteUniversalLessonStudentData?:  {
     __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUniversalArchiveDataSubscription = {
+  onCreateUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUniversalArchiveDataSubscription = {
+  onUpdateUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    roomID?: string | null,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "partInput",
+      domID?: string | null,
+      options?: Array< string | null > | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
+      } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+      shared?: boolean | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUniversalArchiveDataSubscription = {
+  onDeleteUniversalArchiveData?:  {
+    __typename: "UniversalArchiveData",
     id: string,
     syllabusLessonID: string,
     lessonID: string,
