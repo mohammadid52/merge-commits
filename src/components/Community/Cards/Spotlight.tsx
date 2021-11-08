@@ -3,12 +3,13 @@ import Buttons from '@components/Atoms/Buttons';
 import SelectorWithAvatar from '@components/Atoms/Form/SelectorWithAvatar';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
-import {ISpotlightInput} from '@interfaces/Community.interfaces';
+import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
+import {getImageFromS3Static} from '@utilities/services';
 import {getFilterORArray} from '@utilities/strings';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
@@ -17,16 +18,37 @@ const Spotlight = ({
   instId,
   onCancel,
   onSubmit,
-}: {
-  instId?: string;
-  onCancel: () => void;
-  onSubmit: (input: ISpotlightInput) => void;
-}) => {
+  editMode,
+  cardDetails,
+}: ICommunityCardProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [loadingTeachers, setLoadingTeachers] = useState(false);
   const [file, setFile] = useState<IFile>();
   const [studentsList, setStudentsList] = useState([]);
   const [loadingStudents, setLoadingStudents] = useState(false);
+
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      if (teachersList.length > 0) {
+        const teacher = teachersList.find(
+          (teacher) => teacher.id === cardDetails.additionalLinks[0]
+        );
+        setSelectedPerson(teacher);
+      }
+
+      const imageUrl = getImageFromS3Static(
+        COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink
+      );
+
+      setTempData({
+        image: imageUrl,
+      });
+
+      setFields({...fields, summary: cardDetails.summary});
+    }
+  }, [editMode, cardDetails, teachersList]);
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
@@ -199,7 +221,7 @@ const Spotlight = ({
     if (teacher === undefined) {
       setError('Please select person');
       isValid = false;
-    } else if (isEmpty(file)) {
+    } else if ((!editMode && isEmpty(file)) || !tempData?.image) {
       setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
@@ -215,11 +237,24 @@ const Spotlight = ({
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const spotlightDetails: ISpotlightInput = {
-        cardImageLink: file.fileKey,
-        summary: fields.summary,
-        additionalLinks: [teacher.id],
+      let spotlightDetails: ISpotlightInput = {
+        summary: fields.summaryHtml,
       };
+      if (!editMode) {
+        spotlightDetails = {
+          ...spotlightDetails,
+          cardImageLink: file.fileKey,
+          additionalLinks: [teacher.id],
+        };
+      } else {
+        spotlightDetails = {
+          ...spotlightDetails,
+          cardImageLink: cardDetails.cardImageLink,
+          additionalLinks: [teacher.id],
+          cardId: cardDetails.cardId,
+        };
+      }
+
       onSubmit(spotlightDetails);
     }
   };
@@ -241,7 +276,13 @@ const Spotlight = ({
           onChange={selectPerson}
         />
       </div>
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData.image ? (
+        <div>
+          <img className="content-image" src={tempData.image} />
+        </div>
+      ) : (
+        <Media setError={setError} setFile={setFile} file={file} />
+      )}
 
       <div className="px-3 py-4">
         <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
@@ -276,7 +317,7 @@ const Spotlight = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
-            disabled={isEmpty(file)}
+            disabled={(!editMode && isEmpty(file)) || !tempData?.image}
             onClick={_onSubmit}
           />
         </div>

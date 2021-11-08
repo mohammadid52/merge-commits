@@ -4,18 +4,12 @@ import Label from '@atoms/Form/Label';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
-import {ICheckItOutInput} from '@interfaces/Community.interfaces';
+import {ICheckItOutInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
 import React, {useState} from 'react';
 
-const CheckItOut = ({
-  onCancel,
-  onSubmit,
-}: {
-  onCancel: () => void;
-  onSubmit: (input: ICheckItOutInput) => void;
-}) => {
+const CheckItOut = ({onCancel, onSubmit}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);

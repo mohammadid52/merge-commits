@@ -4,21 +4,34 @@ import Buttons from '@components/Atoms/Buttons';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {IFile} from '@components/Community/constants.community';
-import useScript from '@customHooks/useScript';
-import {IEventInput} from '@interfaces/Community.interfaces';
+import {ICommunityCardProps, IEventInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
 const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
+import {GoogleMap, useLoadScript} from '@react-google-maps/api';
 
-const Event = ({
-  onCancel,
-  onSubmit,
-}: {
-  onCancel: () => void;
-  onSubmit: (input: IEventInput) => void;
-}) => {
+const GoogleMaps = ({location}: {location: {lat: any; lng: any}}) => {
+  const mapContainerStyle = {
+    width: '100vw',
+    height: '100vh',
+  };
+  const center = {
+    lat: location.lat,
+    lng: location.lng,
+  };
+
+  const {isLoaded, loadError} = useLoadScript({
+    googleMapsApiKey: api,
+  });
+
+  if (loadError) return <p>Error loading Maps</p>;
+  if (!isLoaded) return <p>Loading Maps</p>;
+
+  return <GoogleMap mapContainerStyle={mapContainerStyle} zoom={11} center={center} />;
+};
+const Event = ({onCancel, onSubmit}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -35,10 +48,6 @@ const Event = ({
     summary: '',
     summaryHtml: '',
   });
-
-  const status = useScript(
-    `https://maps.googleapis.com/maps/api/js?key=${api}&callback=initMap&libraries=&v=weekly`
-  );
 
   const onEditorStateChange = (
     html: string,
@@ -99,6 +108,24 @@ const Event = ({
     }
     return isValid;
   };
+
+  const [location, setLocation] = useState({lat: 0, lng: 0});
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      setError('Geolocation is not supported by this browser.');
+    }
+  }
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  function showPosition(position: any) {
+    setLocation({lat: position.coords.latitude, lng: position.coords.longitude});
+  }
 
   return (
     <div className="min-w-256 max-w-256">
@@ -187,7 +214,9 @@ const Event = ({
               value={details.address}
             />
           </div>
-          {/* <div id="map"></div> */}
+          {/* Map starts here */}
+          {/* <GoogleMaps location={location} /> */}
+          {/* Map ends here */}
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>

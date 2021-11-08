@@ -98,6 +98,18 @@ const Community = ({}: {role: string}) => {
     setNavState('init');
   };
 
+  const [isCardEditMode, setIsCardEditMode] = useState(false);
+
+  const [cardForEdit, setCardForEdit] = useState(null);
+
+  const onCardEdit = (cardDetails: ICommunityCard) => {
+    // @ts-ignore
+    setNavState(cardDetails.cardType);
+    setIsCardEditMode(true);
+    setShowCardsModal(true);
+    setCardForEdit(cardDetails);
+  };
+
   const getCommonInput = (
     cardType: CardType
   ): {
@@ -116,10 +128,16 @@ const Community = ({}: {role: string}) => {
     personEmail,
   });
 
-  const {mutate} = useGraphqlMutation('createCommunity', {
+  const createCommunity = useGraphqlMutation('createCommunity', {
     onCancel,
     onSuccess: (data) => {
       list.unshift({...data});
+      setList([...list]);
+    },
+  });
+  const updateCommunity = useGraphqlMutation('updateCommunity', {
+    onCancel,
+    onSuccess: () => {
       setList([...list]);
     },
   });
@@ -133,8 +151,11 @@ const Community = ({}: {role: string}) => {
       additionalLinks: spotlightDetails.additionalLinks,
       ...commonInput,
     };
-
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+    } else {
+      createCommunity.mutate({input});
+    }
   };
 
   const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
@@ -147,7 +168,11 @@ const Community = ({}: {role: string}) => {
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+    } else {
+      createCommunity.mutate({input});
+    }
   };
 
   const onEventSubmit = async (eventDetails: IEventInput) => {
@@ -158,7 +183,11 @@ const Community = ({}: {role: string}) => {
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+    } else {
+      createCommunity.mutate({input});
+    }
   };
 
   const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
@@ -169,7 +198,11 @@ const Community = ({}: {role: string}) => {
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+    } else {
+      createCommunity.mutate({input});
+    }
   };
 
   const FAB = () => {
@@ -226,7 +259,12 @@ const Community = ({}: {role: string}) => {
           data &&
           data.length > 0 &&
           data.map((card: ICommunityCard, idx: number) => (
-            <Card onDelete={onDelete} key={idx} cardDetails={card} />
+            <Card
+              onCardEdit={onCardEdit}
+              onDelete={onDelete}
+              key={idx}
+              cardDetails={card}
+            />
           ))}
       </ContentCard>
     );
@@ -290,6 +328,7 @@ const Community = ({}: {role: string}) => {
         <TitleBar />
         <CardsModal
           navState={navState}
+          editMode={isCardEditMode}
           setNavState={setNavState}
           functions={{
             onCheckItOutSubmit,
@@ -313,6 +352,8 @@ const Community = ({}: {role: string}) => {
       <CardsModal
         navState={navState}
         setNavState={setNavState}
+        editMode={isCardEditMode}
+        cardDetails={cardForEdit}
         functions={{
           onSpotlightSubmit,
           onAnnouncementSubmit,

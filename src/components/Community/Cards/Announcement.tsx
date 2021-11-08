@@ -3,12 +3,19 @@ import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import {IAnnouncementInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
+const Announcements = ({
+  onCancel,
+  onSubmit,
+  editMode,
+  cardDetails,
+}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -16,6 +23,24 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     summary: '',
     summaryHtml: '',
   });
+
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      const imageUrl = getImageFromS3Static(
+        COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink
+      );
+
+      setTempData({
+        image: imageUrl,
+      });
+
+      setOverlayText(cardDetails?.cardName);
+
+      setFields({...fields, summary: cardDetails.summary});
+    }
+  }, [editMode, cardDetails]);
 
   const [error, setError] = useState('');
 
@@ -33,19 +58,31 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const announcementsDetails = {
-        cardImageLink: file.fileKey,
-        summary: fields.summary,
+      let announcementsDetails: IAnnouncementInput = {
+        summary: fields.summaryHtml,
         cardName: overlayText,
       };
+      if (!editMode) {
+        announcementsDetails = {
+          ...announcementsDetails,
+          cardImageLink: file.fileKey,
+        };
+      } else {
+        announcementsDetails = {
+          ...announcementsDetails,
+          cardImageLink: cardDetails.cardImageLink,
+
+          cardId: cardDetails.cardId,
+        };
+      }
+
       onSubmit(announcementsDetails);
-      onCancel();
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if (isEmpty(file)) {
+    if ((!editMode && isEmpty(file)) || !tempData?.image) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -63,7 +100,13 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
 
   return (
     <div className="min-w-256 max-w-256">
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData.image ? (
+        <div>
+          <img className="content-image" src={tempData.image} />
+        </div>
+      ) : (
+        <Media setError={setError} setFile={setFile} file={file} />
+      )}
 
       <div className="px-3 py-4">
         <div>
@@ -109,7 +152,12 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            disabled={(!editMode && isEmpty(file)) || !tempData?.image}
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={'Save'}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>

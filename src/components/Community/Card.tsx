@@ -11,6 +11,7 @@ import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import ReactHtmlParser from 'react-html-parser';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -191,14 +192,17 @@ const Menu = ({
   onDelete,
   cardId,
   fileKey,
+  onCardEdit,
+  cardDetails,
 }: {
   showMenu: boolean;
   cardId: string;
   fileKey: string;
+  cardDetails: ICommunityCard;
+  onCardEdit?: (cardDetails: ICommunityCard) => void;
   onDelete?: (cardId: string, fileKey?: string) => void;
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const onEdit = (cardId: string) => {};
   return (
     <div className="w-auto absolute top-0 right-0 p-4">
       <Popover
@@ -211,13 +215,13 @@ const Menu = ({
         setShow={setShowMenu}
         content={
           <dl className="grid grid-cols-1 gap-y-3">
-            {/* <div className="col-span-1">
+            <div className="col-span-1">
               <dt
-                onClick={() => onEdit(cardId)}
+                onClick={() => onCardEdit(cardDetails)}
                 className={`cursor-pointer text-gray-900  transition-all `}>
                 Edit
               </dt>
-            </div> */}
+            </div>
             <div className="col-span-1">
               <dt
                 onClick={() => onDelete(cardId, fileKey)}
@@ -241,9 +245,11 @@ const Menu = ({
 const Card = ({
   cardDetails,
   onDelete,
+  onCardEdit,
 }: {
   cardDetails: ICommunityCard;
   onDelete: (cardId: string, fileKey: string) => void;
+  onCardEdit?: (cardDetails: ICommunityCard) => void;
 }): JSX.Element => {
   const media = getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink);
   const person = cardDetails.person;
@@ -326,8 +332,10 @@ const Card = ({
 
   const MenuOptions = iAmOwnerOfTheCard && (
     <Menu
+      cardDetails={cardDetails}
       fileKey={cardDetails.cardImageLink}
       onDelete={onDelete}
+      onCardEdit={onCardEdit}
       cardId={cardDetails.id}
       showMenu={showMenu}
       setShowMenu={setShowMenu}
@@ -391,7 +399,7 @@ const Card = ({
             <div className="w-full">
               <div className="border-b-0 bg-red-600 text-white p-4 border-gray-200">
                 <div className="text-white font-semibold text-lg  px-2">
-                  Announcement: {cardDetails.summary}
+                  {ReactHtmlParser(cardDetails.summary)}
                 </div>
               </div>
               {cardDetails.cardName ? (
@@ -431,7 +439,9 @@ const Card = ({
               <div className="text-gray-900 font-bold text-xl mb-2">
                 {cardDetails.cardName}
               </div>
-              <p className="text-gray-700 text-base">{cardDetails.summary}</p>
+              <p className="text-gray-700 text-base">
+                {ReactHtmlParser(cardDetails.summary)}
+              </p>
             </div>
             <div className="flex items-center">
               <div className="text-sm">
@@ -514,7 +524,7 @@ const Card = ({
               )}
 
               <div className="text-gray-500 font-thin text-sm mb-6 mx-3 px-2">
-                {cardDetails.summary}
+                {ReactHtmlParser(cardDetails.summary)}
               </div>
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
                 <div className="w-auto">
