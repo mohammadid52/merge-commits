@@ -10,7 +10,7 @@ import {
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
-import useGraphqlMutation from '@graphql/useGraphqlMutation';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -211,13 +211,13 @@ const Menu = ({
         setShow={setShowMenu}
         content={
           <dl className="grid grid-cols-1 gap-y-3">
-            <div className="col-span-1">
+            {/* <div className="col-span-1">
               <dt
                 onClick={() => onEdit(cardId)}
                 className={`cursor-pointer text-gray-900  transition-all `}>
                 Edit
               </dt>
-            </div>
+            </div> */}
             <div className="col-span-1">
               <dt
                 onClick={() => onDelete(cardId, fileKey)}
@@ -435,10 +435,16 @@ const Card = ({
             </div>
             <div className="flex items-center">
               <div className="text-sm">
-                <p className="text-gray-900 leading-none">
-                  {moment(date).format('DD MMM')}
+                <p className="text-gray-600 leading-none">
+                  Date:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(date).format('DD MMM')}
+                  </span>
                 </p>
-                <p className="text-gray-600">{addres}</p>
+                <p className="text-gray-600">
+                  Address:{' '}
+                  <span className="w-auto text-gray-700 font-medium">{addres}</span>
+                </p>
               </div>
             </div>
           </div>

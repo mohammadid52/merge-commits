@@ -11195,6 +11195,129 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalArchiveData = /* GraphQL */ `
+  mutation CreateUniversalArchiveData(
+    $input: CreateUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    createUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalArchiveData = /* GraphQL */ `
+  mutation UpdateUniversalArchiveData(
+    $input: UpdateUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    updateUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalArchiveData = /* GraphQL */ `
+  mutation DeleteUniversalArchiveData(
+    $input: DeleteUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    deleteUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUniversalSurveyStudentData = /* GraphQL */ `
   mutation CreateUniversalSurveyStudentData(
     $input: CreateUniversalSurveyStudentDataInput!
