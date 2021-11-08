@@ -3781,6 +3781,8 @@ const LessonsListDict: any = {
     SORTBY: 'Sort By',
     NO: 'No.',
     LESSONTITLE: 'Session Title',
+    INSTITUTION_NAME:'Institution Name',
+    SELECT_INSTITUTION: 'Select Institution',
     TYPE: 'Type',
     LANGUAGE: 'Language',
     ACTION: 'Actions',

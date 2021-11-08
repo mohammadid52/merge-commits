@@ -58,6 +58,8 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     name: '',
     asc: true,
   });
+  const [institutionList, setInstitutionList] = useState<any>([]);
+  const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -151,7 +153,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const getLessonsList = async () => {
     try {
       let condition = {};
-      if (instId && state.user.role !== 'SUP') {
+      if (instId && !state.user.isSuperAdmin) {
         condition = {
           filter: {
             institutionID: {eq: instId},
@@ -223,7 +225,43 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
   const removeSearchAction = () => {
     backToInitials();
+    onSearch('',selectedInstitution?.id)
     setSearchInput({value: '', isActive: false});
+  };
+
+  const onSearch = (searchValue: string, institutionId?: string) => {
+    let filteredData;
+    if (searchValue && institutionId) {
+      filteredData = [...lessonsData].filter(
+        (item: any) =>
+          item.title?.toLowerCase().includes(searchValue.toLowerCase()) &&
+          item.institution?.id === institutionId
+      );
+    } else if (institutionId) {
+      filteredData = [...lessonsData].filter(
+        (item: any) => item.institution?.id === institutionId
+      );
+    } else if (searchValue) {
+      filteredData = [...lessonsData].filter((item: any) =>
+        item.name?.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    } else {
+      filteredData = lessonsData;
+    }
+    setCurrentList(filteredData);
+    setTotalPages(Math.floor(filteredData.length / pageCount));
+    setFirstPage(true);
+    setLastPage(!(filteredData.length > pageCount));
+  };
+
+  const instituteChange = (_: string, name: string, value: string) => {
+    setSelectedInstitution({name, id: value});
+    onSearch(searchInput.value, value);
+  };
+
+  const onInstitutionSelectionRemove = () => {
+    setSelectedInstitution({});
+    onSearch(searchInput.value, '');
   };
 
   const fetchSortedList = () => {
@@ -245,6 +283,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
 
   useEffect(() => {
+    fetchInstitutions();
     getLessonsList();
   }, []);
 
@@ -319,6 +358,19 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     }
   };
 
+  const fetchInstitutions = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutionOptions)
+      );
+      setInstitutionList(
+        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        )
+      );
+    } catch (error) {}
+  };
+
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
       setDeleteModal({
@@ -384,10 +436,22 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             <SearchInput
               value={searchInput.value}
               onChange={setSearch}
-              onKeyDown={searchLessonsFromList}
+              onKeyDown={() => onSearch(searchInput.value, selectedInstitution?.id)}
               closeAction={removeSearchAction}
               style={`mr-4 ${isInInstitution ? 'w-auto' : 'w-full'}`}
             />
+            {state.user.isSuperAdmin && (
+              <Selector
+                placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
+                list={institutionList}
+                selectedItem={selectedInstitution?.name}
+                onChange={instituteChange}
+                arrowHidden={true}
+                additionalClass={'w-auto lg:w-48'}
+                isClearable
+                onClear={onInstitutionSelectionRemove}
+              />
+            )}
             {!isInInstitution && (
               <>
                 <Selector
@@ -408,12 +472,14 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                 </button>
               </>
             )}
-            {state.user.role !== 'SUP' && <Buttons
-              label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
-              onClick={buildLesson}
-              btnClass={isInInstitution ? '' : 'mr-4 w-full'}
-              Icon={IoMdAddCircleOutline}
-            />}
+            {!state.user.isSuperAdmin && (
+              <Buttons
+                label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
+                onClick={buildLesson}
+                btnClass={isInInstitution ? '' : 'mr-4 w-full'}
+                Icon={IoMdAddCircleOutline}
+              />
+            )}
             {params.get('from') ? (
               <Buttons
                 label="Go back"
@@ -433,9 +499,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                 isInInstitution ? '' : 'white_back px-8'
               } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
               <div
-                className={`h-8/10 ${
-                  isInInstitution ? '' : 'px-4'
-                } w-screen lg:w-auto`}>
+                className={`h-8/10 ${isInInstitution ? '' : 'px-4'} w-screen lg:w-auto`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
@@ -443,6 +507,11 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                   <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
                   </div>
+                  {state.user.isSuperAdmin && (
+                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>{LessonsListDict[userLanguage]['INSTITUTION_NAME']}</span>
+                    </div>
+                  )}
                   {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
@@ -482,6 +551,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}
                       title={lessonsObject.title}
+                      institution={lessonsObject.institution}
                       type={lessonsObject.type && getType(lessonsObject.type)}
                       languages={
                         lessonsObject?.language &&
@@ -495,6 +565,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
                       zebraStripping={isInInstitution}
+                      isSuperAdmin={state.user.isSuperAdmin}
                     />
                   ))
                 ) : (

@@ -14,6 +14,10 @@ interface ICloneModalProps {
 interface LessonsListRow {
   id: string;
   index: number;
+  institution: {
+    id: string;
+    name: string;
+  };
   title: string;
   type: string;
   languages: string[];
@@ -24,6 +28,7 @@ interface LessonsListRow {
   updatedAt: Date;
   zebraStripping?: boolean;
   setShowCloneModal?: React.Dispatch<React.SetStateAction<ICloneModalProps>>;
+  isSuperAdmin?: boolean;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -44,6 +49,7 @@ const LessonsListRow = (props: LessonsListRow) => {
   const {
     id,
     index,
+    institution: {name: institutionName},
     title,
     type,
     languages,
@@ -79,6 +85,9 @@ const LessonsListRow = (props: LessonsListRow) => {
         className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal"
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>
+      </div>
+      <div className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
+        <span>{institutionName || '--'}</span>
       </div>
 
       <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">

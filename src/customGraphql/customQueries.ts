@@ -2021,6 +2021,10 @@ export const listUniversalLessons = /* GraphQL */ `
         label
         title
         institutionID
+        institution{
+          id
+          name
+        }
         language
         designers
         objectives
