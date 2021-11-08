@@ -158,7 +158,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         cr.curricula?.items.length > 0
           ? cr.curricula?.items[0].curriculum
           : null;
-    instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+      instCRs.push({id: cr.id, name: cr.name, value: cr.name});
       return {
         id: cr.id,
         name: cr.name,
@@ -224,9 +224,11 @@ const Csv = ({institutionId}: ICsvProps) => {
         setSelectedClass(classroom.class);
         setSelectedCurriculum(classroom?.curriculum);
         // fetch students of the selected class. (This list of students will be used in the csv)
-        setUnitsLoading(true);
         const studentsEmails = await fetchStudents(classroom.class.id);
-        await fetchUnits(classroom?.curriculum?.id, studentsEmails);
+        if (classroom?.curriculum?.id) {
+          setUnitsLoading(true);
+          await fetchUnits(classroom?.curriculum?.id, studentsEmails);
+        }
         // units (syllabus fetched)
       } else {
         console.log('classroom already selected');
