@@ -413,6 +413,7 @@ const staffBuilderDict: any = {
     NO: 'No.',
     NAME: 'Name',
     ROLE: 'Role',
+    INSTITUTION_NAME: "Institution Name",
     STATUS: 'Status',
     ACTION: 'Action',
     UPDATING: 'updating...',
@@ -429,6 +430,7 @@ const staffBuilderDict: any = {
     NO: 'TBD',
     NAME: 'TBD',
     ROLE: 'TBD',
+    INSTITUTION_NAME: "TBD",
     STATUS: 'TBD',
     ACTION: 'TBD',
     UPDATING: 'TBD',
@@ -3980,10 +3982,12 @@ const CommonlyUsedDict: any = {
   EN: {
     BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
+    NO_SEARCH_RESULT: "No data found",
   },
   ES: {
     BACK: 'TBD',
     BACK_TO_LIST: 'TBD',
+    NO_SEARCH_RESULT: "TBD",
   },
 };
 

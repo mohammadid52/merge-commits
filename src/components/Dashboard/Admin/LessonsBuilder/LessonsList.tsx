@@ -38,7 +38,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
   const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles, LessonsListDict, paginationPage} = useDictionary(clientKey);
+  const {
+    BreadcrumsTitles,
+    CommonlyUsedDict,
+    LessonsListDict,
+    paginationPage,
+  } = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
@@ -225,7 +230,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
   const removeSearchAction = () => {
     backToInitials();
-    onSearch('',selectedInstitution?.id)
+    onSearch('', selectedInstitution?.id);
     setSearchInput({value: '', isActive: false});
   };
 
@@ -407,6 +412,10 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     );
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit`);
+  };
+
   {
     return (
       <div className={`w-full h-full`}>
@@ -540,7 +549,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                     .fill(' ')
                     .map((_: any, index: number) => (
                       <Fragment key={index}>
-                        <LessonListLoader />
+                        <LessonListLoader isSuperAdmin={state.user.isSuperAdmin} />
                       </Fragment>
                     ))
                 ) : currentList?.length ? (
@@ -566,11 +575,16 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       updatedAt={lessonsObject.updatedAt}
                       zebraStripping={isInInstitution}
                       isSuperAdmin={state.user.isSuperAdmin}
+                      redirectToInstitution={() =>
+                        redirectToInstitution(lessonsObject.institution?.id)
+                      }
                     />
                   ))
                 ) : (
                   <div className="flex p-12 mx-auto text-gray-400 justify-center">
-                    {LessonsListDict[userLanguage]['NORESULT']}
+                    {searchInput?.value || selectedInstitution?.id
+                      ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+                      : LessonsListDict[userLanguage]['NORESULT']}
                   </div>
                 )}
                 {deleteModal.show && (

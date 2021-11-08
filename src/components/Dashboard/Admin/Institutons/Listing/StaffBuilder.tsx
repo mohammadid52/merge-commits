@@ -348,6 +348,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit`);
+  };
+
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
@@ -356,12 +360,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             {dictionary['TITLE']}
           </h3>
           {!showAddSection ? (
-            state.user.role !== 'SUP' && (
+            !state.user.isSuperAdmin && (
               <div className="w-auto">
                 <AddButton
                   className="ml-4 py-1"
                   label={'Staff member'}
-                  onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
+                  onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
                 />
                 {/*{user.role === 'SUP' && (
                 <div
@@ -413,6 +417,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['NAME']}</span>
                     </div>
+                    {user.isSuperAdmin && (
+                      <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['INSTITUTION_NAME']}</span>
+                      </div>
+                    )}
                     <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['ROLE']}</span>
                     </div>
@@ -488,7 +497,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                         </div>
                                       </div>
                                     </div>
-
+                                    {user.isSuperAdmin && (
+                                      <div
+                                        className="w-2/10 px-8 py-3 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
+                                        onClick={() =>
+                                          redirectToInstitution(item.institution?.id)
+                                        }>
+                                        <span>{item.institution?.name}</span>
+                                      </div>
+                                    )}
                                     <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">
                                       <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800 w-auto">
                                         {item.role ? getStaffRole(item.role) : ''}

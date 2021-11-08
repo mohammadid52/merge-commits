@@ -1,6 +1,5 @@
 import Popover from '@components/Atoms/Popover';
 import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
@@ -12,6 +11,7 @@ interface IUnitListRowProps {
   checkIfRemovable: any;
   handleToggleDelete: any;
   editCurrentUnit: any;
+  redirectToInstitution: () => void;
 }
 
 const UnitListRow = ({
@@ -21,6 +21,7 @@ const UnitListRow = ({
   checkIfRemovable,
   handleToggleDelete,
   editCurrentUnit,
+  redirectToInstitution
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -47,7 +48,7 @@ const UnitListRow = ({
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (
-        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
+        <div className="flex w-4/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer" onClick={redirectToInstitution}>
           {item.institution?.name}
         </div>
       )}

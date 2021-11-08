@@ -30,9 +30,11 @@ const CurriculumList = ({
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
-  const {InstitueCurriculum} = useDictionary(clientKey);
+  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
   const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
-  const [courseList, setCourseList] = useState<Array<{name?: string; id: string}>>();
+  const [courseList, setCourseList] = useState<
+    Array<{name?: string; id: string; institution?: {name?: string; id: string}}>
+  >();
   const [allCourses, setAllCourses] = useState<Array<{name?: string; id: string}>>();
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [loading, setLoading] = useState(isSuperAdmin);
@@ -194,6 +196,10 @@ const CurriculumList = ({
     );
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit`);
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -282,6 +288,9 @@ const CurriculumList = ({
                   checkIfRemovable={checkIfRemovable}
                   handleToggleDelete={handleToggleDelete}
                   editCurrentCurricular={editCurrentCurricular}
+                  redirectToInstitution={() =>
+                    redirectToInstitution(item.institution?.id)
+                  }
                 />
               ))}
             </div>
@@ -308,7 +317,9 @@ const CurriculumList = ({
             )}
             <p className="text-center p-16">
               {' '}
-              {InstitueCurriculum[userLanguage]['INFO']}
+              {searchInput || selectedInstitution?.id
+                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+                : InstitueCurriculum[userLanguage]['INFO']}
             </p>
           </Fragment>
         )}

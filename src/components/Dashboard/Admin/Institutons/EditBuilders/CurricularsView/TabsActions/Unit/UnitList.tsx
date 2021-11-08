@@ -26,7 +26,7 @@ export const UnitList = ({instId}: any) => {
     userLanguage,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {UnitLookupDict} = useDictionary(clientKey);
+  const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
 
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
@@ -139,10 +139,7 @@ export const UnitList = ({instId}: any) => {
           a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
         )
       );
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
+    } catch (error) {}
   };
 
   const instituteChange = (_: string, name: string, value: string) => {
@@ -182,6 +179,10 @@ export const UnitList = ({instId}: any) => {
     onSearch(searchInput, '');
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit`);
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -189,49 +190,49 @@ export const UnitList = ({instId}: any) => {
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
+        <div className="flex justify-between items-center w-full m-auto">
+          <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
+          <div className={`flex justify-end`}>
+            <div
+              className={`flex justify-between w-auto ${
+                isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'
+              }`}>
+              <SearchInput
+                value={searchInput}
+                onChange={(value) => setSearchInput(value)}
+                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
+                closeAction={removeSearchAction}
+                style={`mr-4 w-auto lg:w-48`}
+              />
+              {isSuperAdmin && (
+                <Selector
+                  placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={'w-auto lg:w-48'}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
+            </div>
+            {!isSuperAdmin && (
+              <AddButton
+                label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+                onClick={handleAdd}
+              />
+            )}
+          </div>
+        </div>
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
               <Loader />
             </div>
           </div>
-        ) : units.length ? (
-          <Fragment>
-            <div className="flex justify-between items-center w-full m-auto">
-              <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-              <div className={`flex justify-end`}>
-                <div
-                  className={`flex justify-between w-auto ${
-                    isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'
-                  }`}>
-                  <SearchInput
-                    value={searchInput}
-                    onChange={(value) => setSearchInput(value)}
-                    onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
-                    closeAction={removeSearchAction}
-                    style={`mr-4 w-auto lg:w-48`}
-                  />
-                  {isSuperAdmin && (
-                    <Selector
-                      placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
-                      list={institutionList}
-                      selectedItem={selectedInstitution?.name}
-                      onChange={instituteChange}
-                      arrowHidden={true}
-                      additionalClass={'w-auto lg:w-48'}
-                      isClearable
-                      onClear={onInstitutionSelectionRemove}
-                    />
-                  )}
-                </div>
-                {!isSuperAdmin && (
-                  <AddButton
-                    label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                    onClick={handleAdd}
-                  />
-                )}
-              </div>
-            </div>
+        ) : units?.length ? (
+          <>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -264,6 +265,9 @@ export const UnitList = ({instId}: any) => {
                   handleToggleDelete={handleToggleDelete}
                   editCurrentUnit={handleView}
                   isSuperAdmin
+                  redirectToInstitution={() =>
+                    redirectToInstitution(unit.institution?.id)
+                  }
                 />
               ))}
             </div>
@@ -276,7 +280,7 @@ export const UnitList = ({instId}: any) => {
                 message={deleteModal.message}
               />
             )}
-          </Fragment>
+          </>
         ) : (
           <>
             {!isSuperAdmin && (
@@ -288,7 +292,12 @@ export const UnitList = ({instId}: any) => {
                 />
               </div>
             )}
-            <p className="text-center p-16"> {UnitLookupDict[userLanguage]['INFO']}</p>
+            <p className="text-center p-16">
+              {' '}
+              {searchInput || selectedInstitution?.id
+                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+                : UnitLookupDict[userLanguage]['INFO']}
+            </p>
           </>
         )}
       </div>

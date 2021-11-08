@@ -12,6 +12,7 @@ interface ICurriculumListRowProps {
   checkIfRemovable: any;
   handleToggleDelete: any;
   editCurrentCurricular: any;
+  redirectToInstitution: () => void;
 }
 
 const CurriculumListRow = ({
@@ -21,6 +22,7 @@ const CurriculumListRow = ({
   checkIfRemovable,
   handleToggleDelete,
   editCurrentCurricular,
+  redirectToInstitution,
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -50,7 +52,9 @@ const CurriculumListRow = ({
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (
-        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
+        <div
+          className="flex w-4/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
+          onClick={redirectToInstitution}>
           {item.institution?.name}
         </div>
       )}

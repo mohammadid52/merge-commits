@@ -29,7 +29,7 @@ const RoomsList = (props: RoomListProps) => {
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const {InstitueRomms} = useDictionary(clientKey);
+  const {CommonlyUsedDict, InstitueRomms} = useDictionary(clientKey);
 
   const [roomList, setRoomList] = useState([]);
   const [allRooms, setAllRooms] = useState([]);
@@ -323,7 +323,10 @@ const RoomsList = (props: RoomListProps) => {
                     {i + 1}.
                   </div>
                   {isSuperAdmin && (
-                    <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
+                    <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal" onClick={(e) => {
+                      e.stopPropagation();
+                      history.push(`/dashboard/manage-institutions/institution/${item.institution?.id}/edit`)
+                    }}>
                       {item.institution?.name}
                     </div>
                   )}
@@ -367,7 +370,9 @@ const RoomsList = (props: RoomListProps) => {
             )}
 
             <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
-              {messages.message}
+              {searchInput || selectedInstitution?.id || selectedStaff?.id
+                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+                : messages.message}
             </p>
           </Fragment>
         )}

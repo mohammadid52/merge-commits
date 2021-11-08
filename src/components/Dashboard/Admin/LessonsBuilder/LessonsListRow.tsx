@@ -29,6 +29,7 @@ interface LessonsListRow {
   zebraStripping?: boolean;
   setShowCloneModal?: React.Dispatch<React.SetStateAction<ICloneModalProps>>;
   isSuperAdmin?: boolean;
+  redirectToInstitution: () => void;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -59,6 +60,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     setShowCloneModal,
     createdAt,
     updatedAt,
+    redirectToInstitution
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -86,7 +88,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>
       </div>
-      <div className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
+      <div className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer" onClick={redirectToInstitution}>
         <span>{institutionName || '--'}</span>
       </div>
 
