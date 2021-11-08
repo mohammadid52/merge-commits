@@ -253,6 +253,28 @@ const Community = ({}: {role: string}) => {
     {id: 4, name: 'Check It Out', value: 'check_it_out'},
   ];
 
+  const TitleBar = () => (
+    <SectionTitleV3
+      extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
+      title={'Community'}
+      fontSize="xl"
+      fontStyle="semibold"
+      extraClass="leading-6 text-gray-900"
+      borderBottom
+      withButton={
+        <div className="w-auto">
+          <Selector
+            selectedItem={selectedFilterType.name}
+            list={filterList}
+            additionalClass="w-56"
+            placeholder={'All '}
+            onChange={changeFilter}
+          />
+        </div>
+      }
+    />
+  );
+
   if (isStudent) {
     return (
       <div>
@@ -265,25 +287,7 @@ const Community = ({}: {role: string}) => {
             Here is what is happening today
           </h2>
         </div>
-        <SectionTitleV3
-          extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-          title={'Community'}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
-          borderBottom
-          withButton={
-            <div className="w-auto">
-              <Selector
-                selectedItem={selectedFilterType.name}
-                list={filterList}
-                additionalClass="w-56"
-                placeholder={'All '}
-                onChange={changeFilter}
-              />
-            </div>
-          }
-        />
+        <TitleBar />
         <CardsModal
           navState={navState}
           setNavState={setNavState}
@@ -326,14 +330,8 @@ const Community = ({}: {role: string}) => {
         </div>
       </div>
       <div>
-        <SectionTitleV3
-          extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-          title={'Community'}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900 "
-          borderBottom
-        />
+        <TitleBar />
+
         <CommonList />
       </div>
     </DashboardContainer>
