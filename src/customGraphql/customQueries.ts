@@ -4890,6 +4890,26 @@ export const listStaffWithBasicInfo = /* GraphQL */ `
     }
   }
 `;
+
+export const listStaffOptions = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+        staffMember{
+          firstName
+          preferredName
+          lastName
+          role
+        }
+      }
+    }
+  }
+`;
+
 export const listCurriculumUnitss = /* GraphQL */ `
   query ListCurriculumUnitss(
     $filter: ModelcurriculumUnitsFilterInput
