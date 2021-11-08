@@ -17,8 +17,8 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import * as mutations from '@graphql/mutations';
-import useGraphqlMutation from '@graphql/useGraphqlMutation';
-import useGraphqlQuery from '@graphql/useGraphqlQuery';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {
   IAnnouncementInput,
   ICheckItOutInput,

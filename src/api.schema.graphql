@@ -856,6 +856,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   label: String
   title: String!
   institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
   language: [Language!]
   designers: [String]
   objectives: [String]
