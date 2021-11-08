@@ -135,35 +135,48 @@ const ClassRoster = ({
 
   // ~~~~~~~~~ FETCH CLASS STUDENTS ~~~~~~~~ //
 
-  const getClassStudents = async (sessionClassID: string) => {
+  const getClassStudents = async (
+    sessionClassID: string,
+    nextToken?: string,
+    outArray?: any[]
+  ) => {
     try {
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
+          nextToken: nextToken,
           filter: {classID: {contains: sessionClassID}},
         })
       );
-      const classStudentList = classStudents.data.listClassStudents.items;
-      const initClassStudentList = classStudentList.map((student: any) => {
-        return {
-          id: '',
-          personAuthID: student.studentAuthID,
-          personEmail: student.studentEmail,
-          syllabusLessonID: '',
-          roomID: '',
-          currentLocation: '',
-          lessonProgress: '',
-          person: student.student,
-          syllabusLesson: {},
-          room: '',
-          createdAt: student.createdAt,
-          updatedAt: student.updatedAt,
-          saveType: '',
-        };
-      });
-      controlDispatch({
-        type: 'UPDATE_STUDENT_ROSTER',
-        payload: {students: initClassStudentList},
-      });
+      const classStudentList = outArray
+        ? [...classStudents.data.listClassStudents.items, ...outArray]
+        : classStudents.data.listClassStudents?.items;
+      const theNextToken = classStudents.data.listClassStudents?.nextToken;
+
+      if (theNextToken) {
+        getClassStudents(sessionClassID, theNextToken, classStudentList);
+      } else {
+        const initClassStudentList = classStudentList.map((student: any) => {
+          return {
+            id: '',
+            personAuthID: student.studentAuthID,
+            personEmail: student.studentEmail,
+            syllabusLessonID: '',
+            roomID: '',
+            currentLocation: '',
+            lessonProgress: '',
+            person: student.student,
+            syllabusLesson: {},
+            room: '',
+            createdAt: student.createdAt,
+            updatedAt: student.updatedAt,
+            saveType: '',
+          };
+        });
+        controlDispatch({
+          type: 'UPDATE_STUDENT_ROSTER',
+          payload: {students: initClassStudentList},
+        });
+      }
     } catch (e) {
       console.error('getClassStudents - ', e);
     }
@@ -173,11 +186,14 @@ const ClassRoster = ({
 
   const {lessonID} = urlParams;
 
-  const getActiveClassStudents = async () => {
-    setLoading(true);
+  const getActiveClassStudents = async (nextToken?: string, outArray?: any[]) => {
+    if (!loading) {
+      setLoading(true);
+    }
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
+          nextToken: nextToken,
           filter: {
             syllabusLessonID: {eq: getRoomData.activeSyllabus},
             lessonID: {eq: lessonID},
@@ -185,27 +201,34 @@ const ClassRoster = ({
           },
         })
       );
-      const syllabusLessonStudentList =
-        syllabusLessonStudents.data.listPersonLocations.items;
-      const studentsFromThisClass = syllabusLessonStudentList.filter((student: any) => {
-        const findStudentInClasslist = roster.find(
-          (student2: any) => student2.personEmail === student.personEmail
-        );
-        if (findStudentInClasslist) {
-          return findStudentInClasslist;
-        }
-      });
-      setPersonLocationStudents(studentsFromThisClass);
-      controlDispatch({
-        type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: studentsFromThisClass},
-      });
-      subscription = subscribeToPersonLocations();
-      deleteSubscription = subscribeToDeletePersonLocations();
+      const syllabusLessonStudentList = outArray
+        ? [...syllabusLessonStudents.data.listPersonLocations.items, ...outArray]
+        : syllabusLessonStudents.data.listPersonLocations.items;
+      const theNextToken = syllabusLessonStudents.data.listPersonLocations?.nextToken;
+
+      if (theNextToken) {
+        getActiveClassStudents(theNextToken, syllabusLessonStudentList);
+      } else {
+        const studentsFromThisClass = syllabusLessonStudentList.filter((student: any) => {
+          const findStudentInClasslist = roster.find(
+            (student2: any) => student2.personEmail === student.personEmail
+          );
+          if (findStudentInClasslist) {
+            return findStudentInClasslist;
+          }
+        });
+        setPersonLocationStudents(studentsFromThisClass);
+        controlDispatch({
+          type: 'UPDATE_ACTIVE_ROSTER',
+          payload: {students: studentsFromThisClass},
+        });
+        subscription = subscribeToPersonLocations();
+        deleteSubscription = subscribeToDeletePersonLocations();
+        setLoading(false);
+      }
     } catch (e) {
-      console.error('getActiveClassStudents - ', e);
-    } finally {
       setLoading(false);
+      console.error('getActiveClassStudents - ', e);
     }
   };
 
