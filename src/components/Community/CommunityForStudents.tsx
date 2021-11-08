@@ -5,7 +5,7 @@ import {CardType, NavStateTypes} from '@components/Community/constants.community
 import HeroBanner from '@components/Header/HeroBanner';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
-import useGraphql from '@graphql/useGraphqlMutation';
+import useGraphql from '@customHooks/useGraphqlMutation';
 import {ICheckItOutInput, ICommunityCard} from '@interfaces/Community.interfaces';
 import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
