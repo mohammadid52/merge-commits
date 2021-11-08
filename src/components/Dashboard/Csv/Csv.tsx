@@ -154,7 +154,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         cr.curricula?.items && Array.isArray(cr.curricula?.items)
           ? cr.curricula?.items[0]?.curriculum
           : null;
-      instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+    instCRs.push({id: cr.id, name: cr.name, value: cr.name});
       return {
         id: cr.id,
         name: cr.name,
@@ -187,7 +187,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         classrooms = classrooms.map((cr: any) => {
           let curriculum =
             cr.curricula?.items && Array.isArray(cr.curricula?.items)
-              ? cr.curricula?.items[0].curriculum
+              ? cr.curricula?.items[0]?.curriculum
               : null;
           instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
@@ -218,11 +218,11 @@ const Csv = ({institutionId}: ICsvProps) => {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
         // with classroom => class and curriculum are directly selected
         setSelectedClass(classroom.class);
-        setSelectedCurriculum(classroom.curriculum);
+        setSelectedCurriculum(classroom?.curriculum);
         // fetch students of the selected class. (This list of students will be used in the csv)
         setUnitsLoading(true);
         const studentsEmails = await fetchStudents(classroom.class.id);
-        await fetchUnits(classroom.curriculum.id, studentsEmails);
+        await fetchUnits(classroom?.curriculum?.id, studentsEmails);
         // units (syllabus fetched)
       } else {
         console.log('classroom already selected');
@@ -728,7 +728,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const Table = () => {
     return (
-      <div className="flex flex-col px-8">
+      <div className="flex flex-col">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
             <div className="shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
