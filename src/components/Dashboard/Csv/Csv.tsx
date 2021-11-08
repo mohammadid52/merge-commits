@@ -399,6 +399,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  // ##################################################################### //
+  // ########## LOOP OVER LESSONPLAN AND GENERATE QUESTION LIST ########## //
+  // ##################################################################### //
   const getQuestionListFromLesson = async (lessonObj: any) => {
     if (lessonObj?.lessonPlan) {
       const mappedPages = lessonObj?.lessonPlan.reduce(
@@ -614,6 +617,22 @@ const Csv = ({institutionId}: ICsvProps) => {
     return;
   };
 
+  // regex match double spaces and replace with single space
+  const removeDoubleSpaces = (str: string) => {
+    return str.replace(/\s{2,}/g, ' ');
+  };
+
+  // regex match double quotations and replace with single quotations
+  const removeDoubleQuotes = (str: string) => {
+    return str.replace(/\"/g, "'");
+  };
+
+  const pipeFn = (...fns: any[]) => (arg: any) => fns.reduce((acc, fn) => fn(acc), arg);
+
+  const cleanString = (str: string) => {
+    return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
+  };
+
   const getCSVReady = async () => {
     try {
       setCsvGettingReady(true);
@@ -659,52 +678,48 @@ const Csv = ({institutionId}: ICsvProps) => {
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
 
-        SCQAnswers.map((ans: any) => {
-          if (ans.studentID === stu.authId) {
+        SCQAnswers.map((answerArray: any) => {
+          if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
-            ans.surveyData.map((page: any) => {
-              if (qids.indexOf(page.domID) >= 0) {
-                surveyAnswerDates.push(ans.updatedAt);
-                surveyDates.push(ans.updatedAt);
+            answerArray.surveyData.map((singleAnswer: any) => {
+              if (qids.indexOf(singleAnswer.domID) >= 0) {
+                surveyAnswerDates.push(answerArray.updatedAt);
+                surveyDates.push(answerArray.updatedAt);
                 if (
-                  surveyQuestionOptions[page.domID] &&
-                  Array.isArray(surveyQuestionOptions[page.domID]) &&
-                  surveyQuestionOptions[page.domID].length
+                  surveyQuestionOptions[singleAnswer.domID] &&
+                  Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
+                  surveyQuestionOptions[singleAnswer.domID].length
                 ) {
                   if (
-                    Array.isArray(page.input) &&
-                    page.input.length &&
-                    page.input[0].length
+                    Array.isArray(singleAnswer.input) &&
+                    singleAnswer.input.length &&
+                    singleAnswer.input[0].length
                   ) {
-                    let selectedOption = surveyQuestionOptions[page.domID].filter(
+                    let selectedOption = surveyQuestionOptions[singleAnswer.domID].filter(
                       (option: any) => {
-                        return option.id === page.input[0];
+                        return option.id === singleAnswer.input[0];
                       }
                     );
                     if (Array.isArray(selectedOption) && selectedOption.length) {
-                      studentAnswers[page.domID] = selectedOption[0].text;
+                      // cleanup here
+                      studentAnswers[singleAnswer.domID] = cleanString(
+                        selectedOption[0].text
+                      );
                     } else {
-                      studentAnswers[page.domID] = '';
+                      studentAnswers[singleAnswer.domID] = '';
                     }
                   } else {
-                    studentAnswers[page.domID] = '';
+                    studentAnswers[singleAnswer.domID] = '';
                   }
                 } else {
-                  studentAnswers[page.domID] =
-                    Array.isArray(page.input) && page.input.length ? page.input[0] : '';
+                  // cleanup here
+                  studentAnswers[singleAnswer.domID] =
+                    Array.isArray(singleAnswer.input) && singleAnswer.input.length
+                      ? cleanString(singleAnswer.input[0])
+                      : '';
                 }
               }
             });
-            // ans.responseObject.map((resp: any) => {
-            //   if (qids.indexOf(resp.qid) >= 0) {
-            //     surveyAnswerDates.push(ans.updatedAt);
-            //     surveyDates.push(ans.updatedAt)
-            //     studentAnswers[resp.qid] =
-            //       Array.isArray(resp.response) && resp.response.length
-            //         ? resp.response[0]
-            //         : '';
-            //   }
-            // });
           }
         });
 
@@ -715,7 +730,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               if (qids.indexOf(resp.qid) >= 0) {
                 studentAnswers[resp.qid] =
                   Array.isArray(resp.response) && resp.response.length
-                    ? resp.response[0]
+                    ? cleanString(resp.response[0])
                     : '';
               }
             });
@@ -810,7 +825,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       <div className="flex flex-col px-8">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
-            <div className="shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div className="flex flex-1 overflow-scroll shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
@@ -880,7 +895,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   return (
-    <div className="w-full h-full px-8 py-4">
+    <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 text-gray-600 w-auto">

@@ -458,7 +458,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             )}
           </div>
 
-          <div className="flex">
+          <div className="flex flex-1 overflow-auto">
             <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
               <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
