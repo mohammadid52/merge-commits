@@ -8,10 +8,12 @@ const useGraphqlQuery = (
   variables: any,
   {
     enabled = true,
+    loopOnNextToken = false,
     custom = false,
     onSuccess = () => {},
   }: {
     enabled?: boolean;
+    loopOnNextToken?: boolean;
     custom?: boolean;
     onSuccess?: (data: any, updateCallback?: (updatedData: any) => void) => void;
   }
@@ -34,22 +36,30 @@ const useGraphqlQuery = (
 
   const action = custom ? customQueries : queries;
 
-  const fetch = async () => {
+  const fetch = async (nextToken?: string, loopArray?: any[]) => {
     try {
       setIsLoading(true);
-      // @ts-ignore
-
-      const res: any = await API.graphql(graphqlOperation(action[queryName], variables));
+      const res: any = await API.graphql(
+        // @ts-ignore
+        graphqlOperation(action[queryName], {...variables, nextToken: nextToken})
+      );
       const data = res.data[queryName].items;
-      if (data.length > 0) {
-        setIsSuccess(true);
-        setData(data);
-        setError('');
-        setIsError(false);
-        if (onSuccess && typeof onSuccess === 'function') {
-          onSuccess(data, (updatedData) => setData(updatedData));
+      const theNextToken = res.data[queryName]?.nextToken;
+      const outputData = loopArray ? [...loopArray, ...data] : data;
+
+      if (theNextToken && loopOnNextToken) {
+        await fetch(theNextToken, outputData);
+      } else {
+        if (outputData.length > 0) {
+          setIsSuccess(true);
+          setData(outputData);
+          setError('');
+          setIsError(false);
+          if (onSuccess && typeof onSuccess === 'function') {
+            onSuccess(outputData, (updatedData) => setData(updatedData));
+          }
+          return outputData;
         }
-        return data;
       }
     } catch (error) {
       console.error(error);
