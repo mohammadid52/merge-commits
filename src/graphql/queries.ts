@@ -6356,6 +6356,7 @@ export const getCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
@@ -6460,6 +6461,7 @@ export const listCommunitys = /* GraphQL */ `
         personAuthID
         personEmail
         isEditedCard
+        summaryHtml
         person {
           id
           authId
