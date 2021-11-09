@@ -31,23 +31,32 @@ const RoomChat = (props: RoomChatProps) => {
     return date;
   };
 
-  const fetchRoomChat = async () => {
+  const fetchRoomChat = async (roomObj: any, nextToken?: string, outArray?: []) => {
     setLoading(true);
     let lastWeek = getDate(8);
     let msgs: any = await API.graphql(
       graphqlOperation(customQueries.messagesByRoomId, {
-        roomID: selectedRoom.id,
+        nextToken: nextToken,
+        roomID: roomObj.id,
         createdAt: {gt: lastWeek.toISOString()},
       })
     );
-    msgs = msgs?.data.messagesByRoomID?.items || [];
-    setMsgs(msgs);
-    setLoading(false);
+    let outputData = outArray
+      ? [...msgs?.data.messagesByRoomID?.items, ...outArray]
+      : msgs?.data.messagesByRoomID?.items;
+    let theNextToken = msgs?.data.messagesByRoomID?.nextToken;
+
+    if (theNextToken) {
+      fetchRoomChat(roomObj, theNextToken, outputData);
+    } else {
+      setMsgs(outputData);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (Object.keys(selectedRoom).length > 0) {
-      fetchRoomChat();
+      fetchRoomChat(selectedRoom);
     }
   }, [selectedRoom]);
 

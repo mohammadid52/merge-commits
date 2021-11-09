@@ -1,7 +1,26 @@
 import * as customQueries from '@customGraphql/customQueries';
 import * as queries from '@graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+
+/*
+  Example:
+  const {data, isSuccess, isLoading, setData, isError, error, isFetched, refetch} = useGraphqlQuery('getAllPosts', {}, {
+    enabled: true,
+    loopOnNextToken: true,
+    custom: false,
+    onSuccess: (data: any, updateCallback?: (updatedData: any) => void) => {
+      console.log(data);
+    },
+  }); */
+
+/**
+ * 
+ * @param queryName 
+ * @param variables 
+ * @param param2 
+ * @returns 
+ */
 
 const useGraphqlQuery = (
   queryName: string,

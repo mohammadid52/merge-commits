@@ -11030,6 +11030,120 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUniversalArchiveData = /* GraphQL */ `
+  subscription OnCreateUniversalArchiveData {
+    onCreateUniversalArchiveData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalArchiveData = /* GraphQL */ `
+  subscription OnUpdateUniversalArchiveData {
+    onUpdateUniversalArchiveData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalArchiveData = /* GraphQL */ `
+  subscription OnDeleteUniversalArchiveData {
+    onDeleteUniversalArchiveData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUniversalSurveyStudentData = /* GraphQL */ `
   subscription OnCreateUniversalSurveyStudentData {
     onCreateUniversalSurveyStudentData {
@@ -12742,6 +12856,7 @@ export const onCreateCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
@@ -12851,6 +12966,7 @@ export const onUpdateCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
@@ -12960,6 +13076,7 @@ export const onDeleteCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
