@@ -13114,6 +13114,7 @@ export const createCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
@@ -13226,6 +13227,7 @@ export const updateCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId
@@ -13338,6 +13340,7 @@ export const deleteCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
+      summaryHtml
       person {
         id
         authId

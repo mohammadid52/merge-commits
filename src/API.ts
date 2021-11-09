@@ -3770,6 +3770,7 @@ export type CreateCommunityInput = {
   personAuthID: string,
   personEmail: string,
   isEditedCard?: boolean | null,
+  summaryHtml?: string | null,
   likes?: Array< string | null > | null,
   chatCount?: number | null,
 };
@@ -3790,6 +3791,7 @@ export type ModelCommunityConditionInput = {
   personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
   isEditedCard?: ModelBooleanInput | null,
+  summaryHtml?: ModelStringInput | null,
   likes?: ModelStringInput | null,
   chatCount?: ModelIntInput | null,
   and?: Array< ModelCommunityConditionInput | null > | null,
@@ -3816,6 +3818,7 @@ export type Community = {
   personAuthID?: string,
   personEmail?: string,
   isEditedCard?: boolean | null,
+  summaryHtml?: string | null,
   person?: Person,
   chat?: ModelCommunityChatConnection,
   likes?: Array< string | null > | null,
@@ -3859,6 +3862,7 @@ export type UpdateCommunityInput = {
   personAuthID?: string | null,
   personEmail?: string | null,
   isEditedCard?: boolean | null,
+  summaryHtml?: string | null,
   likes?: Array< string | null > | null,
   chatCount?: number | null,
 };
@@ -4771,6 +4775,7 @@ export type ModelCommunityFilterInput = {
   personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
   isEditedCard?: ModelBooleanInput | null,
+  summaryHtml?: ModelStringInput | null,
   likes?: ModelStringInput | null,
   chatCount?: ModelIntInput | null,
   and?: Array< ModelCommunityFilterInput | null > | null,
@@ -19256,6 +19261,7 @@ export type CreateCommunityMutation = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -19381,6 +19387,7 @@ export type UpdateCommunityMutation = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -19506,6 +19513,7 @@ export type DeleteCommunityMutation = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -26541,6 +26549,7 @@ export type GetCommunityQuery = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -26647,6 +26656,7 @@ export type ListCommunitysQuery = {
       personAuthID: string,
       personEmail: string,
       isEditedCard?: boolean | null,
+      summaryHtml?: string | null,
       person?:  {
         __typename: "Person",
         id: string,
@@ -41053,6 +41063,7 @@ export type OnCreateCommunitySubscription = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -41173,6 +41184,7 @@ export type OnUpdateCommunitySubscription = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
@@ -41293,6 +41305,7 @@ export type OnDeleteCommunitySubscription = {
     personAuthID: string,
     personEmail: string,
     isEditedCard?: boolean | null,
+    summaryHtml?: string | null,
     person?:  {
       __typename: "Person",
       id: string,
