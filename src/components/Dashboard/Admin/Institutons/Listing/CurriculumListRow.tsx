@@ -48,7 +48,7 @@ const CurriculumListRow = ({
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
           isSuperAdmin ? 'w-4/10' : 'w-8/10'
-        } items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-nowrap`}>
+        } items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (

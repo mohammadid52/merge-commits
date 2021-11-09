@@ -270,7 +270,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    let part1 = `/dashboard/manage-institutions/institution/${instituteId}`;
+    let part1 = user.isSuperAdmin
+      ? '/dashboard/manage-institutions'
+      : `/dashboard/manage-institutions/institution/${instituteId}`;
     let part2 = `/manage-users/${profileId}`;
     // console.log(`${part1}${part2}`);
     history.push(`${part1}${part2}`);
@@ -349,7 +351,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const redirectToInstitution = (institutionId: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
+    );
   };
 
   return (

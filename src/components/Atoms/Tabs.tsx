@@ -141,7 +141,7 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } ${
                   menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform scale-95 hover:scale-100 text-gray-700 font-bold`}>
+                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-xs 2xl:text-base rounded-md transition duration-150 ease-in-out transform scale-95 hover:scale-100 text-gray-700 font-bold`}>
                 {menu.title}
               </button>
             )

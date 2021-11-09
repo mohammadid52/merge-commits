@@ -213,7 +213,7 @@ const CurriculumList = ({
           <div className={`flex justify-end`}>
             <div
               className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'lg:w-96' : 'lg:w-48 mr-4'
+                isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
               }`}>
               <SearchInput
                 value={searchInput}

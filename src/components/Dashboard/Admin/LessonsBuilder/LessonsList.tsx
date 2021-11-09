@@ -515,11 +515,14 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
                   </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div
+                    className={`${
+                      state.user.isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+                    } px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                     <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
                   </div>
                   {state.user.isSuperAdmin && (
-                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{LessonsListDict[userLanguage]['INSTITUTION_NAME']}</span>
                     </div>
                   )}

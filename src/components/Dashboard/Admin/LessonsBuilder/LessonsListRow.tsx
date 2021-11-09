@@ -57,10 +57,11 @@ const LessonsListRow = (props: LessonsListRow) => {
     lessonObject,
     checkIfRemovable,
     handleToggleDelete,
+    isSuperAdmin,
     setShowCloneModal,
     createdAt,
     updatedAt,
-    redirectToInstitution
+    redirectToInstitution,
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -84,13 +85,17 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div>
       <div
         title={title ? title : '--'}
-        className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal"
+        className={`${isSuperAdmin ? 'w-1.5/10' : 'w-3/10'} flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>
       </div>
-      <div className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer" onClick={redirectToInstitution}>
-        <span>{institutionName || '--'}</span>
-      </div>
+      {isSuperAdmin && (
+        <div
+          className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
+          onClick={redirectToInstitution}>
+          <span>{institutionName || '--'}</span>
+        </div>
+      )}
 
       <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
