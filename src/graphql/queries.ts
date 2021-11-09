@@ -5187,6 +5187,88 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
     }
   }
 `;
+export const getUniversalLessonWritingExcercises = /* GraphQL */ `
+  query GetUniversalLessonWritingExcercises($id: ID!) {
+    getUniversalLessonWritingExcercises(id: $id) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalLessonWritingExcercisess = /* GraphQL */ `
+  query ListUniversalLessonWritingExcercisess(
+    $id: ID
+    $filter: ModelUniversalLessonWritingExcercisesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonWritingExcercisess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        pageData {
+          domID
+          options
+          input
+        }
+        hasExerciseData
+        exerciseData {
+          id
+          feedbacks
+          shared
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUniversalArchiveData = /* GraphQL */ `
   query GetUniversalArchiveData($id: ID!) {
     getUniversalArchiveData(id: $id) {

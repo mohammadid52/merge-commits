@@ -11195,6 +11195,138 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation CreateUniversalLessonWritingExcercises(
+    $input: CreateUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    createUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation UpdateUniversalLessonWritingExcercises(
+    $input: UpdateUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    updateUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation DeleteUniversalLessonWritingExcercises(
+    $input: DeleteUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    deleteUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUniversalArchiveData = /* GraphQL */ `
   mutation CreateUniversalArchiveData(
     $input: CreateUniversalArchiveDataInput!
