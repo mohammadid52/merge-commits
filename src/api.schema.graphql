@@ -959,6 +959,44 @@ type UniversalLessonStudentData
   exerciseData: [ExerciseData]
 }
 
+type UniversalLessonStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  roomID: String
+  currentLocation: String
+  lessonProgress: String
+  pageData: [partInput]
+  hasExerciseData: Boolean
+  exerciseData: [ExerciseData]
+}
+
+type UniversalLessonWritingExcercises
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  roomID: String
+  currentLocation: String
+  lessonProgress: String
+  pageData: [partInput]
+  hasExerciseData: Boolean
+  exerciseData: [ExerciseData]
+}
+
 type UniversalArchiveData
   @model
   @key(fields: ["id"])
