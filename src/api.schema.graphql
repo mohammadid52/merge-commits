@@ -940,24 +940,6 @@ type UniversalContentOptions {
   text: String
 }
 
-type UniversalLessonStudentData
-  @model
-  @key(fields: ["id"])
-  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-  id: ID!
-  syllabusLessonID: ID!
-  lessonID: ID!
-  lessonPageID: ID!
-  studentID: ID!
-  studentAuthID: ID!
-  studentEmail: String!
-  roomID: String
-  currentLocation: String
-  lessonProgress: String
-  pageData: [partInput]
-  hasExerciseData: Boolean
-  exerciseData: [ExerciseData]
-}
 
 type UniversalLessonStudentData
   @model
@@ -1197,7 +1179,7 @@ type Community @model @key(fields: ["id"]) {
   isEditedCard: Boolean 
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
- 
+  summaryHtml:String
   likes:[String]
   chatCount:Int
 }
