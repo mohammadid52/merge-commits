@@ -71,7 +71,7 @@ const Announcements = ({
         announcementsDetails = {
           ...announcementsDetails,
           cardImageLink: cardDetails.cardImageLink,
-
+          isEditedCard: true,
           cardId: cardDetails.cardId,
         };
       }

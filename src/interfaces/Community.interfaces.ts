@@ -3,6 +3,7 @@ export interface ISpotlightInput {
   summary: string;
   additionalLinks?: string[];
   cardId?: string;
+  isEditedCard?: boolean;
 }
 
 export interface IAnnouncementInput extends ISpotlightInput {

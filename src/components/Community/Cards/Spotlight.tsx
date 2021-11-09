@@ -252,6 +252,7 @@ const Spotlight = ({
           cardImageLink: cardDetails.cardImageLink,
           additionalLinks: [teacher.id],
           cardId: cardDetails.cardId,
+          isEditedCard: true,
         };
       }
 
