@@ -3,7 +3,7 @@ export interface ISpotlightInput {
   summary: string;
   summaryHtml?: string;
   additionalLinks?: string[];
-  cardId?: string;
+  id?: string;
   isEditedCard?: boolean;
 }
 
@@ -51,7 +51,8 @@ export interface ICommunityCardProps {
   instId?: string;
   onCancel: () => void;
   onSubmit: (
-    input: ISpotlightInput | IAnnouncementInput | IEventInput | ICheckItOutInput
+    input: ISpotlightInput | IAnnouncementInput | IEventInput | ICheckItOutInput,
+    successCallback?: () => void
   ) => void;
   editMode?: boolean;
   cardDetails?: ICommunityCard;

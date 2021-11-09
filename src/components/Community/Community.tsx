@@ -144,7 +144,10 @@ const Community = ({}: {role: string}) => {
     },
   });
 
-  const onSpotlightSubmit = async (spotlightDetails: ISpotlightInput) => {
+  const onSpotlightSubmit = async (
+    spotlightDetails: ISpotlightInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('spotlight');
 
     const input = {
@@ -153,13 +156,16 @@ const Community = ({}: {role: string}) => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input});
+      createCommunity.mutate({input}, successCallback);
     }
   };
 
-  const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
+  const onAnnouncementSubmit = async (
+    announcementDetails: IAnnouncementInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('announcement');
 
     const input = {
@@ -168,13 +174,16 @@ const Community = ({}: {role: string}) => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input});
+      createCommunity.mutate({input}, successCallback);
     }
   };
 
-  const onEventSubmit = async (eventDetails: IEventInput) => {
+  const onEventSubmit = async (
+    eventDetails: IEventInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('event');
 
     const input = {
@@ -183,13 +192,16 @@ const Community = ({}: {role: string}) => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input});
+      createCommunity.mutate({input}, successCallback);
     }
   };
 
-  const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
+  const onCheckItOutSubmit = async (
+    checkItOutDetails: ICheckItOutInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('check_it_out');
 
     const input = {
@@ -198,9 +210,9 @@ const Community = ({}: {role: string}) => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input});
+      createCommunity.mutate({input}, successCallback);
     }
   };
 

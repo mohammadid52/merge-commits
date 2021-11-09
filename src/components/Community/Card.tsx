@@ -136,8 +136,10 @@ const PostComment = ({
     setChats([...chats]);
     setShowComments(true);
 
+    let payload = {...chatObject};
+    delete payload.person;
     mutate({
-      input: {...chatObject},
+      input: {...payload},
     });
   };
 
@@ -423,8 +425,8 @@ const Card = ({
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
-    const date = cardDetails.additionalInfo.split(' || ')[0];
-    const addres = cardDetails.additionalInfo.split(' || ')[1];
+    const [date, address] = cardDetails?.additionalInfo.split(' || ');
+
     return (
       <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
         {MenuOptions}
@@ -439,12 +441,10 @@ const Card = ({
               <div className="text-gray-900 font-bold text-xl mb-2">
                 {cardDetails.cardName}
               </div>
-              <p className="text-gray-700 text-base">
-                {ReactHtmlParser(cardDetails.summary)}
-              </p>
+              <div className=" text-base">{ReactHtmlParser(cardDetails.summaryHtml)}</div>
             </div>
-            <div className="flex items-center">
-              <div className="text-sm">
+            <div className="flex items-center justify-between">
+              <div className="text-sm w-auto">
                 <p className="text-gray-600 leading-none">
                   Date:{' '}
                   <span className="w-auto text-gray-700 font-medium">
@@ -453,7 +453,21 @@ const Card = ({
                 </p>
                 <p className="text-gray-600">
                   Address:{' '}
-                  <span className="w-auto text-gray-700 font-medium">{addres}</span>
+                  <span className="w-auto text-gray-700 font-medium">{address}</span>
+                </p>
+              </div>
+              <div className="text-sm w-auto">
+                <p className="text-gray-600 leading-none">
+                  Start time:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(cardDetails.startTime).format('LT')}
+                  </span>
+                </p>
+                <p className="text-gray-600">
+                  End time:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(cardDetails.endTime).format('LT')}
+                  </span>
                 </p>
               </div>
             </div>
@@ -523,8 +537,8 @@ const Card = ({
                 </div>
               )}
 
-              <div className="text-gray-500 font-thin text-sm mb-6 mx-3 px-2">
-                {ReactHtmlParser(cardDetails.summary)}
+              <div className=" text-sm mb-6 mx-3 px-2">
+                {ReactHtmlParser(cardDetails.summaryHtml)}
               </div>
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
                 <div className="w-auto">

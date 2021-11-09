@@ -26,15 +26,12 @@ const Announcements = ({
   });
 
   const [tempData, setTempData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
-      const imageUrl = getImageFromS3Static(
-        COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink
-      );
-
       setTempData({
-        image: imageUrl,
+        image: cardDetails.cardImageLink,
       });
 
       setOverlayText(cardDetails?.cardName);
@@ -61,34 +58,33 @@ const Announcements = ({
   };
 
   const _onSubmit = () => {
+    setIsLoading(true);
     const isValid = validateFields();
     if (isValid) {
       let announcementsDetails: IAnnouncementInput = {
         summary: fields.summary,
         summaryHtml: fields.summaryHtml,
         cardName: overlayText,
+        cardImageLink: editMode
+          ? file && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
       };
+
       if (!editMode) {
-        announcementsDetails = {
-          ...announcementsDetails,
-          cardImageLink: file.fileKey,
-        };
-      } else {
-        announcementsDetails = {
-          ...announcementsDetails,
-          cardImageLink: cardDetails.cardImageLink,
-          isEditedCard: true,
-          cardId: cardDetails.id,
-        };
+        delete announcementsDetails.id;
       }
 
-      onSubmit(announcementsDetails);
+      onSubmit(announcementsDetails, () => setIsLoading(false));
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if ((!editMode && isEmpty(file)) || !tempData?.image) {
+    if (!editMode && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -106,18 +102,31 @@ const Announcements = ({
 
   return (
     <div className="min-w-256 max-w-256">
-      {tempData && tempData.image ? (
+      {tempData && tempData?.image ? (
         <div>
-          {/* <img className="content-image" src={tempData.image} /> */}
           <Media
-            initialImage={tempData.image}
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
             setError={setError}
             setFile={setFile}
             file={file}
           />
         </div>
       ) : (
-        <Media setError={setError} setFile={setFile} file={file} />
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          setError={setError}
+          setFile={setFile}
+          file={file}
+        />
       )}
 
       <div className="px-3 py-4">
@@ -167,7 +176,8 @@ const Announcements = ({
             transparent
           />
           <Buttons
-            disabled={(!editMode && isEmpty(file)) || !tempData?.image}
+            loading={isLoading}
+            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
             onClick={_onSubmit}

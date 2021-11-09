@@ -4,6 +4,7 @@ import SelectorWithAvatar from '@components/Atoms/Form/SelectorWithAvatar';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
@@ -41,19 +42,15 @@ const Spotlight = ({
         setSelectedPerson(teacher);
       }
 
-      const imageUrl = getImageFromS3Static(
-        COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink
-      );
-
       setTempData({
-        image: imageUrl,
+        image: cardDetails.cardImageLink,
       });
 
       setFields({
         ...fields,
 
-        summary: cardDetails.summary,
-        summaryHtml: cardDetails.summaryHtml,
+        summary: cardDetails?.summary || '',
+        summaryHtml: cardDetails?.summaryHtml || '',
       });
     }
   }, [editMode, cardDetails, teachersList]);
@@ -73,6 +70,8 @@ const Spotlight = ({
     setUnsavedChanges(true);
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialData = {
     id: '',
@@ -229,7 +228,7 @@ const Spotlight = ({
     if (teacher === undefined) {
       setError('Please select person');
       isValid = false;
-    } else if ((!editMode && isEmpty(file)) || (editMode && !tempData?.image)) {
+    } else if (!editMode && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
@@ -243,27 +242,27 @@ const Spotlight = ({
   };
 
   const _onSubmit = () => {
+    setIsLoading(true);
     const isValid = validateFields();
     if (isValid) {
       let spotlightDetails: ISpotlightInput = {
         summary: fields.summary,
         summaryHtml: fields.summaryHtml,
-
         additionalLinks: [selectedPerson.id],
         cardImageLink: editMode
           ? file && file?.fileKey
             ? file?.fileKey
             : cardDetails?.cardImageLink
           : file?.fileKey,
-        cardId: cardDetails?.id,
+        id: cardDetails?.id,
         isEditedCard: editMode,
       };
 
       if (!editMode) {
-        delete spotlightDetails.cardId;
+        delete spotlightDetails.id;
       }
 
-      onSubmit(spotlightDetails);
+      onSubmit(spotlightDetails, () => setIsLoading(false));
     }
   };
 
@@ -284,12 +283,31 @@ const Spotlight = ({
           onChange={selectPerson}
         />
       </div>
-      {tempData && tempData.image ? (
+      {tempData && tempData?.image ? (
         <div>
-          <img className="content-image" src={tempData.image} />
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            setError={setError}
+            setFile={setFile}
+            file={file}
+          />
         </div>
       ) : (
-        <Media setError={setError} setFile={setFile} file={file} />
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          setError={setError}
+          setFile={setFile}
+          file={file}
+        />
       )}
 
       <div className="px-3 py-4">
@@ -298,9 +316,11 @@ const Spotlight = ({
           <span className="text-red-500"> *</span>
         </label>
         <div>
-          <RichTextEditor
+          <CustomRichTextEditor
             placeholder={'Why do you want to put this person in the community spotlight?'}
             withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
@@ -325,7 +345,8 @@ const Spotlight = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
-            disabled={(!editMode && isEmpty(file)) || (editMode && !tempData?.image)}
+            loading={isLoading}
+            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
             onClick={_onSubmit}
           />
         </div>

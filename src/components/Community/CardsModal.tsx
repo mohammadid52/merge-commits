@@ -102,10 +102,13 @@ const CardsModal = ({
   editMode: boolean;
   instId: string;
   functions: {
-    onSpotlightSubmit?: (input: ISpotlightInput) => void;
-    onAnnouncementSubmit?: (input: IAnnouncementInput) => void;
-    onEventSubmit?: (input: IEventInput) => void;
-    onCheckItOutSubmit?: (input: ICheckItOutInput) => void;
+    onSpotlightSubmit?: (input: ISpotlightInput, successCallback?: () => void) => void;
+    onAnnouncementSubmit?: (
+      input: IAnnouncementInput,
+      successCallback?: () => void
+    ) => void;
+    onEventSubmit?: (input: IEventInput, successCallback?: () => void) => void;
+    onCheckItOutSubmit?: (input: ICheckItOutInput, successCallback?: () => void) => void;
   };
   navState?: NavStateTypes;
   setNavState?: React.Dispatch<React.SetStateAction<NavStateTypes>>;

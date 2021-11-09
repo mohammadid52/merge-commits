@@ -3,13 +3,15 @@ import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
 import {ICheckItOutInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-const CheckItOut = ({onCancel, onSubmit}: ICommunityCardProps) => {
+const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -35,19 +37,28 @@ const CheckItOut = ({onCancel, onSubmit}: ICommunityCardProps) => {
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const checkItOutDetails: ICheckItOutInput = {
-        cardImageLink: file.fileKey,
+      let checkItOutDetails: ICheckItOutInput = {
+        cardImageLink: editMode
+          ? !isEmpty(file) && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
         summary: fields.summary,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
+        summaryHtml: fields.summaryHtml,
         cardName: overlayText,
       };
+      if (!editMode) {
+        delete checkItOutDetails.id;
+      }
       onSubmit(checkItOutDetails);
-      onCancel();
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if (isEmpty(file)) {
+    if (!editMode && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -63,9 +74,53 @@ const CheckItOut = ({onCancel, onSubmit}: ICommunityCardProps) => {
     return isValid;
   };
 
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      setTempData({
+        image: cardDetails.cardImageLink,
+      });
+
+      setOverlayText(cardDetails?.cardName);
+
+      setFields({
+        ...fields,
+        summary: cardDetails?.summary || '',
+        summaryHtml: cardDetails?.summaryHtml || '',
+      });
+    }
+  }, [editMode, cardDetails]);
+
   return (
     <div className="min-w-256 max-w-256">
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData?.image ? (
+        <div>
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            setError={setError}
+            setFile={setFile}
+            file={file}
+          />
+        </div>
+      ) : (
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          setError={setError}
+          setFile={setFile}
+          file={file}
+        />
+      )}
+
       <div className="px-3 py-4">
         <div>
           <FormInput
@@ -83,11 +138,13 @@ const CheckItOut = ({onCancel, onSubmit}: ICommunityCardProps) => {
         <Label label="Step 3: Add a description" />
 
         <div>
-          <RichTextEditor
+          <CustomRichTextEditor
             placeholder={
               'What do you want people in the community to check out this video or image you uploaded?'
             }
             withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
