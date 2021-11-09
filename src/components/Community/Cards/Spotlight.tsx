@@ -51,6 +51,7 @@ const Spotlight = ({
 
       setFields({
         ...fields,
+
         summary: cardDetails.summary,
         summaryHtml: cardDetails.summaryHtml,
       });
@@ -228,7 +229,7 @@ const Spotlight = ({
     if (teacher === undefined) {
       setError('Please select person');
       isValid = false;
-    } else if ((!editMode && isEmpty(file)) || !tempData?.image) {
+    } else if ((!editMode && isEmpty(file)) || (editMode && !tempData?.image)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
@@ -247,21 +248,19 @@ const Spotlight = ({
       let spotlightDetails: ISpotlightInput = {
         summary: fields.summary,
         summaryHtml: fields.summaryHtml,
+
+        additionalLinks: [selectedPerson.id],
+        cardImageLink: editMode
+          ? file && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
+        cardId: cardDetails?.id,
+        isEditedCard: editMode,
       };
+
       if (!editMode) {
-        spotlightDetails = {
-          ...spotlightDetails,
-          cardImageLink: file.fileKey,
-          additionalLinks: [teacher.id],
-        };
-      } else {
-        spotlightDetails = {
-          ...spotlightDetails,
-          cardImageLink: cardDetails.cardImageLink,
-          additionalLinks: [teacher.id],
-          cardId: cardDetails.id,
-          isEditedCard: true,
-        };
+        delete spotlightDetails.cardId;
       }
 
       onSubmit(spotlightDetails);
@@ -326,7 +325,7 @@ const Spotlight = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
-            disabled={(!editMode && isEmpty(file)) || !tempData?.image}
+            disabled={(!editMode && isEmpty(file)) || (editMode && !tempData?.image)}
             onClick={_onSubmit}
           />
         </div>

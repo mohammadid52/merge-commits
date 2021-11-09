@@ -102,7 +102,7 @@ const Media = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
-    accept: 'video/mp4,video/x-m4v,video/*',
+    accept: 'video/mp4,video/x-m4v,video/*,image/x-png,image/gif,image/jpeg',
   });
 
   const handleFileSelection = async (e: any) => {

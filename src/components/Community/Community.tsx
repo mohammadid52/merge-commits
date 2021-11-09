@@ -151,6 +151,7 @@ const Community = ({}: {role: string}) => {
       ...spotlightDetails,
       ...commonInput,
     };
+
     if (isCardEditMode) {
       updateCommunity.mutate({input: {...input, id: cardForEdit.id}});
     } else {
