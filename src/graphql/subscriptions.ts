@@ -11030,6 +11030,120 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
+  subscription OnCreateUniversalLessonWritingExcercises {
+    onCreateUniversalLessonWritingExcercises {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
+  subscription OnUpdateUniversalLessonWritingExcercises {
+    onUpdateUniversalLessonWritingExcercises {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
+  subscription OnDeleteUniversalLessonWritingExcercises {
+    onDeleteUniversalLessonWritingExcercises {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUniversalArchiveData = /* GraphQL */ `
   subscription OnCreateUniversalArchiveData {
     onCreateUniversalArchiveData {
