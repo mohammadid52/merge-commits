@@ -397,9 +397,9 @@ const Card = ({
         <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="border-b-0 bg-red-600 text-white p-4 border-gray-200">
-                <div className="text-white font-semibold text-lg  px-2">
-                  {ReactHtmlParser(cardDetails.summary)}
+              <div className="border-b-0 p-2 border-gray-200">
+                <div className="text-lg  px-2">
+                  {ReactHtmlParser(cardDetails.summaryHtml)}
                 </div>
               </div>
               {cardDetails.cardName ? (

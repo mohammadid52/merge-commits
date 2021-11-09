@@ -31,7 +31,7 @@ import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
-import {isEmpty} from 'lodash';
+import {findIndex, isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
@@ -77,7 +77,7 @@ const Community = ({}: {role: string}) => {
       last: true,
     },
   ];
-  const payloadForCommunities = {institutionID: instId, limit: 12};
+  const payloadForCommunities = {};
 
   const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery(
     'listCommunitys',
@@ -137,7 +137,9 @@ const Community = ({}: {role: string}) => {
   });
   const updateCommunity = useGraphqlMutation('updateCommunity', {
     onCancel,
-    onSuccess: () => {
+    onSuccess: (data: ICommunityCard) => {
+      const cardIdx = findIndex(list, (item: ICommunityCard) => item.id === data.id);
+      list[cardIdx] = {...data};
       setList([...list]);
     },
   });
@@ -146,9 +148,7 @@ const Community = ({}: {role: string}) => {
     const commonInput = getCommonInput('spotlight');
 
     const input = {
-      cardImageLink: spotlightDetails.cardImageLink,
-      summary: spotlightDetails.summary,
-      additionalLinks: spotlightDetails.additionalLinks,
+      ...spotlightDetails,
       ...commonInput,
     };
     if (isCardEditMode) {
@@ -162,9 +162,7 @@ const Community = ({}: {role: string}) => {
     const commonInput = getCommonInput('announcement');
 
     const input = {
-      cardImageLink: announcementDetails.cardImageLink,
-      summary: announcementDetails.summary,
-      cardName: announcementDetails.cardName,
+      ...announcementDetails,
       ...commonInput,
     };
 

@@ -4,6 +4,7 @@ import Label from '@components/Atoms/Form/Label';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import CustomRichTextEditor from '@UlbBlocks/HighlighterBlock/CustomRichTextEditor';
 import {IAnnouncementInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from '@utilities/services';
@@ -38,7 +39,11 @@ const Announcements = ({
 
       setOverlayText(cardDetails?.cardName);
 
-      setFields({...fields, summary: cardDetails.summary});
+      setFields({
+        ...fields,
+        summary: cardDetails?.summary || '',
+        summaryHtml: cardDetails?.summaryHtml || '',
+      });
     }
   }, [editMode, cardDetails]);
 
@@ -59,7 +64,8 @@ const Announcements = ({
     const isValid = validateFields();
     if (isValid) {
       let announcementsDetails: IAnnouncementInput = {
-        summary: fields.summaryHtml,
+        summary: fields.summary,
+        summaryHtml: fields.summaryHtml,
         cardName: overlayText,
       };
       if (!editMode) {
@@ -72,7 +78,7 @@ const Announcements = ({
           ...announcementsDetails,
           cardImageLink: cardDetails.cardImageLink,
           isEditedCard: true,
-          cardId: cardDetails.cardId,
+          cardId: cardDetails.id,
         };
       }
 
@@ -102,7 +108,13 @@ const Announcements = ({
     <div className="min-w-256 max-w-256">
       {tempData && tempData.image ? (
         <div>
-          <img className="content-image" src={tempData.image} />
+          {/* <img className="content-image" src={tempData.image} /> */}
+          <Media
+            initialImage={tempData.image}
+            setError={setError}
+            setFile={setFile}
+            file={file}
+          />
         </div>
       ) : (
         <Media setError={setError} setFile={setFile} file={file} />
@@ -125,11 +137,13 @@ const Announcements = ({
         <Label label="Step 3: Add a description" />
 
         <div>
-          <RichTextEditor
+          <CustomRichTextEditor
             placeholder={
               'Why do you want people in the community to know about what is happening'
             }
             withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')

@@ -33,7 +33,10 @@ const Spotlight = ({
     if (editMode && !isEmpty(cardDetails)) {
       if (teachersList.length > 0) {
         const teacher = teachersList.find(
-          (teacher) => teacher.id === cardDetails.additionalLinks[0]
+          (teacher) =>
+            teacher.id === cardDetails?.additionalLinks &&
+            cardDetails?.additionalLinks.length > 0 &&
+            cardDetails?.additionalLinks[0]
         );
         setSelectedPerson(teacher);
       }
@@ -46,7 +49,11 @@ const Spotlight = ({
         image: imageUrl,
       });
 
-      setFields({...fields, summary: cardDetails.summary});
+      setFields({
+        ...fields,
+        summary: cardDetails.summary,
+        summaryHtml: cardDetails.summaryHtml,
+      });
     }
   }, [editMode, cardDetails, teachersList]);
 
@@ -238,7 +245,8 @@ const Spotlight = ({
     const isValid = validateFields();
     if (isValid) {
       let spotlightDetails: ISpotlightInput = {
-        summary: fields.summaryHtml,
+        summary: fields.summary,
+        summaryHtml: fields.summaryHtml,
       };
       if (!editMode) {
         spotlightDetails = {
@@ -251,7 +259,7 @@ const Spotlight = ({
           ...spotlightDetails,
           cardImageLink: cardDetails.cardImageLink,
           additionalLinks: [teacher.id],
-          cardId: cardDetails.cardId,
+          cardId: cardDetails.id,
           isEditedCard: true,
         };
       }

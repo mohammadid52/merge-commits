@@ -1,6 +1,7 @@
 export interface ISpotlightInput {
   cardImageLink?: string;
   summary: string;
+  summaryHtml?: string;
   additionalLinks?: string[];
   cardId?: string;
   isEditedCard?: boolean;

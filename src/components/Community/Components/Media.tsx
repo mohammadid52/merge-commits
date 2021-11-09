@@ -14,8 +14,10 @@ const Media = ({
   file,
   setFile,
   setError,
+  initialImage = null,
 }: {
   file: IFile;
+  initialImage?: string;
   setFile: React.Dispatch<React.SetStateAction<IFile>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -123,7 +125,7 @@ const Media = ({
           {...getRootProps()}
           className={`border-${
             isDragActive ? 'blue' : 'gray'
-          }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
+          }-400 border-2 relative transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
           <input
             {...getInputProps()}
             ref={inputOther}
@@ -131,6 +133,15 @@ const Media = ({
             type="file"
             className="hidden"
           />
+
+          {initialImage && (
+            <img
+              src={initialImage}
+              alt=""
+              className="w-32 h-auto rounded-md absolute top-1 left-1"
+            />
+          )}
+
           <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
           {isDragActive ? (
             <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
