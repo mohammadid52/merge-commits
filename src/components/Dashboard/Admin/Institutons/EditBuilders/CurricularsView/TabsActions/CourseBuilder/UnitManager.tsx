@@ -10,14 +10,12 @@ import * as mutations from '../../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../../customGraphql/customMutations';
 
-import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
+import {reorder} from '../../../../../../../../utilities/strings';
 import Selector from '../../../../../../../Atoms/Form/Selector';
-import {DeleteActionBtn} from '../../../../../../../Atoms/Buttons/DeleteActionBtn';
 import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
-import CurriculumList from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
 import UnitManagerRow from './UnitManagerRow';
 
 interface UIMessages {

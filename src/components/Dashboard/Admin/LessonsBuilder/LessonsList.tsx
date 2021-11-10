@@ -508,7 +508,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             <div
               className={`${
                 isInInstitution ? '' : 'white_back px-8'
-              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
+              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 overflow-x-scroll`}>
               <div
                 className={`h-8/10 ${isInInstitution ? '' : 'px-4'} w-screen lg:w-auto`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">

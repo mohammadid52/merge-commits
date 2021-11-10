@@ -216,8 +216,8 @@ const RoomsList = (props: RoomListProps) => {
   return (
     <div className="flex m-auto justify-center p-4 pt-0 pl-12">
       <div className="">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg leading-6 text-gray-600 w-auto">
+        <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
+          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
             {InstitueRomms[userLanguage]['TITLE']}
           </h3>
           <div className={`flex justify-end`}>
@@ -232,7 +232,7 @@ const RoomsList = (props: RoomListProps) => {
                   onSearch(searchInput, selectedInstitution?.id, selectedStaff?.id)
                 }
                 closeAction={removeSearchAction}
-                style={`mr-4 w-auto lg:w-48`}
+                style={`mr-4 w-auto md:w-40 lg:w-48`}
               />
               <Selector
                 placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
@@ -240,7 +240,7 @@ const RoomsList = (props: RoomListProps) => {
                 selectedItem={selectedStaff?.name}
                 onChange={handleStaffChange}
                 arrowHidden={true}
-                additionalClass={`w-auto lg:w-48 ${isSuperAdmin ? 'mr-4' : ''}`}
+                additionalClass={`w-auto md:w-52 lg:w-48 ${isSuperAdmin ? 'mr-4' : ''}`}
                 isClearable
                 onClear={onStaffSelectionRemove}
               />
@@ -251,7 +251,7 @@ const RoomsList = (props: RoomListProps) => {
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
                   arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
+                  additionalClass={'w-auto md:w-52 lg:w-48'}
                   isClearable
                   onClear={onInstitutionSelectionRemove}
                 />
@@ -285,11 +285,14 @@ const RoomsList = (props: RoomListProps) => {
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{InstitueRomms[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
-                <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div
+                  className={`${
+                    isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+                  } px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
                 {/* <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -324,14 +327,21 @@ const RoomsList = (props: RoomListProps) => {
                     {i + 1}.
                   </div>
                   {isSuperAdmin && (
-                    <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal" onClick={(e) => {
-                      e.stopPropagation();
-                      history.push(`/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`)
-                    }}>
+                    <div
+                      className="flex w-1.5/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(
+                          `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+                        );
+                      }}>
                       {item.institution?.name}
                     </div>
                   )}
-                  <div className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
+                  <div
+                    className={`flex ${
+                      isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+                    } items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all`}>
                     {item.name}
                   </div>
                   {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">

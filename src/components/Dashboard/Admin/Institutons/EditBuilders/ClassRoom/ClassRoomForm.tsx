@@ -781,7 +781,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   useEffect(() => {
     fetchRoomDetails();
     // getInstitutionList();
-  }, []);
+  }, [roomId]);
 
   const {
     name,

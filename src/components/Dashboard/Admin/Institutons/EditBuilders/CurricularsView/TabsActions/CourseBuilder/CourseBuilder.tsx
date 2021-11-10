@@ -38,7 +38,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
 
   const {clientKey, state, userLanguage} = useContext(GlobalContext);
   const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(clientKey);
-  const isSuperAdmin:any = state.user.role === 'SUP';
+  const isSuperAdmin: any = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState([]);
@@ -113,7 +113,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     }
   };
 
-  const getBasicInstitutionInfo = async (instituteId:any) => {
+  const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
         id: instituteId,
@@ -169,7 +169,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           <UnitManager
             courseId={courseId}
             courseData={courseData}
-            institutionId={instId}
+            institutionId={courseData?.institution.id}
             savedSyllabusList={savedSyllabusList}
             setSavedSyllabusList={setSavedSyllabusList}
             syllabusIds={syllabusIds}
@@ -198,7 +198,11 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         <div
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
-            history.push(isSuperAdmin ? `/dashboard/manage-institutions/courses` : `/dashboard/manage-institutions/institution/${instId}/courses`)
+            history.push(
+              isSuperAdmin
+                ? `/dashboard/manage-institutions/courses`
+                : `/dashboard/manage-institutions/institution/${instId}/courses`
+            )
           }>
           <span className="w-auto mr-2">
             <BsArrowLeft />
