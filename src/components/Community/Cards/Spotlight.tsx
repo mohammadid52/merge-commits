@@ -5,9 +5,11 @@ import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
 import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
+
 import * as queries from '@graphql/queries';
 import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
@@ -32,19 +34,31 @@ const Spotlight = ({
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
+      const additionalLinks = cardDetails?.additionalLinks;
+
       if (teachersList.length > 0) {
         const teacher = teachersList.find(
           (teacher) =>
-            teacher.id === cardDetails?.additionalLinks &&
-            cardDetails?.additionalLinks.length > 0 &&
-            cardDetails?.additionalLinks[0]
+            teacher.id ===
+            (additionalLinks &&
+              additionalLinks.length > 0 &&
+              additionalLinks[cardDetails?.cardImageLink ? 0 : 1])
         );
+
         setSelectedPerson(teacher);
       }
 
       setTempData({
         image: cardDetails.cardImageLink,
       });
+
+      if (
+        !cardDetails.cardImageLink &&
+        additionalLinks?.length > 0 &&
+        additionalLinks[0]
+      ) {
+        setYoutubeVideoLink(additionalLinks[0]);
+      }
 
       setFields({
         ...fields,
@@ -225,14 +239,21 @@ const Spotlight = ({
 
   const validateFields = () => {
     let isValid = true;
+
     if (teacher === undefined) {
       setError('Please select person');
       isValid = false;
-    } else if (!editMode && isEmpty(file)) {
+    } else if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
       setError('Please add description');
+      isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
       isValid = false;
     } else {
       setError('');
@@ -242,9 +263,9 @@ const Spotlight = ({
   };
 
   const _onSubmit = () => {
-    setIsLoading(true);
     const isValid = validateFields();
     if (isValid) {
+      setIsLoading(true);
       let spotlightDetails: ISpotlightInput = {
         summary: fields.summary,
         summaryHtml: fields.summaryHtml,
@@ -261,9 +282,25 @@ const Spotlight = ({
       if (!editMode) {
         delete spotlightDetails.id;
       }
+      if (youtubeVideoLink) {
+        spotlightDetails = {
+          ...spotlightDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink, selectedPerson.id],
+        };
+      }
 
       onSubmit(spotlightDetails, () => setIsLoading(false));
     }
+  };
+
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
   };
 
   return (
@@ -292,9 +329,7 @@ const Spotlight = ({
                   ? file?.fileKey
                   : tempData?.image)
             )}
-            setError={setError}
-            setFile={setFile}
-            file={file}
+            {...mediaProps}
           />
         </div>
       ) : (
@@ -304,9 +339,7 @@ const Spotlight = ({
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
               : null
           }
-          setError={setError}
-          setFile={setFile}
-          file={file}
+          {...mediaProps}
         />
       )}
 
@@ -316,9 +349,8 @@ const Spotlight = ({
           <span className="text-red-500"> *</span>
         </label>
         <div>
-          <CustomRichTextEditor
+          <RichTextEditor
             placeholder={'Why do you want to put this person in the community spotlight?'}
-            withStyles
             rounded
             customStyle
             initialValue={fields.summary}
@@ -346,7 +378,10 @@ const Spotlight = ({
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
             loading={isLoading}
-            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
+            // disabled={
+            //   (!editMode && isEmpty(file) && file?._status !== 'success') ||
+            //   (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink))
+            // }
             onClick={_onSubmit}
           />
         </div>

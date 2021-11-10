@@ -1,6 +1,7 @@
 import FormInput from '@atoms/Form/FormInput';
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
@@ -77,6 +78,13 @@ const Announcements = ({
       if (!editMode) {
         delete announcementsDetails.id;
       }
+      if (youtubeVideoLink) {
+        announcementsDetails = {
+          ...announcementsDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink],
+        };
+      }
 
       onSubmit(announcementsDetails, () => setIsLoading(false));
     }
@@ -84,7 +92,7 @@ const Announcements = ({
 
   const validateFields = () => {
     let isValid = true;
-    if (!editMode && isEmpty(file)) {
+    if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -93,11 +101,27 @@ const Announcements = ({
     } else if (!fields.summary) {
       setError('Please add description');
       isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
+      isValid = false;
     } else {
       setError('');
       isValid = true;
     }
     return isValid;
+  };
+
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
   };
 
   return (
@@ -111,9 +135,7 @@ const Announcements = ({
                   ? file?.fileKey
                   : tempData?.image)
             )}
-            setError={setError}
-            setFile={setFile}
-            file={file}
+            {...mediaProps}
           />
         </div>
       ) : (
@@ -123,9 +145,7 @@ const Announcements = ({
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
               : null
           }
-          setError={setError}
-          setFile={setFile}
-          file={file}
+          {...mediaProps}
         />
       )}
 
@@ -146,11 +166,10 @@ const Announcements = ({
         <Label label="Step 3: Add a description" />
 
         <div>
-          <CustomRichTextEditor
+          <RichTextEditor
             placeholder={
               'Why do you want people in the community to know about what is happening'
             }
-            withStyles
             rounded
             customStyle
             initialValue={fields.summary}

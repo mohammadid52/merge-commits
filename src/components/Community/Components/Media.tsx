@@ -1,7 +1,7 @@
 import Label from '@components/Atoms/Form/Label';
 import File from '@components/Community/File';
 import {getAsset} from 'assets';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
@@ -9,18 +9,26 @@ import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.commu
 import Storage from '@aws-amplify/storage';
 import {nanoid} from 'nanoid';
 import {Transition} from '@headlessui/react';
+import FormInput from '@atoms/Form/FormInput';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+
+interface MediaProps {
+  file: IFile;
+  videoLink?: string;
+  initialImage?: string;
+  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  setVideoLink?: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const Media = ({
   file,
   setFile,
   setError,
   initialImage = null,
-}: {
-  file: IFile;
-  initialImage?: string;
-  setFile: React.Dispatch<React.SetStateAction<IFile>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+  videoLink,
+  setVideoLink,
+}: MediaProps) => {
   const updateProgress = (file: IFile, progress: IFile['progress']) => {
     update(file, `progress`, () => progress);
     setFile({...file});
@@ -102,7 +110,7 @@ const Media = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
-    accept: 'video/mp4,video/x-m4v,video/*,image/x-png,image/gif,image/jpeg',
+    accept: 'image/x-png,image/gif,image/jpeg',
   });
 
   const handleFileSelection = async (e: any) => {
@@ -115,6 +123,23 @@ const Media = ({
   const openFilesExplorer = () => inputOther.current.click();
 
   const fileIcon = getAsset('general', 'fileImg');
+
+  const [errors, setErrors] = useState({videoLink: ''});
+  const uploadedVideoLink: boolean =
+    !isEmpty(file) && (file._status === 'success' || file._status === 'progress');
+
+  const onVideoLinkChange = (e: any): void => {
+    const {value = ''} = e.target;
+    setVideoLink(value);
+    const isValidUrl = REGEX.Youtube.test(value);
+    if (isValidUrl) {
+      setErrors({...errors, videoLink: ''});
+    } else {
+      setErrors({...errors, videoLink: 'Invalid url'});
+    }
+  };
+
+  const isUploadedFromPC = Boolean(uploadedVideoLink);
 
   return (
     <div className="px-3 py-4">
@@ -177,6 +202,19 @@ const Media = ({
           )}
         </Transition>
       </div>
+
+      <p className="text-center text-gray-600 mt-2"> --- or --- </p>
+
+      <Label label="Upload Youtube/Vimeo link" />
+      <FormInput
+        placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
+        value={videoLink}
+        disabled={isUploadedFromPC}
+        onChange={onVideoLinkChange}
+        dark={true}
+        id="videoLink"
+        error={errors.videoLink}
+      />
     </div>
   );
 };

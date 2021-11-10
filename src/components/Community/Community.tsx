@@ -15,7 +15,7 @@ import HeroBanner from '@components/Header/HeroBanner';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-import useAuth from '@customHooks/useAuth';
+
 import * as mutations from '@graphql/mutations';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -39,6 +39,7 @@ import React, {useEffect, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import useAuth from '@customHooks/useAuth';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -230,11 +231,13 @@ const Community = ({}: {role: string}) => {
     deleteImageFromS3(`${COMMUNITY_UPLOAD_KEY}${fileKey}`);
   };
 
-  const onDelete = async (cardId: string, fileKey: string) => {
+  const onDelete = async (cardId: string, fileKey?: string) => {
     try {
       remove(list, ['id', cardId]);
       setList([...list]);
-      await deleteImage(fileKey);
+      if (fileKey) {
+        await deleteImage(fileKey);
+      }
       const res: any = await API.graphql(
         graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
       );

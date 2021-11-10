@@ -154,7 +154,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         editorRef.current.editor.editor.innerHTML = text;
       });
     }
-  }, [editorRef]);
+  }, [editorRef,withStyles]);
 
   const toolbarClassName = `${
     customStyle

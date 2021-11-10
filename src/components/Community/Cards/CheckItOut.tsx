@@ -1,6 +1,7 @@
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
@@ -52,13 +53,20 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       if (!editMode) {
         delete checkItOutDetails.id;
       }
+      if (youtubeVideoLink) {
+        checkItOutDetails = {
+          ...checkItOutDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink],
+        };
+      }
       onSubmit(checkItOutDetails);
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if (!editMode && isEmpty(file)) {
+    if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -66,6 +74,12 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       isValid = false;
     } else if (!fields.summary) {
       setError('Description not found');
+      isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
       isValid = false;
     } else {
       setError('');
@@ -92,6 +106,17 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     }
   }, [editMode, cardDetails]);
 
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+  const isValidUrl = REGEX.Youtube.test(youtubeVideoLink);
+
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
+  };
+
   return (
     <div className="min-w-256 max-w-256">
       {tempData && tempData?.image ? (
@@ -103,9 +128,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
                   ? file?.fileKey
                   : tempData?.image)
             )}
-            setError={setError}
-            setFile={setFile}
-            file={file}
+            {...mediaProps}
           />
         </div>
       ) : (
@@ -115,9 +138,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
               : null
           }
-          setError={setError}
-          setFile={setFile}
-          file={file}
+          {...mediaProps}
         />
       )}
 
@@ -138,11 +159,10 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
         <Label label="Step 3: Add a description" />
 
         <div>
-          <CustomRichTextEditor
+          <RichTextEditor
             placeholder={
               'What do you want people in the community to check out this video or image you uploaded?'
             }
-            withStyles
             rounded
             customStyle
             initialValue={fields.summary}

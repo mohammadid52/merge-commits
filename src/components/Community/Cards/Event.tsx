@@ -220,8 +220,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         <Label label="Step 3: Add a description" />
 
         <div>
-          <CustomRichTextEditor
-            withStyles
+          <RichTextEditor
             rounded
             customStyle
             placeholder={

@@ -1,6 +1,7 @@
 import FormInput from '@atoms/Form/FormInput';
 import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
+import ReactPlayer from 'react-player';
 import Popover from '@components/Atoms/Popover';
 import Comments from '@components/Community/Components/Comments';
 import {
@@ -8,7 +9,6 @@ import {
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
 import * as customQueries from '@customGraphql/customQueries';
-import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import ReactHtmlParser from 'react-html-parser';
@@ -21,16 +21,16 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
+import useAuth from '@customHooks/useAuth';
+import HandleMedia from '@components/Community/Components/HandleMedia';
 
 const BottomSection = ({
   setShowComments,
   showComments,
-
   cardDetails,
 }: {
   cardDetails: ICommunityCard;
   showComments: boolean;
-
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
@@ -56,20 +56,7 @@ const BottomSection = ({
 
   return (
     <>
-      <div className="flex justify-end mb-4 border-t-0 border-gray-200">
-        <div className="flex w-auto mt-1 pt-2 space-x-4 pr-5">
-          <div
-            onClick={() => likeAction()}
-            className={`${
-              isLiked
-                ? 'bg-pink-500 text-white'
-                : 'bg-pink-100 hover:bg-pink-200 text-pink-500'
-            } rounded-full p-2  w-auto cursor-pointer z-100 transition-all`}>
-            <AiOutlineHeart className=" text-xl " />
-          </div>
-        </div>
-      </div>
-      <div className="flex w-full border-t border-gray-100">
+      <div className="flex w-full border-t-0 border-gray-100">
         <div className="mt-3 mx-5 flex flex-row w-auto">
           <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
             Comments:
@@ -82,8 +69,17 @@ const BottomSection = ({
 
         <div className="mt-3 mx-5 w-full flex justify-end">
           <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
+            <div
+              onClick={() => likeAction()}
+              className={`${
+                isLiked
+                  ? 'bg-pink-500 text-white'
+                  : 'bg-pink-100 hover:bg-pink-200 text-pink-500'
+              } rounded-full p-2 mr-2 w-auto cursor-pointer z-100 transition-all`}>
+              <AiOutlineHeart className=" text-xl " />
+            </div>
             Likes:{' '}
-            <div className="ml-1 text-gray-500 font-medium text-sm">
+            <div className="ml-1 text-gray-500 w-auto font-medium text-sm">
               {' '}
               {cardDetails?.likes?.length || 0}
             </div>
@@ -143,48 +139,52 @@ const PostComment = ({
     });
   };
 
+  const {image, Placeholder} = useAuth();
+
   return (
-    cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-      <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
+    <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
+      {image ? (
         <img
           className="w-10 h-10 object-cover rounded-full shadow mr-2 cursor-pointer"
           alt="User avatar"
-          src={getImageFromS3Static(cardDetails.person.image)}
+          src={getImageFromS3Static(image)}
         />
-        <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
-          <button
-            type="submit"
-            className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500">
-            <svg
-              className="w-6 h-6 transition ease-out duration-300 hover:text-blue-500 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </button>
-        </span>
-        <input
-          type="search"
-          className="w-full py-2 pl-4 pr-10 text-sm border-gray-400 bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
-          placeholder="Post a comment..."
-          autoComplete="off"
-          value={postText}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              onPost();
-            }
-          }}
-          onChange={(e) => setPostText(e.target.value)}
-        />
-      </div>
-    )
+      ) : (
+        <Placeholder />
+      )}
+      <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
+        <button
+          type="submit"
+          className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500">
+          <svg
+            className="w-6 h-6 transition ease-out duration-300 hover:text-blue-500 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
+      </span>
+      <input
+        type="search"
+        className="w-full py-2 pl-4 pr-10 text-sm border-gray-400 bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
+        placeholder="Post a comment..."
+        autoComplete="off"
+        value={postText}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onPost();
+          }
+        }}
+        onChange={(e) => setPostText(e.target.value)}
+      />
+    </div>
   );
 };
 
@@ -206,7 +206,7 @@ const Menu = ({
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <div className="w-auto absolute top-0 right-0 p-4">
+    <div className="w-auto absolute top-0 right-0 p-4 z-1000">
       <Popover
         show={showMenu}
         bottom={0.6}
@@ -244,6 +244,158 @@ const Menu = ({
   );
 };
 
+const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
+  const person = cardDetails?.person;
+
+  const UploadDate = () => {
+    return (
+      <span className="text-gray-600 font-thin w-auto text-xs ml-2">
+        • {moment(cardDetails.cardDate).fromNow()}
+      </span>
+    );
+  };
+
+  const media = React.useMemo(
+    () =>
+      cardDetails?.cardImageLink
+        ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails?.cardImageLink)
+        : null,
+    [cardDetails?.cardImageLink]
+  );
+
+  if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
+    return (
+      <div className="relative">
+        <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
+          Announcement <UploadDate />
+        </div>
+        <div className="flex max-w-xl  mx-auto">
+          <div className="flex items-center w-full">
+            <div className="w-full">
+              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+                <HandleMedia cardDetails={cardDetails} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className=" text-sm mb-2 mx-3 px-2">
+          {ReactHtmlParser(cardDetails.summaryHtml)}
+        </div>
+      </div>
+    );
+  } else if (cardDetails.cardType === communityTypes.EVENT) {
+    const [date, address] = cardDetails?.additionalInfo.split(' || ');
+
+    return (
+      <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+        <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
+          Event <UploadDate />
+        </div>
+        <div className=" w-full lg:max-w-full lg:flex">
+          <div
+            className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
+            style={{backgroundImage: `url(${media})`}}></div>
+          <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+            <div className="mb-8">
+              <div className="text-gray-900 font-bold text-xl mb-2">
+                {cardDetails.cardName}
+              </div>
+              <div className=" text-base">{ReactHtmlParser(cardDetails.summaryHtml)}</div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-sm w-auto">
+                <p className="text-gray-600 leading-none">
+                  Date:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(date).format('DD MMM')}
+                  </span>
+                </p>
+                <p className="text-gray-600">
+                  Address:{' '}
+                  <span className="w-auto text-gray-700 font-medium">{address}</span>
+                </p>
+              </div>
+              <div className="text-sm w-auto">
+                <p className="text-gray-600 leading-none">
+                  Start time:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(cardDetails.startTime).format('LT')}
+                  </span>
+                </p>
+                <p className="text-gray-600">
+                  End time:{' '}
+                  <span className="w-auto text-gray-700 font-medium">
+                    {moment(cardDetails.endTime).format('LT')}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
+          <BottomSection
+            cardDetails={cardDetails}
+            showComments={showComments}
+            setShowComments={setShowComments}
+          />
+        )} */}
+      </div>
+    );
+  } else
+    return (
+      <div className="relative">
+        <div className="flex">
+          <div className="flex items-center w-full">
+            <div className="w-full">
+              <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
+                {cardDetails.cardType === communityTypes.SPOTLIGHT
+                  ? 'Spotlight'
+                  : 'Check It Out'}
+                <UploadDate />
+              </div>
+              {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
+                <div className="flex flex-row mt-2 px-2 py-3 mx-3">
+                  <div className="w-auto h-auto rounded-full">
+                    <img
+                      className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
+                      alt="User avatar"
+                      src={getImageFromS3Static(person.image)}
+                    />
+                  </div>
+                  <div className="flex flex-col mb-2 ml-4 mt-1">
+                    <div className="text-gray-600 text-sm font-semibold">
+                      {person.firstName} {person.lastName}
+                    </div>
+                    <div className="flex  mt-1">
+                      <div className="text-gray-500 font-thin w-auto text-xs">
+                        {moment(cardDetails.cardDate).fromNow()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+                <HandleMedia cardDetails={cardDetails} />
+              </div>
+
+              <div className="mb-2 mx-3 px-2">
+                {cardDetails?.cardName && (
+                  <h1 className=" text-xl text-gray-800 font-medium mb-2">
+                    {cardDetails.cardName}
+                  </h1>
+                )}
+                <p className="text-gray-600 text-sm">
+                  {ReactHtmlParser(cardDetails.summaryHtml)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+};
+
 const Card = ({
   cardDetails,
   onDelete,
@@ -253,8 +405,6 @@ const Card = ({
   onDelete: (cardId: string, fileKey: string) => void;
   onCardEdit?: (cardDetails: ICommunityCard) => void;
 }): JSX.Element => {
-  const media = getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails.cardImageLink);
-  const person = cardDetails.person;
   const [chats, setChats] = useState([]);
 
   const {mutate} = useGraphqlMutation('deleteCommunityChat');
@@ -335,7 +485,7 @@ const Card = ({
   const MenuOptions = iAmOwnerOfTheCard && (
     <Menu
       cardDetails={cardDetails}
-      fileKey={cardDetails.cardImageLink}
+      fileKey={cardDetails?.cardImageLink}
       onDelete={onDelete}
       onCardEdit={onCardEdit}
       cardId={cardDetails.id}
@@ -391,185 +541,36 @@ const Card = ({
     );
   };
 
-  if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
-    return (
-      <div className="relative">
-        {MenuOptions}
-
-        <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
-          <div className="flex items-center w-full">
-            <div className="w-full">
-              <div className="border-b-0 p-2 border-gray-200">
-                <div className="text-lg  px-2">
-                  {ReactHtmlParser(cardDetails.summaryHtml)}
-                </div>
-              </div>
-              {cardDetails.cardName ? (
-                <div className="mb-7 mt-3 px-2">
-                  <div className="content">
-                    <div className="content-overlay"></div>
-                    <img className="content-image" src={media} />
-                    <div className="content-details fadeIn-bottom">
-                      <h3 className="content-title text-xl">{cardDetails.cardName}</h3>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
-                  <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (cardDetails.cardType === communityTypes.EVENT) {
-    const [date, address] = cardDetails?.additionalInfo.split(' || ');
-
-    return (
-      <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
-        {MenuOptions}
-        <EditChatModal />
-
-        <div className=" w-full lg:max-w-full lg:flex">
-          <div
-            className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
-            style={{backgroundImage: `url(${media})`}}></div>
-          <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-            <div className="mb-8">
-              <div className="text-gray-900 font-bold text-xl mb-2">
-                {cardDetails.cardName}
-              </div>
-              <div className=" text-base">{ReactHtmlParser(cardDetails.summaryHtml)}</div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="text-sm w-auto">
-                <p className="text-gray-600 leading-none">
-                  Date:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
-                    {moment(date).format('DD MMM')}
-                  </span>
-                </p>
-                <p className="text-gray-600">
-                  Address:{' '}
-                  <span className="w-auto text-gray-700 font-medium">{address}</span>
-                </p>
-              </div>
-              <div className="text-sm w-auto">
-                <p className="text-gray-600 leading-none">
-                  Start time:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
-                    {moment(cardDetails.startTime).format('LT')}
-                  </span>
-                </p>
-                <p className="text-gray-600">
-                  End time:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
-                    {moment(cardDetails.endTime).format('LT')}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-          <BottomSection
-            cardDetails={cardDetails}
-            showComments={showComments}
-            setShowComments={setShowComments}
+  return (
+    <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+      {MenuOptions}
+      <EditChatModal />
+      <MainCard cardDetails={cardDetails} />
+      <div className="w-auto">
+        <BottomSection
+          cardDetails={cardDetails}
+          showComments={showComments}
+          setShowComments={setShowComments}
+        />
+        <PostComment
+          chats={chats}
+          setChats={setChats}
+          setShowComments={setShowComments}
+          cardDetails={cardDetails}
+        />
+        {showComments && (
+          <Comments
+            email={email}
+            onEdit={onEditChat}
+            authId={authId}
+            onChatDelete={onChatDelete}
+            isLoading={isLoading}
+            chats={chats}
           />
         )}
       </div>
-    );
-  } else
-    return (
-      <div className="relative">
-        {MenuOptions}
-        <EditChatModal />
-
-        <div className="flex max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
-          <div className="flex items-center w-full">
-            <div className="w-full">
-              <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
-                {cardDetails.cardType === communityTypes.SPOTLIGHT
-                  ? 'Spotlight'
-                  : 'Check It Out'}
-              </div>
-              {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-                <div className="flex flex-row mt-2 px-2 py-3 mx-3">
-                  <div className="w-auto h-auto rounded-full">
-                    <img
-                      className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
-                      alt="User avatar"
-                      src={getImageFromS3Static(person.image)}
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2 ml-4 mt-1">
-                    <div className="text-gray-600 text-sm font-semibold">
-                      {person.firstName} {person.lastName}
-                    </div>
-                    <div className="flex  mt-1">
-                      <div className="text-blue-700 w-auto font-base text-xs mr-1 cursor-pointer">
-                        {person.role}
-                      </div>
-                      <div className="text-gray-500 font-thin w-auto text-xs">
-                        • {moment(cardDetails.cardDate).fromNow()}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {cardDetails.cardName ? (
-                <div className="mb-7 mt-3 px-2">
-                  <div className="content">
-                    <div className="content-overlay"></div>
-                    <img className="content-image" src={media} />
-                    <div className="content-details fadeIn-bottom">
-                      <h3 className="content-title text-xl">{cardDetails.cardName}</h3>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
-                  <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
-                </div>
-              )}
-
-              <div className=" text-sm mb-6 mx-3 px-2">
-                {ReactHtmlParser(cardDetails.summaryHtml)}
-              </div>
-              {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-                <div className="w-auto">
-                  <BottomSection
-                    cardDetails={cardDetails}
-                    showComments={showComments}
-                    setShowComments={setShowComments}
-                  />
-                  <PostComment
-                    chats={chats}
-                    setChats={setChats}
-                    setShowComments={setShowComments}
-                    cardDetails={cardDetails}
-                  />
-                  {showComments && (
-                    <Comments
-                      email={email}
-                      onEdit={onEditChat}
-                      authId={authId}
-                      onChatDelete={onChatDelete}
-                      isLoading={isLoading}
-                      chats={chats}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    </div>
+  );
 };
 
 export default Card;
