@@ -13246,7 +13246,6 @@ export const createCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
-      summaryHtml
       person {
         id
         authId
@@ -13293,6 +13292,7 @@ export const createCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      summaryHtml
       likes
       chatCount
       createdAt
@@ -13359,7 +13359,6 @@ export const updateCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
-      summaryHtml
       person {
         id
         authId
@@ -13406,6 +13405,7 @@ export const updateCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      summaryHtml
       likes
       chatCount
       createdAt
@@ -13472,7 +13472,6 @@ export const deleteCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
-      summaryHtml
       person {
         id
         authId
@@ -13519,6 +13518,7 @@ export const deleteCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      summaryHtml
       likes
       chatCount
       createdAt

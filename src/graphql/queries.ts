@@ -6438,7 +6438,6 @@ export const getCommunity = /* GraphQL */ `
       personAuthID
       personEmail
       isEditedCard
-      summaryHtml
       person {
         id
         authId
@@ -6485,6 +6484,7 @@ export const getCommunity = /* GraphQL */ `
         }
         nextToken
       }
+      summaryHtml
       likes
       chatCount
       createdAt
@@ -6543,7 +6543,6 @@ export const listCommunitys = /* GraphQL */ `
         personAuthID
         personEmail
         isEditedCard
-        summaryHtml
         person {
           id
           authId
@@ -6577,6 +6576,7 @@ export const listCommunitys = /* GraphQL */ `
         chat {
           nextToken
         }
+        summaryHtml
         likes
         chatCount
         createdAt

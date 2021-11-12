@@ -8,9 +8,10 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_jNgXBFd1o",
     "aws_user_pools_web_client_id": "1hj7i8g22g21bahhegja4ath6d",
     "oauth": {},
-    "aws_cognito_login_mechanisms": [
+    "aws_cognito_username_attributes": [
         "EMAIL"
     ],
+    "aws_cognito_social_providers": [],
     "aws_cognito_signup_attributes": [
         "EMAIL"
     ],
@@ -38,12 +39,18 @@ const awsmobile = {
                 "items": {
                     "lmsMap-uatenv": {
                         "style": "VectorEsriLightGrayCanvas"
+                    },
+                    "map32a03f17-uatenv": {
+                        "style": "VectorEsriStreets"
                     }
                 },
-                "default": "lmsMap-uatenv"
+                "default": "map32a03f17-uatenv"
             }
         }
-    }
+    },
+    "aws_cognito_login_mechanisms": [
+        "EMAIL"
+    ]
 };
 
 
