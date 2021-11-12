@@ -13,6 +13,7 @@ import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import {Lesson} from './Classroom';
 import axios from 'axios';
+import Loader from '@components/Atoms/Loader';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -55,6 +56,7 @@ const Start: React.FC<StartProps> = ({
   const getRoomData = getLocalStorageData('room_info');
 
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {classRoomDict} = useDictionary(clientKey);
   const history = useHistory();
@@ -63,6 +65,7 @@ const Start: React.FC<StartProps> = ({
   const [warnModal, setWarnModal] = useState({
     show: false,
     activeLessonsId: [],
+    lessonID: '',
     message: 'Do you want to mark these active lessons as completed?',
   });
 
@@ -254,6 +257,7 @@ const Start: React.FC<StartProps> = ({
     if (activeLessonsData?.length) {
       setWarnModal((prevValues) => ({
         ...prevValues,
+        lessonID: activeLessonsData.map((lesson: any) => lesson.id),
         message: `Do you want to mark ${activeLessonsData
           .map((lesson: any) => lesson.title)
           .join(', ')} as completed?`,
@@ -266,6 +270,7 @@ const Start: React.FC<StartProps> = ({
   };
 
   const handleMarkAsCompleteClick = async (lessonIds: any) => {
+    setIsLoading(true);
     const payloadLessonIds = Array.isArray(lessonIds)
       ? lessonIds
       : warnModal.activeLessonsId;
@@ -288,12 +293,14 @@ const Start: React.FC<StartProps> = ({
       );
       // POST TO LAMBDA
       await axios.post(tableCleanupUrl, {
-        lessonID: lessonKey,
+        lessonID: warnModal.lessonID[0],
         syllabusID: getRoomData.activeSyllabus,
         roomID: getRoomData.id,
       });
+      setIsLoading(false);
     } catch (e) {
       console.error('handleMarkAsCompleteClick() - ', e);
+      setIsLoading(false);
     } finally {
       history.push(`${`/lesson-control/${lessonKey}`}`);
       discardChanges();
@@ -379,6 +386,7 @@ const Start: React.FC<StartProps> = ({
     setWarnModal({
       message: '',
       activeLessonsId: [],
+      lessonID: '',
       show: false,
     });
   };
@@ -411,7 +419,7 @@ const Start: React.FC<StartProps> = ({
           closeAction={onCloseModal}
           cancelAction={discardChanges}
           saveAction={handleMarkAsCompleteClick}
-          saveLabel="Yes"
+          saveLabel={isLoading ? 'Processing...' : 'Yes'}
           cancelLabel="No"
           message={warnModal.message}
         />
