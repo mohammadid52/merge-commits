@@ -1,6 +1,6 @@
 const awsconfig = require('../aws-exports');
 
-const getCorrectUrl = (clientKey: string) => {
+export const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -12,9 +12,9 @@ const getCorrectUrl = (clientKey: string) => {
     case 'demo':
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/prod-create-user',
+          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-edgesprod',
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password',
+          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-edgesprod',
       };
     case 'curate':
       return {
@@ -23,6 +23,7 @@ const getCorrectUrl = (clientKey: string) => {
         requestResetPassword:
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/demosite-request-reset-password',
       };
+    case 'localhost':
     default:
       return {
         createUserUrl:
@@ -38,29 +39,33 @@ const getCorrectUrl = (clientKey: string) => {
  * @param configJson - imported aws config file
  * @returns
  */
-export const getBackendKey = (configJson: string): string => {
+export const getBackendKey = (): string => {
+  let configJson = awsconfig;
   if (configJson) {
     //@ts-ignore
     let s3BucketName = configJson['aws_user_files_s3_bucket'];
     if (s3BucketName) {
-      if (s3BucketName.match(/^(demosite)/)) {
+      if (s3BucketName.match(/(-demosite)/)) {
         return 'curate';
-      } else if (s3BucketName.match(/^(dev)/)) {
+      } else if (s3BucketName.match(/(-dev)/)) {
         return 'iconoclast';
-      } else if (s3BucketName.match(/^(edgesprod)/)) {
+      } else if (s3BucketName.match(/(-edgesprod)/)) {
         return 'demo';
-      } else if (s3BucketName.match(/^(uatenv)/)) {
-        return '';
+      } else if (s3BucketName.match(/(-uatenv)/)) {
+        return 'localhost';
       }
     } else {
-      return '';
+      return 'localhost';
     }
   } else {
-    return '';
+    return 'localhost';
   }
-  console.log('configJson', awsconfig);
 };
 
-// ~~~~~~~~~~~~ TABLE CLEANUP ~~~~~~~~~~~~ //
+// ##################################################################### //
+// ############################### OUTPUT ############################## //
+// ##################################################################### //
+export const createUserUrl = getCorrectUrl(getBackendKey()).createUserUrl;
+export const requestResetPassword = getCorrectUrl(getBackendKey()).requestResetPassword;
 export const tableCleanupUrl =
   'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson';
