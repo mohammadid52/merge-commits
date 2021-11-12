@@ -33,7 +33,31 @@ const getCorrectUrl = (clientKey: string) => {
   }
 };
 
-export const getBackendKey = (/*configJson: string*/) => {
+/**
+ *
+ * @param configJson - imported aws config file
+ * @returns
+ */
+export const getBackendKey = (configJson: string): string => {
+  if (configJson) {
+    //@ts-ignore
+    let s3BucketName = configJson['aws_user_files_s3_bucket'];
+    if (s3BucketName) {
+      if (s3BucketName.match(/^(demosite)/)) {
+        return 'curate';
+      } else if (s3BucketName.match(/^(dev)/)) {
+        return 'iconoclast';
+      } else if (s3BucketName.match(/^(edgesprod)/)) {
+        return 'demo';
+      } else if (s3BucketName.match(/^(uatenv)/)) {
+        return '';
+      }
+    } else {
+      return '';
+    }
+  } else {
+    return '';
+  }
   console.log('configJson', awsconfig);
 };
 
