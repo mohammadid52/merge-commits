@@ -122,6 +122,7 @@
     "react-datepicker": "^4.1.1",
     "react-dom": "^16.10.2",
     "react-dropzone": "^11.3.2",
+    "react-google-autocomplete": "^2.6.0",
     "react-html-parser": "^2.0.2",
     "react-image-crop": "8.6.6",
     "react-infinite-scroll-component": "^6.1.0",

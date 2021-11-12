@@ -6,33 +6,10 @@ import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
 import {ICommunityCardProps, IEventInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
-const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
-import {GoogleMap, useLoadScript} from '@react-google-maps/api';
-import CustomRichTextEditor from '@UlbBlocks/HighlighterBlock/CustomRichTextEditor';
-import {getImageFromS3Static} from '@utilities/services';
-
-const GoogleMaps = ({location}: {location: {lat: any; lng: any}}) => {
-  const mapContainerStyle = {
-    width: '100vw',
-    height: '100vh',
-  };
-  const center = {
-    lat: location.lat,
-    lng: location.lng,
-  };
-
-  const {isLoaded, loadError} = useLoadScript({
-    googleMapsApiKey: api,
-  });
-
-  if (loadError) return <p>Error loading Maps</p>;
-  if (!isLoaded) return <p>Loading Maps</p>;
-
-  return <GoogleMap mapContainerStyle={mapContainerStyle} zoom={11} center={center} />;
-};
 
 const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
@@ -156,24 +133,6 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
     return isValid;
   };
 
-  const [location, setLocation] = useState({lat: 0, lng: 0});
-
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      setError('Geolocation is not supported by this browser.');
-    }
-  }
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  function showPosition(position: any) {
-    setLocation({lat: position.coords.latitude, lng: position.coords.longitude});
-  }
-
   return (
     <div className="min-w-256 max-w-256">
       {tempData && tempData?.image ? (
@@ -235,65 +194,54 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
           <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
-      {!loading && (
-        <div className="px-3 py-4">
-          <Label label="Step 4: Provide details about the event" />
 
-          <div className="grid grid-cols-2 mt-4 gap-6">
-            <div className="relative event-details-datepicker">
-              <Label label="Start Time" />
-              <DatePicker
-                selected={details.startTime}
-                onChange={(date) => handleDateChange(date, 'startTime')}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                timeCaption="Time"
-                placeholderText={'Start Time'}
-                isClearable={true}
-                dateFormat="h:mm aa"
-              />
-            </div>
-            <div className="relative event-details-datepicker">
-              <Label label="Date" />
+      <div className="px-3 py-4">
+        <Label label="Step 4: Provide details about the event" />
 
-              <DatePicker
-                dateFormat={'dd/MM/yyyy'}
-                selected={details.date}
-                placeholderText={'Date'}
-                onChange={(date: any) => handleDateChange(date, 'date')}
-                isClearable={true}
-              />
-            </div>
-            <div className="relative event-details-datepicker">
-              <Label label="End Time" />
+        <div className="grid grid-cols-2 mt-4 gap-6">
+          <div className="relative event-details-datepicker">
+            <Label label="Start Time" />
+            <DatePicker
+              selected={details.startTime}
+              onChange={(date) => handleDateChange(date, 'startTime')}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              timeCaption="Time"
+              placeholderText={'Start Time'}
+              isClearable={true}
+              dateFormat="h:mm aa"
+            />
+          </div>
+          <div className="relative event-details-datepicker">
+            <Label label="Date" />
 
-              <DatePicker
-                selected={details.endTime}
-                onChange={(date) => handleDateChange(date, 'endTime')}
-                showTimeSelect
-                showTimeSelectOnly
-                placeholderText={'End Time'}
-                timeIntervals={15}
-                timeCaption="Time"
-                isClearable={true}
-                dateFormat="h:mm aa"
-              />
-            </div>
-            <div className="relative">
-              <FormInput
-                label="Address"
-                placeHolder="Address"
-                onChange={(e) => handleDateChange(e.target.value, 'address')}
-                value={details.address}
-              />
-            </div>
-            {/* Map starts here */}
-            {/* <GoogleMaps location={location} /> */}
-            {/* Map ends here */}
+            <DatePicker
+              dateFormat={'dd/MM/yyyy'}
+              selected={details.date}
+              placeholderText={'Date'}
+              onChange={(date: any) => handleDateChange(date, 'date')}
+              isClearable={true}
+            />
+          </div>
+          <div className="relative event-details-datepicker">
+            <Label label="End Time" />
+
+            <DatePicker
+              selected={details.endTime}
+              onChange={(date) => handleDateChange(date, 'endTime')}
+              showTimeSelect
+              showTimeSelectOnly
+              placeholderText={'End Time'}
+              timeIntervals={15}
+              timeCaption="Time"
+              isClearable={true}
+              dateFormat="h:mm aa"
+            />
           </div>
         </div>
-      )}
+      </div>
+
       <AnimatedContainer show={Boolean(error)}>
         {error && <p className="text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>

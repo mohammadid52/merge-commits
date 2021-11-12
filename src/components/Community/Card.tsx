@@ -23,14 +23,17 @@ import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
 import useAuth from '@customHooks/useAuth';
 import HandleMedia from '@components/Community/Components/HandleMedia';
+import EventMap from '@components/Community/Components/EventMap';
 
 const BottomSection = ({
   setShowComments,
   showComments,
   cardDetails,
+  chatCount,
 }: {
   cardDetails: ICommunityCard;
   showComments: boolean;
+  chatCount: number;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
@@ -62,7 +65,7 @@ const BottomSection = ({
             Comments:
             <div className="ml-1 text-gray-500 font-medium text-sm">
               {' '}
-              {cardDetails?.chatCount || 0}
+              {chatCount || 0}
             </div>
           </div>
         </div>
@@ -101,11 +104,15 @@ const PostComment = ({
   chats,
   setChats,
   setShowComments,
+  chatCount,
+  setChatCount,
 }: {
   cardDetails: ICommunityCard;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
   chats: IChat[];
   setChats: React.Dispatch<React.SetStateAction<IChat[]>>;
+  chatCount: number;
+  setChatCount: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const [postText, setPostText] = useState('');
   const {authId: personAuthID, email: personEmail, user} = useAuth();
@@ -114,7 +121,11 @@ const PostComment = ({
 
   const {mutate} = useGraphqlMutation('createCommunityChat', {
     onSuccess: () => {
-      community.mutate({input: {id: cardDetails.id, chatCount: chats.length}});
+      let updatedCount = chatCount + 1;
+      community.mutate({
+        input: {id: cardDetails.id, chatCount: updatedCount},
+      });
+      setChatCount(updatedCount);
     },
   });
 
@@ -287,7 +298,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
     const [date, address] = cardDetails?.additionalInfo.split(' || ');
 
     return (
-      <div className="flex-col relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+      <div className="flex-col relative max-w-xl bg-gray-100 rounded-lg  mx-auto">
         <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
           Event <UploadDate />
         </div>
@@ -332,13 +343,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        {/* {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-          <BottomSection
-            cardDetails={cardDetails}
-            showComments={showComments}
-            setShowComments={setShowComments}
-          />
-        )} */}
+        <EventMap />
       </div>
     );
   } else
@@ -408,11 +413,14 @@ const Card = ({
   const [chats, setChats] = useState([]);
 
   const {mutate} = useGraphqlMutation('deleteCommunityChat');
+  const community = useGraphqlMutation('updateCommunity');
 
   const onChatDelete = (chatId: string) => {
     remove(chats, ['id', chatId]);
     setChats([...chats]);
     mutate({input: {id: chatId}});
+    community.mutate({input: {id: cardDetails.id, chatCount: chatCount - 1}});
+    setChatCount((prev) => prev - 1);
   };
 
   const [isFetched, setIsFetched] = useState(false);
@@ -461,11 +469,7 @@ const Card = ({
   };
 
   useEffect(() => {
-    if (
-      !isFetched &&
-      showComments &&
-      cardDetails.cardType === communityTypes.CHECK_IT_OUT
-    ) {
+    if (!isFetched && showComments) {
       fetchChats();
     }
   }, [isFetched, showComments]);
@@ -541,6 +545,8 @@ const Card = ({
     );
   };
 
+  const [chatCount, setChatCount] = useState(cardDetails.chatCount);
+
   return (
     <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
       {MenuOptions}
@@ -549,12 +555,15 @@ const Card = ({
       <div className="w-auto">
         <BottomSection
           cardDetails={cardDetails}
+          chatCount={chatCount}
           showComments={showComments}
           setShowComments={setShowComments}
         />
         <PostComment
           chats={chats}
           setChats={setChats}
+          setChatCount={setChatCount}
+          chatCount={chatCount}
           setShowComments={setShowComments}
           cardDetails={cardDetails}
         />
