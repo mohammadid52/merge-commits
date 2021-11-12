@@ -24,6 +24,7 @@ import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {partInput} from 'API';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -585,6 +586,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
+  // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
+  const {breakpoint} = useTailwindBreakpoint();
+
   return (
     <>
       {/* 
@@ -615,7 +619,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
-        <div className="relative top-6 lesson-body-container">
+        <div
+          className={`${
+            breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
+          } relative lesson-body-container`}>
           {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
               <LessonPageLoader />
