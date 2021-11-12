@@ -6,7 +6,7 @@ import Rooms from '../../RoomChat/Rooms';
 import {CallWidgetsSmall} from './SectionContent/CallWidgetsSmall';
 import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
-import NotesForm from '../../Lesson/LessonComponents/Notes/NotesForm';
+import NotesForm from '@components/Lesson/Notes/NotesForm';
 import useDictionary from '../../../customHooks/dictionary';
 import {FloatingSideMenuProps} from './FloatingSideMenu';
 
