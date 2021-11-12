@@ -147,7 +147,7 @@ const SideMenu = ({
             <div className="w-auto p-4 mb-4 flex flex-row justify-end">
               <span
                 ref={closeButtonRef}
-                className={`my-auto text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}
+                className={`my-auto text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
                 onPointerDown={() => handleClose()}>
                 <IconContext.Provider
                   value={{
