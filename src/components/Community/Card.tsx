@@ -1,29 +1,28 @@
 import FormInput from '@atoms/Form/FormInput';
 import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
-import ReactPlayer from 'react-player';
 import Popover from '@components/Atoms/Popover';
 import Comments from '@components/Community/Components/Comments';
+import EventMap from '@components/Community/Components/EventMap';
+import HandleMedia from '@components/Community/Components/HandleMedia';
 import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY,
 } from '@components/Community/constants.community';
 import * as customQueries from '@customGraphql/customQueries';
-import * as queries from '@graphql/queries';
+import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import ReactHtmlParser from 'react-html-parser';
+import * as queries from '@graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import ReactHtmlParser from 'react-html-parser';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
-import useAuth from '@customHooks/useAuth';
-import HandleMedia from '@components/Community/Components/HandleMedia';
-import EventMap from '@components/Community/Components/EventMap';
 
 const BottomSection = ({
   setShowComments,
@@ -390,9 +389,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     {cardDetails.cardName}
                   </h1>
                 )}
-                <p className="text-gray-600 text-sm">
+                <div className="text-gray-600 text-sm">
                   {ReactHtmlParser(cardDetails.summaryHtml)}
-                </p>
+                </div>
               </div>
             </div>
           </div>

@@ -26,8 +26,8 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
   const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const onEditorStateChange = (
@@ -43,22 +43,13 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
 
   const [tempData, setTempData] = useState(null);
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
-      setLoading(true);
       setTempData({
         image: cardDetails.cardImageLink,
       });
 
       setOverlayText(cardDetails?.cardName);
-
-      setFields({
-        ...fields,
-        summary: cardDetails?.summary || '',
-        summaryHtml: cardDetails?.summaryHtml || '',
-      });
 
       const [date, address] = cardDetails?.additionalInfo.split(' || ');
 
@@ -69,16 +60,15 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         date: new Date(date),
         address: address,
       });
-      setLoading(false);
     }
   }, [editMode, cardDetails]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const _onSubmit = () => {
-    setIsLoading(true);
     const isValid = validateFields();
     if (isValid) {
+      setIsLoading(true);
       let eventDetails: IEventInput = {
         cardImageLink: editMode
           ? file && file?.fileKey

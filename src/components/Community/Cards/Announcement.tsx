@@ -1,11 +1,10 @@
 import FormInput from '@atoms/Form/FormInput';
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import CustomRichTextEditor from '@UlbBlocks/HighlighterBlock/CustomRichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {IAnnouncementInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from '@utilities/services';
@@ -22,8 +21,8 @@ const Announcements = ({
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const [tempData, setTempData] = useState(null);
@@ -36,12 +35,6 @@ const Announcements = ({
       });
 
       setOverlayText(cardDetails?.cardName);
-
-      setFields({
-        ...fields,
-        summary: cardDetails?.summary || '',
-        summaryHtml: cardDetails?.summaryHtml || '',
-      });
     }
   }, [editMode, cardDetails]);
 
@@ -59,9 +52,9 @@ const Announcements = ({
   };
 
   const _onSubmit = () => {
-    setIsLoading(true);
     const isValid = validateFields();
     if (isValid) {
+      setIsLoading(true);
       let announcementsDetails: IAnnouncementInput = {
         summary: fields.summary,
         summaryHtml: fields.summaryHtml,

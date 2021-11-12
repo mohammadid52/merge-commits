@@ -2,7 +2,7 @@ import React from 'react';
 import {useEffect, useRef} from 'react';
 import {createMap} from 'maplibre-gl-js-amplify';
 import 'maplibre-gl/dist/maplibre-gl.css';
-const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
+// const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
 
 const EventMap = () => {
   const mapRef = useRef(null); // Reference to the map DOM element

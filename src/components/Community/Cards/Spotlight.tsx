@@ -60,19 +60,22 @@ const Spotlight = ({
         setYoutubeVideoLink(additionalLinks[0]);
       }
 
-      setFields({
-        ...fields,
+      // this method is not working with text editor. doesn't work ❌
+      // trying to add initial value to useState. finally this method works ✅. (check useState for fields for ref.)
 
-        summary: cardDetails?.summary || '',
-        summaryHtml: cardDetails?.summaryHtml || '',
-      });
+      // setFields({
+      //   ...fields,
+
+      //   summary: cardDetails?.summary || '',
+      //   summaryHtml: cardDetails?.summaryHtml || '',
+      // });
     }
   }, [editMode, cardDetails, teachersList]);
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const onEditorStateChange = (

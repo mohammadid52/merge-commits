@@ -20,8 +20,8 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
   const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const onEditorStateChange = (
@@ -35,9 +35,12 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
+      setIsLoading(true);
       let checkItOutDetails: ICheckItOutInput = {
         cardImageLink: editMode
           ? !isEmpty(file) && file?.fileKey
@@ -60,7 +63,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
           additionalLinks: [youtubeVideoLink],
         };
       }
-      onSubmit(checkItOutDetails);
+      onSubmit(checkItOutDetails, () => setIsLoading(false));
     }
   };
 
@@ -97,12 +100,6 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       });
 
       setOverlayText(cardDetails?.cardName);
-
-      setFields({
-        ...fields,
-        summary: cardDetails?.summary || '',
-        summaryHtml: cardDetails?.summaryHtml || '',
-      });
     }
   }, [editMode, cardDetails]);
 
@@ -186,7 +183,12 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            loading={isLoading}
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={'Save'}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>
