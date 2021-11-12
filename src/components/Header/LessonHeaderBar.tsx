@@ -1,17 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {match, useHistory, useRouteMatch} from 'react-router-dom';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
-import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
-import SideMenu from '../Lesson/Header/SideMenu';
+import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
+import SideMenu from '../Lesson/Navigation/SideMenu';
 import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getLocalStorageData} from '../../utilities/localStorage';
 import useStudentTimer from '../../customHooks/timer';
 import Modal from '@components/Atoms/Modal';
 import ReactPlayer from 'react-player';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
 const LessonHeaderBar = ({
+  overlay,
+  setOverlay,
   isAtEnd,
   setisAtEnd,
   handleRequiredNotification,
@@ -20,10 +25,14 @@ const LessonHeaderBar = ({
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
+
   const history = useHistory();
+  const match = useRouteMatch();
 
   const initializeTimer = useStudentTimer();
+
   if (initializeTimer) {
   }
 
@@ -39,6 +48,7 @@ const LessonHeaderBar = ({
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
   const handleManualSave = () => {
+    console.log('manual save');
     if (lessonState.updated) {
       setWaiting(true);
       setSafeToLeave(false);
@@ -73,27 +83,31 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
-  const leaveModal = useOutsideAlerter(false);
-  const leaveModalVisible = leaveModal.visible;
-  const setLeaveModalVisible = leaveModal.setVisible;
+  const [leaveModalVisible, setLeaveModalVisible] = useState<boolean>(false);
 
   // ~~ VIDEOLINK WHICH IS SHOWN TO USERS ~~ //
   const [videoLink, setVideoLink] = useState<string>('');
-  const videoLinkModal = useOutsideAlerter(false);
-  const videoLinkModalVisible = videoLinkModal.visible;
-  const setVideoLinkModalVisible = videoLinkModal.setVisible;
+  const [videoLinkModalVisible, setVideoLinkModalVisible] = useState<boolean>(false);
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
+    console.log('handleLeavePopup');
+
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
-    setLeaveModalVisible((prevState: any) => !prevState);
+
+    if (leaveModalVisible) {
+      setLeaveModalVisible(false);
+    } else {
+      setLeaveModalVisible(true);
+    }
     setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
   const handleVideoLinkPopup = (url?: string) => {
+    console.log('handleVideoLinkPopup');
     if (videoLinkModalVisible) {
       // setVideoLink('');
       setVideoLinkModalVisible(false);
@@ -131,6 +145,132 @@ const LessonHeaderBar = ({
   }, [lessonState.currentPage, thisPageVideoLink]);
 
   // ##################################################################### //
+  // ################################ NAVI ############################### //
+  // ##################################################################### //
+
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  const validateRequired = (pageIdx: number) => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData[pageIdx];
+      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  const canContinue = () => {
+    if (PAGES) {
+      return (
+        validateRequired(lessonState.currentPage) &&
+        lessonState.currentPage < PAGES.length - 1 &&
+        PAGES[lessonState.currentPage + 1]?.open !== false
+      );
+    } else {
+      return false;
+    }
+  };
+
+  const userAtEnd = () => {
+    return lessonState.currentPage === PAGES.length - 1;
+  };
+
+  // ##################################################################### //
+  // ############################# NAVIGATION ############################ //
+  // ##################################################################### //
+
+  const getPageIndex = (pageID: string, pageArray: any[]) => {
+    console.log('find page id for - ', pageID);
+    if (pageID && pageArray) {
+      return pageArray.findIndex((pageObj: any) => pageObj.id === pageID);
+    }
+  };
+
+  // ~~~~~~~~ TEACHER IS PRESENTING ~~~~~~~~ //
+  const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
+  const presentedPageID = lessonState.displayData[0].lessonPageID;
+  useEffect(() => {
+    // console.log(getPageIndex(presentedPageID, lessonState.lessonData.lessonPlan));
+    if (teacherIsPresenting && presentedPageID) {
+      const getPresentedPagedIndex = getPageIndex(
+        presentedPageID,
+        lessonState.lessonData.lessonPlan
+      );
+      // console.log('getPresentedPageIndex - ', getPresentedPagedIndex);
+      if (typeof getPresentedPagedIndex === 'number' && getPresentedPagedIndex >= 0) {
+        history.push(`${match.url}/${getPresentedPagedIndex}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: getPresentedPagedIndex,
+        });
+      }
+    }
+  }, [teacherIsPresenting, presentedPageID]);
+
+  // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
+  const handleForward = () => {
+    if (!userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      if (canContinue()) {
+        history.push(`${match.url}/${lessonState.currentPage + 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage + 1,
+        });
+      } else {
+        handleRequiredNotification();
+      }
+    } else if (userAtEnd()) {
+      if (validateRequired(lessonState.currentPage)) {
+        handleLeavePopup();
+      } else {
+        handleRequiredNotification();
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (lessonState.currentPage === 0) {
+      handleLeavePopup(true);
+    } else {
+      if (userAtEnd()) {
+        if (isAtEnd) setisAtEnd(false);
+        history.push(`${match.url}/${lessonState.currentPage - 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage - 1,
+        });
+      } else if (!userAtEnd() && lessonState.currentPage > 0) {
+        if (isAtEnd) setisAtEnd(false);
+        history.push(`${match.url}/${lessonState.currentPage - 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage - 1,
+        });
+      }
+    }
+  };
+
+  // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
+  const {breakpoint} = useTailwindBreakpoint();
+
+  // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
@@ -160,23 +300,35 @@ const LessonHeaderBar = ({
       </div>
 
       {/* VIDEO POPUP */}
-      <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
-        <Modal
-          title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
-          showHeader={true}
-          showHeaderBorder={false}
-          showFooter={false}
-          scrollHidden={true}
-          closeAction={() => handleVideoLinkPopup()}>
-          <ReactPlayer url={videoLink} controls={true} pip={true} stopOnUnmount={false} />
-        </Modal>
-      </div>
+      {!leaveModalVisible && (
+        <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
+          <Modal
+            title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
+            showHeader={true}
+            showHeaderBorder={false}
+            showFooter={false}
+            scrollHidden={true}
+            closeAction={handleVideoLinkPopup}>
+            <ReactPlayer
+              url={videoLink}
+              controls={true}
+              pip={true}
+              stopOnUnmount={false}
+            />
+          </Modal>
+        </div>
+      )}
 
       <LessonTopMenu
+        overlay={overlay}
+        setOverlay={setOverlay}
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}
         setisAtEnd={setisAtEnd}
         handleRequiredNotification={handleRequiredNotification}
+        pages={PAGES}
+        canContinue={canContinue()}
+        handleForward={handleForward}
       />
 
       {/**
@@ -187,17 +339,32 @@ const LessonHeaderBar = ({
        *
        */}
 
-      <SideMenu
-        videoLink={videoLink}
-        videoLinkModalVisible={videoLinkModalVisible}
-        handleVideoLinkPopup={handleVideoLinkPopup}
-      />
-
-      {/* {lessonDataLoaded && (
-        <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />
-      )} */}
+      {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
+        <VideoWidget
+          videoLink={videoLink}
+          videoLinkModalVisible={videoLinkModalVisible}
+          handleVideoLinkPopup={handleVideoLinkPopup}
+        />
+      ) : (
+        <SideMenu
+          isOpen={overlay === 'sidemenu'}
+          overlay={overlay}
+          setOverlay={setOverlay}
+          videoLink={videoLink}
+          videoLinkModalVisible={videoLinkModalVisible}
+          handleVideoLinkPopup={handleVideoLinkPopup}
+          handlePopup={handleLeavePopup}
+          isAtEnd={isAtEnd}
+          setisAtEnd={setisAtEnd}
+          handleRequiredNotification={handleRequiredNotification}
+          pages={PAGES}
+          canContinue={canContinue()}
+          handleBack={handleBack}
+          handleForward={handleForward}
+        />
+      )}
     </div>
   );
-};;
+};
 
 export default LessonHeaderBar;
