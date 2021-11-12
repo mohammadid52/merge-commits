@@ -133,5 +133,7 @@ export function getAsset(clientKey: string, key?: string) {
     return demo_assets[key];
   } else if (clientKey === 'general') {
     return key ? general[key] : general;
+  } else {
+    return demo_assets[key];
   }
 }

@@ -256,7 +256,7 @@ export const getClientKey = () => {
   if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (hostname.indexOf('curate') >= 0) return 'curate';
-  else '';
+  else return 'demo';
 };
 
 /**
