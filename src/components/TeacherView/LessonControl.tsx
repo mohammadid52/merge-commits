@@ -1,11 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import UserInformation from '@components/Dashboard/Admin/UserManagement/UserInformation';
 import useLessonControls from '@customHooks/lessonControls';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
-import useDeviceDetect from '../../customHooks/deviceDetect';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
@@ -20,12 +21,12 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
-import LessonControlBar from './LessonControlBar/LessonControlBar';
+import Frame from './Frame';
+import AttendanceFrame from './StudentWindow/AttendanceFrame';
+// import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
-import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
-import TopMenu from './TopMenu';
-import LessonDetails from './TopMenu/LessonDetails';
-import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
+import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
+import ProfileFrame from './StudentWindow/ProfileFrame';
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -34,7 +35,9 @@ const LessonControl = () => {
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
+  const roster = controlState.roster;
   const theme = gContext.theme;
+  const clientKey = gContext.clientKey;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -55,6 +58,12 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
+
+  // view: 'lesson' | 'lessonInfo' | 'profile';
+  const [rightView, setRightView] = useState<{
+    view: string;
+    option?: string;
+  }>({view: 'lesson', option: ''});
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
@@ -167,6 +176,44 @@ const LessonControl = () => {
    *                  INFORMATION                  *
    *************************************************/
 
+  const loopFetchStudentData = async (
+    filterObj: any,
+    nextToken: string,
+    outArray: any[]
+  ) => {
+    if (filterObj) {
+      try {
+        let studentData: any = await API.graphql(
+          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+            ...filterObj,
+            nextToken: nextToken,
+          })
+        );
+        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+        let combined = [...outArray, ...studentDataRows];
+
+        if (theNextToken) {
+          console.log('nextToken fetching more - ', nextToken);
+          loopFetchStudentData(filterObj, theNextToken, combined);
+        } else {
+          // console.log('no more - ', combined);
+          return combined;
+        }
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    } else {
+      return [];
+    }
+  };
+
   const getStudentData = async (studentAuthId: string) => {
     const {lessonID} = urlParams;
 
@@ -179,12 +226,12 @@ const LessonControl = () => {
           roomID: {eq: getRoomData.id},
         },
       };
-      const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
-      );
+      // const studentData: any = await API.graphql(
+      //   graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+      // );
 
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
       if (studentDataRows.length > 0) {
         subscription = subscribeToStudent();
@@ -420,6 +467,12 @@ const LessonControl = () => {
   }, [isPresenting]);
 
   // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
+
+  const {breakpoint} = useTailwindBreakpoint();
+
+  // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
@@ -479,13 +532,15 @@ const LessonControl = () => {
           />
         </div>
 
-        {/* START TOP MENU */}
-
-        {/* END TOP MENU */}
-
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
-          <RosterFrame fullscreen={fullscreen}>
+
+          <RosterFrame
+            fullscreen={fullscreen}
+            theme={theme}
+            clientKey={clientKey}
+            rightView={rightView}
+            setRightView={setRightView}>
             <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
@@ -493,47 +548,77 @@ const LessonControl = () => {
                 handleQuitViewing={handleQuitViewing}
                 handlePageChange={handlePageChange}
                 handleRoomUpdate={handleRoomUpdate}
+                rightView={rightView}
+                setRightView={setRightView}
               />
             </ErrorBoundary>
           </RosterFrame>
-          {/* FOR MOBILE */}
-          <div className="block lg:hidden">
-            <div className="relative w-full h-16 lg:h-12 flex flex-col items-center z-100">
-              <LessonControlBar handlePageChange={handlePageChange} />
-            </div>
-          </div>
 
           {/* RIGHT SECTION */}
 
-          <LessonFrame
-            theme={theme}
-            fullscreen={fullscreen}
-            handleFullscreen={handleFullscreen}
-            anyoneIsViewed={anyoneIsViewed}
-            anyoneIsShared={anyoneIsShared}
-            isPresenting={isPresenting}
-            isSameStudentShared={isSameStudentShared}
-            handleQuitShare={handleQuitShare}
-            handleQuitViewing={handleQuitViewing}
-            handlePageChange={handlePageChange}
-            handleLeavePopup={handleLeavePopup}
-            handleHomePopup={handleHomePopup}>
-            <div
-              className={`${
-                theme && theme.bg
-              }  relative w-full border-t-2 border-black overflow-y-scroll overflow-x-hidden`}>
-              <Suspense
-                fallback={
-                  <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <ComponentLoading />
-                  </div>
-                }>
-                <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                  <CoreUniversalLesson />
-                </ErrorBoundary>
-              </Suspense>
-            </div>
-          </LessonFrame>
+          <Frame visible={true} additionalClass="z-40">
+            <LessonFrame
+              theme={theme}
+              fullscreen={fullscreen}
+              handleFullscreen={handleFullscreen}
+              anyoneIsViewed={anyoneIsViewed}
+              anyoneIsShared={anyoneIsShared}
+              isPresenting={isPresenting}
+              isSameStudentShared={isSameStudentShared}
+              handleQuitShare={handleQuitShare}
+              handleQuitViewing={handleQuitViewing}
+              handlePageChange={handlePageChange}
+              handleLeavePopup={handleLeavePopup}
+              handleHomePopup={handleHomePopup}>
+              <div
+                className={`${
+                  theme && theme.bg
+                } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
+                <Suspense
+                  fallback={
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                      <ComponentLoading />
+                    </div>
+                  }>
+                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                    <CoreUniversalLesson />
+                  </ErrorBoundary>
+                </Suspense>
+              </div>
+            </LessonFrame>
+          </Frame>
+          {/* -- OR -- */}
+
+          {/* RIGHT SECTION */}
+
+          <Frame visible={rightView.view === 'lessonInfo'} additionalClass="z-50">
+            <LessonInfoFrame
+              visible={rightView.view === 'lessonInfo'}
+              rightView={rightView}
+              setRightView={setRightView}
+            />
+          </Frame>
+
+          <Frame visible={rightView.view === 'profile'} additionalClass="z-50">
+            <ProfileFrame
+              visible={rightView.view === 'profile'}
+              rightView={rightView}
+              setRightView={setRightView}
+              personAuthID={rightView.option}
+              roster={roster}
+            />
+          </Frame>
+
+          <Frame visible={rightView.view === 'attendance'} additionalClass="z-50">
+            <AttendanceFrame
+              selectedRoomId={getRoomData.id}
+              visible={rightView.view === 'attendance'}
+              rightView={rightView}
+              setRightView={setRightView}
+              studentID={rightView.option}
+              roster={roster}
+            />
+          </Frame>
         </div>
       </div>
     </div>

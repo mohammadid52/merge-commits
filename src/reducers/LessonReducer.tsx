@@ -73,6 +73,18 @@ export type LessonActions =
       };
     }
   | {
+      type: 'LOAD_SURVEY_DATA';
+      payload: {
+        dataIdReferences: {
+          id: string;
+          pageIdx: number;
+          lessonPageID: string;
+          update: boolean;
+        }[];
+        surveyData?: [StudentPageInput[]];
+      };
+    }
+  | {
       type: 'LOAD_STUDENT_SUBSCRIPTION_DATA';
       payload: {
         stDataIdx: number;
@@ -104,6 +116,10 @@ export type LessonActions =
       payload: {pageIdx: number; data: StudentPageInput};
     }
   | {
+      type: 'UPDATE_SURVEY_DATA';
+      payload: {data: StudentPageInput};
+    }
+  | {
       type: 'COMPLETE_STUDENT_UPDATE';
       payload: any;
     }
@@ -117,6 +133,10 @@ export type LessonActions =
     }
   | {
       type: 'TOGGLE_OPEN_PAGE';
+      payload: number;
+    }
+  | {
+      type: 'TOGGLE_CLOSE_PAGE';
       payload: number;
     }
   | {
@@ -196,6 +216,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const requiredInputs = action.payload.requiredInputs;
       const studentData = action.payload.studentData;
       const exerciseData = action.payload.exerciseData;
+      console.log('SET_INITIAL_STUDENT_DATA - ', action.payload);
       return {
         ...state,
         requiredInputs: requiredInputs,
@@ -223,6 +244,15 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         exerciseData: action.payload.filteredExerciseData
           ? action.payload.filteredExerciseData
           : state.exerciseData,
+      };
+    case 'LOAD_SURVEY_DATA':
+      return {
+        ...state,
+        loaded: true,
+        universalStudentDataID: action.payload.dataIdReferences,
+        studentData: action.payload.surveyData
+          ? action.payload.surveyData
+          : state.studentData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
@@ -341,6 +371,21 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: mappedStudentData,
         exerciseData: mappedExerciseData,
       };
+    case 'UPDATE_SURVEY_DATA':
+      const surveyDomID = action.payload.data.domID;
+      const newSurveyInput = action.payload.data.input;
+
+      const updatedSurveyStudentData = state.studentData.map((obj: any) =>
+        obj.domID === surveyDomID ? {...obj, input: newSurveyInput} : obj
+      );
+
+      return {
+        ...state,
+        updated: true,
+        universalStudentDataID: [{...state.universalStudentDataID[0], update: true}],
+        studentData: updatedSurveyStudentData,
+      };
+
     case 'COMPLETE_STUDENT_UPDATE':
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
@@ -358,16 +403,27 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
       };
     case 'TOGGLE_OPEN_PAGE':
-      const mappedPages = state.lessonData.lessonPlan.map(
+      const mappedOpenPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
-          if (idx !== action.payload) {
-            return page;
+          if (idx <= action.payload) {
+            return {...page, open: true};
           } else {
-            return {...page, open: page.open === false ? true : false};
+            return page;
           }
         }
       );
-      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedOpenPages}};
+    case 'TOGGLE_CLOSE_PAGE':
+      const mappedClosePages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (idx >= action.payload) {
+            return {...page, open: false};
+          } else {
+            return page;
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosePages}};
     case 'INCREMENT_SAVE_COUNT':
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':

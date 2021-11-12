@@ -177,6 +177,7 @@ const BreadcrumsTitles: any = {
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
     LOADING: 'Loading...',
+    COMMUNTIY: 'S/B Community Builder',
   },
   ES: {
     HOME: 'CASA',
@@ -214,6 +215,7 @@ const BreadcrumsTitles: any = {
     LESSONPLANBUILDER: 'TBD',
     LESSON_EDITOR: 'TBD',
     STUDENTS: 'Students',
+    COMMUNTIY: 'TBD',
     STUDENTS_NOTEBOOK: 'Students Notebook',
   },
 };
@@ -822,6 +824,7 @@ const lessonPlannerDict: any = {
       STUDENT_SECTION: {
         IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
+        ON_DEMAND: 'On Demand',
       },
     },
     ACCESS_BUTTONS: {
@@ -854,8 +857,9 @@ const lessonPlannerDict: any = {
         THREE: 'TBD',
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'TBD',
-        NOT_IN_CLASS: 'TBD',
+        IN_CLASS: 'Student Roster',
+        NOT_IN_CLASS: 'Not In Class',
+        ON_DEMAND: 'On Demand',
       },
     },
     ACCESS_BUTTONS: {
@@ -3828,15 +3832,25 @@ const StudentDict: any = {
     NO_STUDENT: 'TBD',
   },
 };
-
 const CommunityDict: any = {
   EN: {
+    TITLE: 'Community',
     HEADER: 'Here is what is happening today',
+    TABS: {
+      FRONT_PAGE: 'Front page',
+      COMMUNITY_BUILDER: 'Community Builder',
+    },
   },
   ES: {
+    TITLE: 'TBD',
     HEADER: 'TBD',
+    TABS: {
+      FRONT_PAGE: 'TBD',
+      COMMUNITY_BUILDER: 'TBD',
+    },
   },
 };
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;

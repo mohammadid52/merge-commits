@@ -64,6 +64,7 @@ export const batchAddClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -543,6 +544,7 @@ export const createInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -668,6 +670,7 @@ export const updateInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -793,6 +796,7 @@ export const deleteInstitution = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1422,6 +1426,7 @@ export const createRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1478,6 +1483,7 @@ export const createRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -1641,6 +1647,7 @@ export const updateRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1697,6 +1704,7 @@ export const updateRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -1860,6 +1868,7 @@ export const deleteRoom = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -1916,6 +1925,7 @@ export const deleteRoom = /* GraphQL */ `
         lessonImpact
         adjustment
       }
+      classSentiment
       createdAt
       updatedAt
     }
@@ -1959,6 +1969,7 @@ export const createClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2083,6 +2094,7 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2207,6 +2219,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -2410,6 +2423,7 @@ export const createClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -2586,6 +2600,7 @@ export const updateClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -2762,6 +2777,7 @@ export const deleteClassroomGroups = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -2941,6 +2957,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3102,6 +3119,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3263,6 +3281,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3461,6 +3480,7 @@ export const createClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3640,6 +3660,7 @@ export const updateClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3819,6 +3840,7 @@ export const deleteClass = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -3906,6 +3928,7 @@ export const createClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4018,6 +4041,7 @@ export const updateClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -4130,6 +4154,7 @@ export const deleteClassStudent = /* GraphQL */ `
           activeLessons
           weekDay
           conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -9041,6 +9066,7 @@ export const createPersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9269,6 +9295,7 @@ export const updatePersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9497,6 +9524,7 @@ export const deletePersonLocation = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -9764,6 +9792,25 @@ export const createAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -9787,6 +9834,25 @@ export const createAttendance = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -9956,6 +10022,7 @@ export const createAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -10028,6 +10095,25 @@ export const updateAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -10051,6 +10137,25 @@ export const updateAttendance = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -10220,6 +10325,7 @@ export const updateAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -10292,6 +10398,25 @@ export const deleteAttendance = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -10315,6 +10440,25 @@ export const deleteAttendance = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -10484,6 +10628,7 @@ export const deleteAttendance = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        classSentiment
         createdAt
         updatedAt
       }
@@ -10566,6 +10711,43 @@ export const createUniversalLesson = /* GraphQL */ `
       label
       title
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       language
       designers
       objectives
@@ -10653,6 +10835,43 @@ export const updateUniversalLesson = /* GraphQL */ `
       label
       title
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       language
       designers
       objectives
@@ -10740,6 +10959,43 @@ export const deleteUniversalLesson = /* GraphQL */ `
       label
       title
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       language
       designers
       objectives
@@ -10939,6 +11195,348 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation CreateUniversalLessonWritingExcercises(
+    $input: CreateUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    createUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation UpdateUniversalLessonWritingExcercises(
+    $input: UpdateUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    updateUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
+  mutation DeleteUniversalLessonWritingExcercises(
+    $input: DeleteUniversalLessonWritingExcercisesInput!
+    $condition: ModelUniversalLessonWritingExcercisesConditionInput
+  ) {
+    deleteUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUniversalArchiveData = /* GraphQL */ `
+  mutation CreateUniversalArchiveData(
+    $input: CreateUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    createUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalArchiveData = /* GraphQL */ `
+  mutation UpdateUniversalArchiveData(
+    $input: UpdateUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    updateUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalArchiveData = /* GraphQL */ `
+  mutation DeleteUniversalArchiveData(
+    $input: DeleteUniversalArchiveDataInput!
+    $condition: ModelUniversalArchiveDataConditionInput
+  ) {
+    deleteUniversalArchiveData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+        shared
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUniversalSurveyStudentData = /* GraphQL */ `
+  mutation CreateUniversalSurveyStudentData(
+    $input: CreateUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    createUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalSurveyStudentData = /* GraphQL */ `
+  mutation UpdateUniversalSurveyStudentData(
+    $input: UpdateUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    updateUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalSurveyStudentData = /* GraphQL */ `
+  mutation DeleteUniversalSurveyStudentData(
+    $input: DeleteUniversalSurveyStudentDataInput!
+    $condition: ModelUniversalSurveyStudentDataConditionInput
+  ) {
+    deleteUniversalSurveyStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      studentID
+      studentAuthID
+      studentEmail
+      roomID
+      currentLocation
+      lessonProgress
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUniversalJournalData = /* GraphQL */ `
   mutation CreateUniversalJournalData(
     $input: CreateUniversalJournalDataInput!
@@ -11030,6 +11628,43 @@ export const createUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11074,6 +11709,43 @@ export const updateUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11118,6 +11790,43 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
       name
       type
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       description
       methodology
       policies
@@ -11165,6 +11874,25 @@ export const createCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11201,6 +11929,25 @@ export const updateCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11237,6 +11984,25 @@ export const deleteCurriculumUnits = /* GraphQL */ `
         name
         type
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         description
         methodology
         policies
@@ -11281,6 +12047,25 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -11410,6 +12195,25 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -11539,6 +12343,25 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
         label
         title
         institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
         language
         designers
         objectives
@@ -12372,6 +13195,43 @@ export const createCommunity = /* GraphQL */ `
     createCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12385,6 +13245,7 @@ export const createCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12426,47 +13287,13 @@ export const createCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
       }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12480,6 +13307,43 @@ export const updateCommunity = /* GraphQL */ `
     updateCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12493,6 +13357,7 @@ export const updateCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12534,47 +13399,13 @@ export const updateCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
       }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12588,6 +13419,43 @@ export const deleteCommunity = /* GraphQL */ `
     deleteCommunity(input: $input, condition: $condition) {
       id
       institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
       cardName
       cardType
       cardDate
@@ -12601,6 +13469,7 @@ export const deleteCommunity = /* GraphQL */ `
       additionalInfo
       personAuthID
       personEmail
+      isEditedCard
       person {
         id
         authId
@@ -12642,47 +13511,13 @@ export const deleteCommunity = /* GraphQL */ `
           personEmail
           msg
           createdAt
+          isEditedChat
           updatedAt
         }
         nextToken
       }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
+      likes
+      chatCount
       createdAt
       updatedAt
     }
@@ -12700,6 +13535,7 @@ export const createCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
@@ -12716,6 +13552,7 @@ export const updateCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }
@@ -12732,6 +13569,7 @@ export const deleteCommunityChat = /* GraphQL */ `
       personEmail
       msg
       createdAt
+      isEditedChat
       updatedAt
     }
   }

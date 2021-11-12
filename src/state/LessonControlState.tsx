@@ -24,6 +24,9 @@ export interface lessonControlStateType {
   status: string;
   currentPage: number;
   roster: Array<studentObject>;
+  rosterActive: Array<studentObject>;
+  rosterInactive: Array<studentObject>;
+  rosterOnDemand: Array<studentObject>;
   studentDataUpdated: boolean;
   sharing: boolean;
   studentViewing: string;
@@ -33,6 +36,9 @@ export const lessonControlState: lessonControlStateType = {
   status: '',
   currentPage: 0,
   roster: [],
+  rosterActive: [],
+  rosterInactive: [],
+  rosterOnDemand: [],
   studentDataUpdated: true,
   sharing: false,
   studentViewing: '', // student email

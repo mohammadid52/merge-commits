@@ -6,6 +6,7 @@ import StudentWindowTitleBar from './StudentWindowTitleBar';
 import TopMenu from '../TopMenu';
 import {getAsset} from 'assets';
 import {GlobalContext} from '@contexts/GlobalContext';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 interface ILessonFrame {
   children?: React.ReactNode;
@@ -21,6 +22,7 @@ interface ILessonFrame {
   handlePageChange?: any;
   handleLeavePopup?: any;
   handleHomePopup?: any;
+  visible?: boolean;
 }
 
 const LessonFrame = ({
@@ -41,6 +43,7 @@ const LessonFrame = ({
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   // ~~~~~~~~~~~ LIVE VIEW STATE ~~~~~~~~~~~ //
   const [live, setLive] = useState<boolean>(false);
@@ -117,15 +120,21 @@ const LessonFrame = ({
     }
   }, [fullscreen]);
 
+  // ##################################################################### //
+  // ############################# RESPONSIVE ############################ //
+  // ##################################################################### //
   const {mobile} = useDeviceDetect();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {breakpoint} = useTailwindBreakpoint();
 
   return (
     <>
       <div
         ref={frameRef}
-        style={{width: '75%', height: mobile && !fullscreen ? 'calc(75% - 80px)' : ''}}
-        className={`bg-gray-200 absolute mr-0 right-0 h-full flex flex-col items-center`}>
+        style={{
+          width:
+            breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+        }}
+        className={`bg-gray-200 absolute mr-0 right-0 h-full flex flex-col items-center z-50`}>
         <TopMenu
           themeColor={themeColor}
           isSameStudentShared={isSameStudentShared}

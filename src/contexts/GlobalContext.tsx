@@ -18,7 +18,7 @@ export const standardTheme = {
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
   banner: '',
   section:
-    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
+    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center ',
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
@@ -125,7 +125,7 @@ export const standardTheme = {
     footer:
       'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
     content:
-      ' border-0  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
+      'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
     hideBg: `border-transparent  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-transparent text-gray-900`,
   },
   notice: {

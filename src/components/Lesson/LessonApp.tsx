@@ -1,8 +1,8 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -23,8 +23,9 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {ILessonSurveyApp} from './Lesson';
 
-const LessonApp = () => {
+const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -64,18 +65,6 @@ const LessonApp = () => {
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ----------- 1 ---------- //
-  //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
-
-  // useEffect(() => {
-  //   if (lessonState.lessonData.id) {
-  //     lessonDispatch({
-  //       type: 'SET_SUBSCRIBE_FUNCTION',
-  //       payload: {
-  //         subscribeFunc: subscribeToRoom,
-  //       },
-  //     });
-  //   }
-  // }, [lessonState.lessonData.id]);
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
@@ -118,36 +107,8 @@ const LessonApp = () => {
     }
   }, [subscriptionData]);
 
-  // ##################################################################### //
-  // ############################ LESSON FETCH ########################### //
-  // ##################################################################### //
-
-  const getSyllabusLesson = async (lessonID?: string) => {
-    try {
-      const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
-      );
-      const response = universalLesson.data.getUniversalLesson;
-      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
-        return [
-          ...acc,
-          {
-            id: page.id,
-            label: page.label,
-          },
-        ];
-      }, []);
-      setLocalStorageData('lesson_plan', lessonPlan);
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
-    } catch (e) {
-      console.error('error getting lesson - ', lessonID, ' ', e);
-    }
-  };
-
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
-    const {lessonID} = urlParams;
-
     const leaveUnload = () => {
       const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
       Promise.resolve(leaveRoom).then((_: void) => {
@@ -158,12 +119,7 @@ const LessonApp = () => {
       });
     };
 
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) => {
-        //
-      });
-    }
+    console.log('lesson loaded....');
 
     return () => {
       leaveUnload();
@@ -560,8 +516,51 @@ const LessonApp = () => {
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  /******************************************
+   * GETS THE PREVIOUSLY SAVED STUDENT DATA *
+   * IF THERE IS ANY, AND SETS IT IN STATE  *
+   ******************************************/
+
+  const loopFetchStudentData = async (
+    filterObj: any,
+    nextToken: string,
+    outArray: any[]
+  ) => {
+    if (filterObj) {
+      try {
+        let studentData: any = await API.graphql(
+          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+            ...filterObj,
+            nextToken: nextToken,
+          })
+        );
+        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+        let combined = [...outArray, ...studentDataRows];
+
+        if (theNextToken) {
+          console.log('nextToken fetching more - ', nextToken);
+          loopFetchStudentData(filterObj, theNextToken, combined);
+        } else {
+          // console.log('no more - ', combined);
+          return combined;
+        }
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    } else {
+      return [];
+    }
+  };
+
   const getOrCreateStudentData = async () => {
-    const syllabusID = getRoomData.activeSyllabus;
+    // const syllabusID = getRoomData.activeSyllabus;
 
     // console.log('getOrCreateData - user - ', user);
 
@@ -575,12 +574,12 @@ const LessonApp = () => {
         },
       };
 
-      const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
-      );
+      // const studentData: any = await API.graphql(
+      //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+      // );
 
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
       const filteredData = filterExtraPages(PAGES, studentDataRows);
       const extraPages = filteredData.extraPages;
@@ -866,7 +865,7 @@ const LessonApp = () => {
       lessonProgress: updatedLocationObj.lessonProgress,
     };
     try {
-      const newPersonLocationMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
       );
       setLocalStorageData('person_location', locationUpdateProps);
@@ -877,7 +876,7 @@ const LessonApp = () => {
 
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
-      const deletePersonLocationMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,
