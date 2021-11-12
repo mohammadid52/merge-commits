@@ -1,4 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {tableCleanupUrl} from '@utilities/urls';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
@@ -10,6 +12,7 @@ import {awsFormatDate, dateString} from '../../../utilities/time';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import {Lesson} from './Classroom';
+import axios from 'axios';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -49,6 +52,7 @@ const Start: React.FC<StartProps> = ({
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
+  const getRoomData = getLocalStorageData('room_info');
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -265,23 +269,35 @@ const Start: React.FC<StartProps> = ({
     const payloadLessonIds = Array.isArray(lessonIds)
       ? lessonIds
       : warnModal.activeLessonsId;
-    await API.graphql(
-      graphqlOperation(mutations.updateRoom, {
-        input: {
-          id: roomID,
-          completedLessons: [
-            ...(state.roomData.completedLessons || []),
-            ...payloadLessonIds?.map((lessonID: any) => ({
-              lessonID,
-              time: new Date().toISOString(),
-            })),
-          ],
-          activeLessons: [lessonKey],
-        },
-      })
-    );
-    history.push(`${`/lesson-control/${lessonKey}`}`);
-    discardChanges();
+    // UPDATE ROOM MUTATION
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: roomID,
+            completedLessons: [
+              ...(state.roomData.completedLessons || []),
+              ...payloadLessonIds?.map((lessonID: any) => ({
+                lessonID,
+                time: new Date().toISOString(),
+              })),
+            ],
+            activeLessons: [lessonKey],
+          },
+        })
+      );
+      // POST TO LAMBDA
+      await axios.post(tableCleanupUrl, {
+        lessonID: lessonKey,
+        syllabusID: getRoomData.activeSyllabus,
+        roomID: getRoomData.id,
+      });
+    } catch (e) {
+      console.error('handleMarkAsCompleteClick() - ', e);
+    } finally {
+      history.push(`${`/lesson-control/${lessonKey}`}`);
+      discardChanges();
+    }
   };
 
   const firstPart = () => {
