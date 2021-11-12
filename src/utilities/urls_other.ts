@@ -1,3 +1,5 @@
+const awsconfig = require('../aws-exports');
+
 const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
     case 'iconoclast':
@@ -29,6 +31,10 @@ const getCorrectUrl = (clientKey: string) => {
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
       };
   }
+};
+
+export const getBackendKey = (/*configJson: string*/) => {
+  console.log('configJson', awsconfig);
 };
 
 // ~~~~~~~~~~~~ TABLE CLEANUP ~~~~~~~~~~~~ //
