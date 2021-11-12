@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
+import Loader from '@components/Atoms/Loader';
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
@@ -15,6 +16,8 @@ interface ButtonProps {
   iconBeforeLabel?: boolean;
   disabled?: boolean;
   customStyles?: object;
+  loading?: boolean;
+  loadingText?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
@@ -30,13 +33,15 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     labelClass,
     disabled,
     customStyles,
+    loading = false,
+    loadingText = 'Loading...',
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || loading}
       type={type ? type : 'button'}
       style={customStyles}
       className={`
@@ -56,23 +61,30 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       } 
       ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} `}
       onClick={onClick}>
-      {Icon && iconBeforeLabel && (
-        <span className="w-auto">
-          <IconContext.Provider value={{color: '#ffffff'}}>
-            <Icon className="w-6 h-6" />
-          </IconContext.Provider>
-        </span>
+      {loading ? (
+        <Loader withText={loadingText} className="w-auto text-gray-400" />
+      ) : (
+        <>
+          {' '}
+          {Icon && iconBeforeLabel && (
+            <span className="w-auto">
+              <IconContext.Provider value={{color: '#ffffff'}}>
+                <Icon className="w-6 h-6" />
+              </IconContext.Provider>
+            </span>
+          )}
+          {label ? (
+            <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
+          ) : null}
+          {Icon && !iconBeforeLabel ? (
+            <span className="w-8 h-8 flex items-center">
+              <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
+                <Icon />
+              </IconContext.Provider>
+            </span>
+          ) : null}
+        </>
       )}
-      {label ? (
-        <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
-      ) : null}
-      {Icon && !iconBeforeLabel ? (
-        <span className="w-8 h-8 flex items-center">
-          <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
-            <Icon />
-          </IconContext.Provider>
-        </span>
-      ) : null}
     </button>
   );
 };

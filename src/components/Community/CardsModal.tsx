@@ -10,15 +10,18 @@ import {
 } from '@components/Community/constants.community';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import useAuth from '@customHooks/useAuth';
+
 import {
   ISpotlightInput,
   IAnnouncementInput,
   ICheckItOutInput,
   IEventInput,
+  ICommunityCard,
 } from '@interfaces/Community.interfaces';
 import {setState} from '@interfaces/index';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import React from 'react';
+import {isEmpty} from 'lodash';
+import React, {useEffect} from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
 
 const getModalHeader = (navState: NavStateTypes) => {
@@ -90,16 +93,24 @@ const CardsModal = ({
   instId,
   navState,
   setNavState,
+  editMode = false,
+  cardDetails = null,
 }: {
   showCardsModal: boolean;
+
+  cardDetails?: ICommunityCard;
+  setShowCardsModal: setState['boolean'];
+  editMode: boolean;
   instId: string;
   functions: {
-    onSpotlightSubmit?: (input: ISpotlightInput) => void;
-    onAnnouncementSubmit?: (input: IAnnouncementInput) => void;
-    onEventSubmit?: (input: IEventInput) => void;
-    onCheckItOutSubmit?: (input: ICheckItOutInput) => void;
+    onSpotlightSubmit?: (input: ISpotlightInput, successCallback?: () => void) => void;
+    onAnnouncementSubmit?: (
+      input: IAnnouncementInput,
+      successCallback?: () => void
+    ) => void;
+    onEventSubmit?: (input: IEventInput, successCallback?: () => void) => void;
+    onCheckItOutSubmit?: (input: ICheckItOutInput, successCallback?: () => void) => void;
   };
-  setShowCardsModal: setState['boolean'];
   navState?: NavStateTypes;
   setNavState?: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
@@ -118,6 +129,12 @@ const CardsModal = ({
   let cardList = isStudent
     ? communityContent.filter((d) => d.type === communityTypes.CHECK_IT_OUT)
     : communityContent;
+
+  const commonProps = {
+    onCancel,
+    editMode,
+    cardDetails,
+  };
 
   return (
     <div style={{zIndex: 99999}}>
@@ -147,8 +164,8 @@ const CardsModal = ({
                     onSubmit={(input: ISpotlightInput) =>
                       functions.onSpotlightSubmit(input)
                     }
-                    onCancel={onCancel}
                     instId={instId}
+                    {...commonProps}
                   />
                 </div>
               )}
@@ -160,7 +177,7 @@ const CardsModal = ({
                     onSubmit={(input: IAnnouncementInput) =>
                       functions.onAnnouncementSubmit(input)
                     }
-                    onCancel={onCancel}
+                    {...commonProps}
                   />
                 </div>
               )}
@@ -170,7 +187,7 @@ const CardsModal = ({
                 <div className="">
                   <Event
                     onSubmit={(input: IEventInput) => functions.onEventSubmit(input)}
-                    onCancel={onCancel}
+                    {...commonProps}
                   />
                 </div>
               )}
@@ -180,7 +197,7 @@ const CardsModal = ({
                 <div className="">
                   <CheckItOut
                     onSubmit={(input: IEventInput) => functions.onCheckItOutSubmit(input)}
-                    onCancel={onCancel}
+                    {...commonProps}
                   />
                 </div>
               )}

@@ -3,19 +3,40 @@ import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {IAnnouncementInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: any}) => {
+const Announcements = ({
+  onCancel,
+  onSubmit,
+  editMode,
+  cardDetails,
+}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
+
+  const [tempData, setTempData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      setTempData({
+        image: cardDetails.cardImageLink,
+      });
+
+      setOverlayText(cardDetails?.cardName);
+    }
+  }, [editMode, cardDetails]);
 
   const [error, setError] = useState('');
 
@@ -33,19 +54,38 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const announcementsDetails = {
-        cardImageLink: file.fileKey,
+      setIsLoading(true);
+      let announcementsDetails: IAnnouncementInput = {
         summary: fields.summary,
+        summaryHtml: fields.summaryHtml,
         cardName: overlayText,
+        cardImageLink: editMode
+          ? file && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
       };
-      onSubmit(announcementsDetails);
-      onCancel();
+
+      if (!editMode) {
+        delete announcementsDetails.id;
+      }
+      if (youtubeVideoLink) {
+        announcementsDetails = {
+          ...announcementsDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink],
+        };
+      }
+
+      onSubmit(announcementsDetails, () => setIsLoading(false));
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if (isEmpty(file)) {
+    if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -54,6 +94,12 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     } else if (!fields.summary) {
       setError('Please add description');
       isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
+      isValid = false;
     } else {
       setError('');
       isValid = true;
@@ -61,9 +107,40 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
     return isValid;
   };
 
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
+  };
+
   return (
     <div className="min-w-256 max-w-256">
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData?.image ? (
+        <div>
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            {...mediaProps}
+          />
+        </div>
+      ) : (
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          {...mediaProps}
+        />
+      )}
 
       <div className="px-3 py-4">
         <div>
@@ -86,7 +163,8 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
             placeholder={
               'Why do you want people in the community to know about what is happening'
             }
-            withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
@@ -109,7 +187,13 @@ const Announcements = ({onCancel, onSubmit}: {onCancel: () => void; onSubmit: an
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            loading={isLoading}
+            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={'Save'}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ import HeroBanner from '@components/Header/HeroBanner';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-import useAuth from '@customHooks/useAuth';
+
 import * as mutations from '@graphql/mutations';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -31,7 +31,7 @@ import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
-import {isEmpty} from 'lodash';
+import {findIndex, isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
@@ -39,6 +39,7 @@ import React, {useEffect, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
+import useAuth from '@customHooks/useAuth';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -77,7 +78,7 @@ const Community = ({}: {role: string}) => {
       last: true,
     },
   ];
-  const payloadForCommunities = {institutionID: instId, limit: 12};
+  const payloadForCommunities = {};
 
   const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery(
     'listCommunitys',
@@ -98,6 +99,18 @@ const Community = ({}: {role: string}) => {
     setNavState('init');
   };
 
+  const [isCardEditMode, setIsCardEditMode] = useState(false);
+
+  const [cardForEdit, setCardForEdit] = useState(null);
+
+  const onCardEdit = (cardDetails: ICommunityCard) => {
+    // @ts-ignore
+    setNavState(cardDetails.cardType);
+    setIsCardEditMode(true);
+    setShowCardsModal(true);
+    setCardForEdit(cardDetails);
+  };
+
   const getCommonInput = (
     cardType: CardType
   ): {
@@ -116,41 +129,62 @@ const Community = ({}: {role: string}) => {
     personEmail,
   });
 
-  const {mutate} = useGraphqlMutation('createCommunity', {
+  const createCommunity = useGraphqlMutation('createCommunity', {
     onCancel,
     onSuccess: (data) => {
       list.unshift({...data});
       setList([...list]);
     },
   });
+  const updateCommunity = useGraphqlMutation('updateCommunity', {
+    onCancel,
+    onSuccess: (data: ICommunityCard) => {
+      const cardIdx = findIndex(list, (item: ICommunityCard) => item.id === data.id);
+      list[cardIdx] = {...data};
+      setList([...list]);
+    },
+  });
 
-  const onSpotlightSubmit = async (spotlightDetails: ISpotlightInput) => {
+  const onSpotlightSubmit = async (
+    spotlightDetails: ISpotlightInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('spotlight');
 
     const input = {
-      cardImageLink: spotlightDetails.cardImageLink,
-      summary: spotlightDetails.summary,
-      additionalLinks: spotlightDetails.additionalLinks,
+      ...spotlightDetails,
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+    } else {
+      createCommunity.mutate({input}, successCallback);
+    }
   };
 
-  const onAnnouncementSubmit = async (announcementDetails: IAnnouncementInput) => {
+  const onAnnouncementSubmit = async (
+    announcementDetails: IAnnouncementInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('announcement');
 
     const input = {
-      cardImageLink: announcementDetails.cardImageLink,
-      summary: announcementDetails.summary,
-      cardName: announcementDetails.cardName,
+      ...announcementDetails,
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+    } else {
+      createCommunity.mutate({input}, successCallback);
+    }
   };
 
-  const onEventSubmit = async (eventDetails: IEventInput) => {
+  const onEventSubmit = async (
+    eventDetails: IEventInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('event');
 
     const input = {
@@ -158,10 +192,17 @@ const Community = ({}: {role: string}) => {
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+    } else {
+      createCommunity.mutate({input}, successCallback);
+    }
   };
 
-  const onCheckItOutSubmit = async (checkItOutDetails: ICheckItOutInput) => {
+  const onCheckItOutSubmit = async (
+    checkItOutDetails: ICheckItOutInput,
+    successCallback?: () => void
+  ) => {
     const commonInput = getCommonInput('check_it_out');
 
     const input = {
@@ -169,7 +210,11 @@ const Community = ({}: {role: string}) => {
       ...commonInput,
     };
 
-    mutate({input});
+    if (isCardEditMode) {
+      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+    } else {
+      createCommunity.mutate({input}, successCallback);
+    }
   };
 
   const FAB = () => {
@@ -186,11 +231,13 @@ const Community = ({}: {role: string}) => {
     deleteImageFromS3(`${COMMUNITY_UPLOAD_KEY}${fileKey}`);
   };
 
-  const onDelete = async (cardId: string, fileKey: string) => {
+  const onDelete = async (cardId: string, fileKey?: string) => {
     try {
       remove(list, ['id', cardId]);
       setList([...list]);
-      await deleteImage(fileKey);
+      if (fileKey) {
+        await deleteImage(fileKey);
+      }
       const res: any = await API.graphql(
         graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
       );
@@ -226,7 +273,12 @@ const Community = ({}: {role: string}) => {
           data &&
           data.length > 0 &&
           data.map((card: ICommunityCard, idx: number) => (
-            <Card onDelete={onDelete} key={idx} cardDetails={card} />
+            <Card
+              onCardEdit={onCardEdit}
+              onDelete={onDelete}
+              key={idx}
+              cardDetails={card}
+            />
           ))}
       </ContentCard>
     );
@@ -290,6 +342,7 @@ const Community = ({}: {role: string}) => {
         <TitleBar />
         <CardsModal
           navState={navState}
+          editMode={isCardEditMode}
           setNavState={setNavState}
           functions={{
             onCheckItOutSubmit,
@@ -313,6 +366,8 @@ const Community = ({}: {role: string}) => {
       <CardsModal
         navState={navState}
         setNavState={setNavState}
+        editMode={isCardEditMode}
+        cardDetails={cardForEdit}
         functions={{
           onSpotlightSubmit,
           onAnnouncementSubmit,
