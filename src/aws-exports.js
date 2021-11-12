@@ -40,17 +40,14 @@ const awsmobile = {
                     "lmsMap-uatenv": {
                         "style": "VectorEsriLightGrayCanvas"
                     },
-                    "map32a03f17-uatenv": {
+                    "houston-uatenv": {
                         "style": "VectorEsriStreets"
                     }
                 },
-                "default": "map32a03f17-uatenv"
+                "default": "houston-uatenv"
             }
         }
-    },
-    "aws_cognito_login_mechanisms": [
-        "EMAIL"
-    ]
+    }
 };
 
 
