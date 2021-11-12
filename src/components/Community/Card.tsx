@@ -342,7 +342,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        <EventMap />
+        {/* <EventMap /> */}
       </div>
     );
   } else

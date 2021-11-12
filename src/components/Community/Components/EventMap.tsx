@@ -4,34 +4,23 @@ import {createMap} from 'maplibre-gl-js-amplify';
 import 'maplibre-gl/dist/maplibre-gl.css';
 // const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
 
+async function initializeMap() {
+  const map = await createMap({
+    container: 'map', // An HTML Element or HTML element ID to render the map in https://maplibre.org/maplibre-gl-js-docs/api/map/
+    center: [-73.98597609730648, 40.751874635721734], // center in New York
+    zoom: 11,
+  });
+  return map;
+}
+
 const EventMap = () => {
-  const mapRef = useRef(null); // Reference to the map DOM element
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    let map: any;
-    async function initializeMap() {
-      // We only want to initialize the underlying maplibre map after the div has been rendered
-      if (mapRef.current != null) {
-        map = await createMap({
-          container: mapRef.current,
-          center: [-122.431297, 37.773972],
-          zoom: 11,
-        });
-      }
-    }
-    try {
-      initializeMap();
-    } catch (error) {
-      console.error(error);
-    }
-
-    // Cleans up and maplibre DOM elements and other resources - https://maplibre.org/maplibre-gl-js-docs/api/map/#map#remove
-    return function cleanup() {
-      if (map !== null) map.remove();
-    };
+    const map = initializeMap();
   }, []);
 
-  return <div ref={mapRef} id="map" />;
+  return <div ref={mapRef} id="map"></div>;
 };
 
 export default EventMap;
