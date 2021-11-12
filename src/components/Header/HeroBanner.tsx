@@ -16,7 +16,7 @@ const HeroBanner = (props: HeroBannerProps) => {
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 w-full h-32 2xl:h-60">
+      <div className="absolute inset-0 w-full h-40 2xl:h-60">
         <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
         <img
           className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
@@ -26,7 +26,7 @@ const HeroBanner = (props: HeroBannerProps) => {
       </div>
       <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
         <div
-          className={`z-10 flex flex-col align-center self-auto items-center justify-center h-32 2xl:h-60 font-extrabold tracking-tight text-center text-white text-2xl 2xl:text-7xl pb-8 2xl:pb-6 ${
+          className={`z-10 flex flex-col align-center self-auto items-center justify-center h-40 2xl:h-60 font-extrabold tracking-tight text-center text-white text-4xl 2xl:text-7xl pb-8 2xl:pb-6 ${
             transition ? 'fade__animation' : ''
           }`}>
           <h1>{title}</h1>
