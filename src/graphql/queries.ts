@@ -6586,6 +6586,179 @@ export const listCommunitys = /* GraphQL */ `
     }
   }
 `;
+export const getGameChanger = /* GraphQL */ `
+  query GetGameChanger($id: ID!) {
+    getGameChanger(id: $id) {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGameChangers = /* GraphQL */ `
+  query ListGameChangers(
+    $id: ID
+    $filter: ModelGameChangerFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listGameChangers(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getGameChangerLog = /* GraphQL */ `
+  query GetGameChangerLog($id: ID!) {
+    getGameChangerLog(id: $id) {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGameChangerLogs = /* GraphQL */ `
+  query ListGameChangerLogs(
+    $id: ID
+    $filter: ModelGameChangerLogFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listGameChangerLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        gameChangerID
+        gameChanger {
+          id
+          gameChangerName
+          title
+          objective
+          gameChangerLinks
+          inputs
+          likes
+          createdAt
+          updatedAt
+        }
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        startTime
+        endTime
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getCommunityChat = /* GraphQL */ `
   query GetCommunityChat($id: ID!) {
     getCommunityChat(id: $id) {
