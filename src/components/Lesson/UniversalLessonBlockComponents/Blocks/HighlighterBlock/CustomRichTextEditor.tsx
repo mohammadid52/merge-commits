@@ -51,6 +51,7 @@ interface RichTextEditorProps {
   theme?: 'iconoclastIndigo' | 'curate';
   fullWHOverride?: boolean;
   rounded?: boolean;
+  placeholder?: string;
   dark?: boolean;
   mediumDark?: boolean;
   customStyle?: boolean;
@@ -73,6 +74,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     features = [],
     withStyles = false,
     theme,
+    placeholder = '',
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -86,7 +88,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
    */
   const isInLesson = useInLessonCheck();
   const switchContext = isInLesson ? undefined : useULBContext();
-  const previewMode = isInLesson ? false : switchContext.previewMode;
+  const previewMode = isInLesson ? false : switchContext?.previewMode;
 
   const options: string[] = [
     'inline',
@@ -152,7 +154,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         editorRef.current.editor.editor.innerHTML = text;
       });
     }
-  }, [editorRef]);
+  }, [editorRef,withStyles]);
 
   const toolbarClassName = `${
     customStyle
@@ -182,6 +184,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     <Editor
       ref={editorRef}
       editorState={editorState}
+      placeholder={placeholder}
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}
       editorClassName={editorClassName}

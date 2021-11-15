@@ -13526,6 +13526,243 @@ export const deleteCommunity = /* GraphQL */ `
     }
   }
 `;
+export const createGameChanger = /* GraphQL */ `
+  mutation CreateGameChanger(
+    $input: CreateGameChangerInput!
+    $condition: ModelGameChangerConditionInput
+  ) {
+    createGameChanger(input: $input, condition: $condition) {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGameChanger = /* GraphQL */ `
+  mutation UpdateGameChanger(
+    $input: UpdateGameChangerInput!
+    $condition: ModelGameChangerConditionInput
+  ) {
+    updateGameChanger(input: $input, condition: $condition) {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGameChanger = /* GraphQL */ `
+  mutation DeleteGameChanger(
+    $input: DeleteGameChangerInput!
+    $condition: ModelGameChangerConditionInput
+  ) {
+    deleteGameChanger(input: $input, condition: $condition) {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createGameChangerLog = /* GraphQL */ `
+  mutation CreateGameChangerLog(
+    $input: CreateGameChangerLogInput!
+    $condition: ModelGameChangerLogConditionInput
+  ) {
+    createGameChangerLog(input: $input, condition: $condition) {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGameChangerLog = /* GraphQL */ `
+  mutation UpdateGameChangerLog(
+    $input: UpdateGameChangerLogInput!
+    $condition: ModelGameChangerLogConditionInput
+  ) {
+    updateGameChangerLog(input: $input, condition: $condition) {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGameChangerLog = /* GraphQL */ `
+  mutation DeleteGameChangerLog(
+    $input: DeleteGameChangerLogInput!
+    $condition: ModelGameChangerLogConditionInput
+  ) {
+    deleteGameChangerLog(input: $input, condition: $condition) {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createCommunityChat = /* GraphQL */ `
   mutation CreateCommunityChat(
     $input: CreateCommunityChatInput!

@@ -3,12 +3,16 @@ import Buttons from '@components/Atoms/Buttons';
 import SelectorWithAvatar from '@components/Atoms/Form/SelectorWithAvatar';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
+
 import * as queries from '@graphql/queries';
-import {ISpotlightInput} from '@interfaces/Community.interfaces';
+import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
+import {getImageFromS3Static} from '@utilities/services';
 import {getFilterORArray} from '@utilities/strings';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
@@ -17,21 +21,61 @@ const Spotlight = ({
   instId,
   onCancel,
   onSubmit,
-}: {
-  instId?: string;
-  onCancel: () => void;
-  onSubmit: (input: ISpotlightInput) => void;
-}) => {
+  editMode,
+  cardDetails,
+}: ICommunityCardProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [loadingTeachers, setLoadingTeachers] = useState(false);
   const [file, setFile] = useState<IFile>();
   const [studentsList, setStudentsList] = useState([]);
   const [loadingStudents, setLoadingStudents] = useState(false);
 
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      const additionalLinks = cardDetails?.additionalLinks;
+
+      if (teachersList.length > 0) {
+        const teacher = teachersList.find(
+          (teacher) =>
+            teacher.id ===
+            (additionalLinks &&
+              additionalLinks.length > 0 &&
+              additionalLinks[cardDetails?.cardImageLink ? 0 : 1])
+        );
+
+        setSelectedPerson(teacher);
+      }
+
+      setTempData({
+        image: cardDetails.cardImageLink,
+      });
+
+      if (
+        !cardDetails.cardImageLink &&
+        additionalLinks?.length > 0 &&
+        additionalLinks[0]
+      ) {
+        setYoutubeVideoLink(additionalLinks[0]);
+      }
+
+      // this method is not working with text editor. doesn't work ❌
+      // trying to add initial value to useState. finally this method works ✅. (check useState for fields for ref.)
+
+      // setFields({
+      //   ...fields,
+
+      //   summary: cardDetails?.summary || '',
+      //   summaryHtml: cardDetails?.summaryHtml || '',
+      // });
+    }
+  }, [editMode, cardDetails, teachersList]);
+
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const onEditorStateChange = (
@@ -43,6 +87,8 @@ const Spotlight = ({
     setUnsavedChanges(true);
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialData = {
     id: '',
@@ -196,14 +242,21 @@ const Spotlight = ({
 
   const validateFields = () => {
     let isValid = true;
+
     if (teacher === undefined) {
       setError('Please select person');
       isValid = false;
-    } else if (isEmpty(file)) {
+    } else if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
       setError('Please add description');
+      isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
       isValid = false;
     } else {
       setError('');
@@ -215,13 +268,42 @@ const Spotlight = ({
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const spotlightDetails: ISpotlightInput = {
-        cardImageLink: file.fileKey,
+      setIsLoading(true);
+      let spotlightDetails: ISpotlightInput = {
         summary: fields.summary,
-        additionalLinks: [teacher.id],
+        summaryHtml: fields.summaryHtml,
+        additionalLinks: [selectedPerson.id],
+        cardImageLink: editMode
+          ? file && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
       };
-      onSubmit(spotlightDetails);
+
+      if (!editMode) {
+        delete spotlightDetails.id;
+      }
+      if (youtubeVideoLink) {
+        spotlightDetails = {
+          ...spotlightDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink, selectedPerson.id],
+        };
+      }
+
+      onSubmit(spotlightDetails, () => setIsLoading(false));
     }
+  };
+
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
   };
 
   return (
@@ -241,7 +323,28 @@ const Spotlight = ({
           onChange={selectPerson}
         />
       </div>
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData?.image ? (
+        <div>
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            {...mediaProps}
+          />
+        </div>
+      ) : (
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          {...mediaProps}
+        />
+      )}
 
       <div className="px-3 py-4">
         <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
@@ -251,7 +354,8 @@ const Spotlight = ({
         <div>
           <RichTextEditor
             placeholder={'Why do you want to put this person in the community spotlight?'}
-            withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
@@ -276,7 +380,11 @@ const Spotlight = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
-            disabled={isEmpty(file)}
+            loading={isLoading}
+            // disabled={
+            //   (!editMode && isEmpty(file) && file?._status !== 'success') ||
+            //   (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink))
+            // }
             onClick={_onSubmit}
           />
         </div>

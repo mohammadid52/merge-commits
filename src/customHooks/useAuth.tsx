@@ -1,0 +1,71 @@
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getInitialsFromString, initials, stringToHslColor} from '@utilities/strings';
+import React from 'react';
+
+const useAuth = (): {
+  role: any;
+  isStudent: boolean;
+  isTeacher: boolean;
+  isBuilder: boolean;
+  isAdmin: boolean;
+  isFellow: boolean;
+  authId: any;
+  email: any;
+  firstName: any;
+  lastName: any;
+  image: any;
+  instId: string;
+  user: any;
+  Placeholder: any;
+} => {
+  const context = useGlobalContext();
+
+  const user = context.state.user;
+  const {authId, role, email, firstName, lastName, image} = user;
+
+  const isStudent = role === 'ST';
+  const isTeacher = role === 'TR';
+  const isBuilder = role === 'BLD';
+  const isAdmin = role === 'ADM';
+  const isFellow = role === 'FLW';
+  const instId = user?.associateInstitute[0]?.institution?.id || '';
+
+  const Placeholder = ({name}: {name?: string}) => {
+    const [firstName, lastName] = getInitialsFromString(
+      name || `${user.firstName} ${user.lastName}`
+    );
+    return (
+      <div
+        className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
+        <div
+          className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+          style={{
+            /*  stylelint-disable */
+            background: `${name ? stringToHslColor(firstName + ' ' + lastName) : null}`,
+            textShadow: '0.2rem 0.2rem 3px #423939b3',
+          }}>
+          {name && initials(firstName, lastName)}
+        </div>
+      </div>
+    );
+  };
+
+  return {
+    role,
+    isStudent,
+    isTeacher,
+    isBuilder,
+    isAdmin,
+    isFellow,
+    authId,
+    email,
+    firstName,
+    lastName,
+    image,
+    instId,
+    user,
+    Placeholder,
+  };
+};
+
+export default useAuth;

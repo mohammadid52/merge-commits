@@ -15,7 +15,7 @@ const useGraphqlMutation = (
   mutationName: string,
   options?: Options
 ): {
-  mutate: (variables: any) => Promise<void>;
+  mutate: (variables: any, successCallback?: () => void) => Promise<void>;
   isLoading: boolean;
   isError: boolean;
   error: string;
@@ -27,7 +27,7 @@ const useGraphqlMutation = (
 
   const action = custom ? customMutations : mutations;
 
-  const mutate = async (variables: any) => {
+  const mutate = async (variables: any, successCallback?: () => void) => {
     setIsLoading(true);
     try {
       const res: any = await API.graphql(
@@ -38,6 +38,9 @@ const useGraphqlMutation = (
       const data = res.data[mutationName];
       if (onSuccess && typeof onSuccess === 'function') {
         onSuccess(data);
+        if (successCallback && typeof successCallback === 'function') {
+          successCallback();
+        }
       }
     } catch (error) {
       setIsError(true);
@@ -48,6 +51,7 @@ const useGraphqlMutation = (
       if (onCancel && typeof onCancel === 'function') {
         onCancel();
       }
+
       setIsLoading(false);
     }
   };

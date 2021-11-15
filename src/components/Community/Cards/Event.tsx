@@ -3,22 +3,15 @@ import Label from '@atoms/Form/Label';
 import Buttons from '@components/Atoms/Buttons';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
-import useScript from '@customHooks/useScript';
-import {IEventInput} from '@interfaces/Community.interfaces';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import {ICommunityCardProps, IEventInput} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
-const api = 'AIzaSyDcwGyRxRbcNGWOFQVT87A1mkxEOfm8t0w';
 
-const Event = ({
-  onCancel,
-  onSubmit,
-}: {
-  onCancel: () => void;
-  onSubmit: (input: IEventInput) => void;
-}) => {
+const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -29,16 +22,13 @@ const Event = ({
     date: null,
     address: '',
   });
+
   const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
-
-  const status = useScript(
-    `https://maps.googleapis.com/maps/api/js?key=${api}&callback=initMap&libraries=&v=weekly`
-  );
 
   const onEditorStateChange = (
     html: string,
@@ -51,20 +41,53 @@ const Event = ({
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      setTempData({
+        image: cardDetails.cardImageLink,
+      });
+
+      setOverlayText(cardDetails?.cardName);
+
+      const [date, address] = cardDetails?.additionalInfo.split(' || ');
+
+      setDetails({
+        ...details,
+        startTime: new Date(cardDetails?.startTime),
+        endTime: new Date(cardDetails?.endTime),
+        date: new Date(date),
+        address: address,
+      });
+    }
+  }, [editMode, cardDetails]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const eventDetails: IEventInput = {
-        cardImageLink: file.fileKey,
+      setIsLoading(true);
+      let eventDetails: IEventInput = {
+        cardImageLink: editMode
+          ? file && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
+        summaryHtml: fields.summaryHtml,
         summary: fields.summary,
         cardName: overlayText,
         startTime: details.startTime,
         endTime: details.endTime,
-
         additionalInfo: `${details.date} || ${details.address}`,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
       };
-      onSubmit(eventDetails);
-      onCancel();
+      if (!editMode) {
+        delete eventDetails.id;
+      }
+      onSubmit(eventDetails, () => setIsLoading(false));
     }
   };
 
@@ -84,7 +107,7 @@ const Event = ({
 
   const validateFields = () => {
     let isValid = true;
-    if (isEmpty(file)) {
+    if (!editMode && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -102,7 +125,32 @@ const Event = ({
 
   return (
     <div className="min-w-256 max-w-256">
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData?.image ? (
+        <div>
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            setError={setError}
+            setFile={setFile}
+            file={file}
+          />
+        </div>
+      ) : (
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          setError={setError}
+          setFile={setFile}
+          file={file}
+        />
+      )}
 
       <div className="px-3 py-4">
         <div>
@@ -122,10 +170,11 @@ const Event = ({
 
         <div>
           <RichTextEditor
+            rounded
+            customStyle
             placeholder={
               'Why do you want people in the community to know about the event'
             }
-            withStyles
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
@@ -135,6 +184,7 @@ const Event = ({
           <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
+
       <div className="px-3 py-4">
         <Label label="Step 4: Provide details about the event" />
 
@@ -179,17 +229,9 @@ const Event = ({
               dateFormat="h:mm aa"
             />
           </div>
-          <div className="relative">
-            <FormInput
-              label="Address"
-              placeHolder="Address"
-              onChange={(e) => handleDateChange(e.target.value, 'address')}
-              value={details.address}
-            />
-          </div>
-          {/* <div id="map"></div> */}
         </div>
       </div>
+
       <AnimatedContainer show={Boolean(error)}>
         {error && <p className="text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
@@ -201,7 +243,13 @@ const Event = ({
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            loading={isLoading}
+            btnClass="py-1 px-8 text-xs ml-2"
+            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
+            label={'Save'}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>
