@@ -622,6 +622,11 @@ const NewLessonPlanSO = ({
       <div className="flex-1">
         {/* Header */}
         <div className="px-4 py-6 dark:bg-gray-800 bg-gray-50 sm:px-6">
+          <div
+            onClick={onTopRightButtonClick}
+            className="cursor-pointer hover:underline text-right text-sm mb-2 text-gray-500">
+            return to editor
+          </div>
           <div className="flex items-start justify-between space-x-3">
             <div className="space-y-1 dark:text-white">
               Activity Details

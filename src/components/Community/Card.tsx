@@ -3,7 +3,7 @@ import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import Popover from '@components/Atoms/Popover';
 import Comments from '@components/Community/Components/Comments';
-import EventMap from '@components/Community/Components/EventMap';
+
 import HandleMedia from '@components/Community/Components/HandleMedia';
 import {
   communityTypes,
@@ -342,7 +342,6 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        {/* <EventMap /> */}
       </div>
     );
   } else

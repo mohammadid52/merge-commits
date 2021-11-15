@@ -46,7 +46,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     cols = 125,
     maxLength = 99999,
     showCharacterUsage = false,
-    dark,
+    dark = false,
     min,
     max,
     inputRef,
