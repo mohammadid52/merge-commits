@@ -770,6 +770,8 @@ const PageBuilderSlideOver = ({
     setShowMovementBox(false);
   };
 
+  const isSurvey = universalLessonDetails?.type === 'survey';
+
   return (
     <>
       <AnimatedContainer
@@ -908,6 +910,7 @@ const PageBuilderSlideOver = ({
               }
             />
             <AddContentDialog
+              isSurvey={isSurvey}
               setCurrentHelpStep={setCurrentHelpStep}
               onItemClick={onContentItemClick}
             />
