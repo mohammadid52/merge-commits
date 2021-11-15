@@ -54,11 +54,14 @@ export const getCorrectUrl = (clientKey: string) => {
  * @param configJson - imported aws config file
  * @returns
  */
-export const getBackendKey = () => {
-  const awsconfig = require('../aws-exports');
-  if (awsconfig) {
+
+import * as awsconfig2 from '../aws-exports';
+
+export const getBackendKey = (input: any) => {
+  console.log('input', input);
+  if (input) {
     //@ts-ignore
-    let configJson = awsconfig['default'];
+    let configJson = input['default'];
     let s3BucketName = configJson['aws_user_files_s3_bucket'];
 
     if (/(-demosite)/.test(s3BucketName)) {
@@ -78,7 +81,7 @@ export const getBackendKey = () => {
 // ##################################################################### //
 // ############################### OUTPUT ############################## //
 // ##################################################################### //
-const getUrls = getCorrectUrl(getBackendKey());
+const getUrls = getCorrectUrl(getBackendKey(awsconfig2));
 export const createUserUrl = getUrls.createUserUrl;
 export const requestResetPassword = getUrls.requestResetPassword;
 export const tableCleanupUrl = getUrls.tableCleanupUrl;
