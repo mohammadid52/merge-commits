@@ -186,7 +186,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
                     )}
                     <span
                       className={`${
-                        selectedItem.id === item.id ? 'font-semibold' : 'font-normal'
+                        selectedItem?.id === item?.id ? 'font-semibold' : 'font-normal'
                       } pl-4 block truncate`}>
                       {item.name}
                     </span>

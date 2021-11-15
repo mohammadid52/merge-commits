@@ -101,6 +101,7 @@ const SideMenu = ({
       {
         scaleX: 1,
         scaleY: 1,
+        transformOrigin: 'center center',
         duration: ANIMATION_DURATION,
         ease: 'elastic.out(1, 0.3)',
       }
@@ -143,9 +144,10 @@ const SideMenu = ({
       <div className={`w-full flex justify-center items-center content-center py-2 px-6`}>
         <div className="w-full flex flex-col items-center justify-between">
           <div className="text-lg font-medium">
-            <div ref={closeButtonRef} className="p-4 mb-4 flex flex-row justify-end">
+            <div className="w-auto p-4 mb-4 flex flex-row justify-end">
               <span
-                className={`my-auto text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}
+                ref={closeButtonRef}
+                className={`my-auto text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
                 onPointerDown={() => handleClose()}>
                 <IconContext.Provider
                   value={{
@@ -170,15 +172,15 @@ const SideMenu = ({
                     style: {width: '32px'},
                     className: `text-white`,
                   }}>
-                  <AiOutlineHome />
+                  <AiOutlineArrowLeft />
                 </IconContext.Provider>
               </span>
               <span className={`pointer-events-none`}>BACK</span>
             </div>
             <div
-              ref={backButtonRef}
+              ref={homeButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
-              onPointerDown={() => handleMenuBack()}>
+              onPointerDown={() => handleMenuHome()}>
               <span
                 className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}>
                 <IconContext.Provider
@@ -209,7 +211,7 @@ const SideMenu = ({
               </span>
               <span className={`pointer-events-none`}>VIDEO LINK</span>
             </div>
-            <div
+            {/* <div
               ref={saveQuitButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
               onPointerDown={() => setOverlay('')}>
@@ -225,7 +227,7 @@ const SideMenu = ({
                 </IconContext.Provider>
               </span>
               <span className={`pointer-events-none`}>SAVE & QUIT</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

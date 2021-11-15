@@ -1,6 +1,8 @@
 // import Amplify from 'aws-amplify';
 import Amplify from '@aws-amplify/core';
-import React from 'react';
+import {createUserUrl, requestResetPassword} from '@utilities/urls';
+import {getBackendKey, getCorrectUrl} from '@utilities/urls_other';
+import React, {useEffect} from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom';
 import 'react-image-crop/lib/ReactCrop.scss';
@@ -12,6 +14,10 @@ import './style/style.scss';
 Amplify.configure(awsconfig);
 
 const Page: React.FC = () => {
+  useEffect(() => {
+    console.log('createUserUrl = ', createUserUrl);
+    console.log('requestResetPassword = ', requestResetPassword);
+  }, []);
   return <App />;
 };
 

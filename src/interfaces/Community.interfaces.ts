@@ -1,7 +1,10 @@
 export interface ISpotlightInput {
   cardImageLink?: string;
   summary: string;
+  summaryHtml?: string;
   additionalLinks?: string[];
+  id?: string;
+  isEditedCard?: boolean;
 }
 
 export interface IAnnouncementInput extends ISpotlightInput {
@@ -42,4 +45,15 @@ export interface IChat {
   personEmail: string;
   msg?: string | null;
   isEditedChat?: boolean;
+}
+
+export interface ICommunityCardProps {
+  instId?: string;
+  onCancel: () => void;
+  onSubmit: (
+    input: ISpotlightInput | IAnnouncementInput | IEventInput | ICheckItOutInput,
+    successCallback?: () => void
+  ) => void;
+  editMode?: boolean;
+  cardDetails?: ICommunityCard;
 }

@@ -1,13 +1,6 @@
-// ##################################################################### //
-// ############################### BACKUP ############################## //
-// ##################################################################### //
-// ~~~~~~~~~~~~~~~~~ DEV ~~~~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~ EDGESPROD ~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~ DEMOSITE ~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~~ UATENV ~~~~~~~~~~~~~~~ //
+const awsconfig = require('../aws-exports');
 
 export const getCorrectUrl = (clientKey: string) => {
-  console.log('getCorrectURL - ', clientKey);
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -46,20 +39,22 @@ export const getCorrectUrl = (clientKey: string) => {
  * @param configJson - imported aws config file
  * @returns
  */
-export const getBackendKey = () => {
-  const awsconfig = require('../aws-exports');
-  if (awsconfig) {
+export const getBackendKey = (): string => {
+  let configJson = awsconfig;
+  if (configJson) {
     //@ts-ignore
-    let configJson = awsconfig['default'];
     let s3BucketName = configJson['aws_user_files_s3_bucket'];
-
-    if (/(-demosite)/.test(s3BucketName)) {
-      return 'curate';
-    } else if (/(-dev)/.test(s3BucketName)) {
-      return 'iconoclast';
-    } else if (/(-edgesprod)/.test(s3BucketName)) {
-      return 'demo';
-    } else if (/(-uatenv)/.test(s3BucketName)) {
+    if (s3BucketName) {
+      if (s3BucketName.match(/(-demosite)/)) {
+        return 'curate';
+      } else if (s3BucketName.match(/(-dev)/)) {
+        return 'iconoclast';
+      } else if (s3BucketName.match(/(-edgesprod)/)) {
+        return 'demo';
+      } else if (s3BucketName.match(/(-uatenv)/)) {
+        return 'localhost';
+      }
+    } else {
       return 'localhost';
     }
   } else {
