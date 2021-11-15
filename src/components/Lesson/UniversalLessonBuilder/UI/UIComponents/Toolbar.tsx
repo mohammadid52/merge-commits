@@ -91,13 +91,13 @@ const Toolbar = ({
       <div
         // hidden={previewMode}
         ref={toolbarRef}
-        style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
+        // style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
         className={` ${
           !toolbarOnTop
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
         } customShadow transform ${
-          previewMode ? 'fixed bottom-4 right-4' : ''
+          previewMode ? 'fixed bottom-3 right-7' : ''
         } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <div className="flex items-center w-auto">
