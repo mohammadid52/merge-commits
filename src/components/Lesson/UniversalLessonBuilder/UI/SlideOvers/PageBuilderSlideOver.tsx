@@ -29,6 +29,7 @@ import {
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import {RiPagesLine} from 'react-icons/ri';
 import {useRouteMatch} from 'react-router';
 
 type ActionTypes = 'edit' | 'delete' | 'init';
@@ -467,6 +468,8 @@ const PageBuilderSlideOver = ({
   deleteFromULBHandler,
   handleModalPopToggle,
   handleEditBlockContent,
+  setNewLessonPlanShow,
+  setEditMode,
 }: {
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
   open: boolean;
@@ -483,6 +486,8 @@ const PageBuilderSlideOver = ({
     targetId: string,
     indexToUpdate: number
   ) => void;
+  setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {
     selectedPageID,
@@ -934,6 +939,14 @@ const PageBuilderSlideOver = ({
           </div>
         )}
       </AnimatedContainer>
+      <Item
+        Icon={RiPagesLine}
+        label="Page details"
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
+      />
       <Popup saving={saving} text={'Saving'} />
       {/* <Popup2
         show={onAddContent && currentHelpStep !== null}

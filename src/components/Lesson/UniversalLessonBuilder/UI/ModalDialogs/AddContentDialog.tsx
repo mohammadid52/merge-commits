@@ -79,7 +79,7 @@ const AddContentDialog = ({
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-100',
     },
-    isSurvey && {
+    !isSurvey && {
       name: 'Word Tiles',
       subtitle: 'Add keywords',
       type: FORM_TYPES.KEYWORDS,
@@ -87,7 +87,7 @@ const AddContentDialog = ({
       iconForeground: 'text-blue-700',
       iconBackground: 'bg-blue-100',
     },
-    isSurvey && {
+    !isSurvey && {
       name: 'Links',
       subtitle: 'Add links',
       type: FORM_TYPES.LINKS,
@@ -104,7 +104,7 @@ const AddContentDialog = ({
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-100',
     },
-    isSurvey && {
+    !isSurvey && {
       name: 'Table',
       subtitle: 'Add table',
       type: TABLE,
@@ -147,7 +147,7 @@ const AddContentDialog = ({
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',
     },
-    isSurvey && {
+    !isSurvey && {
       name: 'Attachments',
       type: FORM_TYPES.ATTACHMENTS,
       subtitle: 'Students can upload',
@@ -173,7 +173,7 @@ const AddContentDialog = ({
     },
   ].filter(Boolean);
   const userInterfaceContent = [
-    isSurvey && {
+    !isSurvey && {
       name: 'Notes ⭐',
       type: 'notes-form',
       subtitle: 'Interactive notes for students',
@@ -189,7 +189,7 @@ const AddContentDialog = ({
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-100',
     },
-    isSurvey && {
+    !isSurvey && {
       name: 'Highlighter',
       type: FORM_TYPES.HIGHLIGHTER,
       subtitle: 'Add highlighter',
