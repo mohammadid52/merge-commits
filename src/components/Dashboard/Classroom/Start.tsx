@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getLocalStorageData} from '@utilities/localStorage';
-import {tableCleanupUrl} from '@utilities/urls_other';
+import {tableCleanupUrl} from '@utilities/urls';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';

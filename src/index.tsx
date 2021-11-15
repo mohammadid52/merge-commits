@@ -1,7 +1,6 @@
 // import Amplify from 'aws-amplify';
 import Amplify from '@aws-amplify/core';
-import {createUserUrl, requestResetPassword} from '@utilities/urls';
-import {getBackendKey, getCorrectUrl} from '@utilities/urls_other';
+import {createUserUrl, requestResetPassword, tableCleanupUrl} from '@utilities/urls';
 import React, {useEffect} from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom';
@@ -17,6 +16,7 @@ const Page: React.FC = () => {
   useEffect(() => {
     console.log('createUserUrl = ', createUserUrl);
     console.log('requestResetPassword = ', requestResetPassword);
+    console.log('tableCleanupUrl = ', tableCleanupUrl);
   }, []);
   return <App />;
 };
