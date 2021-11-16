@@ -119,24 +119,6 @@ const Institution = (props: InstitutionProps) => {
     },
   });
 
-  const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    // {
-    //   title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-    //   url: '/dashboard/manage-institutions',
-    //   last: false,
-    // },
-    {
-      title: institutionData?.name,
-      url:
-        currentPath === 'edit'
-          ? `${location.pathname}${location.search}`
-          : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
-      last: false,
-    },
-    ...breadcrumbPathForSection,
-  ].filter(Boolean);
-
   const toggleUpdateState = () => {
     setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
   };
@@ -163,7 +145,7 @@ const Institution = (props: InstitutionProps) => {
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
         } else {
-          setInstitutionData(fetchInstitutionData.data.getInstitution);
+          setInstitutionData({...fetchInstitutionData.data.getInstitution});
         }
         setFetchingDetails(false);
         setISNewUpdate(false);

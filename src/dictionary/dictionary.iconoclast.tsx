@@ -413,7 +413,7 @@ const staffBuilderDict: any = {
     NO: 'No.',
     NAME: 'Name',
     ROLE: 'Role',
-    INSTITUTION_NAME: "Institution Name",
+    INSTITUTION_NAME: 'Institution Name',
     STATUS: 'Status',
     ACTION: 'Action',
     UPDATING: 'updating...',
@@ -430,7 +430,7 @@ const staffBuilderDict: any = {
     NO: 'TBD',
     NAME: 'TBD',
     ROLE: 'TBD',
-    INSTITUTION_NAME: "TBD",
+    INSTITUTION_NAME: 'TBD',
     STATUS: 'TBD',
     ACTION: 'TBD',
     UPDATING: 'TBD',
@@ -1219,12 +1219,14 @@ const InstitueCurriculum: any = {
     NO: 'No.',
     NAME: 'Course Name',
     INSTITUTION_NAME: 'Institution Name',
+    COURSE_TYPE: 'Course Type',
+    UNITS: 'Units',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
     LOADING: 'Loading Courses...',
-    SELECT_INSTITUTION: 'Select Institution'
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     TITLE: 'TBD',
@@ -1234,12 +1236,15 @@ const InstitueCurriculum: any = {
     NO: 'TBD',
     NAME: 'TBD',
     INSTITUTION_NAME: 'TBD',
+    COURSE_TYPE: 'TBD',
+    UNITS: 'TBD',
+    LESSONS: 'TBD',
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
     NO_DELETE: 'TBD',
     LOADING: 'TBD',
-    SELECT_INSTITUTION: 'TBD'
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -1265,7 +1270,7 @@ const InstitueRomms: any = {
     },
     LOADING: 'Loading Classrooms...',
     SELECT_STAFF: 'Select Staff',
-    SELECT_INSTITUTION: 'Select Institution'
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     TITLE: 'TBD',
@@ -1287,7 +1292,7 @@ const InstitueRomms: any = {
     },
     LOADING: 'Cargando aulas...',
     SELECT_STAFF: 'TBD',
-    SELECT_INSTITUTION: 'TBD'
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -3622,6 +3627,7 @@ const UnitLookupDict: any = {
     NAME: 'Name',
     INSTITUTION_NAME: 'Institution Name',
     UNITNAME: 'Module Name',
+    LESSONS: 'Lessons',
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This session is not added to any course or modules.',
@@ -3635,7 +3641,7 @@ const UnitLookupDict: any = {
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
     NO_DELETE: '(Unit in use)',
-    SELECT_INSTITUTION: 'Select Institution'
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     HEADING: 'TBD',
@@ -3658,7 +3664,7 @@ const UnitLookupDict: any = {
     },
     NO_DELETE: '(Unit in use)',
     SELECT_STAFF: 'TBD',
-    SELECT_INSTITUTION: 'TBD'
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -3982,12 +3988,12 @@ const CommonlyUsedDict: any = {
   EN: {
     BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
-    NO_SEARCH_RESULT: "No data found",
+    NO_SEARCH_RESULT: 'No data found',
   },
   ES: {
     BACK: 'TBD',
     BACK_TO_LIST: 'TBD',
-    NO_SEARCH_RESULT: "TBD",
+    NO_SEARCH_RESULT: 'TBD',
   },
 };
 

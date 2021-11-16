@@ -13,10 +13,18 @@ import SearchInput from '@components/Atoms/Form/SearchInput';
 import Selector from '@components/Atoms/Form/Selector';
 
 interface CurriculumListProps {
-  curricular?: {items: {name?: string; id: string}[]};
+  curricular?: {items: ICurricular[]};
   updateCurricularList?: any;
   instId: string;
   instName: string;
+}
+
+interface ICurricular {
+  name?: string;
+  id: string;
+  institution?: {name?: string; id: string};
+  universalSyllabusSeq: Array<string>;
+  universalSyllabus: {items: Array<any>};
 }
 
 const CurriculumList = ({
@@ -32,10 +40,8 @@ const CurriculumList = ({
   const userLanguage = gContext.userLanguage;
   const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
   const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
-  const [courseList, setCourseList] = useState<
-    Array<{name?: string; id: string; institution?: {name?: string; id: string}}>
-  >();
-  const [allCourses, setAllCourses] = useState<Array<{name?: string; id: string}>>();
+  const [courseList, setCourseList] = useState<Array<ICurricular>>();
+  const [allCourses, setAllCourses] = useState<Array<ICurricular>>();
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [loading, setLoading] = useState(isSuperAdmin);
   const [searchInput, setSearchInput] = useState('');
@@ -69,8 +75,20 @@ const CurriculumList = ({
 
   useEffect(() => {
     if (curricular?.items?.length) {
-      setCourseList(curricular.items);
-      setAllCourses(curricular.items);
+      const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
+        ...item,
+        universalSyllabus: {
+          ...(item.universalSyllabus || {}),
+          items: item.universalSyllabus?.items
+            ?.map((syllabus) => ({
+              ...syllabus,
+              index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id),
+            }))
+            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+        },
+      }));
+      setCourseList(updatedList);
+      setAllCourses(updatedList);
     }
   }, [curricular?.items?.length]);
 
@@ -79,8 +97,22 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
-      setCourseList(list.data?.listCurriculums?.items);
-      setAllCourses(list.data?.listCurriculums?.items);
+      const updatedList: ICurricular[] = list.data?.listCurriculums?.items?.map(
+        (item: ICurricular) => ({
+          ...item,
+          universalSyllabus: {
+            ...(item.universalSyllabus || {}),
+            items: item.universalSyllabus?.items
+              ?.map((syllabus) => ({
+                ...syllabus,
+                index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id),
+              }))
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+          },
+        })
+      );
+      setCourseList(updatedList);
+      setAllCourses(updatedList);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -91,18 +123,20 @@ const CurriculumList = ({
     if (searchValue && institutionId) {
       setCourseList(
         [...allCourses].filter(
-          (item: any) =>
+          (item: ICurricular) =>
             item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
             item.institution?.id === institutionId
         )
       );
     } else if (institutionId) {
       setCourseList(
-        [...allCourses].filter((item: any) => item.institution?.id === institutionId)
+        [...allCourses].filter(
+          (item: ICurricular) => item.institution?.id === institutionId
+        )
       );
     } else if (searchValue) {
       setCourseList(
-        [...allCourses].filter((item: any) =>
+        [...allCourses].filter((item: ICurricular) =>
           item.name?.toLowerCase().includes(searchValue.toLowerCase())
         )
       );
@@ -197,7 +231,9 @@ const CurriculumList = ({
   };
 
   const redirectToInstitution = (institutionId: string) => {
-    history.push(`/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`);
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
+    );
   };
 
   // ##################################################################### //
@@ -261,15 +297,23 @@ const CurriculumList = ({
                 </div>
                 <div
                   className={`${
-                    isSuperAdmin ? 'w-4/10' : 'w-8/10'
+                    isSuperAdmin ? 'w-2/10' : 'w-4/10'
                   } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                     <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
+                <div
+                  className={`w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
+                  <span>{InstitueCurriculum[userLanguage]['COURSE_TYPE']}</span>
+                </div>
+                <div
+                  className={`w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
+                  <span>{InstitueCurriculum[userLanguage]['UNITS']}</span>
+                </div>
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculum[userLanguage]['ACTION']}

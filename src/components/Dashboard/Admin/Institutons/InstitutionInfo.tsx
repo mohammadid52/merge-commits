@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
@@ -8,7 +8,6 @@ import {HiPencil} from 'react-icons/hi';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
 import * as customMutations from '@customGraphql/customMutations';
 import DroppableMedia from '@molecules/DroppableMedia';
 import {getAsset} from '../../../../assets';

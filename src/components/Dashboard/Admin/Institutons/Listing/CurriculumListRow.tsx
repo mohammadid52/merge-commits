@@ -41,23 +41,33 @@ const CurriculumListRow = ({
       className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
       }`}>
-      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+      <div className="flex w-1/10 items-center px-8 py-3 text-left text-sm leading-4">
         {index + 1}.
       </div>
       <div
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
-          isSuperAdmin ? 'w-4/10' : 'w-8/10'
-        } items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+          isSuperAdmin ? 'w-2/10' : 'w-4/10'
+        } items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (
         <div
-          className="flex w-4/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
+          className="flex w-2/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           {item.institution?.name}
         </div>
       )}
+      <div
+        className={`flex w-2/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
+        {item.type || '-'}
+      </div>
+      <div
+        className={`flex w-2/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
+        {item.universalSyllabus?.items
+          ?.map(({unit: {name}}: {id: string; unit: {name: string}}) => name)
+          .join(', ')}
+      </div>
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">

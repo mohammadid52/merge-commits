@@ -1769,10 +1769,21 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
       items {
         id
         name
+        type
         institution {
           id
           name
         }
+        universalSyllabus{
+          items{
+            id
+            unit{
+              id
+              name
+            }
+          }
+        }
+        universalSyllabusSeq
       }
       nextToken
     }
@@ -2307,6 +2318,9 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         lessons {
           items {
             id
+            lesson{
+              title
+            }
           }
           nextToken
         }
@@ -2701,6 +2715,16 @@ export const GetInstitutionDetails = /* GraphQL */ `
           syllabiHistory
           objectives
           languages
+          universalSyllabus{
+            items{
+              id
+              unit{
+                id
+                name
+              }
+            }
+          }
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
