@@ -148,7 +148,7 @@ const HeaderMegaMenu = () => {
       active: location.pathname.indexOf('home') > -1,
     },
     {
-      title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
+      title: Institute_info[userLanguage]['TABS']['HOME'],
       key: 'game-changers',
       redirectionUrl: `${baseUrl}/dashboard/game-changers`,
       active: location.pathname.indexOf('game-changers') > -1,
