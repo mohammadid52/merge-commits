@@ -910,6 +910,7 @@ const Institute_info: any = {
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
+      GAME_CHANGERS: 'Game Changers',
     },
   },
   ES: {
@@ -933,6 +934,7 @@ const Institute_info: any = {
       HOME: 'TBD',
       COMMUNITY: 'TBD',
       NOTEBOOK: 'TBD',
+      GAME_CHANGERS: 'TBD',
     },
   },
 };
