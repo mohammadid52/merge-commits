@@ -96,8 +96,8 @@ const Toolbar = ({
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
         } customShadow transform ${
-          previewMode ? 'fixed translate-x-100 2xl:translate-x-160' : 'translate-x-0'
-        } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200 w-auto p-2`}>
+          previewMode ? 'fixed bottom-3 right-7' : ''
+        } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <div className="flex items-center w-auto">
             <Button

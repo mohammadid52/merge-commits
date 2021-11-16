@@ -211,7 +211,6 @@ const Media = ({
         value={videoLink}
         disabled={isUploadedFromPC}
         onChange={onVideoLinkChange}
-        dark={true}
         id="videoLink"
         error={errors.videoLink}
       />

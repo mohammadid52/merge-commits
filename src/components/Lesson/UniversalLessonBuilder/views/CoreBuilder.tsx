@@ -394,6 +394,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           <div className="p-4 2xl:p-8">
             <PageBuilderSlideOver
               deleteFromULBHandler={deleteFromULBHandler}
+              setEditMode={setEditMode}
+              setNewLessonPlanShow={setNewLessonPlanShow}
               open={showLessonEditOverlay}
               handleEditBlockContent={handleEditBlockContent}
               handleModalPopToggle={handleModalPopToggle}
