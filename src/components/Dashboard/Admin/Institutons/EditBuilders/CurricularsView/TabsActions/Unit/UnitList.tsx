@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '@graphql/mutations';
@@ -52,8 +52,22 @@ export const UnitList = ({instId}: any) => {
               },
         })
       );
-      setUnits(result.data?.listUniversalSyllabuss.items);
-      setAllUnits(result.data?.listUniversalSyllabuss.items);
+      const updatedList: any[] = result.data?.listUniversalSyllabuss.items?.map(
+        (item: any) => ({
+          ...item,
+          lessons: {
+            ...(item.lessons || {}),
+            items: item.lessons?.items
+              ?.map((lesson: any) => ({
+                ...lesson,
+                index: item?.universalLessonsSeq?.indexOf(lesson.lesson.id),
+              }))
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+          },
+        })
+      );
+      setUnits(updatedList);
+      setAllUnits(updatedList);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -241,16 +255,20 @@ export const UnitList = ({instId}: any) => {
                   <span>{UnitLookupDict[userLanguage]['NO']}</span>
                 </div>
                 <div
-                  className={`${
-                    isSuperAdmin ? 'w-4/10' : 'w-8/10'
-                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
                     <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
+                <div
+                  className={`${
+                    isSuperAdmin ? 'w-2/10' : 'w-4/10'
+                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
+                </div>
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
@@ -266,7 +284,7 @@ export const UnitList = ({instId}: any) => {
                   checkIfRemovable={checkIfRemovable}
                   handleToggleDelete={handleToggleDelete}
                   editCurrentUnit={handleView}
-                  isSuperAdmin
+                  isSuperAdmin={isSuperAdmin}
                   redirectToInstitution={() =>
                     redirectToInstitution(unit.institution?.id)
                   }

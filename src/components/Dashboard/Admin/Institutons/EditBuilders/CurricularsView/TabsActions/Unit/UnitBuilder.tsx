@@ -87,7 +87,7 @@ const UnitBuilder = ({instId}: any) => {
 
   useEffect(() => {
     fetchSyllabusData();
-  }, []);
+  }, [unitId]);
 
   const fetchSyllabusData = async () => {
     if (unitId) {

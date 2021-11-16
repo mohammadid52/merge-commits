@@ -21,7 +21,7 @@ const UnitListRow = ({
   checkIfRemovable,
   handleToggleDelete,
   editCurrentUnit,
-  redirectToInstitution
+  redirectToInstitution,
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -44,15 +44,25 @@ const UnitListRow = ({
       </div>
       <div
         onClick={() => editCurrentUnit(item.id)}
-        className={`cursor-pointer flex ${isSuperAdmin ? 'w-4/10' : 'w-8/10'} items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+        className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
         {item.name ? item.name : ''}
       </div>
       {isSuperAdmin && (
-        <div className="flex w-4/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer" onClick={redirectToInstitution}>
+        <div
+          className="flex w-2/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
+          onClick={redirectToInstitution}>
           {item.institution?.name}
         </div>
       )}
-
+      <div
+        className={`flex ${
+          isSuperAdmin ? 'w-2/10' : 'w-4/10'
+        } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}
+        onClick={redirectToInstitution}>
+        {item.lessons?.items
+          ?.map(({lesson: {title}}: {id: string; lesson: {title: string}}) => title)
+          .join(', ')}{' '}
+      </div>
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">

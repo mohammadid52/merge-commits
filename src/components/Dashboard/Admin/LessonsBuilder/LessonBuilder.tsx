@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
+import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
@@ -16,11 +16,7 @@ import {
 } from '../../../../interfaces/LessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import SectionTitle from '../../../Atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
@@ -66,6 +62,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
+  const lessonIdFromUrl = (useParams() as any).lessonId;
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
   const {BreadcrumsTitles, AddNewLessonFormDict, LessonBuilderDict} = useDictionary(
@@ -127,7 +124,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [lessonId, setLessonId] = useState((useParams() as any).lessonId || '');
+  const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [institutionData, setInstitutionData] = useState<any>(null);
@@ -290,7 +287,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         lessonPlan: [],
       });
     }
-  }, []);
+  }, [lessonId]);
+
+  useEffect(() => {
+    if (lessonIdFromUrl) {
+      setLessonId(lessonIdFromUrl);
+    }
+  }, [lessonIdFromUrl]);
 
   useEffect(() => {
     fetchCurriculum();
