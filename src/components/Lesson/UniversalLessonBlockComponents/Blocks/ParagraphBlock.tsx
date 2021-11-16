@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import ReactHtmlParser from 'react-html-parser';
+
+import parse from 'html-react-parser';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
@@ -8,7 +9,6 @@ interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
-
   pagePartId: string;
 }
 
@@ -25,7 +25,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
           key={inputID}
           id={inputID}
           className={`whitespace-pre-wrap ${themeTextColor}`}>
-          {ReactHtmlParser(inputValue.value)}
+          {inputValue?.value ? parse(inputValue?.value) : ''}
         </div>
       </div>
     );

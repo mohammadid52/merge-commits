@@ -1,21 +1,18 @@
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
-import {IFile} from '@components/Community/constants.community';
-import {ICheckItOutInput} from '@interfaces/Community.interfaces';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {ICheckItOutInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from '@utilities/services';
 import isEmpty from 'lodash/isEmpty';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-const CheckItOut = ({
-  onCancel,
-  onSubmit,
-}: {
-  onCancel: () => void;
-  onSubmit: (input: ICheckItOutInput) => void;
-}) => {
+const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -23,8 +20,8 @@ const CheckItOut = ({
   const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: '',
-    summaryHtml: '',
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
   });
 
   const onEditorStateChange = (
@@ -38,22 +35,41 @@ const CheckItOut = ({
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const _onSubmit = () => {
     const isValid = validateFields();
     if (isValid) {
-      const checkItOutDetails: ICheckItOutInput = {
-        cardImageLink: file.fileKey,
+      setIsLoading(true);
+      let checkItOutDetails: ICheckItOutInput = {
+        cardImageLink: editMode
+          ? !isEmpty(file) && file?.fileKey
+            ? file?.fileKey
+            : cardDetails?.cardImageLink
+          : file?.fileKey,
         summary: fields.summary,
+        id: cardDetails?.id,
+        isEditedCard: editMode,
+        summaryHtml: fields.summaryHtml,
         cardName: overlayText,
       };
-      onSubmit(checkItOutDetails);
-      onCancel();
+      if (!editMode) {
+        delete checkItOutDetails.id;
+      }
+      if (youtubeVideoLink) {
+        checkItOutDetails = {
+          ...checkItOutDetails,
+          cardImageLink: null,
+          additionalLinks: [youtubeVideoLink],
+        };
+      }
+      onSubmit(checkItOutDetails, () => setIsLoading(false));
     }
   };
 
   const validateFields = () => {
     let isValid = true;
-    if (isEmpty(file)) {
+    if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
     } else if (!overlayText) {
@@ -62,6 +78,12 @@ const CheckItOut = ({
     } else if (!fields.summary) {
       setError('Description not found');
       isValid = false;
+    } else if (isEmpty(file) && !youtubeVideoLink) {
+      setError('Please add youtube/vimeo link');
+      isValid = false;
+    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+      setError('Invalid Url');
+      isValid = false;
     } else {
       setError('');
       isValid = true;
@@ -69,9 +91,54 @@ const CheckItOut = ({
     return isValid;
   };
 
+  const [tempData, setTempData] = useState(null);
+
+  useEffect(() => {
+    if (editMode && !isEmpty(cardDetails)) {
+      setTempData({
+        image: cardDetails.cardImageLink,
+      });
+
+      setOverlayText(cardDetails?.cardName);
+    }
+  }, [editMode, cardDetails]);
+
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+  const isValidUrl = REGEX.Youtube.test(youtubeVideoLink);
+
+  const mediaProps = {
+    videoLink: youtubeVideoLink,
+    setVideoLink: setYoutubeVideoLink,
+    setError: setError,
+    setFile: setFile,
+    file: file,
+  };
+
   return (
     <div className="min-w-256 max-w-256">
-      <Media setError={setError} setFile={setFile} file={file} />
+      {tempData && tempData?.image ? (
+        <div>
+          <Media
+            initialImage={getImageFromS3Static(
+              COMMUNITY_UPLOAD_KEY +
+                (!isEmpty(file) && file?._status === 'success'
+                  ? file?.fileKey
+                  : tempData?.image)
+            )}
+            {...mediaProps}
+          />
+        </div>
+      ) : (
+        <Media
+          initialImage={
+            !isEmpty(file) && file?._status === 'success'
+              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+              : null
+          }
+          {...mediaProps}
+        />
+      )}
+
       <div className="px-3 py-4">
         <div>
           <FormInput
@@ -93,7 +160,8 @@ const CheckItOut = ({
             placeholder={
               'What do you want people in the community to check out this video or image you uploaded?'
             }
-            withStyles
+            rounded
+            customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
@@ -115,7 +183,12 @@ const CheckItOut = ({
             onClick={onCancel}
             transparent
           />
-          <Buttons btnClass="py-1 px-8 text-xs ml-2" label={'Save'} onClick={_onSubmit} />
+          <Buttons
+            loading={isLoading}
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={'Save'}
+            onClick={_onSubmit}
+          />
         </div>
       </div>
     </div>

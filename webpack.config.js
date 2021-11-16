@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  node: {fs: 'empty'},
+  node: {fs: 'empty', child_process: 'empty'},
   optimization: {
     usedExports: true,
   },

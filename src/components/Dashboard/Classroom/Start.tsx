@@ -1,4 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {tableCleanupUrl} from '@utilities/urls';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
@@ -10,6 +12,8 @@ import {awsFormatDate, dateString} from '../../../utilities/time';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import {Lesson} from './Classroom';
+import axios from 'axios';
+import Loader from '@components/Atoms/Loader';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -49,8 +53,10 @@ const Start: React.FC<StartProps> = ({
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
+  const getRoomData = getLocalStorageData('room_info');
 
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {classRoomDict} = useDictionary(clientKey);
   const history = useHistory();
@@ -59,6 +65,7 @@ const Start: React.FC<StartProps> = ({
   const [warnModal, setWarnModal] = useState({
     show: false,
     activeLessonsId: [],
+    lessonID: '',
     message: 'Do you want to mark these active lessons as completed?',
   });
 
@@ -250,6 +257,7 @@ const Start: React.FC<StartProps> = ({
     if (activeLessonsData?.length) {
       setWarnModal((prevValues) => ({
         ...prevValues,
+        lessonID: activeLessonsData.map((lesson: any) => lesson.id),
         message: `Do you want to mark ${activeLessonsData
           .map((lesson: any) => lesson.title)
           .join(', ')} as completed?`,
@@ -262,26 +270,41 @@ const Start: React.FC<StartProps> = ({
   };
 
   const handleMarkAsCompleteClick = async (lessonIds: any) => {
+    setIsLoading(true);
     const payloadLessonIds = Array.isArray(lessonIds)
       ? lessonIds
       : warnModal.activeLessonsId;
-    await API.graphql(
-      graphqlOperation(mutations.updateRoom, {
-        input: {
-          id: roomID,
-          completedLessons: [
-            ...(state.roomData.completedLessons || []),
-            ...payloadLessonIds?.map((lessonID: any) => ({
-              lessonID,
-              time: new Date().toISOString(),
-            })),
-          ],
-          activeLessons: [lessonKey],
-        },
-      })
-    );
-    history.push(`${`/lesson-control/${lessonKey}`}`);
-    discardChanges();
+    // UPDATE ROOM MUTATION
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: roomID,
+            completedLessons: [
+              ...(state.roomData.completedLessons || []),
+              ...payloadLessonIds?.map((lessonID: any) => ({
+                lessonID,
+                time: new Date().toISOString(),
+              })),
+            ],
+            activeLessons: [lessonKey],
+          },
+        })
+      );
+      // POST TO LAMBDA
+      await axios.post(tableCleanupUrl, {
+        lessonID: warnModal.lessonID[0],
+        syllabusID: getRoomData.activeSyllabus,
+        roomID: getRoomData.id,
+      });
+      setIsLoading(false);
+    } catch (e) {
+      console.error('handleMarkAsCompleteClick() - ', e);
+      setIsLoading(false);
+    } finally {
+      history.push(`${`/lesson-control/${lessonKey}`}`);
+      discardChanges();
+    }
   };
 
   const firstPart = () => {
@@ -363,6 +386,7 @@ const Start: React.FC<StartProps> = ({
     setWarnModal({
       message: '',
       activeLessonsId: [],
+      lessonID: '',
       show: false,
     });
   };
@@ -395,7 +419,7 @@ const Start: React.FC<StartProps> = ({
           closeAction={onCloseModal}
           cancelAction={discardChanges}
           saveAction={handleMarkAsCompleteClick}
-          saveLabel="Yes"
+          saveLabel={isLoading ? 'Processing...' : 'Yes'}
           cancelLabel="No"
           message={warnModal.message}
         />

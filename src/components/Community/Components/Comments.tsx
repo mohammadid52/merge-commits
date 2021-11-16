@@ -14,9 +14,10 @@ const Comment = ({
   authId,
   email,
   onEdit,
+  isLast,
 }: {
   chat: IChat;
-
+  isLast: boolean;
   authId: string;
   email: string;
   onChatDelete: (chatId: string) => void;
@@ -53,7 +54,7 @@ const Comment = ({
                 <Popover
                   show={showMenu}
                   bottom={0.6}
-                  dir={'top'}
+                  dir={isLast ? 'bottom' : 'top'}
                   minWidth={32}
                   minHeight={11}
                   // containerClass="min-h-8 min-w-24"
@@ -130,6 +131,7 @@ const Comments = ({
           email={email}
           authId={authId}
           key={idx}
+          isLast={orderedList.length - 1 === idx}
           onChatDelete={onChatDelete}
           onEdit={onEdit}
           chat={chat}

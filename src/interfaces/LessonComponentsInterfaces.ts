@@ -1,3 +1,4 @@
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
 
 export interface LessonComponentsInterface {
@@ -20,4 +21,26 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   isAtEnd?: boolean;
   setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRequiredNotification?: () => void;
+  pages?: UniversalLessonPage[];
+  canContinue?: boolean;
+  handleForward?: () => void;
+}
+
+export interface ISideMenuProps {
+  isOpen: boolean;
+  overlay: string;
+  setOverlay: (overlay: string) => void;
+  handleHome?: () => void;
+  handleBack?: () => void;
+  handleVideoLink?: () => void;
+  videoLink?: string;
+  videoLinkModalVisible?: boolean;
+  handleVideoLinkPopup?: (url?: string) => void;
+  isAtEnd?: boolean;
+  setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleRequiredNotification?: () => void;
+  pages?: UniversalLessonPage[];
+  canContinue?: boolean;
+  handleForward?: () => void;
+  handlePopup?: (isLeavingAfterCompletion?: boolean) => void;
 }

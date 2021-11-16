@@ -3942,6 +3942,102 @@ export type DeleteCommunityInput = {
   id: string,
 };
 
+export type CreateGameChangerInput = {
+  id?: string | null,
+  gameChangerName?: string | null,
+  title?: string | null,
+  objective?: string | null,
+  gameChangerLinks?: Array< string | null > | null,
+  inputs?: Array< string | null > | null,
+  likes?: Array< string | null > | null,
+};
+
+export type ModelGameChangerConditionInput = {
+  gameChangerName?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  objective?: ModelStringInput | null,
+  gameChangerLinks?: ModelStringInput | null,
+  inputs?: ModelStringInput | null,
+  likes?: ModelStringInput | null,
+  and?: Array< ModelGameChangerConditionInput | null > | null,
+  or?: Array< ModelGameChangerConditionInput | null > | null,
+  not?: ModelGameChangerConditionInput | null,
+};
+
+export type GameChanger = {
+  __typename: "GameChanger",
+  id?: string,
+  gameChangerName?: string | null,
+  title?: string | null,
+  objective?: string | null,
+  gameChangerLinks?: Array< string | null > | null,
+  inputs?: Array< string | null > | null,
+  likes?: Array< string | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateGameChangerInput = {
+  id: string,
+  gameChangerName?: string | null,
+  title?: string | null,
+  objective?: string | null,
+  gameChangerLinks?: Array< string | null > | null,
+  inputs?: Array< string | null > | null,
+  likes?: Array< string | null > | null,
+};
+
+export type DeleteGameChangerInput = {
+  id: string,
+};
+
+export type CreateGameChangerLogInput = {
+  id?: string | null,
+  gameChangerID: string,
+  personAuthID: string,
+  personEmail: string,
+  startTime?: string | null,
+  endTime?: string | null,
+};
+
+export type ModelGameChangerLogConditionInput = {
+  gameChangerID?: ModelIDInput | null,
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  startTime?: ModelStringInput | null,
+  endTime?: ModelStringInput | null,
+  and?: Array< ModelGameChangerLogConditionInput | null > | null,
+  or?: Array< ModelGameChangerLogConditionInput | null > | null,
+  not?: ModelGameChangerLogConditionInput | null,
+};
+
+export type GameChangerLog = {
+  __typename: "GameChangerLog",
+  id?: string,
+  gameChangerID?: string,
+  gameChanger?: GameChanger,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  startTime?: string | null,
+  endTime?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateGameChangerLogInput = {
+  id: string,
+  gameChangerID?: string | null,
+  personAuthID?: string | null,
+  personEmail?: string | null,
+  startTime?: string | null,
+  endTime?: string | null,
+};
+
+export type DeleteGameChangerLogInput = {
+  id: string,
+};
+
 export type CreateCommunityChatInput = {
   id?: string | null,
   communityId: string,
@@ -4880,6 +4976,43 @@ export type ModelCommunityFilterInput = {
 export type ModelCommunityConnection = {
   __typename: "ModelCommunityConnection",
   items?:  Array<Community | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelGameChangerFilterInput = {
+  id?: ModelIDInput | null,
+  gameChangerName?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  objective?: ModelStringInput | null,
+  gameChangerLinks?: ModelStringInput | null,
+  inputs?: ModelStringInput | null,
+  likes?: ModelStringInput | null,
+  and?: Array< ModelGameChangerFilterInput | null > | null,
+  or?: Array< ModelGameChangerFilterInput | null > | null,
+  not?: ModelGameChangerFilterInput | null,
+};
+
+export type ModelGameChangerConnection = {
+  __typename: "ModelGameChangerConnection",
+  items?:  Array<GameChanger | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelGameChangerLogFilterInput = {
+  id?: ModelIDInput | null,
+  gameChangerID?: ModelIDInput | null,
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  startTime?: ModelStringInput | null,
+  endTime?: ModelStringInput | null,
+  and?: Array< ModelGameChangerLogFilterInput | null > | null,
+  or?: Array< ModelGameChangerLogFilterInput | null > | null,
+  not?: ModelGameChangerLogFilterInput | null,
+};
+
+export type ModelGameChangerLogConnection = {
+  __typename: "ModelGameChangerLogConnection",
+  items?:  Array<GameChangerLog | null > | null,
   nextToken?: string | null,
 };
 
@@ -19806,6 +19939,264 @@ export type DeleteCommunityMutation = {
   } | null,
 };
 
+export type CreateGameChangerMutationVariables = {
+  input?: CreateGameChangerInput,
+  condition?: ModelGameChangerConditionInput | null,
+};
+
+export type CreateGameChangerMutation = {
+  createGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateGameChangerMutationVariables = {
+  input?: UpdateGameChangerInput,
+  condition?: ModelGameChangerConditionInput | null,
+};
+
+export type UpdateGameChangerMutation = {
+  updateGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteGameChangerMutationVariables = {
+  input?: DeleteGameChangerInput,
+  condition?: ModelGameChangerConditionInput | null,
+};
+
+export type DeleteGameChangerMutation = {
+  deleteGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateGameChangerLogMutationVariables = {
+  input?: CreateGameChangerLogInput,
+  condition?: ModelGameChangerLogConditionInput | null,
+};
+
+export type CreateGameChangerLogMutation = {
+  createGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateGameChangerLogMutationVariables = {
+  input?: UpdateGameChangerLogInput,
+  condition?: ModelGameChangerLogConditionInput | null,
+};
+
+export type UpdateGameChangerLogMutation = {
+  updateGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteGameChangerLogMutationVariables = {
+  input?: DeleteGameChangerLogInput,
+  condition?: ModelGameChangerLogConditionInput | null,
+};
+
+export type DeleteGameChangerLogMutation = {
+  deleteGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateCommunityChatMutationVariables = {
   input?: CreateCommunityChatInput,
   condition?: ModelCommunityChatConditionInput | null,
@@ -27018,6 +27409,186 @@ export type ListCommunitysQuery = {
       summaryHtml?: string | null,
       likes?: Array< string | null > | null,
       chatCount?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetGameChangerQueryVariables = {
+  id?: string,
+};
+
+export type GetGameChangerQuery = {
+  getGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListGameChangersQueryVariables = {
+  id?: string | null,
+  filter?: ModelGameChangerFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListGameChangersQuery = {
+  listGameChangers?:  {
+    __typename: "ModelGameChangerConnection",
+    items?:  Array< {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetGameChangerLogQueryVariables = {
+  id?: string,
+};
+
+export type GetGameChangerLogQuery = {
+  getGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListGameChangerLogsQueryVariables = {
+  id?: string | null,
+  filter?: ModelGameChangerLogFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListGameChangerLogsQuery = {
+  listGameChangerLogs?:  {
+    __typename: "ModelGameChangerLogConnection",
+    items?:  Array< {
+      __typename: "GameChangerLog",
+      id: string,
+      gameChangerID: string,
+      gameChanger?:  {
+        __typename: "GameChanger",
+        id: string,
+        gameChangerName?: string | null,
+        title?: string | null,
+        objective?: string | null,
+        gameChangerLinks?: Array< string | null > | null,
+        inputs?: Array< string | null > | null,
+        likes?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      personAuthID: string,
+      personEmail: string,
+      person?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      startTime?: string | null,
+      endTime?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -41808,6 +42379,234 @@ export type OnDeleteCommunitySubscription = {
     summaryHtml?: string | null,
     likes?: Array< string | null > | null,
     chatCount?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateGameChangerSubscription = {
+  onCreateGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateGameChangerSubscription = {
+  onUpdateGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteGameChangerSubscription = {
+  onDeleteGameChanger?:  {
+    __typename: "GameChanger",
+    id: string,
+    gameChangerName?: string | null,
+    title?: string | null,
+    objective?: string | null,
+    gameChangerLinks?: Array< string | null > | null,
+    inputs?: Array< string | null > | null,
+    likes?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateGameChangerLogSubscription = {
+  onCreateGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateGameChangerLogSubscription = {
+  onUpdateGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteGameChangerLogSubscription = {
+  onDeleteGameChangerLog?:  {
+    __typename: "GameChangerLog",
+    id: string,
+    gameChangerID: string,
+    gameChanger?:  {
+      __typename: "GameChanger",
+      id: string,
+      gameChangerName?: string | null,
+      title?: string | null,
+      objective?: string | null,
+      gameChangerLinks?: Array< string | null > | null,
+      inputs?: Array< string | null > | null,
+      likes?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    startTime?: string | null,
+    endTime?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

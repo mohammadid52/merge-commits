@@ -1185,6 +1185,30 @@ type Community @model @key(fields: ["id"]) {
 }
 
 
+type GameChanger @model @key(fields: ["id"]) {
+  id: ID!
+  gameChangerName: String
+  title: String
+  objective: String
+  gameChangerLinks: [String]
+  inputs: [String]
+  likes:[String]
+
+}
+
+type GameChangerLog @model @key(fields: ["id"]) {
+  id: ID!
+  gameChangerID: ID!
+  gameChanger: GameChanger @connection(fields: ["gameChangerID"])
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  startTime: AWSDate
+  endTime: AWSDate
+ 
+}
+
+
+
 type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"]) {
   id: ID!
   communityId: ID!

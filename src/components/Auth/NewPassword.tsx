@@ -1,21 +1,21 @@
-import React, { useContext, useState } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { useHistory, NavLink } from 'react-router-dom';
+import React, {useContext, useState} from 'react';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {useHistory, NavLink} from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
-import { useCookies } from 'react-cookie';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaKey } from 'react-icons/fa';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { getAsset } from '../../assets';
+import {useCookies} from 'react-cookie';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FaKey} from 'react-icons/fa';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {getAsset} from '../../assets';
 
 const NewPassword = () => {
-  const { state, dispatch, clientKey } = useContext(GlobalContext);
+  const {state, dispatch, clientKey} = useContext(GlobalContext);
   const history = useHistory();
   const [input, setInput] = useState({
     password: '',
     match: '',
   });
-  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: '',
@@ -33,8 +33,13 @@ const NewPassword = () => {
         const user = await Auth.signIn(username, password);
         const res = await Auth.changePassword(user, password, input.password);
         console.log(res);
-        dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
-        setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
+        dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
+        // @ts-ignore
+        setCookie(
+          'auth',
+          {email: username, authId: user.username},
+          {secure: false, path: '/'}
+        );
         history.push('/dashboard');
       } catch (error) {
         console.error('error signing in', error);
@@ -103,8 +108,8 @@ const NewPassword = () => {
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       return {
         ...input,

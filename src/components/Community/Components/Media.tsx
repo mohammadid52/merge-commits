@@ -1,7 +1,7 @@
 import Label from '@components/Atoms/Form/Label';
 import File from '@components/Community/File';
 import {getAsset} from 'assets';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
@@ -9,16 +9,26 @@ import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.commu
 import Storage from '@aws-amplify/storage';
 import {nanoid} from 'nanoid';
 import {Transition} from '@headlessui/react';
+import FormInput from '@atoms/Form/FormInput';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+
+interface MediaProps {
+  file: IFile;
+  videoLink?: string;
+  initialImage?: string;
+  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  setVideoLink?: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const Media = ({
   file,
   setFile,
   setError,
-}: {
-  file: IFile;
-  setFile: React.Dispatch<React.SetStateAction<IFile>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+  initialImage = null,
+  videoLink,
+  setVideoLink,
+}: MediaProps) => {
   const updateProgress = (file: IFile, progress: IFile['progress']) => {
     update(file, `progress`, () => progress);
     setFile({...file});
@@ -100,7 +110,7 @@ const Media = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
-    accept: 'video/mp4,video/x-m4v,video/*',
+    accept: 'image/x-png,image/gif,image/jpeg',
   });
 
   const handleFileSelection = async (e: any) => {
@@ -114,6 +124,23 @@ const Media = ({
 
   const fileIcon = getAsset('general', 'fileImg');
 
+  const [errors, setErrors] = useState({videoLink: ''});
+  const uploadedVideoLink: boolean =
+    !isEmpty(file) && (file._status === 'success' || file._status === 'progress');
+
+  const onVideoLinkChange = (e: any): void => {
+    const {value = ''} = e.target;
+    setVideoLink(value);
+    const isValidUrl = REGEX.Youtube.test(value);
+    if (isValidUrl) {
+      setErrors({...errors, videoLink: ''});
+    } else {
+      setErrors({...errors, videoLink: 'Invalid url'});
+    }
+  };
+
+  const isUploadedFromPC = Boolean(uploadedVideoLink);
+
   return (
     <div className="px-3 py-4">
       <Label label="Step 1: Add an image or video" />
@@ -123,7 +150,7 @@ const Media = ({
           {...getRootProps()}
           className={`border-${
             isDragActive ? 'blue' : 'gray'
-          }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
+          }-400 border-2 relative transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
           <input
             {...getInputProps()}
             ref={inputOther}
@@ -131,6 +158,15 @@ const Media = ({
             type="file"
             className="hidden"
           />
+
+          {initialImage && (
+            <img
+              src={initialImage}
+              alt=""
+              className="w-32 h-auto rounded-md absolute top-1 left-1"
+            />
+          )}
+
           <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
           {isDragActive ? (
             <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
@@ -166,6 +202,18 @@ const Media = ({
           )}
         </Transition>
       </div>
+
+      <p className="text-center text-gray-600 mt-2"> --- or --- </p>
+
+      <Label label="Upload Youtube/Vimeo link" />
+      <FormInput
+        placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
+        value={videoLink}
+        disabled={isUploadedFromPC}
+        onChange={onVideoLinkChange}
+        id="videoLink"
+        error={errors.videoLink}
+      />
     </div>
   );
 };

@@ -13244,6 +13244,225 @@ export const onDeleteCommunity = /* GraphQL */ `
     }
   }
 `;
+export const onCreateGameChanger = /* GraphQL */ `
+  subscription OnCreateGameChanger {
+    onCreateGameChanger {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateGameChanger = /* GraphQL */ `
+  subscription OnUpdateGameChanger {
+    onUpdateGameChanger {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteGameChanger = /* GraphQL */ `
+  subscription OnDeleteGameChanger {
+    onDeleteGameChanger {
+      id
+      gameChangerName
+      title
+      objective
+      gameChangerLinks
+      inputs
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateGameChangerLog = /* GraphQL */ `
+  subscription OnCreateGameChangerLog {
+    onCreateGameChangerLog {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateGameChangerLog = /* GraphQL */ `
+  subscription OnUpdateGameChangerLog {
+    onUpdateGameChangerLog {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteGameChangerLog = /* GraphQL */ `
+  subscription OnDeleteGameChangerLog {
+    onDeleteGameChangerLog {
+      id
+      gameChangerID
+      gameChanger {
+        id
+        gameChangerName
+        title
+        objective
+        gameChangerLinks
+        inputs
+        likes
+        createdAt
+        updatedAt
+      }
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      startTime
+      endTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateCommunityChat = /* GraphQL */ `
   subscription OnCreateCommunityChat {
     onCreateCommunityChat {
