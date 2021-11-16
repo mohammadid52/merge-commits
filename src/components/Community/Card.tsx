@@ -3,7 +3,6 @@ import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import Popover from '@components/Atoms/Popover';
 import Comments from '@components/Community/Components/Comments';
-
 import HandleMedia from '@components/Community/Components/HandleMedia';
 import {
   communityTypes,
@@ -14,12 +13,14 @@ import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import * as queries from '@graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
+// import {GoogleMap} from '@react-google-maps/api';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
+import parse from 'html-react-parser';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import ReactHtmlParser from 'react-html-parser';
+import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
@@ -254,6 +255,14 @@ const Menu = ({
   );
 };
 
+const MapWithAMarker = withScriptjs(
+  withGoogleMap((props) => (
+    <GoogleMap defaultZoom={8} defaultCenter={{lat: -34.397, lng: 150.644}}>
+      <Marker position={{lat: -34.397, lng: 150.644}} />
+    </GoogleMap>
+  ))
+);
+
 const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   const person = cardDetails?.person;
 
@@ -289,7 +298,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           </div>
         </div>
         <div className=" text-sm mb-2 mx-3 px-2">
-          {ReactHtmlParser(cardDetails.summaryHtml)}
+          {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
         </div>
       </div>
     );
@@ -310,7 +319,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
               <div className="text-gray-900 font-bold text-xl mb-2">
                 {cardDetails.cardName}
               </div>
-              <div className=" text-base">{ReactHtmlParser(cardDetails.summaryHtml)}</div>
+              <div className=" text-base">
+                {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
+              </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
@@ -342,6 +353,12 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
+        <MapWithAMarker
+          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2f8dlbfHAj3foBt7_YEn8_YnatU2Islg&v=3.exp&libraries=geometry,drawing,places"
+          loadingElement={<div style={{height: `100%`}} />}
+          containerElement={<div style={{height: `400px`}} />}
+          mapElement={<div style={{height: `100%`}} />}
+        />
       </div>
     );
   } else
@@ -389,7 +406,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                   </h1>
                 )}
                 <div className="text-gray-600 text-sm">
-                  {ReactHtmlParser(cardDetails.summaryHtml)}
+                  {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
                 </div>
               </div>
             </div>

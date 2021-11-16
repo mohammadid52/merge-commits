@@ -252,7 +252,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
-        return <AddContentDialog />;
+        return <AddContentDialog isSurvey={universalLessonDetails.type === 'survey'} />;
 
       default:
         return null;
