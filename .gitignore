@@ -31,7 +31,7 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 
-# hello
+<<<<<<< HEAD
 .secret-*
 
 #amplify-do-not-edit-begin
