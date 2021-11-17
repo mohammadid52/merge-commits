@@ -34,8 +34,8 @@ const NewPassword = () => {
         const res = await Auth.changePassword(user, password, input.password);
         console.log(res);
         dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
-        // @ts-ignore
         setCookie(
+          // @ts-ignore
           'auth',
           {email: username, authId: user.username},
           {secure: false, path: '/'}

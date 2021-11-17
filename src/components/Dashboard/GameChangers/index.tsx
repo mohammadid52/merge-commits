@@ -1,5 +1,6 @@
 import useOnScreen from '@customHooks/useOnScreen';
-import React from 'react';
+import React, {useState} from 'react';
+import Selector from '@components/Atoms/Form/Selector';
 import 'components/Dashboard/GameChangers/GameChanger.scss';
 import {HiOutlineArrowRight} from 'react-icons/hi';
 
@@ -36,11 +37,35 @@ const GameChangers = () => {
     {id: 6, title: 'Awareness', color: 'red'},
   ];
 
+  const [selectedFilterType, setSelectedFilterType] = useState<any>({});
+
+  const filterList = [
+    {id: 1434, name: 'All', value: 'all'},
+    {id: 1, name: 'Spotlight', value: 'spotlight'},
+    {id: 2, name: 'Announcement', value: 'announcement'},
+    {id: 3, name: 'Event', value: 'event'},
+    {id: 4, name: 'Check It Out', value: 'check_it_out'},
+  ];
+
+  const changeFilter = (val: string, name: string, id: string) => {
+    setSelectedFilterType({id: id, name: name, value: val});
+  };
+
   return (
     <div className="bg-white">
-      <div className="h-56 flex items-center justify-center">
+      <div className="h-56 relative flex items-center justify-center">
         <h1 className="text-center text-5xl font-semibold">Activities</h1>
+        <div className="absolute bottom-0 p-4 w-auto right-0">
+          <Selector
+            selectedItem={selectedFilterType.name}
+            list={filterList}
+            additionalClass="w-56"
+            placeholder={'All '}
+            onChange={changeFilter}
+          />
+        </div>
       </div>
+
       <div className="cards_container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
           <Card card={card} />
