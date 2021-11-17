@@ -1,14 +1,20 @@
-import useOnScreen from '@customHooks/useOnScreen';
-import React, {useState} from 'react';
 import Selector from '@components/Atoms/Form/Selector';
+import useOnScreen from '@customHooks/useOnScreen';
 import 'components/Dashboard/GameChangers/GameChanger.scss';
+import React, {useState} from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import {useHistory} from 'react-router';
 
 const Card = ({card}: {card: {id: number; title: string; color: string}}) => {
   const cardRef = React.useRef();
+  const history = useHistory();
   const onScreen = useOnScreen(cardRef);
+  const goToActivity = () => {
+    history.push(`/dashboard/activity/${card.id}`);
+  };
   return (
     <div
+      onClick={goToActivity}
       ref={cardRef}
       id={`card_${card.id}`}
       className={`${onScreen ? 'game-changer__card' : ''} cursor-pointer p-16 h-96 bg-${

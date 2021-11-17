@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
+import ExerciseList from '@components/Dashboard/GameChangers/ExerciseList';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -866,6 +867,15 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
                     <GameChangers />
+                  </ErrorBoundary>
+                )}
+              />
+              <Route
+                // exact
+                path={`${match.url}/activity/:activityId`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Breathing Exercise is not working</h1>}>
+                    <ExerciseList />
                   </ErrorBoundary>
                 )}
               />
