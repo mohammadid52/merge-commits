@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {getAsset} from '../../assets';
 import HeroBanner from '../Header/HeroBanner';
+import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 
 interface DashboardContainerProps {
   user?: any;
@@ -28,6 +30,8 @@ const DashboardContainer = ({
   const themeColor = getAsset(clientKey, 'themeClassName');
   const themeSection = theme?.section ? theme?.section : '';
   const themeBackground = theme?.backGround ? theme?.backGround[themeColor] : '';
+
+  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
   // const userObject = !isEmpty(user)
   //   ? {firstName: user.firstName, preferredName: user.firstName}
@@ -64,6 +68,13 @@ const DashboardContainer = ({
                   <span className="font-semibold">{'Classroom Lessons'}</span>
                 )}
               </h2>
+              <div className="absolute z-100 w-6 right-1">
+                <span
+                  className="w-auto cursor-pointer"
+                  onClick={() => setOpenWalkThroughModal(true)}>
+                  <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
+                </span>
+              </div>
             </div>
           ) : (
             <div className="mb-4" />
@@ -73,6 +84,10 @@ const DashboardContainer = ({
           </div>
         </div>
       </div>
+      <InformationalWalkThrough
+        open={openWalkThroughModal}
+        onCancel={() => setOpenWalkThroughModal(false)}
+      />
     </>
   );
 };

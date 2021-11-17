@@ -988,6 +988,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       role === 'SUP'
         ? '/dashboard/manage-institutions'
         : `/dashboard/manage-institutions/institution/${institutionId}`;
+
     switch (activeSection?.id) {
       case 'inst':
         return (
@@ -1668,7 +1669,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   onClick={() =>
                     history.push(
                       activeSection?.data?.universalLessons?.length
-                        ? `${baseUrl}/lessons/${activeSection?.data?.universalLessons[0].id}?step=activities`
+                        ? `${baseUrl}/lessons/${
+                            activeSection?.data?.universalLessons[0].id
+                          }/page-builder${
+                            activeSection?.data?.universalLessons[0]?.lessonPlan.length
+                              ? `?pageId=${activeSection?.data?.universalLessons[0].lessonPlan[0].id}`
+                              : ''
+                          }`
                         : `${baseUrl}/lessons/add`
                     )
                   }>
@@ -2043,24 +2050,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                             selectedInstitution?.institution?.name || ''
                           } Set-Up Navigator`}
                         </Dialog.Title>
-                        {selectedInstitution?.institution?.id ? (
-                          <span className="w-auto cursor-pointer" onClick={resetData}>
-                            <HiOutlineRefresh className="w-6 h-6" />
-                          </span>
-                        ) : (
-                          role === 'ADM' ||
-                          (role === 'SUP' &&
-                            (!associateInstitute?.length ||
-                              associateInstitute?.length > 1) && (
-                              <Selector
-                                selectedItem={selectedInstitution?.institution?.name}
-                                label={''}
-                                placeholder={'Select institution'}
-                                list={institutionList}
-                                onChange={onInstituteChange}
-                              />
-                            ))
-                        )}
+                        {(role === 'ADM' || role === 'SUP') &&
+                        (!associateInstitute?.length ||
+                          associateInstitute?.length > 1) ? (
+                          selectedInstitution?.institution?.id ? (
+                            <span className="w-auto cursor-pointer" onClick={resetData}>
+                              <HiOutlineRefresh className="w-6 h-6" />
+                            </span>
+                          ) : (
+                            <Selector
+                              selectedItem={selectedInstitution?.institution?.name}
+                              label={''}
+                              placeholder={'Select institution'}
+                              list={institutionList}
+                              onChange={onInstituteChange}
+                            />
+                          )
+                        ) : null}
                       </div>
                       {alertConfig.show && (
                         <div

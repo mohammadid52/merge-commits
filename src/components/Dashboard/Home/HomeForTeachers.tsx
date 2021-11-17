@@ -1,11 +1,14 @@
 import {setLocalStorageData} from '@utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
+import {BsFillInfoCircleFill} from 'react-icons/bs';
+
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {getImageFromS3} from '../../../utilities/services';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+import InformationalWalkThrough from '@components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {ClassroomControlProps} from '../Dashboard';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
@@ -36,6 +39,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
   const [loading, setLoading] = useState(false);
+  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const user = !isEmpty(state)
@@ -240,6 +244,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </h2>
+              <div className="absolute z-100 w-6 right-1">
+                <span
+                  className="w-auto cursor-pointer"
+                  onClick={() => setOpenWalkThroughModal(true)}>
+                  <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
+                </span>
+              </div>
             </div>
           )}
           <div className="px-5">
@@ -279,6 +290,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       ) : (
         <ComponentLoading />
       )}
+      <InformationalWalkThrough
+        open={openWalkThroughModal}
+        onCancel={() => setOpenWalkThroughModal(false)}
+      />
     </>
   );
 };
