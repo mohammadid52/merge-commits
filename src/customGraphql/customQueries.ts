@@ -1770,6 +1770,7 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
         id
         name
         type
+        image
         institution {
           id
           name
@@ -2648,6 +2649,26 @@ export const getInstitution = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalSyllabusLessons = /* GraphQL */ `
+  query ListUniversalSyllabusLessons(
+    $filter: ModelUniversalSyllabusLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUniversalSyllabusLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        syllabusID
+        lessonID
+      }
+      nextToken
+    }
+  }
+`;
 
 export const GetInstitutionDetails = /* GraphQL */ `
   query GetInstitution($id: ID!) {
@@ -2711,6 +2732,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           syllabiHistory
           objectives

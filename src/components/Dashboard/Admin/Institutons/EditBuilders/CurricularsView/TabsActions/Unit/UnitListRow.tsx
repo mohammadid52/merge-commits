@@ -55,13 +55,15 @@ const UnitListRow = ({
         </div>
       )}
       <div
-        className={`flex ${
+        className={`${
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
         } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}
         onClick={redirectToInstitution}>
-        {item.lessons?.items
-          ?.map(({lesson: {title}}: {id: string; lesson: {title: string}}) => title)
-          .join(', ')}{' '}
+        {item.lessons?.items?.map(
+          ({lesson: {title}}: {id: string; lesson: {title: string}}) => (
+            <li>{title}</li>
+          )
+        )}
       </div>
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>

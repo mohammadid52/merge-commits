@@ -297,12 +297,12 @@ const CurriculumList = ({
                 </div>
                 <div
                   className={`${
-                    isSuperAdmin ? 'w-2/10' : 'w-4/10'
+                    isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
                   } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                  <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                     <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
@@ -311,7 +311,7 @@ const CurriculumList = ({
                   <span>{InstitueCurriculum[userLanguage]['COURSE_TYPE']}</span>
                 </div>
                 <div
-                  className={`w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
+                  className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['UNITS']}</span>
                 </div>
                 <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">

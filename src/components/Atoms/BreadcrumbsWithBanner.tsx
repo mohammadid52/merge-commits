@@ -122,7 +122,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       if (courseId) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getCurriculumBasicDetails, {
-            id: courseId,
+            id: courseId.split('/')[0],
           })
         );
 

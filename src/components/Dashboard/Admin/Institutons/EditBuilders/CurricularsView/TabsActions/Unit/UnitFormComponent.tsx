@@ -15,7 +15,7 @@ import useDictionary from '../../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../../assets';
 
 interface AddSyllabusProps {
-  syllabusDetails: any;
+  syllabusDetails?: any;
   postAddSyllabus: (syllabusId: string) => void;
   onCancel: () => void;
   instId: string;
