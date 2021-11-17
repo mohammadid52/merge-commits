@@ -1,0 +1,22 @@
+.game-changer__card {
+  transform: scale(1);
+  animation: fadeIn 0.5s ease-in-out;
+  &:hover .scaleImage {
+    transform: scale(1.1);
+  }
+  .scaleImage {
+    transform: scale(1);
+    transition: transform 0.5s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

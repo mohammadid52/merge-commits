@@ -26,6 +26,7 @@ import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 
+const GameChangers = lazy(() => import('./GameChangers/index'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -849,17 +850,25 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
 
-              {
-                <Route
-                  // exact
-                  path={`${match.url}/community/:action`}
-                  render={() => (
-                    <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
-                      <Community role={userData.role} />
-                    </ErrorBoundary>
-                  )}
-                />
-              }
+              <Route
+                // exact
+                path={`${match.url}/community/:action`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
+                  </ErrorBoundary>
+                )}
+              />
+
+              <Route
+                // exact
+                path={`${match.url}/game-changers`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
+                    <GameChangers />
+                  </ErrorBoundary>
+                )}
+              />
 
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||
