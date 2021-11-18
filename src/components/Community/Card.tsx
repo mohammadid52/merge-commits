@@ -255,7 +255,7 @@ const Menu = ({
   );
 };
 
-const MapWithAMarker = withScriptjs(
+const MapWithAMarker: any = withScriptjs(
   withGoogleMap((props) => (
     <GoogleMap defaultZoom={8} defaultCenter={{lat: -34.397, lng: 150.644}}>
       <Marker position={{lat: -34.397, lng: 150.644}} />
