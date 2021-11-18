@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router';
+import {Switch, Route, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {BsArrowLeft} from 'react-icons/bs';
 
@@ -15,6 +15,10 @@ import CourseFormComponent from './CourseFormComponent';
 import UnitManager from './UnitManager';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
+
+// import AddProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+// import ProfileCheckpointlookup from '../../../../EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+// import EditProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 
 interface IUIMessages {
   show: boolean;
@@ -182,6 +186,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }
   };
+  console.log(match.url,'sfksdjfks');
+  
 
   return (
     <div className="w-full h-full">
@@ -242,6 +248,20 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )}
         </div>
       </div>
+      <Switch>
+        {/* <Route
+          path={`${match.url}/checkpoint/addNew`}
+          render={() => <AddProfileCheckpoint />} // Edit course
+        />
+        <Route
+          path={`${match.url}/checkpoint/addPrevious`}
+          render={() => <ProfileCheckpointlookup instId={courseData?.institution.id} />} // Edit course
+        />
+        <Route
+          path={`${match.url}/checkpoint/edit/:id`}
+          render={() => <EditProfileCheckpoint />} // Edit course
+        /> */}
+      </Switch>
       {/* </PageWrapper> */}
     </div>
   );

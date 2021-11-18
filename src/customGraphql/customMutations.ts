@@ -1155,6 +1155,19 @@ export const updateCurriculumSyllabusSequence = /* GraphQL */ `
   }
 `;
 
+export const deleteUniversalSyllabusLesson = /* GraphQL */ `
+  mutation DeleteUniversalSyllabusLesson(
+    $input: DeleteUniversalSyllabusLessonInput!
+    $condition: ModelUniversalSyllabusLessonConditionInput
+  ) {
+    deleteUniversalSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+    }
+  }
+`;
+
 export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
   mutation UpdateUniversalSyllabus(
     $input: UpdateUniversalSyllabusInput!

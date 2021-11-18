@@ -124,6 +124,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
+  const [addedSyllabus, setAddedSyllabus] = useState([]);
   const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
@@ -266,6 +267,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const fetchUniversalSyllabus = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(customQueries.listUniversalSyllabusLessons, {
+        filter: {
+          lessonID: {eq: lessonId},
+        },
+      })
+    );
+    setAddedSyllabus(result?.data?.listUniversalSyllabusLessons.items)
+  };
+
   // old query
   // const result: any = await API.graphql(
   //   graphqlOperation(customQueries.getLesson, {
@@ -277,6 +289,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (lessonId) {
       setLoading(true);
       fetchUniversalLessonDetails();
+      fetchUniversalSyllabus();
     } else {
       setUniversalLessonDetails({
         id: '',
@@ -600,6 +613,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             lessonType={formData.type?.value}
             loading={curriculumLoading}
             selectedCurriculums={selectedCurriculumList}
+            addedSyllabus={addedSyllabus}
+            setAddedSyllabus={setAddedSyllabus}
           />
         );
       case 'learning-evidence':
@@ -720,60 +735,42 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [step]);
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
-      last: false,
-    },
-    {
-      title: params.get('lessonId')
-        ? loading
-          ? 'Loading...'
-          : formData?.name
-        : BreadcrumsTitles[userLanguage]['LESSON_BUILDER'],
-      url: `${match.url}`,
-      last: true,
-    },
-  ];
-
   const steps: IStepElementInterface[] = [
     {
-      title: 'Overview',
-      description: 'Capture core details of your lesson',
+      title: LessonBuilderDict[userLanguage]['OVEVIEW_TITLE'],
+      description: LessonBuilderDict[userLanguage]['OVERVIEW_DESCRIPTION'],
       stepValue: 'overview',
       icon: <IoCardSharp />,
       isComplete: true,
     },
     {
-      title: 'Activities',
-      description: 'Create class and home work here',
+      title: LessonBuilderDict[userLanguage]['ACTIVITY_TITLE'],
+      description: LessonBuilderDict[userLanguage]['ACTIVITY_DESCRIPTION'],
       stepValue: 'activities',
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP'],
     },
     {
-      title: 'Courses',
-      description: 'Assign lessons to courses',
+      title: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TITLE'],
+      description: LessonBuilderDict[userLanguage]['UNIT_MANAGER_DESCRIPTION'],
       stepValue: 'courses',
       icon: <FaQuestionCircle />,
       disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
       isComplete: false,
-      tooltipText: 'Create lesson activities in step 2 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP'],
     },
     {
-      title: 'Learning Evidence',
-      description: 'Link measurements to activities',
+      title: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TITLE'],
+      description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
       disabled: !(
         Boolean(selectedMeasurements?.length) || Boolean(selectedCurriculumList.length)
       ),
       isComplete: false,
-      tooltipText: 'Assign your lesson to courses in step 3 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP'],
     },
   ];
 
@@ -781,33 +778,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      {/* <BreadCrums
-        items={breadCrumsList}
-        unsavedChanges={unsavedChanges}
-        toggleModal={toggleUnSaveModal}
-      /> */}
-      {/* <div className="flex justify-between">
-        <SectionTitle
-          title={LessonBuilderDict[userLanguage]['TITLE']}
-          subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
-        />
-        {params.get('from') ? (
-          <div className="flex justify-end py-4 mb-4 w-5/10">
-            <Buttons
-              label="Go back"
-              btnClass="mr-4"
-              onClick={() => history.goBack()}
-              Icon={IoArrowUndoCircleOutline}
-            />
-          </div>
-        ) : null}
-      </div> */}
       <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
         {LessonBuilderDict[userLanguage]['TITLE']}
       </h3>
-      {/* Body */}
-      {/* <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}> */}
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}
