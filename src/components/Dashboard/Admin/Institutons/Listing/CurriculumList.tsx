@@ -22,6 +22,7 @@ interface CurriculumListProps {
 interface ICurricular {
   name?: string;
   id: string;
+  institutionID: string;
   institution?: {name?: string; id: string};
   universalSyllabusSeq: Array<string>;
   universalSyllabus: {items: Array<any>};
@@ -236,6 +237,15 @@ const CurriculumList = ({
     );
   };
 
+  const redirectToUnit = (institutionId: string, unitId: string) => {
+    const baseUrl = '/dashboard/manage-institutions';
+    history.push(
+      isSuperAdmin
+        ? `${baseUrl}/units/${unitId}/edit`
+        : `${baseUrl}/institution/${institutionId}/units/${unitId}/edit`
+    );
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -332,8 +342,9 @@ const CurriculumList = ({
                   checkIfRemovable={checkIfRemovable}
                   handleToggleDelete={handleToggleDelete}
                   editCurrentCurricular={editCurrentCurricular}
-                  redirectToInstitution={() =>
-                    redirectToInstitution(item.institution?.id)
+                  redirectToInstitution={() => redirectToInstitution(item.institutionID)}
+                  redirectToUnit={(unitId: string) =>
+                    redirectToUnit(item.institutionID, unitId)
                   }
                 />
               ))}

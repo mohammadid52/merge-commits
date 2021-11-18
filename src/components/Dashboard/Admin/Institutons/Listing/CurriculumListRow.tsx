@@ -18,6 +18,7 @@ interface ICurriculumListRowProps {
   handleToggleDelete: any;
   editCurrentCurricular: any;
   redirectToInstitution: () => void;
+  redirectToUnit: (unitId: string) => void;
 }
 
 const CurriculumListRow = ({
@@ -28,6 +29,7 @@ const CurriculumListRow = ({
   handleToggleDelete,
   editCurrentCurricular,
   redirectToInstitution,
+  redirectToUnit
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -93,8 +95,8 @@ const CurriculumListRow = ({
       <div
         className={`w-3/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
         {item.universalSyllabus?.items?.map(
-          ({unit: {name}}: {id: string; unit: {name: string}}) => (
-            <li>{name}</li>
+          ({id, unit: {id: unitId, name}}: {id: string; unit: {id: string;name: string}}) => (
+            <li key={id} className="cursor-pointer" onClick={() => redirectToUnit(unitId)}>{name}</li>
           )
         )}
       </div>

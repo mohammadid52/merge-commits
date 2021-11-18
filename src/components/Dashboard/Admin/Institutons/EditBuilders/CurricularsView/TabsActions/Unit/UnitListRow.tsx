@@ -12,6 +12,7 @@ interface IUnitListRowProps {
   handleToggleDelete: any;
   editCurrentUnit: any;
   redirectToInstitution: () => void;
+  redirectToLesson: (id: string) => void;
 }
 
 const UnitListRow = ({
@@ -22,10 +23,10 @@ const UnitListRow = ({
   handleToggleDelete,
   editCurrentUnit,
   redirectToInstitution,
+  redirectToLesson,
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -57,11 +58,18 @@ const UnitListRow = ({
       <div
         className={`${
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
-        } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}
-        onClick={redirectToInstitution}>
+        } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
         {item.lessons?.items?.map(
-          ({lesson: {title}}: {id: string; lesson: {title: string}}) => (
-            <li>{title}</li>
+          ({
+            id,
+            lesson: {id: lessonId, title},
+          }: {
+            id: string;
+            lesson: {id: string; title: string};
+          }) => (
+            <li key={id} onClick={() => redirectToLesson(lessonId)}>
+              {title}
+            </li>
           )
         )}
       </div>

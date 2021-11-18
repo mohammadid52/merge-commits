@@ -27,7 +27,6 @@ export const UnitList = ({instId}: any) => {
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
-
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -199,6 +198,15 @@ export const UnitList = ({instId}: any) => {
     );
   };
 
+  const redirectToLesson = (institutionId: string, lessonId: string) => {
+    const baseUrl = '/dashboard/manage-institutions';
+    history.push(
+      isSuperAdmin
+        ? `${baseUrl}/lessons/${lessonId}`
+        : `${baseUrl}/institution/${institutionId}/lessons/${lessonId}`
+    );
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -287,6 +295,9 @@ export const UnitList = ({instId}: any) => {
                   isSuperAdmin={isSuperAdmin}
                   redirectToInstitution={() =>
                     redirectToInstitution(unit.institution?.id)
+                  }
+                  redirectToLesson={(lessonId: string) =>
+                    redirectToLesson(unit.institution?.id, lessonId)
                   }
                 />
               ))}

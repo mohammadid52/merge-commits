@@ -1771,6 +1771,7 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
         name
         type
         image
+        institutionID
         institution {
           id
           name
@@ -2320,6 +2321,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
           items {
             id
             lesson{
+              id
               title
             }
           }
@@ -2664,6 +2666,12 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
         id
         syllabusID
         lessonID
+        lesson {
+          id
+          type
+          label
+          title
+        }
       }
       nextToken
     }
