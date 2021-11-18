@@ -65,9 +65,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const lessonIdFromUrl = (useParams() as any).lessonId;
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {BreadcrumsTitles, AddNewLessonFormDict, LessonBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {
     name: '',
@@ -254,7 +252,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         });
         fetchStaffByInstitution(savedData.institutionID);
       }
-
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
@@ -275,7 +272,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         },
       })
     );
-    setAddedSyllabus(result?.data?.listUniversalSyllabusLessons.items)
+    const assignedSyllabus = result?.data?.listUniversalSyllabusLessons.items;
+    fetchCurriculum(assignedSyllabus);
+    setAddedSyllabus(assignedSyllabus);
   };
 
   // old query
@@ -308,9 +307,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [lessonIdFromUrl]);
 
-  useEffect(() => {
-    fetchCurriculum();
-  }, [formData?.institution]);
+  // useEffect(() => {
+  //   fetchCurriculum();
+  // }, [formData?.institution]);
 
   useEffect(() => {
     if (instId && !lessonId) {
@@ -453,7 +452,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const fetchCurriculum = async () => {
+  const fetchCurriculum = async (assignedSyllabus: any = addedSyllabus) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
@@ -491,13 +490,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setCurriculumList(curriculums);
       let selectedCurriculums: any = [];
       curriculums.map((curriculum: any) => {
-        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-          (syllabus: any) =>
-            syllabus.unit?.lessons?.items.filter(
-              (lesson: any) => lesson.lessonID === lessonId
-            ).length
+        const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
+        const assignedSyllabi = curriculum.universalSyllabus?.items.find(
+          (syllabus: any) => addedSyllabusIds.includes(syllabus.unitId)
         );
-        const isCourseAdded = Boolean(assignedSyllabi.length);
+        const isCourseAdded = Boolean(assignedSyllabi);
         if (isCourseAdded) {
           selectedCurriculums.push({
             ...curriculum,
@@ -609,6 +606,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             fetchCurriculum={fetchCurriculum}
             institution={formData?.institution}
             lessonId={lessonId}
+            lessonName={formData?.name}
             lessonPlans={universalLessonDetails?.lessonPlan}
             lessonType={formData.type?.value}
             loading={curriculumLoading}
@@ -766,9 +764,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
-      disabled: !(
-        Boolean(selectedMeasurements?.length) || Boolean(selectedCurriculumList.length)
-      ),
+      disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)),
       isComplete: false,
       tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP'],
     },

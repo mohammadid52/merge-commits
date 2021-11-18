@@ -30,6 +30,7 @@ interface ILessonCourseProps {
   institution: any;
   lessonId: string;
   lessonType: string;
+  lessonName: string;
   lessonPlans: any[];
   loading: boolean;
   selectedCurriculums: any[];
@@ -44,6 +45,7 @@ const LessonCourse = ({
   institution,
   lessonId,
   lessonType,
+  lessonName,
   lessonPlans,
   loading,
   selectedCurriculums,
@@ -153,7 +155,7 @@ const LessonCourse = ({
     if (!deleteModal.show) {
       setDeleteModal({
         show: true,
-        message: `Are you sure you want to remove lesson from "${targetString}"`,
+        message: `Are you sure you want to remove "${lessonName}" from "${targetString}"`,
         action: () => deleteUniversalSyllabusLesson(uniqueId),
       });
     } else {
