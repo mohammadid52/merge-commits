@@ -46,7 +46,9 @@ const UnitBuilder = ({instId}: any) => {
 
   const {
     clientKey,
-    state: {user: isSuperAdmin},
+    state: {
+      user: {isSuperAdmin},
+    },
     userLanguage,
   } = useContext(GlobalContext);
   const {CommonlyUsedDict, SyllabusDict} = useDictionary(clientKey);
@@ -211,7 +213,8 @@ const UnitBuilder = ({instId}: any) => {
       </div> */}
       <div className="px-8 pb-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
-          {!fetchingDetails && (syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT)}
+          {!fetchingDetails &&
+            (syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT)}
         </h3>
         <div
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
