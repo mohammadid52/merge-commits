@@ -492,7 +492,7 @@ const LessonPlanManager = ({
                 <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2.5/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>
