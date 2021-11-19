@@ -3,7 +3,7 @@ import 'components/Dashboard/GameChangers/GameChanger.scss';
 
 import {MdOutlineMusicNote, MdOutlineMusicOff} from 'react-icons/md';
 import {gsap} from 'gsap';
-import {Linear} from 'gsap/all';
+import {Linear, Power2} from 'gsap/all';
 import {map, times} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {BsFillHeartFill, BsFullscreen, BsHeart} from 'react-icons/bs';
@@ -124,17 +124,26 @@ const StartButton = ({
       <div className="absolute flex flex-col gap-y-4 items-center justify-center right-0 pr-10 w-auto">
         <div
           onClick={() => setShowHowTo((prev) => !prev)}
-          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          className={classNames(
+            commonBtnClass,
+            'meditation-card__btn text-2xl text-white text-opacity-50'
+          )}>
           <IoIosHelpCircleOutline />
         </div>
         <div
           onClick={() => setShowInfo((prev) => !prev)}
-          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          className={classNames(
+            commonBtnClass,
+            'meditation-card__btn text-2xl text-white text-opacity-50'
+          )}>
           <AiOutlineInfoCircle />
         </div>
         <div
           onClick={() => setIsPlayingMusic((prev) => !prev)}
-          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          className={classNames(
+            commonBtnClass,
+            'meditation-card__btn text-2xl text-white text-opacity-50'
+          )}>
           {isPlaying ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />}
         </div>
       </div>
@@ -312,6 +321,20 @@ const BreathingExercise = () => {
     }
   }, [escPressed, isImmersiveMode]);
 
+  // Animations here
+  let animate = gsap.timeline();
+  useEffect(() => {
+    animate.fromTo(
+      '#meditation-card__title',
+      {x: -100, opacity: 0, duration: 2, delay: 2},
+      {x: 0, opacity: 1}
+    );
+
+    return () => {
+      animate.kill();
+    };
+  }, []);
+
   return (
     <div className="h-full flex items-center relative overflow-hidden justify-center">
       <audio id="background-music">
@@ -331,6 +354,7 @@ const BreathingExercise = () => {
           'transition-all duration-500 overflow-hidden '
         )}>
         <div
+          id="meditation-card"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6)), url(${mainImg})`,
 
@@ -343,7 +367,9 @@ const BreathingExercise = () => {
           <div id="overlay" className=" bg-black absolute inset-0 bg-opacity-30" />
           {/* Text area */}
           <div className="">
-            <h1 className="z-20 text-white text-6xl font-bold tracking-wider drop-shadow-xl filter">
+            <h1
+              id="meditation-card__title"
+              className="z-20 text-white text-6xl font-bold tracking-wider drop-shadow-xl filter">
               Square
               <br /> Breathing
             </h1>
