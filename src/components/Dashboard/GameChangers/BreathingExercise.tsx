@@ -1,23 +1,60 @@
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import React, {useState, useEffect} from 'react';
-import {BsFillHeartFill, BsFullscreen, BsHeart} from 'react-icons/bs';
-import {MdOutlineMusicNote, MdOutlineMusicOff} from 'react-icons/md';
-import {gsap} from 'gsap';
 import 'components/Dashboard/GameChangers/GameChanger.scss';
+// import {MdOutlineMusicNote, MdOutlineMusicOff} from 'react-icons/md';
+import {gsap} from 'gsap';
 import {Linear} from 'gsap/all';
-import {times} from 'lodash';
+import {map, times} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {BsFillHeartFill, BsFullscreen, BsHeart} from 'react-icons/bs';
 
 const mainImg =
   'https://images.unsplash.com/photo-1559544948-da38a2615cb7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80';
 
+const elem = document.documentElement;
+
+/* View in fullscreen */
+function openFullscreen(): void {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+    // @ts-ignore
+  } else if (elem.webkitRequestFullscreen) {
+    /* Safari */
+    // @ts-ignore
+    elem.webkitRequestFullscreen();
+    // @ts-ignore
+  } else if (elem.msRequestFullscreen) {
+    /* IE11 */
+    // @ts-ignore
+    elem.msRequestFullscreen();
+  }
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+    // @ts-ignore
+  } else if (document.webkitExitFullscreen) {
+    /* Safari */
+    // @ts-ignore
+    document.webkitExitFullscreen();
+    // @ts-ignore
+  } else if (document.msExitFullscreen) {
+    /* IE11 */
+    // @ts-ignore
+    document.msExitFullscreen();
+  }
+}
 interface StartButtonProps {
   setIsImmersiveMode: React.Dispatch<React.SetStateAction<boolean>>;
   liked: boolean;
+  isImmersiveMode: boolean;
   isActive: boolean;
   isPlaying: boolean;
   setLiked: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPlayingMusic: React.Dispatch<React.SetStateAction<boolean>>;
   onStart: () => void;
+  onPause: () => void;
 }
 
 interface HelpingTextProps {
@@ -36,19 +73,30 @@ const StartButton = ({
   isActive,
   setIsPlayingMusic,
   isPlaying,
+  onPause,
+  isImmersiveMode,
 }: StartButtonProps) => {
   const commonBtnClass =
     'w-auto cursor-pointer hover:scale-110 transform transition-all ';
   return (
     <div className={'flex items-center gap-x-6 justify-center'}>
       <div
-        onClick={() => setIsImmersiveMode((prev) => !prev)}
+        onClick={() => {
+          if (isImmersiveMode) {
+            closeFullscreen();
+            $('#top-menu').show();
+          } else {
+            $('#top-menu').hide();
+            openFullscreen();
+          }
+          setIsImmersiveMode((prev) => !prev);
+        }}
         className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
         <BsFullscreen />
       </div>
       <button
         disabled={isActive}
-        onClick={onStart}
+        onClick={isActive ? onPause : onStart}
         className={classNames(
           commonBtnClass,
           isActive ? 'bg-opacity-70 pointer-events-none' : '',
@@ -67,7 +115,7 @@ const StartButton = ({
           'absolute right-0 pr-10 w-auto',
           'text-2xl text-white text-opacity-50'
         )}>
-        {isPlaying ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />}
+        {/* {isPlaying ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />} */}
       </div>
     </div>
   );
@@ -78,19 +126,31 @@ const Count = ({counter}: CountProps) => {
 };
 
 const HelpingText = ({isImmersiveMode}: HelpingTextProps) => {
+  const textList = [
+    'Begin by slowly exhaling all of your air out',
+    'Then, gently inhale through your nose to a slow count of 4',
+    'Hold at the top of the breath for a count of 4',
+    'Then gently exhale through your mouth for a count of 4',
+    'At the bottom of the breath, pause and hold for the count of 4',
+  ];
+
   return (
     <div
       className={classNames(
         isImmersiveMode ? 'text-3xl' : 'text-xl',
         'mb-8 text-white italic text-left pl-10  font-semibold'
       )}>
-      <h5
-        className={classNames(
-          isImmersiveMode ? '' : 'max-w-96',
-          ' duration-500 transition-all'
-        )}>
-        "Begin by slowly exhaling all of your air out."
-      </h5>
+      <ul className="w-auto mx-1 ">
+        {map(textList, (text) => (
+          <li
+            className={classNames(
+              isImmersiveMode ? '' : 'max-w-96',
+              ' duration-500 transition-all'
+            )}>
+            "{text}"
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -133,6 +193,7 @@ const BreathingExercise = () => {
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(0);
   const [isActive, setIsActive] = useState(false);
+
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
 
   const [currentHelpingInfo, setCurrentHelpingInfo] = useState('inhale');
@@ -142,8 +203,8 @@ const BreathingExercise = () => {
   const width = squareEl.width();
   const height = squareEl.height();
 
-  const commonFields = {duration: 4, ease: Linear.easeNone};
-  var tl = gsap.timeline();
+  const commonFields = {duration: 0.5, ease: Linear.easeNone};
+  var tl = gsap.timeline({});
 
   const onAnimationStart = () => {
     tl.to(
@@ -151,12 +212,14 @@ const BreathingExercise = () => {
 
       {
         x: width,
+
         onStart: () => {
           setCurrentHelpingInfo('exhale');
         },
         ...commonFields,
       }
     )
+
       .to(
         '#knob',
 
@@ -169,6 +232,7 @@ const BreathingExercise = () => {
           ...commonFields,
         }
       )
+
       .to(
         '#knob',
 
@@ -180,6 +244,7 @@ const BreathingExercise = () => {
           ...commonFields,
         }
       )
+
       .to(
         '#knob',
 
@@ -189,10 +254,14 @@ const BreathingExercise = () => {
           },
           onComplete: () => {
             setCounter((prevCounter) => {
-              if (prevCounter < 3) {
+              let counter = prevCounter + 1;
+
+              if (counter % 4 === 0) {
+                onPause();
+              } else {
                 onAnimationStart();
               }
-              return prevCounter + 1;
+              return counter;
             });
           },
           y: 0,
@@ -201,24 +270,12 @@ const BreathingExercise = () => {
       );
   };
 
-  useEffect(() => {
-    if (counter === 4) {
-      setIsActive(false);
-    }
-  }, [counter]);
-
   const onStart = () => {
-    if (!isActive) {
-      setIsActive(true);
-      setIsPlayingMusic(true);
-      onAnimationStart();
-      if (counter === 4) {
-        setCounter(0);
-      }
-    }
-  };
+    setIsActive(true);
+    setIsPlayingMusic(true);
 
-  const audioControl = document.getElementById('background-music');
+    onAnimationStart();
+  };
 
   useEffect(() => {
     if (isPlayingMusic) {
@@ -228,13 +285,24 @@ const BreathingExercise = () => {
       // @ts-ignore
       audioControl?.pause();
     }
+    return () => {
+      // @ts-ignore
+      audioControl?.pause();
+    };
   }, [isPlayingMusic]);
+
+  const onPause = () => {
+    setIsPlayingMusic(false);
+    setIsActive(false);
+  };
+
+  const audioControl = document.getElementById('background-music');
 
   return (
     <div className="h-full flex items-center overflow-hidden justify-center">
       <audio id="background-music">
         <source
-          src="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
+          src="https://selready.s3.us-east-2.amazonaws.com/meditation.mp3"
           type="audio/mp3"
         />
       </audio>
@@ -245,8 +313,8 @@ const BreathingExercise = () => {
           minWidth: isImmersiveMode ? `none` : `41rem`,
         }}
         className={classNames(
-          isImmersiveMode ? '' : ' flex w-164 items-center justify-center mx-auto',
-          'transition-all duration-500 overflow-hidden'
+          isImmersiveMode ? '' : ' flex  items-center w-164 justify-center mx-auto',
+          'transition-all duration-500 overflow-hidden '
         )}>
         <div
           style={{
@@ -269,7 +337,6 @@ const BreathingExercise = () => {
 
           {/* Action area */}
           <div className="absolute bottom-5 inset-x-0 flex items-center flex-col justify-center w-auto z-20">
-            <HelpingText isImmersiveMode={isImmersiveMode} />
             <AnimatedSquare currentHelpingInfo={currentHelpingInfo} isActive={isActive} />
 
             <Count counter={counter} />
@@ -277,7 +344,9 @@ const BreathingExercise = () => {
               isActive={isActive}
               onStart={onStart}
               isPlaying={isPlayingMusic}
+              isImmersiveMode={isImmersiveMode}
               liked={liked}
+              onPause={onPause}
               setIsPlayingMusic={setIsPlayingMusic}
               setLiked={setLiked}
               setIsImmersiveMode={setIsImmersiveMode}
