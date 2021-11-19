@@ -422,7 +422,7 @@ const LessonCourse = ({
                     className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                     <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                   </div>
-                  <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-2.5/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {UnitLookupDict[userLanguage]['ACTION']}
                     </span>

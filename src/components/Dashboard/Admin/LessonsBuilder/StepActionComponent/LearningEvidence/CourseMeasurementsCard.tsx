@@ -1,15 +1,17 @@
 import React, {Fragment} from 'react';
 import {FaGraduationCap} from 'react-icons/fa';
+import {HiPencil, HiPlus} from 'react-icons/hi';
 
 import {getImageFromS3Static} from '../../../../../../utilities/services';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
-
 interface ICourseMeasurementsProps {
   curriculum: any;
   handleCheckboxChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     rubricId: string
   ) => void;
+  editLearningObj: (data: any) => void;
+  addLearningObjective: (courseId: string) => void;
   setAddModalShow?: any;
   selectedMeasurements: any[];
 }
@@ -17,6 +19,8 @@ interface ICourseMeasurementsProps {
 const CourseMeasurementsCard = ({
   curriculum,
   handleCheckboxChange,
+  addLearningObjective,
+  editLearningObj,
   selectedMeasurements,
 }: ICourseMeasurementsProps) => {
   return (
@@ -41,6 +45,12 @@ const CourseMeasurementsCard = ({
             <div className="text-xl font-bold inline-flex items-center">
               {curriculum.name}
             </div>
+            <div className="w-auto flex items-center cursor-pointer">
+              <HiPlus
+                className="h-8 w-8"
+                onClick={() => addLearningObjective(curriculum.id)}
+              />
+            </div>
           </div>
           <div className="mt-5 max-h-96 overflow-y-auto p-4 pt-0">
             {curriculum.learningObjectiveData.length ? (
@@ -50,6 +60,12 @@ const CourseMeasurementsCard = ({
                     <div className="flex justify-between items-center">
                       <span className={`text-lg font-bold pr-2`}>
                         {objectiveIndex + 1}. {objective.name}
+                      </span>
+                      <span className="w-auto inline-flex items-center cursor-pointer">
+                        <HiPencil
+                          className="w-4 h-4"
+                          onClick={() => editLearningObj(objective)}
+                        />
                       </span>
                     </div>
                     {objective.associatedTopics?.length ? (

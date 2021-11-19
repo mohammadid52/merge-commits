@@ -102,16 +102,10 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const createLearningObjective = () => {
     setIsFormOpen(true);
     setSelectedObjectiveData({});
-    // history.push(
-    //   `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/learning-objective/add`
-    // );
   };
   const editLearningObj = (learningData: any) => {
     setIsFormOpen(true);
     setSelectedObjectiveData(learningData);
-    // history.push(
-    //   `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/learning-objective/edit/${learningId}`
-    // );
   };
 
   const handleCancel = () => {
