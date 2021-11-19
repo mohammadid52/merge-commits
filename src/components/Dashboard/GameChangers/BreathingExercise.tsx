@@ -1,14 +1,18 @@
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import 'components/Dashboard/GameChangers/GameChanger.scss';
-// import {MdOutlineMusicNote, MdOutlineMusicOff} from 'react-icons/md';
+
+import {MdOutlineMusicNote, MdOutlineMusicOff} from 'react-icons/md';
 import {gsap} from 'gsap';
 import {Linear} from 'gsap/all';
 import {map, times} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {BsFillHeartFill, BsFullscreen, BsHeart} from 'react-icons/bs';
+import useKeyPress from 'customHooks/useKeyPress';
+import {AiOutlineInfoCircle} from 'react-icons/ai';
+import {IoIosHelpCircleOutline} from 'react-icons/io';
 
 const mainImg =
-  'https://images.unsplash.com/photo-1559544948-da38a2615cb7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80';
+  'https://c4.wallpaperflare.com/wallpaper/510/821/261/nature-leaves-plants-green-hd-wallpaper-preview.jpg';
 
 const elem = document.documentElement;
 
@@ -45,20 +49,27 @@ function closeFullscreen() {
     document.msExitFullscreen();
   }
 }
+
+const textList = [
+  'Begin by slowly exhaling all of your air out',
+  'Then, gently inhale through your nose to a slow count of 4',
+  'Hold at the top of the breath for a count of 4',
+  'Then gently exhale through your mouth for a count of 4',
+  'At the bottom of the breath, pause and hold for the count of 4',
+];
 interface StartButtonProps {
-  setIsImmersiveMode: React.Dispatch<React.SetStateAction<boolean>>;
   liked: boolean;
   isImmersiveMode: boolean;
   isActive: boolean;
   isPlaying: boolean;
   setLiked: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPlayingMusic: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowHowTo: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowInfo: React.Dispatch<React.SetStateAction<boolean>>;
   onStart: () => void;
+  turnOffImmersiveMode: () => void;
+  turnOnImmersiveMode: () => void;
   onPause: () => void;
-}
-
-interface HelpingTextProps {
-  isImmersiveMode: boolean;
 }
 
 interface CountProps {
@@ -66,7 +77,6 @@ interface CountProps {
 }
 
 const StartButton = ({
-  setIsImmersiveMode,
   liked,
   setLiked,
   onStart,
@@ -75,21 +85,23 @@ const StartButton = ({
   isPlaying,
   onPause,
   isImmersiveMode,
+  turnOffImmersiveMode,
+  turnOnImmersiveMode,
+  setShowInfo,
+  setShowHowTo,
 }: StartButtonProps) => {
   const commonBtnClass =
     'w-auto cursor-pointer hover:scale-110 transform transition-all ';
+
   return (
     <div className={'flex items-center gap-x-6 justify-center'}>
       <div
         onClick={() => {
           if (isImmersiveMode) {
-            closeFullscreen();
-            $('#top-menu').show();
+            turnOffImmersiveMode();
           } else {
-            $('#top-menu').hide();
-            openFullscreen();
+            turnOnImmersiveMode();
           }
-          setIsImmersiveMode((prev) => !prev);
         }}
         className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
         <BsFullscreen />
@@ -109,13 +121,22 @@ const StartButton = ({
         className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
         {liked ? <BsFillHeartFill /> : <BsHeart />}
       </div>
-      <div
-        onClick={() => setIsPlayingMusic((prev) => !prev)}
-        className={classNames(
-          'absolute right-0 pr-10 w-auto',
-          'text-2xl text-white text-opacity-50'
-        )}>
-        {/* {isPlaying ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />} */}
+      <div className="absolute flex flex-col gap-y-4 items-center justify-center right-0 pr-10 w-auto">
+        <div
+          onClick={() => setShowHowTo((prev) => !prev)}
+          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          <IoIosHelpCircleOutline />
+        </div>
+        <div
+          onClick={() => setShowInfo((prev) => !prev)}
+          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          <AiOutlineInfoCircle />
+        </div>
+        <div
+          onClick={() => setIsPlayingMusic((prev) => !prev)}
+          className={classNames(commonBtnClass, 'text-2xl text-white text-opacity-50')}>
+          {isPlaying ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />}
+        </div>
       </div>
     </div>
   );
@@ -123,36 +144,6 @@ const StartButton = ({
 
 const Count = ({counter}: CountProps) => {
   return <h1 className="w-auto mb-8 text-5xl font-bold text-white">{counter}</h1>;
-};
-
-const HelpingText = ({isImmersiveMode}: HelpingTextProps) => {
-  const textList = [
-    'Begin by slowly exhaling all of your air out',
-    'Then, gently inhale through your nose to a slow count of 4',
-    'Hold at the top of the breath for a count of 4',
-    'Then gently exhale through your mouth for a count of 4',
-    'At the bottom of the breath, pause and hold for the count of 4',
-  ];
-
-  return (
-    <div
-      className={classNames(
-        isImmersiveMode ? 'text-3xl' : 'text-xl',
-        'mb-8 text-white italic text-left pl-10  font-semibold'
-      )}>
-      <ul className="w-auto mx-1 ">
-        {map(textList, (text) => (
-          <li
-            className={classNames(
-              isImmersiveMode ? '' : 'max-w-96',
-              ' duration-500 transition-all'
-            )}>
-            "{text}"
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
 };
 
 const AnimatedSquare = ({
@@ -193,6 +184,8 @@ const BreathingExercise = () => {
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [showHowTo, setShowHowTo] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
 
@@ -203,7 +196,7 @@ const BreathingExercise = () => {
   const width = squareEl.width();
   const height = squareEl.height();
 
-  const commonFields = {duration: 0.5, ease: Linear.easeNone};
+  const commonFields = {duration: 4, ease: Linear.easeNone};
   var tl = gsap.timeline({});
 
   const onAnimationStart = () => {
@@ -293,13 +286,34 @@ const BreathingExercise = () => {
 
   const onPause = () => {
     setIsPlayingMusic(false);
+
     setIsActive(false);
   };
 
   const audioControl = document.getElementById('background-music');
 
+  const turnOnImmersiveMode = () => {
+    $('#top-menu').hide();
+    setIsImmersiveMode(true);
+    openFullscreen();
+  };
+  const turnOffImmersiveMode = () => {
+    closeFullscreen();
+    setIsImmersiveMode(false);
+
+    $('#top-menu').show();
+  };
+
+  const escPressed = useKeyPress('Escape');
+
+  useEffect(() => {
+    if (escPressed && isImmersiveMode) {
+      turnOffImmersiveMode();
+    }
+  }, [escPressed, isImmersiveMode]);
+
   return (
-    <div className="h-full flex items-center overflow-hidden justify-center">
+    <div className="h-full flex items-center relative overflow-hidden justify-center">
       <audio id="background-music">
         <source
           src="https://selready.s3.us-east-2.amazonaws.com/meditation.mp3"
@@ -341,7 +355,11 @@ const BreathingExercise = () => {
 
             <Count counter={counter} />
             <StartButton
+              setShowHowTo={setShowHowTo}
+              setShowInfo={setShowInfo}
               isActive={isActive}
+              turnOnImmersiveMode={turnOnImmersiveMode}
+              turnOffImmersiveMode={turnOffImmersiveMode}
               onStart={onStart}
               isPlaying={isPlayingMusic}
               isImmersiveMode={isImmersiveMode}
@@ -349,9 +367,53 @@ const BreathingExercise = () => {
               onPause={onPause}
               setIsPlayingMusic={setIsPlayingMusic}
               setLiked={setLiked}
-              setIsImmersiveMode={setIsImmersiveMode}
             />
           </div>
+        </div>
+      </div>
+
+      <div
+        className={`absolute transition-all right-0 flex-col top-2 items-end justify-center w-auto hidden xl:flex gap-y-12`}>
+        <div
+          id="breathing_exercise-how_it_works"
+          className={`${
+            isImmersiveMode
+              ? `${
+                  showHowTo ? 'translate-x-0' : 'translate-x-full'
+                } max-w-156 bg-black bg-opacity-10  border-0 border-white`
+              : ` max-w-96 ${showHowTo ? 'translate-x-0' : 'translate-x-200'} bg-white`
+          } rounded-l-xl p-4 px-6 transform   transition-all shadow-lg`}>
+          <ul className="w-auto mx-1 transition-all space-y-4 list-disc px-4 py-6 ">
+            {map(textList, (text) => (
+              <li
+                className={classNames(
+                  isImmersiveMode
+                    ? 'text-white font-semibold  italic text-xl'
+                    : 'text-gray-800 ',
+                  ` duration-500  transition-all`
+                )}>
+                {text}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div
+          id="breathing_exercise-info"
+          className={`${
+            isImmersiveMode
+              ? `${
+                  showInfo ? 'translate-x-0' : 'translate-x-full'
+                } max-w-156 text-white font-semibold italic text-xl  bg-black bg-opacity-10  border-0 border-white`
+              : `${
+                  showInfo ? 'translate-x-0' : 'translate-x-200'
+                }  text-gray-800 bg-white  max-w-96`
+          } rounded-l-xl  p-4 px-6 transition-all transform  shadow-lg`}>
+          Square breathing is a type of breathwork that can shift your energy, connect you
+          more deeply with your body, calm your nervous system, and reduce the stress in
+          your body. It is also referred to as box breathing, 4×4 breathing, and 4-part
+          breath. Here are instructions for square breathing and some ideas for when to
+          practice the technique. We’ll also share tips for making the breathwork as
+          effective as possible.
         </div>
       </div>
     </div>

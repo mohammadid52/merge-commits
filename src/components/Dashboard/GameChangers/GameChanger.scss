@@ -1,6 +1,7 @@
 .game-changer__card {
   transform: scale(1);
   animation: fadeIn 0.5s ease-in-out;
+  // animation-delay: 1s;
   &:hover .scaleImage {
     transform: scale(1.1);
   }
