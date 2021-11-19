@@ -308,6 +308,7 @@ export const UnitList = ({instId}: any) => {
                 saveAction={deleting ? () => {} : deleteModal.action}
                 saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
                 cancelLabel="CANCEL"
+                loading={deleting}
                 message={deleteModal.message}
               />
             )}

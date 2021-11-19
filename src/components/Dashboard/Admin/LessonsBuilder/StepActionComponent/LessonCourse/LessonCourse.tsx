@@ -22,6 +22,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import UnitFormComponent from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
 import UnitListRow from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitListRow';
 import {useHistory, useRouteMatch} from 'react-router';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 interface ILessonCourseProps {
   curriculumList: any[];
@@ -68,7 +69,13 @@ const LessonCourse = ({
   const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
   const [unitInput, setUnitInput] = useState<any>({});
-  const [unitList, setUnitList] = useState<any>([]);
+  const [assignedUnits, setAssignedUnits] = useState<any>([]);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {},
+  });
 
   useEffect(() => {
     if (institution?.id) {
@@ -103,10 +110,13 @@ const LessonCourse = ({
           syllabusId: item.syllabusID,
         });
       });
-      console.log(selectedSyllabus, 'selectedSyllabus');
-
-      setUnits(selectedSyllabus);
-      setUnitList(selectedSyllabus);
+      const addedSyllabusIds = addedSyllabus.map((item) => item.syllabusID);
+      setUnits(
+        result.data?.listUniversalSyllabuss.items.filter(
+          (unit: any) => !addedSyllabusIds.includes(unit.id)
+        )
+      );
+      setAssignedUnits(selectedSyllabus);
       setAllUnits(result.data?.listUniversalSyllabuss.items);
     } catch (error) {}
   };
@@ -139,22 +149,46 @@ const LessonCourse = ({
     setRoomLoading(false);
   };
 
+  const handleToggleDelete = (targetString?: string, uniqueId?: string) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to remove lesson from "${targetString}"`,
+        action: () => deleteUniversalSyllabusLesson(uniqueId),
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
   const deleteUniversalSyllabusLesson = async (id: string) => {
     try {
+      setDeleting(true);
       const input = {
         id,
       };
-      const results: any = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
+      const result: any = await API.graphql(
+        graphqlOperation(customMutations.deleteUniversalSyllabusLesson, {input: input})
       );
-      const lessonRubric = results.data.deleteLessonRubrics;
-      // if (lessonRubric?.id) {
-      //   setLessonMeasurements((prevLessonMeasurements: any) =>
-      //     prevLessonMeasurements.filter((item: any) => item.id !== lessonRubric?.id)
-      //   );
-      // }
-      // toggleModal();
-    } catch {}
+      const selectedItem = allUnits?.find(
+        (unit: any) => unit.id === result.data.deleteUniversalSyllabusLesson?.syllabusID
+      );
+      await API.graphql(
+        graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+          input: {
+            id: result.data.deleteUniversalSyllabusLesson?.syllabusID,
+            universalLessonsSeq: selectedItem?.universalLessonsSeq.filter(
+              (item: any) => item !== lessonId
+            ),
+          },
+        })
+      );
+      setAssignedUnits((prevList: any) => prevList.filter((item: any) => item.id !== id));
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    } catch (error) {
+      setDeleting(false);
+    }
   };
 
   const onAddModalClose = () => {
@@ -202,7 +236,7 @@ const LessonCourse = ({
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalSyllabusLesson, {input: input})
+        graphqlOperation(customMutations.createUniversalSyllabusLesson, {input: input})
       );
       const newLesson = result.data?.createUniversalSyllabusLesson;
       if (newLesson?.id) {
@@ -218,6 +252,25 @@ const LessonCourse = ({
         setUnits((prevUnits: any) =>
           prevUnits.filter((unit: any) => unit.id !== input.syllabusID)
         );
+        const selectedUnitData: any =
+          allUnits.find((unit: any) => unit.id === input.syllabusID) || {};
+        setAssignedUnits((prevList: any) => [
+          ...prevList,
+          {
+            ...selectedUnitData,
+            id: newLesson.id,
+            syllabusId: input.syllabusID,
+            lessons: {
+              items: [
+                ...(selectedUnitData.lessons.items || []),
+                {
+                  id: newLesson.id,
+                  lesson: newLesson.lesson,
+                },
+              ],
+            },
+          },
+        ]);
         // const newItem: any = {
         //   ...newLesson,
         //   curricularName: formState?.curriculum?.name,
@@ -264,6 +317,7 @@ const LessonCourse = ({
   const updateLessonSequence = async (unitId: string) => {
     const selectedItem = allUnits?.find((unit: any) => unit.id === unitId);
     const existingLessonSeq = selectedItem?.universalLessonsSeq || [];
+    setUnits((prevUnits: any) => [...prevUnits, selectedItem]);
     await API.graphql(
       graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
         input: {
@@ -277,12 +331,6 @@ const LessonCourse = ({
   const postAddSyllabus = async (unitId: string) => {
     await addLessonToSyllabusLesson(unitId);
     setAddModalShow(false);
-  };
-
-  const redirectToInstitution = (institutionId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
-    );
   };
 
   const redirectToLesson = (institutionId: string, lessonId: string) => {
@@ -344,7 +392,7 @@ const LessonCourse = ({
                 btnClass="ml-4 py-1"
                 label={ButtonDict[userLanguage]['ADD']}
                 disabled={saving || !unitInput.id}
-                onClick={addLessonToSyllabusLesson}
+                onClick={() => addLessonToSyllabusLesson(unitInput.id)}
               />
               <Buttons
                 btnClass="ml-4 py-1"
@@ -379,48 +427,53 @@ const LessonCourse = ({
                   </div>
                 </div>
               </div>
-              {unitList.map((unit: any, index: number) => (
-                <div
-                  key={index}
-                  className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                    index % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}>
-                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                    {index + 1}.
-                  </div>
+              {assignedUnits?.length ? (
+                assignedUnits.map((unit: any, index: number) => (
                   <div
-                    onClick={() => redirectionToUnitPage(unit.syllabusId)}
-                    className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
-                    {unit.name ? unit.name : ''}
+                    key={index}
+                    className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                      index % 2 !== 0 ? 'bg-gray-50' : ''
+                    }`}>
+                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                      {index + 1}.
+                    </div>
+                    <div
+                      onClick={() => redirectionToUnitPage(unit.syllabusId)}
+                      className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+                      {unit.name ? unit.name : ''}
+                    </div>
+                    <div
+                      className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
+                      {unit.lessons?.items?.map(
+                        ({
+                          id,
+                          lesson: {id: lessonId, title},
+                        }: {
+                          id: string;
+                          lesson: {id: string; title: string};
+                        }) => (
+                          <li
+                            key={id}
+                            onClick={() =>
+                              redirectToLesson(unit.institution?.id, lessonId)
+                            }>
+                            {title}
+                          </li>
+                        )
+                      )}
+                    </div>
+                    <div
+                      className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4"
+                      onClick={() => handleToggleDelete(unit.name, unit.id)}>
+                      <DeleteActionBtn />
+                    </div>
                   </div>
-                  <div
-                    className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
-                    {unit.lessons?.items?.map(
-                      ({
-                        id,
-                        lesson: {id: lessonId, title},
-                      }: {
-                        id: string;
-                        lesson: {id: string; title: string};
-                      }) => (
-                        <li
-                          key={id}
-                          onClick={() =>
-                            redirectToLesson(unit.institution?.id, lessonId)
-                          }>
-                          {title}
-                        </li>
-                      )
-                    )}
-                  </div>
-                  <div
-                    className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4"
-                    // onClick={() => deleteUniversalSyllabusLesson(unit.id)}
-                  >
-                    <DeleteActionBtn />
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-center p-16">
+                  {UnitLookupDict[userLanguage].NO_UNIT_ADDED}
+                </p>
+              )}
             </>
           )}
           {/* <div className="grid gap-5 lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 lg:max-w-none mt-8">
@@ -489,6 +542,16 @@ const LessonCourse = ({
               />
             </div>
           </Modal>
+        )}
+        {deleteModal.show && (
+          <ModalPopUp
+            closeAction={handleToggleDelete}
+            saveAction={deleting ? () => {} : deleteModal.action}
+            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+            loading={deleting}
+            cancelLabel="CANCEL"
+            message={deleteModal.message}
+          />
         )}
       </div>
     </div>
