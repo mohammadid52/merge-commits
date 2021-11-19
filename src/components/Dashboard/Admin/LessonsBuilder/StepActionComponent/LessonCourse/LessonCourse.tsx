@@ -464,11 +464,20 @@ const LessonCourse = ({
                         )
                       )}
                     </div>
-                    <div
-                      className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4"
-                      onClick={() => handleToggleDelete(unit.name, unit.id)}>
-                      <DeleteActionBtn />
-                    </div>
+                    {!unit.lessonHistory?.includes(lessonId) ? (
+                      <div
+                        className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4"
+                        onClick={() => handleToggleDelete(unit.name, unit.id)}>
+                        <DeleteActionBtn />
+                      </div>
+                    ) : (
+                      <span
+                        className={`relative w-2.5/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}>
+                        <p className="text-center  text-gray-500 text-xs">
+                          Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
+                        </p>
+                      </span>
+                    )}
                   </div>
                 ))
               ) : (
