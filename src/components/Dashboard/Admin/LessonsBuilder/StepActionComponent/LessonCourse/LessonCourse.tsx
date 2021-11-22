@@ -64,6 +64,7 @@ const LessonCourse = ({
   } = useContext(GlobalContext);
   const {BUTTONS: ButtonDict, UnitLookupDict} = useDictionary(clientKey);
   const [saving, setSaving] = useState(false);
+  const [assignedUnitsLoading, setAssignedUnitsLoading] = useState(false);
   const [addModalShow, setAddModalShow] = useState(false);
   const [roomLoading, setRoomLoading] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
@@ -93,6 +94,7 @@ const LessonCourse = ({
 
   const fetchSyllabusList = async () => {
     try {
+      setAssignedUnitsLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabuss, {
           filter: isSuperAdmin
@@ -120,7 +122,10 @@ const LessonCourse = ({
       );
       setAssignedUnits(selectedSyllabus);
       setAllUnits(result.data?.listUniversalSyllabuss.items);
-    } catch (error) {}
+      setAssignedUnitsLoading(false);
+    } catch (error) {
+      setAssignedUnitsLoading(false);
+    }
   };
 
   // useEffect(() => {
@@ -403,7 +408,7 @@ const LessonCourse = ({
               />
             </div>
           ) : null}
-          {loading ? (
+          {loading || assignedUnitsLoading ? (
             <div className="mt-4">
               <Loader />
             </div>
@@ -415,14 +420,14 @@ const LessonCourse = ({
                     <span>{UnitLookupDict[userLanguage]['NO']}</span>
                   </div>
                   <div
-                    className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                    className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                     <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                   </div>
                   <div
                     className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                     <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                   </div>
-                  <div className="w-2.5/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-2/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {UnitLookupDict[userLanguage]['ACTION']}
                     </span>
@@ -441,7 +446,7 @@ const LessonCourse = ({
                     </div>
                     <div
                       onClick={() => redirectionToUnitPage(unit.syllabusId)}
-                      className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+                      className={`cursor-pointer flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
                       {unit.name ? unit.name : ''}
                     </div>
                     <div
@@ -466,13 +471,13 @@ const LessonCourse = ({
                     </div>
                     {!unit.lessonHistory?.includes(lessonId) ? (
                       <div
-                        className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4"
+                        className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
                         onClick={() => handleToggleDelete(unit.name, unit.id)}>
                         <DeleteActionBtn />
                       </div>
                     ) : (
                       <span
-                        className={`relative w-2.5/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}>
+                        className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
                         <p className="text-center  text-gray-500 text-xs">
                           Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
                         </p>

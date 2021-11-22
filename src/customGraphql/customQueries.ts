@@ -2049,6 +2049,7 @@ export const listUniversalLessons = /* GraphQL */ `
         notes
         cardImage
         cardCaption
+        targetAudience
         createdAt
         updatedAt
         lessonPlan {
@@ -2382,6 +2383,7 @@ export const getUniversalLesson = /* GraphQL */ `
       darkMode
       cardImage
       cardCaption
+      targetAudience
       lessonPlan {
         id
         title

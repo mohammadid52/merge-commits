@@ -236,9 +236,10 @@ const LessonPlanManager = ({
         updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
       )
       .filter((item: any) => (item.lessonPlan ? true : false))
-      .map((item: {id: string; title: string; type: string}) => ({
+      .map((item: {id: string; title: string; type: string, targetAudience: string}) => ({
         id: item.id,
-        name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+        // name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+        name: `${item.title} - ${item.targetAudience || 'All'}`,
         value: item.title,
       }));
 

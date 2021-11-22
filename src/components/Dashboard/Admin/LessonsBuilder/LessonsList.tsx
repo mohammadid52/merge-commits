@@ -534,17 +534,22 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       {LessonsListDict[userLanguage]['TYPE']}
                     </span>
                   </div>
+                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">
+                      {LessonsListDict[userLanguage]['TARGET_AUDIENCE']}
+                    </span>
+                  </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Created Date</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Last Edit Date</span>
                   </div>
-                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {LessonsListDict[userLanguage]['LANGUAGE']}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {LessonsListDict[userLanguage]['ACTION']}
                   </div>
@@ -573,6 +578,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                           getLanguageString(item)
                         )
                       }
+                      targetAudience={lessonsObject.targetAudience}
                       lessonObject={lessonsObject}
                       checkIfRemovable={checkIfRemovable}
                       handleToggleDelete={handleToggleDelete}
