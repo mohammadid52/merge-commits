@@ -11,7 +11,7 @@ import useKeyPress from 'customHooks/useKeyPress';
 import {AiOutlineInfoCircle} from 'react-icons/ai';
 import {IoIosHelpCircleOutline} from 'react-icons/io';
 
-const mainImg =
+const defaultImage =
   'https://c4.wallpaperflare.com/wallpaper/510/821/261/nature-leaves-plants-green-hd-wallpaper-preview.jpg';
 
 const elem = document.documentElement;
@@ -74,6 +74,12 @@ interface StartButtonProps {
 
 interface CountProps {
   counter: number;
+}
+
+interface ExerciseProps {
+  bgImage?: string;
+  exerciseName1?: string;
+  exerciseName2?: string;
 }
 
 const StartButton = ({
@@ -165,30 +171,43 @@ const AnimatedSquare = ({
   let circleCounts = 4;
 
   return (
+    // <div id="box">
+    //   <div
+    //     className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-lg"
+    //     id="square">
+    // <div
+    //   style={{top: -16, left: -16}}
+    //   id="knob"
+    //   className="bg-white shadow-2xl h-8 w-8 rounded-full absolute "></div>
+    //     <div className="circle_container overflow-hidden rounded-full w-auto relative">
+    //       <div
+    //         className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
+    //         style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
+    //         <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
+    //       </div>
+    //       {times(circleCounts, (i) => (
+    //         <div className={`z-0 ${isActive ? `ripple-${i + 1}` : ''} `} key={i}></div>
+    //       ))}
+    //     </div>
+    //   </div>
+    // </div>
     <div id="box">
       <div
-        className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-lg"
+        className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-full"
         id="square">
         <div
-          style={{top: -16, left: -16}}
           id="knob"
-          className="bg-white shadow-2xl h-8 w-8 rounded-full absolute "></div>
-        <div className="circle_container overflow-hidden rounded-full w-auto relative">
-          <div
-            className="h-40 w-40 flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
-            style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
-            <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
-          </div>
-          {times(circleCounts, (i) => (
-            <div className={`z-0 ${isActive ? `ripple-${i}` : ''} `} key={i}></div>
-          ))}
-        </div>
+          className="bg-white  shadow-2xl h-8 w-8 rounded-full absolute "></div>
       </div>
     </div>
   );
 };
 
-const BreathingExercise = () => {
+const BreathingExercise = ({
+  bgImage = defaultImage,
+  exerciseName1 = 'Square',
+  exerciseName2 = 'Breathing',
+}: ExerciseProps) => {
   const [isImmersiveMode, setIsImmersiveMode] = useState(false);
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -208,6 +227,42 @@ const BreathingExercise = () => {
   const commonFields = {duration: 4, ease: Linear.easeNone};
   var tl = gsap.timeline({});
 
+  const onComplete = (stopAt: number = 4) => {
+    setCounter((prevCounter) => {
+      let counter = prevCounter + 1;
+
+      if (counter % stopAt === 0) {
+        onPause();
+      } else {
+        onAnimationStart();
+      }
+      return counter;
+    });
+  };
+
+  tl.set('#knob', {left: width / 2 - 16, top: -16});
+  const onCircleAnimation = () => {
+    // tl.to('#square', {
+    //   rotation: 360,
+    //   duration: 4,
+    //   repeat: -1,
+    //   ease: Linear.easeNone,
+    // })
+    //   .to('#square', {
+    //     rotation: 360,
+    //     repeat: -1,
+    //     duration: 7,
+    //     ease: Linear.easeNone,
+    //   })
+    //   .to('#square', {
+    //     rotation: 360,
+    //     // repeat: -1,
+    //     duration: 8,
+    //     ease: Linear.easeNone,
+    //     onComplete: () => onComplete(2),
+    //   });
+  };
+
   const onAnimationStart = () => {
     tl.to(
       '#knob',
@@ -216,7 +271,7 @@ const BreathingExercise = () => {
         x: width,
 
         onStart: () => {
-          setCurrentHelpingInfo('exhale');
+          setCurrentHelpingInfo('inhale');
         },
         ...commonFields,
       }
@@ -254,18 +309,7 @@ const BreathingExercise = () => {
           onStart: () => {
             setCurrentHelpingInfo('hold');
           },
-          onComplete: () => {
-            setCounter((prevCounter) => {
-              let counter = prevCounter + 1;
-
-              if (counter % 4 === 0) {
-                onPause();
-              } else {
-                onAnimationStart();
-              }
-              return counter;
-            });
-          },
+          onComplete: onComplete,
           y: 0,
           ...commonFields,
         }
@@ -276,7 +320,7 @@ const BreathingExercise = () => {
     setIsActive(true);
     setIsPlayingMusic(true);
 
-    onAnimationStart();
+    onCircleAnimation();
   };
 
   useEffect(() => {
@@ -356,7 +400,9 @@ const BreathingExercise = () => {
         <div
           id="meditation-card"
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6)), url(${mainImg})`,
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6)), url(${
+              bgImage || defaultImage
+            })`,
 
             backgroundSize: 'cover',
             height: isImmersiveMode ? '100vh' : `90vh`,
@@ -370,8 +416,8 @@ const BreathingExercise = () => {
             <h1
               id="meditation-card__title"
               className="z-20 text-white text-6xl font-bold tracking-wider drop-shadow-xl filter">
-              Square
-              <br /> Breathing
+              {exerciseName1}
+              <br /> {exerciseName2}
             </h1>
           </div>
 
