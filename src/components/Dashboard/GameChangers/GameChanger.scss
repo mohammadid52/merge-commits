@@ -59,6 +59,26 @@
     opacity: 1;
   }
   100% {
+    transform: translate3d(-50%, 50%, 0) scale(200);
+    opacity: 0;
+  }
+}
+@keyframes ripple-5 {
+  0% {
+    transform: translate3d(-50%, 50%, 0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-50%, 50%, 0) scale(200);
+    opacity: 0;
+  }
+}
+@keyframes ripple-6 {
+  0% {
+    transform: translate3d(-50%, 50%, 0) scale(0);
+    opacity: 1;
+  }
+  100% {
     transform: translate3d(-50%, 50%, 0) scale(180);
     opacity: 0;
   }
@@ -91,7 +111,7 @@
   border-radius: 50%;
 
   transform: translate3d(-50%, 50%, 0);
-  animation-duration: 10s;
+  animation-duration: 6s;
   animation-timing-function: ease-out;
   animation-iteration-count: infinite;
   will-change: transform, opacity;
@@ -107,17 +127,25 @@
 
 .ripple-2 {
   animation-name: ripple-2;
-  animation-delay: 4s;
+  animation-delay: 2s;
 }
 
 .ripple-3 {
   animation-name: ripple-3;
-  animation-delay: 5s;
+  animation-delay: 3s;
 }
 
 .ripple-4 {
   animation-name: ripple-4;
-  animation-delay: 10s;
+  animation-delay: 4s;
+}
+.ripple-5 {
+  animation-name: ripple-5;
+  animation-delay: 5s;
+}
+.ripple-6 {
+  animation-name: ripple-6;
+  animation-delay: 6s;
 }
 
 // #knob {

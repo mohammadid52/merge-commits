@@ -20,7 +20,12 @@ const ExerciseList = () => {
 
   if (activityId === 1 || activityId === 2) {
     const props = activityId === 1 ? {...sqaureBreathingProps} : {...FSEBreathingProps};
-    return <BreathingExercise {...props} />;
+    return (
+      <BreathingExercise
+        exerciseType={activityId === 1 ? 'square' : activityId === 2 ? '478' : 'none'}
+        {...props}
+      />
+    );
   } else return null;
 };
 

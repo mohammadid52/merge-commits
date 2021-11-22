@@ -79,6 +79,7 @@ interface CountProps {
 interface ExerciseProps {
   bgImage?: string;
   exerciseName1?: string;
+  exerciseType: string;
   exerciseName2?: string;
 }
 
@@ -164,49 +165,67 @@ const Count = ({counter}: CountProps) => {
 const AnimatedSquare = ({
   isActive,
   currentHelpingInfo = 'inhale',
+  exerciseType = 'square',
 }: {
   isActive: boolean;
   currentHelpingInfo: string;
+  exerciseType: string;
 }) => {
-  let circleCounts = 4;
+  let circleCounts = 6;
 
-  return (
-    // <div id="box">
-    //   <div
-    //     className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-lg"
-    //     id="square">
-    // <div
-    //   style={{top: -16, left: -16}}
-    //   id="knob"
-    //   className="bg-white shadow-2xl h-8 w-8 rounded-full absolute "></div>
-    //     <div className="circle_container overflow-hidden rounded-full w-auto relative">
-    //       <div
-    //         className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
-    //         style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
-    //         <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
-    //       </div>
-    //       {times(circleCounts, (i) => (
-    //         <div className={`z-0 ${isActive ? `ripple-${i + 1}` : ''} `} key={i}></div>
-    //       ))}
-    //     </div>
-    //   </div>
-    // </div>
-    <div id="box">
-      <div
-        className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-full"
-        id="square">
+  if (exerciseType === 'breathing') {
+    return (
+      <div id="box">
         <div
-          id="knob"
-          className="bg-white  shadow-2xl h-8 w-8 rounded-full absolute "></div>
+          className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-lg"
+          id="square">
+          <div
+            style={{top: -16, left: -16}}
+            id="knob"
+            className="bg-white shadow-2xl h-8 w-8 rounded-full absolute "></div>
+          <div className="circle_container overflow-hidden rounded-full w-auto relative">
+            <div
+              className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
+              style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
+              <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
+            </div>
+            {times(circleCounts, (i) => (
+              <div className={`z-0 ${isActive ? `ripple-${i + 1}` : ''} `} key={i}></div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else
+    return (
+      <div id="box">
+        <div
+          className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-full"
+          id="square">
+          <div
+            id="knob"
+            className="bg-white  shadow-2xl h-8 w-8 rounded-full absolute "></div>
+        </div>
+
+        <div className="absolute overflow-hidden inset-0 rounded-full w-full h-full">
+          <div
+            className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
+            style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
+            <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
+          </div>
+          {times(circleCounts, (i) => (
+            <div className={`z-0 ${isActive ? `ripple-${i + 1}` : ''} `} key={i}></div>
+          ))}
+        </div>
+      </div>
+    );
 };
 
 const BreathingExercise = ({
   bgImage = defaultImage,
   exerciseName1 = 'Square',
   exerciseName2 = 'Breathing',
+  exerciseType = 'square',
 }: ExerciseProps) => {
   const [isImmersiveMode, setIsImmersiveMode] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -234,36 +253,44 @@ const BreathingExercise = ({
       if (counter % stopAt === 0) {
         onPause();
       } else {
-        onAnimationStart();
+        if (exerciseType === 'square') {
+          onSquareAnimationStart();
+        } else if (exerciseType === '478') {
+          onCircleAnimationStart();
+        }
       }
       return counter;
     });
   };
 
-  tl.set('#knob', {left: width / 2 - 16, top: -16});
-  const onCircleAnimation = () => {
-    // tl.to('#square', {
-    //   rotation: 360,
-    //   duration: 4,
-    //   repeat: -1,
-    //   ease: Linear.easeNone,
-    // })
-    //   .to('#square', {
-    //     rotation: 360,
-    //     repeat: -1,
-    //     duration: 7,
-    //     ease: Linear.easeNone,
-    //   })
-    //   .to('#square', {
-    //     rotation: 360,
-    //     // repeat: -1,
-    //     duration: 8,
-    //     ease: Linear.easeNone,
-    //     onComplete: () => onComplete(2),
-    //   });
+  useEffect(() => {
+    if (exerciseType === '478') {
+      tl.set('#knob', {left: width / 2 - 16, top: -16});
+    }
+  }, [exerciseType]);
+
+  const onCircleAnimationStart = () => {
+    tl.to('#square', {
+      rotation: 360,
+      duration: 4,
+      repeat: -1,
+      ease: Linear.easeNone,
+    })
+      .to('#square', {
+        rotation: 360,
+        repeat: -1,
+        duration: 7,
+        ease: Linear.easeNone,
+      })
+      .to('#square', {
+        rotation: 360,
+        duration: 8,
+        ease: Linear.easeNone,
+        onComplete: () => onComplete(2),
+      });
   };
 
-  const onAnimationStart = () => {
+  const onSquareAnimationStart = () => {
     tl.to(
       '#knob',
 
@@ -319,8 +346,11 @@ const BreathingExercise = ({
   const onStart = () => {
     setIsActive(true);
     setIsPlayingMusic(true);
-
-    onCircleAnimation();
+    if (exerciseType === 'square') {
+      onSquareAnimationStart();
+    } else if (exerciseType === '478') {
+      onCircleAnimationStart();
+    }
   };
 
   useEffect(() => {
@@ -423,7 +453,11 @@ const BreathingExercise = ({
 
           {/* Action area */}
           <div className="absolute bottom-5 inset-x-0 flex items-center flex-col justify-center w-auto z-20">
-            <AnimatedSquare currentHelpingInfo={currentHelpingInfo} isActive={isActive} />
+            <AnimatedSquare
+              exerciseType={exerciseType}
+              currentHelpingInfo={currentHelpingInfo}
+              isActive={isActive}
+            />
 
             <Count counter={counter} />
             <StartButton
