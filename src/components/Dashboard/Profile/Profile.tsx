@@ -9,7 +9,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
-import {getImageFromS3, _uploadImageToS3} from '../../../utilities/services';
+import {getImageFromS3} from '../../../utilities/services';
 import {getUniqItems} from '../../../utilities/strings';
 import BreadCrums from '../../Atoms/BreadCrums';
 import Buttons from '../../Atoms/Buttons';
@@ -106,6 +106,8 @@ const Profile = (props: ProfilePageProps) => {
   // TODO:
   // Set type for file instead of any
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
+
     return new Promise((resolve, reject) => {
       Storage.put(`profile_image_${id}`, file, {
         contentType: type,
@@ -153,7 +155,7 @@ const Profile = (props: ProfilePageProps) => {
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await _uploadImageToS3(image ? image : fileObj, person.id, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, person.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`);
     setImageUrl(imageUrl);
     setPerson({...person, image: `profile_image_${person.id}`});
