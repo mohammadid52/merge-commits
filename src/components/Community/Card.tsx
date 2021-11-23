@@ -287,9 +287,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        <div className=" text-sm mb-2 mx-3 px-2">
-          {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-        </div>
+        <div
+          className="text-sm mb-2 mx-3 px-2"
+          dangerouslySetInnerHTML={{
+            __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+          }}></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
@@ -309,9 +311,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
               <div className="text-gray-900 font-bold text-xl mb-2">
                 {cardDetails.cardName}
               </div>
-              <div className=" text-base">
-                {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-              </div>
+              <div
+                className=" text-base"
+                dangerouslySetInnerHTML={{
+                  __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+                }}></div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
@@ -389,9 +393,8 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     {cardDetails.cardName}
                   </h1>
                 )}
-                <div className="text-gray-600 text-sm">
-                  {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-                </div>
+                {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
+                <div className="text-gray-600 text-sm"></div>
               </div>
             </div>
           </div>
