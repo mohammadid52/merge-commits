@@ -74,7 +74,7 @@ const GameChangers = () => {
 
       <div className="cards_container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
-          <Card card={card} />
+          <Card key={card.id} card={card} />
         ))}
       </div>
     </div>

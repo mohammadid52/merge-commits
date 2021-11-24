@@ -16,7 +16,7 @@ import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 // import {GoogleMap} from '@react-google-maps/api';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
-import parse from 'html-react-parser';
+
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -297,9 +297,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        <div className=" text-sm mb-2 mx-3 px-2">
-          {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-        </div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+          }}
+          className=" text-sm mb-2 mx-3 px-2"></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
@@ -319,9 +321,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
               <div className="text-gray-900 font-bold text-xl mb-2">
                 {cardDetails.cardName}
               </div>
-              <div className=" text-base">
-                {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-              </div>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+                }}
+                className=" text-base"></div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
@@ -405,9 +409,13 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     {cardDetails.cardName}
                   </h1>
                 )}
-                <div className="text-gray-600 text-sm">
-                  {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: cardDetails.summaryHtml
+                      ? cardDetails?.summaryHtml
+                      : '<p></p>',
+                  }}
+                  className="text-gray-600 text-sm"></div>
               </div>
             </div>
           </div>

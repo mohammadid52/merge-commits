@@ -50,13 +50,6 @@ function closeFullscreen() {
   }
 }
 
-const textList = [
-  'Begin by slowly exhaling all of your air out',
-  'Then, gently inhale through your nose to a slow count of 4',
-  'Hold at the top of the breath for a count of 4',
-  'Then gently exhale through your mouth for a count of 4',
-  'At the bottom of the breath, pause and hold for the count of 4',
-];
 interface StartButtonProps {
   liked: boolean;
   isImmersiveMode: boolean;
@@ -81,6 +74,8 @@ interface ExerciseProps {
   exerciseName1?: string;
   exerciseType: string;
   exerciseName2?: string;
+  infoText?: string;
+  howToList?: string[];
 }
 
 const StartButton = ({
@@ -166,14 +161,18 @@ const AnimatedSquare = ({
   isActive,
   currentHelpingInfo = 'inhale',
   exerciseType = 'square',
+
+  onComplete,
 }: {
   isActive: boolean;
   currentHelpingInfo: string;
   exerciseType: string;
+
+  onComplete?: () => void;
 }) => {
   let circleCounts = 6;
 
-  if (exerciseType === 'breathing') {
+  if (exerciseType === 'square') {
     return (
       <div id="box">
         <div
@@ -185,7 +184,7 @@ const AnimatedSquare = ({
             className="bg-white shadow-2xl h-8 w-8 rounded-full absolute "></div>
           <div className="circle_container overflow-hidden rounded-full w-auto relative">
             <div
-              className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
+              className="h-40 w-40 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
               style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
               <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
             </div>
@@ -196,36 +195,97 @@ const AnimatedSquare = ({
         </div>
       </div>
     );
-  } else
+  } else {
+    let t = [
+      'Breathe In',
+      '1',
+      '2',
+      '3',
+      '4',
+      'Hold',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      'Breathe Out',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+    ];
+
+    const [currentIteration, setCurrentIteration] = useState(0);
+
+    useEffect(() => {
+      if (isActive) {
+        const interval = setInterval(
+          () => {
+            setCurrentIteration(currentIteration + 1);
+          },
+          !isNaN(Number(t[currentIteration])) ? 1200 : 5000
+        );
+
+        if (currentIteration === t.length - 1) {
+          setCurrentIteration(0);
+          clearInterval(interval);
+          onComplete();
+        }
+
+        return () => clearInterval(interval);
+      }
+    }, [isActive, currentIteration]);
+
     return (
       <div id="box">
-        <div
-          className="w-72 h-72 relative flex items-center  justify-center bg-transparent border-6 border-white rounded-full"
-          id="square">
-          <div
-            id="knob"
-            className="bg-white  shadow-2xl h-8 w-8 rounded-full absolute "></div>
-        </div>
-
         <div className="absolute overflow-hidden inset-0 rounded-full w-full h-full">
           <div
-            className="h-32 w-32 shadow-xl flex items-center justify-center text-center z-10  rounded-full bg-white bg-opacity-80 absolute"
-            style={{top: '50%', left: '50%', transform: 'translate(-50%,-50%)'}}>
-            <h1 className="text-2xl text-gray-900 font-bold">{currentHelpingInfo}</h1>
+            className="h-40 w-40 bg-opacity-80 flex items-center justify-center text-center z-10  rounded-full bg-white shadow-xl absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%,-50%)',
+            }}>
+            <ul className="fse-text-helper-list">
+              {map(t, (item, i) => (
+                <li
+                  className={`${
+                    i === currentIteration ? 'showing' : 'hide'
+                  } text-2xl text-gray-900 font-bold`}>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          {times(circleCounts, (i) => (
-            <div className={`z-0 ${isActive ? `ripple-${i + 1}` : ''} `} key={i}></div>
-          ))}
+          <div
+            style={{
+              transitionDuration: '3s',
+              transform:
+                isActive && !isNaN(Number(t[currentIteration]))
+                  ? `scale(300)`
+                  : 'scale(0)',
+              zIndex: 4,
+            }}
+            className={`transition-all ease-in-out ripple`}></div>
         </div>
       </div>
     );
+  }
 };
 
 const BreathingExercise = ({
   bgImage = defaultImage,
   exerciseName1 = 'Square',
   exerciseName2 = 'Breathing',
+  howToList = [''],
   exerciseType = 'square',
+  infoText = '',
 }: ExerciseProps) => {
   const [isImmersiveMode, setIsImmersiveMode] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -243,114 +303,46 @@ const BreathingExercise = ({
   const width = squareEl.width();
   const height = squareEl.height();
 
-  const commonFields = {duration: 4, ease: Linear.easeNone};
-  var tl = gsap.timeline({});
-
-  const onComplete = (stopAt: number = 4) => {
-    setCounter((prevCounter) => {
-      let counter = prevCounter + 1;
-
-      if (counter % stopAt === 0) {
-        onPause();
-      } else {
-        if (exerciseType === 'square') {
-          onSquareAnimationStart();
-        } else if (exerciseType === '478') {
-          onCircleAnimationStart();
-        }
-      }
-      return counter;
-    });
-  };
+  const resetCircularPosition = () => gsap.set('#knob', {left: width / 2 - 16, top: -16});
 
   useEffect(() => {
     if (exerciseType === '478') {
-      tl.set('#knob', {left: width / 2 - 16, top: -16});
+      resetCircularPosition();
     }
   }, [exerciseType]);
 
-  const onCircleAnimationStart = () => {
-    tl.to('#square', {
-      rotation: 360,
-      duration: 4,
-      repeat: -1,
-      ease: Linear.easeNone,
-    })
-      .to('#square', {
-        rotation: 360,
-        repeat: -1,
-        duration: 7,
-        ease: Linear.easeNone,
-      })
-      .to('#square', {
-        rotation: 360,
-        duration: 8,
-        ease: Linear.easeNone,
-        onComplete: () => onComplete(2),
-      });
-  };
-
   const onSquareAnimationStart = () => {
-    tl.to(
-      '#knob',
-
-      {
-        x: width,
-
+    const tl = gsap.timeline({});
+    const commonFields = {duration: 4, ease: Linear.easeNone};
+    tl.to('#knob', {
+      x: width,
+      onStart: () => {
+        setCurrentHelpingInfo('inhale');
+      },
+      ...commonFields,
+    })
+      .to('#knob', {
+        y: height,
         onStart: () => {
-          setCurrentHelpingInfo('inhale');
+          setCurrentHelpingInfo('hold');
         },
         ...commonFields,
-      }
-    )
-
-      .to(
-        '#knob',
-
-        {
-          y: height,
-          onStart: () => {
-            setCurrentHelpingInfo('hold');
-          },
-
-          ...commonFields,
-        }
-      )
-
-      .to(
-        '#knob',
-
-        {
-          x: 0,
-          onStart: () => {
-            setCurrentHelpingInfo('exhale');
-          },
-          ...commonFields,
-        }
-      )
-
-      .to(
-        '#knob',
-
-        {
-          onStart: () => {
-            setCurrentHelpingInfo('hold');
-          },
-          onComplete: onComplete,
-          y: 0,
-          ...commonFields,
-        }
-      );
-  };
-
-  const onStart = () => {
-    setIsActive(true);
-    setIsPlayingMusic(true);
-    if (exerciseType === 'square') {
-      onSquareAnimationStart();
-    } else if (exerciseType === '478') {
-      onCircleAnimationStart();
-    }
+      })
+      .to('#knob', {
+        x: 0,
+        onStart: () => {
+          setCurrentHelpingInfo('exhale');
+        },
+        ...commonFields,
+      })
+      .to('#knob', {
+        onStart: () => {
+          setCurrentHelpingInfo('hold');
+        },
+        onComplete: () => {},
+        y: 0,
+        ...commonFields,
+      });
   };
 
   useEffect(() => {
@@ -366,12 +358,6 @@ const BreathingExercise = ({
       audioControl?.pause();
     };
   }, [isPlayingMusic]);
-
-  const onPause = () => {
-    setIsPlayingMusic(false);
-
-    setIsActive(false);
-  };
 
   const audioControl = document.getElementById('background-music');
 
@@ -408,6 +394,26 @@ const BreathingExercise = ({
       animate.kill();
     };
   }, []);
+
+  // on/off functions below
+
+  const onStart = () => {
+    setIsActive(true);
+    setIsPlayingMusic(true);
+    if (exerciseType === 'square') {
+      onSquareAnimationStart();
+    }
+  };
+
+  const onPause = () => {
+    setIsActive(false);
+    setIsPlayingMusic(false);
+  };
+
+  const onComplete = () => {
+    setCounter(counter + 1);
+    onPause();
+  };
 
   return (
     <div className="h-full flex items-center relative overflow-hidden justify-center">
@@ -454,9 +460,10 @@ const BreathingExercise = ({
           {/* Action area */}
           <div className="absolute bottom-5 inset-x-0 flex items-center flex-col justify-center w-auto z-20">
             <AnimatedSquare
+              isActive={isActive}
               exerciseType={exerciseType}
               currentHelpingInfo={currentHelpingInfo}
-              isActive={isActive}
+              onComplete={onComplete}
             />
 
             <Count counter={counter} />
@@ -490,8 +497,9 @@ const BreathingExercise = ({
               : ` max-w-96 ${showHowTo ? 'translate-x-0' : 'translate-x-200'} bg-white`
           } rounded-l-xl p-4 px-6 transform   transition-all shadow-lg`}>
           <ul className="w-auto mx-1 transition-all space-y-4 list-disc px-4 py-6 ">
-            {map(textList, (text) => (
+            {map(howToList, (text) => (
               <li
+                key={text}
                 className={classNames(
                   isImmersiveMode
                     ? 'text-white font-semibold  italic text-xl'
@@ -514,12 +522,7 @@ const BreathingExercise = ({
                   showInfo ? 'translate-x-0' : 'translate-x-200'
                 }  text-gray-800 bg-white  max-w-96`
           } rounded-l-xl  p-4 px-6 transition-all transform  shadow-lg`}>
-          Square breathing is a type of breathwork that can shift your energy, connect you
-          more deeply with your body, calm your nervous system, and reduce the stress in
-          your body. It is also referred to as box breathing, 4×4 breathing, and 4-part
-          breath. Here are instructions for square breathing and some ideas for when to
-          practice the technique. We’ll also share tips for making the breathwork as
-          effective as possible.
+          {infoText}
         </div>
       </div>
     </div>
