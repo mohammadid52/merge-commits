@@ -13,14 +13,12 @@ import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import * as queries from '@graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
-// import {GoogleMap} from '@react-google-maps/api';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
@@ -255,14 +253,6 @@ const Menu = ({
   );
 };
 
-const MapWithAMarker: any = withScriptjs(
-  withGoogleMap((props) => (
-    <GoogleMap defaultZoom={8} defaultCenter={{lat: -34.397, lng: 150.644}}>
-      <Marker position={{lat: -34.397, lng: 150.644}} />
-    </GoogleMap>
-  ))
-);
-
 const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   const person = cardDetails?.person;
 
@@ -357,12 +347,6 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
-        {/* <MapWithAMarker
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2f8dlbfHAj3foBt7_YEn8_YnatU2Islg&v=3.exp&libraries=geometry,drawing,places"
-          loadingElement={<div style={{height: `100%`}} />}
-          containerElement={<div style={{height: `400px`}} />}
-          mapElement={<div style={{height: `100%`}} />}
-        /> */}
       </div>
     );
   } else
