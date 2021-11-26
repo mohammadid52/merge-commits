@@ -19,6 +19,7 @@ interface AddSyllabusProps {
   postAddSyllabus: (syllabusId: string) => void;
   onCancel: () => void;
   instId: string;
+  isInModal?: boolean;
 }
 interface InitialData {
   name: string;
@@ -34,7 +35,8 @@ const UnitFormComponent = ({
   onCancel,
   postAddSyllabus,
   syllabusDetails,
-  instId
+  instId,
+  isInModal = false,
 }: AddSyllabusProps) => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -225,7 +227,7 @@ const UnitFormComponent = ({
   } = syllabusData;
 
   return (
-    <div className="bg-white shadow-5 overflow-hidden mb-4">
+    <div className={`bg-white ${isInModal ? '' : 'shadow-5'} overflow-hidden mb-4`}>
       {/* <div className={`border-b-0 p-4 pl-2 ${theme.borderColor[themeColor]} mt-6`}>
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddSyllabusDict[userLanguage]['heading']}

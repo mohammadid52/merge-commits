@@ -552,6 +552,7 @@ const LessonCourse = ({
                 height: 'calc(100vh - 150px)',
               }}>
               <UnitFormComponent
+                isInModal={true}
                 instId={institution?.id}
                 postAddSyllabus={postAddSyllabus}
                 onCancel={() => setAddModalShow(false)}

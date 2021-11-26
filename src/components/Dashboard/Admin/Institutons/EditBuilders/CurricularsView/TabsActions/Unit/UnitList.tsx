@@ -214,7 +214,7 @@ export const UnitList = ({instId}: any) => {
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        <div className="flex justify-between items-center w-full m-auto">
+        <div className="flex justify-between items-center w-full mx-auto">
           <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
           <div className={`flex justify-end`}>
             <div
