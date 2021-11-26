@@ -1,6 +1,8 @@
 import React from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
+import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+
 import LessonsBuilderHome from './LessonsBuilder/LessonsBuilderHome';
 import User from './UserManagement/User';
 import UserLookup from './UserManagement/UserLookup';
@@ -16,11 +18,15 @@ import StaffBuilder from './Institutons/Listing/StaffBuilder';
 import Students from './Institutons/Students';
 import Registration from './UserManagement/Registration';
 import Csv from '../Csv/Csv';
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+import AddProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import ProfileCheckpointlookup from './Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+import EditProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 
 const NavBarRouter = (instProps: any) => {
   const {institute = {}, updateCurricularList, curricular} = instProps;
   const match = useRouteMatch();
+
+  console.log(match.url,'ksfjskdfjskf');
 
   return (
     <Switch>
@@ -130,9 +136,22 @@ const NavBarRouter = (instProps: any) => {
         render={() => <CourseBuilder instId={institute?.id} />} // Create new course
       />
       <Route
+      exact
         path={`${match.url}/course-builder/:courseId`}
         render={() => <CourseBuilder instId={institute?.id} />} // Edit course
       />
+      <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/addNew`}
+          render={() => <AddProfileCheckpoint />} // Edit course
+        />
+        <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
+          render={() => <ProfileCheckpointlookup instId={institute?.id} />} // Edit course
+        />
+        <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/edit/:id`}
+          render={() => <EditProfileCheckpoint />} // Edit course
+        />
       <UniversalLessonBuilderProvider>
         <Route
           path={`${match.url}/lessons`}
