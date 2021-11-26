@@ -229,7 +229,7 @@ const AnimatedSquare = ({
           () => {
             setCurrentIteration(currentIteration + 1);
           },
-          !isNaN(Number(t[currentIteration])) ? 1200 : 5000
+          !isNaN(Number(t[currentIteration])) ? 1200 : 3000
         );
 
         if (currentIteration === t.length - 1) {
