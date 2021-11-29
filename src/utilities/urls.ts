@@ -22,9 +22,9 @@ export const getCorrectUrl = (clientKey: string) => {
     case 'demo':
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-edgesprod',
+          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-efprod',
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-edgesprod',
+          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-efprod',
         tableCleanupUrl: '',
       };
       break;
@@ -68,7 +68,7 @@ export const getBackendKey = (input: any) => {
       return 'curate';
     } else if (/(-dev)/.test(s3BucketName)) {
       return 'iconoclast';
-    } else if (/(-edgesprod)/.test(s3BucketName)) {
+    } else if (/(-efprod)/.test(s3BucketName)) {
       return 'demo';
     } else if (/(-uatenv)/.test(s3BucketName)) {
       return 'localhost';
