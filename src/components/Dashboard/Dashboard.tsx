@@ -1,7 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import ExerciseList from '@components/Dashboard/GameChangers/ExerciseList';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -27,7 +26,7 @@ import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 
-const GameChangers = lazy(() => import('./GameChangers/index'));
+const GameChangers = lazy(() => import('./GameChangers/GameChangers'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -802,7 +801,12 @@ const Dashboard = (props: DashboardProps) => {
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 
-        <div className="h-full overflow-y-auto">
+        <div
+          className={`h-full ${
+            window.location.pathname.includes('game-changers')
+              ? 'overflow-hidden'
+              : 'overflow-y-auto'
+          }`}>
           {/*<FloatingSideMenu />*/}
           <Noticebar notifications={notifications} />
 
@@ -840,7 +844,6 @@ const Dashboard = (props: DashboardProps) => {
                     );
                 }}
               />
-
               <Route
                 exact
                 path={`${match.url}/home`}
@@ -850,7 +853,6 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 // exact
                 path={`${match.url}/community/:action`}
@@ -860,7 +862,6 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 // exact
                 path={`${match.url}/game-changers`}
@@ -870,16 +871,7 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-              <Route
-                // exact
-                path={`${match.url}/activity/:activityId`}
-                render={() => (
-                  <ErrorBoundary fallback={<h1>Breathing Exercise is not working</h1>}>
-                    <ExerciseList />
-                  </ErrorBoundary>
-                )}
-              />
-
+              ]
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||
                 userData.role === 'TR' ||
@@ -887,7 +879,6 @@ const Dashboard = (props: DashboardProps) => {
                 userData.role === 'BLD') && (
                 <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
               )}
-
               <Route
                 exact
                 path={`${match.url}/classroom/:roomId`}
@@ -913,7 +904,6 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 path={`${match.url}/anthology`}
                 render={() => (
@@ -925,19 +915,15 @@ const Dashboard = (props: DashboardProps) => {
                   />
                 )}
               />
-
               <Route
                 path={`${match.url}/noticeboard`}
                 render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
               />
-
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
-
               <Route
                 path={`${match.url}/profile`}
                 render={() => <Profile updateAuthState={updateAuthState} />}
               />
-
               <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (
@@ -960,12 +946,10 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 path={`${match.url}/manage-institutions`}
                 render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
               />
-
               <Route
                 path={`${match.url}/question-bank`}
                 render={() => <QuestionBank />}
