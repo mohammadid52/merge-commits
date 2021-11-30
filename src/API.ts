@@ -3994,16 +3994,16 @@ export type DeleteGameChangerInput = {
 export type CreateGameChangerLogInput = {
   id?: string | null,
   gameChangerID: string,
-  personAuthID: string,
   personEmail: string,
+  personAuthID: string,
   startTime?: string | null,
   endTime?: string | null,
 };
 
 export type ModelGameChangerLogConditionInput = {
   gameChangerID?: ModelIDInput | null,
-  personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
+  personAuthID?: ModelStringInput | null,
   startTime?: ModelStringInput | null,
   endTime?: ModelStringInput | null,
   and?: Array< ModelGameChangerLogConditionInput | null > | null,
@@ -4016,8 +4016,8 @@ export type GameChangerLog = {
   id?: string,
   gameChangerID?: string,
   gameChanger?: GameChanger,
-  personAuthID?: string,
   personEmail?: string,
+  personAuthID?: string,
   person?: Person,
   startTime?: string | null,
   endTime?: string | null,
@@ -4028,8 +4028,8 @@ export type GameChangerLog = {
 export type UpdateGameChangerLogInput = {
   id: string,
   gameChangerID?: string | null,
-  personAuthID?: string | null,
   personEmail?: string | null,
+  personAuthID?: string | null,
   startTime?: string | null,
   endTime?: string | null,
 };
@@ -5001,8 +5001,8 @@ export type ModelGameChangerConnection = {
 export type ModelGameChangerLogFilterInput = {
   id?: ModelIDInput | null,
   gameChangerID?: ModelIDInput | null,
-  personAuthID?: ModelStringInput | null,
   personEmail?: ModelStringInput | null,
+  personAuthID?: ModelStringInput | null,
   startTime?: ModelStringInput | null,
   endTime?: ModelStringInput | null,
   and?: Array< ModelGameChangerLogFilterInput | null > | null,
@@ -20021,8 +20021,8 @@ export type CreateGameChangerLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -20087,8 +20087,8 @@ export type UpdateGameChangerLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -20153,8 +20153,8 @@ export type DeleteGameChangerLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -27483,8 +27483,8 @@ export type GetGameChangerLogQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -27554,8 +27554,8 @@ export type ListGameChangerLogsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
-      personAuthID: string,
       personEmail: string,
+      personAuthID: string,
       person?:  {
         __typename: "Person",
         id: string,
@@ -42446,8 +42446,8 @@ export type OnCreateGameChangerLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -42507,8 +42507,8 @@ export type OnUpdateGameChangerLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,
@@ -42568,8 +42568,8 @@ export type OnDeleteGameChangerLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    personAuthID: string,
     personEmail: string,
+    personAuthID: string,
     person?:  {
       __typename: "Person",
       id: string,

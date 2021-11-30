@@ -13305,8 +13305,8 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      personAuthID
       personEmail
+      personAuthID
       person {
         id
         authId
@@ -13363,8 +13363,8 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      personAuthID
       personEmail
+      personAuthID
       person {
         id
         authId
@@ -13421,8 +13421,8 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      personAuthID
       personEmail
+      personAuthID
       person {
         id
         authId
