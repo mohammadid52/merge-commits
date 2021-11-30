@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 
 const AnimatedFlower = () => {
   const Circle = ({id}: {id: string}) => {
-    const wrapper = $('#main-outer-wrapper');
-
     const [config, setConfig] = useState({h: 0, w: 0});
 
     useEffect(() => {
+      const wrapper = $('#main-outer-wrapper');
       const height = wrapper.height();
       const width = wrapper.width();
       setConfig({h: height, w: width});
