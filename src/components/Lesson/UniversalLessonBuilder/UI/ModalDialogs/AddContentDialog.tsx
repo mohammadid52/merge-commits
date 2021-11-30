@@ -15,8 +15,8 @@ import {
   AiOutlineVideoCameraAdd,
   AiOutlineYoutube,
 } from 'react-icons/ai';
-import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
-import {BsCheckBox, BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
+import {BiCheckboxChecked, BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
+import {BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
 import {CgNotes} from 'react-icons/cg';
 import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
@@ -30,8 +30,13 @@ interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
 
   onItemClick?: (type: string, bottom?: boolean) => void;
+  isSurvey: boolean;
 }
-const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) => {
+const AddContentDialog = ({
+  onItemClick,
+  isSurvey = false,
+  setCurrentHelpStep,
+}: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
@@ -74,7 +79,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-100',
     },
-    {
+    !isSurvey && {
       name: 'Word Tiles',
       subtitle: 'Add keywords',
       type: FORM_TYPES.KEYWORDS,
@@ -82,7 +87,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-blue-700',
       iconBackground: 'bg-blue-100',
     },
-    {
+    !isSurvey && {
       name: 'Links',
       subtitle: 'Add links',
       type: FORM_TYPES.LINKS,
@@ -99,7 +104,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-100',
     },
-    {
+    !isSurvey && {
       name: 'Table',
       subtitle: 'Add table',
       type: TABLE,
@@ -107,7 +112,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-100',
     },
-  ];
+  ].filter(Boolean);
   const mediaContent = [
     {
       name: 'Docs',
@@ -142,7 +147,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',
     },
-    {
+    !isSurvey && {
       name: 'Attachments',
       type: FORM_TYPES.ATTACHMENTS,
       subtitle: 'Students can upload',
@@ -166,9 +171,9 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-blue-700',
       iconBackground: 'bg-blue-100',
     },
-  ];
+  ].filter(Boolean);
   const userInterfaceContent = [
-    {
+    !isSurvey && {
       name: 'Notes ⭐',
       type: 'notes-form',
       subtitle: 'Interactive notes for students',
@@ -184,7 +189,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-100',
     },
-    {
+    !isSurvey && {
       name: 'Highlighter',
       type: FORM_TYPES.HIGHLIGHTER,
       subtitle: 'Add highlighter',
@@ -229,7 +234,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
       name: 'Checkbox',
       subtitle: 'Add multiple option field',
       type: FORM_TYPES.MULTIPLE,
-      icon: BsCheckBox,
+      icon: BiCheckboxChecked,
       iconForeground: 'text-green-700',
       iconBackground: 'bg-green-100',
     },
@@ -257,7 +262,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
     //   iconForeground: 'text-red-700',
     //   iconBackground: 'bg-red-100',
     // },
-  ];
+  ].filter(Boolean);
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab] = helpers;
@@ -308,7 +313,7 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
         }}
         className={`relative ${
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
-        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${
+        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-2 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -318,17 +323,17 @@ const AddContentDialog = ({onItemClick, setCurrentHelpStep}: AddContentDialog) =
                 className={classNames(
                   content.iconBackground,
                   content.iconForeground,
-                  'rounded-lg inline-flex p-3 w-auto'
+                  'rounded-lg inline-flex p-1.5 2xl:p-3 w-auto'
                 )}>
                 <content.icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <div className="flex-1 min-w-0 flex items-center justify-between">
                 <div className="focus:outline-none cursor-pointer">
                   <span className="absolute inset-0" aria-hidden="true" />
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-xs 2xl:text-sm font-medium text-gray-900 dark:text-white">
                     {content.name}
                   </p>
-                  <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">{content.subtitle}</p>
                 </div>
               </div>
 

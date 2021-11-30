@@ -30,7 +30,7 @@ const SyllabusSwitch = ({
 
   return (
     <>
-      {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
+      {syllabusLoading ? (
         <div className="relative shadow rounded-lg flex mb-8">
           <div className="animate-pulse space-y-8 flex flex-col">
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
@@ -39,7 +39,7 @@ const SyllabusSwitch = ({
             </div>
           </div>
         </div>
-      ) : state.roomData?.syllabus?.length > 0 ? (
+      ) : state.roomData?.syllabus?.length ? (
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
           {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
             // const progressPercentage = completedLessons;
@@ -96,16 +96,19 @@ const SyllabusSwitch = ({
         </div>
       )}
 
-      {activeRoom === '' ? (
-        <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
-          <p>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...</p>
-        </div>
-      ) : null}
-
-      {activeRoom !== '' && !syllabusLoading && state.roomData?.syllabus?.length === 0 ? (
-        <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
-          {classRoomDict[userLanguage].MESSAGES.NO_SYLLABUS}...
-        </div>
+      {!syllabusLoading ? (
+        activeRoom === '' ? (
+          <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
+            <p>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...</p>
+          </div>
+        ) : (
+          activeRoom !== '' &&
+          !state.roomData?.syllabus?.length && (
+            <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
+              <p>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...</p>
+            </div>
+          )
+        )
       ) : null}
     </>
   );

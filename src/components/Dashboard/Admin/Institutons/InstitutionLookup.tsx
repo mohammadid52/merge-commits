@@ -1,6 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import HeroBanner from '@components/Header/HeroBanner';
+import {useQuery} from '@customHooks/urlParam';
+import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoBusinessSharp} from 'react-icons/io5';
@@ -28,6 +30,10 @@ import InstitutionRowLoader from './InstitutionRowLoader';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
+
+  const params = useQuery(location.search);
+  const alert = params.get('alert');
+
   const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
   const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -41,6 +47,7 @@ const InstitutionLookup: React.FC = () => {
   const [firstPage, setFirstPage] = useState(false);
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [searchInput, setSearchInput] = useState({
     value: '',
@@ -218,6 +225,12 @@ const InstitutionLookup: React.FC = () => {
   };
 
   useEffect(() => {
+    if (alert) {
+      setShowAlert(true);
+    }
+  }, [alert]);
+
+  useEffect(() => {
     getInstitutionsData();
   }, []);
 
@@ -263,12 +276,11 @@ const InstitutionLookup: React.FC = () => {
     return (
       <div className={`w-full h-full`}>
         {/* Header section */}
-        <div className="relative">
-          <HeroBanner imgUrl={bannerImage} title={`Institutions`} />
-          <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-            <BreadcrumbsWithBanner items={breadCrumbsList} />
-          </div>
-        </div>
+        <BreadcrumbsWithBanner
+          items={breadCrumbsList}
+          bannerImage={bannerImage}
+          title={'Institutions'}
+        />
         {/* <BreadCrums items={breadCrumsList} /> */}
         <div className="px-2 py-8 md:p-8">
           {/* <div className="flex justify-between"> */}
@@ -311,32 +323,45 @@ const InstitutionLookup: React.FC = () => {
             )}
           </div>
           {/* </div> */}
-
+          {showAlert && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert">
+              <span className="block sm:inline">
+                {'Click on institution to see information'}
+              </span>
+              <span
+                className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
+                onClick={() => setShowAlert(false)}>
+                <XIcon className="h-6 w-6" aria-hidden="true" />
+              </span>
+            </div>
+          )}
           {/* List / Table */}
           <div className="flex flex-col">
             <div className="-my-2 py-2">
-              <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
-                <div className="h-8/10 px-4">
-                  <div className="w-full flex justify-between border-b-0 border-gray-200 ">
-                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="white_back py-4 px-2 lg:px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 lg:w-full w-screen">
+                <div className="h-8/10 px-4 lg:w-full w-screen overflow-scroll lg:overflow-hidden">
+                  <div className="w-full flex justify-between border-b-0 border-gray-200 bg-gray-50">
+                    <div className="w-3/10 px-2 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>
                     </div>
-                    <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">
                         {InstitutionDict[userLanguage]['TABLE']['TYPE']}
                       </span>
                     </div>
-                    <div className="w-3.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-3.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">
                         {InstitutionDict[userLanguage]['TABLE']['WEBSITE']}
                       </span>
                     </div>
-                    <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">
                         {InstitutionDict[userLanguage]['TABLE']['CONTACT']}
                       </span>
                     </div>
-                    <div className="w-1/10 px-8 flex justify-left py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1/10 px-4 lg:px-8 flex justify-left py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       {InstitutionDict[userLanguage]['TABLE']['ACTION']}
                     </div>
                   </div>

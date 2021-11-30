@@ -15,9 +15,11 @@ import Loader from '../../../../../../../Atoms/Loader';
 
 import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
+import {BsArrowLeft} from 'react-icons/bs';
 
 interface IUnitData {
   id: string;
+  institutionID?: string;
   name: string;
   description: string;
   methodology: string;
@@ -38,13 +40,18 @@ interface IUIMessages {
 const UnitBuilder = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const urlParams: any = useParams();
   const params = useQuery(location.search);
   const step = params.get('step');
   const {unitId}: any = useParams();
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {SyllabusDict} = useDictionary(clientKey);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    userLanguage,
+  } = useContext(GlobalContext);
+  const {CommonlyUsedDict, SyllabusDict} = useDictionary(clientKey);
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedLessonsList, setSavedLessonsList] = useState([]);
@@ -87,7 +94,7 @@ const UnitBuilder = ({instId}: any) => {
 
   useEffect(() => {
     fetchSyllabusData();
-  }, []);
+  }, [unitId]);
 
   const fetchSyllabusData = async () => {
     if (unitId) {
@@ -101,6 +108,7 @@ const UnitBuilder = ({instId}: any) => {
         const savedData = result.data.getUniversalSyllabus;
         setSyllabusData({
           ...syllabusData,
+          institutionID: savedData.institutionID,
           id: savedData.id,
           name: savedData.name,
           languages: languageList.filter((item) =>
@@ -179,7 +187,7 @@ const UnitBuilder = ({instId}: any) => {
           <LessonPlanManager
             syllabusId={unitId}
             syllabusDetails={syllabusData}
-            institutionId={instId}
+            institutionId={instId || syllabusData?.institutionID}
             savedLessonsList={savedLessonsList}
             setSavedLessonsList={setSavedLessonsList}
             lessonsIds={lessonsIds}
@@ -203,7 +211,34 @@ const UnitBuilder = ({instId}: any) => {
           />
         </div>
       </div> */}
-
+      <div className="px-8 pb-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {!fetchingDetails &&
+            (syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT)}
+        </h3>
+        <div
+          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          onClick={() =>
+            history.push(
+              isSuperAdmin
+                ? `/dashboard/manage-institutions/units`
+                : `/dashboard/manage-institutions/institution/${instId}/units`
+            )
+          }>
+          <span className="w-auto mr-2">
+            <BsArrowLeft />
+          </span>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
+        </div>
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
+          <Buttons
+            label="Go back"
+            btnClass="mr-4"
+            onClick={() => null}
+            Icon={IoArrowUndoCircleOutline}
+          />
+        </div> */}
+      </div>
       {/* Body */}
       <div className="w-full m-auto">
         <StepComponent
@@ -211,7 +246,7 @@ const UnitBuilder = ({instId}: any) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mb-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">

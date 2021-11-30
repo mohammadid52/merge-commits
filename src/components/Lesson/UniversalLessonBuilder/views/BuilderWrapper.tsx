@@ -252,7 +252,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
-        return <AddContentDialog />;
+        return <AddContentDialog isSurvey={universalLessonDetails.type === 'survey'} />;
 
       default:
         return null;
@@ -557,7 +557,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={closeAction}>
+          closeAction={closeAction}
+          modalBodyClass="overflow-y-auto 2xl:overflow-y-hidden">
           <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>

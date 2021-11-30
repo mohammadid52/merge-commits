@@ -32,7 +32,7 @@ export interface FloatingSideMenuProps {
   getOrCreateJournalData?: () => void;
   updateNotesContent?: (html: string) => void;
 }
-
+//
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
   studentID: '',

@@ -56,7 +56,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 open || menu.children.filter((item: any) => item.active).length
                   ? 'bg-indigo-300 text-indigo-700'
                   : ''
-              } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+              } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
               } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
               {menu.title}
@@ -91,7 +91,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
-                    <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-sm">
+                    <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-xs 2xl:text-base">
                       {item.title}
                     </div>
                   </Menu.Item>
@@ -105,7 +105,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
+const Tabs = ({tabsData, updateTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -137,35 +137,15 @@ const Tabs = ({tabsData, tabWithNumbers, updateTab}: ITabsProps) => {
                 onClick={() => {
                   updateTab(menu);
                 }}
-                className={`px-3 relative ${
-                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } ${
+                className={`${
                   menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                } py-2 cursor-pointer font-medium hover:bg-gray-400 hover:text-gray-700 bg-opacity-20 hover:bg-opacity-30 text-sm rounded-md transition duration-150 ease-in-out transform scale-95 hover:scale-100 text-gray-700 font-bold`}>
+                }  hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
+                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
+                } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
                 {menu.title}
               </button>
             )
           )}
-          {/* {tabsData.map((tab: ITabElements) => (
-            <button
-              key={tab.title}
-              onClick={() => {
-                updateTab(tab.key);
-              }}
-              className={`px-3 relative ${
-                theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-              } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
-                tab.key === activeTab ? 'active' : ''
-              } transition duration-150 ease-in-out transform hover:scale-105`}>
-              {tab.key === activeTab && (
-                <span className="flex absolute h-4 w-4 top-0 right-0 -mt-1 -mr-1">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-purple-500"></span>
-                </span>
-              )}
-              {tab.title}
-            </button>
-          ))} */}
         </nav>
       </div>
     </div>

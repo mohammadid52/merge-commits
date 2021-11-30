@@ -3,6 +3,7 @@ import Info from '@components/Atoms/Alerts/Info';
 import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
 import {Tree} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import * as customMutations from '@customGraphql/customMutations';
@@ -14,7 +15,7 @@ import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {wait} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import map from 'lodash/map';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useContext, useState} from 'react';
 import {FiBook} from 'react-icons/fi';
 import {useHistory} from 'react-router';
 
@@ -86,6 +87,11 @@ const CopyCloneSlideOver = ({
 }) => {
   const history = useHistory();
 
+  const {
+    state: {
+      user: {isSuperAdmin},
+    },
+  } = useContext(GlobalContext);
   const {setShowDataForCopyClone, showDataForCopyClone} = useOverlayContext();
   const {
     universalLessonDetails,
@@ -141,8 +147,11 @@ const CopyCloneSlideOver = ({
         setShowDataForCopyClone(false);
         // navigate user to newly created page
         if (universalLessonDetails.id && newPage.id) {
+          const baseUrl = isSuperAdmin
+            ? `/dashboard/manage-institutions`
+            : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
           history.push(
-            `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${universalLessonDetails.id}/page-builder?pageId=${newPage.id}`
+            `${baseUrl}/lessons/${universalLessonDetails.id}/page-builder?pageId=${newPage.id}`
           );
         }
         // when user is navigated to the page show modal with lesson page details

@@ -44,7 +44,7 @@ const Button = ({
         type="button"
         className={`${
           invert ? 'bg-indigo-600' : 'bg-transparent'
-        } ${color} mx-2  w-auto  inline-flex justify-center items-center px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
+        } ${color} mx-1 2xl:mx-2 w-auto inline-flex justify-center items-center px-1 2xl:px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
         {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
         <span className="hidden text-xs 2xl:text-sm xl:block">{text}</span>
       </button>
@@ -56,7 +56,6 @@ const Toolbar = ({
   deleteLesson,
   setEditMode,
   setFields,
-
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
@@ -91,13 +90,13 @@ const Toolbar = ({
       <div
         // hidden={previewMode}
         ref={toolbarRef}
-        style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
+        // style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
         className={` ${
           !toolbarOnTop
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
         } customShadow transform ${
-          previewMode ? 'fixed' : ''
+          previewMode ? 'fixed bottom-3 right-7' : ''
         } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <div className="flex items-center w-auto">
@@ -112,8 +111,8 @@ const Toolbar = ({
 
             <div
               className={`${
-                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-6 '
-              } space-x-6 transition-all transform flex`}>
+                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-2 2xl:ml-6 '
+              } space-x-2 2xl:space-x-6 transition-all transform flex`}>
               {!previewMode && (
                 <>
                   <Button

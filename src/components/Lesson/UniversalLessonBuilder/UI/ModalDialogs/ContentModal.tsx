@@ -8,6 +8,7 @@ interface ModalProps {
   showHeaderBorder?: boolean;
   showFooter: boolean;
   children: React.ReactNode;
+  modalBodyClass?: string;
   saveAction?: () => void;
   closeAction?: () => void;
   isImage?: boolean;
@@ -72,6 +73,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     showFooter,
     children,
     intenseOpacity = false,
+    modalBodyClass = '',
     closeAction,
     saveAction,
     closeOnBackdrop = false,
@@ -104,7 +106,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         style={{zIndex: 10000}}
         onClick={() => closeOnBackdrop && closeAction()}
         className={
-          'fixed  modal dark-scroll transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none py-24'
+          'fixed modal dark-scroll transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none py-24'
         }>
         <div
           onClick={(e) => {
@@ -113,7 +115,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             }
           }}
           className="relative w-auto my-4 mx-auto max-w-lg ">
-          <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
+          <div className={`${modalBodyClass} ${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}

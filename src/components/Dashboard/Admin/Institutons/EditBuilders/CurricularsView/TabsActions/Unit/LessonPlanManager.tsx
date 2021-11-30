@@ -12,7 +12,6 @@ import * as customMutations from '../../../../../../../../customGraphql/customMu
 
 import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
 import Selector from '../../../../../../../Atoms/Form/Selector';
-import {DeleteActionBtn} from '../../../../../../../Atoms/Buttons/DeleteActionBtn';
 import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
@@ -37,7 +36,14 @@ const LessonPlanManager = ({
 }: any) => {
   const history = useHistory();
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    clientKey,
+    userLanguage,
+  } = useContext(GlobalContext);
   const {SyllabusDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -230,9 +236,10 @@ const LessonPlanManager = ({
         updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
       )
       .filter((item: any) => (item.lessonPlan ? true : false))
-      .map((item: {id: string; title: string; type: string}) => ({
+      .map((item: {id: string; title: string; type: string, targetAudience: string}) => ({
         id: item.id,
-        name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+        // name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+        name: `${item.title} - ${item.targetAudience || 'All'}`,
         value: item.title,
       }));
 
@@ -410,29 +417,33 @@ const LessonPlanManager = ({
       // setEditLesson({type, id});
     } else {
       history.push(
-        `/dashboard/manage-institutions/institution/${institutionId}/lessons/${id}`
+        isSuperAdmin
+          ? `/dashboard/manage-institutions/lessons/${id}`
+          : `/dashboard/manage-institutions/institution/${institutionId}/lessons/${id}`
       );
     }
   };
 
   return (
-    <div className="bg-white shadow-5 mb-4">
+    <div className="bg-white shadow-5 mb-4 overflow-x-auto lg:overflow-x-hidden">
       {/* *************** SECTION HEADER ************ */}
       <div
         className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
         {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
           {SyllabusDict[userLanguage]['LESSON_PLAN_HEADING']}
         </h3> */}
-        <div className="flex justify-end">
-          <AddButton
-            label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
-            onClick={createNewLesson}
-          />
-        </div>
+        {!isSuperAdmin && (
+          <div className="flex justify-end">
+            <AddButton
+              label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
+              onClick={createNewLesson}
+            />
+          </div>
+        )}
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">
-        <div className="my-8 w-6/10 m-auto flex items-center justify-center">
+        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
           <div className="mr-4">
             <Selector
               selectedItem={selecetedLesson.value}
@@ -469,7 +480,7 @@ const LessonPlanManager = ({
           ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
             <div>
               {/* *************** LESSONS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 w-screen lg:w-full">
                 <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
@@ -482,12 +493,12 @@ const LessonPlanManager = ({
                 <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
                 </div>
-                <div className="w-1/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2.5/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>
 
-              <div className="max-h-88 overflow-y-auto mb-10">
+              <div className="max-h-88 w-screen lg:w-full overflow-y-auto overflow-x-hidden mb-10">
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="droppable">
                     {(provided1, snapshot) => (

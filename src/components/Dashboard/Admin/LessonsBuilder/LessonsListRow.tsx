@@ -14,6 +14,10 @@ interface ICloneModalProps {
 interface LessonsListRow {
   id: string;
   index: number;
+  institution: {
+    id: string;
+    name: string;
+  };
   title: string;
   type: string;
   languages: string[];
@@ -23,7 +27,10 @@ interface LessonsListRow {
   createdAt: Date;
   updatedAt: Date;
   zebraStripping?: boolean;
+  targetAudience?: string;
   setShowCloneModal?: React.Dispatch<React.SetStateAction<ICloneModalProps>>;
+  isSuperAdmin?: boolean;
+  redirectToInstitution: () => void;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -44,15 +51,19 @@ const LessonsListRow = (props: LessonsListRow) => {
   const {
     id,
     index,
+    institution: {name: institutionName},
     title,
     type,
     languages,
     lessonObject,
     checkIfRemovable,
     handleToggleDelete,
+    isSuperAdmin,
     setShowCloneModal,
+    targetAudience,
     createdAt,
     updatedAt,
+    redirectToInstitution,
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -76,14 +87,25 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div>
       <div
         title={title ? title : '--'}
-        className="w-3/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal"
+        className={`${
+          isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+        } flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
         <span>{title ? title : '--'}</span>
       </div>
-
+      {isSuperAdmin && (
+        <div
+          className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
+          onClick={redirectToInstitution}>
+          <span>{institutionName || '--'}</span>
+        </div>
+      )}
+      
       <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
       </div>
+
+      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">{targetAudience||'-'}</div>
 
       <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
@@ -97,7 +119,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      {/* <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {languages?.length
             ? languages.map(
@@ -106,7 +128,7 @@ const LessonsListRow = (props: LessonsListRow) => {
               )
             : '--'}
         </span>
-      </div>
+      </div> */}
 
       <div
         className={`w-1/10 flex justify-center items-center pr-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>

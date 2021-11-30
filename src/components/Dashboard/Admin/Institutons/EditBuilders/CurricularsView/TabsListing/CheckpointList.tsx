@@ -29,17 +29,17 @@ const CheckpointList = (props: CheckpointListProps) => {
 
   const createNewCheckpoint = () => {
     history.push(
-      `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/checkpoint/addNew`
+      `/dashboard/manage-institutions/institution/${institutionId}/course-builder/${curricularId}/checkpoint/addNew`
     );
   };
   const addExistingCheckpoint = () => {
     history.push(
-      `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/checkpoint/addPrevious`
+      `/dashboard/manage-institutions/institution/${institutionId}/course-builder/${curricularId}/checkpoint/addPrevious`
     );
   };
   const editCheckPoint = (id: string) => {
     history.push(
-      `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/checkpoint/edit/${id}`
+      `/dashboard/manage-institutions/institution/${institutionId}/course-builder/${curricularId}/checkpoint/edit/${id}`
     );
   };
   const changeStep = () => {};

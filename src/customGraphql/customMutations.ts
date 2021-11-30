@@ -1154,6 +1154,45 @@ export const updateCurriculumSyllabusSequence = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalSyllabusLesson = /* GraphQL */ `
+  mutation CreateUniversalSyllabusLesson(
+    $input: CreateUniversalSyllabusLessonInput!
+    $condition: ModelUniversalSyllabusLessonConditionInput
+  ) {
+    createUniversalSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      complete
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const deleteUniversalSyllabusLesson = /* GraphQL */ `
+  mutation DeleteUniversalSyllabusLesson(
+    $input: DeleteUniversalSyllabusLessonInput!
+    $condition: ModelUniversalSyllabusLessonConditionInput
+  ) {
+    deleteUniversalSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+    }
+  }
+`;
 
 export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
   mutation UpdateUniversalSyllabus(

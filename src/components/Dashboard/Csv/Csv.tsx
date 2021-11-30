@@ -172,46 +172,46 @@ const Csv = ({institutionId}: ICsvProps) => {
     setClassRoomLoading(false);
   };
 
-  // const onInstSelect = async (id: string, name: string, value: string) => {
-  //   setClassRoomLoading(true);
-  //   try {
-  //     let sInst = selectedInst;
-  //     let inst = {id, name, value};
-  //     setSelectedInst(inst);
-  //     if (!sInst || sInst.id !== inst.id) {
-  //       resetInstitution();
-  //       let instCRs: any = [];
-  //       // fetch inst classrooms.
-  //       let classrooms: any = await API.graphql(
-  //         graphqlOperation(customQueries.getInstClassRooms, {
-  //           id: inst.id,
-  //         })
-  //       );
-  //       classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
-  //       classrooms = classrooms.map((cr: any) => {
-  //         let curriculum =
-  //           cr.curricula?.items && Array.isArray(cr.curricula?.items)
-  //             ? cr.curricula?.items[0].curriculum
-  //             : null;
-  //         instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-  //         return {
-  //           id: cr.id,
-  //           name: cr.name,
-  //           value: cr.name,
-  //           class: {...cr.class},
-  //           curriculum,
-  //         };
-  //       });
-  //       setClassRoomsList(classrooms);
-  //       setInstClassRooms(instCRs);
-  //       setClassRoomLoading(false);
-  //     } else {
-  //       // console.log('institution already selected');
-  //     }
-  //   } catch (err) {
-  //     console.log('inst select, fetch classrooms err', err);
-  //   }
-  // };
+  const onInstSelect = async (id: string, name: string, value: string) => {
+    setClassRoomLoading(true);
+    try {
+      let sInst = selectedInst;
+      let inst = {id, name, value};
+      setSelectedInst(inst);
+      if (!sInst || sInst.id !== inst.id) {
+        resetInstitution();
+        let instCRs: any = [];
+        // fetch inst classrooms.
+        let classrooms: any = await API.graphql(
+          graphqlOperation(customQueries.getInstClassRooms, {
+            id: inst.id,
+          })
+        );
+        classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+        classrooms = classrooms.map((cr: any) => {
+          let curriculum =
+            cr.curricula?.items && Array.isArray(cr.curricula?.items)
+              ? cr.curricula?.items[0]?.curriculum
+              : null;
+          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+          return {
+            id: cr.id,
+            name: cr.name,
+            value: cr.name,
+            class: {...cr.class},
+            curriculum,
+          };
+        });
+        setClassRoomsList(classrooms);
+        setInstClassRooms(instCRs);
+        setClassRoomLoading(false);
+      } else {
+        // console.log('institution already selected');
+      }
+    } catch (err) {
+      console.log('inst select, fetch classrooms err', err);
+    }
+  };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
@@ -222,11 +222,13 @@ const Csv = ({institutionId}: ICsvProps) => {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
         // with classroom => class and curriculum are directly selected
         setSelectedClass(classroom.class);
-        setSelectedCurriculum(classroom.curriculum);
+        setSelectedCurriculum(classroom?.curriculum);
         // fetch students of the selected class. (This list of students will be used in the csv)
-        setUnitsLoading(true);
         const studentsEmails = await fetchStudents(classroom.class.id);
-        await fetchUnits(classroom.curriculum.id, studentsEmails);
+        if (classroom?.curriculum?.id) {
+          setUnitsLoading(true);
+          await fetchUnits(classroom?.curriculum?.id, studentsEmails);
+        }
         // units (syllabus fetched)
       } else {
         console.log('classroom already selected');
@@ -822,7 +824,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const Table = () => {
     return (
-      <div className="flex flex-col px-8">
+      <div className="flex flex-col">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
             <div className="flex flex-1 overflow-scroll shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -894,6 +896,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     );
   };
 
+  const isSuperAdmin = state.user.role === 'SUP';
+
   return (
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
@@ -917,15 +921,18 @@ const Csv = ({institutionId}: ICsvProps) => {
         title={CsvDict[userLanguage]['SELECT_FILTERS']}
       /> */}
       <div className="grid grid-cols-4 gap-x-4">
-        {/* <Selector
-          loading={institutionsLoading}
-          selectedItem={selectedInst ? selectedInst.name : ''}
-          placeholder={CsvDict[userLanguage]['SELECT_INST']}
-          list={institutions}
-          onChange={(value, name, id) => onInstSelect(id, name, value)}
-        /> */}
+        {isSuperAdmin && (
+          <Selector
+            loading={institutionsLoading}
+            selectedItem={selectedInst ? selectedInst.name : ''}
+            placeholder={CsvDict[userLanguage]['SELECT_INST']}
+            list={institutions}
+            onChange={(value, name, id) => onInstSelect(id, name, value)}
+          />
+        )}
 
         <Selector
+          disabled={!selectedInst?.id}
           loading={classRoomLoading}
           selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
           placeholder="select class room"
@@ -952,7 +959,9 @@ const Csv = ({institutionId}: ICsvProps) => {
         />
         <button
           type="button"
-          className="col-end-5 inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
+          className={`col-end-5 ${
+            isSuperAdmin ? 'mt-5' : ''
+          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
           style={{
             /* stylelint-disable */
             opacity: isCSVDownloadReady ? 1 : 0.5,

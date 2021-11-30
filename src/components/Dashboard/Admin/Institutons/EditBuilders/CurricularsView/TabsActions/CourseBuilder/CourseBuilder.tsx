@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router';
+import {Switch, Route, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {BsArrowLeft} from 'react-icons/bs';
 
@@ -15,6 +15,10 @@ import CourseFormComponent from './CourseFormComponent';
 import UnitManager from './UnitManager';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
+
+// import AddProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+// import ProfileCheckpointlookup from '../../../../EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+// import EditProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 
 interface IUIMessages {
   show: boolean;
@@ -36,10 +40,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {clientKey, state, userLanguage} = useContext(GlobalContext);
+  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(clientKey);
+  const isSuperAdmin: any = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState([]);
@@ -73,8 +76,10 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   }, [courseId]);
 
   useEffect(() => {
-    getBasicInstitutionInfo();
-  }, [instId]);
+    if (courseData?.institution?.id) {
+      getBasicInstitutionInfo(courseData?.institution?.id);
+    }
+  }, [courseData?.institution?.id]);
 
   const fetchCourseData = async () => {
     if (courseId) {
@@ -112,10 +117,10 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     }
   };
 
-  const getBasicInstitutionInfo = async () => {
+  const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: instId,
+        id: instituteId,
       })
     );
     setCourseData((prevData: any) => ({
@@ -168,7 +173,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           <UnitManager
             courseId={courseId}
             courseData={courseData}
-            institutionId={instId}
+            institutionId={courseData?.institution.id}
             savedSyllabusList={savedSyllabusList}
             setSavedSyllabusList={setSavedSyllabusList}
             syllabusIds={syllabusIds}
@@ -181,6 +186,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }
   };
+  console.log(match.url,'sfksdjfks');
+  
 
   return (
     <div className="w-full h-full">
@@ -197,7 +204,11 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         <div
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
-            history.push(`/dashboard/manage-institutions/institution/${instId}/courses`)
+            history.push(
+              isSuperAdmin
+                ? `/dashboard/manage-institutions/courses`
+                : `/dashboard/manage-institutions/institution/${instId}/courses`
+            )
           }>
           <span className="w-auto mr-2">
             <BsArrowLeft />
@@ -231,12 +242,26 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 border-t-none py-8">
+            <div className="border-0 border-gray-200 lg:border-t-none py-8 my-8 lg:my-0">
               {currentStepComp(activeStep)}
             </div>
           )}
         </div>
       </div>
+      <Switch>
+        {/* <Route
+          path={`${match.url}/checkpoint/addNew`}
+          render={() => <AddProfileCheckpoint />} // Edit course
+        />
+        <Route
+          path={`${match.url}/checkpoint/addPrevious`}
+          render={() => <ProfileCheckpointlookup instId={courseData?.institution.id} />} // Edit course
+        />
+        <Route
+          path={`${match.url}/checkpoint/edit/:id`}
+          render={() => <EditProfileCheckpoint />} // Edit course
+        /> */}
+      </Switch>
       {/* </PageWrapper> */}
     </div>
   );

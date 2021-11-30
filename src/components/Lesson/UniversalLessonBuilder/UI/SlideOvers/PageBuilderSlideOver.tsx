@@ -29,6 +29,7 @@ import {
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import {RiPagesLine} from 'react-icons/ri';
 import {useRouteMatch} from 'react-router';
 
 type ActionTypes = 'edit' | 'delete' | 'init';
@@ -198,7 +199,7 @@ const SpaceItems = ({
                 label: 'Custom position',
                 onClick: onCustomPosition,
               },
-              {label: 'Add to Botom"', onClick: onAddtoBottom, transparent: true},
+              {label: 'Add to Bottom', onClick: onAddtoBottom, transparent: true},
             ]}
             message={'Where do you want to add space?'}
           />
@@ -280,13 +281,13 @@ const OverlayHeaderTitle = ({
     <div className={'flex items-center justify-start'} id="page_builder_overlay--header">
       {showBackBtn && (
         <div className="w-auto" onClick={onBack}>
-          <AiOutlineArrowLeft className="text-gray-400 hover:text-gray-500 transition-all text-xl cursor-pointer" />
+          <AiOutlineArrowLeft className="text-gray-400 hover:text-gray-500 transition-all text-lg 2xl:text-xl cursor-pointer" />
         </div>
       )}
 
       <h4
         id="page_builder_overlay--header-title"
-        className="dark:text-white text-gray-900 font-semibold tracking-wide text-xl text-center">
+        className="dark:text-white text-gray-900 font-semibold tracking-wide text-lg 2xl:text-xl text-center">
         {title}
       </h4>
     </div>
@@ -323,7 +324,7 @@ const Item = ({
         selected
           ? 'iconoclast:border-500 curate:border-500'
           : `border-gray-300 dark:border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
-      } relative my-8 cursor-pointer form-button mt-4 form-button rounded-lg border-0  dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-5`}>
+      } relative my-6 2xl:my-8 cursor-pointer form-button mt-3 2xl:mt-4 form-button rounded-lg border-0 dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
           <Icon
@@ -467,6 +468,8 @@ const PageBuilderSlideOver = ({
   deleteFromULBHandler,
   handleModalPopToggle,
   handleEditBlockContent,
+  setNewLessonPlanShow,
+  setEditMode,
 }: {
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
   open: boolean;
@@ -483,6 +486,8 @@ const PageBuilderSlideOver = ({
     targetId: string,
     indexToUpdate: number
   ) => void;
+  setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {
     selectedPageID,
@@ -770,6 +775,8 @@ const PageBuilderSlideOver = ({
     setShowMovementBox(false);
   };
 
+  const isSurvey = universalLessonDetails?.type === 'survey';
+
   return (
     <>
       <AnimatedContainer
@@ -780,7 +787,7 @@ const PageBuilderSlideOver = ({
           <div>
             <OverlayHeaderTitle showBackBtn={false} onBack={toHome} title="Edit page" />
             <AnimatedContainer
-              className={`my-2  w-auto`}
+              className={`my-2 w-auto`}
               animationType="opacity"
               show={notSelected && !onInit}>
               {notSelected && !onInit && (
@@ -908,6 +915,7 @@ const PageBuilderSlideOver = ({
               }
             />
             <AddContentDialog
+              isSurvey={isSurvey}
               setCurrentHelpStep={setCurrentHelpStep}
               onItemClick={onContentItemClick}
             />
@@ -931,6 +939,14 @@ const PageBuilderSlideOver = ({
           </div>
         )}
       </AnimatedContainer>
+      <Item
+        Icon={RiPagesLine}
+        label="Page details"
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
+      />
       <Popup saving={saving} text={'Saving'} />
       {/* <Popup2
         show={onAddContent && currentHelpStep !== null}

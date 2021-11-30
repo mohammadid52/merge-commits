@@ -6,7 +6,6 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
-import PageWrapper from '../../../../Atoms/PageWrapper';
 import {reorder} from '../../../../../utilities/strings';
 
 import {
@@ -109,12 +108,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const redirectToRegistrationPage = () => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${instituteId}/register-user?from=staff`
-    );
-  };
-
   const getPersonsList = async (role: string) => {
     try {
       if (role === 'SUP') {
@@ -128,7 +121,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             ? {role: {eq: role}}
             : user.role === 'SUP'
             ? {role: {eq: 'SUP'}}
-            // ? {or: [{role: {eq: 'ADM'}}, {role: {eq: 'SUP'}}]}
             : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
           limit: 500,
         })
@@ -177,11 +169,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const getStaff = async () => {
     try {
       // get service providers of the institute and create a list and fetch the staff
-      const {
-        serviceProviders: {items},
-        instituteId,
-      } = props;
-      const institutions = [instituteId];
+      const {serviceProviders: {items} = {}, instituteId} = props;
+      const institutions =
+        user.role === 'SUP'
+          ? user.associateInstitute.length
+            ? user.associateInstitute.map((institute: any) => institute.institution.id)
+            : []
+          : [instituteId];
 
       // ********
       // Hiding staff details for other institutions they will be available on dropdown only.
@@ -190,12 +184,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
       const staff: any = await API.graphql(
         graphqlOperation(queries.listStaffs, {
-          filter: {
-            ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
-          },
+          filter: institutions.length
+            ? {
+                ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
+              }
+            : {},
         })
       );
-      // We are removing duplicate staff memebers across institution and service providers.
+
+      // We are removing duplicate staff members across institution and service providers.
       // confirm with Mike. If we have to show multiple entries with institute name
       // remove this staffUserIds logic and add institute name in the oject
       const staffUserIds: Array<string> = [];
@@ -273,7 +270,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    let part1 = `/dashboard/manage-institutions/institution/${instituteId}`;
+    let part1 = user.isSuperAdmin
+      ? '/dashboard/manage-institutions'
+      : `/dashboard/manage-institutions/institution/${instituteId}`;
     let part2 = `/manage-users/${profileId}`;
     // console.log(`${part1}${part2}`);
     history.push(`${part1}${part2}`);
@@ -310,7 +309,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   useEffect(() => {
-    if (instituteId) {
+    if (instituteId || user.role === 'SUP') {
       fetchStaffData();
     }
   }, [instituteId]);
@@ -351,6 +350,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
+    );
+  };
+
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
@@ -359,20 +364,22 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             {dictionary['TITLE']}
           </h3>
           {!showAddSection ? (
-            <div className="w-auto">
-              <AddButton
-                className="ml-4 py-1"
-                label={'Staff member'}
-                onClick={() => showAddStaffSection(user.role !== 'SUP' ? 'SUP' : '')}
-              />
-              {/*{user.role === 'SUP' && (
+            !state.user.isSuperAdmin && (
+              <div className="w-auto">
+                <AddButton
+                  className="ml-4 py-1"
+                  label={'Staff member'}
+                  onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
+                />
+                {/*{user.role === 'SUP' && (
                 <div
                   className="text-sm text-right text-gray-400 cursor-pointer mt-1"
                   onClick={() => showAddStaffSection('SUP')}>
                   + {dictionary.ADD_SUPER_ADMIN}
                 </div>
               )} */}
-            </div>
+              </div>
+            )
           ) : (
             <Buttons
               btnClass="ml-4 py-1"
@@ -405,7 +412,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         {!dataLoading ? (
           <>
             {activeStaffList?.length > 0 ? (
-              <Fragment>
+              <div className="w-screen lg:w-auto overflow-x-hidden">
                 <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                   <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -414,6 +421,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['NAME']}</span>
                     </div>
+                    {user.isSuperAdmin && (
+                      <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <span>{dictionary['INSTITUTION_NAME']}</span>
+                      </div>
+                    )}
                     <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['ROLE']}</span>
                     </div>
@@ -489,7 +501,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                         </div>
                                       </div>
                                     </div>
-
+                                    {user.isSuperAdmin && (
+                                      <div
+                                        className="w-2/10 px-8 py-3 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
+                                        onClick={() =>
+                                          redirectToInstitution(item.institution?.id)
+                                        }>
+                                        <span>{item.institution?.name}</span>
+                                      </div>
+                                    )}
                                     <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">
                                       <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800 w-auto">
                                         {item.role ? getStaffRole(item.role) : ''}
@@ -541,7 +561,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     </Droppable>
                   </DragDropContext>
                 </div>
-              </Fragment>
+              </div>
             ) : (
               <div className="text-center p-16">
                 <p> {dictionary['INFO']}</p>

@@ -1,30 +1,32 @@
 import Popover from '@components/Atoms/Popover';
 import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {HiOutlineTrash} from 'react-icons/hi';
 
 interface IUnitListRowProps {
   index: number;
+  isSuperAdmin?: boolean;
   item: any;
   checkIfRemovable: any;
   handleToggleDelete: any;
   editCurrentUnit: any;
+  redirectToInstitution: () => void;
+  redirectToLesson: (id: string) => void;
 }
 
 const UnitListRow = ({
   index,
+  isSuperAdmin,
   item,
   checkIfRemovable,
   handleToggleDelete,
   editCurrentUnit,
+  redirectToInstitution,
+  redirectToLesson,
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const clientKey = gContext.clientKey;
-  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -43,10 +45,34 @@ const UnitListRow = ({
       </div>
       <div
         onClick={() => editCurrentUnit(item.id)}
-        className="cursor-pointer flex w-8/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+        className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
         {item.name ? item.name : ''}
       </div>
-
+      {isSuperAdmin && (
+        <div
+          className="flex w-2/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
+          onClick={redirectToInstitution}>
+          {item.institution?.name}
+        </div>
+      )}
+      <div
+        className={`${
+          isSuperAdmin ? 'w-2/10' : 'w-4/10'
+        } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
+        {item.lessons?.items?.map(
+          ({
+            id,
+            lesson: {id: lessonId, title},
+          }: {
+            id: string;
+            lesson: {id: string; title: string};
+          }) => (
+            <li key={id} onClick={() => redirectToLesson(lessonId)}>
+              {title}
+            </li>
+          )
+        )}
+      </div>
       <div
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">

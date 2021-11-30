@@ -8,9 +8,10 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_Q4lW9SZze",
     "aws_user_pools_web_client_id": "5ie1ftc9f6gq6055fn0lkqt8gn",
     "oauth": {},
-    "aws_cognito_login_mechanisms": [
+    "aws_cognito_username_attributes": [
         "EMAIL"
     ],
+    "aws_cognito_social_providers": [],
     "aws_cognito_signup_attributes": [
         "EMAIL"
     ],
@@ -31,6 +32,9 @@ const awsmobile = {
     "aws_appsync_apiKey": "da2-iw3a5eu3svhfzjkahvvtcgdzeq",
     "aws_user_files_s3_bucket": "iconoclaststorage203627-demosite",
     "aws_user_files_s3_bucket_region": "us-east-1",
+    "aws_cognito_login_mechanisms": [
+        "EMAIL"
+    ],
     "geo": {
         "amazon_location_service": {
             "region": "us-east-1",
@@ -38,9 +42,12 @@ const awsmobile = {
                 "items": {
                     "lmsMap-uatenv": {
                         "style": "VectorEsriLightGrayCanvas"
+                    },
+                    "houston-uatenv": {
+                        "style": "VectorEsriStreets"
                     }
                 },
-                "default": "lmsMap-uatenv"
+                "default": "houston-uatenv"
             }
         }
     }

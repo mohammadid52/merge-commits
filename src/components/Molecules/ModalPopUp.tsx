@@ -54,20 +54,6 @@ const ModalPopUp = (props: ModalProps) => {
       <div className={`${className} text-center my-8`}>
         <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
         <div className="flex justify-center mt-16 w-full mx-auto">
-          {!onlyInfo && (
-            <Tooltip
-              show={cancelTooltip ? true : false}
-              placement="bottom"
-              text={cancelTooltip}>
-              <Buttons
-                label={cancelLabel ? cancelLabel : 'Cancel'}
-                btnClass="px-8 py-3 mr-4"
-                onClick={cancelAction !== undefined ? cancelAction : closeAction}
-                transparent
-              />
-            </Tooltip>
-          )}
-
           {noButton && (
             <Tooltip show={noTooltip ? true : false} placement="bottom" text={noTooltip}>
               <Buttons
@@ -103,11 +89,25 @@ const ModalPopUp = (props: ModalProps) => {
                       ? 'Saving'
                       : 'Save'
                   }
-                  btnClass="px-10 py-3 ml-4"
+                  btnClass="px-10 py-3 mr-4"
                   onClick={saveAction}
                 />
               </Tooltip>
             )
+          )}
+
+          {!onlyInfo && (
+            <Tooltip
+              show={cancelTooltip ? true : false}
+              placement="bottom"
+              text={cancelTooltip}>
+              <Buttons
+                label={cancelLabel ? cancelLabel : 'Cancel'}
+                btnClass="px-8 py-3 mr-4"
+                onClick={cancelAction !== undefined ? cancelAction : closeAction}
+                transparent
+              />
+            </Tooltip>
           )}
         </div>
       </div>

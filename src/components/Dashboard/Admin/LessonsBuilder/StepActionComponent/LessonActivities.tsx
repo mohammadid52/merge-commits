@@ -48,7 +48,7 @@ const PageRow = ({page, lessonPagePreview, toggleDeleteModal, index}: PageRowPro
         <div
           onClick={() => lessonPagePreview(page.id, false)}
           key={index}
-          className="flex justify-between bg-white w-full border-b-0 border-gray-200"
+          className="flex justify-between bg-white w-screen lg:w-full border-b-0 border-gray-200"
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}>
@@ -121,7 +121,8 @@ const LessonActivities = ({
   universalLessonDetails,
 }: LessonPlansListProps) => {
   const history = useHistory();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
+  const {isSuperAdmin} = state.user;
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {
@@ -167,7 +168,9 @@ const LessonActivities = ({
   const lessonPagePreview = (id: string, preview: boolean = true) => {
     setPreviewMode(preview);
     history.push(
-      `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}/page-builder?pageId=${id}`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${id}`
     );
   };
 
@@ -219,7 +222,7 @@ const LessonActivities = ({
       </PageBuilderLayout>
       <div className="flex m-auto justify-center">
         <div className="">
-          <PageWrapper defaultClass="px-8 border-0 border-gray-200">
+          <PageWrapper defaultClass="overflow-x-auto px-8 border-0 border-gray-200">
             {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
             {lessonName}
           </h3> */}
@@ -261,7 +264,7 @@ const LessonActivities = ({
                     />
                   </span>
                 </div>
-                <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8 pr-3">
+                <div className="w-screen lg:w-full flex justify-between border-b-0 border-gray-200 mt-8 pr-3">
                   {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}

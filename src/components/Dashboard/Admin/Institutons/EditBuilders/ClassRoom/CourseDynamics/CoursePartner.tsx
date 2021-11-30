@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
@@ -11,6 +11,7 @@ import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
+import { GlobalContext } from '@contexts/GlobalContext';
 
 interface ICoursePartnerProps {
   roomData: any;
@@ -18,6 +19,11 @@ interface ICoursePartnerProps {
 
 const CoursePartner = ({roomData}: ICoursePartnerProps) => {
   const history = useHistory();
+  const {
+    state: {user},
+  } = useContext(GlobalContext);
+  const isSuperAdmin = user.role === 'SUP';
+
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
@@ -124,7 +130,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
 
   const redirectToUserPage = (studentId: string) => {
     history.push(
-      `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+      isSuperAdmin ? `/dashboard/manage-institutions/users/${studentId}` : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
     );
   };
 

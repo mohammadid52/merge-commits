@@ -1,31 +1,75 @@
 // import AWS from 'aws-sdk';
 import Storage from '@aws-amplify/storage';
 import awsconfig from '../aws-exports';
-import awsmobile from '../aws-exports';
 
 // ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //
-const {S3Client, ListObjectsCommand} = require('@aws-sdk/client-s3');
+const {CognitoIdentityClient} = require('@aws-sdk/client-cognito-identity');
 const {fromCognitoIdentityPool} = require('@aws-sdk/credential-providers');
+const {
+  S3Client,
+  S3,
+  ListObjectsCommand,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
+// const {Upload} = require('@aws-sdk/lib-storage');
 
 // ~~~~~~~~~~ CLIENT CONSTRUCTOR ~~~~~~~~~ //
 const s3Client = new S3Client({
-  region: awsmobile.aws_cognito_region,
-  // old way of providing credentials
-  // credentials: new AWS.CognitoIdentityCredentials({
-  //   IdentityPoolId: awsmobile.aws_cognito_identity_pool_id,
-  // }),
+  region: awsconfig.aws_cognito_region,
   credentials: fromCognitoIdentityPool({
-    clientConfig: {region: awsmobile.aws_cognito_region},
-    identityPoolId: awsmobile.aws_cognito_identity_pool_id,
+    client: new CognitoIdentityClient({region: awsconfig.aws_cognito_region}),
+    identityPoolId: awsconfig.aws_cognito_identity_pool_id,
   }),
 });
 
-// AWS.config.update({
-//   region: awsmobile.aws_cognito_region,
-//   credentials: new AWS.CognitoIdentityCredentials({
-//     IdentityPoolId: awsmobile.aws_cognito_identity_pool_id,
-//   }),
-// });
+export const _uploadImageToS3 = async (file: any, id: string, type: string) => {
+  const newS3Client = new S3Client({
+    region: awsconfig.aws_cognito_region,
+    credentials: fromCognitoIdentityPool({
+      client: new CognitoIdentityClient({region: awsconfig.aws_cognito_region}),
+      identityPoolId: awsconfig.aws_cognito_identity_pool_id,
+    }),
+  });
+
+  // Upload file to s3 bucket
+  // const upload = new Upload({
+  //   client: newS3Client,
+  //   params: {
+  //     Bucket: awsconfig.aws_user_files_s3_bucket,
+  //     Key: `profile_image_${id}`,
+  //     Body: file,
+  //     ContentType: type,
+  //   },
+  // });
+
+  // return await upload.done();
+
+  try {
+    const uploadCommand = new PutObjectCommand({
+      Bucket: awsconfig.aws_user_files_s3_bucket,
+      Key: `profile_image_${id}`,
+      Body: file,
+      ACL: 'public-read',
+    });
+    await newS3Client.send(uploadCommand);
+  } catch (e) {
+    console.error('error uploading image to s3', e);
+  }
+
+  // return new Promise((resolve, reject) => {
+  //   Storage.put(`profile_image_${id}`, file, {
+  //     contentType: type,
+  //     ContentEncoding: 'base64',
+  //   })
+  //     .then((result) => {
+  //       resolve(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log('Error in uploading file to s3', err);
+  //       reject(err);
+  //     });
+  // });
+};
 
 export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
   if (key) {

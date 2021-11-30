@@ -25,6 +25,7 @@ import ProfileEdit from './ProfileEdit';
 import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
 import DroppableMedia from '../../Molecules/DroppableMedia';
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 
 export interface UserInfo {
   authId: string;
@@ -380,12 +381,17 @@ const Profile = (props: ProfilePageProps) => {
   {
     return (
       <div className="relative">
+        <BreadcrumbsWithBanner
+          items={breadCrumsList}
+          bannerImage={profileBanner1}
+          title={'Profile'}
+        />
         {/* Hero Section */}
-        <div>
+        {/* <div>
           <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
-        </div>
+        </div> */}
         {/* Header */}
-        {person && (
+        {/* {person && (
           <div
             className={`${theme.section} relative -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
             <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
@@ -395,10 +401,10 @@ const Profile = (props: ProfilePageProps) => {
               , update your avatar, personal information & profile questions here.
             </h2>
           </div>
-        )}
+        )} */}
         <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
-          <BreadCrums items={breadCrumsList} />
-          <div className="flex justify-between flex-col md:flex-row">
+          {/* <BreadCrums items={breadCrumsList} /> */}
+          <div className="flex justify-between flex-col md:flex-row mt-5">
             <SectionTitle
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}

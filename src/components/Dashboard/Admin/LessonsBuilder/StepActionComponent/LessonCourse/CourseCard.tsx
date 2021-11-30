@@ -121,8 +121,8 @@ const CourseCard = ({
                         key={d.institutionId}
                         className={`${
                           (index + 1) % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                        } flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0`}>
-                        <td className="w-auto p-3  text-sm text-gray-800 border border-b block lg:table-cell relative lg:static">
+                        } flex table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0`}>
+                        <td className="w-auto p-3 text-sm text-gray-800 border border-b block table-cell relative lg:static">
                           <span
                             onClick={() =>
                               history.push(
@@ -133,7 +133,7 @@ const CourseCard = ({
                             {d.institutionName}
                           </span>
                         </td>
-                        <td className="w-auto p-3  text-sm text-gray-800 border border-b block lg:table-cell relative lg:static">
+                        <td className="w-auto p-3  text-sm text-gray-800 border border-b block table-cell relative lg:static">
                           <span
                             onClick={() =>
                               history.push(
@@ -144,7 +144,7 @@ const CourseCard = ({
                             {d.roomName}
                           </span>
                         </td>
-                        <td className="w-auto p-3  text-sm text-gray-800 border border-b block lg:table-cell relative lg:static">
+                        <td className="w-auto p-3  text-sm text-gray-800 border border-b block table-cell relative lg:static">
                           <span
                             onClick={() =>
                               history.push(

@@ -51,7 +51,7 @@ const LessonPlanManagerRow = ({
 
       {checkIfRemovable(lessonObject, syllabusObject) ? (
         <span
-          className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
+          className={`w-2.5/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
           onClick={() => handleToggleDelete(lessonObject.name, lessonObject)}>
           {/* <DeleteActionBtn
             handleClick={() => handleToggleDelete(lessonObject.name, lessonObject)}
@@ -60,7 +60,7 @@ const LessonPlanManagerRow = ({
         </span>
       ) : (
         <span
-          className={`relative w-1/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}
+          className={`relative w-2.5/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}
           onClick={() => {}}>
           {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
           <p className="text-center  text-gray-500 text-xs">

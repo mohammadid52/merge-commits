@@ -2,6 +2,7 @@ import ContentCard from '@atoms/ContentCard';
 import Loader from '@components/Atoms/Loader';
 import Card from '@components/Community/Card';
 import useAuth from '@customHooks/useAuth';
+
 import * as queries from '@graphql/queries';
 import {ICommunityCard} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';

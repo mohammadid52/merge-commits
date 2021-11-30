@@ -15,9 +15,12 @@ const HeaderMegaMenu = () => {
   } = useContext(GlobalContext);
   const {Institute_info, CommunityDict} = useDictionary(clientKey);
 
-  const baseUrl = user.associateInstitute?.length
-    ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
-    : '';
+  const baseUrl =
+    user.role === 'SUP'
+      ? `/dashboard/manage-institutions`
+      : user.associateInstitute?.length
+      ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
+      : '';
 
   // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
@@ -29,7 +32,8 @@ const HeaderMegaMenu = () => {
         {
           title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
           key: 'general_information',
-          redirectionUrl: `${baseUrl}/edit`,
+          redirectionUrl:
+            user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
           active: location.pathname.indexOf(`${baseUrl}/edit`) > -1,
         },
         {
@@ -147,6 +151,12 @@ const HeaderMegaMenu = () => {
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active: location.pathname.indexOf('home') > -1,
     },
+    // {
+    //   title: Institute_info[userLanguage]['TABS']['HOME'],
+    //   key: 'game-changers',
+    //   redirectionUrl: `${baseUrl}/dashboard/game-changers`,
+    //   active: location.pathname.indexOf('game-changers') > -1,
+    // },
     {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
       key: 'community',

@@ -8,9 +8,11 @@ import Buttons from '../../../../../Atoms/Buttons';
 import Loader from '../../../../../Atoms/Loader';
 import Modal from '../../../../../Atoms/Modal';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
+
 import AddEvidence from './AddEvidence';
 import CourseMeasurementsCard from './CourseMeasurementsCard';
 import MeasurementsList from './MeasurementsList';
+import AddLearningObjective from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 
 interface ILearningEvidence {
   fetchLessonRubrics: () => void;
@@ -45,12 +47,25 @@ const LearningEvidence = ({
   // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
-  // const [updating, setUpdating] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
 
-  // const [serverMessage, setServerMessage] = useState({
-  //   isError: false,
-  //   message: '',
-  // });
+  const addLearningObjective = (curricularId: string) => {
+    setIsFormOpen(true);
+    setSelectedObjectiveData({
+      curricularId,
+    });
+  };
+
+  const editLearningObj = (learningData: any) => {
+    setIsFormOpen(true);
+    setSelectedObjectiveData(learningData);
+  };
+
+  const handleCancel = () => {
+    setIsFormOpen(false);
+    setSelectedObjectiveData({});
+  };
 
   useEffect(() => {
     fetchCurriculum();
@@ -173,8 +188,6 @@ const LearningEvidence = ({
       setSelectedCurriculumList(selectedCurriculums);
       setLoading(false);
     } catch (error) {
-      console.log(error, 'errorerrorerrorerror');
-
       setLoading(false);
     }
   };
@@ -208,6 +221,25 @@ const LearningEvidence = ({
     updateMeasurementList(selectedMeasurements);
   };
 
+  const postLearningObjectiveChange = (data: any) => {
+    setSelectedCurriculumList((prevList) =>
+      prevList.map((item) =>
+        item.id === data.curriculumID
+          ? {
+              ...item,
+              learningObjectiveData: selectedObjectiveData?.id
+                ? item.learningObjectiveData.map((objective: any) =>
+                    objective.id === data.id ? {...objective, ...data} : objective
+                  )
+                : [...item.learningObjectiveData, data],
+            }
+          : item
+      )
+    );
+    setIsFormOpen(false);
+    setSelectedObjectiveData({});
+  };
+
   const renderTableView = (learningEvidenceList: any) => {
     return (
       <MeasurementsList
@@ -231,9 +263,18 @@ const LearningEvidence = ({
     <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-2 xl:px-8 border-0 border-gray-200">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
-            {LearningEvidenceDict[userLanguage]['TITLE']}
-          </h3>
+          <div className="flex justify-between pb-8">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">
+              {LearningEvidenceDict[userLanguage]['TITLE']}
+            </h3>
+            {/* <div className="flex justify-end w-72">
+              <Buttons
+                btnClass=""
+                label={'Add Learning Objective'}
+                onClick={() => setIsFormOpen(true)}
+              />
+            </div> */}
+          </div>
           {loading ? (
             <div className="mt-4">
               <Loader />
@@ -249,6 +290,8 @@ const LearningEvidence = ({
                       selectedMeasurements={selectedMeasurements}
                       setAddModalShow={setAddModalShow}
                       key={curriculum.id}
+                      addLearningObjective={addLearningObjective}
+                      editLearningObj={editLearningObj}
                     />
                   ))}
                 </div>
@@ -300,6 +343,24 @@ const LearningEvidence = ({
             closeAction={() => setAddModalShow(false)}>
             <div className="min-w-256">
               <AddEvidence />
+            </div>
+          </Modal>
+        )}
+        {isFormOpen && (
+          <Modal
+            showHeader
+            showFooter={false}
+            showHeaderBorder
+            title={'Learning Objective'}
+            closeOnBackdrop
+            closeAction={handleCancel}>
+            <div className="min-w-120">
+              <AddLearningObjective
+                curricularId={selectedObjectiveData.curricularId}
+                handleCancel={handleCancel}
+                learningObjectiveData={selectedObjectiveData}
+                postMutation={postLearningObjectiveChange}
+              />
             </div>
           </Modal>
         )}
