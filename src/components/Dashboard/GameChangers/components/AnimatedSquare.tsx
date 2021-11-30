@@ -69,7 +69,7 @@ const AnimatedSquare = ({
         );
 
         if (currentIteration === t.length - 1) {
-          setCurrentIteration(0);
+          // setCurrentIteration(0);
           clearInterval(interval);
           onComplete();
         }

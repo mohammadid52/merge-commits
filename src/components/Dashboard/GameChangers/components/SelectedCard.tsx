@@ -114,7 +114,7 @@ const SelectedCard = ({
       }, 4000);
 
       if (currentIteration === breathingHelpingTexts.length - 1) {
-        setCurrentIteration(0);
+        // setCurrentIteration(0);
         clearInterval(interval);
       }
 
@@ -159,7 +159,7 @@ const SelectedCard = ({
                 {/* <Count counter={counter} /> */}
 
                 <StartButton isActive={isActive} onStart={onStart} onPause={onPause} />
-                {exerciseType === 'square' && (
+                {exerciseType === 'square' && isActive && (
                   <ul className="mt-8 fse-text-helper-list">
                     {map(breathingHelpingTexts, (item, i) => (
                       <li
