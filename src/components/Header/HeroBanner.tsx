@@ -16,7 +16,7 @@ const HeroBanner = (props: HeroBannerProps) => {
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 w-full h-32 2xl:h-60">
+      <div className="absolute inset-0 w-full h-40 2xl:h-60">
         <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
         <img
           className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"

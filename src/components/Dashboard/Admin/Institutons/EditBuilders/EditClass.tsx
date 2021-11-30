@@ -87,6 +87,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     state: {user},
     theme,
   } = useContext(GlobalContext);
+  const isSuperAdmin = user.role === 'SUP';
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {editClassDict, RegistrationDict} = useDictionary('curate');
   const dictionary = editClassDict[userLanguage];
@@ -117,7 +118,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(
-      `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
+      isSuperAdmin ? `/dashboard/manage-institutions/manage-users/${profileId}`: `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
     );
   };
 
@@ -646,7 +647,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           </div>
 
           <div className="flex flex-col items-center justify-center w-9/10 2xl:w-6/10 m-auto px-2 mb-4">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div className="col-span-2">
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                   Add students to class
@@ -791,7 +792,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                             {'-'}
                           </div>
                         )} */}
-                        <div className="w-3/10 px-3">
+                        <div className="w-3/10 px-3 text-gray-900">
                           {item.createAt
                             ? new Date(item.createAt).toLocaleDateString()
                             : '--'}

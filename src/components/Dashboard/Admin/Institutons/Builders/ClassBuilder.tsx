@@ -67,25 +67,6 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   };
   const params = useQuery();
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false,
-    },
-    {
-      title: classData?.instituteName,
-      goBack: true,
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['Class_Creation'],
-      url: `/dashboard/manage-institutions/institution/${classData.instituteId}/class-creation`,
-      last: true,
-    },
-  ];
-
   const onChange = (e: any) => {
     setClassData({
       ...classData,

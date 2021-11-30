@@ -16,6 +16,7 @@ import {getAsset} from '../../../../assets';
 import InstitutionInfo from './InstitutionInfo';
 import HeroBanner from '@components/Header/HeroBanner';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
+import {breadcrumbsRoutes} from '@utilities/breadcrumb';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -76,6 +77,14 @@ const Institution = (props: InstitutionProps) => {
     serviceProviders: {items: [{id: '', providerID: '', status}]},
     curricula: {items: [{name: '', id: ''}]},
   });
+  const [lessonData, setLessonData] = useState<{
+    id?: string;
+    title?: string;
+  }>({});
+  const [roomData, setRoomData] = useState<{
+    id?: string;
+    title?: string;
+  }>({});
   const [isNewUpdate, setISNewUpdate] = useState(false);
   const history = useHistory();
   const match = useRouteMatch();
@@ -83,114 +92,32 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {
+      user: {isSuperAdmin},
+    },
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
-  let heroSectionTitle, breadcrumbPathForSection;
   const {pathname} = location;
-  if (pathname.indexOf('unit') > -1) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage]['UNITS'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
-      last: true,
-    };
-  } else if (pathname.indexOf('staff') > -1) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage].STAFF;
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: true,
-    };
-  } else if (
-    pathname.indexOf('manage-users') > -1 ||
-    pathname.indexOf('register-user') > -1
-  ) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage].USERS;
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: true,
-    };
-  } else if (pathname.indexOf('course') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['COURSES'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/courses`,
-      last: true,
-    };
-  } else if (pathname.indexOf('students') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/students`,
-      last: true,
-    };
-  } else if (pathname.indexOf('units') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['UNITS'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/units`,
-      last: true,
-    };
-  } else if (pathname.indexOf('lessons') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['LESSONS'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/lessons`,
-      last: true,
-    };
-  }
-  //  else if (pathname.indexOf('class') > -1) {
-  //   heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSES'];
-  //   breadcrumbPathForSection = {
-  //     title: heroSectionTitle,
-  //     url: `/dashboard/manage-institutions/institution/${institutionId}/class`,
-  //     last: true,
-  //   };
-  // }
-  else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['CLASSROOMS'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`,
-      last: true,
-    };
-  } else if (pathname.indexOf('research-and-analytics') > -1) {
-    heroSectionTitle = Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/research-and-analytics`,
-      last: true,
-    };
-  } else if (pathname.indexOf('edit') > -1) {
-    heroSectionTitle = BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'];
-    breadcrumbPathForSection = {
-      title: heroSectionTitle,
-      url: `/dashboard/manage-institutions/institution/${institutionId}/edit`,
-      last: true,
-    };
-  }
-
-  const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    // {
-    //   title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-    //   url: '/dashboard/manage-institutions',
-    //   last: false,
-    // },
-    {
-      title: institutionData?.name,
-      url:
-        currentPath !== 'edit'
-          ? `${location.pathname}${location.search}`
-          : `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false,
+  const baseUrl = isSuperAdmin
+    ? `/dashboard/manage-institutions`
+    : `/dashboard/manage-institutions/institution/${institutionId}`;
+  const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
+    breadcrumbsTitles: BreadcrumsTitles[userLanguage],
+    instituteTabTitles: Institute_info[userLanguage],
+    pathname,
+    baseUrl,
+    otherValues: {
+      lessonData,
+      roomData,
     },
-    breadcrumbPathForSection,
-  ].filter(Boolean);
+  });
 
   const toggleUpdateState = () => {
     setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
@@ -218,7 +145,7 @@ const Institution = (props: InstitutionProps) => {
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
         } else {
-          setInstitutionData(fetchInstitutionData.data.getInstitution);
+          setInstitutionData({...fetchInstitutionData.data.getInstitution});
         }
         setFetchingDetails(false);
         setISNewUpdate(false);
@@ -230,9 +157,53 @@ const Institution = (props: InstitutionProps) => {
     }
   }
 
+  const getLessonData = async () => {
+    try {
+      // To extract lesson id from path name
+      const splitUrl = pathname.split('/lessons/')?.length
+        ? pathname.split('/lessons/')[1]
+        : '';
+      if (splitUrl.indexOf('add') === -1) {
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+            id: splitUrl.split('/')[0],
+          })
+        );
+        setLessonData(result.data?.getUniversalLesson);
+      }
+    } catch (error) {}
+  };
+
+  const getRoomData = async () => {
+    try {
+      // To extract room id from path name
+      const roomId = pathname.split('/room-edit/')?.length
+        ? pathname.split('/room-edit/')[1]
+        : '';
+
+      if (roomId) {
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getRoomBasicDetails, {
+            id: roomId,
+          })
+        );
+
+        setRoomData(result.data?.getRoom);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getInstitutionData();
   }, [institutionId]);
+
+  useEffect(() => {
+    if (pathname.indexOf('lessons/') > -1) {
+      getLessonData();
+    } else if (pathname.indexOf('room') > -1) {
+      getRoomData();
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const {tab} = urlQueryParams;
@@ -253,32 +224,15 @@ const Institution = (props: InstitutionProps) => {
 
   return (
     <div className={`w-full h-full`}>
-      <div className="relative">
-        <HeroBanner imgUrl={bannerImage} title={heroSectionTitle} />
-        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-          <BreadcrumbsWithBanner items={breadCrumbsList} />
-        </div>
-      </div>
-      <div className="px-2 py-8 md:p-8">
-        {/* Section Header */}
-        {/* <BreadCrums items={breadCrumbsList} /> */}
-        {/* <div className="flex justify-between">
-        <SectionTitle title={`${institutionData.name} Dashboard`} />
-      </div> */}
-        <PageWrapper wrapClass="overflow-x-auto">
+      <BreadcrumbsWithBanner
+        bannerImage={bannerImage}
+        institutionData={institutionData}
+        institutionId={institutionId}
+        forInstitution
+      />
+      <div className="px-2 py-8 md:px-4 lg:p-8">
+        <PageWrapper>
           <Switch>
-            {/* <Route
-            path={`${match.url}/edit`}
-            exact
-            render={() => (
-              <InstitutionBuilder
-                institute={institutionData}
-                loading={fetchingDetails}
-                toggleUpdateState={toggleUpdateState}
-                updateServiceProviders={updateServiceProviders}
-              />
-            )}
-          /> */}
             <Route
               path={`${match.url}/`}
               render={() => (

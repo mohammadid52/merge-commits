@@ -3,6 +3,7 @@ import findIndex from 'lodash/findIndex';
 import React, {useContext, createContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {UniversalLesson} from '../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from './GlobalContext';
 export const UniversalLessonBuilderContext = createContext(null);
 
 const initialUniversalLessonData: UniversalLesson = {
@@ -38,6 +39,11 @@ const INITIAL_STATE: FieldsInterface = {
 };
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
+  const {
+    state: {
+      user: {isSuperAdmin},
+    },
+  } = useContext(GlobalContext);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
@@ -147,9 +153,10 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
    */
   const pushUserToThisId = (lessonId: string, pageId: string) => {
     try {
-      history.push(
-        `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}/page-builder?pageId=${pageId}`
-      );
+      const baseUrl = isSuperAdmin
+        ? '/dashboard/manage-institutions'
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
+      history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${pageId}`);
     } catch (error) {
       console.log(
         '@pushUserToThisId: Error while navigating user to other page: ' + error

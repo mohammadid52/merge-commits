@@ -57,7 +57,7 @@ export const Directory = ({
         <span className="w-6 h-6 mx-1 inline-flex justify-center items-center">
           {item.type === 'list' ? (
             <BsCircleFill className="w-2 h-2" />
-          ) : item.type === 'menu' ? (
+          ) : item.type === 'menu' || item.type === 'dropdown' ? (
             !toggle ? (
               <BsFillCaretRightFill />
             ) : (

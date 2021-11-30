@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
@@ -11,6 +11,7 @@ import Loader from '../../../../../../Atoms/Loader';
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
+import { GlobalContext } from '@contexts/GlobalContext';
 
 interface ISubjectProficiencyProps {
   roomData: any;
@@ -18,6 +19,12 @@ interface ISubjectProficiencyProps {
 
 const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
   const history = useHistory();
+
+  const {
+    state: {user},
+  } = useContext(GlobalContext);
+  const isSuperAdmin = user.role === 'SUP';
+
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
@@ -124,7 +131,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
 
   const redirectToUserPage = (studentId: string) => {
     history.push(
-      `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+      isSuperAdmin ? `/dashboard/manage-institutions/users/${studentId}` : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
     );
   };
 

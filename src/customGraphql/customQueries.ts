@@ -1751,6 +1751,47 @@ export const listCurriculums = /* GraphQL */ `
   }
 `;
 
+export const listCurriculumsForSuperAdmin = /* GraphQL */ `
+  query ListCurriculums(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculums(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        image
+        institutionID
+        institution {
+          id
+          name
+        }
+        universalSyllabus{
+          items{
+            id
+            unit{
+              id
+              name
+            }
+          }
+        }
+        universalSyllabusSeq
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listCurriculumsForLessons = /* GraphQL */ `
   query ListCurriculums(
     $id: ID
@@ -1993,6 +2034,10 @@ export const listUniversalLessons = /* GraphQL */ `
         label
         title
         institutionID
+        institution{
+          id
+          name
+        }
         language
         designers
         objectives
@@ -2004,6 +2049,7 @@ export const listUniversalLessons = /* GraphQL */ `
         notes
         cardImage
         cardCaption
+        targetAudience
         createdAt
         updatedAt
         lessonPlan {
@@ -2071,6 +2117,10 @@ export const listUniversalSyllabusOptions = /* GraphQL */ `
         name
         type
         institutionID
+        institution{
+          id
+          name
+        }
       }
       nextToken
     }
@@ -2152,6 +2202,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       id
       name
       type
+      institutionID
       description
       methodology
       policies
@@ -2228,6 +2279,15 @@ export const getUniversalSyllabus = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabusBasicDetails = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
 export const listUniversalSyllabuss = /* GraphQL */ `
   query ListUniversalSyllabuss(
     $id: ID
@@ -2248,6 +2308,10 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         name
         type
         institutionID
+        institution{
+          id
+          name
+        }
         description
         methodology
         policies
@@ -2257,6 +2321,10 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         lessons {
           items {
             id
+            lesson{
+              id
+              title
+            }
           }
           nextToken
         }
@@ -2315,6 +2383,7 @@ export const getUniversalLesson = /* GraphQL */ `
       darkMode
       cardImage
       cardCaption
+      targetAudience
       lessonPlan {
         id
         title
@@ -2584,6 +2653,32 @@ export const getInstitution = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalSyllabusLessons = /* GraphQL */ `
+  query ListUniversalSyllabusLessons(
+    $filter: ModelUniversalSyllabusLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUniversalSyllabusLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        syllabusID
+        lessonID
+        lesson {
+          id
+          type
+          label
+          title
+        }
+      }
+      nextToken
+    }
+  }
+`;
 
 export const GetInstitutionDetails = /* GraphQL */ `
   query GetInstitution($id: ID!) {
@@ -2647,10 +2742,21 @@ export const GetInstitutionDetails = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           syllabiHistory
           objectives
           languages
+          universalSyllabus{
+            items{
+              id
+              unit{
+                id
+                name
+              }
+            }
+          }
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -3036,6 +3142,15 @@ export const getCurriculum = /* GraphQL */ `
   }
 `;
 
+export const getCurriculumBasicDetails = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
 export const getCurriculumUniversalSyllabusSequence = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
@@ -3079,6 +3194,16 @@ export const getLesson = /* GraphQL */ `
     }
   }
 `;
+
+export const getUniversalLessonBasicDetails = /* GraphQL */ `
+  query getUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      title
+    }
+  }
+`;
+
 export const listCheckpoints = /* GraphQL */ `
   query ListCheckpoints(
     $filter: ModelCheckpointFilterInput
@@ -4609,6 +4734,15 @@ export const getScheduleDetails = /* GraphQL */ `
   }
 `;
 
+export const getRoomBasicDetails = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
 export const listRoomsNotebook = /* GraphQL */ `
   query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
@@ -4816,6 +4950,26 @@ export const listStaffWithBasicInfo = /* GraphQL */ `
     }
   }
 `;
+
+export const listStaffOptions = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+        staffMember{
+          firstName
+          preferredName
+          lastName
+          role
+        }
+      }
+    }
+  }
+`;
+
 export const listCurriculumUnitss = /* GraphQL */ `
   query ListCurriculumUnitss(
     $filter: ModelcurriculumUnitsFilterInput
@@ -4853,6 +5007,30 @@ export const listClassroomGroupssOptions = /* GraphQL */ `
         classRoomID
         groupName
         groupType
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listInstitutionOptions = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
       }
       nextToken
     }

@@ -38,7 +38,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
   const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles, LessonsListDict, paginationPage} = useDictionary(clientKey);
+  const {
+    BreadcrumsTitles,
+    CommonlyUsedDict,
+    LessonsListDict,
+    paginationPage,
+  } = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
@@ -58,6 +63,8 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     name: '',
     asc: true,
   });
+  const [institutionList, setInstitutionList] = useState<any>([]);
+  const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -151,7 +158,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const getLessonsList = async () => {
     try {
       let condition = {};
-      if (instId) {
+      if (instId && !state.user.isSuperAdmin) {
         condition = {
           filter: {
             institutionID: {eq: instId},
@@ -223,7 +230,43 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
   const removeSearchAction = () => {
     backToInitials();
+    onSearch('', selectedInstitution?.id);
     setSearchInput({value: '', isActive: false});
+  };
+
+  const onSearch = (searchValue: string, institutionId?: string) => {
+    let filteredData;
+    if (searchValue && institutionId) {
+      filteredData = [...lessonsData].filter(
+        (item: any) =>
+          item.title?.toLowerCase().includes(searchValue.toLowerCase()) &&
+          item.institution?.id === institutionId
+      );
+    } else if (institutionId) {
+      filteredData = [...lessonsData].filter(
+        (item: any) => item.institution?.id === institutionId
+      );
+    } else if (searchValue) {
+      filteredData = [...lessonsData].filter((item: any) =>
+        item.name?.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    } else {
+      filteredData = lessonsData;
+    }
+    setCurrentList(filteredData);
+    setTotalPages(Math.floor(filteredData.length / pageCount));
+    setFirstPage(true);
+    setLastPage(!(filteredData.length > pageCount));
+  };
+
+  const instituteChange = (_: string, name: string, value: string) => {
+    setSelectedInstitution({name, id: value});
+    onSearch(searchInput.value, value);
+  };
+
+  const onInstitutionSelectionRemove = () => {
+    setSelectedInstitution({});
+    onSearch(searchInput.value, '');
   };
 
   const fetchSortedList = () => {
@@ -245,6 +288,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
 
   useEffect(() => {
+    fetchInstitutions();
     getLessonsList();
   }, []);
 
@@ -319,6 +363,19 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     }
   };
 
+  const fetchInstitutions = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutionOptions)
+      );
+      setInstitutionList(
+        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        )
+      );
+    } catch (error) {}
+  };
+
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
       setDeleteModal({
@@ -355,6 +412,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     );
   };
 
+  const redirectToInstitution = (institutionId: string) => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
+    );
+  };
+
   {
     return (
       <div className={`w-full h-full`}>
@@ -367,11 +430,11 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         {/* Header section */}
         {!isInInstitution && <BreadCrums items={breadCrumsList} />}
         <div
-          className={`flex justify-between ${
-            isInInstitution ? 'items-center px-8' : ''
+          className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
+            isInInstitution ? 'lg:items-center px-8' : ''
           }`}>
           {isInInstitution ? (
-            <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
+            <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto my-4 lg:mb-0">
               {LessonsListDict[userLanguage]['HEADING']}
             </h3>
           ) : (
@@ -384,10 +447,22 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             <SearchInput
               value={searchInput.value}
               onChange={setSearch}
-              onKeyDown={searchLessonsFromList}
+              onKeyDown={() => onSearch(searchInput.value, selectedInstitution?.id)}
               closeAction={removeSearchAction}
               style={`mr-4 ${isInInstitution ? 'w-auto' : 'w-full'}`}
             />
+            {state.user.isSuperAdmin && (
+              <Selector
+                placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
+                list={institutionList}
+                selectedItem={selectedInstitution?.name}
+                onChange={instituteChange}
+                arrowHidden={true}
+                additionalClass={'w-auto lg:w-48'}
+                isClearable
+                onClear={onInstitutionSelectionRemove}
+              />
+            )}
             {!isInInstitution && (
               <>
                 <Selector
@@ -408,12 +483,14 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                 </button>
               </>
             )}
-            <Buttons
-              label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
-              onClick={buildLesson}
-              btnClass={isInInstitution ? '' : 'mr-4 w-full'}
-              Icon={IoMdAddCircleOutline}
-            />
+            {!state.user.isSuperAdmin && (
+              <Buttons
+                label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
+                onClick={buildLesson}
+                btnClass={isInInstitution ? '' : 'mr-4 w-full'}
+                Icon={IoMdAddCircleOutline}
+              />
+            )}
             {params.get('from') ? (
               <Buttons
                 label="Go back"
@@ -431,15 +508,24 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             <div
               className={`${
                 isInInstitution ? '' : 'white_back px-8'
-              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200`}>
-              <div className={`h-8/10 ${isInInstitution ? '' : 'px-4'}`}>
+              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 overflow-x-scroll`}>
+              <div
+                className={`h-8/10 ${isInInstitution ? '' : 'px-4'} w-screen lg:w-auto`}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
                   </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div
+                    className={`${
+                      state.user.isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+                    } px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                     <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
                   </div>
+                  {state.user.isSuperAdmin && (
+                    <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>{LessonsListDict[userLanguage]['INSTITUTION_NAME']}</span>
+                    </div>
+                  )}
                   {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
@@ -448,17 +534,22 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       {LessonsListDict[userLanguage]['TYPE']}
                     </span>
                   </div>
+                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">
+                      {LessonsListDict[userLanguage]['TARGET_AUDIENCE']}
+                    </span>
+                  </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Created Date</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Last Edit Date</span>
                   </div>
-                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {LessonsListDict[userLanguage]['LANGUAGE']}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {LessonsListDict[userLanguage]['ACTION']}
                   </div>
@@ -468,7 +559,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                     .fill(' ')
                     .map((_: any, index: number) => (
                       <Fragment key={index}>
-                        <LessonListLoader />
+                        <LessonListLoader isSuperAdmin={state.user.isSuperAdmin} />
                       </Fragment>
                     ))
                 ) : currentList?.length ? (
@@ -479,6 +570,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}
                       title={lessonsObject.title}
+                      institution={lessonsObject.institution}
                       type={lessonsObject.type && getType(lessonsObject.type)}
                       languages={
                         lessonsObject?.language &&
@@ -486,17 +578,24 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                           getLanguageString(item)
                         )
                       }
+                      targetAudience={lessonsObject.targetAudience}
                       lessonObject={lessonsObject}
                       checkIfRemovable={checkIfRemovable}
                       handleToggleDelete={handleToggleDelete}
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
                       zebraStripping={isInInstitution}
+                      isSuperAdmin={state.user.isSuperAdmin}
+                      redirectToInstitution={() =>
+                        redirectToInstitution(lessonsObject.institution?.id)
+                      }
                     />
                   ))
                 ) : (
                   <div className="flex p-12 mx-auto text-gray-400 justify-center">
-                    {LessonsListDict[userLanguage]['NORESULT']}
+                    {searchInput?.value || selectedInstitution?.id
+                      ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+                      : LessonsListDict[userLanguage]['NORESULT']}
                   </div>
                 )}
                 {deleteModal.show && (
@@ -514,17 +613,19 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
               {!searchInput.isActive && totalLessonNum > 0 && (
                 <div className="flex justify-center my-4">
                   <Fragment>
-                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                      {' '}
-                      {paginationPage(userLanguage, currentPage, totalPages)}
-                    </span>
-                    <Pagination
-                      currentPage={currentPage + 1}
-                      setNext={goNextPage}
-                      setPrev={goPrevPage}
-                      firstPage={firstPage}
-                      lastPage={lastPage}
-                    />
+                    <div className="flex justify-between flex-col lg:flex-row">
+                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
+                        {' '}
+                        {paginationPage(userLanguage, currentPage, totalPages)}
+                      </span>
+                      <Pagination
+                        currentPage={currentPage + 1}
+                        setNext={goNextPage}
+                        setPrev={goPrevPage}
+                        firstPage={firstPage}
+                        lastPage={lastPage}
+                      />
+                    </div>
                     <PageCountSelector
                       pageSize={pageCount}
                       setPageSize={(c: number) => setPageCount(c)}

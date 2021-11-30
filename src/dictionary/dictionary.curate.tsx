@@ -41,6 +41,19 @@ const BUTTONS: any = {
   },
 };
 
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK: 'Back',
+    BACK_TO_LIST: 'Back to list',
+    NO_SEARCH_RESULT: 'No data found',
+  },
+  ES: {
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
+    NO_SEARCH_RESULT: 'TBD',
+  },
+};
+
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
@@ -413,6 +426,7 @@ const staffBuilderDict: any = {
     NO: 'No.',
     NAME: 'Name',
     ROLE: 'Role',
+    INSTITUTION_NAME: 'Institution Name',
     STATUS: 'Status',
     ACTION: 'Action',
     UPDATING: 'updating...',
@@ -429,6 +443,7 @@ const staffBuilderDict: any = {
     NO: 'TBD',
     NAME: 'TBD',
     ROLE: 'TBD',
+    INSTITUTION_NAME: 'TBD',
     STATUS: 'TBD',
     ACTION: 'TBD',
     UPDATING: 'TBD',
@@ -906,7 +921,7 @@ const Institute_info: any = {
       CLASSROOMS: 'Classroom Manager',
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lesson Manager',
-      RESEARCH_AND_ANALYTICS: 'Research & Analytics',
+      RESEARCH_AND_ANALYTICS: 'Analytics Manager',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
@@ -1218,10 +1233,15 @@ const InstitueCurriculum: any = {
     },
     NO: 'No.',
     NAME: 'Course Name',
+    INSTITUTION_NAME: 'Institution Name',
+    COURSE_TYPE: 'Course Type',
+    UNITS: 'Units',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
+    LOADING: 'Loading Courses...',
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     TITLE: 'TBD',
@@ -1230,10 +1250,15 @@ const InstitueCurriculum: any = {
     },
     NO: 'TBD',
     NAME: 'TBD',
+    INSTITUTION_NAME: 'TBD',
+    COURSE_TYPE: 'TBD',
+    UNITS: 'TBD',
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
     NO_DELETE: 'TBD',
+    LOADING: 'TBD',
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -1243,6 +1268,7 @@ const InstitueRomms: any = {
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
+    INSTITUTION_NAME: 'Institution Name',
     TEACHER: 'Teacher',
     CURRICULUM: 'COurse',
     MXSTUDENTS: 'Max. Students',
@@ -1257,6 +1283,8 @@ const InstitueRomms: any = {
       ADD: 'New Classroom',
     },
     LOADING: 'Loading Classrooms...',
+    SELECT_STAFF: 'Select Staff',
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     TITLE: 'TBD',
@@ -1264,6 +1292,7 @@ const InstitueRomms: any = {
     CURRICULUM: 'TBD',
     CLASSROOMS_NAME: 'TBD',
     CLASS_NAME: 'TBD',
+    INSTITUTION_NAME: 'TBD',
     TEACHER: 'TBD',
     MXSTUDENTS: 'TBD',
     ACTION: 'TBD',
@@ -1276,6 +1305,8 @@ const InstitueRomms: any = {
       ADD: 'TBD',
     },
     LOADING: 'Cargando aulas...',
+    SELECT_STAFF: 'TBD',
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -2249,6 +2280,7 @@ const SyllabusDict: any = {
     TITLE: 'Unit Builder',
     LESSON_PLAN: 'LESSON PLAN MANAGER',
     ADD_NEW_LESSON: 'New Lesson',
+    ADD_UNIT: 'Add Unit',
     SELECT_LESSON: 'Select Lesson',
     HEADING: 'UNIT INFORMATION',
     LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
@@ -2270,6 +2302,7 @@ const SyllabusDict: any = {
     TITLE: 'TBD',
     LESSON_PLAN: 'TBD',
     ADD_NEW_LESSON: 'TBD',
+    ADD_UNIT: 'TBD',
     SELECT_LESSON: 'TBD',
     HEADING: 'TBD',
     LESSON_PLAN_HEADING: 'TBD',
@@ -3607,10 +3640,14 @@ const UnitLookupDict: any = {
       'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
+    NAME: 'Name',
+    INSTITUTION_NAME: 'Institution Name',
     UNITNAME: 'Module Name',
+    LESSONS: 'Lessons',
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This session is not added to any course or modules.',
+    NO_UNIT_ADDED: 'This lesson is not added to any unit',
     NEW_UNIT: 'New Unit',
     UNIT_DETAILS: 'View Unit details',
     VIEW: 'View',
@@ -3621,16 +3658,21 @@ const UnitLookupDict: any = {
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
     NO_DELETE: '(Unit in use)',
+    SELECT_INSTITUTION: 'Select Institution',
   },
   ES: {
     HEADING: 'TBD',
     NOTE: 'TBD',
     NO: 'TBD',
     CURRICULUMNAME: 'TBD',
+    NAME: 'TBD',
+    INSTITUTION_NAME: 'TBD',
     UNITNAME: 'TBD',
+    LESSONS: 'Lessons',
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
+    NO_UNIT_ADDED: 'TBD',
     NEW_UNIT: 'New Unit',
     UNIT_DETAILS: 'View Unit details',
     VIEW: 'View',
@@ -3641,6 +3683,7 @@ const UnitLookupDict: any = {
       FETCHERR: 'TBD',
     },
     NO_DELETE: '(Unit in use)',
+    SELECT_INSTITUTION: 'TBD',
   },
 };
 
@@ -3850,6 +3893,9 @@ const LessonsListDict: any = {
     SORTBY: 'Sort By',
     NO: 'No.',
     LESSONTITLE: 'Lesson Title',
+    INSTITUTION_NAME: 'Institution Name',
+    SELECT_INSTITUTION: 'Select Institution',
+    TARGET_AUDIENCE: 'Target Audience',
     TYPE: 'Type',
     LANGUAGE: 'Language',
     ACTION: 'Actions',
@@ -3867,6 +3913,7 @@ const LessonsListDict: any = {
     SORTBY: 'TBD',
     NO: 'TBD',
     LESSONTITLE: 'TBD',
+    TARGET_AUDIENCE: 'TBD',
     TYPE: 'TBD',
     LANGUAGE: 'TBD',
     ACTION: 'TBD',
@@ -3954,17 +4001,6 @@ const LearningEvidenceDict: any = {
   },
   ES: {
     TITLE: 'TBD',
-  },
-};
-
-const CommonlyUsedDict: any = {
-  EN: {
-    BACK: 'Back',
-    BACK_TO_LIST: 'Back to list',
-  },
-  ES: {
-    BACK: 'TBD',
-    BACK_TO_LIST: 'TBD',
   },
 };
 

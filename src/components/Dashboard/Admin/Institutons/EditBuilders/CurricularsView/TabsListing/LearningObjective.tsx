@@ -474,7 +474,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                 </div>
               )}
               <div className="py-4">
-                <div className="grid px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
+                <div className="grid px-2 lg:px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
                   {/* <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable" direction="horizontal">
                       {(provided, snapshot) => (

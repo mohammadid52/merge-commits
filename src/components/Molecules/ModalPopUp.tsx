@@ -89,7 +89,7 @@ const ModalPopUp = (props: ModalProps) => {
                       ? 'Saving'
                       : 'Save'
                   }
-                  btnClass="px-10 py-3 ml-4"
+                  btnClass="px-10 py-3 mr-4"
                   onClick={saveAction}
                 />
               </Tooltip>

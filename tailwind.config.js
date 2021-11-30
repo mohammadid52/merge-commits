@@ -145,8 +145,8 @@ module.exports = {
       0: '0rem',
       0.5: '0.5rem',
       1: '1rem',
-      2.5: '2.5rem',
       2: '2rem',
+      2.5: '2.5rem',
       3: '3rem',
       3.5: '3.5rem',
       4: '4rem',
@@ -743,6 +743,10 @@ module.exports = {
         'inner-box': 'inset 0 2px 4px 0 #191d25',
         container: '1px 1px 10px 1px #e0e0e0',
       },
+      translate: {
+        100: '25rem',
+        160: '40rem',
+      }
     },
   },
   variants: {

@@ -387,7 +387,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       ? `${classRoomDict[userLanguage]['STEP']} 1:`
                       : ''
                   } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
-                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
+                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name || ''}` : ''
                   }`}
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />

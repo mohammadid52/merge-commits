@@ -1,12 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../../Atoms/Buttons';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
 
@@ -23,10 +19,6 @@ interface AddLearningObjectiveProps {
 
 const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const {curricularId, handleCancel, learningObjectiveData, postMutation} = props;
-  const history = useHistory();
-  const urlParams: any = useParams();
-  // const curricularId = urlParams.curricularId;
-  // const institutionId = urlParams.institutionId;
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -34,21 +26,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const [validation, setValidation] = useState({isValid: true, msg: ''});
   const [learningsIds, setLearningsIds] = useState([]);
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const {ADDLEARINGOBJDICT, BreadcrumsTitles} = useDictionary(clientKey);
-
-  // const breadCrumsList = [
-  //   {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-  //   {
-  //     title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-  //     url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-  //     last: false,
-  //   },
-  //   {
-  //     title: BreadcrumsTitles[userLanguage]['LEARINGOBJECTIVE'],
-  //     url: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/add`,
-  //     last: true,
-  //   },
-  // ];
+  const {ADDLEARINGOBJDICT} = useDictionary(clientKey);
 
   useEffect(() => {
     if (learningObjectiveData?.id) {

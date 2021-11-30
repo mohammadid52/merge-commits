@@ -107,7 +107,8 @@ const Registration = ({
     {code: 'FLW', name: 'Fellow'},
     {code: 'CRD', name: 'Coordinator'},
     {code: 'TR', name: 'Teacher'},
-    (!isInModalPopup || (isInModalPopup && classId)) && {code: 'ST', name: 'Student'},
+    (!isInModalPopup || (isInModalPopup && classId)) &&
+      state.user.role !== 'BLD' && {code: 'ST', name: 'Student'},
   ].filter(Boolean);
 
   const breadCrumsList = [

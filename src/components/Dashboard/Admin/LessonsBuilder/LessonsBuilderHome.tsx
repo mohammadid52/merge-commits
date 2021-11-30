@@ -11,7 +11,7 @@ import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
 
 interface ILessonBuilderHomeProps {
-  instId: string;
+  instId?: string;
 }
 
 const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {

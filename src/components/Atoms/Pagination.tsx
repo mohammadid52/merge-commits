@@ -129,7 +129,7 @@ const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
-    <div className="flex flex-wrap items-center justify-center">
+    <div className="flex flex-wrap items-center justify-start lg:justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
       {currentPage !== 1 && (
         <span className={`w-auto mr-2 ${theme.textColor[themeColor]}`}> . . . </span>

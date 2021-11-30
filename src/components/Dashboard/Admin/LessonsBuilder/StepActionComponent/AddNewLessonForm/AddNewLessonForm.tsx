@@ -40,7 +40,7 @@ interface AddNewLessonFormProps {
 
 const Card = ({
   cardTitle,
-  className,
+  className = '',
   children,
 }: {
   cardTitle: string;
@@ -49,7 +49,7 @@ const Card = ({
 }) => {
   return (
     <div
-      className={`${className} w-auto min-h-56 min-w-56 customShadow p-4 bg-white rounded-lg`}>
+      className={`${className} w-auto min-h-56 min-w-56 customShadow p-4 bg-white rounded-lg my-2 lg:my-0`}>
       <div className="px-3 mb-2">
         <h4 className="half-border relative  w-auto  text-lg font-medium tracking-wide ">
           {cardTitle}
@@ -420,7 +420,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   } = formData;
 
   return (
-    <div className="shadow-5 overflow-hidden mb-4 bg-gray-200">
+    <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-gray-200">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
@@ -428,7 +428,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       </div> */}
 
       <div className="">
-        <div className="h-9/10 grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+        <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
           <Card cardTitle={'Lesson Details'}>
             <div className="px-3">
               <div className="px-0 py-4">
@@ -447,7 +447,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   <p className="text-red-600 text-sm">{validation.name}</p>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-x-4">
+              <div className="grid lg:grid-cols-2 gap-x-4">
                 <div className="px-0 py-4">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                     {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
@@ -476,7 +476,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-x-4">
+              <div className="grid lg:grid-cols-2 gap-x-4">
                 <div className="px-0 py-4">
                   <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                     {AddNewLessonFormDict[userLanguage]['TARGET_AUDIENCE']}{' '}

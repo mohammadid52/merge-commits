@@ -192,7 +192,7 @@ const Dashboard = (props: DashboardProps) => {
   // ##################################################################### //
 
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
-  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
+  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(true);
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
 
   // ##################################################################### //

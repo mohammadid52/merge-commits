@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoCardSharp, IoDocumentText} from 'react-icons/io5';
+import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
@@ -16,11 +16,7 @@ import {
 } from '../../../../interfaces/LessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import SectionTitle from '../../../Atoms/SectionTitle';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
@@ -66,11 +62,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
+  const lessonIdFromUrl = (useParams() as any).lessonId;
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {BreadcrumsTitles, AddNewLessonFormDict, LessonBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {
     name: '',
@@ -127,7 +122,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [lessonId, setLessonId] = useState((useParams() as any).lessonId || '');
+  const [addedSyllabus, setAddedSyllabus] = useState([]);
+  const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [institutionData, setInstitutionData] = useState<any>(null);
@@ -256,7 +252,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         });
         fetchStaffByInstitution(savedData.institutionID);
       }
-
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
@@ -267,6 +262,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       console.log('Error while fetching lesson data');
       history.push(`/dashboard/manage-institutions/institution/${instId}/lessons`);
     }
+  };
+
+  const fetchUniversalSyllabus = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(customQueries.listUniversalSyllabusLessons, {
+        filter: {
+          lessonID: {eq: lessonId},
+        },
+      })
+    );
+    const assignedSyllabus = result?.data?.listUniversalSyllabusLessons.items;
+    fetchCurriculum(assignedSyllabus);
+    setAddedSyllabus(assignedSyllabus);
   };
 
   // old query
@@ -280,6 +288,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (lessonId) {
       setLoading(true);
       fetchUniversalLessonDetails();
+      fetchUniversalSyllabus();
     } else {
       setUniversalLessonDetails({
         id: '',
@@ -290,11 +299,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         lessonPlan: [],
       });
     }
-  }, []);
+  }, [lessonId]);
 
   useEffect(() => {
-    fetchCurriculum();
-  }, [formData?.institution]);
+    if (lessonIdFromUrl) {
+      setLessonId(lessonIdFromUrl);
+    }
+  }, [lessonIdFromUrl]);
+
+  // useEffect(() => {
+  //   fetchCurriculum();
+  // }, [formData?.institution]);
 
   useEffect(() => {
     if (instId && !lessonId) {
@@ -437,7 +452,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const fetchCurriculum = async () => {
+  const fetchCurriculum = async (assignedSyllabus: any = addedSyllabus) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
@@ -475,13 +490,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setCurriculumList(curriculums);
       let selectedCurriculums: any = [];
       curriculums.map((curriculum: any) => {
-        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-          (syllabus: any) =>
-            syllabus.unit?.lessons?.items.filter(
-              (lesson: any) => lesson.lessonID === lessonId
-            ).length
+        const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
+        const assignedSyllabi = curriculum.universalSyllabus?.items.find(
+          (syllabus: any) => addedSyllabusIds.includes(syllabus.unitId)
         );
-        const isCourseAdded = Boolean(assignedSyllabi.length);
+        const isCourseAdded = Boolean(assignedSyllabi);
         if (isCourseAdded) {
           selectedCurriculums.push({
             ...curriculum,
@@ -593,10 +606,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             fetchCurriculum={fetchCurriculum}
             institution={formData?.institution}
             lessonId={lessonId}
+            lessonName={formData?.name}
             lessonPlans={universalLessonDetails?.lessonPlan}
             lessonType={formData.type?.value}
             loading={curriculumLoading}
             selectedCurriculums={selectedCurriculumList}
+            addedSyllabus={addedSyllabus}
+            setAddedSyllabus={setAddedSyllabus}
           />
         );
       case 'learning-evidence':
@@ -717,60 +733,40 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [step]);
 
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
-      last: false,
-    },
-    {
-      title: params.get('lessonId')
-        ? loading
-          ? 'Loading...'
-          : formData?.name
-        : BreadcrumsTitles[userLanguage]['LESSON_BUILDER'],
-      url: `${match.url}`,
-      last: true,
-    },
-  ];
-
   const steps: IStepElementInterface[] = [
     {
-      title: 'Overview',
-      description: 'Capture core details of your lesson',
+      title: LessonBuilderDict[userLanguage]['OVEVIEW_TITLE'],
+      description: LessonBuilderDict[userLanguage]['OVERVIEW_DESCRIPTION'],
       stepValue: 'overview',
       icon: <IoCardSharp />,
       isComplete: true,
     },
     {
-      title: 'Activities',
-      description: 'Create class and home work here',
+      title: LessonBuilderDict[userLanguage]['ACTIVITY_TITLE'],
+      description: LessonBuilderDict[userLanguage]['ACTIVITY_DESCRIPTION'],
       stepValue: 'activities',
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP'],
     },
     {
-      title: 'Courses',
-      description: 'Assign lessons to courses',
+      title: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TITLE'],
+      description: LessonBuilderDict[userLanguage]['UNIT_MANAGER_DESCRIPTION'],
       stepValue: 'courses',
       icon: <FaQuestionCircle />,
       disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
       isComplete: false,
-      tooltipText: 'Create lesson activities in step 2 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP'],
     },
     {
-      title: 'Learning Evidence',
-      description: 'Link measurements to activities',
+      title: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TITLE'],
+      description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
-      disabled: !(
-        Boolean(selectedMeasurements?.length) || Boolean(selectedCurriculumList.length)
-      ),
+      disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)),
       isComplete: false,
-      tooltipText: 'Assign your lesson to courses in step 3 to continue',
+      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP'],
     },
   ];
 
@@ -778,33 +774,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      {/* <BreadCrums
-        items={breadCrumsList}
-        unsavedChanges={unsavedChanges}
-        toggleModal={toggleUnSaveModal}
-      /> */}
-      {/* <div className="flex justify-between">
-        <SectionTitle
-          title={LessonBuilderDict[userLanguage]['TITLE']}
-          subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
-        />
-        {params.get('from') ? (
-          <div className="flex justify-end py-4 mb-4 w-5/10">
-            <Buttons
-              label="Go back"
-              btnClass="mr-4"
-              onClick={() => history.goBack()}
-              Icon={IoArrowUndoCircleOutline}
-            />
-          </div>
-        ) : null}
-      </div> */}
       <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
         {LessonBuilderDict[userLanguage]['TITLE']}
       </h3>
-      {/* Body */}
-      {/* <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}> */}
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}

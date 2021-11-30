@@ -1,19 +1,15 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
-import Loader from '@components/Atoms/Loader';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
-import Csv from '@components/Dashboard/Csv/Csv';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
-import * as customMutations from '@customGraphql/customMutations';
-import DroppableMedia from '@molecules/DroppableMedia';
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
-import {AiOutlineCamera} from 'react-icons/ai';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {IoIosGlobe} from 'react-icons/io';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {HiPencil} from 'react-icons/hi';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Storage from '@aws-amplify/storage';
+
+import * as customMutations from '@customGraphql/customMutations';
+import DroppableMedia from '@molecules/DroppableMedia';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
@@ -24,6 +20,7 @@ import {
   initials,
   stringToHslColor,
 } from '../../../../utilities/strings';
+
 import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
 import User from '../UserManagement/User';
 import UserLookup from '../UserManagement/UserLookup';
@@ -37,8 +34,13 @@ import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
 import StaffBuilder from './Listing/StaffBuilder';
 import Students from './Students';
-import {useParams} from 'react-router';
-import {useQuery} from '@customHooks/urlParam';
+
+import Loader from '@components/Atoms/Loader';
+import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import Csv from '@components/Dashboard/Csv/Csv';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
+import Tooltip from '@components/Atoms/Tooltip';
+import NavBarRouter from '../NavBarRouter';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -90,128 +92,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
   const mediaRef = useRef(null);
-
-  // const headerMenusForInstitution = [
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
-  //     key: 'institution',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
-  //         key: 'general_information',
-  //         redirectionUrl: `${match.url}/edit`,
-  //         active: location.pathname.indexOf('/edit') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['STAFF'],
-  //         key: 'staff',
-  //         redirectionUrl: `${match.url}/staff`,
-  //         active: location.pathname.indexOf('staff') > -1,
-  //       },
-  //       {
-  //         title: 'User registry',
-  //         key: 'user_registry',
-  //         redirectionUrl: `${match.url}/person`,
-  //         active: location.pathname.indexOf('register') > -1,
-  //       },
-  //       {
-  //         title: 'Register New User',
-  //         key: 'register',
-  //         redirectionUrl: `${match.url}/register-user`,
-  //         active: location.pathname.indexOf('register-user') > -1,
-  //       },
-  //     ].filter(Boolean),
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
-  //     key: 'course',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: 'Courses',
-  //         key: 'course',
-  //         redirectionUrl: `${match.url}/courses`,
-  //         active: location.pathname.indexOf('course') > -1,
-  //       },
-  //       {
-  //         title: 'Units',
-  //         key: 'unit',
-  //         redirectionUrl: `${match.url}/units`,
-  //         active: location.pathname.indexOf('units') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['LESSONS'],
-  //         key: 'lessons',
-  //         redirectionUrl: `${match.url}/lessons`,
-  //         active: location.pathname.indexOf('lessons') > -1,
-  //       },
-  //       {
-  //         title: 'Game Changers ',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
-  //     key: 'class',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['CLASSES'],
-  //         key: 'class',
-  //         redirectionUrl: `${match.url}/class`,
-  //         active: location.pathname.indexOf('class') > -1,
-  //       },
-  //       {
-  //         title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
-  //         key: 'class_room',
-  //         redirectionUrl: `${match.url}/class-rooms`,
-  //         active: location.pathname.indexOf('room') > -1,
-  //       },
-  //       (user.role === 'FLW' || user.role === 'TR') && {
-  //         title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
-  //         key: 'roaster',
-  //         redirectionUrl: `${match.url}/class-rooms`,
-  //         active: location.pathname.indexOf('room') > -1,
-  //       },
-  //     ].filter(Boolean),
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
-  //     key: 'community',
-  //     type: 'dropdown',
-  //     children: [
-  //       {
-  //         title: 'New Person Spotlight',
-  //       },
-  //       {
-  //         title: 'Announcements & Events',
-  //       },
-  //       {
-  //         title: 'Front Page',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
-  //     key: 'research_and_analytics',
-  //     redirectionUrl: `${match.url}/research-and-analytics`,
-  //   },
-  // ];
-
-  const updateTab = ({key, redirectionUrl}: any) => {
-    // tabProps.setTabsData({...tabProps.tabsData, inst: key});
-    // if (redirectionUrl) {
-    //   history.push(redirectionUrl);
-    // }
-    // if (tab === 'user_registry') {
-    //   history.push(`/dashboard/manage-users`);
-    // } else if (tab === 'unit') {
-    //   // history.push(`/dashboard/manage-institutions/${institute?.id}/curricular/${curricularId}/syllabus/add`)
-    // } else {
-    //   tabProps.setTabsData({...tabProps.tabsData, inst: tab});
-    // }
-  };
 
   useEffect(() => {
     getUrl();
@@ -301,21 +181,22 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   return (
     <div>
-      <div className="h-9/10 flex px-0 md:px-4 flex-col">
+      <div className="h-9/10 flex px-0 2xl:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-col md:flex-row flex justify-center md:justify-start">
+        <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <div
             hidden={pathname.includes('page-builder')}
-            className="w-auto border-r-0 border-gray-200">
-            <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col text-center flex-shrink-0">
+            className="w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col"
+            onClick={handleImageClick}>
+            <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col flex-shrink-0">
               {imageLoading ? (
                 <div
-                  className={`w-20 h-20 md:w-40 md:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
+                  className={`w-20 h-20 md:w-30 md:h-30 2xl:w-40 2xl:h-40 flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
                   <Loader />
                 </div>
               ) : instProps?.institute?.image ? (
                 imageUrl ? (
-                  <div className="relative">
+                  <div className="relative flex justify-center">
                     <DroppableMedia
                       mediaRef={mediaRef}
                       setImage={(img: any, file: any) => {
@@ -324,15 +205,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       }}
                       toggleCropper={toggleCropper}>
                       <img
-                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        className={`profile w-20 h-20 md:w-30 md:h-30 2xl:w-40 2xl:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                         src={imageUrl}
                       />
                     </DroppableMedia>
-                    <div
-                      className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                    {/* <div
+                      className={`absolute w-8 h-8 2xl:w-12 2xl:h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} 2xl:right-2 right-2.5 bottom-0 p-1.5 2xl:p-3 cursor-pointer`}
                       onClick={handleImageClick}>
-                      <AiOutlineCamera className="w-6 h-6 text-white" />
-                    </div>
+                      <AiOutlineCamera className="w-5 h-5 2xl:w-6 2xl:h-6 text-white" />
+                    </div> */}
                   </div>
                 ) : (
                   <div
@@ -373,25 +254,27 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       </div>
                     </div>
                   </DroppableMedia>
-                  <div
-                    className={`absolute w-12 h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
+                  {/* <div
+                    className={`absolute w-8 h-8 2xl:w-12 2xl:h-12 rounded-full shadow-lg ${theme.backGroundLight[themeColor]} right-2 bottom-0 p-3 cursor-pointer`}
                     onClick={handleImageClick}>
-                    <AiOutlineCamera className="w-6 h-6 text-white" />
-                  </div>
+                    <AiOutlineCamera className="w-5 h-5 2xl:w-6 2xl:h-6 text-white" />
+                  </div> */}
                 </div>
               )}
 
-              <div className="text-xl font-bold flex items-center text-gray-900 mt-4 w-48">
-                <p>{instProps?.institute?.name ? instProps?.institute?.name : ''}</p>
-                {/* <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
+              <div className="text-xl font-bold flex items-center justify-center text-gray-900 mt-4 w-auto 2xl:w-48">
+                <p className="w-min">
+                  {instProps?.institute?.name ? instProps?.institute?.name : ''}
+                </p>
+                <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                   <span
                     className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
                     <HiPencil
                       className="w-6 h-6 pl-2"
-                      onClick={() => history.push(`${match.url}/edit?id=${id}`)}
+                      // onClick={() => history.push(`${match.url}/edit?id=${id}`)}
                     />
                   </span>
-                </Tooltip> */}
+                </Tooltip>
               </div>
             </div>
             {institute?.id && (
@@ -462,149 +345,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
               <div className="overflow-hidden h-full">
                 {/* {renderElementBySelectedMenu()} */}
-                <Switch>
-                  <Route
-                    path={`${match.url}/class`}
-                    exact
-                    render={() => (
-                      <ClassList
-                        classes={institute?.classes}
-                        instId={institute?.id}
-                        instName={institute?.name}
-                      />
-                    )}
-                  />
-                  {/* <Route
-                    path={`${match.url}/class-creation`}
-                    exact
-                    render={() => (
-                      <ClassBuilder
-                        instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )} // Create new class
-                  /> */}
-                  {/* <Route
-                    path={`${match.url}/class-edit/:classId`}
-                    exact
-                    render={() => (
-                      <EditClass
-                        instId={institute?.id}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )} // Edit current class
-                  /> */}
-                  <Route
-                    path={`${match.url}/class-rooms`}
-                    exact
-                    render={() => (
-                      <RoomsList instId={institute?.id} instName={institute?.name} />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/room-creation`}
-                    exact
-                    render={() => <ClassRoomBuilder instId={institute?.id} />} // Create new room
-                  />
-                  <Route
-                    path={`${match.url}/room-edit/:roomId`}
-                    render={() => <ClassRoomBuilder instId={institute?.id} />} // Edit current room.
-                  />
-                  <Route
-                    path={`${match.url}/register-user`}
-                    render={() => <Registration isInInstitute instId={institute?.id} />} // Register new user to roo,
-                  />
-                  <Route
-                    path={`${match.url}/students`}
-                    exact
-                    render={() => <Students instId={institute?.id} />}
-                  />
-                  <Route
-                    path={`${match.url}/courses`}
-                    exact
-                    render={() => (
-                      <CurriculumList
-                        updateCurricularList={updateCurricularList}
-                        curricular={curricular && curricular}
-                        instId={institute?.id}
-                        instName={institute?.name}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/units`}
-                    exact
-                    render={() => (
-                      <UnitList instId={institute?.id} instName={institute?.name} />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path={`${match.url}/units/add`}
-                    render={() => <UnitBuilder instId={institute?.id} />}
-                  />
-                  <Route
-                    exact
-                    path={`${match.url}/units/:unitId/edit`}
-                    render={() => <UnitBuilder instId={institute?.id} />}
-                  />
-                  <Route
-                    path={`${match.url}/research-and-analytics`}
-                    exact
-                    render={() => <Csv institutionId={institute?.id} />}
-                  />
-                  <Route
-                    path={`${match.url}/staff`}
-                    exact
-                    render={() => (
-                      <StaffBuilder
-                        serviceProviders={institute.serviceProviders}
-                        instituteId={instProps?.institute?.id}
-                        instName={institute?.name}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/edit`}
-                    exact
-                    render={() => (
-                      <InstitutionBuilder
-                        institutionId={institute?.id}
-                        institute={instProps.institute}
-                        loading={instProps.loading}
-                        postInfoUpdate={instProps.postInfoUpdate}
-                        updateServiceProviders={instProps.updateServiceProviders}
-                        toggleUpdateState={instProps.toggleUpdateState}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/manage-users`}
-                    exact
-                    render={() => (
-                      <UserLookup instituteId={instProps?.institute?.id} isInInstitute />
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/manage-users/:userId`}
-                    render={() => <User instituteId={instProps?.institute?.id} />}
-                  />
-                  <Route
-                    path={`${match.url}/course-builder`}
-                    exact
-                    render={() => <CourseBuilder instId={institute?.id} />} // Create new course
-                  />
-                  <Route
-                    path={`${match.url}/course-builder/:courseId`}
-                    render={() => <CourseBuilder instId={institute?.id} />} // Edit course
-                  />
-                  <UniversalLessonBuilderProvider>
-                    <Route
-                      path={`${match.url}/lessons`}
-                      render={() => <LessonsBuilderHome instId={institute?.id} />}
-                    />
-                  </UniversalLessonBuilderProvider>
-                </Switch>
+                <NavBarRouter
+                  {...instProps}
+                  updateCurricularList={updateCurricularList}
+                  curricular={curricular}
+                />
               </div>
             </div>
           </div>

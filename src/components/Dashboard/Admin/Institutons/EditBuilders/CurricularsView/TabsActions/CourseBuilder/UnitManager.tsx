@@ -10,14 +10,12 @@ import * as mutations from '../../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../../customGraphql/customMutations';
 
-import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
+import {reorder} from '../../../../../../../../utilities/strings';
 import Selector from '../../../../../../../Atoms/Form/Selector';
-import {DeleteActionBtn} from '../../../../../../../Atoms/Buttons/DeleteActionBtn';
 import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
 import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
-import CurriculumList from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
 import UnitManagerRow from './UnitManagerRow';
 
 interface UIMessages {
@@ -373,7 +371,7 @@ const UnitManager = ({
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">
-        <div className="my-8 w-6/10 m-auto flex items-center justify-center">
+        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
           <div className="mr-4">
             <Selector
               selectedItem={selectedSyllabus.value}
