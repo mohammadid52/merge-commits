@@ -1200,7 +1200,6 @@ type GameChangerLog @model @key(fields: ["id"]) {
   id: ID!
   gameChangerID: ID!
   gameChanger: GameChanger @connection(fields: ["gameChangerID"])
-  personAuthID: String!
   personEmail: String!
   personAuthID: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
