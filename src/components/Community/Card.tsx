@@ -159,7 +159,7 @@ const PostComment = ({
           src={getImageFromS3Static(image)}
         />
       ) : (
-        <Placeholder />
+        <Placeholder className="mr-4" size="w-10 h-10" />
       )}
       <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
         <button
