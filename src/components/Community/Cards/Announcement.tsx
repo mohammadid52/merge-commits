@@ -31,8 +31,12 @@ const Announcements = ({
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails?.cardImageLink,
       });
+
+      if (cardDetails?.additionalLinks?.length > 0) {
+        setYoutubeVideoLink(cardDetails.additionalLinks[0]);
+      }
 
       setOverlayText(cardDetails?.cardName);
     }
@@ -94,8 +98,13 @@ const Announcements = ({
     } else if (!fields.summary) {
       setError('Please add description');
       isValid = false;
-    } else if (isEmpty(file) && !youtubeVideoLink) {
-      setError('Please add youtube/vimeo link');
+    } else if (
+      !youtubeVideoLink &&
+      !tempData.image &&
+      !youtubeVideoLink &&
+      isEmpty(file)
+    ) {
+      setError('Please add youtube/vimeo link or image');
       isValid = false;
     } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
       setError('Invalid Url');
@@ -176,7 +185,7 @@ const Announcements = ({
       </div>
 
       <AnimatedContainer show={Boolean(error)}>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
+        {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
 
       <div className="flex mt-8 justify-center px-6 pb-4">

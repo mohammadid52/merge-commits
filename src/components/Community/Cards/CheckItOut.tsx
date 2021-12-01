@@ -78,7 +78,12 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     } else if (!fields.summary) {
       setError('Description not found');
       isValid = false;
-    } else if (isEmpty(file) && !youtubeVideoLink) {
+    } else if (
+      !youtubeVideoLink &&
+      !tempData.image &&
+      !youtubeVideoLink &&
+      isEmpty(file)
+    ) {
       setError('Please add youtube/vimeo link');
       isValid = false;
     } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
@@ -98,6 +103,10 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       setTempData({
         image: cardDetails.cardImageLink,
       });
+
+      if (cardDetails?.additionalLinks?.length > 0) {
+        setYoutubeVideoLink(cardDetails.additionalLinks[0]);
+      }
 
       setOverlayText(cardDetails?.cardName);
     }
@@ -173,7 +182,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       </div>
 
       <AnimatedContainer show={Boolean(error)}>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
+        {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">

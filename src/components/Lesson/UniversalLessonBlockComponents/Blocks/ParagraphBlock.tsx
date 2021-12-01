@@ -21,12 +21,11 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
       <div className="flex w-auto items-center p-4 paragraph-block">
-        <div
+        <p
           key={inputID}
           id={inputID}
-          className={`whitespace-pre-wrap ${themeTextColor}`}>
-          {inputValue?.value ? parse(inputValue?.value) : ''}
-        </div>
+          dangerouslySetInnerHTML={{__html: inputValue?.value || '<p></p>'}}
+          className={`whitespace-pre-wrap ${themeTextColor}`}></p>
       </div>
     );
   };

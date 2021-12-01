@@ -48,6 +48,10 @@ const Spotlight = ({
         setSelectedPerson(teacher);
       }
 
+      if (cardDetails?.additionalLinks?.length > 1) {
+        setYoutubeVideoLink(cardDetails.additionalLinks[1]);
+      }
+
       setTempData({
         image: cardDetails.cardImageLink,
       });
@@ -252,7 +256,12 @@ const Spotlight = ({
     } else if (!fields.summary) {
       setError('Please add description');
       isValid = false;
-    } else if (isEmpty(file) && !youtubeVideoLink) {
+    } else if (
+      !youtubeVideoLink &&
+      !tempData.image &&
+      !youtubeVideoLink &&
+      isEmpty(file)
+    ) {
       setError('Please add youtube/vimeo link');
       isValid = false;
     } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
@@ -366,7 +375,7 @@ const Spotlight = ({
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
+        {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
