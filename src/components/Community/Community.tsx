@@ -31,7 +31,7 @@ import {awsFormatDate, dateString} from '@utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
-import {findIndex, isEmpty} from 'lodash';
+import {findIndex, isEmpty, update} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
@@ -139,9 +139,11 @@ const Community = ({}: {role: string}) => {
   const updateCommunity = useGraphqlMutation('updateCommunity', {
     onCancel,
     onSuccess: (data: ICommunityCard) => {
+      let listCopy = [...list];
       const cardIdx = findIndex(list, (item: ICommunityCard) => item.id === data.id);
-      list[cardIdx] = {...data};
-      setList([...list]);
+
+      listCopy[cardIdx] = data;
+      setList(listCopy);
     },
   });
 

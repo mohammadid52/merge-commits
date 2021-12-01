@@ -1,5 +1,4 @@
 import React from 'react';
-import {classNames} from '../../FormElements/TextInput';
 
 const AnimatedContainer = ({
   children,
@@ -9,10 +8,12 @@ const AnimatedContainer = ({
   className,
   customAnimation,
   fixWidth = false,
+  delay = '0s',
 }: {
   show: boolean;
   fixWidth?: boolean;
   className?: string;
+  delay?: string;
   customAnimation?: {show: string; hide: string};
   children: React.ReactNode;
   duration?: '150' | '200' | '300' | '500' | '700' | '1000' | string;
@@ -37,12 +38,13 @@ const AnimatedContainer = ({
   };
   return (
     <div
-      className={classNames(
-        genAnimation(),
-        'transition-all  transform',
-        `duration-${duration}`,
-        fixWidth ? (show ? className : 'w-0') : className
-      )}>
+      style={{transitionDelay: delay}}
+      className={`
+        ${genAnimation()}
+        transition-all  transform
+        duration-${duration}
+        ${fixWidth ? (show ? className : 'w-0') : className}
+      `}>
       {children}
     </div>
   );

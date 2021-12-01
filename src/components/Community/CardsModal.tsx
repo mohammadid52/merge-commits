@@ -161,8 +161,8 @@ const CardsModal = ({
               {onSpotlight && (
                 <div className="">
                   <Spotlight
-                    onSubmit={(input: ISpotlightInput) =>
-                      functions.onSpotlightSubmit(input)
+                    onSubmit={(input: ISpotlightInput, cb) =>
+                      functions.onSpotlightSubmit(input, cb)
                     }
                     instId={instId}
                     {...commonProps}
@@ -174,8 +174,8 @@ const CardsModal = ({
               {onAnnouncement && (
                 <div className="">
                   <Announcements
-                    onSubmit={(input: IAnnouncementInput) =>
-                      functions.onAnnouncementSubmit(input)
+                    onSubmit={(input: IAnnouncementInput, cb) =>
+                      functions.onAnnouncementSubmit(input, cb)
                     }
                     {...commonProps}
                   />
@@ -186,7 +186,9 @@ const CardsModal = ({
               {onEvent && (
                 <div className="">
                   <Event
-                    onSubmit={(input: IEventInput) => functions.onEventSubmit(input)}
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onEventSubmit(input, cb)
+                    }
                     {...commonProps}
                   />
                 </div>
@@ -196,7 +198,9 @@ const CardsModal = ({
               {onCheckItOut && (
                 <div className="">
                   <CheckItOut
-                    onSubmit={(input: IEventInput) => functions.onCheckItOutSubmit(input)}
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onCheckItOutSubmit(input, cb)
+                    }
                     {...commonProps}
                   />
                 </div>

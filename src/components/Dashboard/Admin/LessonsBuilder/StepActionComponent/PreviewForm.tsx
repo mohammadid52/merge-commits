@@ -1,27 +1,21 @@
-import React, {useState, useContext, useEffect, Fragment} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ReactHtmlParser from 'react-html-parser';
+import {findIndex, get, update} from 'lodash';
 import isEmpty from 'lodash/isEmpty';
-import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import ReactHtmlParser from 'react-html-parser';
 import {AiOutlineEdit} from 'react-icons/ai';
-import {BsCheckAll} from 'react-icons/bs';
-import {GiCancel} from 'react-icons/gi';
-
-import Buttons from '../../../../Atoms/Buttons';
+import {BiChevronDown} from 'react-icons/bi';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-
-import * as mutations from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
-
+import useDictionary from '../../../../../customHooks/dictionary';
+import * as mutations from '../../../../../graphql/mutations';
+import * as queries from '../../../../../graphql/queries';
 import {getTypeString} from '../../../../../utilities/strings';
+import Buttons from '../../../../Atoms/Buttons';
 import Loader from '../../../../Atoms/Loader';
-import Tooltip from '../../../../Atoms/Tooltip';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import EditQuestionModal from '../HelperComponents/EditQuestionModal';
-import {findIndex, findLastIndex, get, update} from 'lodash';
 
 interface PreviewFormProps {
   lessonName: string;

@@ -1,3 +1,4 @@
+import Label from '@components/Atoms/Form/Label';
 import {Transition} from '@headlessui/react';
 import React, {useContext, Fragment} from 'react';
 import {getAsset} from '../../../assets';
@@ -61,15 +62,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      {label && (
-        <label
-          htmlFor={id}
-          className={`${
-            dark ? 'text-white' : 'text-gray-700'
-          } block text-xs font-semibold leading-5 `}>
-          {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
-        </label>
-      )}
+      {label && <Label label={label} isRequired={isRequired} />}
 
       {textarea ? (
         <textarea

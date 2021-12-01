@@ -30,21 +30,31 @@ const useAuth = (): {
   const isFellow = role === 'FLW';
   const instId = user?.associateInstitute[0]?.institution?.id || '';
 
-  const Placeholder = ({name}: {name?: string}) => {
+  const Placeholder = ({
+    name,
+    size = 'w-10 h-10 md:w-12 md:h-12',
+    textSize = 'text-2xl',
+  }: {
+    name?: string;
+    textSize?: string;
+    size?: string;
+  }) => {
     const [firstName, lastName] = getInitialsFromString(
       name || `${user.firstName} ${user.lastName}`
     );
     return (
       <div
-        className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
+        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
         <div
-          className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
           style={{
             /*  stylelint-disable */
-            background: `${name ? stringToHslColor(firstName + ' ' + lastName) : null}`,
+            background: `${
+              firstName ? stringToHslColor(firstName + ' ' + lastName) : null
+            }`,
             textShadow: '0.2rem 0.2rem 3px #423939b3',
           }}>
-          {name && initials(firstName, lastName)}
+          {firstName && initials(firstName, lastName)}
         </div>
       </div>
     );

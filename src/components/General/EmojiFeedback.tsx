@@ -207,6 +207,7 @@ const EmojiFeedback = () => {
         closeAction={() => setShowSentimentModal(false)}
         closeOnBackdrop={false}
         hidePadding
+        className=""
         showHeader={false}
         showHeaderBorder={false}
         showFooter={false}>
