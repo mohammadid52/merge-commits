@@ -15,7 +15,7 @@ import * as queries from '@graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
-import parse from 'html-react-parser';
+
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -293,10 +293,10 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           </h1>
         )}
         <div
-          className="text-sm mb-2 mx-3 px-2"
           dangerouslySetInnerHTML={{
             __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
-          }}></div>
+          }}
+          className=" text-sm mb-2 mx-3 px-2"></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
@@ -319,10 +319,10 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </h1>
               )}
               <div
-                className=" text-base"
                 dangerouslySetInnerHTML={{
                   __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
-                }}></div>
+                }}
+                className=" text-base"></div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
