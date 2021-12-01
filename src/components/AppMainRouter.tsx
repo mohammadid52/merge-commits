@@ -63,8 +63,7 @@ const MainRouter: React.FC = () => {
 
     document
       .querySelector('html')
-      // .classList.add(clientKey === 'demo' ? 'curate' : clientKey);
-      .classList.add('demo');
+      .classList.add(clientKey === 'demo' ? 'curate' : clientKey);
   };
 
   const checkUserAuthenticated = async () => {
