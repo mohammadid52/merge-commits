@@ -8,8 +8,8 @@ const cardsList = [
   },
   {
     id: 1,
-    type: '4-7-8',
-    title: '478 Breathing',
+    type: '478',
+    title: '4-7-8 Breathing',
     desc:
       'With this exercise, you’ll get your desired focus back so you can be even more productive.',
   },
