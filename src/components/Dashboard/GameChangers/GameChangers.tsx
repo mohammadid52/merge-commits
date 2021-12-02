@@ -15,8 +15,6 @@ import {
   sqaureBreathingInfoText,
   sqaureBreathingHowTo,
   FSEInfoText,
-  openFullscreen,
-  closeFullscreen,
 } from '@components/Dashboard/GameChangers/__contstants';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 

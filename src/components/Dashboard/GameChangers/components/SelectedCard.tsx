@@ -104,7 +104,6 @@ const SelectedCard = ({
     if (exerciseType === 'square') {
       onSquareAnimationStart();
     }
-    setIsPlayingMusic(true);
   };
 
   const onPause = () => {
@@ -122,8 +121,10 @@ const SelectedCard = ({
       onPause();
       setIsCompleted(true);
       clearEverything();
-      // @ts-ignore
-      finishSound.play();
+      if (isPlayingMusic) {
+        // @ts-ignore
+        finishSound.play();
+      }
     }, 700);
   };
 
@@ -198,11 +199,18 @@ const SelectedCard = ({
                   )}
                 </div>
 
+                <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
+                  Select number of cycles
+                  <br />
+                  <span className="font-light text-xs w-auto">
+                    (4 is recommended if you are new to this)
+                  </span>
+                </h1>
                 <Flickity
-                  className={'carousel overflow-x-hidden mt-4'}
+                  className={'carousel overflow-x-hidden mb-4'}
                   elementType={'div'}
                   options={{
-                    initialIndex: 0,
+                    initialIndex: 3,
                     pageDots: false,
                     selectedAttraction: 0.03,
                     friction: 0.15,
@@ -217,7 +225,6 @@ const SelectedCard = ({
                     </div>
                   ))}
                 </Flickity>
-                <h1 className="text-center w-auto text-white font-semibold mb-4">time</h1>
 
                 <NextButton onClick={onStartClick} countSelected={countSelected} />
               </>

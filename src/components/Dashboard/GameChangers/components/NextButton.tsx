@@ -22,7 +22,7 @@ const NextButton = ({onClick, countSelected}: NextButtonProps) => {
               // isActive ? "bg-opacity-70 pointer-events-none" : "",
               ' px-4 py-2  bg-teal-500 hover:bg-teal-600  rounded-lg text-white'
             )}>
-            Next
+            Start
           </button>
         )}
       </AnimatedContainer>
