@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
+import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -867,7 +868,9 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/game-changers`}
                 render={() => (
                   <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
-                    <GameChangers />
+                    <GameChangerProvider>
+                      <GameChangers />
+                    </GameChangerProvider>
                   </ErrorBoundary>
                 )}
               />

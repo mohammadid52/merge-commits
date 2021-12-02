@@ -3,6 +3,7 @@ import React from 'react';
 import {map} from 'lodash';
 import {useEffect, useState} from 'react';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
+import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 
 const t = [
   'Breathe In',
@@ -33,7 +34,7 @@ const AnimatedSquare = ({
   isActive,
 
   exerciseType = 'square',
-
+  onStart,
   onComplete,
 }: {
   isActive: boolean;
@@ -41,6 +42,7 @@ const AnimatedSquare = ({
   exerciseType: string;
 
   onComplete?: () => void;
+  onStart?: () => void;
 }) => {
   if (exerciseType === 'square') {
     return (
@@ -58,7 +60,7 @@ const AnimatedSquare = ({
     );
   } else {
     const [currentIteration, setCurrentIteration] = useState(0);
-
+    const {countSelected, counter, setCounter} = useGameChangers();
     useEffect(() => {
       if (isActive && exerciseType === '478') {
         const interval = setInterval(
@@ -68,10 +70,15 @@ const AnimatedSquare = ({
           !isNaN(Number(t[currentIteration])) ? 1200 : 1500
         );
 
-        if (currentIteration === t.length - 1) {
-          // setCurrentIteration(0);
+        if (currentIteration === t.length) {
           clearInterval(interval);
-          onComplete();
+          if (countSelected === counter) {
+            onComplete();
+          } else {
+            onStart();
+            setCounter((prev) => prev + 1);
+            setCurrentIteration(0);
+          }
         }
 
         return () => clearInterval(interval);

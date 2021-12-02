@@ -1,19 +1,18 @@
+import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import {map} from 'lodash';
 import React from 'react';
 
 const InfoTab = ({
-  showHowTo,
   howToList,
-  showInfo,
+
   infoText,
 }: {
-  showHowTo: boolean;
   howToList: string[];
-  showInfo: boolean;
   infoText: string;
 }) => {
   const isImmersiveMode = true;
+  const {showHowTo, showInfo} = useGameChangers();
   return (
     <div
       className={`absolute overflow-hidden transition-all right-0 flex-col top-2 items-end justify-center w-auto hidden xl:flex gap-y-12`}>
