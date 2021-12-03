@@ -220,8 +220,8 @@ const EvidenceTab = ({
           />
         </div>
       ) : checkedEvidence.length === 0 ? (
-        <div className="flex items-center justify-center min-h-32">
-          <p className="text-gray-400 font-medium text-lg leading-3">
+        <div className="flex text-center items-center justify-center min-h-32">
+          <p className="text-gray-400 w-auto font-medium text-lg leading-3">
             No Evidences Listed
           </p>
         </div>
@@ -264,9 +264,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [onObjectivesTab, onResourcesTab, onEvidencesTab] = helpers;
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
-    name: lesson.title,
-    time: `${lesson.estTime} min`,
-    instructions: lesson.description ? ReactHtmlParser(lesson.description) : '--',
+    name: lesson?.title,
+    time: `${lesson?.estTime} min`,
+    instructions: lesson?.description || '<p></p>',
   }));
 
   const lessonPlanTableConfig = {
