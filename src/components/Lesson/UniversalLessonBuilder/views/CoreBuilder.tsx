@@ -88,6 +88,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     getCurrentPage,
     newLessonPlanShow,
   } = useULBContext();
+  console.log(
+    '🚀 ~ file: CoreBuilder.tsx ~ line 91 ~ CoreBuilder ~ newLessonPlanShow',
+    newLessonPlanShow
+  );
 
   const {
     clientKey,
@@ -391,7 +395,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         overflowHidden
         open={showLessonEditOverlay}>
         {showLessonEditOverlay && (
-          <div className="p-4 2xl:p-8">
+          <div className="p-6 2xl:p-8">
             <PageBuilderSlideOver
               deleteFromULBHandler={deleteFromULBHandler}
               setEditMode={setEditMode}
@@ -423,6 +427,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
           {!fetchingLessonDetails && (
             <Toolbar
+              newLessonPlanShow={newLessonPlanShow}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}

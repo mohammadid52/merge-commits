@@ -61,12 +61,12 @@ const BottomButtonWithMessage = ({
   btns: {label: string; disabled?: boolean; transparent?: boolean; onClick: () => void}[];
 }) => {
   return (
-    <div className="h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
+    <div className="min-h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
       {message && <p className="w-auto dark:text-white">{message}</p>}
       <div
-        className={`flex px-2 dark:text-gray-500 items-center justify-${
+        className={` justify-${
           btns.length === 1 ? 'center' : 'between'
-        }`}>
+        } flex flex-col 2xl:flex-row px-2 dark:text-gray-500 2xl:items-center mt-2 2xl:mt-0`}>
         {map(btns, (btn, idx) => (
           <Buttons
             disabled={btn.disabled}
@@ -247,11 +247,11 @@ const SpaceItems = ({
 // =========================POPUP=============================>> //
 // ====================================================== //
 
-const Popup = ({saving, text}: {saving: boolean; text: string}) => (
+const Popup = ({show, text}: {show: boolean; text: string}) => (
   <div className="fixed bottom-0 inset-x-0  w-auto ">
     <Transition
       appear
-      show={saving}
+      show={show}
       enter="transform transition ease-in-out duration-300"
       enterFrom="translate-y-full"
       enterTo="translate-y-0"
@@ -259,7 +259,7 @@ const Popup = ({saving, text}: {saving: boolean; text: string}) => (
       leaveFrom="translate-y-0"
       leaveTo="translate-y-full"
       className="shadow-lg bg-transparent border-gray-200 dark:border-gray-700 flex items-center justify-center border-t-0">
-      {saving && <p className="text-gray-500 w-auto p-4">{text}</p>}
+      {show && <p className="text-gray-500 w-auto p-4">{text}</p>}
     </Transition>
   </div>
 );
@@ -508,7 +508,18 @@ const PageBuilderSlideOver = ({
     setActiveContentItem,
     showMovementBox,
     setShowingBlockPin,
+    showMessage,
+    setShowMessage,
   } = usePageBuilderContext();
+
+  // Remove message after three seconds
+  useEffect(() => {
+    if (showMessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
+  }, [showMessage]);
 
   const {lessonState} = useGlobalContext();
   const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
@@ -553,6 +564,7 @@ const PageBuilderSlideOver = ({
         await updateLessonPageToDB(input);
         setUniversalLessonDetails(updatedPage);
       }
+      setShowMessage(true);
     } catch (error) {
     } finally {
       setSaving(false);
@@ -649,16 +661,11 @@ const PageBuilderSlideOver = ({
   };
 
   const onCancel = () => {
-    setActionMode('init');
     cleanup();
-    setShowingPin(false);
   };
 
   const onMovementCancel = () => {
-    setShowMovementBox(false);
-    setSelectedComponent(null);
-
-    setShowingPin(false);
+    cleanup();
   };
 
   const route: any = useRouteMatch();
@@ -767,6 +774,8 @@ const PageBuilderSlideOver = ({
       if (up) onMoveUp();
       else onMoveDown();
     }
+
+    setShowMessage(true);
   };
 
   const onInit = actionMode === 'init';
@@ -947,16 +956,7 @@ const PageBuilderSlideOver = ({
           setEditMode(true);
         }}
       />
-      <Popup saving={saving} text={'Saving'} />
-      {/* <Popup2
-        show={onAddContent && currentHelpStep !== null}
-        steps={[
-          'Click on a component to add',
-          'Click on a circle to select position',
-          "Click on 'Create component'",
-        ]}
-        currentStep={currentHelpStep}
-      /> */}
+      <Popup show={showMessage} text={'Your changes are saved.'} />
     </>
   );
 };

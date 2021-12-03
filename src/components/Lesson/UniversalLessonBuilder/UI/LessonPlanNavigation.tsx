@@ -32,9 +32,13 @@ const LessonPlanNavigation = ({
   const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
     universalLessonDetails || {};
   const {updateMovableList, fetchingLessonDetails} = useULBContext();
-  const {dispatch, lessonDispatch, state: {
-    user: {isSuperAdmin},
-  },} = useContext(GlobalContext);
+  const {
+    dispatch,
+    lessonDispatch,
+    state: {
+      user: {isSuperAdmin},
+    },
+  } = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
   // const lessonId = params.get('lessonId');
@@ -59,9 +63,7 @@ const LessonPlanNavigation = ({
       ? `/dashboard/manage-institutions`
       : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
 
-    history.push(
-      `${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`
-    );
+    history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
 
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
@@ -124,16 +126,16 @@ const LessonPlanNavigation = ({
   const {darkMode, classwork} = settings;
 
   return (
-    <div className="px-0 py-5 flex items-center border-b-0 border-gray-200 bg-gray-200">
+    <div className="py-5 px-4 flex items-center border-b-0 border-gray-200 bg-gray-200">
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="partContent" direction="horizontal">
           {(provided) => (
             <nav
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className={`bg-white border-b ${
+              className={`bg-white border-b-0 ${
                 lessonPlan?.length ? 'h-14' : 'h-12'
-              } border-gray-200 flex w-10/12 overflow-x-scroll`}
+              } border-gray-200 flex overflow-x-auto`}
               aria-label="Breadcrumb">
               <ol
                 key={nanoid(4)}
@@ -199,7 +201,7 @@ const LessonPlanNavigation = ({
       <div
         className={`ml-2 w-auto bg-white ${
           lessonPlan?.length ? 'h-14' : 'h-12'
-        } flex items-center p-4 mr-3`}>
+        } flex items-center p-4`}>
         <Tooltip text="Switch to homework" placement="bottom">
           <button
             type="button"

@@ -18,6 +18,8 @@ export const PageBuilderProvider = ({children}: any) => {
   const [selectedType, setSelectedType] = useState(null);
   const [showingBlockPin, setShowingBlockPin] = useState(false);
 
+  const [showMessage, setShowMessage] = useState(false);
+
   return (
     <PageBuilderContext.Provider
       value={{
@@ -41,6 +43,8 @@ export const PageBuilderProvider = ({children}: any) => {
         setActiveContentItem,
         showingBlockPin,
         setShowingBlockPin,
+        showMessage,
+        setShowMessage,
       }}>
       {children}
     </PageBuilderContext.Provider>

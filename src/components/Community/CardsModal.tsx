@@ -53,6 +53,8 @@ const Item = ({
   content: any;
   setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
+  const pathname = window.location.pathname;
+  const isCommunity = pathname.includes('community');
   return (
     <div
       onClick={() => setNavState(content.type)}
@@ -69,7 +71,10 @@ const Item = ({
         <div className="flex-1 min-w-0 flex items-center justify-between">
           <div className="focus:outline-none cursor-pointer">
             <span className="absolute inset-0" aria-hidden="true" />
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
+            <p
+              className={`${
+                isCommunity ? '' : 'dark:text-white'
+              } text-sm font-medium text-gray-900 `}>
               {content.name}
             </p>
             <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
@@ -145,6 +150,7 @@ const CardsModal = ({
           showFooter={false}
           title={getModalHeader(navState)}>
           <>
+            {/* Showing all items in this block */}
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (
                 <div
@@ -157,6 +163,8 @@ const CardsModal = ({
                 </div>
               )}
             </AnimatedContainer>
+            {/*  up --- Showing all items in this block --- up */}
+
             <AnimatedContainer show={onSpotlight} animationType="translateY">
               {onSpotlight && (
                 <div className="">

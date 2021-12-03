@@ -1,16 +1,15 @@
-import React, { useContext, useEffect } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import UserLookup from './UserLookup';
+import React, {useContext, useEffect} from 'react';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import User from './User';
-import UserInformation from './UserInformation';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import UserLookup from './UserLookup';
 
 const UserManagement = () => {
-  const { dispatch } = useContext(GlobalContext);
+  const {dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
 
   useEffect(() => {
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'manage-users' } });
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-users'}});
   }, []);
 
   return (
