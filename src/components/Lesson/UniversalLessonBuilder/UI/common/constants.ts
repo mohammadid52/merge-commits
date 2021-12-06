@@ -33,6 +33,8 @@ export const DATE_PICKER = 'Date Picker';
 export const TABLE = 'table';
 export const PARAGRAPH = 'paragraph';
 export const SPACER = 'spacer';
+export const SQUARE = 'square';
+export const FOUR_SEVEN_EIGHT = '478';
 
 export const REGEX = {
   Youtube: /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/,

@@ -504,22 +504,13 @@ icon {
 
 .carousel-cell.is-selected {
   #first-round {
-    // animation-delay: 1s;
-
     transform: rotate(35deg);
     animation: round1 3s;
   }
   #second-round {
-    // animation-delay: 1s;
-
     transform: rotate(90deg);
     animation: round2 3s;
   }
-
-  // #main-outer-wrapper {
-  //   animation-delay: 1s;
-  //   animation: scale 3s ease-in-out infinite;
-  // }
 }
 
 @keyframes round1 {

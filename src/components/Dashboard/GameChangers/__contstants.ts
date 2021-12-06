@@ -1,24 +1,29 @@
+import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
+
 const cardsList = [
   {
     id: 0,
     type: 'square',
     title: 'Square Breathing',
+    icon: BiRadioCircleMarked,
+    subtitle: 'Add square breathing to lesson',
+    name: 'Sqaure Breathing',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-100',
     desc:
       'Ideal for a calm down breathe session at the beginning or at the end of the day to relax and clear your mind.',
   },
   {
+    icon: BiCheckboxChecked,
+    iconForeground: 'text-yellow-700',
+    iconBackground: 'bg-yellow-100',
+    subtitle: 'Add 4-7-8 breathing to lesson',
     id: 1,
+    name: '4-7-8 Breathing',
     type: '478',
     title: '4-7-8 Breathing',
     desc:
       'With this exercise, you’ll get your desired focus back so you can be even more productive.',
-  },
-  {
-    id: 2,
-    type: 'square',
-    title: 'Classic',
-    desc:
-      'Select this exercise for a classic breathing exercise. Ideal when you need some extra headspace.',
   },
 ];
 

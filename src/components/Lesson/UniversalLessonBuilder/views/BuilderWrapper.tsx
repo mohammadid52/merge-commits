@@ -35,6 +35,8 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
+import SquareActivityModal from '@UlbModals/SquareActivityModal';
+
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -46,6 +48,7 @@ import {
   PARAGRAPH,
   SELECT_MANY,
   SELECT_ONE,
+  SQUARE,
   TABLE,
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
@@ -457,6 +460,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       case FORM_TYPES.DOCS:
         return <DocsModal {...commonProps} />;
+      case SQUARE:
+        return <SquareActivityModal {...commonProps} />;
 
       default:
         return (

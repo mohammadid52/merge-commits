@@ -17,6 +17,7 @@ import {
   FSEInfoText,
 } from '@components/Dashboard/GameChangers/__contstants';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import Counter from '@components/Dashboard/GameChangers/components/Counter';
 
 const GameChangers = () => {
   const {
@@ -108,7 +109,7 @@ const GameChangers = () => {
         <AnimatedContainer
           duration={duration}
           animationType={animation}
-          className="h-full flex items-center justify-center"
+          className="h-full flex items-center justify-center flex-col"
           show={selectedCard !== null}>
           {selectedCard !== null && (
             <SelectedCard
@@ -116,6 +117,7 @@ const GameChangers = () => {
               card={cardsList.find((c) => c.id === selectedCard)}
             />
           )}
+          <Counter />
         </AnimatedContainer>
 
         <BottomSection />

@@ -7,26 +7,12 @@ import NextButton from '@components/Dashboard/GameChangers/components/NextButton
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
-import {map, times} from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import map from 'lodash/map';
+import times from 'lodash/times';
+import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
-
-const Counter = ({
-  countSelected,
-  counter,
-}: {
-  countSelected: number | null;
-  counter: number | null;
-}) => {
-  return (
-    <div className={'text-white font-semibold text-center text-lg'}>
-      {counter}{' '}
-      <span className="text-gray-300 font-light text-sm">out of {countSelected}</span>
-    </div>
-  );
-};
 
 const SelectedCard = ({
   card,
@@ -158,6 +144,9 @@ const SelectedCard = ({
   const onStartClick = () => {
     const elem = $('.carousel-cell.is-selected h1').text();
     setCountSelected(Number(elem));
+    setTimeout(() => {
+      onStart();
+    }, 2500);
   };
 
   return (
@@ -248,19 +237,13 @@ const SelectedCard = ({
                   onComplete={onComplete}
                 />
 
-                <StartButton isActive={isActive} onStart={onStart} onPause={onPause} />
-
-                <AnimatedContainer className="w-auto" show={isActive}>
-                  {isActive && (
-                    <Counter counter={counter} countSelected={countSelected} />
-                  )}
-                </AnimatedContainer>
+                {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
 
                 {exerciseType === 'square' && isActive && (
                   <ul className="mt-8 fse-text-helper-list">
                     {map(breathingHelpingTexts, (item, i) => (
                       <li
-                        key={i}
+                        key={item}
                         className={`${
                           i === currentIteration ? 'showing' : 'hide'
                         } text-xl text-center w-auto text-gray-200 font-light`}>
@@ -292,11 +275,9 @@ const SelectedCard = ({
                   Well done.
                 </h1>
                 <p className="text-base my-4  text-gray-100 font-light max-w-72 transition-all text-left">
-                  Your breathing exercise is done. So far today you have done{' '}
-                  <span className="text-white font-medium">
-                    {selected.type === 'sqaure' ? 'Square' : '4-7-8'} exercise{' '}
-                    {countSelected} times
-                  </span>
+                  You have completed this activity.
+                  <br /> Come back anytime when you want to feel more focused and centered
+                  during your day.
                 </p>
                 <button
                   onClick={() => {

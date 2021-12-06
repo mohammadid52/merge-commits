@@ -948,14 +948,16 @@ const PageBuilderSlideOver = ({
           </div>
         )}
       </AnimatedContainer>
-      <Item
-        Icon={RiPagesLine}
-        label="Page details"
-        onClick={() => {
-          setNewLessonPlanShow(true);
-          setEditMode(true);
-        }}
-      />
+      {onHome && (
+        <Item
+          Icon={RiPagesLine}
+          label="Page details"
+          onClick={() => {
+            setNewLessonPlanShow(true);
+            setEditMode(true);
+          }}
+        />
+      )}
       <Popup show={showMessage} text={'Your changes are saved.'} />
     </>
   );
