@@ -35,14 +35,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     handleModalPopToggle,
     handleEditBlockContent,
   } = props;
-  console.log(
-    '🚀 ~ file: EditOverlayBlock.tsx ~ line 38 ~ EditOverlayBlock ~ pageContentID',
-    pageContentID
-  );
-  console.log(
-    '🚀 ~ file: EditOverlayBlock.tsx ~ line 38 ~ EditOverlayBlock ~ partContentID',
-    partContentID
-  );
 
   const {previewMode, universalLessonDetails} = useULBContext();
   const {
@@ -54,10 +46,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     selectedType,
     showingBlockPin,
   } = usePageBuilderContext();
-  console.log(
-    '🚀 ~ file: EditOverlayBlock.tsx ~ line 49 ~ EditOverlayBlock ~ selectedComponent',
-    selectedComponent
-  );
 
   const {setAddContentModal} = useOverlayContext();
 
