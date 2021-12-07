@@ -109,7 +109,7 @@ const CreateQuestion = ({
         msg: AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE'],
       });
     } else {
-      clearErrors;
+      clearErrors();
     }
 
     return isValid;
