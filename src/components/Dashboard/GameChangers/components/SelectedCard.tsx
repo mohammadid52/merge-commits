@@ -5,13 +5,25 @@ import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
+import {
+  FOUR_SEVEN_EIGHT,
+  SQUARE,
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
 import map from 'lodash/map';
 import times from 'lodash/times';
+import moment from 'moment';
+import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
+
+// Constants
+const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const SelectedCard = ({
   card,
@@ -142,12 +154,45 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
+  const {mutate, error, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
+
+  const {email, authId} = useAuth();
+
+  const getEndTime = () => {
+    // For Square exercises
+    // takes 16 seconds for one round
+    // multiple total counts with 16 to get end time
+    // <------->
+    // For 4-7-8 exercises
+    // takes 4+7+8 =19  seconds for one round
+    // multiple total counts with 19 to get end time
+
+    if (countSelected !== null) {
+      return (
+        countSelected *
+        (card.type === SQUARE ? 16 : card.type === FOUR_SEVEN_EIGHT ? 19 : 16) // default 16 for now
+      );
+    }
+  };
+
   const onStartClick = () => {
     const elem = $('.carousel-cell.is-selected h1').text();
     setCountSelected(Number(elem));
-    setTimeout(() => {
-      onStart();
-    }, 2500);
+
+    const payload: CreateGameChangerLogInput = {
+      id: nanoid(24),
+      gameChangerID: card.id.toString(),
+      personAuthID: authId,
+      personEmail: email,
+      startTime: moment().toString(),
+      endTime: moment().add('seconds', getEndTime()).toString(),
+    };
+    mutate({input: payload});
+    if (!isLoading && !isError) {
+      setTimeout(() => {
+        onStart();
+      }, 2500);
+    }
   };
 
   return (
@@ -156,10 +201,7 @@ const SelectedCard = ({
         inLesson ? 'mt-12' : ''
       }  z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
-        <source
-          src="http://freesoundeffect.net/sites/default/files/achiement-4-sound-effect-6274415.mp3"
-          type="audio/mp3"
-        />
+        <source src={successSound} type="audio/mp3" />
       </audio>
       <audio id="background-music">
         <source
