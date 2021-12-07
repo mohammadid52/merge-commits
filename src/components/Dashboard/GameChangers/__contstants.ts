@@ -1,9 +1,13 @@
+import {
+  FOUR_SEVEN_EIGHT,
+  SQUARE,
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
 
 const cardsList = [
   {
     id: 0,
-    type: 'square',
+    type: SQUARE,
     title: 'Square Breathing',
     icon: BiRadioCircleMarked,
     subtitle: 'Add square breathing to lesson',
@@ -20,7 +24,7 @@ const cardsList = [
     subtitle: 'Add 4-7-8 breathing to lesson',
     id: 1,
     name: '4-7-8 Breathing',
-    type: '478',
+    type: FOUR_SEVEN_EIGHT,
     title: '4-7-8 Breathing',
     desc:
       'With this exercise, you’ll get your desired focus back so you can be even more productive.',

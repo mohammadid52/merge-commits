@@ -7,11 +7,16 @@ import Buttons from '@components/Atoms/Buttons';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 
-const SquareActivityModal = ({
+interface ActivityModalProps extends IContentTypeComponentProps {
+  type: string;
+}
+
+const ActivityModal = ({
   createNewBlockULBHandler,
   askBeforeClose,
   closeAction,
-}: IContentTypeComponentProps) => {
+  type = SQUARE,
+}: ActivityModalProps) => {
   const addToDB = async (list: any) => {
     closeAction();
 
@@ -30,8 +35,8 @@ const SquareActivityModal = ({
     const value = [
       {
         id: nanoid(20),
-        label: 'Square Breathing',
-        value: 'sqaure-breathing',
+        label: type === SQUARE ? 'Square Breathing' : '478 Breathing',
+        value: type === SQUARE ? 'square-breathing' : '478-breathing',
       },
     ];
 
@@ -50,7 +55,10 @@ const SquareActivityModal = ({
   };
   return (
     <div>
-      <h1>Did you want to add Square breathing to this lesson?</h1>
+      <h1>
+        Did you want to add {type === SQUARE ? 'SQUARE' : '4-7-8'} breathing to this
+        lesson?
+      </h1>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
@@ -71,4 +79,4 @@ const SquareActivityModal = ({
   );
 };
 
-export default SquareActivityModal;
+export default ActivityModal;

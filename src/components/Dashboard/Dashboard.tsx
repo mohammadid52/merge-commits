@@ -2,6 +2,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
 import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import '@components/Dashboard/GameChangers/styles/Flickity.scss';
+import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';

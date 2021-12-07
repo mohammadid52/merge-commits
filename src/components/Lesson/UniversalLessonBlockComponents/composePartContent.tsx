@@ -1,11 +1,9 @@
-import Counter from '@components/Dashboard/GameChangers/components/Counter';
-import SelectedCard from '@components/Dashboard/GameChangers/components/SelectedCard';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
+import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ActivityBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
 import DocsBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import map from 'lodash/map';
 import React from 'react';
 import {
@@ -46,8 +44,6 @@ const composePartContent = (
   notesData?: any,
   isStudent: boolean = true
 ): JSX.Element => {
-  // const {selectedCard, setInitialIndex, setSelectedCard} = useGameChangers();
-
   const commonBlockProps = {
     classString,
     id,
@@ -121,32 +117,14 @@ const composePartContent = (
   } else if (type.includes(FORM_TYPES.DOCS)) {
     return <DocsBlock value={value} />;
   } else if (type.includes('square')) {
-    return <div />;
-  }
-
-  // else if (type.includes('square')) {
-  //   const onClick = (id: number) => {
-  //     setInitialIndex(id);
-  //     setSelectedCard(selectedCard === null ? id : null);
-  //   };
-
-  //   return (
-  //     <AnimatedContainer
-  //       duration={'1000'}
-  //       animationType={'translateY'}
-  //       className="h-full flex items-center justify-center flex-col"
-  //       show={selectedCard !== null}>
-  //       {selectedCard !== null && (
-  //         <SelectedCard
-  //           onClick={onClick}
-  //           card={cardsList.find((c) => c.id === selectedCard)}
-  //         />
-  //       )}
-  //       <Counter />
-  //     </AnimatedContainer>
-  //   );
-  // }
-  else {
+    return (
+      <GameChangerProvider>
+        <ErrorBoundary fallback={<h1>Something wrong with activity</h1>}>
+          <ActivityBlock value={value} />
+        </ErrorBoundary>
+      </GameChangerProvider>
+    );
+  } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }
 };

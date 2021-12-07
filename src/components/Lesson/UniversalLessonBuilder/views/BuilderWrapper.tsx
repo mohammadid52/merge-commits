@@ -35,13 +35,14 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
-import SquareActivityModal from '@UlbModals/SquareActivityModal';
+import ActivityModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
 
 import {
   ATTACHMENTS,
   DATE_PICKER,
   DIVIDER,
   FORM_TYPES,
+  FOUR_SEVEN_EIGHT,
   INPUT,
   INPUT_WITH_EMOJI,
   LINK,
@@ -461,7 +462,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.DOCS:
         return <DocsModal {...commonProps} />;
       case SQUARE:
-        return <SquareActivityModal {...commonProps} />;
+      case FOUR_SEVEN_EIGHT:
+        return <ActivityModal type={type} {...commonProps} />;
 
       default:
         return (
