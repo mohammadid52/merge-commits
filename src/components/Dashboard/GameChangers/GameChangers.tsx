@@ -3,8 +3,7 @@
 import React, {useEffect} from 'react';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Flickity from 'react-flickity-component';
-import '@components/Dashboard/GameChangers/styles/Flickity.scss';
-import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
+
 import InfoTab from '@components/Dashboard/GameChangers/components/InfoTab';
 import SelectedCard from '@components/Dashboard/GameChangers/components/SelectedCard';
 import BottomSection from '@components/Dashboard/GameChangers/components/BottomSection';
@@ -113,6 +112,7 @@ const GameChangers = () => {
           show={selectedCard !== null}>
           {selectedCard !== null && (
             <SelectedCard
+              inLesson={false}
               onClick={onClick}
               card={cardsList.find((c) => c.id === selectedCard)}
             />

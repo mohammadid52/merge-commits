@@ -115,6 +115,7 @@ const AddContentDialog = ({
       iconBackground: 'bg-purple-100',
     },
   ].filter(Boolean);
+
   const mediaContent = [
     {
       name: 'Docs',
@@ -174,6 +175,7 @@ const AddContentDialog = ({
       iconBackground: 'bg-blue-100',
     },
   ].filter(Boolean);
+
   const userInterfaceContent = [
     !isSurvey && {
       name: 'Notes ⭐',
@@ -397,7 +399,7 @@ const AddContentDialog = ({
           </div>
         )}
       </AnimatedContainer>
-      {/* <AnimatedContainer
+      <AnimatedContainer
         show={onGameChangersTab && isEmpty(activeContentItem)}
         animationType="translateY">
         {onGameChangersTab && isEmpty(activeContentItem) && (
@@ -407,7 +409,7 @@ const AddContentDialog = ({
             ))}
           </div>
         )}
-      </AnimatedContainer> */}
+      </AnimatedContainer>
       <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
         {!isEmpty(activeContentItem) && (
           <>

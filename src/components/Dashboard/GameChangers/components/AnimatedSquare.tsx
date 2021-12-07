@@ -112,7 +112,7 @@ const AnimatedSquare = ({
               transitionDuration: '3s',
               transform:
                 isActive && !isNaN(Number(t[currentIteration]))
-                  ? `scale(220)`
+                  ? `scale(250)`
                   : 'scale(0)',
               zIndex: 4,
             }}

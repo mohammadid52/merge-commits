@@ -26,8 +26,6 @@ const NavBarRouter = (instProps: any) => {
   const {institute = {}, updateCurricularList, curricular} = instProps;
   const match = useRouteMatch();
 
-  console.log(match.url,'ksfjskdfjskf');
-
   return (
     <Switch>
       <Route
@@ -136,22 +134,22 @@ const NavBarRouter = (instProps: any) => {
         render={() => <CourseBuilder instId={institute?.id} />} // Create new course
       />
       <Route
-      exact
+        exact
         path={`${match.url}/course-builder/:courseId`}
         render={() => <CourseBuilder instId={institute?.id} />} // Edit course
       />
       <Route
-          path={`${match.url}/course-builder/:courseId/checkpoint/addNew`}
-          render={() => <AddProfileCheckpoint />} // Edit course
-        />
-        <Route
-          path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
-          render={() => <ProfileCheckpointlookup instId={institute?.id} />} // Edit course
-        />
-        <Route
-          path={`${match.url}/course-builder/:courseId/checkpoint/edit/:id`}
-          render={() => <EditProfileCheckpoint />} // Edit course
-        />
+        path={`${match.url}/course-builder/:courseId/checkpoint/addNew`}
+        render={() => <AddProfileCheckpoint />} // Edit course
+      />
+      <Route
+        path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
+        render={() => <ProfileCheckpointlookup instId={institute?.id} />} // Edit course
+      />
+      <Route
+        path={`${match.url}/course-builder/:courseId/checkpoint/edit/:id`}
+        render={() => <EditProfileCheckpoint />} // Edit course
+      />
       <UniversalLessonBuilderProvider>
         <Route
           path={`${match.url}/lessons`}

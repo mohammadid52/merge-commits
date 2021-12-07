@@ -1,27 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Flickity from 'react-flickity-component';
+import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
-import StartButton from '@components/Dashboard/GameChangers/components/StartButton';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
+import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
 import map from 'lodash/map';
 import times from 'lodash/times';
 import React, {useEffect, useState} from 'react';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
-import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
+import Flickity from 'react-flickity-component';
 
 const SelectedCard = ({
   card,
   onClick,
+  inLesson = false,
 }: {
   card?: {id: number; title: string; desc: string; type: string};
   onClick: (id: number) => void;
+  inLesson?: boolean;
 }) => {
-  const exerciseType = card.type;
+  const exerciseType = card?.type;
   const {
     isActive,
     setIsActive,
@@ -151,7 +152,9 @@ const SelectedCard = ({
 
   return (
     <div
-      className={` rounded-2xl box   z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+      className={` rounded-2xl box ${
+        inLesson ? 'mt-12' : ''
+      }  z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
         <source
           src="http://freesoundeffect.net/sites/default/files/achiement-4-sound-effect-6274415.mp3"

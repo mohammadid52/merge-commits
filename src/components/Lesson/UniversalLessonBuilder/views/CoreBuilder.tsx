@@ -88,10 +88,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     getCurrentPage,
     newLessonPlanShow,
   } = useULBContext();
-  console.log(
-    '🚀 ~ file: CoreBuilder.tsx ~ line 91 ~ CoreBuilder ~ newLessonPlanShow',
-    newLessonPlanShow
-  );
 
   const {
     clientKey,
