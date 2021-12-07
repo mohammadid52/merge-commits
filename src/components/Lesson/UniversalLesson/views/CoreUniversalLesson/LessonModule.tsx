@@ -307,9 +307,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                   {currentLesson?.objectives[0] ? (
                     <div>
                       <p
-                        style={{color: 'rgba(203, 213, 224, 1) !important'}}
+                        // style={{color: 'rgba(203, 213, 224, 1) !important'}}
                         dangerouslySetInnerHTML={{__html: currentLesson?.objectives[0]}}
-                        className="text-gray-400 font-medium text-lg leading-3"></p>
+                        className="text-gray-400  remove-draft-styles font-medium text-lg leading-3"></p>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center min-h-32">
@@ -328,12 +328,12 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                     //@ts-ignore
                     currentLesson?.studentMaterials ? (
                       <div>
-                        <p className="text-gray-400 font-medium text-lg leading-3">
-                          {
-                            //@ts-ignore
-                            currentLesson?.studentMaterials
-                          }
-                        </p>
+                        <p
+                          className="text-gray-400 remove-draft-styles font-medium text-lg leading-3"
+                          dangerouslySetInnerHTML={{
+                            // @ts-ignore
+                            __html: currentLesson?.studentMaterials,
+                          }}></p>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center min-h-32">

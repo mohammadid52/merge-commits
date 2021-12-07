@@ -1390,3 +1390,10 @@
   bottom: 0;
   width: 100%;
 }
+
+.remove-draft-styles {
+  * span {
+    color: unset !important;
+    background-color: unset !important;
+  }
+}
