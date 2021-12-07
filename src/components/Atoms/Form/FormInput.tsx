@@ -62,7 +62,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      {label && <Label label={label} isRequired={isRequired} />}
+      {label && <Label dark={dark} label={label} isRequired={isRequired} />}
 
       {textarea ? (
         <textarea

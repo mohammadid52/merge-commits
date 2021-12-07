@@ -56,7 +56,7 @@ const ActivityModal = ({
   return (
     <div>
       <h1>
-        Did you want to add {type === SQUARE ? 'SQUARE' : '4-7-8'} breathing to this
+        Did you want to add {type === SQUARE ? 'Square' : '4-7-8'} Breathing to this
         lesson?
       </h1>
 

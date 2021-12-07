@@ -27,6 +27,8 @@ const ActivityBlock = ({value}: {value: any}) => {
 
   if (loading) {
     return <div>Loading</div>;
+  } else if (selectedCard === null) {
+    return <div />;
   } else
     return (
       <AnimatedContainer

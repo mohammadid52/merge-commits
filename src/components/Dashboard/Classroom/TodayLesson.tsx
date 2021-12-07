@@ -89,21 +89,25 @@ const Today: React.FC<LessonProps> = ({
                 </span>
               </div>
             </div>
-            {session.lessons.map((lesson: any, key: number) => {
-              return (
-                <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
-                  <StandardLessonCard
-                    roomID={getRoomData.id}
-                    isTeacher={isTeacher}
-                    keyProps={`todayLesson_${key}`}
-                    activeRoomInfo={activeRoomInfo}
-                    lessonProps={lesson}
-                    syllabusProps={syllabus}
-                    accessible={accessible}
-                    lessonType={lesson.type}
-                  />
-                </div>
-              );
+            {session.lessons.filter(Boolean).map((lesson: any, key: number) => {
+              if (lesson?.lesson?.id) {
+                return (
+                  <div
+                    id={`todayLesson_${key}_wrapper`}
+                    key={`todayLesson_${key}_wrapper`}>
+                    <StandardLessonCard
+                      roomID={getRoomData.id}
+                      isTeacher={isTeacher}
+                      keyProps={`todayLesson_${key}`}
+                      activeRoomInfo={activeRoomInfo}
+                      lessonProps={lesson}
+                      syllabusProps={syllabus}
+                      accessible={accessible}
+                      lessonType={lesson.type}
+                    />
+                  </div>
+                );
+              } else return <div />;
             })}
           </Fragment>
         ))
