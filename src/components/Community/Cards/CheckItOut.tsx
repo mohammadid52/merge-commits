@@ -125,10 +125,6 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
   }, [editMode, cardDetails]);
 
   const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
-  console.log(
-    '🚀 ~ file: CheckItOut.tsx ~ line 132 ~ CheckItOut ~ youtubeVideoLink',
-    youtubeVideoLink
-  );
 
   const mediaProps = {
     videoLink: youtubeVideoLink,
@@ -139,7 +135,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
   };
 
   return (
-    <div className="min-w-256 max-w-256">
+    <div className="">
       {tempData && tempData?.image ? (
         <div>
           <Media

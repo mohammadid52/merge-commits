@@ -149,7 +149,7 @@ const CardsModal = ({
           closeAction={onCancel}
           showFooter={false}
           title={getModalHeader(navState)}>
-          <>
+          <div className="2xl:min-w-256 max-w-screen 2xl:max-w-256">
             {/* Showing all items in this block */}
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (
@@ -214,7 +214,7 @@ const CardsModal = ({
                 </div>
               )}
             </AnimatedContainer>
-          </>
+          </div>
         </Modal>
       )}
     </div>

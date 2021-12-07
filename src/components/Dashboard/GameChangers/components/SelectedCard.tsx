@@ -12,6 +12,7 @@ import {
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {awsFormatDate, dateString} from '@utilities/time';
 import {CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
@@ -158,7 +159,7 @@ const SelectedCard = ({
 
   const {email, authId} = useAuth();
 
-  const getEndTime = () => {
+  const getEndSeconds = () => {
     // For Square exercises
     // takes 16 seconds for one round
     // multiple total counts with 16 to get end time
@@ -184,8 +185,8 @@ const SelectedCard = ({
       gameChangerID: card.id.toString(),
       personAuthID: authId,
       personEmail: email,
-      startTime: moment().toString(),
-      endTime: moment().add('seconds', getEndTime()).toString(),
+      startTime: moment().format('YYYY-MM-DD'),
+      endTime: moment().format('YYYY-MM-DD'),
     };
     mutate({input: payload});
     if (!isLoading && !isError) {

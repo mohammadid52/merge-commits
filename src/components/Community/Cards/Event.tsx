@@ -124,7 +124,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
   };
 
   return (
-    <div className="min-w-256 max-w-256">
+    <div className="">
       {tempData && tempData?.image ? (
         <div>
           <Media

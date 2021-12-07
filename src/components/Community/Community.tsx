@@ -223,7 +223,7 @@ const Community = ({}: {role: string}) => {
     return (
       <div
         onClick={() => setShowCardsModal(true)}
-        className="fixed bottom-5 cursor-pointer flex items-center justify-center right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
+        className="fixed z-100 bottom-5 cursor-pointer flex items-center justify-center right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
         <BsCardHeading className="text-white text-lg" />
       </div>
     );
