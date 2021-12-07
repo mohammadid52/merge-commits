@@ -57,12 +57,12 @@ const Toolbar = ({
   setEditMode,
   setFields,
   setNewLessonPlanShow,
+  newLessonPlanShow,
 }: {
   deleteLesson: () => void;
-
+  newLessonPlanShow: boolean;
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-
   setFields: React.Dispatch<React.SetStateAction<any>>;
 }) => {
   const {
@@ -83,7 +83,7 @@ const Toolbar = ({
     setToolbarOnTop(isVisible);
   }, [isVisible]);
 
-  const {setShowDataForCopyClone, newLessonPlanShow} = useOverlayContext();
+  const {setShowDataForCopyClone} = useOverlayContext();
 
   return (
     <>
@@ -96,7 +96,7 @@ const Toolbar = ({
             ? 'opacity-0 -translate-y-12 scale-90'
             : 'opacity-100 scale-100 translate-y-0'
         } customShadow transform ${
-          previewMode ? 'fixed bottom-3 right-7' : ''
+          previewMode ? `fixed bottom-3 ${newLessonPlanShow ? 'left-7' : 'right-7'}` : ''
         } rounded-lg toolbar bg-white dark:bg-gray-700 z-1000 ease-out transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <div className="flex items-center w-auto">
@@ -111,7 +111,9 @@ const Toolbar = ({
 
             <div
               className={`${
-                previewMode ? 'scale-0 opacity-80' : 'scale-100 opacity-100 ml-2 2xl:ml-6 '
+                previewMode
+                  ? 'scale-0 opacity-80'
+                  : 'scale-100 opacity-100 ml-2 2xl:ml-6 '
               } space-x-2 2xl:space-x-6 transition-all transform flex`}>
               {!previewMode && (
                 <>

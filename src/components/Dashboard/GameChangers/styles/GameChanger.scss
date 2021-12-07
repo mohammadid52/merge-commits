@@ -441,7 +441,7 @@ icon {
     pointer-events: visible;
   }
   & .main_circle {
-    animation: scale 1s ease-in-out;
+    animation: scale 3s ease-in-out;
   }
 
   --tw-border-opacity: 0.3;
@@ -488,54 +488,45 @@ icon {
   }
 
   50% {
-    transform: scale(0.5);
+    transform: scale(0.3);
   }
   100% {
     transform: scale(1);
   }
 }
 
-.carousel-cell.is-selected {
-  #first-round {
-    // animation-delay: 1s;
-    transform: rotate(0deg);
-    animation: rotate-cw 3s;
-  }
-  #second-round {
-    // animation-delay: 1s;
-    transform: rotate(0deg);
-    animation: rotate-acw 3s;
-  }
-  #third-round {
-    animation-delay: 1s;
-    transform: rotate(36deg);
-    animation: rotate-cw 3s;
-  }
-  // #main-outer-wrapper {
-  //   animation-delay: 1s;
-  //   animation: scale 3s ease-in-out infinite;
-  // }
+#first-round {
+  transform: rotate(35deg);
+}
+#second-round {
+  transform: rotate(90deg);
 }
 
-@keyframes rotate-cw {
-  0% {
-    transform: rotate(0deg);
+.carousel-cell.is-selected {
+  #first-round {
+    transform: rotate(35deg);
+    animation: round1 3s;
   }
-  50% {
-    transform: rotate(360deg);
-  }
-  100% {
-    transform: rotate(0deg);
+  #second-round {
+    transform: rotate(90deg);
+    animation: round2 3s;
   }
 }
-@keyframes rotate-acw {
-  0% {
+
+@keyframes round1 {
+  from {
     transform: rotate(0deg);
   }
-  50% {
-    transform: rotate(-360deg);
+  to {
+    transform: rotate(35deg);
   }
-  100% {
+}
+
+@keyframes round2 {
+  from {
     transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
   }
 }

@@ -185,8 +185,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {/* Profile section */}
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <div
-            hidden={pathname.includes('page-builder')}
-            className="w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col"
+            className={`${
+              pathname.includes('page-builder') ? 'hidden' : 'flex'
+            } w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200  flex-row lg:flex-col`}
             onClick={handleImageClick}>
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col flex-shrink-0">
               {imageLoading ? (

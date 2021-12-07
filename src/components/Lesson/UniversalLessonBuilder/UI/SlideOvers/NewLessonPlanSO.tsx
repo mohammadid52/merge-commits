@@ -752,7 +752,7 @@ const NewLessonPlanSO = ({
           <Block>
             <Label className="mb-1" label={'Interaction type'} />
 
-            <div className="w-48">
+            <div className="">
               <Checkbox
                 title={'Group'}
                 label={'Working as a class to complete activity'}

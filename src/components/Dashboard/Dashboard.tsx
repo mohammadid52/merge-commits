@@ -1,6 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
+import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import '@components/Dashboard/GameChangers/styles/Flickity.scss';
+import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -519,20 +522,20 @@ const Dashboard = (props: DashboardProps) => {
       lessons: {
         ...syllabus.lessons,
         items: syllabus.lessons.items.map((item: any) => {
-          if (count !== 0 && 1 - count < item.lesson.duration) {
+          if (count !== 0 && 1 - count < item?.lesson?.duration) {
             lastOccupiedDate = moment(lastOccupiedDate).add(
               frequencyMapping[frequency].step,
               frequencyMapping[frequency].unit
             );
             count = 0;
           }
-          count += item.lesson.duration;
+          count += item?.lesson?.duration;
 
           const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
             moment(lastOccupiedDate),
             frequencyMapping[frequency].unit,
             frequencyMapping[frequency].step,
-            item.lesson.duration,
+            item?.lesson?.duration,
             scheduleDates,
             scheduleData
           );
@@ -867,7 +870,9 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/game-changers`}
                 render={() => (
                   <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
-                    <GameChangers />
+                    <GameChangerProvider>
+                      <GameChangers />
+                    </GameChangerProvider>
                   </ErrorBoundary>
                 )}
               />

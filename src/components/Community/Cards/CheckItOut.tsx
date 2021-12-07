@@ -1,11 +1,10 @@
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Label from '@atoms/Form/Label';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import RichTextEditor from '@atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {ICheckItOutInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from '@utilities/services';
@@ -69,24 +68,37 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
 
   const validateFields = () => {
     let isValid = true;
+    const isUrlValid = REGEX.Youtube.test(youtubeVideoLink);
+
     if (!editMode && !youtubeVideoLink && isEmpty(file)) {
       setError('Image or video not found');
       isValid = false;
-    } else if (!overlayText) {
+    } else {
+      setError('');
+      isValid = true;
+    }
+    if (!overlayText) {
       setError('Overlay text not found');
       isValid = false;
-    } else if (!fields.summary) {
+    } else {
+      setError('');
+      isValid = true;
+    }
+    if (!fields.summary) {
       setError('Description not found');
       isValid = false;
-    } else if (
-      !youtubeVideoLink &&
-      !tempData.image &&
-      !youtubeVideoLink &&
-      isEmpty(file)
-    ) {
+    } else {
+      setError('');
+      isValid = true;
+    }
+    if (!youtubeVideoLink && !tempData.image && !youtubeVideoLink && isEmpty(file)) {
       setError('Please add youtube/vimeo link');
       isValid = false;
-    } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
+    } else {
+      setError('');
+      isValid = true;
+    }
+    if (youtubeVideoLink && !isUrlValid) {
       setError('Invalid Url');
       isValid = false;
     } else {
@@ -113,7 +125,10 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
   }, [editMode, cardDetails]);
 
   const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
-  const isValidUrl = REGEX.Youtube.test(youtubeVideoLink);
+  console.log(
+    '🚀 ~ file: CheckItOut.tsx ~ line 132 ~ CheckItOut ~ youtubeVideoLink',
+    youtubeVideoLink
+  );
 
   const mediaProps = {
     videoLink: youtubeVideoLink,
