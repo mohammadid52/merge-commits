@@ -57,20 +57,25 @@ const EmojiFeedback = () => {
     }
   };
 
+  // What am i doing down here?
+
+  // First of all, I am fetching last submission date
+  // Then i am putting it in moment function to get the difference in days (numeric), matching with current date.
+  // Then i am checking if the difference (will be numeric always) is greater than or equals to 0 (Zero).
+  // Its not possible to have number greater than zero. it will be either zero or negative.
+  // if difference is less than zero, which means it is negative than we'll ask for user mood submission.
+
   useEffect(() => {
     if (!fetching && !isEmpty(lastMoodSubmission)) {
-      const lastSubmissionDate = moment(
-        `${lastMoodSubmission.date} ${lastMoodSubmission.time}`
-      );
+      const prevDate = moment(`${lastMoodSubmission.date}`);
 
-      const date = moment(lastSubmissionDate).get('date');
+      const curDate = moment();
+      const diff = moment(prevDate).diff(curDate, 'days'); // will be numeric always and zero or negative
 
-      const todayDate = moment().get('date');
-
-      if (todayDate - date >= 1) {
-        setShowSentimentModal(true);
-      } else {
+      if (diff >= 0) {
         setShowSentimentModal(false);
+      } else {
+        setShowSentimentModal(true);
       }
     } else if (!fetching && isEmpty(lastMoodSubmission)) {
       setShowSentimentModal(true);

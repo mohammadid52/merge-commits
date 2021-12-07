@@ -1,51 +1,58 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
-import StartButton from '@components/Dashboard/GameChangers/components/StartButton';
+import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
+import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
-import {map} from 'lodash';
+import map from 'lodash/map';
+import times from 'lodash/times';
 import React, {useEffect, useState} from 'react';
+import Flickity from 'react-flickity-component';
 
 const SelectedCard = ({
   card,
   onClick,
-  isPlayingMusic,
-  setIsPlayingMusic,
+  inLesson = false,
 }: {
-  isPlayingMusic: boolean;
-  setIsPlayingMusic: React.Dispatch<React.SetStateAction<boolean>>;
   card?: {id: number; title: string; desc: string; type: string};
   onClick: (id: number) => void;
+  inLesson?: boolean;
 }) => {
-  const exerciseType = card.type;
-
-  const [counter, setCounter] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  const exerciseType = card?.type;
+  const {
+    isActive,
+    setIsActive,
+    setCounter,
+    counter,
+    isCompleted,
+    setIsCompleted,
+    isPlayingMusic,
+    setIsPlayingMusic,
+    selectedCard,
+    countSelected,
+    setCountSelected,
+  } = useGameChangers();
 
   const breathingHelpingTexts = ['inhale', 'hold', 'exhale', 'hold'];
-
-  const [config, setConfig] = useState({h: 0, w: 0});
-
-  useEffect(() => {
-    const squareEl = $('#square');
-    const width = squareEl.width();
-    const height = squareEl.height();
-
-    setConfig({h: height, w: width});
-  }, []);
 
   const tl = gsap.timeline({});
   const commonFields = {duration: 4, ease: Linear.easeNone};
   const onSquareAnimationStart = () => {
+    const squareEl = $('#square');
+    const width = squareEl.width();
+    const height = squareEl.height();
+
     tl.to('#knob', {
-      x: config.w,
+      x: width,
 
       ...commonFields,
     })
       .to('#knob', {
-        y: config.h,
+        y: height,
 
         ...commonFields,
       })
@@ -55,13 +62,10 @@ const SelectedCard = ({
         ...commonFields,
       })
       .to('#knob', {
-        onComplete: onComplete,
         y: 0,
         ...commonFields,
       });
   };
-
-  const [isCompleted, setIsCompleted] = useState(false);
 
   const audioControl = document.getElementById('background-music');
   const finishSound = document.getElementById('finish-sound');
@@ -83,11 +87,10 @@ const SelectedCard = ({
   // on/off functions below
 
   const onStart = () => {
+    setIsActive(true);
     if (exerciseType === 'square') {
       onSquareAnimationStart();
     }
-    setIsActive(true);
-    setIsPlayingMusic(true);
   };
 
   const onPause = () => {
@@ -95,14 +98,21 @@ const SelectedCard = ({
     setIsPlayingMusic(false);
   };
 
+  const clearEverything = () => {
+    setCounter(1);
+    setCountSelected(null);
+  };
+
   const onComplete = () => {
-    setCounter(counter + 1);
     setTimeout(() => {
       onPause();
       setIsCompleted(true);
-      // @ts-ignore
-      finishSound.play();
-    }, 1000);
+      clearEverything();
+      if (isPlayingMusic) {
+        // @ts-ignore
+        finishSound.play();
+      }
+    }, 700);
   };
 
   const [currentIteration, setCurrentIteration] = useState(0);
@@ -113,18 +123,38 @@ const SelectedCard = ({
         setCurrentIteration(currentIteration + 1);
       }, 4000);
 
-      if (currentIteration === breathingHelpingTexts.length - 1) {
-        // setCurrentIteration(0);
+      if (currentIteration === breathingHelpingTexts.length) {
         clearInterval(interval);
+        if (countSelected === counter) {
+          onComplete();
+        } else {
+          onStart();
+          setCounter((prev) => prev + 1);
+          setCurrentIteration(0);
+        }
       }
 
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+      };
     }
   }, [isActive, currentIteration, exerciseType]);
 
+  const selected = cardsList[selectedCard];
+
+  const onStartClick = () => {
+    const elem = $('.carousel-cell.is-selected h1').text();
+    setCountSelected(Number(elem));
+    setTimeout(() => {
+      onStart();
+    }, 2500);
+  };
+
   return (
     <div
-      className={`carousel-cell rounded-2xl box  is-selected z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+      className={` rounded-2xl box ${
+        inLesson ? 'mt-12' : ''
+      }  z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
         <source
           src="http://freesoundeffect.net/sites/default/files/achiement-4-sound-effect-6274415.mp3"
@@ -143,27 +173,80 @@ const SelectedCard = ({
         }}
         className={`h-full  transition-all rounded-2xl p-16 px-14  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
         <div>
+          {/* Count Selection Section */}
+
           <AnimatedContainer
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={!isCompleted}>
-            {!isCompleted && (
+            show={!isCompleted && countSelected === null}>
+            {!isCompleted && countSelected === null && (
+              <>
+                <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
+                <div className="flex w-auto items-center justify-center">
+                  {selected.type === 'square' ? (
+                    <FocusIcon isActive={isActive} />
+                  ) : (
+                    <AnimatedFlower />
+                  )}
+                </div>
+
+                <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
+                  Select number of cycles
+                  <br />
+                  <span className="font-light text-xs w-auto">
+                    (4 is recommended if you are new to this)
+                  </span>
+                </h1>
+                <Flickity
+                  className={'carousel overflow-x-hidden mb-4'}
+                  elementType={'div'}
+                  options={{
+                    initialIndex: 3,
+                    pageDots: false,
+                    selectedAttraction: 0.03,
+                    friction: 0.15,
+                  }}
+                  reloadOnUpdate
+                  disableImagesLoaded={false}>
+                  {times(10, (t) => (
+                    <div className="w-auto counter carousel-cell">
+                      <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
+                        {t + 1}
+                      </h1>
+                    </div>
+                  ))}
+                </Flickity>
+
+                <NextButton onClick={onStartClick} countSelected={countSelected} />
+              </>
+            )}
+          </AnimatedContainer>
+
+          {/* Main Exercise Section */}
+
+          <AnimatedContainer
+            delay="0.5s"
+            duration="1000"
+            animationType="translateY"
+            show={!isCompleted && countSelected !== null}>
+            {!isCompleted && countSelected !== null && (
               <>
                 <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
                 <AnimatedSquare
+                  onStart={onStart}
                   isActive={isActive}
                   exerciseType={exerciseType}
                   onComplete={onComplete}
                 />
-                {/* <Count counter={counter} /> */}
 
-                <StartButton isActive={isActive} onStart={onStart} onPause={onPause} />
+                {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
+
                 {exerciseType === 'square' && isActive && (
                   <ul className="mt-8 fse-text-helper-list">
                     {map(breathingHelpingTexts, (item, i) => (
                       <li
-                        key={i}
+                        key={item}
                         className={`${
                           i === currentIteration ? 'showing' : 'hide'
                         } text-xl text-center w-auto text-gray-200 font-light`}>
@@ -175,6 +258,8 @@ const SelectedCard = ({
               </>
             )}
           </AnimatedContainer>
+
+          {/* ON Complete Section */}
           <AnimatedContainer
             duration="1000"
             delay="0.5s"
@@ -183,16 +268,27 @@ const SelectedCard = ({
             className="flex items-start flex-col ">
             {isCompleted && (
               <>
-                <FocusIcon isActive={isActive} />
+                {selected.type === 'square' ? (
+                  <FocusIcon isActive={isActive} />
+                ) : (
+                  <AnimatedFlower />
+                )}
+
                 <h1 className="text-4xl my-4  text-white font-bold text-left">
                   Well done.
                 </h1>
                 <p className="text-base my-4  text-gray-100 font-light max-w-72 transition-all text-left">
-                  Your breathing exercise is done. So far today you have 10 minutes
-                  mindfully
+                  You have completed this activity.
+                  <br /> Come back anytime when you want to feel more focused and centered
+                  during your day.
                 </p>
                 <button
-                  onClick={() => onClick(null)}
+                  onClick={() => {
+                    onClick(null);
+                    setTimeout(() => {
+                      setIsCompleted(false);
+                    }, 300);
+                  }}
                   className=" bg-teal-600 hover:bg-teal-700 transition-all w-84  p-2 text-white mt-8 rounded-md px-4">
                   Complete
                 </button>

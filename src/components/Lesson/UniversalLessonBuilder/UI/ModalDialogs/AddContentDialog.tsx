@@ -2,7 +2,7 @@ import Buttons from '@components/Atoms/Buttons';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {isEmpty} from 'lodash';
+import {isEmpty, map} from 'lodash';
 import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
@@ -25,6 +25,7 @@ import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import {DIVIDER, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -41,6 +42,7 @@ const AddContentDialog = ({
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
     {name: 'User Interaction', current: false},
+    // {name: 'Game Changers', current: false},
   ];
 
   const {
@@ -113,6 +115,7 @@ const AddContentDialog = ({
       iconBackground: 'bg-purple-100',
     },
   ].filter(Boolean);
+
   const mediaContent = [
     {
       name: 'Docs',
@@ -172,6 +175,7 @@ const AddContentDialog = ({
       iconBackground: 'bg-blue-100',
     },
   ].filter(Boolean);
+
   const userInterfaceContent = [
     !isSurvey && {
       name: 'Notes ⭐',
@@ -238,34 +242,10 @@ const AddContentDialog = ({
       iconForeground: 'text-green-700',
       iconBackground: 'bg-green-100',
     },
-    // {
-    //   name: 'Emoji',
-    //   subtitle: 'Add emoji field',
-    //   type: FORM_TYPES.EMOJI,
-    //   icon: HiOutlineEmojiHappy,
-    //   iconForeground: 'text-blue-700',
-    //   iconBackground: 'bg-blue-100',
-    // },
-    // {
-    //   name: 'Date Picker',
-    //   subtitle: 'Add date picker field',
-    //   type: FORM_TYPES.DATE_PICKER,
-    //   icon: AiOutlineCalendar,
-    //   iconForeground: 'text-indigo-700',
-    //   iconBackground: 'bg-indigo-100',
-    // },
-    // {
-    //   name: 'Other',
-    //   subtitle: 'Add other fields',
-    //   type: 'input',
-    //   icon: MdInput,
-    //   iconForeground: 'text-red-700',
-    //   iconBackground: 'bg-red-100',
-    // },
   ].filter(Boolean);
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
-  const [onTextTab, onMediaTab, onUIContentTab] = helpers;
+  const [onTextTab, onMediaTab, onUIContentTab, onGameChangersTab] = helpers;
   const btnClass = `font-semibold hover:text-gray-600 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
 
   const onCustomPositionClick = (e: any) => {
@@ -333,7 +313,9 @@ const AddContentDialog = ({
                   <p className="text-xs 2xl:text-sm font-medium text-gray-900 dark:text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">{content.subtitle}</p>
+                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">
+                    {content.subtitle}
+                  </p>
                 </div>
               </div>
 
@@ -412,6 +394,17 @@ const AddContentDialog = ({
         {onUIContentTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {userInterfaceContent.map((content, idx) => (
+              <Item key={idx} content={content} />
+            ))}
+          </div>
+        )}
+      </AnimatedContainer>
+      <AnimatedContainer
+        show={onGameChangersTab && isEmpty(activeContentItem)}
+        animationType="translateY">
+        {onGameChangersTab && isEmpty(activeContentItem) && (
+          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+            {cardsList.map((content, idx) => (
               <Item key={idx} content={content} />
             ))}
           </div>

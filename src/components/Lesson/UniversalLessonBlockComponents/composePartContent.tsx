@@ -1,3 +1,6 @@
+import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ActivityBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
 import DocsBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
 import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
@@ -113,6 +116,14 @@ const composePartContent = (
     return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   } else if (type.includes(FORM_TYPES.DOCS)) {
     return <DocsBlock value={value} />;
+  } else if (type.includes('square')) {
+    return (
+      <GameChangerProvider>
+        <ErrorBoundary fallback={<h1>Something wrong with activity</h1>}>
+          <ActivityBlock value={value} />
+        </ErrorBoundary>
+      </GameChangerProvider>
+    );
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

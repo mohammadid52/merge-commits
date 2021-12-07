@@ -55,10 +55,12 @@ export const Tabs2 = ({
                 key={tab.name}
                 onClick={() => setCurTab(tab.name)}
                 className={classNames(
+                  tabs.length >= 4 ? 'text-xs' : 'text-sm',
+
                   tab.name === curTab
                     ? 'iconoclast:border-600 curate:border-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                  'whitespace-nowrap py-4 px-1 w-auto border-b-2 font-medium text-sm'
+                  'whitespace-nowrap py-4 px-1 w-auto border-b-2 font-medium'
                 )}
                 aria-current={tab.current ? 'page' : undefined}>
                 {tab.name}
@@ -112,11 +114,12 @@ const Tabs = ({
                   setCurTab(tab.name);
                 }}
                 className={classNames(
+                  tabs.length >= 4 ? 'text-xs' : 'text-sm',
                   curTab === tab.name
                     ? `iconoclast:text-main curate:text-main 
                       iconoclast:border-main curate:border-main `
                     : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                  'py-4 cursor-pointer px-1 text-center border-b-3 font-medium text-sm'
+                  'py-4 cursor-pointer px-1 text-center border-b-3 font-medium '
                 )}
                 aria-current={curTab === tab.name ? 'page' : undefined}>
                 {tab.name}
@@ -167,18 +170,20 @@ export const Tabs3 = ({
       </div>
       <div className="hidden sm:block">
         <nav className="transition-all mb-4 flex space-x-4" aria-label="Tabs">
-          {tabs.map((tab, idx: number) => (
+          {tabs.map((tab, idx) => (
             <div
               onClick={() => setCurTab(tab.name)}
               key={tab.name}
               role="button"
               className={classNames(
+                tabs.length >= 4 ? 'text-xs' : 'text-sm',
+
                 tab.name === curTab
                   ? config.fullColor
                     ? 'iconoclast:bg-main text-white curate:bg-main '
                     : 'iconoclast:bg-100 iconoclast:text-700 curate:bg-100 curate:text-700 '
                   : 'text-gray-500 hover:text-gray-600',
-                'px-3 text-center cursor-pointer transition-all py-3 font-medium text-sm rounded-md'
+                'px-3 text-center cursor-pointer transition-all py-3 font-medium  rounded-md'
               )}
               aria-current={tab.current ? 'page' : undefined}>
               {numbered ? `${idx + 1}. ` : ''}

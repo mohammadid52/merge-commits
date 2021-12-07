@@ -62,17 +62,22 @@ const Table = ({
                           : `${config?.dataList?.patternConfig.secondColor}`
                         : 'bg-transparent'
                     }`}>
-                    {map(headers, (header, _idx) => (
-                      <td
-                        key={item.id + '-' + header}
-                        className={`${
-                          config?.dataList?.textColor || 'text-gray-500'
-                        } px-6 py-4 ${
-                          _idx === 0 ? 'w-72' : ''
-                        } whitespace-nowrap text-sm`}>
-                        {item[camelCase(header.toLowerCase())]}
-                      </td>
-                    ))}
+                    {map(headers, (header, _idx) => {
+                      let lowerHeader = camelCase(header.toLowerCase());
+
+                      let _item = item[lowerHeader];
+                      return (
+                        <td
+                          key={item.id + '-' + header}
+                          className={`${
+                            config?.dataList?.textColor || 'text-gray-500'
+                          } px-6 py-4 ${
+                            _idx === 0 ? 'w-72' : ''
+                          } whitespace-nowrap text-sm`}>
+                          {_item}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>

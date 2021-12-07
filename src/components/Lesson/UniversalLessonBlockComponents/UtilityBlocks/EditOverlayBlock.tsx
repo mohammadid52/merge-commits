@@ -151,8 +151,12 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   }, [navState, selectedComponent]);
 
   const currentComponentSelected =
+    !selectedComponent?.block &&
     selectedComponent?.pageContentID === pageContentID &&
     selectedComponent?.partContentID === partContentID;
+
+  const currentBlockSelected =
+    selectedComponent?.block && selectedComponent?.pageContentID === pageContentID;
 
   const deleteModeCurrentComponentSelected = selectedComponent?.extras || [];
 
@@ -184,7 +188,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 <button
                   onClick={() => onComponentSelect()}
                   className={`py-1 px-4 ${
-                    currentComponentSelected ? '' : 'border'
+                    currentComponentSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {currentComponentSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
@@ -214,7 +218,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                         p.partContentID === partContentID
                     )
                       ? ''
-                      : 'border'
+                      : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {deleteModeCurrentComponentSelected.find(
                     (p: any) =>
@@ -230,6 +234,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             )}
           {!previewMode &&
             showingBlockPin &&
+            !isComponent &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
                 id="editControlsWrapper"
@@ -240,9 +245,9 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 <button
                   onClick={() => onComponentSelect(true)}
                   className={`py-1 px-4 ${
-                    deleteModeCurrentComponentSelected ? '' : 'border'
+                    currentBlockSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
-                  {deleteModeCurrentComponentSelected ? (
+                  {currentBlockSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
                     <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
