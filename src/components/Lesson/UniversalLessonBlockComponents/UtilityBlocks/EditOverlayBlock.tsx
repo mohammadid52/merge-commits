@@ -186,6 +186,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   true ? 'active' : ''
                 } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
                 <button
+                  title="Select this component"
                   onClick={() => onComponentSelect()}
                   className={`py-1 px-4 ${
                     currentComponentSelected ? '' : ''
@@ -210,6 +211,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   true ? 'active' : ''
                 } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
                 <button
+                  title="Select this component"
                   onClick={() => onComponentSelect()}
                   className={`py-1 px-4 ${
                     deleteModeCurrentComponentSelected.find(
@@ -243,6 +245,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   true ? 'active' : ''
                 } flex flex-row items-center inset-y-0 bg-transparent rounded-lg h-auto w-auto justify-center`}>
                 <button
+                  title="Select this block"
                   onClick={() => onComponentSelect(true)}
                   className={`py-1 px-4 ${
                     currentBlockSelected ? '' : ''
