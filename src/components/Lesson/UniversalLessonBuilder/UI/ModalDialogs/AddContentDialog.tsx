@@ -42,7 +42,7 @@ const AddContentDialog = ({
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
     {name: 'User Interaction', current: false},
-    // {name: 'Game Changers', current: false},
+    {name: 'Game Changers', current: false},
   ];
 
   const {
