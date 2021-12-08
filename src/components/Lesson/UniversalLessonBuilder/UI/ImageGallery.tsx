@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {FaImages} from 'react-icons/fa';
-import {
-  getImagesFromS3Folder,
-  getImageFromS3Static,
-} from '../../../../utilities/services';
-import Loader from '../../../Atoms/Loader';
+import {getImagesFromS3Folder, getImageFromS3Static} from '@utilities/services';
+import Loader from '@atoms/Loader';
 
 const limit = 10;
 
@@ -19,8 +16,10 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
 
   const fetchImagesFromS3 = async (startAfter: string = '') => {
     const response: any = await getImagesFromS3Folder(basePath, startAfter, limit);
-    setImages((prevImages: any) => [...prevImages, ...response.Contents]);
-    setHasMore(response.IsTruncated);
+    if (response) {
+      setImages((prevImages: any) => [...prevImages, ...response.Contents]);
+      setHasMore(response.IsTruncated);
+    }
     setLoading(false);
   };
 

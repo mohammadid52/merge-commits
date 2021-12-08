@@ -1,9 +1,6 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-
-import parse from 'html-react-parser';
-
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
@@ -15,7 +12,7 @@ interface ParagraphBlockProps extends RowWrapperProps {
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const {id, value, type} = props;
   const {
-    state: {lessonPage: {lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const Paragraph = ({inputID, inputValue}: any) => {
@@ -25,17 +22,10 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
           key={inputID}
           id={inputID}
           dangerouslySetInnerHTML={{__html: inputValue?.value || '<p></p>'}}
-          className={`whitespace-pre-wrap ${themeTextColor}`}></p>
+          className={`whitespace-pre-wrap remove-white-bg ${themeTextColor}`}></p>
       </div>
     );
   };
-
-  // const composeParagraph = (inputID: string, inputValue: string, inputType: string) => {
-  //   switch (inputType) {
-  //     default:
-  //       return ;
-  //   }
-  // };
 
   return (
     <div className="w-auto">

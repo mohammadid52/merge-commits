@@ -1,10 +1,12 @@
+import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
+import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {v4 as uuidv4} from 'uuid';
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -13,44 +15,12 @@ import {
   INPUT_WITH_EMOJI,
   LINK,
 } from '../common/constants';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-
-import {Switch} from '@headlessui/react';
 
 /**
  * @param classes multipple classes separeted bt comma
  * @returns multiple classes into a single class
  * */
 export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
-
-const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
-  return (
-    <Switch
-      checked={checked}
-      onChange={onClick}
-      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-      <span className="sr-only">Text response type</span>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
-          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
-        )}
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
-        )}
-      />
-    </Switch>
-  );
-};
 
 const UniversalInput = (props: any) => {
   const {
@@ -176,7 +146,7 @@ const UniversalInput = (props: any) => {
                           <div className="sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm w-auto">
                             <div className="flex items-center text-xs w-auto">
                               Sentence
-                              <Toggle
+                              <ToggleForModal
                                 checked={input.textArea}
                                 onClick={() => changeCheckboxValue(idx, input.textArea)}
                               />
@@ -187,7 +157,7 @@ const UniversalInput = (props: any) => {
                       )}
                       <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         Make this required
-                        <Toggle
+                        <ToggleForModal
                           checked={input.required}
                           onClick={() => makeRequired(idx, input.required)}
                         />
@@ -207,7 +177,7 @@ const UniversalInput = (props: any) => {
                         <div className="flex items-center w-auto sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
                           <div className="flex items-center text-xs w-auto">
                             Sentence
-                            <Toggle
+                            <ToggleForModal
                               checked={input.textArea}
                               onClick={() => changeCheckboxValue(idx, input.textArea)}
                             />
@@ -218,7 +188,7 @@ const UniversalInput = (props: any) => {
                     )}
                     <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                       Make this required
-                      <Toggle
+                      <ToggleForModal
                         checked={input.required}
                         onClick={() => makeRequired(idx, input.required)}
                       />

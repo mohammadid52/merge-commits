@@ -1,6 +1,4 @@
-import {stringify} from 'querystring';
 import React, {useEffect, useState} from 'react';
-
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
 
@@ -11,7 +9,7 @@ interface ImageBlockProps extends RowWrapperProps {
 }
 
 export const ImageBlock = (props: ImageBlockProps) => {
-  const {id, dataIdAttribute, value} = props;
+  const {id, dataIdAttribute, value, classString = ''} = props;
   const [imageState, setImageState] = useState<{
     url: string;
     width: string;
@@ -40,16 +38,16 @@ export const ImageBlock = (props: ImageBlockProps) => {
     <div id={id} data-id={dataIdAttribute} className={`px-4 py-5 sm:p-6`}>
       {imageState.url && (
         <img
-          className="mx-auto"
+          className={`${classString} mx-auto h-96 xl:h-132 2xl:h-156`}
           style={styleAttribute}
-          width={imageState.width}
-          height={imageState.height}
+          // width={imageState.width}
+          // height={imageState.height}
           src={getImageFromS3Static(imageState.url)}
           alt=""
         />
       )}
 
-      <p className="text-center">{imageState.caption}</p>
+      <p className="text-left mt-2">{imageState.caption}</p>
     </div>
   );
 };
