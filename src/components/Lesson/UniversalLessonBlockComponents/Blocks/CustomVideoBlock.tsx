@@ -12,7 +12,8 @@ interface ImageBlockProps extends RowWrapperProps {
 export const CustomVideoBlock = (props: ImageBlockProps) => {
   const {id, dataIdAttribute, value} = props;
 
-  const {value: url, width = '', height = '', caption = ''} = Array.isArray(value) && value?.length ? value[0] : value;
+  const {value: url, width = '', height = '', caption = ''} =
+    Array.isArray(value) && value?.length ? value[0] : value;
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -76,7 +77,7 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
         <source />
         Your browser does not support the video tag.
       </video>
-      <p className="text-center">{caption}</p>
+      <p className="text-left mt-2">{caption}</p>
     </div>
   );
 };

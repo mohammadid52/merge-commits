@@ -47,7 +47,7 @@ export const ImageBlock = (props: ImageBlockProps) => {
         />
       )}
 
-      <p className="text-center">{imageState.caption}</p>
+      <p className="text-left mt-2">{imageState.caption}</p>
     </div>
   );
 };
