@@ -1,21 +1,27 @@
-import React, {useState, useEffect, useContext} from 'react';
-
+import Buttons from '@atoms/Buttons';
+import ULBFileUploader from '@atoms/Form/FileUploader';
+import FormInput from '@atoms/Form/FormInput';
 import Storage from '@aws-amplify/storage';
-
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-
-import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import Label from '@components/Atoms/Form/Label';
+import Selector from '@components/Atoms/Form/Selector';
+import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
+import DummyContent from '@components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
+import PreviewLayout from '@components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {
+  Tabs3,
+  useTabs,
+} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+} from '@dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {getImageFromS3Static} from '@utilities/services';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import React, {useContext, useEffect, useState} from 'react';
 import ProgressBar from '../ProgressBar';
-import {wait} from '../../../../../utilities/functions';
 
 interface IImageInput {
   value: string;
@@ -125,12 +131,15 @@ const ImageFormComponent = ({
           ...payload,
           value: `ULB/${user.id}/content_image_${fileName}`,
         };
+        const styles = getStyles();
         if (isEditingMode) {
           const updatedList = updateBlockContentULBHandler(
             '',
             '',
             customVideo ? 'custom_video' : 'image',
-            [payload]
+            [payload],
+            0,
+            styles
           );
 
           await addToDB(updatedList);
@@ -139,7 +148,9 @@ const ImageFormComponent = ({
             '',
             '',
             customVideo ? 'custom_video' : 'image',
-            [payload]
+            [payload],
+            0,
+            styles
           );
 
           await addToDB(updatedList);
@@ -207,132 +218,189 @@ const ImageFormComponent = ({
     });
   };
 
-  console.log(
-    '🚀 ~ file: ImageComponent.tsx ~ line 238 ~ useEffect ~ uploadProgress',
-    uploadProgress
-  );
   useEffect(() => {
     if (uploadProgress === 'done') {
       closeAction();
     }
   }, [uploadProgress]);
 
-  const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
+  const {caption = '', value = '', imageData} = imageInputs;
+
+  const {curTab, setCurTab, helpers} = useTabs();
+  const [onSetupTab, onPreviewTab] = helpers;
+
+  const [selectedStyles, setSelectedStyles] = useState({
+    isRounded: true,
+    isBorder: true,
+  });
+  const getStyles = () => {
+    let styles = '';
+    if (selectedStyles.isBorder) {
+      styles = styles + ' border-2 dark:border-gray-600 border-gray-400';
+    }
+    if (selectedStyles.isRounded) {
+      styles = styles + ' rounded-2xl';
+    }
+
+    return styles;
+  };
+
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (value && error) {
+      setError('');
+    }
+  }, [value]);
+
   return (
-    <div>
-      <form onSubmit={onSave}>
-        <div className={`grid grid-cols-2 gap-3`}>
-          <div
-            className={
-              'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
-            }>
-            <ULBFileUploader
-              acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
-              updateFileUrl={updateFileUrl}
-              fileUrl={value}
-              error={errors?.value}
-              customVideo={customVideo}
-              showPreview={true}
-            />
-            <div className="flex flex-col items-center justify-center text-gray-400">
-              --- Or ---
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <Buttons label={'Browse'} onClick={handleGalleryModal} />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <FormInput
-                value={height || ''}
-                id="height"
-                onChange={handleInputChange}
-                name="height"
-                label={'Height'}
-                placeHolder={'Ex. 100'}
-                isRequired
-                error={errors?.height}
-              />
-            </div>
-            <div>
-              <FormInput
-                value={width || ''}
-                id="width"
-                onChange={handleInputChange}
-                name="width"
-                label={'Width'}
-                placeHolder={'Ex. 100'}
-                isRequired
-                error={errors?.width}
-              />
-            </div>
-            <div className="col-span-2">
-              <FormInput
-                value={caption || ''}
-                id="caption"
-                onChange={handleInputChange}
-                name="caption"
-                label={'Caption'}
-                placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
-              />
-            </div>
-          </div>
-        </div>
-        {value ? (
-          customVideo ? (
-            <div className="w-72 h-auto mx-auto mt-6">
-              <video
-                controls
-                className="rounded-lg mx-auto"
-                src={imageData ? value : getImageFromS3Static(value)}>
-                <source />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          ) : (
-            <div>
-              <img
-                src={imageData ? value : getImageFromS3Static(value)}
-                alt=""
-                className={`w-auto h-30 pt-4`}
-              />
-            </div>
-          )
-        ) : null}
+    <div className="2xl:min-w-256 max-w-screen 2xl:max-w-256">
+      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
 
-        {loading && uploadProgress !== 'done' && (
-          <ProgressBar
-            status={
-              uploadProgress < 99
-                ? `Uploading ${customVideo ? 'Video' : 'Image'}`
-                : 'Upload Done'
-            }
-            progress={uploadProgress}
-          />
+      <AnimatedContainer show={onSetupTab}>
+        {onSetupTab && (
+          <form onSubmit={onSave}>
+            <div className={`grid grid-cols-2 gap-6`}>
+              <div
+                className={
+                  ' col-span-2 border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
+                }>
+                <ULBFileUploader
+                  acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
+                  updateFileUrl={updateFileUrl}
+                  fileUrl={value}
+                  error={errors?.value}
+                  customVideo={customVideo}
+                  showPreview={true}
+                />
+                <div className="flex flex-col items-center justify-center text-gray-400">
+                  --- Or ---
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  <Buttons label={'Browse'} onClick={handleGalleryModal} />
+                </div>
+              </div>
+              <div className="disabled col-span-1">
+                <Label dark={false} label="Styles" />
+                <div className="mt-1 flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
+                  <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
+                    Corners rounded
+                    <ToggleForModal
+                      checked={selectedStyles.isRounded}
+                      onClick={() => {
+                        if (!value) {
+                          setError(
+                            `Please select an ${customVideo ? 'video' : 'image'} first`
+                          );
+                        } else {
+                          setSelectedStyles({
+                            ...selectedStyles,
+                            isRounded: !selectedStyles.isRounded,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
+                    Border
+                    <ToggleForModal
+                      checked={selectedStyles.isBorder}
+                      onClick={() => {
+                        if (!value) {
+                          setError(
+                            `Please select an ${customVideo ? 'video' : 'image'} first`
+                          );
+                        } else {
+                          setSelectedStyles({
+                            ...selectedStyles,
+                            isBorder: !selectedStyles.isBorder,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                {error && <p className="text-red-500 text-xs">{error}</p>}
+              </div>
+
+              <div className="col-span-1">
+                <FormInput
+                  value={caption || ''}
+                  id="caption"
+                  onChange={handleInputChange}
+                  name="caption"
+                  label={'Caption'}
+                  placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
+                />
+              </div>
+            </div>
+
+            {loading && uploadProgress !== 'done' && (
+              <ProgressBar
+                status={
+                  uploadProgress < 99
+                    ? `Uploading ${customVideo ? 'Video' : 'Image'}`
+                    : 'Upload Done'
+                }
+                progress={uploadProgress}
+              />
+            )}
+
+            <div className="flex mt-8 justify-center px-6 pb-4">
+              <div className="flex justify-end">
+                <Buttons
+                  btnClass="py-1 px-4 text-xs mr-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  onClick={askBeforeClose}
+                  transparent
+                />
+                <Buttons
+                  btnClass="py-1 px-8 text-xs ml-2"
+                  label={
+                    loading
+                      ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVING']
+                      : EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+                  }
+                  type="submit"
+                  onClick={onSave}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+          </form>
         )}
+      </AnimatedContainer>
+      <AnimatedContainer show={onPreviewTab}>
+        {onPreviewTab && (
+          <div>
+            <PreviewLayout
+              notAvailable={
+                !value ? `No ${customVideo ? 'video' : 'image'} found` : false
+              }>
+              {customVideo ? (
+                <div className="w-auto h-auto mx-auto mt-6">
+                  <video
+                    controls
+                    className={`${getStyles()} mx-auto`}
+                    src={imageData ? value : getImageFromS3Static(value)}>
+                    <source />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : (
+                <div>
+                  <img
+                    src={imageData ? value : getImageFromS3Static(value)}
+                    alt=""
+                    className={`w-full ${getStyles()} h-96 xl:h-132 2xl:h-156 mt-4`}
+                  />
+                </div>
+              )}
 
-        <div className="flex mt-8 justify-center px-6 pb-4">
-          <div className="flex justify-end">
-            <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={askBeforeClose}
-              transparent
-            />
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={
-                loading
-                  ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVING']
-                  : EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-              }
-              type="submit"
-              onClick={onSave}
-              disabled={loading}
-            />
+              <DummyContent />
+            </PreviewLayout>
           </div>
-        </div>
-      </form>
+        )}
+      </AnimatedContainer>
     </div>
   );
 };

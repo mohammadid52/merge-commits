@@ -12,8 +12,8 @@ export function OverlayContextProvider(props: React.PropsWithChildren<{}>): JSX.
 
   // This state handles all the modal components
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
+    show: true,
+    type: 'image',
   });
   const [showDataForCopyClone, setShowDataForCopyClone] = useState(false);
 

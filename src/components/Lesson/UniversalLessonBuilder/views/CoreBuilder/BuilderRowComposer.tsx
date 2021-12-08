@@ -1,3 +1,4 @@
+import Buttons from '@components/Atoms/Buttons';
 import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -24,7 +25,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
 
-  const {selectedComponent} = usePageBuilderContext();
+  const {selectedComponent, setNavState} = usePageBuilderContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -41,6 +42,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
+  const openNewContentWindow = () => {
+    setNavState('addContent');
+    setNoInfoMsg('Now select a component type');
+  };
+
   const {selectedPageID, universalLessonDetails} = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
@@ -49,6 +55,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+
+  const [noInfoMsg, setNoInfoMsg] = useState(
+    'No content added yet. Click on the button to add content.'
+  );
 
   return (
     <div>
@@ -139,7 +149,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     content.type === FORM_TYPES.JUMBOTRON ||
                                     content.type.includes('writing-exercise')
                                       ? 'px-4 pt-4'
-                                      : content.type === 'header'
+                                      : content.type === 'header' ||
+                                        content.type === 'image' ||
+                                        content.type === 'customVideo'
                                       ? ''
                                       : content.class
                                   }`}
@@ -180,11 +192,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
           )),
         ]
       ) : (
-        <>
-          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
-            This page has no layout information.
-          </h1>
-        </>
+        <div className="flex flex-col items-center justify-center w-auto">
+          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>{noInfoMsg}</h1>
+          <Buttons label={'Add now'} onClick={openNewContentWindow} />
+        </div>
       )}
     </div>
   );
