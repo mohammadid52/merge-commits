@@ -25,7 +25,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
 
-  const {selectedComponent, setNavState} = usePageBuilderContext();
+  const {selectedComponent, setNavState, navState} = usePageBuilderContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -44,7 +44,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   const openNewContentWindow = () => {
     setNavState('addContent');
-    setNoInfoMsg('Now select a component type');
   };
 
   const {selectedPageID, universalLessonDetails} = useULBContext();
@@ -55,10 +54,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
-
-  const [noInfoMsg, setNoInfoMsg] = useState(
-    'No content added yet. Click on the button to add content.'
-  );
 
   return (
     <div>
@@ -193,8 +188,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <div className="flex flex-col items-center justify-center w-auto">
-          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>{noInfoMsg}</h1>
-          <Buttons label={'Add now'} onClick={openNewContentWindow} />
+          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
+            {navState !== 'addContent'
+              ? 'No content added yet. Click on the button to add content.'
+              : 'Now select a component type'}
+          </h1>
+          {navState !== 'addContent' && (
+            <Buttons label={'Add now'} onClick={openNewContentWindow} />
+          )}
         </div>
       )}
     </div>
