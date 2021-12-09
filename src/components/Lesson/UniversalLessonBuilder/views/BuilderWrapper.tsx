@@ -269,9 +269,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setShowLocationIcon(false);
 
     if (showPopup) {
-      setNavState('home');
+      // setNavState('home');
       setActiveContentItem(null);
-      setActionMode('init');
+      // setActionMode('init');
 
       wait(700).then(() => {
         setSavingStatus('loading');

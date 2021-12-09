@@ -316,7 +316,7 @@ const Spotlight = ({
   };
 
   return (
-    <div className="min-w-256 max-w-256">
+    <div className="">
       <div className="px-3 py-4">
         <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
           Step 1: Select person in the community to spotlight

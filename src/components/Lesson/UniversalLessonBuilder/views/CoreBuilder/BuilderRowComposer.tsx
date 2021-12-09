@@ -1,3 +1,4 @@
+import Buttons from '@components/Atoms/Buttons';
 import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -24,7 +25,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
 
-  const {selectedComponent} = usePageBuilderContext();
+  const {selectedComponent, setNavState, navState} = usePageBuilderContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -39,6 +40,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         setEditedID('');
       }
     }
+  };
+
+  const openNewContentWindow = () => {
+    setNavState('addContent');
   };
 
   const {selectedPageID, universalLessonDetails} = useULBContext();
@@ -139,7 +144,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     content.type === FORM_TYPES.JUMBOTRON ||
                                     content.type.includes('writing-exercise')
                                       ? 'px-4 pt-4'
-                                      : content.type === 'header'
+                                      : content.type === 'header' ||
+                                        content.type === 'image' ||
+                                        content.type === 'customVideo'
                                       ? ''
                                       : content.class
                                   }`}
@@ -180,11 +187,16 @@ const BuilderRowComposer = (props: RowComposerProps) => {
           )),
         ]
       ) : (
-        <>
+        <div className="flex flex-col items-center justify-center w-auto">
           <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
-            This page has no layout information.
+            {navState !== 'addContent'
+              ? 'No content added yet. Click on the button to add content.'
+              : 'Now select a component type'}
           </h1>
-        </>
+          {navState !== 'addContent' && (
+            <Buttons label={'Add now'} onClick={openNewContentWindow} />
+          )}
+        </div>
       )}
     </div>
   );

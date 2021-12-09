@@ -79,12 +79,6 @@ const ParaModalComponent = ({
 
   const {paragraph} = fields;
 
-  // function extractContent(html: string) {
-  //   return new DOMParser().parseFromString(html, 'text/html').documentElement.textContent;
-  // }
-
-  // console.log(extractContent(paragraph));
-
   return (
     <div>
       <div className="grid grid-cols-2 my-2 gap-4">
