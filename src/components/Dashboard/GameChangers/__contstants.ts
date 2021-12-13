@@ -1,12 +1,15 @@
 import {
   FOUR_SEVEN_EIGHT,
   SQUARE,
+  THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
+import {FcMindMap} from 'react-icons/fc';
 
 const cardsList = [
   {
     id: 0,
+    // don't change the id
     type: SQUARE,
     title: 'Square Breathing',
     icon: BiRadioCircleMarked,
@@ -19,15 +22,29 @@ const cardsList = [
   },
   {
     icon: BiCheckboxChecked,
-    iconForeground: 'text-yellow-700',
-    iconBackground: 'bg-yellow-100',
+    iconForeground: 'text-blue-700',
+    iconBackground: 'bg-blue-100',
     subtitle: 'Add 4-7-8 breathing to lesson',
     id: 1,
+    // don't change the id
     name: '4-7-8 Breathing',
     type: FOUR_SEVEN_EIGHT,
     title: '4-7-8 Breathing',
     desc:
-      'With this exercise, you’ll get your desired focus back so you can be even more productive.',
+      "With this exercise, you'll get your desired focus back so you can be even more productive.",
+  },
+  {
+    icon: FcMindMap,
+    iconForeground: 'text-yellow-700',
+    iconBackground: 'bg-yellow-100',
+    subtitle: 'Add `Think about it` to lesson',
+    id: 2,
+    // don't change the id
+    name: 'Think About It',
+    type: THINK_ABOUT_IT,
+    title: 'Think About It',
+    desc:
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
   },
 ];
 
@@ -38,8 +55,8 @@ const FSEBreathingHowTo = [
   'Make another whooshing exhale from your mouth for eight seconds.',
 ];
 
-const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It’s based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
-  When practiced regularly, it’s possible that this technique could help some people fall asleep in a shorter period of time.`;
+const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It's based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
+  When practiced regularly, it's possible that this technique could help some people fall asleep in a shorter period of time.`;
 
 const sqaureBreathingHowTo = [
   'Begin by slowly exhaling all of your air out',
@@ -51,9 +68,9 @@ const sqaureBreathingHowTo = [
 
 const sqaureBreathingInfoText = `Square breathing is a type of breathwork that can shift your energy, connect you
   more deeply with your body, calm your nervous system, and reduce the stress in
-  your body. It is also referred to as box breathing, 4×4 breathing, and 4-part
+  your body. It is also referred to as box breathing, 4x4 breathing, and 4-part
   breath. Here are instructions for square breathing and some ideas for when to
-  practice the technique. We’ll also share tips for making the breathwork as
+  practice the technique. We'll also share tips for making the breathwork as
   effective as possible.`;
 
 /* View in fullscreen */

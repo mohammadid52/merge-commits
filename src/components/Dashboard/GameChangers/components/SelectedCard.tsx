@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import FormInput from '@components/Atoms/Form/FormInput';
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
+import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
@@ -8,6 +10,7 @@ import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import {
   FOUR_SEVEN_EIGHT,
   SQUARE,
+  THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
@@ -25,6 +28,69 @@ import Flickity from 'react-flickity-component';
 
 // Constants
 const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
+
+const qaList = [
+  {
+    id: nanoid(24),
+    question: 'What just happened that made you doubt yourself?',
+    placeholder: "I didn't do well in my math test today.",
+  },
+  {
+    id: nanoid(24),
+    question: 'What are you telling yourself about the situation?',
+    placeholder: "I'm useless. I can't do anything right.",
+  },
+  {
+    id: nanoid(24),
+    question: 'What happens if you keep believing what you are thinking?',
+    placeholder: 'I give up and stop studying for the exam next week.',
+  },
+  {
+    id: nanoid(24),
+    question:
+      'What am I not giving myself credit for in what happened?  What am I proud of?',
+    placeholder:
+      "I did well in the test last week. I've been studying well, but I hadn't covered this topic yet.\n The results show me where i need to focus my attention.",
+  },
+  {
+    id: nanoid(24),
+    question:
+      "What can I do where I would be proud of myself that doesn't include beating myself up or quitting?",
+    placeholder:
+      "I sit down with my teacher to understand where I went wrong.\n We work on parts of the test I didn't understand, and I include what i have learned in my future studying.",
+  },
+];
+
+const ThinkAboutItCard = () => {
+  const [answers, setAnswers] = useState<any>({});
+
+  const onAnsChange = (e: any) => {
+    const {id, value} = e.target;
+
+    setAnswers({...answers, [id]: value});
+  };
+
+  return (
+    <section>
+      <h1 className="text-white text-4xl font-semibold mb-4">Think About It</h1>
+      <form className="flex flex-col gap-y-6">
+        {qaList.map((qa) => (
+          <div>
+            <FormInput
+              dark
+              onChange={onAnsChange}
+              key={qa.id}
+              id={qa.id}
+              label={qa.question}
+              value={answers[qa.id]}
+              placeHolder={qa.placeholder}
+            />
+          </div>
+        ))}
+      </form>
+    </section>
+  );
+};
 
 const SelectedCard = ({
   card,
@@ -159,23 +225,6 @@ const SelectedCard = ({
 
   const {email, authId} = useAuth();
 
-  const getEndSeconds = () => {
-    // For Square exercises
-    // takes 16 seconds for one round
-    // multiple total counts with 16 to get end time
-    // <------->
-    // For 4-7-8 exercises
-    // takes 4+7+8 =19  seconds for one round
-    // multiple total counts with 19 to get end time
-
-    if (countSelected !== null) {
-      return (
-        countSelected *
-        (card.type === SQUARE ? 16 : card.type === FOUR_SEVEN_EIGHT ? 19 : 16) // default 16 for now
-      );
-    }
-  };
-
   const onStartClick = () => {
     const elem = $('.carousel-cell.is-selected h1').text();
     setCountSelected(Number(elem));
@@ -218,12 +267,16 @@ const SelectedCard = ({
         <div>
           {/* Count Selection Section */}
 
+          <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
+            {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
+          </AnimatedContainer>
+
           <AnimatedContainer
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={!isCompleted && countSelected === null}>
-            {!isCompleted && countSelected === null && (
+            show={!isCompleted && selectedCard !== 2 && countSelected === null}>
+            {!isCompleted && countSelected === null && selectedCard !== 2 && (
               <>
                 <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <div className="flex w-auto items-center justify-center">
@@ -272,8 +325,8 @@ const SelectedCard = ({
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={!isCompleted && countSelected !== null}>
-            {!isCompleted && countSelected !== null && (
+            show={!isCompleted && selectedCard !== 2 && countSelected !== null}>
+            {!isCompleted && selectedCard !== 2 && countSelected !== null && (
               <>
                 <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <AnimatedSquare
@@ -313,6 +366,8 @@ const SelectedCard = ({
               <>
                 {selected.type === 'square' ? (
                   <FocusIcon isActive={isActive} />
+                ) : card.type === THINK_ABOUT_IT ? (
+                  <AnimatedMind />
                 ) : (
                   <AnimatedFlower />
                 )}
