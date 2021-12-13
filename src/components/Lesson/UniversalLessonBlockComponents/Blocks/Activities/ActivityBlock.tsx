@@ -15,7 +15,7 @@ const ActivityBlock = ({value}: {value: any}) => {
     if (initialValue && selectedCard === null) {
       const card = cardsList.find((card) => initialValue.includes(card.type));
 
-      if (card !== null) {
+      if (card) {
         setSelectedCard(card?.id);
       }
 
@@ -35,8 +35,8 @@ const ActivityBlock = ({value}: {value: any}) => {
         duration={'1000'}
         animationType={'translateY'}
         className="h-full flex items-center justify-center flex-col"
-        show={selectedCard !== null}>
-        {selectedCard !== null && (
+        show={selectedCard !== null && selectedCard !== undefined}>
+        {selectedCard !== null && selectedCard !== undefined && (
           <SelectedCard
             inLesson
             key={'5253'}

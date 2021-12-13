@@ -3,7 +3,6 @@ import ULBFileUploader from '@atoms/Form/FileUploader';
 import FormInput from '@atoms/Form/FormInput';
 import Storage from '@aws-amplify/storage';
 import Label from '@components/Atoms/Form/Label';
-import Selector from '@components/Atoms/Form/Selector';
 import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import DummyContent from '@components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import PreviewLayout from '@components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
@@ -270,6 +269,7 @@ const ImageFormComponent = ({
                   fileUrl={value}
                   error={errors?.value}
                   customVideo={customVideo}
+                  isEditingMode={isEditingMode}
                   showPreview={true}
                 />
                 <div className="flex flex-col items-center justify-center text-gray-400">
