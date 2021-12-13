@@ -1,3 +1,4 @@
+import {getImageFromS3Static} from '@utilities/services';
 import React, {useCallback, useContext} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {FaCloudUploadAlt} from 'react-icons/fa';
@@ -13,6 +14,7 @@ interface IULBFileUploader {
   multiple?: boolean;
   showPreview?: boolean;
   customVideo?: boolean;
+  isEditingMode?: boolean;
   updateFileUrl: (url: string, imageData: File | null) => void;
 }
 
@@ -25,7 +27,9 @@ const ULBFileUploader = ({
   showPreview = true,
   updateFileUrl,
   customVideo = false,
+  isEditingMode = false,
 }: IULBFileUploader) => {
+  console.log('🚀 ~ file: FileUploader.tsx ~ line 32 ~ fileUrl', fileUrl);
   const {userLanguage} = useContext(GlobalContext);
   const otherProps: any = {};
   if (acceptedFilesFormat) {
@@ -51,6 +55,13 @@ const ULBFileUploader = ({
   });
   const label: string = multiple ? 'some files' : 'file';
 
+  const getImageFile = (fileUrl: any) =>
+    isEditingMode
+      ? fileUrl.includes('blob')
+        ? fileUrl
+        : getImageFromS3Static(fileUrl)
+      : fileUrl;
+
   return (
     <div {...getRootProps()} className={classString}>
       <input {...getInputProps()} />
@@ -58,13 +69,17 @@ const ULBFileUploader = ({
         {showPreview && fileUrl ? (
           customVideo ? (
             <div className="w-56 h-auto mx-auto rounded">
-              <video className="rounded-lg mx-auto" src={fileUrl}>
+              <video className="rounded-lg mx-auto" src={getImageFile(fileUrl)}>
                 <source />
                 Your browser does not support the video tag.
               </video>
             </div>
           ) : (
-            <img src={fileUrl} alt="" className={`w-56 h-auto mx-auto rounded`} />
+            <img
+              src={getImageFile(fileUrl)}
+              alt=""
+              className={`w-56 h-auto mx-auto rounded`}
+            />
           )
         ) : (
           <div className="py-4">

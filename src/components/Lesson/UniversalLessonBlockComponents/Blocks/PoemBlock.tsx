@@ -1,11 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import WritingBlock from './PoemBlock/WritingBlock';
-import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
-import EditingBlock from './PoemBlock/EditingBlock';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {isEmpty, noop} from 'lodash';
+import React from 'react';
 import {FormControlProps} from './FormBlock';
 
 interface PoemBlockProps extends FormControlProps {
@@ -15,8 +8,6 @@ interface PoemBlockProps extends FormControlProps {
 
 const PoemBlock = (props: PoemBlockProps) => {
   const {id, inputID, onChange, value, disabled, classString} = props;
-
-  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
 
   return (
     <div

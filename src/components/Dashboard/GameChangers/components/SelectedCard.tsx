@@ -225,7 +225,7 @@ const SelectedCard = ({
             show={!isCompleted && countSelected === null}>
             {!isCompleted && countSelected === null && (
               <>
-                <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
+                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <div className="flex w-auto items-center justify-center">
                   {selected.type === 'square' ? (
                     <FocusIcon isActive={isActive} />
@@ -275,7 +275,7 @@ const SelectedCard = ({
             show={!isCompleted && countSelected !== null}>
             {!isCompleted && countSelected !== null && (
               <>
-                <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
+                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <AnimatedSquare
                   onStart={onStart}
                   isActive={isActive}
