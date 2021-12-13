@@ -3,22 +3,19 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
 import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
-import * as mutations from '../../../../graphql/mutations';
-import {
-  LessonPlansProps,
-  SavedLessonDetailsProps,
-} from '../../../../interfaces/LessonInterfaces';
-import {getImageFromS3Static} from '../../../../utilities/services';
-import {languageList, lessonTypeList} from '../../../../utilities/staticData';
-import Loader from '../../../Atoms/Loader';
-import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
+import {useQuery} from '@customHooks/urlParam';
+import * as mutations from '@graphql/mutations';
+import {LessonPlansProps, SavedLessonDetailsProps} from '@interfaces/LessonInterfaces';
+import {getImageFromS3Static} from '@utilities/services';
+import {languageList, lessonTypeList} from '@utilities/staticData';
+import Loader from '@atoms/Loader';
+import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
+import ModalPopUp from '@molecules/ModalPopUp';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';
@@ -760,7 +757,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP'],
     },
     {
-      title: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TITLE'],
+      title:
+        LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS'][
+          'LEARNING_OBJECTIVE'
+        ],
       description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
