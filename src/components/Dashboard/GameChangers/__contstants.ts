@@ -1,12 +1,17 @@
 import {
   FOUR_SEVEN_EIGHT,
   SQUARE,
+  THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {nanoid} from 'nanoid';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
+import {FcMindMap} from 'react-icons/fc';
+const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const cardsList = [
   {
     id: 0,
+    // don't change the id
     type: SQUARE,
     title: 'Square Breathing',
     icon: BiRadioCircleMarked,
@@ -19,15 +24,29 @@ const cardsList = [
   },
   {
     icon: BiCheckboxChecked,
-    iconForeground: 'text-yellow-700',
-    iconBackground: 'bg-yellow-100',
+    iconForeground: 'text-blue-700',
+    iconBackground: 'bg-blue-100',
     subtitle: 'Add 4-7-8 breathing to lesson',
     id: 1,
+    // don't change the id
     name: '4-7-8 Breathing',
     type: FOUR_SEVEN_EIGHT,
     title: '4-7-8 Breathing',
     desc:
-      'With this exercise, you’ll get your desired focus back so you can be even more productive.',
+      "With this exercise, you'll get your desired focus back so you can be even more productive.",
+  },
+  {
+    icon: FcMindMap,
+    iconForeground: 'text-yellow-700',
+    iconBackground: 'bg-yellow-100',
+    subtitle: 'Add `Think about it` to lesson',
+    id: 2,
+    // don't change the id
+    name: 'Think About It',
+    type: THINK_ABOUT_IT,
+    title: 'Think About It',
+    desc:
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
   },
 ];
 
@@ -38,8 +57,8 @@ const FSEBreathingHowTo = [
   'Make another whooshing exhale from your mouth for eight seconds.',
 ];
 
-const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It’s based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
-  When practiced regularly, it’s possible that this technique could help some people fall asleep in a shorter period of time.`;
+const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It's based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
+  When practiced regularly, it's possible that this technique could help some people fall asleep in a shorter period of time.`;
 
 const sqaureBreathingHowTo = [
   'Begin by slowly exhaling all of your air out',
@@ -51,9 +70,9 @@ const sqaureBreathingHowTo = [
 
 const sqaureBreathingInfoText = `Square breathing is a type of breathwork that can shift your energy, connect you
   more deeply with your body, calm your nervous system, and reduce the stress in
-  your body. It is also referred to as box breathing, 4×4 breathing, and 4-part
+  your body. It is also referred to as box breathing, 4x4 breathing, and 4-part
   breath. Here are instructions for square breathing and some ideas for when to
-  practice the technique. We’ll also share tips for making the breathwork as
+  practice the technique. We'll also share tips for making the breathwork as
   effective as possible.`;
 
 /* View in fullscreen */
@@ -91,6 +110,43 @@ function closeFullscreen() {
   }
 }
 
+const qaList = [
+  {
+    id: nanoid(24),
+    question: 'What just happened that made you doubt yourself?',
+    placeholder: "I didn't do well in my math test today.",
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question: 'What are you telling yourself about the situation?',
+    placeholder: "I'm useless. I can't do anything right.",
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question: 'What happens if you keep believing what you are thinking?',
+    placeholder: 'I give up and stop studying for the exam next week.',
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question:
+      'What am I not giving myself credit for in what happened?  What am I proud of?',
+    placeholder:
+      "I did well in the test last week. I've been studying well, but I hadn't covered this topic yet.\n The results show me where i need to focus my attention.",
+    textarea: true,
+  },
+  {
+    id: nanoid(24),
+    question:
+      "What can I do where I would be proud of myself that doesn't include beating myself up or quitting?",
+    placeholder:
+      "I sit down with my teacher to understand where I went wrong.\n We work on parts of the test I didn't understand, and I include what i have learned in my future studying.",
+    textarea: true,
+  },
+];
+
 export {
   cardsList,
   FSEBreathingHowTo,
@@ -99,4 +155,6 @@ export {
   sqaureBreathingInfoText,
   openFullscreen,
   closeFullscreen,
+  qaList,
+  successSound,
 };

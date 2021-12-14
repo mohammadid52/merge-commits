@@ -22,7 +22,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
           key={inputID}
           id={inputID}
           dangerouslySetInnerHTML={{__html: inputValue?.value || '<p></p>'}}
-          className={`whitespace-pre-wrap remove-white-bg ${themeTextColor}`}></p>
+          className={`whitespace-pre-wrap remove-draft-styles  ${themeTextColor}`}></p>
       </div>
     );
   };

@@ -1,4 +1,9 @@
+import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
+import {
+  SQUARE,
+  THINK_ABOUT_IT,
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import React from 'react';
 
 const Card = ({
@@ -32,7 +37,13 @@ const Card = ({
           background: 'rgba(21, 19, 21, .8)',
         }}
         className={`h-full inner-card transition-all rounded-xl p-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
-        {card.type === 'square' ? focusIcon : <AnimatedFlower />}
+        {card.type === SQUARE ? (
+          focusIcon
+        ) : card.type === THINK_ABOUT_IT ? (
+          <AnimatedMind />
+        ) : (
+          <AnimatedFlower />
+        )}
         <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
         <p className="text-base my-2 text-white font-light">{card.desc}</p>
       </div>
@@ -40,7 +51,7 @@ const Card = ({
       <button
         onClick={() => onClick(card.id)}
         className=" bg-teal-600 hover:bg-teal-700 transition-all w-84  p-2 text-white mt-8 rounded-md px-4">
-        Select Exercise
+        Select {card.type !== THINK_ABOUT_IT ? 'Exercise' : ''}
       </button>
     </div>
   );

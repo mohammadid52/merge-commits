@@ -1,28 +1,20 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {API, graphqlOperation} from 'aws-amplify';
-
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-
-import * as customQueries from '@customGraphql/customQueries';
-import * as customMutations from '@customGraphql/customMutations';
-import * as mutations from '@graphql/mutations';
-
 import Buttons from '@atoms/Buttons';
 import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
+import Selector from '@atoms/Form/Selector';
 import Loader from '@atoms/Loader';
 import Modal from '@atoms/Modal';
 import PageWrapper from '@atoms/PageWrapper';
-import Selector from '@atoms/Form/Selector';
-
-import DetailTable from './DetailTable';
-import AddCourse from './AddCourse';
-import CourseCard from './CourseCard';
-import AddButton from '@components/Atoms/Buttons/AddButton';
 import UnitFormComponent from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
-import UnitListRow from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitListRow';
-import {useHistory, useRouteMatch} from 'react-router';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import {API, graphqlOperation} from 'aws-amplify';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
+import DetailTable from './DetailTable';
 
 interface ILessonCourseProps {
   curriculumList: any[];
@@ -108,16 +100,16 @@ const LessonCourse = ({
       addedSyllabus.map((item) => {
         selectedSyllabus.push({
           ...result.data?.listUniversalSyllabuss.items.find(
-            (unit: any) => item.syllabusID === unit.id
+            (unit: any) => item?.syllabusID === unit?.id
           ),
-          id: item.id,
-          syllabusId: item.syllabusID,
+          id: item?.id,
+          syllabusId: item?.syllabusID,
         });
       });
       const addedSyllabusIds = addedSyllabus.map((item) => item.syllabusID);
       setUnits(
         result.data?.listUniversalSyllabuss.items.filter(
-          (unit: any) => !addedSyllabusIds.includes(unit.id)
+          (unit: any) => !addedSyllabusIds.includes(unit?.id)
         )
       );
       setAssignedUnits(selectedSyllabus);
@@ -178,7 +170,7 @@ const LessonCourse = ({
         graphqlOperation(customMutations.deleteUniversalSyllabusLesson, {input: input})
       );
       const selectedItem = allUnits?.find(
-        (unit: any) => unit.id === result.data.deleteUniversalSyllabusLesson?.syllabusID
+        (unit: any) => unit?.id === result.data.deleteUniversalSyllabusLesson?.syllabusID
       );
       await API.graphql(
         graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
@@ -190,7 +182,9 @@ const LessonCourse = ({
           },
         })
       );
-      setAssignedUnits((prevList: any) => prevList.filter((item: any) => item.id !== id));
+      setAssignedUnits((prevList: any) =>
+        prevList.filter((item: any) => item?.id !== id)
+      );
       setDeleting(false);
       setDeleteModal({show: false, message: '', action: () => {}});
     } catch (error) {
@@ -257,15 +251,15 @@ const LessonCourse = ({
           },
         ]);
         setUnits((prevUnits: any) =>
-          prevUnits.filter((unit: any) => unit.id !== input.syllabusID)
+          prevUnits.filter((unit: any) => unit?.id !== input.syllabusID)
         );
         const selectedUnitData: any =
-          allUnits.find((unit: any) => unit.id === input.syllabusID) || {};
+          allUnits.find((unit: any) => unit?.id === input.syllabusID) || {};
         setAssignedUnits((prevList: any) => [
           ...prevList,
           {
             ...selectedUnitData,
-            id: newLesson.id,
+            id: newLesson?.id,
             syllabusId: input.syllabusID,
             lessons: {
               items: [
@@ -366,133 +360,134 @@ const LessonCourse = ({
   }));
 
   return (
-    <div className="flex m-auto justify-center">
-      <div className="">
-        <PageWrapper defaultClass="px-8 border-0 border-gray-200">
-          {!showAddSection
-            ? !isSuperAdmin && (
-                <div className="flex justify-end">
-                  <div className="w-auto">
-                    <Buttons
-                      btnClass=""
-                      label={'Add Lesson to Unit'}
-                      onClick={() => setShowAddSection(true)}
-                    />
-                    <div
-                      className="text-sm text-right text-gray-400 cursor-pointer mt-1"
-                      onClick={() => setAddModalShow(true)}>
-                      + Create Unit
+    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <div className="flex m-auto justify-center">
+        <div className="">
+          <PageWrapper defaultClass="px-8 border-0 border-gray-200">
+            {!showAddSection
+              ? !isSuperAdmin && (
+                  <div className="flex justify-end">
+                    <div className="w-auto">
+                      <Buttons
+                        btnClass=""
+                        label={'Add Lesson to Unit'}
+                        onClick={() => setShowAddSection(true)}
+                      />
+                      <div
+                        className="text-sm text-right text-gray-400 cursor-pointer mt-1"
+                        onClick={() => setAddModalShow(true)}>
+                        + Create Unit
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            : null}
-          {showAddSection ? (
-            <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
-              <Selector
-                selectedItem={unitInput.name}
-                list={units}
-                placeholder="Select Unit"
-                onChange={(val, name, id) => setUnitInput({name, id})}
-              />
-              <Buttons
-                btnClass="ml-4 py-1"
-                label={ButtonDict[userLanguage]['ADD']}
-                disabled={saving || !unitInput.id}
-                onClick={() => addLessonToSyllabusLesson(unitInput.id)}
-              />
-              <Buttons
-                btnClass="ml-4 py-1"
-                label={ButtonDict[userLanguage]['CANCEL']}
-                onClick={() => setShowAddSection(false)}
-              />
-            </div>
-          ) : null}
-          {loading || assignedUnitsLoading ? (
-            <div className="mt-4">
-              <Loader />
-            </div>
-          ) : (
-            <>
-              <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{UnitLookupDict[userLanguage]['NO']}</span>
-                  </div>
-                  <div
-                    className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                    <span>{UnitLookupDict[userLanguage]['NAME']}</span>
-                  </div>
-                  <div
-                    className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                    <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
-                  </div>
-                  <div className="w-2/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">
-                      {UnitLookupDict[userLanguage]['ACTION']}
-                    </span>
-                  </div>
-                </div>
+                )
+              : null}
+            {showAddSection ? (
+              <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
+                <Selector
+                  selectedItem={unitInput.name}
+                  list={units}
+                  placeholder="Select Unit"
+                  onChange={(val, name, id) => setUnitInput({name, id})}
+                />
+                <Buttons
+                  btnClass="ml-4 py-1"
+                  label={ButtonDict[userLanguage]['ADD']}
+                  disabled={saving || !unitInput.id}
+                  onClick={() => addLessonToSyllabusLesson(unitInput.id)}
+                />
+                <Buttons
+                  btnClass="ml-4 py-1"
+                  label={ButtonDict[userLanguage]['CANCEL']}
+                  onClick={() => setShowAddSection(false)}
+                />
               </div>
-              {assignedUnits?.length ? (
-                assignedUnits.map((unit: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                      index % 2 !== 0 ? 'bg-gray-50' : ''
-                    }`}>
-                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                      {index + 1}.
+            ) : null}
+            {loading || assignedUnitsLoading ? (
+              <div className="mt-4">
+                <Loader />
+              </div>
+            ) : (
+              <>
+                <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
+                  <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                    <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>{UnitLookupDict[userLanguage]['NO']}</span>
                     </div>
                     <div
-                      onClick={() => redirectionToUnitPage(unit.syllabusId)}
-                      className={`cursor-pointer flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
-                      {unit.name ? unit.name : ''}
+                      className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                      <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                     </div>
                     <div
-                      className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
-                      {unit.lessons?.items?.map(
-                        ({
-                          id,
-                          lesson: {id: lessonId, title},
-                        }: {
-                          id: string;
-                          lesson: {id: string; title: string};
-                        }) => (
-                          <li
-                            key={id}
-                            onClick={() =>
-                              redirectToLesson(unit.institution?.id, lessonId)
-                            }>
-                            {title}
-                          </li>
-                        )
+                      className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                      <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
+                    </div>
+                    <div className="w-2/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span className="w-auto">
+                        {UnitLookupDict[userLanguage]['ACTION']}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {assignedUnits?.length ? (
+                  assignedUnits.map((unit: any, index: number) => (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                        index % 2 !== 0 ? 'bg-gray-50' : ''
+                      }`}>
+                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                        {index + 1}.
+                      </div>
+                      <div
+                        onClick={() => redirectionToUnitPage(unit.syllabusId)}
+                        className={`cursor-pointer flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+                        {unit.name ? unit.name : ''}
+                      </div>
+                      <div
+                        className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
+                        {unit.lessons?.items?.map(
+                          ({
+                            id,
+                            lesson,
+                          }: {
+                            id: string;
+                            lesson: {id: string; title: string};
+                          }) => (
+                            <li
+                              key={id}
+                              onClick={() =>
+                                redirectToLesson(unit.institution?.id, lesson?.id)
+                              }>
+                              {lesson?.title}
+                            </li>
+                          )
+                        )}
+                      </div>
+                      {!unit.lessonHistory?.includes(lessonId) ? (
+                        <div
+                          className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
+                          onClick={() => handleToggleDelete(unit.name, unit.id)}>
+                          <DeleteActionBtn />
+                        </div>
+                      ) : (
+                        <span
+                          className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
+                          <p className="text-center  text-gray-500 text-xs">
+                            Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
+                          </p>
+                        </span>
                       )}
                     </div>
-                    {!unit.lessonHistory?.includes(lessonId) ? (
-                      <div
-                        className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
-                        onClick={() => handleToggleDelete(unit.name, unit.id)}>
-                        <DeleteActionBtn />
-                      </div>
-                    ) : (
-                      <span
-                        className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
-                        <p className="text-center  text-gray-500 text-xs">
-                          Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
-                        </p>
-                      </span>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p className="text-center p-16">
-                  {UnitLookupDict[userLanguage].NO_UNIT_ADDED}
-                </p>
-              )}
-            </>
-          )}
-          {/* <div className="grid gap-5 lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 lg:max-w-none mt-8">
+                  ))
+                ) : (
+                  <p className="text-center p-16">
+                    {UnitLookupDict[userLanguage].NO_UNIT_ADDED}
+                  </p>
+                )}
+              </>
+            )}
+            {/* <div className="grid gap-5 lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 lg:max-w-none mt-8">
             {selectedCurriculumList.map((curriculum) => (
                 <CourseCard
                   institutionCollection={institutionCollection}
@@ -504,7 +499,7 @@ const LessonCourse = ({
                 />
               ))}
             </div> */}
-          {/* ) : (
+            {/* ) : (
             // <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
             //   <Accordion
             //     titleList={titleList}
@@ -517,8 +512,8 @@ const LessonCourse = ({
               </p>
             </div>
           )} */}
-        </PageWrapper>
-        {/* {addModalShow && (
+          </PageWrapper>
+          {/* {addModalShow && (
           <Modal
             showHeader
             showFooter={false}
@@ -538,40 +533,41 @@ const LessonCourse = ({
             </div>
           </Modal>
         )} */}
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Lesson to Syllabus'}
-            closeOnBackdrop
-            closeAction={onAddModalClose}>
-            <div
-              className="min-w-180 lg:min-w-256"
-              style={{
-                height: 'calc(100vh - 150px)',
-              }}>
-              <UnitFormComponent
-                isInModal={true}
-                instId={institution?.id}
-                postAddSyllabus={postAddSyllabus}
-                onCancel={() => setAddModalShow(false)}
-              />
-            </div>
-          </Modal>
-        )}
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            loading={deleting}
-            cancelLabel="CANCEL"
-            message={deleteModal.message}
-          />
-        )}
+          {addModalShow && (
+            <Modal
+              showHeader
+              showFooter={false}
+              showHeaderBorder
+              title={'Add Lesson to Syllabus'}
+              closeOnBackdrop
+              closeAction={onAddModalClose}>
+              <div
+                className="min-w-180 lg:min-w-256"
+                style={{
+                  height: 'calc(100vh - 150px)',
+                }}>
+                <UnitFormComponent
+                  isInModal={true}
+                  instId={institution?.id}
+                  postAddSyllabus={postAddSyllabus}
+                  onCancel={() => setAddModalShow(false)}
+                />
+              </div>
+            </Modal>
+          )}
+          {deleteModal.show && (
+            <ModalPopUp
+              closeAction={handleToggleDelete}
+              saveAction={deleting ? () => {} : deleteModal.action}
+              saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+              loading={deleting}
+              cancelLabel="CANCEL"
+              message={deleteModal.message}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
