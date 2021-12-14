@@ -30,6 +30,8 @@ const BottomSection = () => {
     'w-auto cursor-pointer hover:scale-110 hover:text-teal-500 transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
 
   const history = useHistory();
+  const show = selectedCard !== 2;
+  // because 2 is thinkaboutit card
   return (
     <>
       <AnimatedContainer
@@ -51,31 +53,35 @@ const BottomSection = () => {
                 <BsChevronLeft />
               </div>
             </Tooltip>
-            <Tooltip text="Show how-to" placement="top">
-              <div
-                onClick={() => setShowHowTo((prev) => !prev)}
-                className={classNames(
-                  commonBtnClass,
-                  showHowTo ? 'text-teal-500' : 'text-white',
-                  'hidden xl:block'
-                )}>
-                <IoIosHelpCircleOutline />
-              </div>
-            </Tooltip>
-            <Tooltip text="Show info" placement="top">
-              <div
-                onClick={() => setShowInfo((prev) => !prev)}
-                className={classNames(
-                  commonBtnClass,
-                  showInfo ? 'text-teal-500' : 'text-white',
-                  'hidden xl:block'
-                )}>
-                <AiOutlineInfoCircle />
-              </div>
-            </Tooltip>
+            {show && (
+              <Tooltip text="Show how-to" placement="top">
+                <div
+                  onClick={() => setShowHowTo((prev) => !prev)}
+                  className={classNames(
+                    commonBtnClass,
+                    showHowTo ? 'text-teal-500' : 'text-white',
+                    'hidden xl:block'
+                  )}>
+                  <IoIosHelpCircleOutline />
+                </div>
+              </Tooltip>
+            )}
+            {show && (
+              <Tooltip text="Show info" placement="top">
+                <div
+                  onClick={() => setShowInfo((prev) => !prev)}
+                  className={classNames(
+                    commonBtnClass,
+                    showInfo ? 'text-teal-500' : 'text-white',
+                    'hidden xl:block'
+                  )}>
+                  <AiOutlineInfoCircle />
+                </div>
+              </Tooltip>
+            )}
 
-            <AnimatedContainer className="w-auto" show={isActive}>
-              {isActive && (
+            <AnimatedContainer className="w-auto" show={isActive && show}>
+              {isActive && show && (
                 <Tooltip
                   text={isPlayingMusic ? 'Turn off music' : 'Turn on music'}
                   placement="top">

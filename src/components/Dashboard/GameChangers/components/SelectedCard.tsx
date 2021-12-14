@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
+import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
+import ThinkAboutItCard from '@components/Dashboard/GameChangers/components/ThinkAboutIt';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
-import {
-  FOUR_SEVEN_EIGHT,
-  SQUARE,
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
+import {THINK_ABOUT_IT} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
 import {CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
@@ -24,7 +22,6 @@ import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
 
 // Constants
-const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const SelectedCard = ({
   card,
@@ -155,26 +152,9 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
-  const {mutate, error, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
+  const {mutate, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
 
   const {email, authId} = useAuth();
-
-  const getEndSeconds = () => {
-    // For Square exercises
-    // takes 16 seconds for one round
-    // multiple total counts with 16 to get end time
-    // <------->
-    // For 4-7-8 exercises
-    // takes 4+7+8 =19  seconds for one round
-    // multiple total counts with 19 to get end time
-
-    if (countSelected !== null) {
-      return (
-        countSelected *
-        (card.type === SQUARE ? 16 : card.type === FOUR_SEVEN_EIGHT ? 19 : 16) // default 16 for now
-      );
-    }
-  };
 
   const onStartClick = () => {
     const elem = $('.carousel-cell.is-selected h1').text();
@@ -200,7 +180,7 @@ const SelectedCard = ({
     <div
       className={` rounded-2xl box ${
         inLesson ? 'mt-12' : ''
-      }  z-100  w-auto    transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+      }  z-100  w-auto m-8 2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
         <source src={successSound} type="audio/mp3" />
       </audio>
@@ -216,14 +196,17 @@ const SelectedCard = ({
         }}
         className={`h-full  transition-all rounded-2xl p-16 px-14  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
         <div>
-          {/* Count Selection Section */}
+          <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
+            {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
+          </AnimatedContainer>
 
+          {/* Count Selection Section */}
           <AnimatedContainer
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={!isCompleted && countSelected === null}>
-            {!isCompleted && countSelected === null && (
+            show={!isCompleted && selectedCard !== 2 && countSelected === null}>
+            {!isCompleted && countSelected === null && selectedCard !== 2 && (
               <>
                 <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <div className="flex w-auto items-center justify-center">
@@ -272,8 +255,8 @@ const SelectedCard = ({
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={!isCompleted && countSelected !== null}>
-            {!isCompleted && countSelected !== null && (
+            show={!isCompleted && selectedCard !== 2 && countSelected !== null}>
+            {!isCompleted && selectedCard !== 2 && countSelected !== null && (
               <>
                 <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
                 <AnimatedSquare
@@ -313,6 +296,8 @@ const SelectedCard = ({
               <>
                 {selected.type === 'square' ? (
                   <FocusIcon isActive={isActive} />
+                ) : card.type === THINK_ABOUT_IT ? (
+                  <AnimatedMind />
                 ) : (
                   <AnimatedFlower />
                 )}
