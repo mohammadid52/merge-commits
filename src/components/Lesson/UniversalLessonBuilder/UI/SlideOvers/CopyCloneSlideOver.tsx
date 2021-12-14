@@ -33,7 +33,8 @@ const Slideover = ({
       <Dialog
         as="div"
         static
-        className="fixed z-100 w-auto inset-0 overflow-hidden"
+        style={{zIndex: 9999}}
+        className="fixed  w-auto inset-0 overflow-hidden"
         open={open}
         onClose={setOpen}>
         <div className="absolute w-auto inset-0 overflow-hidden">

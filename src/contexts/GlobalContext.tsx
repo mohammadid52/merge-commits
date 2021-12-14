@@ -158,7 +158,6 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     lessonControlReducer,
     lessonControlState
   );
-
   const theme = standardTheme;
   const globalStateAccess = state;
   const userLanguage = state.user.language || 'EN';

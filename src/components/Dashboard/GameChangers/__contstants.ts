@@ -3,8 +3,10 @@ import {
   SQUARE,
   THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {nanoid} from 'nanoid';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
 import {FcMindMap} from 'react-icons/fc';
+const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const cardsList = [
   {
@@ -108,6 +110,43 @@ function closeFullscreen() {
   }
 }
 
+const qaList = [
+  {
+    id: nanoid(24),
+    question: 'What just happened that made you doubt yourself?',
+    placeholder: "I didn't do well in my math test today.",
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question: 'What are you telling yourself about the situation?',
+    placeholder: "I'm useless. I can't do anything right.",
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question: 'What happens if you keep believing what you are thinking?',
+    placeholder: 'I give up and stop studying for the exam next week.',
+    textarea: false,
+  },
+  {
+    id: nanoid(24),
+    question:
+      'What am I not giving myself credit for in what happened?  What am I proud of?',
+    placeholder:
+      "I did well in the test last week. I've been studying well, but I hadn't covered this topic yet.\n The results show me where i need to focus my attention.",
+    textarea: true,
+  },
+  {
+    id: nanoid(24),
+    question:
+      "What can I do where I would be proud of myself that doesn't include beating myself up or quitting?",
+    placeholder:
+      "I sit down with my teacher to understand where I went wrong.\n We work on parts of the test I didn't understand, and I include what i have learned in my future studying.",
+    textarea: true,
+  },
+];
+
 export {
   cardsList,
   FSEBreathingHowTo,
@@ -116,4 +155,6 @@ export {
   sqaureBreathingInfoText,
   openFullscreen,
   closeFullscreen,
+  qaList,
+  successSound,
 };

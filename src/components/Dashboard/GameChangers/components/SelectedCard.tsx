@@ -1,21 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import FormInput from '@components/Atoms/Form/FormInput';
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
 import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
+import ThinkAboutItCard from '@components/Dashboard/GameChangers/components/ThinkAboutIt';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
-import {
-  FOUR_SEVEN_EIGHT,
-  SQUARE,
-  THINK_ABOUT_IT,
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
+import {THINK_ABOUT_IT} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
 import {CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
@@ -27,70 +22,6 @@ import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
 
 // Constants
-const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
-
-const qaList = [
-  {
-    id: nanoid(24),
-    question: 'What just happened that made you doubt yourself?',
-    placeholder: "I didn't do well in my math test today.",
-  },
-  {
-    id: nanoid(24),
-    question: 'What are you telling yourself about the situation?',
-    placeholder: "I'm useless. I can't do anything right.",
-  },
-  {
-    id: nanoid(24),
-    question: 'What happens if you keep believing what you are thinking?',
-    placeholder: 'I give up and stop studying for the exam next week.',
-  },
-  {
-    id: nanoid(24),
-    question:
-      'What am I not giving myself credit for in what happened?  What am I proud of?',
-    placeholder:
-      "I did well in the test last week. I've been studying well, but I hadn't covered this topic yet.\n The results show me where i need to focus my attention.",
-  },
-  {
-    id: nanoid(24),
-    question:
-      "What can I do where I would be proud of myself that doesn't include beating myself up or quitting?",
-    placeholder:
-      "I sit down with my teacher to understand where I went wrong.\n We work on parts of the test I didn't understand, and I include what i have learned in my future studying.",
-  },
-];
-
-const ThinkAboutItCard = () => {
-  const [answers, setAnswers] = useState<any>({});
-
-  const onAnsChange = (e: any) => {
-    const {id, value} = e.target;
-
-    setAnswers({...answers, [id]: value});
-  };
-
-  return (
-    <section>
-      <h1 className="text-white text-4xl font-semibold mb-4">Think About It</h1>
-      <form className="flex flex-col gap-y-6">
-        {qaList.map((qa) => (
-          <div>
-            <FormInput
-              dark
-              onChange={onAnsChange}
-              key={qa.id}
-              id={qa.id}
-              label={qa.question}
-              value={answers[qa.id]}
-              placeHolder={qa.placeholder}
-            />
-          </div>
-        ))}
-      </form>
-    </section>
-  );
-};
 
 const SelectedCard = ({
   card,
@@ -221,7 +152,7 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
-  const {mutate, error, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
+  const {mutate, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
 
   const {email, authId} = useAuth();
 
@@ -265,12 +196,11 @@ const SelectedCard = ({
         }}
         className={`h-full  transition-all rounded-2xl p-16 px-14  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
         <div>
-          {/* Count Selection Section */}
-
           <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
             {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
           </AnimatedContainer>
 
+          {/* Count Selection Section */}
           <AnimatedContainer
             delay="0.5s"
             duration="1000"

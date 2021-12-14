@@ -206,22 +206,6 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     });
   };
 
-  const searchLessonsFromList = () => {
-    if (searchInput.value) {
-      const currentLessonsList = [...lessonsData];
-      const newList = currentLessonsList.filter((item) => {
-        // Search on lesson title for match.
-        return item.title?.toLowerCase().includes(searchInput.value.toLowerCase());
-      });
-      setSearchInput({
-        ...searchInput,
-        isActive: true,
-      });
-      setCurrentList(newList);
-    } else {
-      removeSearchAction();
-    }
-  };
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
@@ -230,7 +214,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   };
   const removeSearchAction = () => {
     backToInitials();
+
     onSearch('', selectedInstitution?.id);
+
     setSearchInput({value: '', isActive: false});
   };
 
@@ -242,17 +228,20 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           item.title?.toLowerCase().includes(searchValue.toLowerCase()) &&
           item.institution?.id === institutionId
       );
-    } else if (institutionId) {
+    } else if (institutionId && !searchValue) {
       filteredData = [...lessonsData].filter(
         (item: any) => item.institution?.id === institutionId
       );
-    } else if (searchValue) {
-      filteredData = [...lessonsData].filter((item: any) =>
-        item.name?.toLowerCase().includes(searchValue.toLowerCase())
-      );
+    } else if (searchValue && !institutionId) {
+      searchValue = searchValue.toLowerCase();
+
+      filteredData = [...lessonsData].filter((item: any) => {
+        return item?.title?.toLowerCase().includes(searchValue);
+      });
     } else {
       filteredData = lessonsData;
     }
+
     setCurrentList(filteredData);
     setTotalPages(Math.floor(filteredData.length / pageCount));
     setFirstPage(true);
@@ -355,13 +344,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     action: () => {},
   });
 
-  const checkIfRemovable = (lessonObj: any) => {
-    if (lessonObj?.isUsed) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  const checkIfRemovable = (lessonObj: any) => !lessonObj?.isUsed;
 
   const fetchInstitutions = async () => {
     try {
@@ -373,7 +356,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
         )
       );
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
@@ -565,6 +550,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                 ) : currentList?.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
+                      searchTerm={searchInput.value}
                       setShowCloneModal={setShowCloneModal}
                       key={`lessonsRows${i}`}
                       index={currentPage * pageCount + i}
