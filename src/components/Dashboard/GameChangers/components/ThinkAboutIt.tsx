@@ -16,15 +16,17 @@ const ThinkAboutItCard = () => {
       <h1 className="text-white text-4xl font-semibold mb-4">Think About It</h1>
       <form className="flex flex-col gap-y-6">
         {qaList.map((qa) => (
-          <div>
+          <div key={qa.id}>
+            <label className={` text-white block text-xs font-semibold leading-5 `}>
+              {qa.question}{' '}
+            </label>
             <FormInput
               textarea={qa.textarea}
               dark
               onChange={onAnsChange}
-              key={qa.id}
               id={qa.id}
-              label={qa.question}
               value={answers[qa.id]}
+              rows={qa.textarea ? 3 : undefined}
               placeHolder={qa.placeholder}
             />
           </div>

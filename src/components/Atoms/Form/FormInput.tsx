@@ -25,6 +25,7 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
+  updateHeight?: boolean;
   inputRef?: any;
   className?: string;
 }
@@ -47,6 +48,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     cols = 125,
     maxLength = 99999,
     showCharacterUsage = false,
+    updateHeight = false,
     dark = false,
     min,
     max,
@@ -105,7 +107,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           } ${className}`}
           value={value ? value : ''}
           placeholder={placeHolder}
-          onKeyDown={onKeyDown}
+          onKeyDown={updateHeight && onKeyDown}
           {...otherInputProps}
         />
       )}
