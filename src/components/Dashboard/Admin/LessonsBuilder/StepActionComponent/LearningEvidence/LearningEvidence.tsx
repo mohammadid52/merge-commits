@@ -1,18 +1,17 @@
+import Buttons from '@atoms/Buttons';
+import Loader from '@atoms/Loader';
+import Modal from '@atoms/Modal';
+import PageWrapper from '@atoms/PageWrapper';
+import AddLearningObjective from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
+import * as queries from '@graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as queries from '../../../../../../graphql/queries';
-import Buttons from '../../../../../Atoms/Buttons';
-import Loader from '../../../../../Atoms/Loader';
-import Modal from '../../../../../Atoms/Modal';
-import PageWrapper from '../../../../../Atoms/PageWrapper';
-
 import AddEvidence from './AddEvidence';
 import CourseMeasurementsCard from './CourseMeasurementsCard';
 import MeasurementsList from './MeasurementsList';
-import AddLearningObjective from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 
 interface ILearningEvidence {
   fetchLessonRubrics: () => void;
