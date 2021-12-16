@@ -1,15 +1,13 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useParams} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
+import * as mutations from '../../../../../../../graphql/mutations';
+import * as queries from '../../../../../../../graphql/queries';
 import Buttons from '../../../../../../Atoms/Buttons';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
 
-import * as queries from '../../../../../../../graphql/queries';
-import * as mutations from '../../../../../../../graphql/mutations';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
 interface AddLearningObjectiveProps {
   curricularId: string;
   learningObjectiveData: any;
@@ -90,8 +88,8 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       }
       if (addedItem) {
         postMutation(addedItem);
-      }else{
-        setLoading(false)
+      } else {
+        setLoading(false);
       }
     }
     // if (addedItem) {
@@ -135,8 +133,8 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {ADDLEARINGOBJDICT[userLanguage]['HEADING']}
           </h3> */}
-        <div className="">
-          <div className="px-3 py-4">
+        <div className="my-4">
+          <div className="px-3">
             <FormInput
               value={name}
               id="name"
@@ -159,7 +157,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
             </div> */}
 
-          <div className="px-3 py-4">
+          <div className="px-3">
             <TextArea
               id="description"
               value={description}
