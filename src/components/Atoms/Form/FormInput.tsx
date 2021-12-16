@@ -107,7 +107,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           } ${className}`}
           value={value ? value : ''}
           placeholder={placeHolder}
-          onKeyDown={updateHeight && onKeyDown}
+          onKeyDown={updateHeight ? onKeyDown : () => {}}
           {...otherInputProps}
         />
       )}

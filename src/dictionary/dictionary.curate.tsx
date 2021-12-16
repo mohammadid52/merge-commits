@@ -2822,6 +2822,10 @@ const UserInformationDict: any = {
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
+    MESSAGE: {
+      RESET_PASSWORD_SUCCESS: 'Password reset successfully',
+      RESET_PASSWORD_FAILURE: 'Password reset failed',
+    },
   },
   ES: {
     heading: 'TBD',
@@ -2837,6 +2841,10 @@ const UserInformationDict: any = {
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
     RESETTING_PASSWORD: 'TBD',
+    MESSAGE: {
+      RESET_PASSWORD_SUCCESS: 'TBD',
+      RESET_PASSWORD_FAILURE: 'TBD',
+    },
   },
 };
 

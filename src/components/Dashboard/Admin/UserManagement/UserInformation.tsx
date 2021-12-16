@@ -1,24 +1,19 @@
-import React, {Fragment, useContext, useState} from 'react';
-
+import Buttons from '@atoms/Buttons';
+import Status from '@atoms/Status';
+import Modal from '@components/Atoms/Modal';
+import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import LessonLoading from '@lesson/Loading/ComponentLoading';
+import {requestResetPassword} from '@utilities/urls';
+import {getAsset} from 'assets';
 import axios from 'axios';
-import {requestResetPassword} from '../../../../utilities/urls';
-
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {UserInfo} from './User';
-import UserRole from './UserRole';
-import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import React, {Fragment, useContext, useState} from 'react';
+import {FiAlertCircle} from 'react-icons/fi';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import Status from '../../../Atoms/Status';
-import {getAsset} from '../../../../assets';
-import Buttons from '@atoms/Buttons';
-import Modal from '@components/Atoms/Modal';
-import {FiAlertCircle} from 'react-icons/fi';
-
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import {UserInfo} from './User';
+import UserRole from './UserRole';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -224,7 +219,11 @@ const UserInformation = ({
                 </div>
                 <div className="sm:col-span-1 p-2 flex items-centers">
                   <Buttons
-                    label={loading ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']: UserInformationDict[userLanguage]['RESET_PASSWORD']}
+                    label={
+                      loading
+                        ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']
+                        : UserInformationDict[userLanguage]['RESET_PASSWORD']
+                    }
                     onClick={resetPassword}
                     disabled={loading}
                   />

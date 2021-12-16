@@ -558,6 +558,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setUnsavedChanges(false);
       setUpdating(false);
     } catch (error) {
+      console.error(
+        '🚀 ~ file: LessonBuilder.tsx ~ line 561 ~ updateMeasurementList ~ error',
+        error
+      );
       setUpdating(false);
       setServerMessage({
         isError: true,
