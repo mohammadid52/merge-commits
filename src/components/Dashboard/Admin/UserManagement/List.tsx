@@ -50,11 +50,12 @@ const List = (props: ListProps) => {
         message: 'Password was reset',
       });
     } catch (err) {
-      setLoading(false);
       setResetPasswordServerResponse({
         show: true,
         message: 'Error in resetting password',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,7 +79,7 @@ const List = (props: ListProps) => {
   }, [item.image]);
 
   const showResetPasswordOption = (loggedUserRole: any, userRole: any) => {
-    let show = false;
+    let show = true;
     if (loggedUserRole === 'ADM' || loggedUserRole === 'SUP') {
       show = true;
     }
