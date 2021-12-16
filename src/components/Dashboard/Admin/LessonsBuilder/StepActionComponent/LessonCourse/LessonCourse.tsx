@@ -430,56 +430,62 @@ const LessonCourse = ({
                   </div>
                 </div>
                 {assignedUnits?.length ? (
-                  assignedUnits.map((unit: any, index: number) => (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                        index % 2 !== 0 ? 'bg-gray-50' : ''
-                      }`}>
-                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                        {index + 1}.
-                      </div>
-                      <div
-                        onClick={() => redirectionToUnitPage(unit.syllabusId)}
-                        className={`cursor-pointer flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
-                        {unit.name ? unit.name : ''}
-                      </div>
-                      <div
-                        className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
-                        {unit.lessons?.items?.map(
-                          ({
-                            id,
-                            lesson,
-                          }: {
-                            id: string;
-                            lesson: {id: string; title: string};
-                          }) => (
-                            <li
-                              key={id}
-                              onClick={() =>
-                                redirectToLesson(unit.institution?.id, lesson?.id)
-                              }>
-                              {lesson?.title}
-                            </li>
-                          )
-                        )}
-                      </div>
-                      {!unit.lessonHistory?.includes(lessonId) ? (
+                  assignedUnits.map((unit: any, index: number) => {
+                    if (unit.name) {
+                      return (
                         <div
-                          className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
-                          onClick={() => handleToggleDelete(unit.name, unit.id)}>
-                          <DeleteActionBtn />
+                          key={index}
+                          className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                            index % 2 !== 0 ? 'bg-gray-50' : ''
+                          }`}>
+                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                            {index + 1}.
+                          </div>
+                          <div
+                            onClick={() => redirectionToUnitPage(unit.syllabusId)}
+                            className={`cursor-pointer flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+                            {unit.name ? unit.name : ''}
+                          </div>
+                          <div
+                            className={`w-4/10 items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
+                            {unit.lessons?.items
+                              .filter(Boolean)
+                              ?.map(
+                                ({
+                                  id,
+                                  lesson,
+                                }: {
+                                  id: string;
+                                  lesson: {id: string; title: string};
+                                }) => (
+                                  <li
+                                    key={id}
+                                    onClick={() =>
+                                      redirectToLesson(unit.institution?.id, lesson?.id)
+                                    }>
+                                    {lesson?.title}
+                                  </li>
+                                )
+                              )}
+                          </div>
+                          {!unit.lessonHistory?.includes(lessonId) ? (
+                            <div
+                              className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
+                              onClick={() => handleToggleDelete(unit.name, unit.id)}>
+                              <DeleteActionBtn />
+                            </div>
+                          ) : (
+                            <span
+                              className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
+                              <p className="text-center  text-gray-500 text-xs">
+                                Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
+                              </p>
+                            </span>
+                          )}
                         </div>
-                      ) : (
-                        <span
-                          className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
-                          <p className="text-center  text-gray-500 text-xs">
-                            Delete {UnitLookupDict[userLanguage]['NO_DELETE']}
-                          </p>
-                        </span>
-                      )}
-                    </div>
-                  ))
+                      );
+                    }
+                  })
                 ) : (
                   <p className="text-center p-16">
                     {UnitLookupDict[userLanguage].NO_UNIT_ADDED}

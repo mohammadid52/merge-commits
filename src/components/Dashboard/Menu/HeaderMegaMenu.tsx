@@ -80,7 +80,10 @@ const HeaderMegaMenu = () => {
           active: location.pathname.indexOf('lessons') > -1,
         },
         {
-          title: 'Game Changers ',
+          title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
+          key: 'game-changers',
+          redirectionUrl: `/dashboard/game-changers`,
+          active: location.pathname.indexOf('game-changers') > -1,
         },
       ],
     },
