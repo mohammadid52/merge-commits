@@ -14,7 +14,16 @@ interface ICourseMeasurementsProps {
   editLearningObj: (data: any) => void;
   addLearningObjective: (courseId: string) => void;
   setAddModalShow?: any;
+  setOpenMeasurementModal?: any;
   selectedMeasurements: any[];
+  editCurrentMeasurement: (rubric: any, learningId: string) => void;
+  editCurrentTopic: (
+    topicData: any,
+    curIdx: number,
+    objIdx: number,
+    topicIdx: number
+  ) => void;
+  curIdx?: number;
 }
 
 const Empty = ({text}: {text: string}) => (
@@ -29,9 +38,12 @@ const Empty = ({text}: {text: string}) => (
 const CourseMeasurementsCard = ({
   curriculum,
   handleCheckboxChange,
-  addLearningObjective,
+
   editLearningObj,
   selectedMeasurements,
+  editCurrentMeasurement,
+  editCurrentTopic,
+  curIdx,
 }: ICourseMeasurementsProps) => {
   return (
     <div
@@ -55,12 +67,6 @@ const CourseMeasurementsCard = ({
             <div className="text-xl font-bold inline-flex items-center">
               {curriculum.name}
             </div>
-            <div className="rounded-full flex items-center transition-all hover:iconoclast:bg-400 hover:curate:bg-400 h-9 w-9 cursor-pointer">
-              <HiPlus
-                className="h-8 w-8"
-                onClick={() => addLearningObjective(curriculum.id)}
-              />
-            </div>
           </div>
           <div className="mt-5 max-h-96 overflow-y-auto p-4 px-6  pt-0">
             {curriculum.learningObjectiveData.length ? (
@@ -82,7 +88,16 @@ const CourseMeasurementsCard = ({
                         return (
                           <div className="ml-2" key={topic.id}>
                             <div className="text-lg font-medium mb-1">
-                              <div className="w-auto mt-1 mr-2 flex items-center text-gray-700 justify-start">
+                              <div
+                                onClick={() =>
+                                  editCurrentTopic(
+                                    topic,
+                                    curIdx,
+                                    objectiveIndex,
+                                    topicIndex
+                                  )
+                                }
+                                className="w-auto cursor-pointer hover:underline  mt-1 mr-2 flex items-center text-gray-700 justify-start">
                                 <HiOutlineArrowRight
                                   className={`arrow-icon mr-2 w-auto `}
                                 />
@@ -95,11 +110,14 @@ const CourseMeasurementsCard = ({
                                   {topic.associatedRubrics.map(
                                     (rubric: any, rubricIndex: number) => (
                                       <li
-                                        className="flex group hover:border-gray-300 border-0 border-transparent transition-all   justify-between rounded-md  px-2 items-center truncate"
+                                        onClick={() =>
+                                          editCurrentMeasurement(rubric, objective.id)
+                                        }
+                                        className="flex group hover:border-gray-300 border-0 border-transparent transition-all   justify-between cursor-pointer rounded-md  px-2 items-center truncate"
                                         key={rubric.id}>
                                         <span className="pr-2 text-lg truncate flex items-center">
                                           <div
-                                            className={`w-2 mt-1 h-2 mr-2 rounded-full bg-red-500`}></div>{' '}
+                                            className={`w-2 mt-1 h-2 mr-2 rounded-full bg-black`}></div>{' '}
                                           {rubric.name}
                                         </span>
                                         <span className="w-auto mr-4">

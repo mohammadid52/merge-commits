@@ -1,19 +1,12 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useParams} from 'react-router';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import TextArea from '@atoms/Form/TextArea';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customMutations from '@customGraphql/customMutations';
+import useDictionary from '@customHooks/dictionary';
+import React, {useContext, useEffect, useState} from 'react';
 
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import Buttons from '../../../../../../Atoms/Buttons';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../../Atoms/Form/TextArea';
-
-import * as queries from '../../../../../../../graphql/queries';
-import * as mutations from '../../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 interface AddMeasurementProps {
   curricularId: string;
   onCancel?: () => void;
@@ -28,10 +21,10 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [criteria, setCriteria] = useState('');
-  const [topic, setTopic] = useState({id: '', name: '', value: ''});
+
   const [validation, setValidation] = useState({name: '', topic: ''});
-  const [measurementIds, setMeasurementIds] = useState([]);
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+
+  const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {AddMeasurementDict} = useDictionary(clientKey);
 

@@ -1,22 +1,13 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useLocation} from 'react-router-dom';
-import queryString from 'query-string';
-import {useHistory} from 'react-router-dom';
-import {Switch, Route, useParams, useRouteMatch} from 'react-router-dom';
-
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import {GlobalContext} from '@contexts/GlobalContext';
-
 import PageWrapper from '@atoms/PageWrapper';
-
-import {getAsset} from '../../../../assets';
-
-import InstitutionInfo from './InstitutionInfo';
-import HeroBanner from '@components/Header/HeroBanner';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import {breadcrumbsRoutes} from '@utilities/breadcrumb';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+import queryString from 'query-string';
+import React, {useContext, useEffect, useState} from 'react';
+import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {getAsset} from 'assets';
+import InstitutionInfo from './InstitutionInfo';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -86,38 +77,16 @@ const Institution = (props: InstitutionProps) => {
     title?: string;
   }>({});
   const [isNewUpdate, setISNewUpdate] = useState(false);
-  const history = useHistory();
+
   const match = useRouteMatch();
   const location = useLocation();
-  const pathName = location.pathname.replace(/\/$/, '');
-  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
+
   const urlQueryParams = queryString.parse(location.search);
-  const {
-    clientKey,
-    state: {
-      user: {isSuperAdmin},
-    },
-    theme,
-    userLanguage,
-  } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
+  const {clientKey} = useContext(GlobalContext);
+
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
   const {pathname} = location;
-  const baseUrl = isSuperAdmin
-    ? `/dashboard/manage-institutions`
-    : `/dashboard/manage-institutions/institution/${institutionId}`;
-  const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
-    breadcrumbsTitles: BreadcrumsTitles[userLanguage],
-    instituteTabTitles: Institute_info[userLanguage],
-    pathname,
-    baseUrl,
-    otherValues: {
-      lessonData,
-      roomData,
-    },
-  });
 
   const toggleUpdateState = () => {
     setISNewUpdate((prevNewUpdate) => !prevNewUpdate);

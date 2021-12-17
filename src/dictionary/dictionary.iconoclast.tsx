@@ -2152,8 +2152,9 @@ const SelectPreviousQuestionDict: any = {
 const AddMeasurementDict: any = {
   EN: {
     title: 'Add Measurement',
+
     subtitle: 'Add new measurement to course.',
-    heading: 'MEASUREMENT INFORMATION',
+    heading: 'Measurement Information',
     mlabel: 'Measurement Name',
     selecttopic: 'Select Topic',
     topic: 'Topic',
