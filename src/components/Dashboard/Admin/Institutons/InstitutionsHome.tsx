@@ -1,17 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import PageWrapper from '@components/Atoms/PageWrapper';
-import HeroBanner from '@components/Header/HeroBanner';
-import useDictionary from '@customHooks/dictionary';
 import * as customQueries from '@customGraphql/customQueries';
-import {breadcrumbsRoutes} from '@utilities/breadcrumb';
+import useDictionary from '@customHooks/dictionary';
 import {getAsset} from 'assets';
-
+import React, {useContext, useEffect, useState} from 'react';
+import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
+import NavBarRouter from '../NavBarRouter';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
 import CurricularView from './EditBuilders/CurricularsView/CurricularView';
@@ -25,14 +22,12 @@ import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBui
 import Institution from './Institution';
 // Instituttion
 import InstitutionLookup from './InstitutionLookup';
-import NavBarRouter from '../NavBarRouter';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const {clientKey, state, theme, userLanguage, dispatch} = useContext(GlobalContext);
+  const {clientKey, state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const {pathname} = useLocation();
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
+
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [lessonData, setLessonData] = useState<{
     id?: string;
@@ -76,21 +71,6 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       }
     }
   }, [pathname]);
-
-  const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
-    breadcrumbsTitles: BreadcrumsTitles[userLanguage],
-    instituteTabTitles: Institute_info[userLanguage],
-    pathname,
-    baseUrl: '/dashboard/manage-institutions',
-    otherValues: {
-      lessonData,
-    },
-  });
-
-  const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    ...(breadcrumbPathForSection || []),
-  ].filter(Boolean);
 
   return (
     <div className={`w-full h-full flex justify-center`}>
