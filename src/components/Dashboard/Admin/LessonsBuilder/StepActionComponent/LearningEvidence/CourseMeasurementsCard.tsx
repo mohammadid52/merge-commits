@@ -110,12 +110,13 @@ const CourseMeasurementsCard = ({
                                   {topic.associatedRubrics.map(
                                     (rubric: any, rubricIndex: number) => (
                                       <li
-                                        onClick={() =>
-                                          editCurrentMeasurement(rubric, objective.id)
-                                        }
                                         className="flex group hover:border-gray-300 border-0 border-transparent transition-all   justify-between cursor-pointer rounded-md  px-2 items-center truncate"
                                         key={rubric.id}>
-                                        <span className="pr-2 text-lg truncate flex items-center">
+                                        <span
+                                          onClick={() =>
+                                            editCurrentMeasurement(rubric, objective.id)
+                                          }
+                                          className="pr-2 text-lg truncate flex items-center">
                                           <div
                                             className={`w-2 mt-1 h-2 mr-2 rounded-full bg-black`}></div>{' '}
                                           {rubric.name}

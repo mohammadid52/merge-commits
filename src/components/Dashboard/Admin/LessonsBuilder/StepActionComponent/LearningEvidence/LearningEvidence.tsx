@@ -52,10 +52,6 @@ const LearningEvidence = ({
   } = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  console.log(
-    '🚀 ~ file: LearningEvidence.tsx ~ line 55 ~ selectedCurriculumList',
-    selectedCurriculumList
-  );
 
   // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
@@ -256,6 +252,7 @@ const LearningEvidence = ({
     event: React.ChangeEvent<HTMLInputElement>,
     rubricId: string
   ) => {
+    event.stopPropagation();
     setUnsavedChanges(true);
     const checked: boolean = (event.target as HTMLInputElement).checked;
     let rubrics = [...selectedMeasurements];
@@ -392,19 +389,6 @@ const LearningEvidence = ({
     let temp: any[] = [...selectedCurriculumList];
 
     if (curIdx === -1) return;
-
-    console.log(
-      '🚀 ~ file: LearningEvidence.tsx ~ line 383 ~ postTopicChange ~ selectedTopicData',
-      selectedTopicData
-    );
-    console.log(
-      '🚀 ~ file: LearningEvidence.tsx ~ line 382 ~ postTopicChange ~ data',
-      data
-    );
-    console.log(
-      '🚀 ~ file: LearningEvidence.tsx ~ line 384 ~ postTopicChange ~ temp',
-      temp
-    );
 
     let topics = temp[curIdx].learningObjectiveData[objectiveIdx].associatedTopics;
 
