@@ -565,6 +565,7 @@ const Dashboard = (props: DashboardProps) => {
    ********************/
 
   const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+    console.log('reorderSyllabus')
     let getSyllabusInSequence =
       sequenceArray && sequenceArray.length > 0
         ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
@@ -575,8 +576,8 @@ const Dashboard = (props: DashboardProps) => {
           }, [])
         : syllabusArray;
 
-    // console.log('syllabusArray ', syllabusArray);
-    // console.log('getSyllabusInSequence ', getSyllabusInSequence);
+    console.log('syllabusArray ', syllabusArray);
+    console.log('getSyllabusInSequence ', getSyllabusInSequence);
 
     let mapSyllabusToSequence =
       sequenceArray && sequenceArray.length > 0

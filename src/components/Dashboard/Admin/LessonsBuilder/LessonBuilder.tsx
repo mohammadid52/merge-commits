@@ -165,15 +165,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const closeCheckpointModal = () => {
-    setCheckpointSaveModal({
-      ...checkpointSaveModal,
-      stepOnHold: '',
-      message: '',
-      show: false,
-    });
-  };
-
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
@@ -218,6 +209,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
+
         setInstitutionData(institution);
         setSelectedMeasurements(savedData.rubrics);
         setFormData({
@@ -436,7 +428,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       // clicked on no button
 
       setActiveStep(warnModal2.stepOnHold);
-      setHistoryList([...historyList, warnModal2.stepOnHold]);
+
       setWarnModal2({
         stepOnHold: '',
         show: false,
@@ -630,22 +622,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             updateMeasurementList={updateMeasurementList}
           />
         );
-    }
-  };
-
-  const [historyList, setHistoryList] = useState(['Overview']);
-
-  const goBack = () => {
-    const currentStepIdx = historyList.indexOf(activeStep);
-    if (currentStepIdx < 0) {
-      setHistoryList(['Overview']);
-    } else if (historyList.length === 1) {
-      history.goBack();
-    } else {
-      const prevStep: string = historyList[currentStepIdx - 1];
-      setActiveStep(prevStep);
-      historyList.pop();
-      setHistoryList([...historyList]);
     }
   };
 
@@ -892,7 +868,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         <ModalPopUp
           closeAction={() => {
             setActiveStep(warnModal2.stepOnHold);
-            setHistoryList([...historyList, warnModal2.stepOnHold]);
+
             setWarnModal2({show: false, message: '', stepOnHold: ''});
             setIndividualFieldEmpty(false);
           }}
