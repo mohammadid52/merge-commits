@@ -18,6 +18,7 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'M/W/F': {unit: 'day', step: 1},
   'Tu/Th': {unit: 'day', step: 1},
   'One Time': {unit: 'day', step: 1},
+  'Daily': {unit: 'day', step: 1},
 };
 
 interface IUnitPlannerProps {
@@ -39,7 +40,7 @@ const UnitPlanner = ({
   setLogsChanged,
   isDetailsComplete,
 }: IUnitPlannerProps) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(roomData.curricular?.id);
   const [syllabusList, setSyllabusList] = useState([]);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const UnitPlanner = ({
           id: roomData.curricular?.id,
         })
       );
-      const result: any = list.data?.getCurriculum;
+      const result: any = list.data?.listCurriculums;
       setSyllabusList(
         result?.universalSyllabus.items
           ?.map((item: any) => ({
@@ -188,7 +189,7 @@ const UnitPlanner = ({
         startDate: lastOccupiedDate,
         lessons: {
           ...syllabus.lessons,
-          items: syllabus.lessons.items.map((item: any) => {
+          items: syllabus.lessons.items.filter((item:any) => item.lesson).map((item: any)=> {
             if (count !== 0 && 1 - count < item.lesson.duration) {
               lastOccupiedDate = moment(lastOccupiedDate).add(
                 frequencyMapping[roomData.frequency].step,
