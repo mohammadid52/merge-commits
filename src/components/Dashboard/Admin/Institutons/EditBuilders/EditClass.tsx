@@ -882,6 +882,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     <User
                       instituteId={instId}
                       userId={studentProfileID}
+                      insideModalPopUp={true}
                     />
                 </Modal>
               )}

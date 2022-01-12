@@ -95,15 +95,17 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
-  userId?: string
+  userId?: string;
+  insideModalPopUp?: boolean;
 }
 
-const User = (props: IUserProps ) => {
+const User = (props: IUserProps) => {
+  const {insideModalPopUp} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
   const params = useQuery(location.search);
-  const urlParam:any = useParams();
+  const urlParam: any = useParams();
 
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -131,8 +133,8 @@ const User = (props: IUserProps ) => {
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
   );
-  
-  const userId =  props.userId || urlParam?.userId;
+
+  const userId = props.userId || urlParam?.userId;
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -511,7 +513,15 @@ const User = (props: IUserProps ) => {
   }, [user.authId]);
 
   if (status !== 'done') {
-    return <LessonLoading />;
+    return insideModalPopUp ? (
+      <div
+        className={`pl-0 lg:pl-12 w-256`}
+        style={{height: 'calc(100vh - 150px)'}}>
+        <Loader />
+      </div>
+    ) : (
+      <LessonLoading />
+    );
   }
 
   const disableProfileChange = user.role !== 'ST';
@@ -1431,7 +1441,9 @@ const User = (props: IUserProps ) => {
   {
     return (
       <>
-        <div className={`pl-0 lg:pl-12 max-w-256`}>
+        <div
+          className={`pl-0 lg:pl-12 max-w-256 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div
