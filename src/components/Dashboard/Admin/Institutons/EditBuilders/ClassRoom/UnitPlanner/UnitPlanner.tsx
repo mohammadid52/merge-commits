@@ -57,7 +57,7 @@ const UnitPlanner = ({
           id: roomData.curricular?.id,
         })
       );
-      const result: any = list.data?.listCurriculums;
+      const result: any = list.data?.getCurriculum;
       setSyllabusList(
         result?.universalSyllabus.items
           ?.map((item: any) => ({

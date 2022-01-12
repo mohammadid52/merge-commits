@@ -487,6 +487,7 @@ export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'M/W/F': {unit: 'day', step: 1},
   'Tu/Th': {unit: 'day', step: 1},
   'One Time': {unit: 'day', step: 1},
+  'Daily': {unit: 'day', step: 1},
 };
 
 export const weekdaysOption: any = [
