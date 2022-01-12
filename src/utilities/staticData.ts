@@ -467,14 +467,15 @@ export const groupOptions: any = [
 
 export const frequencyOptions: any = [
   {id: 1, name: 'One Time'},
-  {id: 2, name: 'Weekly'},
-  {id: 3, name: 'Bi-weekly'},
-  {id: 8, name: 'M/W/F'},
-  {id: 9, name: 'Tu/Th'},
-  {id: 4, name: 'Monthly'},
-  {id: 5, name: 'Trimestral'},
-  {id: 6, name: 'Quarterly'},
-  {id: 7, name: 'Semestral'},
+  {id: 2, name: 'Daily'},
+  {id: 3, name: 'Weekly'},
+  {id: 4, name: 'Bi-weekly'},
+  {id: 9, name: 'M/W/F'},
+  {id: 10, name: 'Tu/Th'},
+  {id: 5, name: 'Monthly'},
+  {id: 6, name: 'Trimestral'},
+  {id: 7, name: 'Quarterly'},
+  {id: 8, name: 'Semestral'},
 ];
 
 export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
@@ -486,6 +487,7 @@ export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'M/W/F': {unit: 'day', step: 1},
   'Tu/Th': {unit: 'day', step: 1},
   'One Time': {unit: 'day', step: 1},
+  'Daily': {unit: 'day', step: 1},
 };
 
 export const weekdaysOption: any = [
