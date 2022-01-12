@@ -95,13 +95,15 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
+  userId?: string
 }
 
-const User = ({instituteId}: IUserProps) => {
+const User = (props: IUserProps ) => {
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
   const params = useQuery(location.search);
+  const urlParam:any = useParams();
 
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -129,8 +131,8 @@ const User = ({instituteId}: IUserProps) => {
     {id: '', t: 'p'},
     {navigateMode: 'replace'}
   );
-
-  const {userId}: any = useParams();
+  
+  const userId =  props.userId || urlParam?.userId;
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -1568,7 +1570,7 @@ const User = ({instituteId}: IUserProps) => {
                       render={() => (
                         <UserEdit
                           // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          instituteId={instituteId}
+                          instituteId={props.instituteId}
                           tab={tab}
                           setTab={setTab}
                           user={user}
