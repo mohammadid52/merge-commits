@@ -1275,4 +1275,8 @@ type Mutation {
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
 
+<<<<<<< HEAD
 # asdfasdfsd7
+=======
+# asdfasdfsd4
+>>>>>>> new-dev

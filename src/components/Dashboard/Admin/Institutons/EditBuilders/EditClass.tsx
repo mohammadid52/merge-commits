@@ -26,7 +26,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import Modal from '@components/Atoms/Modal';
-
+import User from '@components/Dashboard/Admin/UserManagement/User';
 import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
 
 interface EditClassProps {
@@ -38,7 +38,6 @@ interface EditClassProps {
 
 const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
-
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
   const defaultNewMember = {
     id: '',
@@ -56,8 +55,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [students, setStudents] = useState([]);
 
   const [searching, setSearching] = useState<boolean>(false);
+  const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
-
+  const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
   const [groups, setGroups] = useState([]);
@@ -89,7 +89,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   } = useContext(GlobalContext);
   const isSuperAdmin = user.role === 'SUP';
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, RegistrationDict} = useDictionary('curate');
+  const {editClassDict, RegistrationDict, UserDict} = useDictionary('curate');
   const dictionary = editClassDict[userLanguage];
 
   // const breadCrumsList = [
@@ -730,10 +730,13 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                           className={`flex w-5/10 items-center px-4 py-2 whitespace-normal ${
                             user.role !== 'BLD' ? 'cursor-pointer' : ''
                           } `}
-                          onClick={() =>
-                            user.role !== 'BLD'
-                              ? movetoStudentProfile(item.student.id)
-                              : null
+                          onClick={() =>{
+                            user.role !== 'BLD' && setStudentProfileID(item.student.id)
+                            user.role !== 'BLD' && setUserModalFormOpen(true)
+                            // user.role !== 'BLD'
+                            //   ? movetoStudentProfile(item.student.id)
+                            //   : null
+                          }
                           }>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
@@ -865,6 +868,22 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     postMutation={postMutation}
                     instId={instId}
                   />
+                </Modal>
+              )}
+              {userModalOpen && (
+                <Modal
+                  title={UserDict[userLanguage]['title']}
+                  showHeader={true}
+                  showHeaderBorder={false}
+                  showFooter={false}
+                  scrollHidden={true}
+                  closeAction={() => setUserModalFormOpen(false)}
+                  position={'fixed'}>
+                    <User
+                      instituteId={instId}
+                      userId={studentProfileID}
+                      insideModalPopUp={true}
+                    />
                 </Modal>
               )}
             </Fragment>
