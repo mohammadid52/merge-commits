@@ -30,7 +30,7 @@ const BottomSection = () => {
     'w-auto cursor-pointer hover:scale-110 hover:text-teal-500 transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
 
   const history = useHistory();
-  const show = selectedCard !== 2;
+  const show = selectedCard !== 2 && selectedCard !== 3;
   // because 2 is thinkaboutit card
   return (
     <>
