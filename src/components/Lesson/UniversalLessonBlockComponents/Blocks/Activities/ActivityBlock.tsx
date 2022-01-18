@@ -12,6 +12,7 @@ const ActivityBlock = ({value}: {value: any}) => {
 
   useEffect(() => {
     const initialValue: string = value[0]?.value;
+
     if (initialValue && selectedCard === null) {
       const card = cardsList.find((card) => initialValue.includes(card.type));
 
@@ -39,7 +40,6 @@ const ActivityBlock = ({value}: {value: any}) => {
         {selectedCard !== null && selectedCard !== undefined && (
           <SelectedCard
             inLesson
-            key={'5253'}
             onClick={onClick}
             card={cardsList.find((c) => c.id === selectedCard)}
           />

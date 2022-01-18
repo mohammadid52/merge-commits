@@ -180,11 +180,12 @@ const SelectedCard = ({
     }
   };
 
+  const showSelectors = !isCompleted && (selectedCard === 0 || selectedCard === 1);
   return (
     <div
       className={` rounded-2xl box ${
         inLesson ? 'mt-12' : ''
-      }  z-100  w-auto m-8 2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+      }  z-100  relative w-auto m-8 2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
         <source src={successSound} type="audio/mp3" />
       </audio>
@@ -214,54 +215,48 @@ const SelectedCard = ({
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={
-              !isCompleted &&
-              (selectedCard === 1 || selectedCard === 2) &&
-              countSelected === null
-            }>
-            {!isCompleted &&
-              countSelected === null &&
-              (selectedCard === 1 || selectedCard === 2) && (
-                <>
-                  <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
-                  <div className="flex w-auto items-center justify-center">
-                    {selected.type === 'square' ? (
-                      <FocusIcon isActive={isActive} />
-                    ) : (
-                      <AnimatedFlower />
-                    )}
-                  </div>
+            show={showSelectors && countSelected === null}>
+            {showSelectors && countSelected === null && (
+              <>
+                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
+                <div className="flex w-auto items-center justify-center">
+                  {selected.type === 'square' ? (
+                    <FocusIcon isActive={isActive} />
+                  ) : (
+                    <AnimatedFlower />
+                  )}
+                </div>
 
-                  <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
-                    Select number of cycles
-                    <br />
-                    <span className="font-light text-xs w-auto">
-                      (4 is recommended if you are new to this)
-                    </span>
-                  </h1>
-                  <Flickity
-                    className={'carousel overflow-x-hidden mb-4'}
-                    elementType={'div'}
-                    options={{
-                      initialIndex: 3,
-                      pageDots: false,
-                      selectedAttraction: 0.03,
-                      friction: 0.15,
-                    }}
-                    reloadOnUpdate
-                    disableImagesLoaded={false}>
-                    {times(10, (t) => (
-                      <div className="w-auto counter carousel-cell">
-                        <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
-                          {t + 1}
-                        </h1>
-                      </div>
-                    ))}
-                  </Flickity>
+                <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
+                  Select number of cycles
+                  <br />
+                  <span className="font-light text-xs w-auto">
+                    (4 is recommended if you are new to this)
+                  </span>
+                </h1>
+                <Flickity
+                  className={'carousel overflow-x-hidden mb-4'}
+                  elementType={'div'}
+                  options={{
+                    initialIndex: 3,
+                    pageDots: false,
+                    selectedAttraction: 0.03,
+                    friction: 0.15,
+                  }}
+                  reloadOnUpdate
+                  disableImagesLoaded={false}>
+                  {times(10, (t) => (
+                    <div className="w-auto counter carousel-cell">
+                      <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
+                        {t + 1}
+                      </h1>
+                    </div>
+                  ))}
+                </Flickity>
 
-                  <NextButton onClick={onStartClick} countSelected={countSelected} />
-                </>
-              )}
+                <NextButton onClick={onStartClick} countSelected={countSelected} />
+              </>
+            )}
           </AnimatedContainer>
 
           {/* Main Exercise Section */}
@@ -270,40 +265,34 @@ const SelectedCard = ({
             delay="0.5s"
             duration="1000"
             animationType="translateY"
-            show={
-              !isCompleted &&
-              (selectedCard === 1 || selectedCard === 2) &&
-              countSelected !== null
-            }>
-            {!isCompleted &&
-              (selectedCard === 1 || selectedCard === 2) &&
-              countSelected !== null && (
-                <>
-                  <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
-                  <AnimatedSquare
-                    onStart={onStart}
-                    isActive={isActive}
-                    exerciseType={exerciseType}
-                    onComplete={onComplete}
-                  />
+            show={showSelectors && countSelected !== null}>
+            {showSelectors && countSelected !== null && (
+              <>
+                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
+                <AnimatedSquare
+                  onStart={onStart}
+                  isActive={isActive}
+                  exerciseType={exerciseType}
+                  onComplete={onComplete}
+                />
 
-                  {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
+                {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
 
-                  {exerciseType === 'square' && isActive && (
-                    <ul className="mt-8 fse-text-helper-list">
-                      {map(breathingHelpingTexts, (item, i) => (
-                        <li
-                          key={item}
-                          className={`${
-                            i === currentIteration ? 'showing' : 'hide'
-                          } text-xl text-center w-auto text-gray-200 font-light`}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </>
-              )}
+                {exerciseType === 'square' && isActive && (
+                  <ul className="mt-8 fse-text-helper-list">
+                    {map(breathingHelpingTexts, (item, i) => (
+                      <li
+                        key={item}
+                        className={`${
+                          i === currentIteration ? 'showing' : 'hide'
+                        } text-xl text-center w-auto text-gray-200 font-light`}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
           </AnimatedContainer>
 
           {/* ON Complete Section */}

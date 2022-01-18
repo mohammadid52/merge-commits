@@ -41,6 +41,7 @@ import {
   ATTACHMENTS,
   DATE_PICKER,
   DIVIDER,
+  EMOTIONS,
   FORM_TYPES,
   FOUR_SEVEN_EIGHT,
   INPUT,
@@ -51,6 +52,7 @@ import {
   SELECT_ONE,
   SQUARE,
   TABLE,
+  THINK_ABOUT_IT,
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import ImageGallery from '@UlbUI/ImageGallery';
@@ -463,6 +465,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <DocsModal {...commonProps} />;
       case SQUARE:
       case FOUR_SEVEN_EIGHT:
+      case THINK_ABOUT_IT:
+      case EMOTIONS:
         return <ActivityModal type={type} {...commonProps} />;
 
       default:

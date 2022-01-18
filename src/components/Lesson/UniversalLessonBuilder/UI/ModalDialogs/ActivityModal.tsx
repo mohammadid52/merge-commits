@@ -1,11 +1,12 @@
 import React from 'react';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {SQUARE} from '../common/constants';
+import {EMOTIONS, SQUARE, THINK_ABOUT_IT} from '../common/constants';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {nanoid} from 'nanoid';
 import Buttons from '@components/Atoms/Buttons';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
+import {kebabCase, snakeCase} from 'lodash';
 
 interface ActivityModalProps extends IContentTypeComponentProps {
   type: string;
@@ -31,12 +32,27 @@ const ActivityModal = ({
   const {clientKey, userLanguage} = useGlobalContext();
   const {EditQuestionModalDict} = useDictionary(clientKey);
 
+  const getLabel = () => {
+    switch (type) {
+      case SQUARE:
+        return 'Sqaure Breathing';
+
+      case EMOTIONS:
+        return 'Emotion Wheel';
+
+      case THINK_ABOUT_IT:
+        return 'Think About It';
+
+      default:
+        return '478 Breathing';
+    }
+  };
   const onActivityCreate = async () => {
     const value = [
       {
         id: nanoid(20),
-        label: type === SQUARE ? 'Square Breathing' : '478 Breathing',
-        value: type === SQUARE ? 'square-breathing' : '478-breathing',
+        label: getLabel(),
+        value: snakeCase(getLabel()),
       },
     ];
 
@@ -55,10 +71,7 @@ const ActivityModal = ({
   };
   return (
     <div>
-      <h1>
-        Did you want to add {type === SQUARE ? 'Square' : '4-7-8'} Breathing to this
-        lesson?
-      </h1>
+      <h1>Did you want to add {getLabel()} to this lesson?</h1>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
