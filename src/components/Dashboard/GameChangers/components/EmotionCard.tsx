@@ -7465,11 +7465,12 @@ const EmotionCard = () => {
           <rect
             x="412"
             y="367"
-            width="20.7143"
+            width="25"
+            className="w-auto"
             height="25"
             fill="url(#pattern0)"
             style={{
-              width: '25px',
+              width: '21px',
             }}
           />
           <rect
