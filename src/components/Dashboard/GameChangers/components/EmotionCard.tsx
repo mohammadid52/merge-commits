@@ -36,7 +36,7 @@ const EmotionCard = () => {
 
   return (
     <>
-      <div className="text-xl text-white absolute bottom-2 w-auto left-1">
+      <div className="text-xl text-white absolute bottom-4 w-auto left-1">
         <h1 className="">1: {selected.level1}</h1>
         <h1 className="">2: {selected.level2}</h1>
         <h1 className="">3: {selected.level3}</h1>
