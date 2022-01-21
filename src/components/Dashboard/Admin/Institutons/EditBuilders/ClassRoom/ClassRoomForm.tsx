@@ -528,10 +528,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const newRoom: any = await API.graphql(
             graphqlOperation(mutation.updateRoom, {input: input})
           );
-
           const curriculaId = newRoom.data.updateRoom.curricula.items[0]?.id;
           await saveRoomTeachers(roomData.id);
-          await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+          if (curriculaId) {
+            await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+          } else {
+            await createRoomCurricular(roomId, roomData.curricular.id);
+          }
           setUnsavedChanges(false);
           setMessages({
             show: true,

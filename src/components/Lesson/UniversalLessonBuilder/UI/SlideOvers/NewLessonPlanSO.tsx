@@ -673,7 +673,7 @@ const NewLessonPlanSO = ({
               label="Activity name"
               isRequired
               onChange={onFieldChange}
-              dark={true}
+              dark={pageDetails?.darkMode}
               id="title"
               error={errors?.title}
             />
@@ -684,7 +684,7 @@ const NewLessonPlanSO = ({
               showCharacterUsage
               label="Activity label"
               maxLength={12}
-              dark={true}
+              dark={pageDetails?.darkMode}
               isRequired
               placeHolder="eg. Let's learn what is javascript"
               value={label}
@@ -701,7 +701,7 @@ const NewLessonPlanSO = ({
               label="Add video instructions"
               disabled={isUploadedFromPC}
               onChange={onVideoLinkChange}
-              dark={true}
+              dark={pageDetails?.darkMode}
               id="videoLink"
               error={errors?.videoLink}
             />
@@ -752,7 +752,7 @@ const NewLessonPlanSO = ({
           <Block>
             <Label className="mb-1" label={'Interaction type'} />
 
-            <div className="w-48">
+            <div className="">
               <Checkbox
                 title={'Group'}
                 label={'Working as a class to complete activity'}

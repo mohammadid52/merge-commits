@@ -35,17 +35,21 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
+import ActivityModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
+
 import {
   ATTACHMENTS,
   DATE_PICKER,
   DIVIDER,
   FORM_TYPES,
+  FOUR_SEVEN_EIGHT,
   INPUT,
   INPUT_WITH_EMOJI,
   LINK,
   PARAGRAPH,
   SELECT_MANY,
   SELECT_ONE,
+  SQUARE,
   TABLE,
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
@@ -265,9 +269,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setShowLocationIcon(false);
 
     if (showPopup) {
-      setNavState('home');
+      // setNavState('home');
       setActiveContentItem(null);
-      setActionMode('init');
+      // setActionMode('init');
 
       wait(700).then(() => {
         setSavingStatus('loading');
@@ -457,6 +461,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       case FORM_TYPES.DOCS:
         return <DocsModal {...commonProps} />;
+      case SQUARE:
+      case FOUR_SEVEN_EIGHT:
+        return <ActivityModal type={type} {...commonProps} />;
 
       default:
         return (
@@ -558,7 +565,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           showHeaderBorder={true}
           showFooter={false}
           closeAction={closeAction}
-          modalBodyClass="overflow-y-auto 2xl:overflow-y-hidden">
+          // modalBodyClass="overflow-y-auto 2xl:overflow-y-hidden"
+        >
           <div className="transition-all min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>

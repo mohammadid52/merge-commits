@@ -1,9 +1,11 @@
+import Highlighted from '@components/Atoms/Highlighted';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
+
+import {escapeRegExp} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {HiOutlineTrash} from 'react-icons/hi';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import Popover from '../../../Atoms/Popover';
 
 interface ICloneModalProps {
@@ -31,10 +33,11 @@ interface LessonsListRow {
   setShowCloneModal?: React.Dispatch<React.SetStateAction<ICloneModalProps>>;
   isSuperAdmin?: boolean;
   redirectToInstitution: () => void;
+  searchTerm?: string;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
-  const match = useRouteMatch();
+  const match: any = useRouteMatch();
   const history = useHistory();
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonsListDict} = useDictionary(clientKey);
@@ -64,6 +67,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     createdAt,
     updatedAt,
     redirectToInstitution,
+    searchTerm,
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -74,7 +78,6 @@ const LessonsListRow = (props: LessonsListRow) => {
   };
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
-  const textDisabledClass = ` line-through text-sm leading-5 text-gray-500 hover:text-gray-600 transition-all duration-50`;
 
   return (
     <div
@@ -91,21 +94,23 @@ const LessonsListRow = (props: LessonsListRow) => {
           isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
         } flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
-        <span>{title ? title : '--'}</span>
+        <Highlighted text={title} highlight={searchTerm} />
       </div>
       {isSuperAdmin && (
         <div
-          className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
+          className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           <span>{institutionName || '--'}</span>
         </div>
       )}
-      
+
       <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
       </div>
 
-      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">{targetAudience||'-'}</div>
+      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        {targetAudience || '-'}
+      </div>
 
       <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">

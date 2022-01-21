@@ -1776,10 +1776,10 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
           id
           name
         }
-        universalSyllabus{
-          items{
+        universalSyllabus {
+          items {
             id
-            unit{
+            unit {
               id
               name
             }
@@ -2034,7 +2034,7 @@ export const listUniversalLessons = /* GraphQL */ `
         label
         title
         institutionID
-        institution{
+        institution {
           id
           name
         }
@@ -2117,7 +2117,7 @@ export const listUniversalSyllabusOptions = /* GraphQL */ `
         name
         type
         institutionID
-        institution{
+        institution {
           id
           name
         }
@@ -2308,7 +2308,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         name
         type
         institutionID
-        institution{
+        institution {
           id
           name
         }
@@ -2321,7 +2321,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         lessons {
           items {
             id
-            lesson{
+            lesson {
               id
               title
             }
@@ -2659,11 +2659,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID
@@ -2747,10 +2743,10 @@ export const GetInstitutionDetails = /* GraphQL */ `
           syllabiHistory
           objectives
           languages
-          universalSyllabus{
-            items{
+          universalSyllabus {
+            items {
               id
-              unit{
+              unit {
                 id
                 name
               }
@@ -4959,7 +4955,7 @@ export const listStaffOptions = /* GraphQL */ `
         institutionID
         staffAuthID
         staffEmail
-        staffMember{
+        staffMember {
           firstName
           preferredName
           lastName

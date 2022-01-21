@@ -240,28 +240,28 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           const lessonScheduleData = activeSyllabusLessons?.find(
             (lesson: any) => lesson.id === item.id
           );
-          let temp = Math.ceil(count + item.lesson.duration);
+          let temp = Math.ceil(count + item?.lesson?.duration);
           const sessionHeading = lessonScheduleData?.startDate
-            ? item.lesson.duration > 1
+            ? item?.lesson?.duration > 1
               ? [
                   new Date(lessonScheduleData.startDate).toLocaleDateString(),
                   new Date(lessonScheduleData.estEndDate).toLocaleDateString(),
                 ].join(' - ')
               : new Date(lessonScheduleData.startDate).toLocaleDateString()
             : `Session ${
-                item.lesson.duration > 1
+                item?.lesson?.duration > 1
                   ? range(Math.ceil(count) + 1, temp)
                       .join(', ')
                       .replace(/, ([^,]*)$/, ' & $1')
                   : temp
               }`;
-          count += item.lesson.duration;
+          count += item?.lesson?.duration;
           const session = Math.ceil(count);
           const lesson = {
-            ...item.lesson,
+            ...item?.lesson,
             totalEstTime:
               Math.ceil(
-                item.lesson.lessonPlan.reduce(
+                item?.lesson?.lessonPlan?.reduce(
                   (total: number, obj: any) => Number(obj.estTime) + total,
                   0
                 ) / 5
@@ -387,7 +387,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       ? `${classRoomDict[userLanguage]['STEP']} 1:`
                       : ''
                   } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
-                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name || ''}` : ''
+                    !syllabusLoading
+                      ? `for ${state.roomData?.curriculum?.name || ''}`
+                      : ''
                   }`}
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />

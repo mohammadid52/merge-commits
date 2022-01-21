@@ -1,27 +1,27 @@
 import Storage from '@aws-amplify/storage';
 import {Switch} from '@headlessui/react';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {getImageFromS3Static} from '../../../../../utilities/services';
-import {blur, tinting} from '../../../../../utilities/staticData';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import Loader from '../../../../Atoms/Loader';
+} from '@dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from '@interfaces/UniversalLessonInterfaces';
+import {getImageFromS3Static} from '@utilities/services';
+import {blur, tinting} from '@utilities/staticData';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import Buttons from '@atoms/Buttons';
+import ULBFileUploader from '@atoms/Form/FileUploader';
+import FormInput from '@atoms/Form/FormInput';
+import Selector from '@atoms/Form/Selector';
+import Loader from '@atoms/Loader';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {useTabs, Tabs3} from '@uiComponents/Tabs/Tabs';
 
 const Toggle = ({
   checked,
@@ -312,7 +312,8 @@ const JumbotronModalDialog = ({
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
     if (isValid) {
-      let temp = imageInputs.imageData.name.split('.');
+      // @ts-ignore
+      let temp = imageInputs?.imageDatame.split('.');
       const extension = temp.pop();
       const fileName = `${Date.now()}_${temp
         .join(' ')

@@ -1,45 +1,26 @@
-import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {BsEnvelope} from 'react-icons/bs';
-import {FiPhone} from 'react-icons/fi';
-import {IoIosGlobe} from 'react-icons/io';
-import {HiPencil} from 'react-icons/hi';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
-
+import Loader from '@components/Atoms/Loader';
+import Tooltip from '@components/Atoms/Tooltip';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
+import {GlobalContext} from '@contexts/GlobalContext';
 import * as customMutations from '@customGraphql/customMutations';
+import useDictionary from '@customHooks/dictionary';
 import DroppableMedia from '@molecules/DroppableMedia';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import {getImageFromS3} from '../../../../utilities/services';
+import {getImageFromS3} from '@utilities/services';
 import {
   formatPhoneNumber,
   getInitialsFromString,
   initials,
   stringToHslColor,
-} from '../../../../utilities/strings';
-
-import LessonsBuilderHome from '../LessonsBuilder/LessonsBuilderHome';
-import User from '../UserManagement/User';
-import UserLookup from '../UserManagement/UserLookup';
-import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
-import ClassRoomBuilder from './EditBuilders/ClassRoom/ClassRoomBuilder';
-import CourseBuilder from './EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
-import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import UnitList from './EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
-import ClassList from './Listing/ClassList';
-import CurriculumList from './Listing/CurriculumList';
-import RoomsList from './Listing/RoomsList';
-import StaffBuilder from './Listing/StaffBuilder';
-import Students from './Students';
-
-import Loader from '@components/Atoms/Loader';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
-import Csv from '@components/Dashboard/Csv/Csv';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import Tooltip from '@components/Atoms/Tooltip';
+} from '@utilities/strings';
+import {getAsset} from 'assets';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
+import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
+import {BsEnvelope} from 'react-icons/bs';
+import {FiPhone} from 'react-icons/fi';
+import {HiPencil} from 'react-icons/hi';
+import {IoIosGlobe} from 'react-icons/io';
 import NavBarRouter from '../NavBarRouter';
 
 interface InstitutionInfoProps {
@@ -71,24 +52,17 @@ interface InstInfo {
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
-  const {institute, tabProps} = instProps;
-
-  const match = useRouteMatch();
+  const {institute} = instProps;
 
   const pathname = window.location.pathname;
-  const history = useHistory();
+
   const [imageUrl, setImageUrl] = useState();
   const [upImage, setUpImage] = useState(null);
   const [fileObj, setFileObj] = useState({});
   const [imageLoading, setImageLoading] = useState(false);
-  const [s3Image, setS3Image] = useState(null);
+
   const [showCropper, setShowCropper] = useState(false);
-  const {
-    theme,
-    clientKey,
-    userLanguage,
-    state: {user},
-  } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info} = useDictionary(clientKey);
   const mediaRef = useRef(null);
@@ -185,8 +159,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {/* Profile section */}
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <div
-            hidden={pathname.includes('page-builder')}
-            className="w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200 flex flex-row lg:flex-col"
+            className={`${
+              pathname.includes('page-builder') ? 'hidden' : 'flex'
+            } w-auto cursor-pointer lg:w-2/12 2xl:w-auto border-r-none lg:border-r-0 border-gray-200  flex-row lg:flex-col`}
             onClick={handleImageClick}>
             <div className="w-auto p-4 mr-2 2xl:mr-4 flex flex-col flex-shrink-0">
               {imageLoading ? (

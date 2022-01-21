@@ -1,3 +1,4 @@
+import Label from '@components/Atoms/Form/Label';
 import {Transition} from '@headlessui/react';
 import React, {useContext, Fragment} from 'react';
 import {getAsset} from '../../../assets';
@@ -24,6 +25,7 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
+  updateHeight?: boolean;
   inputRef?: any;
   className?: string;
 }
@@ -46,6 +48,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     cols = 125,
     maxLength = 99999,
     showCharacterUsage = false,
+    updateHeight = false,
     dark = false,
     min,
     max,
@@ -61,15 +64,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      {label && (
-        <label
-          htmlFor={id}
-          className={`${
-            dark ? 'text-white' : 'text-gray-700'
-          } block text-xs font-semibold leading-5 `}>
-          {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
-        </label>
-      )}
+      {label && <Label dark={dark} label={label} isRequired={isRequired} />}
 
       {textarea ? (
         <textarea
@@ -78,7 +73,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           id={id}
           value={value}
           className={`mt-1  ${
-            dark ? 'dark:border-gray-700  dark:text-white dark:bg-gray-800' : ''
+            dark ? 'border-gray-700  text-white bg-gray-800' : ''
           } max-w-256 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
@@ -104,7 +99,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           name={name}
           onChange={onChange}
           className={`mt-1 ${
-            dark ? 'dark:border-gray-700  dark:text-white dark:bg-gray-800' : ''
+            dark ? 'border-gray-700  text-white bg-gray-800' : ''
           } block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
@@ -112,7 +107,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           } ${className}`}
           value={value ? value : ''}
           placeholder={placeHolder}
-          onKeyDown={onKeyDown}
+          onKeyDown={updateHeight ? onKeyDown : () => {}}
           {...otherInputProps}
         />
       )}

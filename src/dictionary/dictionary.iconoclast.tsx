@@ -2152,8 +2152,9 @@ const SelectPreviousQuestionDict: any = {
 const AddMeasurementDict: any = {
   EN: {
     title: 'Add Measurement',
+
     subtitle: 'Add new measurement to course.',
-    heading: 'MEASUREMENT INFORMATION',
+    heading: 'Measurement Information',
     mlabel: 'Measurement Name',
     selecttopic: 'Select Topic',
     topic: 'Topic',
@@ -2810,6 +2811,10 @@ const UserInformationDict: any = {
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
+    MESSAGE: {
+      RESET_PASSWORD_SUCCESS: 'Password reset successfully',
+      RESET_PASSWORD_FAILURE: 'Password reset failed',
+    },
   },
   ES: {
     heading: 'TBD',
@@ -2825,6 +2830,10 @@ const UserInformationDict: any = {
     ondemand: 'TBD',
     RESET_PASSWORD: 'TBD',
     RESETTING_PASSWORD: 'TBD',
+    MESSAGE: {
+      RESET_PASSWORD_SUCCESS: 'TBD',
+      RESET_PASSWORD_FAILURE: 'TBD',
+    },
   },
 };
 
@@ -3686,8 +3695,8 @@ const LessonBuilderDict: any = {
     UNIT_MANAGER_TITLE: 'Unit Manager',
     UNIT_MANAGER_DESCRIPTION: 'Assign lessons to units',
     UNIT_MANAGER_TOOLTIP: 'Create lesson activities in step 2 to continue',
-    LEARNING_EVIDENCE_TITLE: 'Learning Evidence',
-    LEARNING_EVIDENCE_DESCRIPTION: 'Link measurements to activities',
+    LEARNING_EVIDENCE_TITLE: 'Select measurements applied to lesson',
+    LEARNING_EVIDENCE_DESCRIPTION: 'Link measurements to lesson',
     LEARNING_EVIDENCE_TOOLTIP: 'Assign your lesson to courses in step 3 to continue',
     BUTTON: {
       ADD_PLAN: 'Add new page',
@@ -3996,7 +4005,7 @@ const DashboardDict: any = {
 
 const LearningEvidenceDict: any = {
   EN: {
-    TITLE: 'Learning Evidence',
+    TITLE: 'Add Measurements to Lesson',
   },
   ES: {
     TITLE: 'TBD',

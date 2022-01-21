@@ -53,6 +53,8 @@ const Item = ({
   content: any;
   setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
+  const pathname = window.location.pathname;
+  const isCommunity = pathname.includes('community');
   return (
     <div
       onClick={() => setNavState(content.type)}
@@ -69,7 +71,10 @@ const Item = ({
         <div className="flex-1 min-w-0 flex items-center justify-between">
           <div className="focus:outline-none cursor-pointer">
             <span className="absolute inset-0" aria-hidden="true" />
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
+            <p
+              className={`${
+                isCommunity ? '' : 'dark:text-white'
+              } text-sm font-medium text-gray-900 `}>
               {content.name}
             </p>
             <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
@@ -144,7 +149,8 @@ const CardsModal = ({
           closeAction={onCancel}
           showFooter={false}
           title={getModalHeader(navState)}>
-          <>
+          <div className="2xl:min-w-256 max-w-screen 2xl:max-w-256">
+            {/* Showing all items in this block */}
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (
                 <div
@@ -157,12 +163,14 @@ const CardsModal = ({
                 </div>
               )}
             </AnimatedContainer>
+            {/*  up --- Showing all items in this block --- up */}
+
             <AnimatedContainer show={onSpotlight} animationType="translateY">
               {onSpotlight && (
                 <div className="">
                   <Spotlight
-                    onSubmit={(input: ISpotlightInput) =>
-                      functions.onSpotlightSubmit(input)
+                    onSubmit={(input: ISpotlightInput, cb) =>
+                      functions.onSpotlightSubmit(input, cb)
                     }
                     instId={instId}
                     {...commonProps}
@@ -174,8 +182,8 @@ const CardsModal = ({
               {onAnnouncement && (
                 <div className="">
                   <Announcements
-                    onSubmit={(input: IAnnouncementInput) =>
-                      functions.onAnnouncementSubmit(input)
+                    onSubmit={(input: IAnnouncementInput, cb) =>
+                      functions.onAnnouncementSubmit(input, cb)
                     }
                     {...commonProps}
                   />
@@ -186,7 +194,9 @@ const CardsModal = ({
               {onEvent && (
                 <div className="">
                   <Event
-                    onSubmit={(input: IEventInput) => functions.onEventSubmit(input)}
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onEventSubmit(input, cb)
+                    }
                     {...commonProps}
                   />
                 </div>
@@ -196,13 +206,15 @@ const CardsModal = ({
               {onCheckItOut && (
                 <div className="">
                   <CheckItOut
-                    onSubmit={(input: IEventInput) => functions.onCheckItOutSubmit(input)}
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onCheckItOutSubmit(input, cb)
+                    }
                     {...commonProps}
                   />
                 </div>
               )}
             </AnimatedContainer>
-          </>
+          </div>
         </Modal>
       )}
     </div>

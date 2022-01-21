@@ -23,6 +23,7 @@ interface ModalProps {
   outerCloseBtn?: boolean;
   position?: 'absolute' | 'relative' | 'fixed';
   width?: string;
+  className?: string;
   maxWidth?: string;
 }
 
@@ -31,12 +32,13 @@ const ModalBody = (bodyProps: {
   hidePadding?: boolean;
   closeOnBackdrop?: boolean;
   scrollHidden?: boolean;
+  className?: string;
 }) => {
   const {
     children,
 
     closeOnBackdrop,
-
+    className = 'modal-body',
     scrollHidden,
     hidePadding,
   } = bodyProps;
@@ -45,7 +47,7 @@ const ModalBody = (bodyProps: {
     <div
       className={`relative ${
         hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto overflow-hidden modal-body`}>
+      } flex-auto overflow-hidden ${className}`}>
       {' '}
       {/* // flex-auto changed to flex-1 overflow-hidden */}
       {children}
@@ -91,6 +93,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     position,
     width,
     maxWidth,
+    className,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -148,6 +151,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               />
             )}
             <ModalBody
+              className={className}
               scrollHidden={scrollHidden}
               hidePadding={hidePadding}
               closeOnBackdrop={closeOnBackdrop}>

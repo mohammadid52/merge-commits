@@ -15,7 +15,7 @@ import * as queries from '@graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
-import parse from 'html-react-parser';
+
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -159,7 +159,7 @@ const PostComment = ({
           src={getImageFromS3Static(image)}
         />
       ) : (
-        <Placeholder />
+        <Placeholder className="mr-4" size="w-10 h-10" />
       )}
       <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
         <button
@@ -287,11 +287,16 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
           </div>
         </div>
+        {cardDetails?.cardName && (
+          <h1 className=" text-lg text-gray-800  font-semibold mb-2">
+            {cardDetails.cardName}
+          </h1>
+        )}
         <div
-          className="text-sm mb-2 mx-3 px-2"
           dangerouslySetInnerHTML={{
             __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
-          }}></div>
+          }}
+          className=" text-sm mb-2 mx-3 px-2"></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
@@ -308,14 +313,16 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             style={{backgroundImage: `url(${media})`}}></div>
           <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div className="mb-8">
-              <div className="text-gray-900 font-bold text-xl mb-2">
-                {cardDetails.cardName}
-              </div>
+              {cardDetails?.cardName && (
+                <h1 className=" text-lg text-gray-800  font-semibold mb-2">
+                  {cardDetails.cardName}
+                </h1>
+              )}
               <div
-                className=" text-base"
                 dangerouslySetInnerHTML={{
                   __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
-                }}></div>
+                }}
+                className=" text-base"></div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
@@ -389,12 +396,17 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
 
               <div className="mb-2 mx-3 px-2">
                 {cardDetails?.cardName && (
-                  <h1 className=" text-xl text-gray-800 font-medium mb-2">
+                  <h1 className=" text-lg  text-gray-800 font-semibold mb-2">
                     {cardDetails.cardName}
                   </h1>
                 )}
-                {parse(cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>')}
-                <div className="text-gray-600 text-sm"></div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: cardDetails.summaryHtml
+                      ? cardDetails?.summaryHtml
+                      : '<p></p>',
+                  }}
+                  className="text-gray-600 text-sm"></div>
               </div>
             </div>
           </div>

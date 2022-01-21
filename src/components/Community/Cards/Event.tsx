@@ -124,7 +124,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
   };
 
   return (
-    <div className="min-w-256 max-w-256">
+    <div className="">
       {tempData && tempData?.image ? (
         <div>
           <Media
@@ -233,7 +233,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       </div>
 
       <AnimatedContainer show={Boolean(error)}>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
+        {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">

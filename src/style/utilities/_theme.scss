@@ -27,6 +27,8 @@
 
 // ---- Same works with text classes
 
+// Curate and Demo uses same theme set
+
 @mixin iconoclast($util: 'bg') {
   @each $themeName, $themeValue in $iconoclastColors {
     .iconoclast .iconoclast\:#{$util}-#{$themeName} {
@@ -212,6 +214,6 @@
 @include iconoclast('bg');
 @include iconoclast('border');
 @include iconoclast('text');
-@include curate('bg');
-@include curate('border');
-@include curate('text');
+@include curate('bg'); // with demo
+@include curate('border'); // with demo
+@include curate('text'); // with demo

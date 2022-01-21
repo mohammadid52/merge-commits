@@ -1,27 +1,21 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {IconContext} from 'react-icons';
-import {HiPencil} from 'react-icons/hi';
-import {IoAdd} from 'react-icons/io5';
-import {IoIosAdd} from 'react-icons/io';
-
-import {reorder, stringToHslColor} from '@utilities/strings';
-
 import Buttons from '@atoms/Buttons';
 import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
 import Modal from '@atoms/Modal';
 import PageWrapper from '@atoms/PageWrapper';
-
-import ModalPopUp from '@molecules/ModalPopUp';
-
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
 import * as mutations from '@graphql/mutations';
 import * as queries from '@graphql/queries';
-import * as customQueries from '@customGraphql/customQueries';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import ModalPopUp from '@molecules/ModalPopUp';
+import {stringToHslColor} from '@utilities/strings';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {IconContext} from 'react-icons';
+import {HiPencil} from 'react-icons/hi';
+import {IoIosAdd} from 'react-icons/io';
+import {IoAdd} from 'react-icons/io5';
 import {getAsset} from '../../../../../../../../assets';
-
 import AddLearningObjective from '../AddLearningObjective';
 import AddMeasurement from '../AddMeasurement';
 import AddTopic from '../AddTopic';
@@ -46,7 +40,7 @@ interface LearningObjectiveProps {
 }
 
 const LearningObjective = (props: LearningObjectiveProps) => {
-  const {curricularId, institutionId} = props;
+  const {curricularId} = props;
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -71,33 +65,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     LEARINGOBJECTIVEDICT,
     TOPICLISTDICT,
   } = useDictionary(clientKey);
-
-  const history = useHistory();
-
-  const onDragEnd = async (result: any) => {
-    try {
-      if (result.source.index !== result.destination.index) {
-        const list = reorder(learningIds, result.source.index, result.destination.index);
-        setLearningIds(list);
-        let learningsList = learnings
-          .map((t: any) => {
-            let index = list.indexOf(t.id);
-            return {...t, index};
-          })
-          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-        setLearnings(learningsList);
-        let seqItem: any = await API.graphql(
-          graphqlOperation(mutations.updateCSequences, {
-            input: {id: `l_${curricularId}`, sequence: list},
-          })
-        );
-        seqItem = seqItem.data.updateCSequences;
-        console.log('seq updated');
-      }
-    } catch (err) {
-      console.log('err', err);
-    }
-  };
 
   const createLearningObjective = () => {
     setIsFormOpen(true);

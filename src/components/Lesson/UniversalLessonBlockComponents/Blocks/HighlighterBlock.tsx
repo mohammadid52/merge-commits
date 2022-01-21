@@ -1,19 +1,15 @@
-import React, {useContext, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import RichTextEditor from '../../../Atoms/RichTextEditor';
 import {isEmpty} from '@aws-amplify/core';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import Buttons from '../../../Atoms/Buttons';
-import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
-import {v4 as uuidv4} from 'uuid';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {getAsset} from '../../../../assets';
-import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
-import {useEffect} from 'react';
-import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import useStudentDataValue from '@customHooks/studentDataValue';
-
+import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
+import {getAsset} from 'assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
+import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import Buttons from '@atoms/Buttons';
+import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
 
 interface HighlighterBlockProps extends RowWrapperProps {
   id?: string;
@@ -112,7 +108,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const features: string[] = ['colorPicker', 'remove', 'inline'];
 
   return (
-    <div className={`p-4`}>
+    <div className={`p-4 `}>
       <CustomRichTextEditor
         theme={themeColor}
         features={features}

@@ -1,6 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Community from '@components/Community/Community';
 import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
+import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import '@components/Dashboard/GameChangers/styles/Flickity.scss';
+import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useNotifications from '@customHooks/notifications';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -26,6 +29,7 @@ import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 
+const GameChangers = lazy(() => import('./GameChangers/GameChangers'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
@@ -518,20 +522,20 @@ const Dashboard = (props: DashboardProps) => {
       lessons: {
         ...syllabus.lessons,
         items: syllabus.lessons.items.map((item: any) => {
-          if (count !== 0 && 1 - count < item.lesson.duration) {
+          if (count !== 0 && 1 - count < item?.lesson?.duration) {
             lastOccupiedDate = moment(lastOccupiedDate).add(
               frequencyMapping[frequency].step,
               frequencyMapping[frequency].unit
             );
             count = 0;
           }
-          count += item.lesson.duration;
+          count += item?.lesson?.duration;
 
           const {startDate, estEndDate}: any = calculateAvailableStartEndDate(
             moment(lastOccupiedDate),
             frequencyMapping[frequency].unit,
             frequencyMapping[frequency].step,
-            item.lesson.duration,
+            item?.lesson?.duration,
             scheduleDates,
             scheduleData
           );
@@ -561,6 +565,7 @@ const Dashboard = (props: DashboardProps) => {
    ********************/
 
   const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+    console.log('reorderSyllabus')
     let getSyllabusInSequence =
       sequenceArray && sequenceArray.length > 0
         ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
@@ -571,8 +576,8 @@ const Dashboard = (props: DashboardProps) => {
           }, [])
         : syllabusArray;
 
-    // console.log('syllabusArray ', syllabusArray);
-    // console.log('getSyllabusInSequence ', getSyllabusInSequence);
+    console.log('syllabusArray ', syllabusArray);
+    console.log('getSyllabusInSequence ', getSyllabusInSequence);
 
     let mapSyllabusToSequence =
       sequenceArray && sequenceArray.length > 0
@@ -775,7 +780,7 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <>
-      <div className="w-full bg-white">
+      <div id="top-menu" className="w-full bg-white">
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
@@ -800,7 +805,12 @@ const Dashboard = (props: DashboardProps) => {
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 
-        <div className="h-full overflow-y-auto">
+        <div
+          className={`h-full ${
+            window.location.pathname.includes('game-changers')
+              ? 'overflow-hidden'
+              : 'overflow-y-auto'
+          }`}>
           {/*<FloatingSideMenu />*/}
           <Noticebar notifications={notifications} />
 
@@ -838,7 +848,6 @@ const Dashboard = (props: DashboardProps) => {
                     );
                 }}
               />
-
               <Route
                 exact
                 path={`${match.url}/home`}
@@ -848,19 +857,27 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
-              {
-                <Route
-                  // exact
-                  path={`${match.url}/community/:action`}
-                  render={() => (
-                    <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
-                      <Community role={userData.role} />
-                    </ErrorBoundary>
-                  )}
-                />
-              }
-
+              <Route
+                // exact
+                path={`${match.url}/community/:action`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                    <Community role={userData.role} />
+                  </ErrorBoundary>
+                )}
+              />
+              <Route
+                // exact
+                path={`${match.url}/game-changers`}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
+                    <GameChangerProvider>
+                      <GameChangers />
+                    </GameChangerProvider>
+                  </ErrorBoundary>
+                )}
+              />
+              ]
               {(userData.role === 'SUP' ||
                 userData.role === 'ADM' ||
                 userData.role === 'TR' ||
@@ -868,7 +885,6 @@ const Dashboard = (props: DashboardProps) => {
                 userData.role === 'BLD') && (
                 <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
               )}
-
               <Route
                 exact
                 path={`${match.url}/classroom/:roomId`}
@@ -894,7 +910,6 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 path={`${match.url}/anthology`}
                 render={() => (
@@ -906,19 +921,15 @@ const Dashboard = (props: DashboardProps) => {
                   />
                 )}
               />
-
               <Route
                 path={`${match.url}/noticeboard`}
                 render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
               />
-
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
-
               <Route
                 path={`${match.url}/profile`}
                 render={() => <Profile updateAuthState={updateAuthState} />}
               />
-
               <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (
@@ -941,12 +952,10 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-
               <Route
                 path={`${match.url}/manage-institutions`}
                 render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
               />
-
               <Route
                 path={`${match.url}/question-bank`}
                 render={() => <QuestionBank />}

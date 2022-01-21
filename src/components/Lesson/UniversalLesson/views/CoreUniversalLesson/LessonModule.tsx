@@ -1,19 +1,19 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
+import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import map from 'lodash/map';
 import React, {useState} from 'react';
 import ReactHtmlParser from 'react-html-parser';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
+import {AiFillCheckCircle} from 'react-icons/ai';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';
+import * as queries from '../../../../../graphql/queries';
+import {getLocalStorageData} from '../../../../../utilities/localStorage';
+import Loader from '../../../../Atoms/Loader';
 import Table from '../../../../Molecules/Table';
 import ThemeModal from '../../../../Molecules/ThemeModal';
-import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as queries from '../../../../../graphql/queries';
-import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';
-import Loader from '../../../../Atoms/Loader';
-import {AiFillCheckCircle} from 'react-icons/ai';
-import {getLocalStorageData} from '../../../../../utilities/localStorage';
 import AnimatedContainer from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 
 const EvidenceTab = ({
   curTab,
@@ -220,8 +220,8 @@ const EvidenceTab = ({
           />
         </div>
       ) : checkedEvidence.length === 0 ? (
-        <div className="flex items-center justify-center min-h-32">
-          <p className="text-gray-400 font-medium text-lg leading-3">
+        <div className="flex text-center items-center justify-center min-h-32">
+          <p className="text-gray-400 w-auto font-medium text-lg leading-3">
             No Evidences Listed
           </p>
         </div>
@@ -264,9 +264,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [onObjectivesTab, onResourcesTab, onEvidencesTab] = helpers;
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
-    name: lesson.title,
-    time: `${lesson.estTime} min`,
-    instructions: lesson.description ? ReactHtmlParser(lesson.description) : '--',
+    name: lesson?.title,
+    time: `${lesson?.estTime} min`,
+    instructions: lesson?.description || '<p></p>',
   }));
 
   const lessonPlanTableConfig = {
@@ -306,11 +306,10 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                 <>
                   {currentLesson?.objectives[0] ? (
                     <div>
-                      <div
-                        style={{color: 'rgba(203, 213, 224, 1) !important'}}
-                        className="text-gray-400 font-medium text-lg leading-3">
-                        {ReactHtmlParser(currentLesson?.objectives[0])}
-                      </div>
+                      <p
+                        // style={{color: 'rgba(203, 213, 224, 1) !important'}}
+                        dangerouslySetInnerHTML={{__html: currentLesson?.objectives[0]}}
+                        className="text-gray-400  remove-draft-styles font-medium text-lg leading-7"></p>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center min-h-32">
@@ -329,12 +328,12 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                     //@ts-ignore
                     currentLesson?.studentMaterials ? (
                       <div>
-                        <p className="text-gray-400 font-medium text-lg leading-3">
-                          {
-                            //@ts-ignore
-                            currentLesson?.studentMaterials
-                          }
-                        </p>
+                        <p
+                          className="text-gray-400 remove-draft-styles font-medium text-lg leading-7"
+                          dangerouslySetInnerHTML={{
+                            // @ts-ignore
+                            __html: currentLesson?.studentMaterials,
+                          }}></p>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center min-h-32">

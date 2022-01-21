@@ -4,17 +4,8 @@ import Storage from '@aws-amplify/storage';
 import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
-import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsArrowLeft, BsCameraVideoFill} from 'react-icons/bs';
@@ -23,6 +14,14 @@ import {HiEmojiHappy} from 'react-icons/hi';
 import {IoIosTime} from 'react-icons/io';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -33,13 +32,7 @@ import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast
 import * as mutations from '../../../../graphql/mutations';
 import * as queries from '../../../../graphql/queries';
 import {getImageFromS3} from '../../../../utilities/services';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  getUniqItems,
-  initials,
-  stringToHslColor,
-} from '../../../../utilities/strings';
-import BreadCrums from '../../../Atoms/BreadCrums';
+import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
 import Modal from '../../../Atoms/Modal';
@@ -51,9 +44,9 @@ import ModalPopUp from '../../../Molecules/ModalPopUp';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Attendance from './Attendance';
 import Feedback from './Feedback';
+import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
-import UserTabs from './User/UserTabs';
 
 export interface UserInfo {
   authId: string;
@@ -102,13 +95,17 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
+  userId?: string;
+  insideModalPopUp?: boolean;
 }
 
-const User = ({instituteId}: IUserProps) => {
+const User = (props: IUserProps) => {
+  const {insideModalPopUp} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
   const params = useQuery(location.search);
+  const urlParam: any = useParams();
 
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -137,7 +134,7 @@ const User = ({instituteId}: IUserProps) => {
     {navigateMode: 'replace'}
   );
 
-  const {userId}: any = useParams();
+  const userId = props.userId || urlParam?.userId;
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -227,8 +224,6 @@ const User = ({instituteId}: IUserProps) => {
   // ##################################################################### //
 
   // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
-
-
 
   const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
@@ -518,7 +513,15 @@ const User = ({instituteId}: IUserProps) => {
   }, [user.authId]);
 
   if (status !== 'done') {
-    return <LessonLoading />;
+    return insideModalPopUp ? (
+      <div
+        className={`pl-0 lg:pl-12 w-256`}
+        style={{height: 'calc(100vh - 150px)'}}>
+        <Loader />
+      </div>
+    ) : (
+      <LessonLoading />
+    );
   }
 
   const disableProfileChange = user.role !== 'ST';
@@ -1118,7 +1121,7 @@ const User = ({instituteId}: IUserProps) => {
           </span>
 
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
-          {item.content && ReactHtmlParser(item.content)}
+          {item?.content && <p dangerouslySetInnerHTML={{__html: item?.content}}></p>}
         </div>
 
         {showComments && (
@@ -1438,7 +1441,9 @@ const User = ({instituteId}: IUserProps) => {
   {
     return (
       <>
-        <div className={`pl-0 lg:pl-12 max-w-256`}>
+        <div
+          className={`pl-0 lg:pl-12 max-w-256 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
             <div
@@ -1577,7 +1582,7 @@ const User = ({instituteId}: IUserProps) => {
                       render={() => (
                         <UserEdit
                           // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          instituteId={instituteId}
+                          instituteId={props.instituteId}
                           tab={tab}
                           setTab={setTab}
                           user={user}

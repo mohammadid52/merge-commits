@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import HeroBanner from '@components/Header/HeroBanner';
 import {useQuery} from '@customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
@@ -12,13 +11,11 @@ import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import useDictionary from '../../../../customHooks/dictionary';
-import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 import Pagination from '../../../Atoms/Pagination';
-import SectionTitle from '../../../Atoms/SectionTitle';
 import InstitutionRow from './InstitutionRow';
 import InstitutionRowLoader from './InstitutionRowLoader';
 

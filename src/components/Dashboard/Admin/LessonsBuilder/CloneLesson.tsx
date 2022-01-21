@@ -1,16 +1,16 @@
+import Buttons from '@atoms/Buttons';
+import Modal from '@atoms/Modal';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import * as mutations from '@graphql/mutations';
+import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
+import {wait} from '@utilities/functions';
+import {getAsset} from 'assets';
 import {map} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import * as mutations from '../../../../graphql/mutations';
-import {wait} from '../../../../utilities/functions';
-import Buttons from '../../../Atoms/Buttons';
-import Modal from '../../../Atoms/Modal';
 
 interface Props {
   getCloneLessonDetails?: () => UniversalLesson;
@@ -92,7 +92,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
   const onRedirectToNewLesson = () => {
     onCloneModalClose();
-    const redirectionUrl = `${match.url}/lesson/edit?lessonId=${newLessonId}&step=overview&refName=name`;
+    const redirectionUrl = `${match.url}/${newLessonId}?lessonId=${newLessonId}&step=overview&refName=name`;
 
     history.push(redirectionUrl);
   };
@@ -101,19 +101,26 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
     setCloningStatus('cloning');
     try {
       const data = getCloneData();
+
       // Because this is auto generated
       delete data.createdAt;
       delete data.updatedAt;
-      wait(3000).then(async () => {
-        const result: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalLesson, {input: data})
-        );
+      delete data.institution;
+      wait(3000)
+        .then(async () => {
+          const result: any = await API.graphql(
+            graphqlOperation(mutations.createUniversalLesson, {input: data})
+          );
 
-        const newLesson = result.data.createUniversalLesson;
-        setNewLessonId(newLesson?.id);
+          const newLesson = result.data.createUniversalLesson;
+          setNewLessonId(newLesson?.id);
 
-        setCloningStatus('success');
-      });
+          setCloningStatus('success');
+        })
+        .catch((error) => {
+          setCloningStatus('failed');
+          console.error(error.message);
+        });
     } catch (error) {
       setCloningStatus('failed');
       console.error(error.message);
