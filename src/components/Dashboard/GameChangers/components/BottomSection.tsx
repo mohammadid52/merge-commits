@@ -23,7 +23,9 @@ const BottomSection = () => {
     isCompleted,
     setCountSelected,
     setIsActive,
+    goBackCallback,
   } = useGameChangers();
+
   const animation = 'translateY';
   const duration = '1000';
   const commonBtnClass =
@@ -44,10 +46,14 @@ const BottomSection = () => {
             <Tooltip text="Go back" placement="top">
               <div
                 onClick={() => {
-                  setCountSelected(null);
-                  setSelectedCard(null);
-                  setIsPlayingMusic(false);
-                  setIsActive(false);
+                  if (goBackCallback.current) {
+                    goBackCallback.current();
+                  } else {
+                    setCountSelected(null);
+                    setSelectedCard(null);
+                    setIsPlayingMusic(false);
+                    setIsActive(false);
+                  }
                 }}
                 className={classNames(commonBtnClass, 'text-white')}>
                 <BsChevronLeft />

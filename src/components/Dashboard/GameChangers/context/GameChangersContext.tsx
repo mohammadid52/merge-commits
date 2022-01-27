@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useRef, useState} from 'react';
 const GameChangerContext = createContext(null);
 
 // TYPES
@@ -9,10 +9,12 @@ export const GameChangerProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // numbers
-  const [selectedCard, setSelectedCard] = useState<null | number>(null);
+  const [selectedCard, setSelectedCard] = useState<null | number>(3);
   const [initialIndex, setInitialIndex] = useState<number>(1);
   const [countSelected, setCountSelected] = useState<null | number>(null);
   const [counter, setCounter] = useState<number>(1);
+
+  const goBackCallback = useRef();
 
   // booleans
   const [showHowTo, setShowHowTo] = useState<boolean>(false);
@@ -42,6 +44,7 @@ export const GameChangerProvider = ({
         setInitialIndex,
         countSelected,
         setCountSelected,
+        goBackCallback,
       }}>
       {children}
     </GameChangerContext.Provider>
@@ -57,7 +60,7 @@ export const useGameChangers = (): {
   initialIndex: number;
   counter: number;
   countSelected: number | null;
-
+  goBackCallback?: any;
   setCountSelected: React.Dispatch<React.SetStateAction<number | null>>;
   setSelectedCard: React.Dispatch<React.SetStateAction<number | null>>;
   setShowHowTo: React.Dispatch<React.SetStateAction<boolean>>;
