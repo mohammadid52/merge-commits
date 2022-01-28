@@ -3,19 +3,17 @@ import * as mutations from '@graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useState} from 'react';
 
-type NewType = () => void;
-
 interface Options {
   custom?: boolean;
-  onCancel?: NewType;
+  onCancel?: Function;
   onSuccess?: (data: any) => void;
 }
 
-const useGraphqlMutation = (
+const useGraphqlMutation = <T>(
   mutationName: string,
   options?: Options
 ): {
-  mutate: (variables: any, successCallback?: () => void) => Promise<void>;
+  mutate: (variables: T, successCallback?: () => void) => Promise<void>;
   isLoading: boolean;
   isError: boolean;
   error: string;
@@ -27,7 +25,7 @@ const useGraphqlMutation = (
 
   const action = custom ? customMutations : mutations;
 
-  const mutate = async (variables: any, successCallback?: () => void) => {
+  const mutate = async (variables: T, successCallback?: () => void) => {
     setIsLoading(true);
     try {
       const res: any = await API.graphql(

@@ -1,7 +1,7 @@
 import * as customQueries from '@customGraphql/customQueries';
 import * as queries from '@graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 /*
   Example:
@@ -15,16 +15,16 @@ import { useEffect, useState } from 'react';
   }); */
 
 /**
- * 
- * @param queryName 
- * @param variables 
- * @param param2 
- * @returns 
+ *
+ * @param queryName
+ * @param variables
+ * @param param2
+ * @returns
  */
 
-const useGraphqlQuery = (
+const useGraphqlQuery = <T>(
   queryName: string,
-  variables: any,
+  variables: T,
   {
     enabled = true,
     loopOnNextToken = false,
@@ -37,13 +37,13 @@ const useGraphqlQuery = (
     onSuccess?: (data: any, updateCallback?: (updatedData: any) => void) => void;
   }
 ): {
-  data?: any;
+  data?: T;
   isSuccess?: boolean;
   isLoading?: boolean;
   isFetched?: boolean;
   isError?: boolean;
   error?: string;
-  setData?: React.Dispatch<React.SetStateAction<any>>;
+  setData?: React.Dispatch<React.SetStateAction<T>>;
   refetch?: () => Promise<any>;
 } => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +51,7 @@ const useGraphqlQuery = (
   const [error, setError] = useState('');
   const [isFetched, setIsFetched] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<T>();
 
   const action = custom ? customQueries : queries;
 

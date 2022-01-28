@@ -40,6 +40,7 @@ import {BsCardHeading} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
 import useAuth from '@customHooks/useAuth';
+import {ListCommunitysQuery} from 'API';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -80,16 +81,18 @@ const Community = ({}: {role: string}) => {
   ];
   const payloadForCommunities = {};
 
-  const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery(
-    'listCommunitys',
-    payloadForCommunities,
-    {
-      onSuccess: (data, cb) => {
-        const orderedList = orderBy(data, ['createdAt'], 'desc');
-        cb(orderedList);
-      },
-    }
-  );
+  const {
+    data: list,
+    setData: setList,
+    error,
+    isFetched,
+    isLoading,
+  } = useGraphqlQuery<any>('listCommunitys', payloadForCommunities, {
+    onSuccess: (data, cb) => {
+      const orderedList = orderBy(data, ['createdAt'], 'desc');
+      cb(orderedList);
+    },
+  });
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
   const [filteredList, setFilteredList] = useState([]);

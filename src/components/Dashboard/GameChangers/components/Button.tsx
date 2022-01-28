@@ -6,7 +6,7 @@ const Button = ({
   width = 'w-84',
 }: {
   width?: string;
-  text: string;
+  text: string | JSX.Element;
   onClick: () => void;
 }) => {
   return (
