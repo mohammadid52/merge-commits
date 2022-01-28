@@ -1138,6 +1138,32 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   backstory: String
 }
 
+
+type Sentiments @model {
+  sentimentId: ID!
+  sentimentName: String!
+  sentimentType: String!
+
+}
+
+type SentimentTracker @model @key(fields: ["personAuthID", "date"]) {
+  personAuthID: String!
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  sentimentId: ID!
+  sentiment: Sentiments @connection(fields: ["sentimentId"])
+  classRoomID: ID!
+  classRoom: Room @connection(fields: ["classRoomID"])
+ syllabusLessonID: ID!
+  syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
+  date: AWSDate!
+  time: AWSTime!
+  sentimentName: String!
+  sentimentType: String!
+
+}
+
+
 type PersonFiles @model @key(fields: ["id"]) {
   id: ID!
   personAuthID: String!
