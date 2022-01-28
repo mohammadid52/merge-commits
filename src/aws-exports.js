@@ -34,23 +34,7 @@ const awsmobile = {
     "aws_user_files_s3_bucket_region": "us-east-1",
     "aws_cognito_login_mechanisms": [
         "EMAIL"
-    ],
-    "geo": {
-        "amazon_location_service": {
-            "region": "us-east-1",
-            "maps": {
-                "items": {
-                    "lmsMap-uatenv": {
-                        "style": "VectorEsriLightGrayCanvas"
-                    },
-                    "houston-uatenv": {
-                        "style": "VectorEsriStreets"
-                    }
-                },
-                "default": "houston-uatenv"
-            }
-        }
-    }
+    ]
 };
 
 
