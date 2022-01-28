@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {EMOTIONS, SQUARE, THINK_ABOUT_IT} from '../common/constants';
+import {EMOTIONS, GAME_CHANGERS, SQUARE, THINK_ABOUT_IT} from '../common/constants';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {nanoid} from 'nanoid';
 import Buttons from '@components/Atoms/Buttons';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {kebabCase, snakeCase} from 'lodash';
+import FormInput from '@components/Atoms/Form/FormInput';
 
 interface ActivityModalProps extends IContentTypeComponentProps {
   type: string;
@@ -35,10 +36,10 @@ const ActivityModal = ({
   const getLabel = () => {
     switch (type) {
       case SQUARE:
-        return 'Sqaure Breathing';
+        return 'Square';
 
       case EMOTIONS:
-        return 'Emotion Wheel';
+        return 'Emotion';
 
       case THINK_ABOUT_IT:
         return 'Think About It';
@@ -51,7 +52,7 @@ const ActivityModal = ({
     const value = [
       {
         id: nanoid(20),
-        label: getLabel(),
+        label: type === EMOTIONS ? emotionLabel : getLabel(),
         value: snakeCase(getLabel()),
       },
     ];
@@ -60,7 +61,7 @@ const ActivityModal = ({
     const updatedList: any = createNewBlockULBHandler(
       '',
       '',
-      SQUARE,
+      GAME_CHANGERS,
 
       value,
       0,
@@ -69,9 +70,25 @@ const ActivityModal = ({
     );
     await addToDB(updatedList);
   };
+
+  const [emotionLabel, setEmotionLabel] = useState('');
+
   return (
     <div>
-      <h1>Did you want to add {getLabel()} to this lesson?</h1>
+      {type !== EMOTIONS && <h1>Did you want to add {getLabel()} to this lesson?</h1>}
+
+      {type === EMOTIONS && (
+        <div>
+          <FormInput
+            onChange={(e) => setEmotionLabel(e.target.value)}
+            label={'Emotion Feedback Label'}
+            value={emotionLabel}
+            id={'emotion_feedback_label'}
+            placeHolder={`Enter label for emotion feedback`}
+            type="text"
+          />
+        </div>
+      )}
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">

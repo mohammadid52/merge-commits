@@ -1,5 +1,9 @@
 import Buttons from '@components/Atoms/Buttons';
-import {SPACER} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {
+  EMOTIONS,
+  GAME_CHANGERS,
+  SPACER,
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
@@ -510,6 +514,7 @@ const PageBuilderSlideOver = ({
     setShowingBlockPin,
     showMessage,
     setShowMessage,
+    setEmotionComponentExists,
   } = usePageBuilderContext();
 
   // Remove message after three seconds
@@ -633,13 +638,16 @@ const PageBuilderSlideOver = ({
   const notSelected = isEmpty(selectedComponent);
 
   const onDeleteMode = actionMode === 'delete' && !notSelected;
+
   const onDeleteClick = async () => {
     const currentPage = universalLessonDetails.lessonPlan[lessonState.currentPage];
     const _pageContent = currentPage?.pageContent || [];
+    if (selectedComponent?.isEmotionComponentSelected) {
+      setEmotionComponentExists(false);
+    }
     if (!notSelected) {
       forEach(selectedComponent?.extras, (obj, idx: number) => {
         const partContent = _pageContent[obj.pageContentIdx]?.partContent || [];
-
         const lastItem = partContent.length === 1;
 
         if (lastItem) {

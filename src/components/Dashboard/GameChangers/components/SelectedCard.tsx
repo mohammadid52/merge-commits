@@ -184,8 +184,8 @@ const SelectedCard = ({
   return (
     <div
       className={`responsive_card rounded-2xl box ${
-        inLesson ? 'mt-12' : ''
-      }  z-100  relative w-auto m-8 2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+        inLesson ? 'm-4' : 'm-8'
+      }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">
         <source src={successSound} type="audio/mp3" />
       </audio>

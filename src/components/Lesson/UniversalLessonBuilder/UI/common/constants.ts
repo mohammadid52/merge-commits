@@ -36,7 +36,8 @@ export const SPACER = 'spacer';
 export const SQUARE = 'square';
 export const FOUR_SEVEN_EIGHT = '478';
 export const THINK_ABOUT_IT = 'think_about_it';
-export const EMOTIONS = 'emotion_wheel';
+export const EMOTIONS = 'emotion';
+export const GAME_CHANGERS = 'game_changers';
 
 export const REGEX = {
   Youtube: /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/,

@@ -2,7 +2,6 @@ import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {CreateSentimentsInput} from 'API';
-import EventEmitter from 'events';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
@@ -13,38 +12,41 @@ const EmotionCard = () => {
   // For Mobile
   const [primaryEmotion, setPrimaryEmotion] = useState('');
   const [secondaryEmotion, setSecondaryEmotion] = useState('');
-  const {goBackCallback} = useGameChangers();
+  const {goBackCallback, setSelectedCard} = useGameChangers();
   const [changesSaved, setChangesSaved] = useState(false);
   const [showFinalStep, setShowFinalStep] = useState(false);
 
+  const checkChanges = (changes: boolean) => {
+    // if (!changes) {
+    //   window.addEventListener('beforeunload', beforeunload);
+    // } else {
+    //   window.removeEventListener('beforeunload', beforeunload);
+    // }
+  };
+
   goBackCallback.current = () => {
-    setPrimaryEmotion('');
-    setSecondaryEmotion('');
-    if (!changesSaved) {
-      window.addEventListener('beforeunload', beforeunload);
+    if (primaryEmotion) {
+      setSecondaryEmotion('');
     } else {
-      window.removeEventListener('beforeunload', beforeunload);
+      setSecondaryEmotion('');
+      setPrimaryEmotion('');
+      setSelectedCard(null);
+      checkChanges(changesSaved);
     }
   };
 
   const beforeunload = (event: BeforeUnloadEvent) =>
     (event.returnValue = 'Please save the changes');
 
-  // useEffect(() => {
-  //   if (!changesSaved) {
-  //     window.addEventListener('beforeunload', beforeunload);
-  //   } else {
-  //     window.removeEventListener('beforeunload', beforeunload);
-  //   }
-  // }, [changesSaved]);
+  useEffect(() => {
+    checkChanges(changesSaved);
+  }, [changesSaved]);
 
   const {mutate, isLoading} = useGraphqlMutation<{input: CreateSentimentsInput}>(
     'createSentiments'
   );
 
   const onSave = () => {
-    setChangesSaved(true);
-
     try {
       const payload: CreateSentimentsInput = {
         id: nanoid(24),
@@ -56,7 +58,13 @@ const EmotionCard = () => {
       setShowFinalStep(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      setChangesSaved(true);
     }
+  };
+
+  const goBack = () => {
+    setSelectedCard(null);
   };
 
   return (
@@ -84,11 +92,14 @@ const EmotionCard = () => {
       </AnimatedContainer>
       <AnimatedContainer show={showFinalStep}>
         {showFinalStep && (
-          <div className="p-4">
-            <h1 className="text-4xl my-4  text-white font-bold text-left">
-              Thanks for your input
-            </h1>
-          </div>
+          <>
+            <div className="p-4 px-6">
+              <h1 className="text-4xl my-4  text-white font-bold text-left">
+                Thanks for your input
+              </h1>
+            </div>
+            <Button width="w-full" onClick={goBack} text={'Go Back'} />
+          </>
         )}
       </AnimatedContainer>
     </>

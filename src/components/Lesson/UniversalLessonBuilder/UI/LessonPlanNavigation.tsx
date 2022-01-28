@@ -1,15 +1,20 @@
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {BiBook, BiSun} from 'react-icons/bi';
 import {BsMoon} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {useQuery} from '../../../../customHooks/urlParam';
-import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import Tooltip from '../../../Atoms/Tooltip';
+import {EMOTIONS, GAME_CHANGERS} from './common/constants';
 
 interface ILessonPlanNavigationProps {
   selectedPageID: string;
@@ -55,6 +60,32 @@ const LessonPlanNavigation = ({
     updateMovableList(items, 'page');
   };
 
+  const {setEmotionComponentExists} = usePageBuilderContext();
+
+  const {lessonState} = useGlobalContext();
+
+  const pageContent = lessonPlan[lessonState.currentPage]?.pageContent;
+
+  const checkIfEmotionComponentExists = (pageContent: any) => {
+    if (pageContent) {
+      pageContent.forEach((pgContent: any) => {
+        console.log(pgContent);
+
+        pgContent?.partContent?.forEach((ptContent: any) => {
+          if (ptContent.type === GAME_CHANGERS) {
+            if (ptContent.value[0].value === EMOTIONS) {
+              setEmotionComponentExists(true);
+            } else {
+              setEmotionComponentExists(false);
+            }
+          } else {
+            setEmotionComponentExists(false);
+          }
+        });
+      });
+    }
+  };
+
   const updatePage = (id: string, idx: number) => {
     setSelectedPageID(id);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
@@ -63,6 +94,7 @@ const LessonPlanNavigation = ({
       ? `/dashboard/manage-institutions`
       : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
 
+    checkIfEmotionComponentExists(pageContent);
     history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
 
@@ -122,6 +154,10 @@ const LessonPlanNavigation = ({
       payload: {theme: val ? 'dark' : 'light'},
     });
   };
+
+  useEffect(() => {
+    checkIfEmotionComponentExists(pageContent);
+  }, [pageContent]);
 
   const {darkMode, classwork} = settings;
 

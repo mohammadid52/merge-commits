@@ -527,6 +527,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.WRITING_EXERCISE:
       case 'writing-exercise-form-default':
         return 'Writing Exercise Component';
+      case EMOTIONS:
+        return 'Emotion Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

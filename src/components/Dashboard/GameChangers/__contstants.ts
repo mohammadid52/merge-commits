@@ -54,10 +54,10 @@ const cardsList = [
     icon: FcMindMap,
     iconForeground: 'text-green-700',
     iconBackground: 'bg-green-100',
-    subtitle: 'Emotions',
+    subtitle: 'Get emotions feedback',
     id: 3,
     // don't change the id
-    name: 'Emotions',
+    name: 'Emotions Component',
     type: EMOTIONS,
     title: 'Emotions',
     desc:
