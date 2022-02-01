@@ -6323,7 +6323,6 @@ export const getSentiments = /* GraphQL */ `
   query GetSentiments($id: ID!) {
     getSentiments(id: $id) {
       id
-      sentimentId
       sentimentName
       sentimentType
       createdAt
@@ -6340,7 +6339,6 @@ export const listSentimentss = /* GraphQL */ `
     listSentimentss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        sentimentId
         sentimentName
         sentimentType
         createdAt
@@ -6385,6 +6383,14 @@ export const getSentimentTracker = /* GraphQL */ `
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
         createdAt
         updatedAt
       }
@@ -6623,6 +6629,367 @@ export const listSentimentTrackers = /* GraphQL */ `
           spotlightUser
           spotlightDate
           addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        syllabusLessonID
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFeelingTracker = /* GraphQL */ `
+  query GetFeelingTracker($personAuthID: String!, $date: AWSDate!) {
+    getFeelingTracker(personAuthID: $personAuthID, date: $date) {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        complete
+        roster
+        viewing
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeelingTrackers = /* GraphQL */ `
+  query ListFeelingTrackers(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelFeelingTrackerFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFeelingTrackers(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          id
+          sentimentName
+          sentimentType
           createdAt
           updatedAt
         }
