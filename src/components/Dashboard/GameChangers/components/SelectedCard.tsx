@@ -183,7 +183,7 @@ const SelectedCard = ({
   const showSelectors = !isCompleted && (selectedCard === 0 || selectedCard === 1);
   return (
     <div
-      className={`responsive_card rounded-2xl box ${
+      className={`${inLesson ? '' : 'responsive_card'} rounded-2xl box ${
         inLesson ? 'm-4' : 'm-8'
       }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
       <audio id="finish-sound">

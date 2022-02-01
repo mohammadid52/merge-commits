@@ -14,6 +14,13 @@ import {useEffect, useState} from 'react';
     },
   }); */
 
+interface Options {
+  enabled?: boolean;
+  loopOnNextToken?: boolean;
+  custom?: boolean;
+  onSuccess?: (data: any, updateCallback?: (updatedData: any) => void) => void;
+}
+
 /**
  *
  * @param queryName
@@ -22,28 +29,18 @@ import {useEffect, useState} from 'react';
  * @returns
  */
 
-const useGraphqlQuery = <T>(
+const useGraphqlQuery = <VariablesType, ReturnType>(
   queryName: string,
-  variables: T,
-  {
-    enabled = true,
-    loopOnNextToken = false,
-    custom = false,
-    onSuccess = () => {},
-  }: {
-    enabled?: boolean;
-    loopOnNextToken?: boolean;
-    custom?: boolean;
-    onSuccess?: (data: any, updateCallback?: (updatedData: any) => void) => void;
-  }
+  variables: VariablesType | any,
+  options?: Options
 ): {
-  data?: T;
+  data?: ReturnType;
   isSuccess?: boolean;
   isLoading?: boolean;
   isFetched?: boolean;
   isError?: boolean;
   error?: string;
-  setData?: React.Dispatch<React.SetStateAction<T>>;
+  setData?: React.Dispatch<React.SetStateAction<ReturnType>>;
   refetch?: () => Promise<any>;
 } => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +48,10 @@ const useGraphqlQuery = <T>(
   const [error, setError] = useState('');
   const [isFetched, setIsFetched] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [data, setData] = useState<T>();
+  const [data, setData] = useState<ReturnType>();
+
+  const {enabled = true, loopOnNextToken = false, custom = false, onSuccess = () => {}} =
+    options || {};
 
   const action = custom ? customQueries : queries;
 

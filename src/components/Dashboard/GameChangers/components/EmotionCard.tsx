@@ -1,8 +1,10 @@
 import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {CreateSentimentsInput} from 'API';
-import {nanoid} from 'nanoid';
+import {awsFormatDate, dateString} from '@utilities/time';
+import {CreateSentimentTrackerInput} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
@@ -42,17 +44,32 @@ const EmotionCard = () => {
     checkChanges(changesSaved);
   }, [changesSaved]);
 
-  const {mutate, isLoading} = useGraphqlMutation<{input: CreateSentimentsInput}>(
-    'createSentiments'
-  );
+  const {mutate, isLoading, isError, error} = useGraphqlMutation<{
+    input: CreateSentimentTrackerInput;
+  }>('createSentimentTracker');
+
+  if (isError) {
+    console.error(error);
+  }
+
+  const {authId, email} = useAuth();
+
+  const {universalLessonDetails} = useULBContext();
+
+  const lessonId = universalLessonDetails.id || '999';
+  const classId = universalLessonDetails.class || '999';
 
   const onSave = () => {
     try {
-      const payload: CreateSentimentsInput = {
-        id: nanoid(24),
-        sentimentId: `${primaryEmotion}-${secondaryEmotion}`,
+      const payload: CreateSentimentTrackerInput = {
+        personAuthID: authId,
+        personEmail: email,
         sentimentName: secondaryEmotion,
         sentimentType: primaryEmotion,
+        time: new Date().toTimeString().split(' ')[0],
+        date: awsFormatDate(dateString('-', 'WORLD')),
+        classRoomID: classId,
+        syllabusLessonID: lessonId,
       };
       mutate({input: payload});
       setShowFinalStep(true);

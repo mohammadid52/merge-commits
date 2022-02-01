@@ -1,7 +1,8 @@
 import Buttons from '@components/Atoms/Buttons';
+import AllEmotions from '@components/Lesson/AllEmotions';
 import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '@contexts/GlobalContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
@@ -26,6 +27,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   } = props;
 
   const {selectedComponent, setNavState, navState} = usePageBuilderContext();
+  const {lessonState} = useGlobalContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -164,7 +166,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     updateBlockContentULBHandler,
                                     idx2,
                                     undefined, // notesData
-                                    false // isStudent
+                                    false, // isStudent,
+                                    lessonState?.isLastPage
                                   )}
                                 </div>
                               </div>
@@ -183,6 +186,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   )}
                 </BuilderRowWrapper>
               </EditOverlayBlock>
+              {lessonState?.isLastPage && (
+                <AllEmotions lessonId={universalLessonDetails?.id} />
+              )}
             </div>
           )),
         ]

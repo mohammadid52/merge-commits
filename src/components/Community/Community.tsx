@@ -81,13 +81,10 @@ const Community = ({}: {role: string}) => {
   ];
   const payloadForCommunities = {};
 
-  const {
-    data: list,
-    setData: setList,
-    error,
-    isFetched,
-    isLoading,
-  } = useGraphqlQuery<any>('listCommunitys', payloadForCommunities, {
+  const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery<
+    any,
+    any
+  >('listCommunitys', payloadForCommunities, {
     onSuccess: (data, cb) => {
       const orderedList = orderBy(data, ['createdAt'], 'desc');
       cb(orderedList);

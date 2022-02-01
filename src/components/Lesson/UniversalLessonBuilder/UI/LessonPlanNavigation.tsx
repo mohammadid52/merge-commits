@@ -69,8 +69,6 @@ const LessonPlanNavigation = ({
   const checkIfEmotionComponentExists = (pageContent: any) => {
     if (pageContent) {
       pageContent.forEach((pgContent: any) => {
-        console.log(pgContent);
-
         pgContent?.partContent?.forEach((ptContent: any) => {
           if (ptContent.type === GAME_CHANGERS) {
             if (ptContent.value[0].value === EMOTIONS) {
@@ -87,8 +85,8 @@ const LessonPlanNavigation = ({
   };
 
   const updatePage = (id: string, idx: number) => {
-    setSelectedPageID(id);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
+    setSelectedPageID(id);
 
     const baseUrl = isSuperAdmin
       ? `/dashboard/manage-institutions`
@@ -97,7 +95,7 @@ const LessonPlanNavigation = ({
     checkIfEmotionComponentExists(pageContent);
     history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
-
+  // listSentimentss
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
   useEffect(() => {

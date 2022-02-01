@@ -20,10 +20,6 @@ export const PageBuilderProvider = ({children}: any) => {
 
   // Disable Game Changers - Emotion Component is one already exists on current page -> Here i am saving local state for that
   const [emotionComponentExists, setEmotionComponentExists] = useState(false);
-  console.log(
-    '🚀 ~ file: PageBuilderContext.tsx ~ line 23 ~ PageBuilderProvider ~ emotionComponentExists',
-    emotionComponentExists
-  );
 
   const [showMessage, setShowMessage] = useState(false);
 

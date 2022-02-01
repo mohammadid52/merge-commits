@@ -144,6 +144,10 @@ export type LessonActions =
       payload: any;
     }
   | {
+      type: 'SET_LAST_PAGE';
+      payload: boolean;
+    }
+  | {
       type: 'CLEANUP';
       payload?: any;
     }
@@ -161,6 +165,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         universalLessonID: action.payload.universalLessonID,
+      };
+    case 'SET_LAST_PAGE':
+      return {
+        ...state,
+        isLastPage: action.payload,
       };
     case 'SET_UPDATE_STATE':
       return {
