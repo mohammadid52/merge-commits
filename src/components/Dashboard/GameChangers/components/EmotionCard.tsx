@@ -4,7 +4,8 @@ import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {awsFormatDate, dateString} from '@utilities/time';
-import {CreateSentimentTrackerInput} from 'API';
+import {CreateFeelingTrackerInput, CreateSentimentTrackerInput} from 'API';
+import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
@@ -45,8 +46,8 @@ const EmotionCard = () => {
   }, [changesSaved]);
 
   const {mutate, isLoading, isError, error} = useGraphqlMutation<{
-    input: CreateSentimentTrackerInput;
-  }>('createSentimentTracker');
+    input: CreateFeelingTrackerInput;
+  }>('createFeelingTracker');
 
   if (isError) {
     console.error(error);
@@ -61,9 +62,11 @@ const EmotionCard = () => {
 
   const onSave = () => {
     try {
-      const payload: CreateSentimentTrackerInput = {
+      const payload: CreateFeelingTrackerInput = {
         personAuthID: authId,
         personEmail: email,
+        sentimentId: nanoid(24),
+        id: nanoid(24),
         sentimentName: secondaryEmotion,
         sentimentType: primaryEmotion,
         time: new Date().toTimeString().split(' ')[0],

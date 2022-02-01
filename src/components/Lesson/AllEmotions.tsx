@@ -9,7 +9,7 @@ const AllEmotions = ({lessonId}: {lessonId: string}) => {
   const {data: allEmotions = [], isLoading} = useGraphqlQuery<
     ListSentimentTrackersQueryVariables,
     SentimentTracker[]
-  >('listSentimentTrackers', {
+  >('listFeelingTrackers', {
     personAuthID: authId,
     filter: {syllabusLessonID: {eq: lessonId}},
   });
