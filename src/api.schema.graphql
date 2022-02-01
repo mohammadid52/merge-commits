@@ -1172,8 +1172,8 @@ type FeelingTracker @model @key(fields: ["personAuthID", "date"]){
   sentiment: Sentiments @connection(fields: ["sentimentId"])
   classRoomID: ID!
   classRoom: Room @connection(fields: ["classRoomID"])
- syllabusLessonID: ID!
-  syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
+  lessonID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: String!
@@ -1181,6 +1181,23 @@ type FeelingTracker @model @key(fields: ["personAuthID", "date"]){
 
 }
 
+type FeelingsTracker @model @key(fields: ["personAuthID", "id"]){
+  id:ID!
+  personAuthID: String!
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  sentimentId: ID!
+  sentiment: Sentiments @connection(fields: ["sentimentId"])
+  classRoomID: ID!
+  classRoom: Room @connection(fields: ["classRoomID"])
+  lessonID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  date: AWSDate!
+  time: AWSTime!
+  sentimentName: String!
+  sentimentType: String!
+
+}
 
 type PersonFiles @model @key(fields: ["id"]) {
   id: ID!
