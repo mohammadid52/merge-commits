@@ -13738,68 +13738,74 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      syllabusLessonID
-      syllabusLesson {
+      lessonID
+      lesson {
         id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        complete
-        roster
-        viewing
-        lesson {
-          id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
           type
-          label
-          title
-          institutionID
-          language
-          designers
-          objectives
-          purpose
-          introduction
-          introductionTitle
-          instructions
-          instructionsTitle
+          name
           summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          smallGroup
-          groupSize
-          groupType
-          smallGroupSize
-          smallGroupOption
-          studentMaterials
-          targetAudience
-          isUsed
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
           createdAt
           updatedAt
         }
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        feedback {
-          nextToken
-        }
+        duration
+        resources
+        notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -13973,68 +13979,74 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      syllabusLessonID
-      syllabusLesson {
+      lessonID
+      lesson {
         id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        complete
-        roster
-        viewing
-        lesson {
-          id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
           type
-          label
-          title
-          institutionID
-          language
-          designers
-          objectives
-          purpose
-          introduction
-          introductionTitle
-          instructions
-          instructionsTitle
+          name
           summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          smallGroup
-          groupSize
-          groupType
-          smallGroupSize
-          smallGroupOption
-          studentMaterials
-          targetAudience
-          isUsed
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
           createdAt
           updatedAt
         }
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        feedback {
-          nextToken
-        }
+        duration
+        resources
+        notes
+        targetAudience
         createdAt
         updatedAt
       }
@@ -14208,68 +14220,797 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      syllabusLessonID
-      syllabusLesson {
+      lessonID
+      lesson {
         id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        complete
-        roster
-        viewing
-        lesson {
-          id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
           type
-          label
-          title
-          institutionID
-          language
-          designers
-          objectives
-          purpose
-          introduction
-          introductionTitle
-          instructions
-          instructionsTitle
+          name
           summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          smallGroup
-          groupSize
-          groupType
-          smallGroupSize
-          smallGroupOption
-          studentMaterials
-          targetAudience
-          isUsed
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
           createdAt
           updatedAt
         }
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        feedback {
+        duration
+        resources
+        notes
+        targetAudience
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFeelingsTracker = /* GraphQL */ `
+  subscription OnCreateFeelingsTracker {
+    onCreateFeelingsTracker {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
           nextToken
         }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      lessonID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        duration
+        resources
+        notes
+        targetAudience
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeelingsTracker = /* GraphQL */ `
+  subscription OnUpdateFeelingsTracker {
+    onUpdateFeelingsTracker {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      lessonID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        duration
+        resources
+        notes
+        targetAudience
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeelingsTracker = /* GraphQL */ `
+  subscription OnDeleteFeelingsTracker {
+    onDeleteFeelingsTracker {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      lessonID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        duration
+        resources
+        notes
+        targetAudience
         createdAt
         updatedAt
       }
