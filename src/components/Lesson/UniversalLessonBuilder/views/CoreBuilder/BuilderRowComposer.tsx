@@ -166,8 +166,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     updateBlockContentULBHandler,
                                     idx2,
                                     undefined, // notesData
-                                    false, // isStudent,
-                                    lessonState?.isLastPage
+                                    false // isStudent,
                                   )}
                                 </div>
                               </div>

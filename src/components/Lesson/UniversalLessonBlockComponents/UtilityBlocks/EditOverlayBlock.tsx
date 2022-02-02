@@ -48,7 +48,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     navState,
     selectedType,
     showingBlockPin,
-    setEmotionComponentExists,
   } = usePageBuilderContext();
 
   const {setAddContentModal} = useOverlayContext();

@@ -60,7 +60,7 @@ const LessonPlanNavigation = ({
     updateMovableList(items, 'page');
   };
 
-  const {setEmotionComponentExists} = usePageBuilderContext();
+  const {setEmotionComponentExists, emotionComponentExists} = usePageBuilderContext();
 
   const {lessonState} = useGlobalContext();
 
@@ -86,6 +86,7 @@ const LessonPlanNavigation = ({
 
   const updatePage = (id: string, idx: number) => {
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: idx});
+
     setSelectedPageID(id);
 
     const baseUrl = isSuperAdmin
@@ -93,6 +94,7 @@ const LessonPlanNavigation = ({
       : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
 
     checkIfEmotionComponentExists(pageContent);
+
     history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
   // listSentimentss

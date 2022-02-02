@@ -5032,3 +5032,72 @@ export const listInstitutionOptions = /* GraphQL */ `
     }
   }
 `;
+
+export const listFeelingsArchives = /* GraphQL */ `
+  query ListFeelingsArchives(
+    $id: ID
+    $filter: ModelFeelingsArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFeelingsArchives(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+
+          email
+          role
+
+          firstName
+          preferredName
+          lastName
+
+          image
+        }
+        sentimentId
+
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+        }
+        lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          createdAt
+          updatedAt
+          lessonPlan {
+            id
+            title
+            label
+          }
+        }
+        date
+        time
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

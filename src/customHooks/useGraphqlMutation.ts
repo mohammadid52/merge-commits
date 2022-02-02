@@ -9,11 +9,11 @@ interface Options {
   onSuccess?: (data: any) => void;
 }
 
-const useGraphqlMutation = <T>(
+const useGraphqlMutation = <VariablesType>(
   mutationName: string,
   options?: Options
 ): {
-  mutate: (variables: T, successCallback?: () => void) => Promise<void>;
+  mutate: (variables: VariablesType, successCallback?: () => void) => Promise<void>;
   isLoading: boolean;
   isError: boolean;
   error: string;
@@ -25,7 +25,7 @@ const useGraphqlMutation = <T>(
 
   const action = custom ? customMutations : mutations;
 
-  const mutate = async (variables: T, successCallback?: () => void) => {
+  const mutate = async (variables: VariablesType, successCallback?: () => void) => {
     setIsLoading(true);
     try {
       const res: any = await API.graphql(

@@ -1,8 +1,12 @@
 import Buttons from '@components/Atoms/Buttons';
-import {classNames} from '@UlbUI/FormElements/TextInput';
+import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {isEmpty, map} from 'lodash';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import {classNames} from '@UlbUI/FormElements/TextInput';
+import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
@@ -22,10 +26,6 @@ import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
-import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -53,7 +53,6 @@ const AddContentDialog = ({
     showingPin,
     setSelectedType,
     emotionComponentExists,
-    setEmotionComponentExists,
   } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();

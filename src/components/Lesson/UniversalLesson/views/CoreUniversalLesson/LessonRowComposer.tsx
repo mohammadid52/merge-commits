@@ -1,3 +1,4 @@
+import AllEmotions from '@components/Lesson/AllEmotions';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
@@ -69,7 +70,7 @@ const LessonRowComposer = () => {
   const lessonState = gContext.lessonState;
   const PAGES = lessonState.lessonData.lessonPlan;
 
-  const isLastPage = (idx: number) => PAGES.length - 1 === idx;
+  const isLastPage = PAGES.length - 1 === lessonState.currentPage;
 
   useEffect(() => {
     if (PAGES) {
@@ -124,8 +125,7 @@ const LessonRowComposer = () => {
                               undefined, // function related to builder
                               undefined, // position number related to builder
                               content.type === 'notes-form' ? notes : [],
-                              true, // isStudent,
-                              isLastPage(idx)
+                              true // isStudent,
                             )}
                           </div>
                         </div>
@@ -136,6 +136,8 @@ const LessonRowComposer = () => {
                   })}
               </BuilderRowWrapper>
             </div>
+
+            {isLastPage && <AllEmotions lessonId={activePageData?.id} />}
           </div>
         ))}
 

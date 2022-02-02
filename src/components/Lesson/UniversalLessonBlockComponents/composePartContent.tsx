@@ -42,8 +42,7 @@ const composePartContent = (
   updateBlockContentULBHandler?: any,
   position?: number,
   notesData?: any,
-  isStudent: boolean = true,
-  isLastPage: boolean = false
+  isStudent: boolean = true
 ): JSX.Element => {
   const commonBlockProps = {
     classString,

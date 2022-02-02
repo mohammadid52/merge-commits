@@ -5,7 +5,8 @@ import AnimatedSquare from '@components/Dashboard/GameChangers/components/Animat
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
 import ThinkAboutItCard from '@components/Dashboard/GameChangers/components/ThinkAboutIt';
-import EmotionCard from '@components/Dashboard/GameChangers/components/EmotionCard';
+import EmotionCardStudents from '@components/Dashboard/GameChangers/components/EmotionCardStudents';
+import EmotionCardTeachers from '@components/Dashboard/GameChangers/components/EmotionCardTeachers';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
 import {
@@ -158,7 +159,7 @@ const SelectedCard = ({
 
   const {mutate, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
 
-  const {email, authId} = useAuth();
+  const {email, authId, isStudent} = useAuth();
 
   const onStartClick = () => {
     const elem = $('.carousel-cell.is-selected h1').text();
@@ -181,6 +182,7 @@ const SelectedCard = ({
   };
 
   const showSelectors = !isCompleted && (selectedCard === 0 || selectedCard === 1);
+
   return (
     <div
       className={`${inLesson ? '' : 'responsive_card'} rounded-2xl box ${
@@ -207,7 +209,13 @@ const SelectedCard = ({
             {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
           </AnimatedContainer>
           <AnimatedContainer show={selected && selected?.type === EMOTIONS}>
-            {selected && selected?.type === EMOTIONS && <EmotionCard />}
+            {selected &&
+              selected?.type === EMOTIONS &&
+              (isStudent ? (
+                <EmotionCardStudents inLesson={inLesson} />
+              ) : (
+                <EmotionCardTeachers inLesson={inLesson} />
+              ))}
           </AnimatedContainer>
 
           {/* Count Selection Section */}

@@ -1,17 +1,10 @@
-import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
-import {CreateFeelingTrackerInput, CreateSentimentTrackerInput} from 'API';
-import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
 import Button from './Button';
 
-const EmotionCard = () => {
+const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   // For Mobile
   const [primaryEmotion, setPrimaryEmotion] = useState('');
   const [secondaryEmotion, setSecondaryEmotion] = useState('');
@@ -45,44 +38,6 @@ const EmotionCard = () => {
     checkChanges(changesSaved);
   }, [changesSaved]);
 
-  const {mutate, isLoading, isError, error} = useGraphqlMutation<{
-    input: CreateFeelingTrackerInput;
-  }>('createFeelingTracker');
-
-  if (isError) {
-    console.error(error);
-  }
-
-  const {authId, email} = useAuth();
-
-  const {universalLessonDetails} = useULBContext();
-
-  const lessonId = universalLessonDetails.id || '999';
-  const classId = universalLessonDetails.class || '999';
-
-  const onSave = () => {
-    try {
-      const payload: CreateFeelingTrackerInput = {
-        personAuthID: authId,
-        personEmail: email,
-        sentimentId: nanoid(24),
-        id: nanoid(24),
-        sentimentName: secondaryEmotion,
-        sentimentType: primaryEmotion,
-        time: new Date().toTimeString().split(' ')[0],
-        date: awsFormatDate(dateString('-', 'WORLD')),
-        classRoomID: classId,
-        syllabusLessonID: lessonId,
-      };
-      mutate({input: payload});
-      setShowFinalStep(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setChangesSaved(true);
-    }
-  };
-
   const goBack = () => {
     setSelectedCard(null);
   };
@@ -98,15 +53,6 @@ const EmotionCard = () => {
               secondaryEmotion={secondaryEmotion}
               setSecondaryEmotion={setSecondaryEmotion}
             />
-            <AnimatedContainer show={Boolean(primaryEmotion && secondaryEmotion)}>
-              {Boolean(primaryEmotion && secondaryEmotion) && (
-                <Button
-                  width="w-full"
-                  onClick={onSave}
-                  text={isLoading ? <Loader /> : `Save '${secondaryEmotion} emotion'`}
-                />
-              )}
-            </AnimatedContainer>
           </>
         )}
       </AnimatedContainer>
@@ -118,7 +64,7 @@ const EmotionCard = () => {
                 Thanks for your input
               </h1>
             </div>
-            <Button width="w-full" onClick={goBack} text={'Go Back'} />
+            {!inLesson && <Button width="w-full" onClick={goBack} text={'Go Back'} />}
           </>
         )}
       </AnimatedContainer>

@@ -31,7 +31,7 @@ interface Options {
 
 const useGraphqlQuery = <VariablesType, ReturnType>(
   queryName: string,
-  variables: VariablesType | any,
+  variables: VariablesType,
   options?: Options
 ): {
   data?: ReturnType;
