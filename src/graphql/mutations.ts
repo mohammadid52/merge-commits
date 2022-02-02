@@ -14635,11 +14635,14 @@ export const createFeelingsArchive = /* GraphQL */ `
       }
       sentimentId
       sentiment {
-        id
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
+        items {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       classRoomID
       classRoom {
@@ -14844,7 +14847,7 @@ export const createFeelingsArchive = /* GraphQL */ `
       date
       time
       sentimentName
-      sentimentType
+      comments
       createdAt
       updatedAt
     }
@@ -14894,11 +14897,14 @@ export const updateFeelingsArchive = /* GraphQL */ `
       }
       sentimentId
       sentiment {
-        id
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
+        items {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       classRoomID
       classRoom {
@@ -15103,7 +15109,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
       date
       time
       sentimentName
-      sentimentType
+      comments
       createdAt
       updatedAt
     }
@@ -15153,11 +15159,14 @@ export const deleteFeelingsArchive = /* GraphQL */ `
       }
       sentimentId
       sentiment {
-        id
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
+        items {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       classRoomID
       classRoom {
@@ -15362,7 +15371,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
       date
       time
       sentimentName
-      sentimentType
+      comments
       createdAt
       updatedAt
     }

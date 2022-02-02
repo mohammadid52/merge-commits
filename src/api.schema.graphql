@@ -1186,7 +1186,7 @@ type FeelingsArchive @model @key(fields: ["id"]) {
   personAuthID: String!
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
-  sentimentId: ID!
+  sentimentId: [ID!]
   sentiment: Sentiments @connection(fields: ["sentimentId"])
   classRoomID: ID!
   classRoom: Room @connection(fields: ["classRoomID"])
@@ -1194,8 +1194,7 @@ type FeelingsArchive @model @key(fields: ["id"]) {
   lesson: UniversalLesson @connection(fields: ["lessonID"])
   date: AWSDate!
   time: AWSTime!
-  sentimentName: String!
-  sentimentType: String!
+  sentimentName: [String!]
 
 }
 
@@ -1336,4 +1335,4 @@ type Mutation {
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
 
-# asdfasdfsd7
+# asdfasdfsd6
