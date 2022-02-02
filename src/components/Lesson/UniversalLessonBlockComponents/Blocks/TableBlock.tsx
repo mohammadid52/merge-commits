@@ -6,7 +6,7 @@ const TableBlock = ({
   classString = 'green-400 || white || light',
 }: {
   value: any;
-  classString: string;
+  classString?: string;
 }) => {
   const tableBg = classString.split(' || ')[0];
   const tableText = classString.split(' || ')[1];
