@@ -3801,23 +3801,9 @@
               "deprecationReason": null
             },
             {
-              "name": "getFeelingsTracker",
+              "name": "getFeelingsArchive",
               "description": null,
               "args": [
-                {
-                  "name": "personAuthID",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
                 {
                   "name": "id",
                   "description": null,
@@ -3835,32 +3821,22 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "listFeelingsTrackers",
+              "name": "listFeelingsArchives",
               "description": null,
               "args": [
-                {
-                  "name": "personAuthID",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
                 {
                   "name": "id",
                   "description": null,
                   "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "ModelIDKeyConditionInput",
+                    "kind": "SCALAR",
+                    "name": "ID",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -3870,7 +3846,7 @@
                   "description": null,
                   "type": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ModelFeelingsTrackerFilterInput",
+                    "name": "ModelFeelingsArchiveFilterInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -3908,7 +3884,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "ModelFeelingsTrackerConnection",
+                "name": "ModelFeelingsArchiveConnection",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -28789,7 +28765,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "FeelingsTracker",
+          "name": "FeelingsArchive",
           "description": null,
           "fields": [
             {
@@ -28930,7 +28906,7 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Lesson",
+                "name": "UniversalLesson",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -29040,7 +29016,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "ModelFeelingsTrackerConnection",
+          "name": "ModelFeelingsArchiveConnection",
           "description": null,
           "fields": [
             {
@@ -29055,7 +29031,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "FeelingsTracker",
+                    "name": "FeelingsArchive",
                     "ofType": null
                   }
                 }
@@ -29083,7 +29059,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "ModelFeelingsTrackerFilterInput",
+          "name": "ModelFeelingsArchiveFilterInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -29195,7 +29171,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ModelFeelingsTrackerFilterInput",
+                  "name": "ModelFeelingsArchiveFilterInput",
                   "ofType": null
                 }
               },
@@ -29209,7 +29185,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ModelFeelingsTrackerFilterInput",
+                  "name": "ModelFeelingsArchiveFilterInput",
                   "ofType": null
                 }
               },
@@ -29220,7 +29196,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "ModelFeelingsTrackerFilterInput",
+                "name": "ModelFeelingsArchiveFilterInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -36898,7 +36874,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createFeelingsTracker",
+              "name": "createFeelingsArchive",
               "description": null,
               "args": [
                 {
@@ -36909,7 +36885,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "CreateFeelingsTrackerInput",
+                      "name": "CreateFeelingsArchiveInput",
                       "ofType": null
                     }
                   },
@@ -36920,7 +36896,7 @@
                   "description": null,
                   "type": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ModelFeelingsTrackerConditionInput",
+                    "name": "ModelFeelingsArchiveConditionInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -36928,14 +36904,14 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "updateFeelingsTracker",
+              "name": "updateFeelingsArchive",
               "description": null,
               "args": [
                 {
@@ -36946,7 +36922,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "UpdateFeelingsTrackerInput",
+                      "name": "UpdateFeelingsArchiveInput",
                       "ofType": null
                     }
                   },
@@ -36957,7 +36933,7 @@
                   "description": null,
                   "type": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ModelFeelingsTrackerConditionInput",
+                    "name": "ModelFeelingsArchiveConditionInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -36965,14 +36941,14 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "deleteFeelingsTracker",
+              "name": "deleteFeelingsArchive",
               "description": null,
               "args": [
                 {
@@ -36983,7 +36959,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "DeleteFeelingsTrackerInput",
+                      "name": "DeleteFeelingsArchiveInput",
                       "ofType": null
                     }
                   },
@@ -36994,7 +36970,7 @@
                   "description": null,
                   "type": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ModelFeelingsTrackerConditionInput",
+                    "name": "ModelFeelingsArchiveConditionInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -37002,7 +36978,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -59729,7 +59705,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "CreateFeelingsTrackerInput",
+          "name": "CreateFeelingsArchiveInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -59876,10 +59852,20 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "ModelFeelingsTrackerConditionInput",
+          "name": "ModelFeelingsArchiveConditionInput",
           "description": null,
           "fields": null,
           "inputFields": [
+            {
+              "name": "personAuthID",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ModelStringInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
             {
               "name": "personEmail",
               "description": null,
@@ -59968,7 +59954,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ModelFeelingsTrackerConditionInput",
+                  "name": "ModelFeelingsArchiveConditionInput",
                   "ofType": null
                 }
               },
@@ -59982,7 +59968,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ModelFeelingsTrackerConditionInput",
+                  "name": "ModelFeelingsArchiveConditionInput",
                   "ofType": null
                 }
               },
@@ -59993,7 +59979,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "ModelFeelingsTrackerConditionInput",
+                "name": "ModelFeelingsArchiveConditionInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -60005,7 +59991,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdateFeelingsTrackerInput",
+          "name": "UpdateFeelingsArchiveInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -60027,13 +60013,9 @@
               "name": "personAuthID",
               "description": null,
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "defaultValue": null
             },
@@ -60124,24 +60106,10 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "DeleteFeelingsTrackerInput",
+          "name": "DeleteFeelingsArchiveInput",
           "description": null,
           "fields": null,
           "inputFields": [
-            {
-              "name": "personAuthID",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
             {
               "name": "id",
               "description": null,
@@ -64296,36 +64264,36 @@
               "deprecationReason": null
             },
             {
-              "name": "onCreateFeelingsTracker",
+              "name": "onCreateFeelingsArchive",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "onUpdateFeelingsTracker",
+              "name": "onUpdateFeelingsArchive",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "onDeleteFeelingsTracker",
+              "name": "onDeleteFeelingsArchive",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "FeelingsTracker",
+                "name": "FeelingsArchive",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -64507,6 +64475,284 @@
                 "kind": "OBJECT",
                 "name": "CommunityChat",
                 "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DataObject",
+          "description": null,
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "data",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "partnerGroups",
+          "description": null,
+          "fields": [
+            {
+              "name": "partners",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "advisors",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "StudentPageInput",
+          "description": null,
+          "fields": [
+            {
+              "name": "pagePartID",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "pagePartInput",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "partInput",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Tool",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "color",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "icon",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "proficiencyGroups",
+          "description": null,
+          "fields": [
+            {
+              "name": "groupName",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "groupIDs",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Breakdown",
+          "description": null,
+          "fields": [
+            {
+              "name": "included",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "reflectionQuestions",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -64768,11 +65014,27 @@
         },
         {
           "kind": "OBJECT",
-          "name": "Tool",
+          "name": "Instructions",
           "description": null,
           "fields": [
             {
-              "name": "id",
+              "name": "video",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "link",
               "description": null,
               "args": [],
               "type": {
@@ -64784,48 +65046,24 @@
               "deprecationReason": null
             },
             {
-              "name": "name",
+              "name": "text",
               "description": null,
               "args": [],
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "color",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "icon",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -64921,276 +65159,6 @@
                       "ofType": null
                     }
                   }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "StudentPageInput",
-          "description": null,
-          "fields": [
-            {
-              "name": "pagePartID",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "pagePartInput",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "partInput",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "DataObject",
-          "description": null,
-          "fields": [
-            {
-              "name": "name",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "data",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "Instructions",
-          "description": null,
-          "fields": [
-            {
-              "name": "video",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "link",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "text",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "Breakdown",
-          "description": null,
-          "fields": [
-            {
-              "name": "included",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "reflectionQuestions",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "partnerGroups",
-          "description": null,
-          "fields": [
-            {
-              "name": "partners",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "advisors",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "proficiencyGroups",
-          "description": null,
-          "fields": [
-            {
-              "name": "groupName",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "groupIDs",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
                 }
               },
               "isDeprecated": false,

@@ -3898,69 +3898,69 @@ export type DeleteFeelingTrackerInput = {
   date: string;
 };
 
-export type CreateFeelingsTrackerInput = {
-  id?: string | null;
-  personAuthID: string;
-  personEmail: string;
-  sentimentId: string;
-  classRoomID: string;
-  lessonID: string;
-  date: string;
-  time: string;
-  sentimentName: string;
-  sentimentType: string;
+export type CreateFeelingsArchiveInput = {
+  id?: string | null,
+  personAuthID: string,
+  personEmail: string,
+  sentimentId: string,
+  classRoomID: string,
+  lessonID: string,
+  date: string,
+  time: string,
+  sentimentName: string,
+  sentimentType: string,
 };
 
-export type ModelFeelingsTrackerConditionInput = {
-  personEmail?: ModelStringInput | null;
-  sentimentId?: ModelIDInput | null;
-  classRoomID?: ModelIDInput | null;
-  lessonID?: ModelIDInput | null;
-  date?: ModelStringInput | null;
-  time?: ModelStringInput | null;
-  sentimentName?: ModelStringInput | null;
-  sentimentType?: ModelStringInput | null;
-  and?: Array<ModelFeelingsTrackerConditionInput | null> | null;
-  or?: Array<ModelFeelingsTrackerConditionInput | null> | null;
-  not?: ModelFeelingsTrackerConditionInput | null;
+export type ModelFeelingsArchiveConditionInput = {
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  sentimentId?: ModelIDInput | null,
+  classRoomID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  date?: ModelStringInput | null,
+  time?: ModelStringInput | null,
+  sentimentName?: ModelStringInput | null,
+  sentimentType?: ModelStringInput | null,
+  and?: Array< ModelFeelingsArchiveConditionInput | null > | null,
+  or?: Array< ModelFeelingsArchiveConditionInput | null > | null,
+  not?: ModelFeelingsArchiveConditionInput | null,
 };
 
-export type FeelingsTracker = {
-  __typename: 'FeelingsTracker';
-  id?: string;
-  personAuthID?: string;
-  personEmail?: string;
-  person?: Person;
-  sentimentId?: string;
-  sentiment?: Sentiments;
-  classRoomID?: string;
-  classRoom?: Room;
-  lessonID?: string;
-  lesson?: Lesson;
-  date?: string;
-  time?: string;
-  sentimentName?: string;
-  sentimentType?: string;
-  createdAt?: string;
-  updatedAt?: string;
+export type FeelingsArchive = {
+  __typename: "FeelingsArchive",
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  sentimentId?: string,
+  sentiment?: Sentiments,
+  classRoomID?: string,
+  classRoom?: Room,
+  lessonID?: string,
+  lesson?: UniversalLesson,
+  date?: string,
+  time?: string,
+  sentimentName?: string,
+  sentimentType?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
-export type UpdateFeelingsTrackerInput = {
-  id: string;
-  personAuthID: string;
-  personEmail?: string | null;
-  sentimentId?: string | null;
-  classRoomID?: string | null;
-  lessonID?: string | null;
-  date?: string | null;
-  time?: string | null;
-  sentimentName?: string | null;
-  sentimentType?: string | null;
+export type UpdateFeelingsArchiveInput = {
+  id: string,
+  personAuthID?: string | null,
+  personEmail?: string | null,
+  sentimentId?: string | null,
+  classRoomID?: string | null,
+  lessonID?: string | null,
+  date?: string | null,
+  time?: string | null,
+  sentimentName?: string | null,
+  sentimentType?: string | null,
 };
 
-export type DeleteFeelingsTrackerInput = {
-  personAuthID: string;
-  id: string;
+export type DeleteFeelingsArchiveInput = {
+  id: string,
 };
 
 export type CreatePersonFilesInput = {
@@ -5202,36 +5202,26 @@ export type ModelFeelingTrackerConnection = {
   nextToken?: string | null;
 };
 
-export type ModelIDKeyConditionInput = {
-  eq?: string | null;
-  le?: string | null;
-  lt?: string | null;
-  ge?: string | null;
-  gt?: string | null;
-  between?: Array<string | null> | null;
-  beginsWith?: string | null;
+export type ModelFeelingsArchiveFilterInput = {
+  id?: ModelIDInput | null,
+  personAuthID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  sentimentId?: ModelIDInput | null,
+  classRoomID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  date?: ModelStringInput | null,
+  time?: ModelStringInput | null,
+  sentimentName?: ModelStringInput | null,
+  sentimentType?: ModelStringInput | null,
+  and?: Array< ModelFeelingsArchiveFilterInput | null > | null,
+  or?: Array< ModelFeelingsArchiveFilterInput | null > | null,
+  not?: ModelFeelingsArchiveFilterInput | null,
 };
 
-export type ModelFeelingsTrackerFilterInput = {
-  id?: ModelIDInput | null;
-  personAuthID?: ModelStringInput | null;
-  personEmail?: ModelStringInput | null;
-  sentimentId?: ModelIDInput | null;
-  classRoomID?: ModelIDInput | null;
-  lessonID?: ModelIDInput | null;
-  date?: ModelStringInput | null;
-  time?: ModelStringInput | null;
-  sentimentName?: ModelStringInput | null;
-  sentimentType?: ModelStringInput | null;
-  and?: Array<ModelFeelingsTrackerFilterInput | null> | null;
-  or?: Array<ModelFeelingsTrackerFilterInput | null> | null;
-  not?: ModelFeelingsTrackerFilterInput | null;
-};
-
-export type ModelFeelingsTrackerConnection = {
-  __typename: 'ModelFeelingsTrackerConnection';
-  items?: Array<FeelingsTracker | null>;
-  nextToken?: string | null;
+export type ModelFeelingsArchiveConnection = {
+  __typename: "ModelFeelingsArchiveConnection",
+  items?:  Array<FeelingsArchive | null >,
+  nextToken?: string | null,
 };
 
 export type ModelPersonFilesFilterInput = {
@@ -21391,796 +21381,838 @@ export type DeleteFeelingTrackerMutation = {
   } | null;
 };
 
-export type CreateFeelingsTrackerMutationVariables = {
-  input?: CreateFeelingsTrackerInput;
-  condition?: ModelFeelingsTrackerConditionInput | null;
+export type CreateFeelingsArchiveMutationVariables = {
+  input?: CreateFeelingsArchiveInput,
+  condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
-export type CreateFeelingsTrackerMutation = {
-  createFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type CreateFeelingsArchiveMutation = {
+  createFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
-export type UpdateFeelingsTrackerMutationVariables = {
-  input?: UpdateFeelingsTrackerInput;
-  condition?: ModelFeelingsTrackerConditionInput | null;
+export type UpdateFeelingsArchiveMutationVariables = {
+  input?: UpdateFeelingsArchiveInput,
+  condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
-export type UpdateFeelingsTrackerMutation = {
-  updateFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type UpdateFeelingsArchiveMutation = {
+  updateFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
-export type DeleteFeelingsTrackerMutationVariables = {
-  input?: DeleteFeelingsTrackerInput;
-  condition?: ModelFeelingsTrackerConditionInput | null;
+export type DeleteFeelingsArchiveMutationVariables = {
+  input?: DeleteFeelingsArchiveInput,
+  condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
-export type DeleteFeelingsTrackerMutation = {
-  deleteFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type DeleteFeelingsArchiveMutation = {
+  deleteFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreatePersonFilesMutationVariables = {
@@ -30654,405 +30686,417 @@ export type ListFeelingTrackersQuery = {
   } | null;
 };
 
-export type GetFeelingsTrackerQueryVariables = {
-  personAuthID?: string;
-  id?: string;
+export type GetFeelingsArchiveQueryVariables = {
+  id?: string,
 };
 
-export type GetFeelingsTrackerQuery = {
-  getFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type GetFeelingsArchiveQuery = {
+  getFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
-export type ListFeelingsTrackersQueryVariables = {
-  personAuthID?: string | null;
-  id?: ModelIDKeyConditionInput | null;
-  filter?: ModelFeelingsTrackerFilterInput | null;
-  limit?: number | null;
-  nextToken?: string | null;
-  sortDirection?: ModelSortDirection | null;
+export type ListFeelingsArchivesQueryVariables = {
+  id?: string | null,
+  filter?: ModelFeelingsArchiveFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
-export type ListFeelingsTrackersQuery = {
-  listFeelingsTrackers?: {
-    __typename: 'ModelFeelingsTrackerConnection';
-    items: Array<{
-      __typename: 'FeelingsTracker';
-      id: string;
-      personAuthID: string;
-      personEmail: string;
-      person?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      sentimentId: string;
-      sentiment?: {
-        __typename: 'Sentiments';
-        id: string;
-        sentimentName: string;
-        sentimentType: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      classRoomID: string;
-      classRoom?: {
-        __typename: 'Room';
-        id: string;
-        institutionID: string;
-        classID?: string | null;
-        teacherAuthID: string;
-        teacherEmail: string;
-        name: string;
-        maxPersons?: number | null;
-        filters?: Array<string | null> | null;
-        location?: string | null;
-        startDate?: string | null;
-        startTime?: string | null;
-        endDate?: string | null;
-        endTime?: string | null;
-        length?: number | null;
-        repeat?: string | null;
-        notes?: string | null;
-        activeSyllabus?: string | null;
-        frequency?: string | null;
-        activeLessonId?: string | null;
-        ClosedPages?: Array<string | null> | null;
-        disabledPages?: Array<string | null> | null;
-        studentViewing?: string | null;
-        currentPage?: string | null;
-        activeLessons?: Array<string | null> | null;
-        weekDay?: string | null;
-        conferenceCallLink?: string | null;
-        classSentiment?: Array<string | null> | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      lessonID: string;
-      lesson?: {
-        __typename: 'Lesson';
-        id: string;
-        title: string;
-        type: string;
-        label?: string | null;
-        instructions?: Array<string | null> | null;
-        instructionsTitle?: string | null;
-        grades?: Array<number | null> | null;
-        artistID?: string | null;
-        language?: Array<Language> | null;
-        SELStructure?: string | null;
-        connection?: string | null;
-        summary?: string | null;
-        purpose?: string | null;
-        designers?: Array<string | null> | null;
-        objectives?: Array<string | null> | null;
-        doFirstID?: string | null;
-        warmUpId?: string | null;
-        coreLessonId?: string | null;
-        activityId?: string | null;
-        filters?: Array<string | null> | null;
-        coverImage?: string | null;
-        summaryTitle?: string | null;
-        introductionTitle?: string | null;
-        introduction?: string | null;
-        connectionTitle?: string | null;
-        institutionID: string;
-        duration?: number | null;
-        resources?: string | null;
-        notes?: string | null;
-        targetAudience?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      date: string;
-      time: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null>;
-    nextToken?: string | null;
-  } | null;
+export type ListFeelingsArchivesQuery = {
+  listFeelingsArchives?:  {
+    __typename: "ModelFeelingsArchiveConnection",
+    items:  Array< {
+      __typename: "FeelingsArchive",
+      id: string,
+      personAuthID: string,
+      personEmail: string,
+      person?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      sentimentId: string,
+      sentiment?:  {
+        __typename: "Sentiments",
+        id: string,
+        sentimentName: string,
+        sentimentType: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      classRoomID: string,
+      classRoom?:  {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID?: string | null,
+        teacherAuthID: string,
+        teacherEmail: string,
+        name: string,
+        maxPersons?: number | null,
+        filters?: Array< string | null > | null,
+        location?: string | null,
+        startDate?: string | null,
+        startTime?: string | null,
+        endDate?: string | null,
+        endTime?: string | null,
+        length?: number | null,
+        repeat?: string | null,
+        notes?: string | null,
+        activeSyllabus?: string | null,
+        frequency?: string | null,
+        activeLessonId?: string | null,
+        ClosedPages?: Array< string | null > | null,
+        disabledPages?: Array< string | null > | null,
+        studentViewing?: string | null,
+        currentPage?: string | null,
+        activeLessons?: Array< string | null > | null,
+        weekDay?: string | null,
+        conferenceCallLink?: string | null,
+        classSentiment?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      lessonID: string,
+      lesson?:  {
+        __typename: "UniversalLesson",
+        id: string,
+        type: string,
+        label?: string | null,
+        title: string,
+        institutionID: string,
+        language?: Array< Language > | null,
+        designers?: Array< string | null > | null,
+        objectives?: Array< string | null > | null,
+        purpose?: string | null,
+        introduction?: string | null,
+        introductionTitle?: string | null,
+        instructions?: Array< string | null > | null,
+        instructionsTitle?: string | null,
+        summary?: string | null,
+        summaryTitle?: string | null,
+        duration?: number | null,
+        resources?: string | null,
+        notes?: string | null,
+        cardImage?: string | null,
+        cardCaption?: string | null,
+        darkMode?: boolean | null,
+        rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
+        smallGroupSize?: number | null,
+        smallGroupOption?: string | null,
+        studentMaterials?: string | null,
+        targetAudience?: string | null,
+        isUsed?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      date: string,
+      time: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
 };
 
 export type GetPersonFilesQueryVariables = {
@@ -47436,781 +47480,823 @@ export type OnDeleteFeelingTrackerSubscription = {
   } | null;
 };
 
-export type OnCreateFeelingsTrackerSubscription = {
-  onCreateFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type OnCreateFeelingsArchiveSubscription = {
+  onCreateFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
-export type OnUpdateFeelingsTrackerSubscription = {
-  onUpdateFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type OnUpdateFeelingsArchiveSubscription = {
+  onUpdateFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
-export type OnDeleteFeelingsTrackerSubscription = {
-  onDeleteFeelingsTracker?: {
-    __typename: 'FeelingsTracker';
-    id: string;
-    personAuthID: string;
-    personEmail: string;
-    person?: {
-      __typename: 'Person';
-      id: string;
-      authId: string;
-      status: PersonStatus;
-      email: string;
-      role: Role;
-      type?: string | null;
-      firstName: string;
-      preferredName?: string | null;
-      lastName: string;
-      externalId?: string | null;
-      grade?: string | null;
-      onBoardSurvey?: boolean | null;
-      offBoardSurvey?: boolean | null;
-      phone?: string | null;
-      birthdate?: string | null;
-      image?: string | null;
-      language: Language;
-      filters?: Array<string | null> | null;
-      lastLoggedIn?: string | null;
-      lastLoggedOut?: string | null;
-      onDemand?: boolean | null;
-      sentiments?: Array<string | null> | null;
-      passcode?: string | null;
-      classes?: {
-        __typename: 'ModelClassStudentConnection';
-        nextToken?: string | null;
-      } | null;
-      spotlightUser?: boolean | null;
-      spotlightDate?: string | null;
-      addedby?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    sentimentId: string;
-    sentiment?: {
-      __typename: 'Sentiments';
-      id: string;
-      sentimentName: string;
-      sentimentType: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    classRoomID: string;
-    classRoom?: {
-      __typename: 'Room';
-      id: string;
-      institutionID: string;
-      classID?: string | null;
-      teacherAuthID: string;
-      teacherEmail: string;
-      name: string;
-      maxPersons?: number | null;
-      filters?: Array<string | null> | null;
-      location?: string | null;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      length?: number | null;
-      repeat?: string | null;
-      notes?: string | null;
-      activeSyllabus?: string | null;
-      frequency?: string | null;
-      coTeachers?: {
-        __typename: 'ModelRoomCoTeachersConnection';
-        nextToken?: string | null;
-      } | null;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      teacher?: {
-        __typename: 'Person';
-        id: string;
-        authId: string;
-        status: PersonStatus;
-        email: string;
-        role: Role;
-        type?: string | null;
-        firstName: string;
-        preferredName?: string | null;
-        lastName: string;
-        externalId?: string | null;
-        grade?: string | null;
-        onBoardSurvey?: boolean | null;
-        offBoardSurvey?: boolean | null;
-        phone?: string | null;
-        birthdate?: string | null;
-        image?: string | null;
-        language: Language;
-        filters?: Array<string | null> | null;
-        lastLoggedIn?: string | null;
-        lastLoggedOut?: string | null;
-        onDemand?: boolean | null;
-        sentiments?: Array<string | null> | null;
-        passcode?: string | null;
-        spotlightUser?: boolean | null;
-        spotlightDate?: string | null;
-        addedby?: string | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      class?: {
-        __typename: 'Class';
-        id: string;
-        institutionID: string;
-        type?: string | null;
-        name: string;
-        roomId: string;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      curricula?: {
-        __typename: 'ModelRoomCurriculumConnection';
-        nextToken?: string | null;
-      } | null;
-      activeLessonId?: string | null;
-      ClosedPages?: Array<string | null> | null;
-      disabledPages?: Array<string | null> | null;
-      studentViewing?: string | null;
-      displayData?: Array<{
-        __typename: 'StudentSharing';
-        isTeacher?: boolean | null;
-        studentAuthID?: string | null;
-        lessonPageID?: string | null;
-      } | null> | null;
-      currentPage?: string | null;
-      completedLessons?: Array<{
-        __typename: 'CompleteLesson';
-        lessonID?: string | null;
-        time?: string | null;
-      } | null> | null;
-      activeLessons?: Array<string | null> | null;
-      classroomGroups?: {
-        __typename: 'ModelClassroomGroupsConnection';
-        nextToken?: string | null;
-      } | null;
-      weekDay?: string | null;
-      conferenceCallLink?: string | null;
-      lessonImpactLog?: Array<{
-        __typename: 'ImpactLogEntry';
-        impactDate?: string | null;
-        reasonComment?: string | null;
-        lessonImpact?: number | null;
-        adjustment?: string | null;
-      } | null> | null;
-      classSentiment?: Array<string | null> | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    lessonID: string;
-    lesson?: {
-      __typename: 'Lesson';
-      id: string;
-      title: string;
-      type: string;
-      label?: string | null;
-      instructions?: Array<string | null> | null;
-      instructionsTitle?: string | null;
-      theme?: {
-        __typename: 'Theme';
-        type?: string | null;
-        name: string;
-        summary: Array<string>;
-        summaryLabel: string;
-        connection?: string | null;
-        images: Array<string>;
-      } | null;
-      grades?: Array<number | null> | null;
-      artistID?: string | null;
-      language?: Array<Language> | null;
-      SELStructure?: string | null;
-      connection?: string | null;
-      summary?: string | null;
-      purpose?: string | null;
-      designers?: Array<string | null> | null;
-      objectives?: Array<string | null> | null;
-      doFirstID?: string | null;
-      warmUpId?: string | null;
-      coreLessonId?: string | null;
-      activityId?: string | null;
-      filters?: Array<string | null> | null;
-      coverImage?: string | null;
-      summaryTitle?: string | null;
-      introductionTitle?: string | null;
-      introduction?: string | null;
-      connectionTitle?: string | null;
-      lessonPlan?: Array<{
-        __typename: 'LessonComponents';
-        type?: string | null;
-        LessonComponentID: string;
-        sequence?: number | null;
-        stage?: string | null;
-      } | null> | null;
-      measurements?: {
-        __typename: 'ModelLessonRubricsConnection';
-        nextToken?: string | null;
-      } | null;
-      institutionID: string;
-      institution?: {
-        __typename: 'Institution';
-        id: string;
-        name: string;
-        type: string;
-        district?: string | null;
-        address: string;
-        addressLine2?: string | null;
-        city: string;
-        state?: string | null;
-        zip: string;
-        phone?: string | null;
-        website?: string | null;
-        image?: string | null;
-        isServiceProvider?: boolean | null;
-        filters?: Array<string | null> | null;
-        setupComplete?: boolean | null;
-        createdAt: string;
-        updatedAt: string;
-      } | null;
-      duration?: number | null;
-      resources?: string | null;
-      notes?: string | null;
-      targetAudience?: string | null;
-      createdAt: string;
-      updatedAt: string;
-    } | null;
-    date: string;
-    time: string;
-    sentimentName: string;
-    sentimentType: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+export type OnDeleteFeelingsArchiveSubscription = {
+  onDeleteFeelingsArchive?:  {
+    __typename: "FeelingsArchive",
+    id: string,
+    personAuthID: string,
+    personEmail: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      onDemand?: boolean | null,
+      sentiments?: Array< string | null > | null,
+      passcode?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      spotlightUser?: boolean | null,
+      spotlightDate?: string | null,
+      addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    sentimentId: string,
+    sentiment?:  {
+      __typename: "Sentiments",
+      id: string,
+      sentimentName: string,
+      sentimentType: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    classRoomID: string,
+    classRoom?:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID?: string | null,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons?: number | null,
+      filters?: Array< string | null > | null,
+      location?: string | null,
+      startDate?: string | null,
+      startTime?: string | null,
+      endDate?: string | null,
+      endTime?: string | null,
+      length?: number | null,
+      repeat?: string | null,
+      notes?: string | null,
+      activeSyllabus?: string | null,
+      frequency?: string | null,
+      coTeachers?:  {
+        __typename: "ModelRoomCoTeachersConnection",
+        nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        onDemand?: boolean | null,
+        sentiments?: Array< string | null > | null,
+        passcode?: string | null,
+        spotlightUser?: boolean | null,
+        spotlightDate?: string | null,
+        addedby?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class?:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type?: string | null,
+        name: string,
+        roomId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      activeLessonId?: string | null,
+      ClosedPages?: Array< string | null > | null,
+      disabledPages?: Array< string | null > | null,
+      studentViewing?: string | null,
+      displayData?:  Array< {
+        __typename: "StudentSharing",
+        isTeacher?: boolean | null,
+        studentAuthID?: string | null,
+        lessonPageID?: string | null,
+      } | null > | null,
+      currentPage?: string | null,
+      completedLessons?:  Array< {
+        __typename: "CompleteLesson",
+        lessonID?: string | null,
+        time?: string | null,
+      } | null > | null,
+      activeLessons?: Array< string | null > | null,
+      classroomGroups?:  {
+        __typename: "ModelClassroomGroupsConnection",
+        nextToken?: string | null,
+      } | null,
+      weekDay?: string | null,
+      conferenceCallLink?: string | null,
+      lessonImpactLog?:  Array< {
+        __typename: "ImpactLogEntry",
+        impactDate?: string | null,
+        reasonComment?: string | null,
+        lessonImpact?: number | null,
+        adjustment?: string | null,
+      } | null > | null,
+      classSentiment?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lessonID: string,
+    lesson?:  {
+      __typename: "UniversalLesson",
+      id: string,
+      type: string,
+      label?: string | null,
+      title: string,
+      institutionID: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        setupComplete?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      language?: Array< Language > | null,
+      designers?: Array< string | null > | null,
+      objectives?: Array< string | null > | null,
+      purpose?: string | null,
+      introduction?: string | null,
+      introductionTitle?: string | null,
+      instructions?: Array< string | null > | null,
+      instructionsTitle?: string | null,
+      summary?: string | null,
+      summaryTitle?: string | null,
+      duration?: number | null,
+      resources?: string | null,
+      notes?: string | null,
+      cardImage?: string | null,
+      cardCaption?: string | null,
+      lessonPlan?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      homework?:  Array< {
+        __typename: "UniversalLessonPlan",
+        id?: string | null,
+        title?: string | null,
+        label?: string | null,
+        description?: string | null,
+        class?: string | null,
+        active?: boolean | null,
+        disabled?: boolean | null,
+        displayMode?: string | null,
+        open?: boolean | null,
+        estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: Array< string | null > | null,
+        tags?: Array< string | null > | null,
+        videoLink?: string | null,
+      } | null > | null,
+      darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
+      smallGroupSize?: number | null,
+      smallGroupOption?: string | null,
+      studentMaterials?: string | null,
+      targetAudience?: string | null,
+      isUsed?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    date: string,
+    time: string,
+    sentimentName: string,
+    sentimentType: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type OnCreatePersonFilesSubscription = {

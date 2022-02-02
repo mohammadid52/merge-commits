@@ -1181,7 +1181,7 @@ type FeelingTracker @model @key(fields: ["personAuthID", "date"]){
 
 }
 
-type FeelingsTracker @model @key(fields: ["personAuthID", "id"]){
+type FeelingsArchive @model @key(fields: ["id"]) {
   id:ID!
   personAuthID: String!
   personEmail: String!
@@ -1191,7 +1191,7 @@ type FeelingsTracker @model @key(fields: ["personAuthID", "id"]){
   classRoomID: ID!
   classRoom: Room @connection(fields: ["classRoomID"])
   lessonID: ID!
-  lesson: Lesson @connection(fields: ["lessonID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: String!
@@ -1336,4 +1336,4 @@ type Mutation {
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
 
-# asdfasdfsd6
+# asdfasdfsd7
