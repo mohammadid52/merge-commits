@@ -7077,9 +7077,9 @@ export const listFeelingTrackers = /* GraphQL */ `
     }
   }
 `;
-export const getFeelingsTracker = /* GraphQL */ `
-  query GetFeelingsTracker($personAuthID: String!, $id: ID!) {
-    getFeelingsTracker(personAuthID: $personAuthID, id: $id) {
+export const getFeelingsArchive = /* GraphQL */ `
+  query GetFeelingsArchive($id: ID!) {
+    getFeelingsArchive(id: $id) {
       id
       personAuthID
       personEmail
@@ -7241,47 +7241,9 @@ export const getFeelingsTracker = /* GraphQL */ `
       lessonID
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
+        title
         institutionID
         institution {
           id
@@ -7302,10 +7264,63 @@ export const getFeelingsTracker = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -7318,17 +7333,15 @@ export const getFeelingsTracker = /* GraphQL */ `
     }
   }
 `;
-export const listFeelingsTrackers = /* GraphQL */ `
-  query ListFeelingsTrackers(
-    $personAuthID: String
-    $id: ModelIDKeyConditionInput
-    $filter: ModelFeelingsTrackerFilterInput
+export const listFeelingsArchives = /* GraphQL */ `
+  query ListFeelingsArchives(
+    $id: ID
+    $filter: ModelFeelingsArchiveFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listFeelingsTrackers(
-      personAuthID: $personAuthID
+    listFeelingsArchives(
       id: $id
       filter: $filter
       limit: $limit
@@ -7412,35 +7425,35 @@ export const listFeelingsTrackers = /* GraphQL */ `
         lessonID
         lesson {
           id
-          title
           type
           label
-          instructions
-          instructionsTitle
-          grades
-          artistID
+          title
+          institutionID
           language
-          SELStructure
-          connection
-          summary
-          purpose
           designers
           objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
+          purpose
           introduction
-          connectionTitle
-          institutionID
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
           duration
           resources
           notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
           targetAudience
+          isUsed
           createdAt
           updatedAt
         }

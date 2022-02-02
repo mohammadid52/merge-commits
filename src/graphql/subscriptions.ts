@@ -14300,9 +14300,9 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
     }
   }
 `;
-export const onCreateFeelingsTracker = /* GraphQL */ `
-  subscription OnCreateFeelingsTracker {
-    onCreateFeelingsTracker {
+export const onCreateFeelingsArchive = /* GraphQL */ `
+  subscription OnCreateFeelingsArchive {
+    onCreateFeelingsArchive {
       id
       personAuthID
       personEmail
@@ -14464,47 +14464,9 @@ export const onCreateFeelingsTracker = /* GraphQL */ `
       lessonID
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
+        title
         institutionID
         institution {
           id
@@ -14525,10 +14487,63 @@ export const onCreateFeelingsTracker = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -14541,9 +14556,9 @@ export const onCreateFeelingsTracker = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateFeelingsTracker = /* GraphQL */ `
-  subscription OnUpdateFeelingsTracker {
-    onUpdateFeelingsTracker {
+export const onUpdateFeelingsArchive = /* GraphQL */ `
+  subscription OnUpdateFeelingsArchive {
+    onUpdateFeelingsArchive {
       id
       personAuthID
       personEmail
@@ -14705,47 +14720,9 @@ export const onUpdateFeelingsTracker = /* GraphQL */ `
       lessonID
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
+        title
         institutionID
         institution {
           id
@@ -14766,10 +14743,63 @@ export const onUpdateFeelingsTracker = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -14782,9 +14812,9 @@ export const onUpdateFeelingsTracker = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteFeelingsTracker = /* GraphQL */ `
-  subscription OnDeleteFeelingsTracker {
-    onDeleteFeelingsTracker {
+export const onDeleteFeelingsArchive = /* GraphQL */ `
+  subscription OnDeleteFeelingsArchive {
+    onDeleteFeelingsArchive {
       id
       personAuthID
       personEmail
@@ -14946,47 +14976,9 @@ export const onDeleteFeelingsTracker = /* GraphQL */ `
       lessonID
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
+        title
         institutionID
         institution {
           id
@@ -15007,10 +14999,63 @@ export const onDeleteFeelingsTracker = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
         targetAudience
+        isUsed
         createdAt
         updatedAt
       }
