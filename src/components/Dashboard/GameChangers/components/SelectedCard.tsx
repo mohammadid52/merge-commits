@@ -2,11 +2,11 @@
 import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
 import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
 import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
+import EmotionCardStudents from '@components/Dashboard/GameChangers/components/EmotionCardStudents';
+import EmotionCardTeachers from '@components/Dashboard/GameChangers/components/EmotionCardTeachers';
 import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
 import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
 import ThinkAboutItCard from '@components/Dashboard/GameChangers/components/ThinkAboutIt';
-import EmotionCardStudents from '@components/Dashboard/GameChangers/components/EmotionCardStudents';
-import EmotionCardTeachers from '@components/Dashboard/GameChangers/components/EmotionCardTeachers';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
 import {
@@ -25,7 +25,6 @@ import moment from 'moment';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
-import Popover from '../../../Atoms/Popover';
 import SelectedEmotionsContainer from './SelectedEmotionsContainer';
 
 // Constants
@@ -191,7 +190,7 @@ const SelectedCard = ({
       <div
         className={`${inLesson ? '' : ''} rounded-2xl box ${
           inLesson ? 'm-4' : 'm-8'
-        }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+        }  z-100  relative w-auto  2xl:m-0 transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
         <audio id="finish-sound">
           <source src={successSound} type="audio/mp3" />
         </audio>

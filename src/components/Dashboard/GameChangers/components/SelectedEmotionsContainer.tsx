@@ -107,7 +107,7 @@ const SelectedEmotionsContainer = ({}: {selectedEmotions: SelectedEmotion[]}) =>
   // };
 
   return (
-    <div className="flex flex-row 2xl:mt-4 gap-x-4 items-center w-auto">
+    <div className="flex flex-row select-none 2xl:mt-4 gap-x-4 items-center w-auto">
       <div
         style={{
           background: 'rgba(21, 19, 21, .8)',
