@@ -1186,8 +1186,8 @@ type FeelingsArchive @model @key(fields: ["id"]) {
   personAuthID: String!
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
-  sentimentId: [ID!]
-  sentiment: Sentiments @connection(fields: ["sentimentId"])
+  sentimentId: ID!
+  sentiment: [Sentiments] @connection(fields: ["sentimentId"])
   classRoomID: ID!
   classRoom: Room @connection(fields: ["classRoomID"])
   lessonID: ID!
@@ -1195,6 +1195,7 @@ type FeelingsArchive @model @key(fields: ["id"]) {
   date: AWSDate!
   time: AWSTime!
   sentimentName: [String!]
+  comments: String
 
 }
 
