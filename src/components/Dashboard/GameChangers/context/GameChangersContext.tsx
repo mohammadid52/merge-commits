@@ -3,13 +3,15 @@ const GameChangerContext = createContext(null);
 
 // TYPES
 
+export type SelectedEmotion = {primary: string; secondary: string};
+
 export const GameChangerProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
   // numbers
-  const [selectedCard, setSelectedCard] = useState<null | number>(null);
+  const [selectedCard, setSelectedCard] = useState<null | number>(3);
   const [initialIndex, setInitialIndex] = useState<number>(1);
   const [countSelected, setCountSelected] = useState<null | number>(null);
   const [counter, setCounter] = useState<number>(1);
@@ -22,6 +24,11 @@ export const GameChangerProvider = ({
   const [isPlayingMusic, setIsPlayingMusic] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
+
+  const [selectedEmotions, setSelectedEmotions] = useState([]);
+  const [primaryEmotion, setPrimaryEmotion] = useState('happy');
+  const [secondaryEmotion, setSecondaryEmotion] = useState('');
+  const [replaceIdx, setReplaceIdx] = useState(null);
 
   return (
     <GameChangerContext.Provider
@@ -45,6 +52,14 @@ export const GameChangerProvider = ({
         countSelected,
         setCountSelected,
         goBackCallback,
+        selectedEmotions,
+        setSelectedEmotions,
+        secondaryEmotion,
+        setSecondaryEmotion,
+        primaryEmotion,
+        setPrimaryEmotion,
+        replaceIdx,
+        setReplaceIdx,
       }}>
       {children}
     </GameChangerContext.Provider>
@@ -70,4 +85,6 @@ export const useGameChangers = (): {
   setIsCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setCounter: React.Dispatch<React.SetStateAction<number>>;
   setInitialIndex: React.Dispatch<React.SetStateAction<number>>;
+  selectedEmotions: SelectedEmotion[];
+  setSelectedEmotions: React.Dispatch<React.SetStateAction<SelectedEmotion[]>>;
 } => useContext(GameChangerContext);

@@ -25,6 +25,8 @@ import moment from 'moment';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
+import Popover from '../../../Atoms/Popover';
+import SelectedEmotionsContainer from './SelectedEmotionsContainer';
 
 // Constants
 
@@ -50,6 +52,7 @@ const SelectedCard = ({
     selectedCard,
     countSelected,
     setCountSelected,
+    selectedEmotions,
   } = useGameChangers();
 
   const breathingHelpingTexts = ['inhale', 'hold', 'exhale', 'hold'];
@@ -184,166 +187,171 @@ const SelectedCard = ({
   const showSelectors = !isCompleted && (selectedCard === 0 || selectedCard === 1);
 
   return (
-    <div
-      className={`${inLesson ? '' : 'responsive_card'} rounded-2xl box ${
-        inLesson ? 'm-4' : 'm-8'
-      }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
-      <audio id="finish-sound">
-        <source src={successSound} type="audio/mp3" />
-      </audio>
-      <audio id="background-music">
-        <source
-          src="https://selready.s3.us-east-2.amazonaws.com/meditation.mp3"
-          type="audio/mp3"
-        />
-      </audio>
+    <>
       <div
-        style={{
-          background: 'rgba(21, 19, 21, .8)',
-        }}
-        className={`h-full  transition-all rounded-2xl  ${
-          selected?.type === EMOTIONS ? '' : 'p-16 px-14'
-        }  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
-        <div>
-          <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
-            {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
-          </AnimatedContainer>
-          <AnimatedContainer show={selected && selected?.type === EMOTIONS}>
-            {selected &&
-              selected?.type === EMOTIONS &&
-              (isStudent ? (
-                <EmotionCardStudents inLesson={inLesson} />
-              ) : (
-                <EmotionCardTeachers inLesson={inLesson} />
-              ))}
-          </AnimatedContainer>
+        className={`${inLesson ? '' : 'responsive_card'} rounded-2xl box ${
+          inLesson ? 'm-4' : 'm-8'
+        }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+        <audio id="finish-sound">
+          <source src={successSound} type="audio/mp3" />
+        </audio>
+        <audio id="background-music">
+          <source
+            src="https://selready.s3.us-east-2.amazonaws.com/meditation.mp3"
+            type="audio/mp3"
+          />
+        </audio>
+        <div
+          style={{
+            background: 'rgba(21, 19, 21, .8)',
+          }}
+          className={`h-full  transition-all rounded-2xl  ${
+            selected?.type === EMOTIONS ? '' : 'p-16 px-14'
+          }  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
+          <div>
+            <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
+              {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
+            </AnimatedContainer>
+            <AnimatedContainer show={selected && selected?.type === EMOTIONS}>
+              {selected &&
+                selected?.type === EMOTIONS &&
+                (isStudent ? (
+                  <EmotionCardStudents inLesson={inLesson} />
+                ) : (
+                  <EmotionCardTeachers inLesson={inLesson} />
+                ))}
+            </AnimatedContainer>
 
-          {/* Count Selection Section */}
-          <AnimatedContainer
-            delay="0.5s"
-            duration="1000"
-            animationType="translateY"
-            show={showSelectors && countSelected === null}>
-            {showSelectors && countSelected === null && (
-              <>
-                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
-                <div className="flex w-auto items-center justify-center">
+            {/* Count Selection Section */}
+            <AnimatedContainer
+              delay="0.5s"
+              duration="1000"
+              animationType="translateY"
+              show={showSelectors && countSelected === null}>
+              {showSelectors && countSelected === null && (
+                <>
+                  <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
+                  <div className="flex w-auto items-center justify-center">
+                    {selected.type === 'square' ? (
+                      <FocusIcon isActive={isActive} />
+                    ) : (
+                      <AnimatedFlower />
+                    )}
+                  </div>
+
+                  <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
+                    Select number of cycles
+                    <br />
+                    <span className="font-light text-xs w-auto">
+                      (4 is recommended if you are new to this)
+                    </span>
+                  </h1>
+                  <Flickity
+                    className={'carousel overflow-x-hidden mb-4'}
+                    elementType={'div'}
+                    options={{
+                      initialIndex: 3,
+                      pageDots: false,
+                      selectedAttraction: 0.03,
+                      friction: 0.15,
+                    }}
+                    reloadOnUpdate
+                    disableImagesLoaded={false}>
+                    {times(10, (t) => (
+                      <div className="w-auto counter carousel-cell">
+                        <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
+                          {t + 1}
+                        </h1>
+                      </div>
+                    ))}
+                  </Flickity>
+
+                  <NextButton onClick={onStartClick} countSelected={countSelected} />
+                </>
+              )}
+            </AnimatedContainer>
+
+            {/* Main Exercise Section */}
+
+            <AnimatedContainer
+              delay="0.5s"
+              duration="1000"
+              animationType="translateY"
+              show={showSelectors && countSelected !== null}>
+              {showSelectors && countSelected !== null && (
+                <>
+                  <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
+                  <AnimatedSquare
+                    onStart={onStart}
+                    isActive={isActive}
+                    exerciseType={exerciseType}
+                    onComplete={onComplete}
+                  />
+
+                  {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
+
+                  {exerciseType === 'square' && isActive && (
+                    <ul className="mt-8 fse-text-helper-list">
+                      {map(breathingHelpingTexts, (item, i) => (
+                        <li
+                          key={item}
+                          className={`${
+                            i === currentIteration ? 'showing' : 'hide'
+                          } text-xl text-center w-auto text-gray-200 font-light`}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+            </AnimatedContainer>
+
+            {/* ON Complete Section */}
+            <AnimatedContainer
+              duration="1000"
+              delay="0.5s"
+              animationType="translateY"
+              show={isCompleted}
+              className="flex items-start flex-col ">
+              {isCompleted && (
+                <>
                   {selected.type === 'square' ? (
                     <FocusIcon isActive={isActive} />
+                  ) : card.type === THINK_ABOUT_IT ? (
+                    <AnimatedMind />
                   ) : (
                     <AnimatedFlower />
                   )}
-                </div>
 
-                <h1 className="text-white mb-6 text-left  w-auto text-base tracking-wide font-normal">
-                  Select number of cycles
-                  <br />
-                  <span className="font-light text-xs w-auto">
-                    (4 is recommended if you are new to this)
-                  </span>
-                </h1>
-                <Flickity
-                  className={'carousel overflow-x-hidden mb-4'}
-                  elementType={'div'}
-                  options={{
-                    initialIndex: 3,
-                    pageDots: false,
-                    selectedAttraction: 0.03,
-                    friction: 0.15,
-                  }}
-                  reloadOnUpdate
-                  disableImagesLoaded={false}>
-                  {times(10, (t) => (
-                    <div className="w-auto counter carousel-cell">
-                      <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
-                        {t + 1}
-                      </h1>
-                    </div>
-                  ))}
-                </Flickity>
-
-                <NextButton onClick={onStartClick} countSelected={countSelected} />
-              </>
-            )}
-          </AnimatedContainer>
-
-          {/* Main Exercise Section */}
-
-          <AnimatedContainer
-            delay="0.5s"
-            duration="1000"
-            animationType="translateY"
-            show={showSelectors && countSelected !== null}>
-            {showSelectors && countSelected !== null && (
-              <>
-                <h1 className="text-4xl my-4  text-white font-bold">{card?.title}</h1>
-                <AnimatedSquare
-                  onStart={onStart}
-                  isActive={isActive}
-                  exerciseType={exerciseType}
-                  onComplete={onComplete}
-                />
-
-                {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
-
-                {exerciseType === 'square' && isActive && (
-                  <ul className="mt-8 fse-text-helper-list">
-                    {map(breathingHelpingTexts, (item, i) => (
-                      <li
-                        key={item}
-                        className={`${
-                          i === currentIteration ? 'showing' : 'hide'
-                        } text-xl text-center w-auto text-gray-200 font-light`}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            )}
-          </AnimatedContainer>
-
-          {/* ON Complete Section */}
-          <AnimatedContainer
-            duration="1000"
-            delay="0.5s"
-            animationType="translateY"
-            show={isCompleted}
-            className="flex items-start flex-col ">
-            {isCompleted && (
-              <>
-                {selected.type === 'square' ? (
-                  <FocusIcon isActive={isActive} />
-                ) : card.type === THINK_ABOUT_IT ? (
-                  <AnimatedMind />
-                ) : (
-                  <AnimatedFlower />
-                )}
-
-                <h1 className="text-4xl my-4  text-white font-bold text-left">
-                  Well done.
-                </h1>
-                <p className="text-base my-4  text-gray-100 font-light max-w-72 transition-all text-left">
-                  You have completed this activity.
-                  <br /> Come back anytime when you want to feel more focused and centered
-                  during your day.
-                </p>
-                <button
-                  onClick={() => {
-                    onClick(null);
-                    setTimeout(() => {
-                      setIsCompleted(false);
-                    }, 300);
-                  }}
-                  className=" bg-teal-600 hover:bg-teal-700 transition-all w-84  p-2 text-white mt-8 rounded-md px-4">
-                  Complete
-                </button>
-              </>
-            )}
-          </AnimatedContainer>
+                  <h1 className="text-4xl my-4  text-white font-bold text-left">
+                    Well done.
+                  </h1>
+                  <p className="text-base my-4  text-gray-100 font-light max-w-72 transition-all text-left">
+                    You have completed this activity.
+                    <br /> Come back anytime when you want to feel more focused and
+                    centered during your day.
+                  </p>
+                  <button
+                    onClick={() => {
+                      onClick(null);
+                      setTimeout(() => {
+                        setIsCompleted(false);
+                      }, 300);
+                    }}
+                    className=" bg-teal-600 hover:bg-teal-700 transition-all w-84  p-2 text-white mt-8 rounded-md px-4">
+                    Complete
+                  </button>
+                </>
+              )}
+            </AnimatedContainer>
+          </div>
         </div>
       </div>
-    </div>
+      {selectedEmotions.length > 0 && (
+        <SelectedEmotionsContainer selectedEmotions={selectedEmotions} />
+      )}
+    </>
   );
 };
 

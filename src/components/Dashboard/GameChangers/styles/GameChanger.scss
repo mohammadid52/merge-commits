@@ -530,3 +530,64 @@ icon {
     transform: rotate(90deg);
   }
 }
+
+// Emotion Card styles
+
+#emotion-btn {
+  cursor: pointer;
+  /* pointer-events: none; */
+}
+
+@media screen and (min-width: 1560px) {
+  .responsive_card {
+    transform: scale(2.5);
+  }
+}
+@media screen and (min-width: 2000px) {
+  .responsive_card {
+    transform: scale(3);
+  }
+}
+@media screen and (min-width: 2500px) {
+  .responsive_card {
+    transform: scale(3.5);
+  }
+}
+
+.happy_card {
+  background: linear-gradient(131.97deg, #6b83c1 13.18%, #737db8 14.14%, #e8222b 89.82%);
+}
+
+.angry_card {
+  background: linear-gradient(318.86deg, #f14825 -12.45%, #f4b516 83.61%);
+}
+
+.sad_card {
+  background: linear-gradient(318.86deg, #82b9e4 -12.45%, #577cbd 83.61%);
+}
+
+.fearful_card {
+  background: linear-gradient(318.86deg, #faae16 -12.45%, #95cac5 83.61%);
+}
+
+.bad_card {
+  background: linear-gradient(318.86deg, #3c9158 -12.45%, #f9ed51 83.61%);
+}
+
+.suprised_card {
+  background: linear-gradient(29.93deg, #f397b9 17.57%, #eae5f2 97.66%, #eae5f2 97.66%);
+}
+
+.disgusted_card {
+  background: linear-gradient(318.86deg, #6ec59d -12.45%, #d790b6 83.61%);
+}
+
+.happy_card,
+.angry_card,
+.sad_card,
+.fearful_card,
+.bad_card,
+.suprised_card,
+.disgusted_card {
+  animation: fadeIn 300ms ease-in-out;
+}

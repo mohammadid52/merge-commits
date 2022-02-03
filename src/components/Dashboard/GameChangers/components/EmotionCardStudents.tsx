@@ -1,13 +1,13 @@
 import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {awsFormatDate, dateString} from '@utilities/time';
 import {
   CreateFeelingsArchiveInput,
+  CreateFeelingsArchiveMutationVariables,
   FeelingsArchive,
   ListFeelingsArchivesQueryVariables,
 } from 'API';
@@ -51,9 +51,12 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     checkChanges(changesSaved);
   }, [changesSaved]);
 
-  const {mutate, isLoading, isError, error} = useGraphqlMutation<{
-    input: CreateFeelingsArchiveInput;
-  }>('createFeelingsArchive');
+  const {
+    mutate,
+    isLoading,
+    isError,
+    error,
+  } = useGraphqlMutation<CreateFeelingsArchiveMutationVariables>('createFeelingsArchive');
 
   if (isError) {
     console.error(error);
@@ -75,10 +78,8 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
         return '🤢';
       case 'angry':
         return '😡';
-
       case 'surprised':
         return '😱';
-
       default:
         return '😁';
     }
@@ -102,7 +103,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
       filter: {
         personAuthID: {eq: authId},
         lessonID: {eq: lessonId},
-        sentimentType: {eq: lessonState.currentPage.toString()},
+        // sentimentType: {eq: lessonState.currentPage.toString()},
       },
     },
     //  custom means use query from customQueries file.
@@ -133,8 +134,8 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
         personEmail: email,
         sentimentId: `${getEmoji()}-${nanoid(24)}`,
         id: nanoid(24),
-        sentimentName: secondaryEmotion,
-        sentimentType: lessonState.currentPage.toString(),
+        sentimentName: [secondaryEmotion],
+        // sentimentType: lessonState.currentPage.toString(),
         time: new Date().toTimeString().split(' ')[0],
         date: awsFormatDate(dateString('-', 'WORLD')),
         classRoomID: classId,
