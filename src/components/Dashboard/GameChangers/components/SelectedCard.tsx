@@ -189,7 +189,7 @@ const SelectedCard = ({
   return (
     <>
       <div
-        className={`${inLesson ? '' : 'responsive_card'} rounded-2xl box ${
+        className={`${inLesson ? '' : ''} rounded-2xl box ${
           inLesson ? 'm-4' : 'm-8'
         }  z-100  relative w-auto  2xl:m-0   transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
         <audio id="finish-sound">
@@ -348,7 +348,7 @@ const SelectedCard = ({
           </div>
         </div>
       </div>
-      {selectedEmotions.length > 0 && (
+      {selectedCard === 3 && selectedEmotions.length > 0 && (
         <SelectedEmotionsContainer selectedEmotions={selectedEmotions} />
       )}
     </>
