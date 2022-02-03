@@ -64,7 +64,7 @@ const Emotion = ({
             </dt>
           </dl>
         }>
-        <Tooltip text="Edit">
+        <Tooltip placement="top" text="Edit">
           <div
             className={`${selectedEmotion.primary.toLowerCase()}_card  cursor-pointer py-1 px-2 rounded-md text-white`}>
             {selectedEmotion.secondary}
