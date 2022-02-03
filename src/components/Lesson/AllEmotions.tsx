@@ -32,8 +32,8 @@ const AllEmotions = ({lessonId}: {lessonId: string}) => {
     id: nanoid(24),
     value: 'Page',
     options: data.map((em) => {
-      const pageId: number =
-        Number(em.sentimentType) >= 0 ? Number(em.sentimentType) : null;
+      const pageId: number = 0;
+      // Number(em.sentimentType) >= 0 ? Number(em.sentimentType) : null;
 
       const text =
         pageId !== null

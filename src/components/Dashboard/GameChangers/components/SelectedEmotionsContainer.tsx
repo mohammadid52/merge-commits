@@ -4,6 +4,7 @@ import Popover from '@atoms/Popover';
 import {SelectedEmotion, useGameChangers} from '../context/GameChangersContext';
 import {remove} from 'lodash';
 import Button from './Button';
+import Tooltip from '@components/Atoms/Tooltip';
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
@@ -63,10 +64,12 @@ const Emotion = ({
             </dt>
           </dl>
         }>
-        <div
-          className={`${selectedEmotion.primary.toLowerCase()}_card  cursor-pointer py-1 px-2 rounded-md text-white`}>
-          {selectedEmotion.secondary}
-        </div>
+        <Tooltip text="Edit">
+          <div
+            className={`${selectedEmotion.primary.toLowerCase()}_card  cursor-pointer py-1 px-2 rounded-md text-white`}>
+            {selectedEmotion.secondary}
+          </div>
+        </Tooltip>
       </Popover>
     </>
   );
@@ -121,7 +124,7 @@ const SelectedEmotionsContainer = ({}: {selectedEmotions: SelectedEmotion[]}) =>
           );
         })}
       </div>
-      <Button onClick={() => {}} text="Save" />
+      <Button mt="none" width="w-auto" onClick={() => {}} text="Save" />
     </div>
   );
 };

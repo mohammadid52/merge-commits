@@ -662,7 +662,7 @@ const PageBuilderSlideOver = ({
       filter: {
         personAuthID: {eq: authId},
         lessonID: {eq: lessonId},
-        sentimentType: {eq: lessonState.currentPage.toString()},
+        // sentimentType: {eq: lessonState.currentPage.toString()},
       },
     },
     //  custom means use query from customQueries file.
