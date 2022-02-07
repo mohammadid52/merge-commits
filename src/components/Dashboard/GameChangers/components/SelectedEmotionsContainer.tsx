@@ -2,6 +2,7 @@ import Popover from '@atoms/Popover';
 import Tooltip from '@components/Atoms/Tooltip';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useNotifications} from '@contexts/NotificationContext';
+import PositiveAlert from '@components/General/Popup';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -144,41 +145,53 @@ const SelectedEmotionsContainer = () => {
     setPrimaryEmotion('');
   };
 
+  const [visible, setVisible] = useState(false);
+
+  const handlePopup = () => setVisible((prev) => !prev);
+
+  const Modal = () => (
+    <PositiveAlert
+      alert={visible}
+      setAlert={setVisible}
+      header="Are you sure you want to save this?"
+      button1="Yes, Save it!"
+      button2="No, Don't save this"
+      svg="question"
+      handleButton1={onSave}
+      handleButton2={handlePopup}
+      theme="dark"
+      fill="screen"
+    />
+  );
+
   return (
-    !showFinalStep && (
-      <div className="flex flex-row select-none justify-center 2xl:mt-4 gap-x-4 items-center w-auto">
-        <div
-          style={{
-            background: 'rgba(21, 19, 21, .8)',
-          }}
-          className="p-4 emoji-cart-container transition-all  border-2 w-auto  border-gray-900 rounded-md flex flex-row gap-x-4">
-          {selectedEmotions.map((selectedEmotion, idx) => {
-            return (
-              <Emotion
-                key={selectedEmotion.secondary}
-                removeEmotion={removeEmotion}
-                selectedEmotion={selectedEmotion}
-                idx={idx}
-              />
-            );
-          })}
+    <>
+      <Modal />
+      {!showFinalStep && (
+        <div className="flex flex-col select-none justify-center 2xl:mt-4 gap-y-4 items-center w-auto">
+          <div className="p-2 px-3 emoji-cart-container transition-all  border-0 w-auto  border-gray-800 rounded-md flex flex-row gap-x-4">
+            {selectedEmotions.map((selectedEmotion, idx) => {
+              return (
+                <Emotion
+                  key={selectedEmotion.secondary}
+                  removeEmotion={removeEmotion}
+                  selectedEmotion={selectedEmotion}
+                  idx={idx}
+                />
+              );
+            })}
+          </div>
+          <div className="flex flex-row items-center justify-center w-auto gap-x-4">
+            {primaryEmotion && (
+              <Button mt="none" width="w-auto" onClick={onBack} text="Select another" />
+            )}
+            {isStudent && (
+              <Button mt="none" width="w-auto" onClick={handlePopup} text={'Save'} />
+            )}
+          </div>
         </div>
-        <div className="flex flex-row items-center justify-center w-auto gap-x-4">
-          {primaryEmotion && (
-            <Button mt="none" width="w-auto" onClick={onBack} text="Select another" />
-          )}
-          {isStudent && (
-            <Button
-              loading={isLoading}
-              mt="none"
-              width="w-auto"
-              onClick={onSave}
-              text={isLoading ? 'Saving' : 'Save'}
-            />
-          )}
-        </div>
-      </div>
-    )
+      )}
+    </>
   );
 };
 

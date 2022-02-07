@@ -35,12 +35,12 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
 
   goBackCallback.current = () => {
     setSelectedCard(null);
+    setPrimaryEmotion('');
     checkChanges(changesSaved);
+    setSecondaryEmotion('');
+    setSelectedEmotions([]);
     if (inGC && showFinalStep) {
       setShowFinalStep(false);
-      setPrimaryEmotion('');
-      setSecondaryEmotion('');
-      setSelectedEmotions([]);
     }
   };
 
