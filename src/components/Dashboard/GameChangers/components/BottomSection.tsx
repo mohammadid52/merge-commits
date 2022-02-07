@@ -42,7 +42,7 @@ const BottomSection = () => {
         className="flex items-center justify-center"
         show={selectedCard !== null && !isCompleted}>
         {selectedCard !== null && !isCompleted && (
-          <div className="absolute flex items-center justify-center gap-x-4 bottom-5  w-auto">
+          <div className="absolute flex items-center justify-center gap-x-4 bottom-3 lg:bottom-5  w-auto">
             <Tooltip text="Go back" placement="top">
               <div
                 onClick={() => {
@@ -111,7 +111,7 @@ const BottomSection = () => {
         className="flex items-center justify-center"
         show={selectedCard === null}>
         {selectedCard === null && (
-          <div className="absolute flex items-center justify-center gap-x-4 bottom-5  w-auto">
+          <div className="absolute flex items-center justify-center gap-x-4 bottom-3 lg:bottom-5  w-auto">
             <Tooltip text="Go back" placement="top">
               <div
                 onClick={() => {

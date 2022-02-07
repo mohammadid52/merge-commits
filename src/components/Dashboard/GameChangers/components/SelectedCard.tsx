@@ -347,9 +347,7 @@ const SelectedCard = ({
           </div>
         </div>
       </div>
-      {selectedCard === 3 && selectedEmotions.length > 0 && (
-        <SelectedEmotionsContainer selectedEmotions={selectedEmotions} />
-      )}
+      {selectedCard === 3 && selectedEmotions.length > 0 && <SelectedEmotionsContainer />}
     </>
   );
 };

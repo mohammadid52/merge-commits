@@ -1,29 +1,28 @@
 import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import useInGC from '@customHooks/checkIfGameChanges';
 import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {awsFormatDate, dateString} from '@utilities/time';
-import {
-  CreateFeelingsArchiveInput,
-  CreateFeelingsArchiveMutationVariables,
-  FeelingsArchive,
-  ListFeelingsArchivesQueryVariables,
-} from 'API';
-import {nanoid} from 'nanoid';
+import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
+import {useRouteMatch} from 'react-router';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
-import Button from './Button';
 
 const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   // For Mobile
-  const [primaryEmotion, setPrimaryEmotion] = useState('');
-  const [secondaryEmotion, setSecondaryEmotion] = useState('');
-  const {goBackCallback, setSelectedCard} = useGameChangers();
+
+  const {
+    goBackCallback,
+    setSelectedCard,
+    showFinalStep,
+    setShowFinalStep,
+    setPrimaryEmotion,
+    setSecondaryEmotion,
+    setSelectedEmotions,
+  } = useGameChangers();
   const [changesSaved, setChangesSaved] = useState(false);
-  const [showFinalStep, setShowFinalStep] = useState(false);
 
   const checkChanges = (changes: boolean) => {
     // if (!changes) {
@@ -32,15 +31,16 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     //   window.removeEventListener('beforeunload', beforeunload);
     // }
   };
+  const inGC = useInGC();
 
   goBackCallback.current = () => {
-    if (primaryEmotion) {
-      setSecondaryEmotion('');
-    } else {
-      setSecondaryEmotion('');
+    setSelectedCard(null);
+    checkChanges(changesSaved);
+    if (inGC && showFinalStep) {
+      setShowFinalStep(false);
       setPrimaryEmotion('');
-      setSelectedCard(null);
-      checkChanges(changesSaved);
+      setSecondaryEmotion('');
+      setSelectedEmotions([]);
     }
   };
 
@@ -51,48 +51,12 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     checkChanges(changesSaved);
   }, [changesSaved]);
 
-  const {
-    mutate,
-    isLoading,
-    isError,
-    error,
-  } = useGraphqlMutation<CreateFeelingsArchiveMutationVariables>('createFeelingsArchive');
-
-  if (isError) {
-    console.error(error);
-  }
-
-  const {authId, email, isStudent} = useAuth();
-
-  const getEmoji = () => {
-    switch (primaryEmotion) {
-      case 'happy':
-        return '😁';
-      case 'sad':
-        return '😔';
-      case 'bad':
-        return '😭';
-      case 'fearful':
-        return '😰';
-      case 'disgusted':
-        return '🤢';
-      case 'angry':
-        return '😡';
-      case 'surprised':
-        return '😱';
-      default:
-        return '😁';
-    }
-  };
+  const {authId} = useAuth();
 
   const {lessonState} = useGlobalContext();
+  const router: any = useRouteMatch();
 
-  const PAGES = lessonState?.lessonData?.lessonPlan;
-  const CURRENT_PAGE = inLesson ? lessonState.currentPage : null;
-  const ACTIVE_PAGE_DATA = inLesson ? PAGES[CURRENT_PAGE] : null;
-
-  let lessonId = ACTIVE_PAGE_DATA?.id || '999';
-  let classId = ACTIVE_PAGE_DATA?.class || '999';
+  const lessonId = router.params.lessonID || '999';
 
   const {data = [], isLoading: listLoading, isSuccess} = useGraphqlQuery<
     ListFeelingsArchivesQueryVariables,
@@ -103,7 +67,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
       filter: {
         personAuthID: {eq: authId},
         lessonID: {eq: lessonId},
-        // sentimentType: {eq: lessonState.currentPage.toString()},
+        comments: {eq: lessonState.currentPage.toString()},
       },
     },
     //  custom means use query from customQueries file.
@@ -127,32 +91,19 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     }
   };
 
-  const onSave = () => {
-    try {
-      const payload: CreateFeelingsArchiveInput = {
-        personAuthID: authId,
-        personEmail: email,
-        sentimentId: `${getEmoji()}-${nanoid(24)}`,
-        id: nanoid(24),
-        sentimentName: [secondaryEmotion],
-        // sentimentType: lessonState.currentPage.toString(),
-        time: new Date().toTimeString().split(' ')[0],
-        date: awsFormatDate(dateString('-', 'WORLD')),
-        classRoomID: classId,
-        lessonID: lessonId,
-      };
-      mutate({input: payload});
-      setShowFinalStep(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setChangesSaved(true);
-    }
-  };
+  // const deleteM = useGraphqlMutation('deleteFeelingsArchive');
 
-  const goBack = () => {
-    setSelectedCard(null);
-  };
+  // useEffect(() => {
+  //   const ids = [
+  //     'V_v5mvqWE1eCVwN18W1rJvoe',
+  //     'yZhKZetSF3O_-BRwEOMDGbr6',
+  //     'AK6P8yIa2DUEayBcmAAf1JWq',
+  //     '0kmFOoOER2O7dmLIc2MqKNgd',
+  //   ];
+  //   console.log('deleting');
+
+  //   ids.forEach((id) => deleteM.mutate({input: {id}}));
+  // }, []);
 
   return listLoading ? (
     <div className="flex items-center justify-center h-32">
@@ -163,22 +114,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
       <AnimatedContainer show={!showFinalStep && !isSubmitted}>
         {!showFinalStep && !isSubmitted && (
           <>
-            <BubbleVersion
-              setPrimaryEmotion={setPrimaryEmotion}
-              primaryEmotion={primaryEmotion}
-              secondaryEmotion={secondaryEmotion}
-              setSecondaryEmotion={setSecondaryEmotion}
-            />
-            <AnimatedContainer
-              show={Boolean(primaryEmotion && secondaryEmotion && isStudent)}>
-              {Boolean(primaryEmotion && secondaryEmotion && isStudent) && (
-                <Button
-                  width="w-full"
-                  onClick={onSave}
-                  text={isLoading ? <Loader /> : `Save '${secondaryEmotion} emotion'`}
-                />
-              )}
-            </AnimatedContainer>
+            <BubbleVersion />
           </>
         )}
       </AnimatedContainer>
@@ -190,7 +126,6 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
                 Thanks for your input
               </h1>
             </div>
-            {!inLesson && <Button width="w-full" onClick={goBack} text={'Go Back'} />}
           </>
         )}
       </AnimatedContainer>

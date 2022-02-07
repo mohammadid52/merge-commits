@@ -137,7 +137,7 @@ const LessonRowComposer = () => {
               </BuilderRowWrapper>
             </div>
 
-            {isLastPage && <AllEmotions lessonId={activePageData?.id} />}
+            {isLastPage && <AllEmotions />}
           </div>
         ))}
 

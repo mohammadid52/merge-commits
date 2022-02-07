@@ -8,13 +8,9 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   const {
     goBackCallback,
     setSelectedCard,
-    // @ts-ignore
     secondaryEmotion,
-    // @ts-ignore
     setSecondaryEmotion,
-    // @ts-ignore
     primaryEmotion,
-    // @ts-ignore
     setPrimaryEmotion,
   } = useGameChangers();
   const [changesSaved, setChangesSaved] = useState(false);
@@ -41,14 +37,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     setSelectedCard(null);
   };
 
-  return (
-    <BubbleVersion
-      setPrimaryEmotion={setPrimaryEmotion}
-      primaryEmotion={primaryEmotion}
-      secondaryEmotion={secondaryEmotion}
-      setSecondaryEmotion={setSecondaryEmotion}
-    />
-  );
+  return <BubbleVersion />;
 };
 
 export default EmotionCard;

@@ -667,7 +667,7 @@ const PageBuilderSlideOver = ({
     },
     //  custom means use query from customQueries file.
     // enabled allows conditinational fetching. if it is enabled then only the query will be fetched. Default is true
-    {custom: true}
+    {custom: true, enabled: false}
   );
 
   const onDeleteClick = async () => {

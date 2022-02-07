@@ -9,8 +9,6 @@ import React, {useEffect, useState} from 'react';
 const ActivityBlock = ({value}: {value: any}) => {
   const {selectedCard, setSelectedCard} = useGameChangers();
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const initialValue: string = value[0]?.value;
 
@@ -20,8 +18,6 @@ const ActivityBlock = ({value}: {value: any}) => {
       if (card) {
         setSelectedCard(card?.id);
       }
-
-      setLoading(false);
     }
   }, [value, selectedCard]);
 
@@ -30,9 +26,7 @@ const ActivityBlock = ({value}: {value: any}) => {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useGlobalContext();
 
-  if (loading) {
-    return <div>Loading</div>;
-  } else if (selectedCard === null) {
+  if (selectedCard === null) {
     return <div />;
   } else
     return (

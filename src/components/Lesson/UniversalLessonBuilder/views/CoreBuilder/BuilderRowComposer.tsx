@@ -185,9 +185,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   )}
                 </BuilderRowWrapper>
               </EditOverlayBlock>
-              {lessonState?.isLastPage && (
+              {/* {lessonState?.isLastPage && (
                 <AllEmotions lessonId={universalLessonDetails?.id} />
-              )}
+              )} */}
             </div>
           )),
         ]

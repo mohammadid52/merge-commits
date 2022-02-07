@@ -1,28 +1,24 @@
+// global context
+import {useNotifications} from '@contexts/NotificationContext';
+import useInGC from '@customHooks/checkIfGameChanges';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
+import gsap from 'gsap';
 import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
+// local context
 import {useGameChangers} from '../context/GameChangersContext';
-import gsap from 'gsap';
 
-const BubbleVersion = ({
-  setPrimaryEmotion,
-  setSecondaryEmotion,
-  primaryEmotion,
-  secondaryEmotion,
-}: {
-  setPrimaryEmotion: any;
-  setSecondaryEmotion: any;
-  secondaryEmotion: any;
-  primaryEmotion: any;
-}) => {
-  const animateEmotionBubble = (e: any, emotionName?: string) => {};
+const BubbleVersion = () => {
+  const {setSecondaryEmotion, primaryEmotion, setPrimaryEmotion} = useGameChangers();
+
   const {
     selectedEmotions,
     setSelectedEmotions,
-    // @ts-ignore
     replaceIdx,
-    // @ts-ignore
     setReplaceIdx,
   } = useGameChangers();
+
+  const {setNotification, clearNotification} = useNotifications();
 
   useEffect(() => {
     const circles = document.querySelectorAll('#emotion-btn');
@@ -36,12 +32,33 @@ const BubbleVersion = ({
   }, [primaryEmotion]);
 
   const onPrimaryEmotion = (e: any, emotionName: string) => {
-    animateEmotionBubble(e);
     setPrimaryEmotion(emotionName);
   };
 
   const exists = (emName: string) =>
     selectedEmotions.findIndex((em) => em.secondary === emName) !== -1;
+
+  const config = {duration: 0.5, transformOrigin: 'center', ease: 'easeInOut'};
+  const circleWithPath = (e: any) => {
+    return [e.target, e.target.nextSibling];
+  };
+
+  const onMouseEnter = (e: {target: gsap.TweenTarget}) => {
+    gsap.to(circleWithPath(e), {
+      ...config,
+      scale: 0.87,
+    });
+  };
+
+  const onMouseLeave = (e: {target: gsap.TweenTarget}) => {
+    gsap.to(circleWithPath(e), {
+      ...config,
+      scale: 1,
+    });
+  };
+
+  const isInLesson = useInLessonCheck();
+  const inGC = useInGC();
 
   const onSecondEmotion = (e: any, emotionName: string) => {
     if (!exists(emotionName)) {
@@ -56,8 +73,22 @@ const BubbleVersion = ({
         }
 
         setSelectedEmotions([...selectedEmotions]);
-        animateEmotionBubble(e, emotionName);
+        gsap.to(circleWithPath(e), {
+          ...config,
+          scale: 0.75,
+        });
+        clearNotification();
+      } else if (selectedEmotions.length >= 3 && (isInLesson || inGC)) {
+        setNotification({
+          title: `You cannot select more than 3 emotions`,
+          show: true,
+        });
       }
+    } else if (isInLesson || inGC) {
+      setNotification({
+        title: `You have already selected ${emotionName}.`,
+        show: true,
+      });
     }
   };
 
@@ -254,6 +285,8 @@ const BubbleVersion = ({
                 cx="75"
                 cy="106"
                 onClick={(e) => onSecondEmotion(e, 'lonely')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="lonely"
                 r="60"
                 fill="url(#paint0_linear_2_68)"
@@ -268,6 +301,8 @@ const BubbleVersion = ({
                 cx="677"
                 cy="112.5"
                 onClick={(e) => onSecondEmotion(e, 'vulnerable')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="vulnerable"
                 rx="73"
                 ry="71.5"
@@ -281,6 +316,8 @@ const BubbleVersion = ({
               <circle
                 cx="491.5"
                 onClick={(e) => onSecondEmotion(e, 'depressed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="depressed"
                 id="emotion-btn"
                 cy="269.5"
@@ -298,6 +335,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 r="60"
                 onClick={(e) => onSecondEmotion(e, 'isolated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="isolated"
                 fill="url(#paint3_linear_2_68)"
               />
@@ -309,6 +348,8 @@ const BubbleVersion = ({
               <circle
                 data-name="fragile"
                 onClick={(e) => onSecondEmotion(e, 'fragile')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 cx="95"
                 cy="282"
                 id="emotion-btn"
@@ -324,6 +365,8 @@ const BubbleVersion = ({
                 cx="554.5"
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'abandoned')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="abandoned"
                 cy="516.5"
                 r="77.5"
@@ -337,6 +380,8 @@ const BubbleVersion = ({
               <circle
                 cx="77.5"
                 onClick={(e) => onSecondEmotion(e, 'remorseful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="remorseful"
                 cy="701.5"
                 id="emotion-btn"
@@ -351,6 +396,8 @@ const BubbleVersion = ({
               <circle
                 cx="376"
                 onClick={(e) => onSecondEmotion(e, 'unimportant')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="unimportant"
                 cy="665"
                 r="85"
@@ -365,6 +412,8 @@ const BubbleVersion = ({
               <circle
                 cx="287"
                 onClick={(e) => onSecondEmotion(e, 'disappointed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="disappointed"
                 id="emotion-btn"
                 cy="240"
@@ -382,6 +431,8 @@ const BubbleVersion = ({
                 cy="450"
                 r="85"
                 onClick={(e) => onSecondEmotion(e, 'embarrassed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="embarrassed"
                 fill="url(#paint9_linear_2_68)"
               />
@@ -393,6 +444,8 @@ const BubbleVersion = ({
               <circle
                 cx="690"
                 onClick={(e) => onSecondEmotion(e, 'powerless')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="powerless"
                 cy="621"
                 id="emotion-btn"
@@ -407,6 +460,8 @@ const BubbleVersion = ({
               <circle
                 cx="75"
                 onClick={(e) => onSecondEmotion(e, 'ashamed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="ashamed"
                 id="emotion-btn"
                 cy="463"
@@ -421,6 +476,8 @@ const BubbleVersion = ({
               <circle
                 cx="641"
                 onClick={(e) => onSecondEmotion(e, 'victimized')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="victimized"
                 cy="345"
                 id="emotion-btn"
@@ -435,6 +492,8 @@ const BubbleVersion = ({
               <circle
                 cx="215"
                 onClick={(e) => onSecondEmotion(e, 'despair')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="despair"
                 cy="50"
                 r="50"
@@ -449,6 +508,8 @@ const BubbleVersion = ({
               <circle
                 cx="446"
                 onClick={(e) => onSecondEmotion(e, 'empty')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="empty"
                 cy="398"
                 id="emotion-btn"
@@ -463,6 +524,8 @@ const BubbleVersion = ({
               <circle
                 cx="208"
                 onClick={(e) => onSecondEmotion(e, 'guilty')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="guilty"
                 id="emotion-btn"
                 cy="608"
@@ -479,6 +542,8 @@ const BubbleVersion = ({
                 cy="723"
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'grief')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="grief"
                 r="50"
                 fill="url(#paint16_linear_2_68)"
@@ -491,6 +556,8 @@ const BubbleVersion = ({
               <circle
                 cx="531"
                 onClick={(e) => onSecondEmotion(e, 'hurt')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="hurt"
                 cy="117"
                 id="emotion-btn"
@@ -718,6 +785,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="108"
                 onClick={(e) => onSecondEmotion(e, 'disapproving')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="disapproving"
                 cy="100"
                 r="100"
@@ -732,6 +801,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="240"
                 onClick={(e) => onSecondEmotion(e, 'disappointed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="disappointed"
                 cy="288"
                 r="100"
@@ -747,6 +818,8 @@ const BubbleVersion = ({
                 cx="340"
                 cy="70"
                 onClick={(e) => onSecondEmotion(e, 'repelled')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="repelled"
                 r="70"
                 fill="url(#paint2_linear_5_85)"
@@ -761,6 +834,8 @@ const BubbleVersion = ({
                 cx="598"
                 cy="70"
                 onClick={(e) => onSecondEmotion(e, 'hesitant')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="hesitant"
                 r="70"
                 fill="url(#paint3_linear_5_85)"
@@ -774,6 +849,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="70"
                 onClick={(e) => onSecondEmotion(e, 'horrified')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="horrified"
                 cy="424"
                 r="70"
@@ -787,6 +864,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'awful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="awful"
                 cx="668"
                 cy="256"
@@ -804,6 +883,8 @@ const BubbleVersion = ({
                 cy="622"
                 r="95"
                 onClick={(e) => onSecondEmotion(e, 'judgemental')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="judgemental"
                 fill="url(#paint6_linear_5_85)"
               />
@@ -818,6 +899,8 @@ const BubbleVersion = ({
                 cy="433"
                 r="80"
                 onClick={(e) => onSecondEmotion(e, 'humiliated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="humiliated"
                 fill="url(#paint7_linear_5_85)"
               />
@@ -832,6 +915,8 @@ const BubbleVersion = ({
                 cy="660"
                 r="80"
                 onClick={(e) => onSecondEmotion(e, 'nauseated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="nauseated"
                 fill="url(#paint8_linear_5_85)"
               />
@@ -845,6 +930,8 @@ const BubbleVersion = ({
                 cx="357"
                 cy="672"
                 onClick={(e) => onSecondEmotion(e, 'detestable')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="detestable"
                 r="80"
                 fill="url(#paint9_linear_5_85)"
@@ -859,6 +946,8 @@ const BubbleVersion = ({
                 cx="443"
                 cy="218"
                 onClick={(e) => onSecondEmotion(e, 'appalled')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="appalled"
                 r="70"
                 fill="url(#paint10_linear_5_85)"
@@ -874,6 +963,8 @@ const BubbleVersion = ({
                 cy="494"
                 r="80"
                 onClick={(e) => onSecondEmotion(e, 'revolted')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="revolted"
                 fill="url(#paint11_linear_5_85)"
               />
@@ -1032,6 +1123,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="75"
                 onClick={(e) => onSecondEmotion(e, 'let down')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="down"
                 cy="64"
                 r="60"
@@ -1045,6 +1138,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'bitter')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="bitter"
                 cx="56"
                 cy="193"
@@ -1061,6 +1156,8 @@ const BubbleVersion = ({
                 cx="201"
                 cy="333"
                 onClick={(e) => onSecondEmotion(e, 'numb')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="numb"
                 r="45"
                 fill="url(#paint2_linear_7_227)"
@@ -1074,6 +1171,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="680"
                 onClick={(e) => onSecondEmotion(e, 'critical')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="critical"
                 cy="573"
                 r="50"
@@ -1086,6 +1185,8 @@ const BubbleVersion = ({
               />
               <circle
                 onClick={(e) => onSecondEmotion(e, 'hostile')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="hostile"
                 id="emotion-btn"
                 cx="388"
@@ -1101,6 +1202,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'violated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="violated"
                 cx="705"
                 cy="703"
@@ -1116,6 +1219,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="549"
                 onClick={(e) => onSecondEmotion(e, 'distant')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="distant"
                 cy="484"
                 r="50"
@@ -1132,6 +1237,8 @@ const BubbleVersion = ({
                 cy="193"
                 r="40"
                 onClick={(e) => onSecondEmotion(e, 'mad')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="mad"
                 fill="url(#paint7_linear_7_227)"
               />
@@ -1145,6 +1252,8 @@ const BubbleVersion = ({
                 cx="207"
                 cy="198"
                 onClick={(e) => onSecondEmotion(e, 'humiliated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="humiliated"
                 r="70"
                 fill="url(#paint8_linear_7_227)"
@@ -1157,6 +1266,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'furious')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="furious"
                 cx="231"
                 cy="60"
@@ -1173,6 +1284,8 @@ const BubbleVersion = ({
                 cx="351"
                 cy="120"
                 onClick={(e) => onSecondEmotion(e, 'annoyed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="annoyed"
                 r="60"
                 fill="url(#paint10_linear_7_227)"
@@ -1187,6 +1300,8 @@ const BubbleVersion = ({
                 cx="644"
                 cy="74"
                 onClick={(e) => onSecondEmotion(e, 'jealous')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="jealous"
                 r="60"
                 fill="url(#paint11_linear_7_227)"
@@ -1201,6 +1316,8 @@ const BubbleVersion = ({
                 cx="356"
                 cy="299"
                 onClick={(e) => onSecondEmotion(e, 'disrespected')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="disrespected"
                 r="90"
                 fill="url(#paint12_linear_7_227)"
@@ -1214,6 +1331,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="536"
                 onClick={(e) => onSecondEmotion(e, 'withdrawn')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="withdrawn"
                 cy="648"
                 r="75"
@@ -1228,6 +1347,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="75"
                 onClick={(e) => onSecondEmotion(e, 'aggressive')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="aggressive"
                 cy="517"
                 r="75"
@@ -1242,6 +1363,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="63"
                 onClick={(e) => onSecondEmotion(e, 'ridiculed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="ridiculed"
                 cy="730"
                 r="60"
@@ -1256,6 +1379,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="236"
                 onClick={(e) => onSecondEmotion(e, 'indignant')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="indignant"
                 cy="488"
                 r="65"
@@ -1270,6 +1395,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="683"
                 onClick={(e) => onSecondEmotion(e, 'frustrated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="frustrated"
                 cy="250"
                 r="75"
@@ -1286,6 +1413,8 @@ const BubbleVersion = ({
                 cy="320"
                 r="75"
                 onClick={(e) => onSecondEmotion(e, 'dismissive')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="dismissive"
                 fill="url(#paint18_linear_7_227)"
               />
@@ -1298,6 +1427,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="680"
                 onClick={(e) => onSecondEmotion(e, 'resentful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="resentful"
                 cy="423"
                 r="70"
@@ -1313,6 +1444,8 @@ const BubbleVersion = ({
                 cx="249"
                 cy="662"
                 onClick={(e) => onSecondEmotion(e, 'infuriated')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="infuriated"
                 r="70"
                 fill="url(#paint20_linear_7_227)"
@@ -1327,6 +1460,8 @@ const BubbleVersion = ({
                 cx="496"
                 cy="72"
                 onClick={(e) => onSecondEmotion(e, 'betrayed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="betrayed"
                 r="65"
                 fill="url(#paint21_linear_7_227)"
@@ -1341,6 +1476,8 @@ const BubbleVersion = ({
                 cx="72"
                 cy="353"
                 onClick={(e) => onSecondEmotion(e, 'provoked')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="provoked"
                 r="65"
                 fill="url(#paint22_linear_7_227)"
@@ -1355,6 +1492,8 @@ const BubbleVersion = ({
                 cx="383"
                 cy="508"
                 onClick={(e) => onSecondEmotion(e, 'skeptical')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="skeptical"
                 r="65"
                 fill="url(#paint23_linear_7_227)"
@@ -1620,6 +1759,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'playful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="playful"
                 cx="66"
                 cy="55"
@@ -1635,6 +1776,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="284"
                 onClick={(e) => onSecondEmotion(e, 'joyful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="joyful"
                 cy="200"
                 r="50"
@@ -1648,6 +1791,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'curious')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="curious"
                 cx="51"
                 cy="410"
@@ -1663,6 +1808,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="344"
                 onClick={(e) => onSecondEmotion(e, 'inquisitive')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="inquisitive"
                 cy="548"
                 r="70"
@@ -1677,6 +1824,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="62.5"
                 onClick={(e) => onSecondEmotion(e, 'respected')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="respected"
                 cy="590.5"
                 r="62.5"
@@ -1691,6 +1840,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="699"
                 onClick={(e) => onSecondEmotion(e, 'intimate')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="intimate"
                 cy="576"
                 r="55"
@@ -1706,6 +1857,8 @@ const BubbleVersion = ({
                 cx="102"
                 cy="733"
                 onClick={(e) => onSecondEmotion(e, 'hopeful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="hopeful"
                 r="50"
                 fill="url(#paint6_linear_17_104)"
@@ -1719,6 +1872,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="226"
                 onClick={(e) => onSecondEmotion(e, 'inspired')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="inspired"
                 cy="659"
                 r="50"
@@ -1732,6 +1887,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'successful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="successful"
                 cx="450"
                 cy="445"
@@ -1747,6 +1904,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="217"
                 onClick={(e) => onSecondEmotion(e, 'content')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="content"
                 cy="67"
                 r="65"
@@ -1761,6 +1920,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="127"
                 onClick={(e) => onSecondEmotion(e, 'accepted')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="accepted"
                 cy="187"
                 r="70"
@@ -1773,6 +1934,8 @@ const BubbleVersion = ({
               />
               <circle
                 onClick={(e) => onSecondEmotion(e, 'powerful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="powerful"
                 id="emotion-btn"
                 cx="185"
@@ -1788,6 +1951,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'courageous')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="courageous"
                 cx="390"
                 cy="731"
@@ -1803,6 +1968,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="519"
                 onClick={(e) => onSecondEmotion(e, 'sensitive')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="sensitive"
                 cy="620"
                 r="60"
@@ -1818,6 +1985,8 @@ const BubbleVersion = ({
                 cx="499"
                 cy="85"
                 onClick={(e) => onSecondEmotion(e, 'aroused')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="aroused"
                 r="65"
                 fill="url(#paint14_linear_17_104)"
@@ -1829,6 +1998,8 @@ const BubbleVersion = ({
               />
               <circle
                 onClick={(e) => onSecondEmotion(e, 'confident')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="confident"
                 id="emotion-btn"
                 cx="689"
@@ -1846,6 +2017,8 @@ const BubbleVersion = ({
                 cx="597"
                 cy="475"
                 onClick={(e) => onSecondEmotion(e, 'thankful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="thankful"
                 r="55"
                 fill="url(#paint16_linear_17_104)"
@@ -1859,6 +2032,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="326"
                 onClick={(e) => onSecondEmotion(e, 'peaceful')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="peaceful"
                 cy="370"
                 r="65"
@@ -1874,6 +2049,8 @@ const BubbleVersion = ({
                 cx="520"
                 cy="316"
                 onClick={(e) => onSecondEmotion(e, 'loving')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="loving"
                 r="50"
                 fill="url(#paint18_linear_17_104)"
@@ -1887,6 +2064,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="185"
                 onClick={(e) => onSecondEmotion(e, 'trusting')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="trusting"
                 cy="330"
                 r="55"
@@ -1902,6 +2081,8 @@ const BubbleVersion = ({
                 cx="550"
                 cy="755"
                 onClick={(e) => onSecondEmotion(e, 'valued')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="valued"
                 r="45"
                 fill="url(#paint20_linear_17_104)"
@@ -1915,6 +2096,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="624"
                 onClick={(e) => onSecondEmotion(e, 'optimistic')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="optimistic"
                 cy="187"
                 r="75"
@@ -1928,6 +2111,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'interested')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="interested"
                 cx="695"
                 cy="363"
@@ -1944,6 +2129,8 @@ const BubbleVersion = ({
                 cx="431"
                 cy="240"
                 onClick={(e) => onSecondEmotion(e, 'proud')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="proud"
                 r="50"
                 fill="url(#paint23_linear_17_104)"
@@ -1957,6 +2144,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="373"
                 onClick={(e) => onSecondEmotion(e, 'free')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="free"
                 cy="98"
                 r="40"
@@ -1971,6 +2160,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="709"
                 onClick={(e) => onSecondEmotion(e, 'cheeky')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="cheeky"
                 cy="61"
                 r="55"
@@ -2286,6 +2477,8 @@ const BubbleVersion = ({
                 cx="57"
                 cy="104"
                 onClick={(e) => onSecondEmotion(e, 'scared')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="scared"
                 r="50"
                 fill="url(#paint0_linear_15_309)"
@@ -2298,6 +2491,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'inferior')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="inferior"
                 cx="214"
                 cy="413"
@@ -2313,6 +2508,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="47"
                 onClick={(e) => onSecondEmotion(e, 'weak')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="weak"
                 cy="761"
                 r="40"
@@ -2328,6 +2525,8 @@ const BubbleVersion = ({
                 cx="220"
                 cy="60"
                 onClick={(e) => onSecondEmotion(e, 'anxious')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="anxious"
                 r="60"
                 fill="url(#paint3_linear_15_309)"
@@ -2343,6 +2542,8 @@ const BubbleVersion = ({
                 cy="90"
                 r="60"
                 onClick={(e) => onSecondEmotion(e, 'insecure')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="insecure"
                 fill="url(#paint4_linear_15_309)"
               />
@@ -2357,6 +2558,8 @@ const BubbleVersion = ({
                 cy="230"
                 r="60"
                 onClick={(e) => onSecondEmotion(e, 'rejected')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="rejected"
                 fill="url(#paint5_linear_15_309)"
               />
@@ -2371,6 +2574,8 @@ const BubbleVersion = ({
                 cy="264"
                 r="60"
                 onClick={(e) => onSecondEmotion(e, 'helpless')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="helpless"
                 fill="url(#paint6_linear_15_309)"
               />
@@ -2384,6 +2589,8 @@ const BubbleVersion = ({
                 cx="334"
                 cy="523"
                 onClick={(e) => onSecondEmotion(e, 'worried')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="worried"
                 r="60"
                 fill="url(#paint7_linear_15_309)"
@@ -2397,6 +2604,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="445.5"
                 onClick={(e) => onSecondEmotion(e, 'threatened')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="threatened"
                 cy="388.5"
                 r="72.5"
@@ -2411,6 +2620,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="656.5"
                 onClick={(e) => onSecondEmotion(e, 'persecuted')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="persecuted"
                 cy="315.5"
                 r="72.5"
@@ -2423,6 +2634,8 @@ const BubbleVersion = ({
               />
               <circle
                 onClick={(e) => onSecondEmotion(e, 'excluded')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="excluded"
                 id="emotion-btn"
                 cx="653"
@@ -2440,6 +2653,8 @@ const BubbleVersion = ({
                 cx="641"
                 cy="710"
                 onClick={(e) => onSecondEmotion(e, 'exposed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="exposed"
                 r="60"
                 fill="url(#paint11_linear_15_309)"
@@ -2455,6 +2670,8 @@ const BubbleVersion = ({
                 cy="445.5"
                 r="72.5"
                 onClick={(e) => onSecondEmotion(e, 'inadequate')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="inadequate"
                 fill="url(#paint12_linear_15_309)"
               />
@@ -2467,6 +2684,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="249.5"
                 onClick={(e) => onSecondEmotion(e, 'frightened')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="frightened"
                 cy="248.5"
                 r="72.5"
@@ -2480,6 +2699,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'distraught')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="distraught"
                 cx="617.5"
                 cy="103.5"
@@ -2495,6 +2716,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="334.5"
                 onClick={(e) => onSecondEmotion(e, 'worthless')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="worthless"
                 cy="705.5"
                 r="72.5"
@@ -2511,6 +2734,8 @@ const BubbleVersion = ({
                 cy="590.5"
                 r="72.5"
                 onClick={(e) => onSecondEmotion(e, 'nervous')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="nervous"
                 fill="url(#paint16_linear_15_309)"
               />
@@ -2525,6 +2750,8 @@ const BubbleVersion = ({
                 cx="158"
                 cy="636"
                 onClick={(e) => onSecondEmotion(e, 'insignificant')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="insignificant"
                 r="80"
                 fill="url(#paint18_linear_15_309)"
@@ -2740,6 +2967,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'bored')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="bored"
                 cx="67"
                 cy="82"
@@ -2756,6 +2985,8 @@ const BubbleVersion = ({
                 cx="253"
                 cy="115"
                 onClick={(e) => onSecondEmotion(e, 'tired')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="tired"
                 r="65"
                 fill="url(#paint1_linear_15_346)"
@@ -2769,6 +3000,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="60"
                 onClick={(e) => onSecondEmotion(e, 'busy')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="busy"
                 cy="430"
                 r="60"
@@ -2783,6 +3016,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="131"
                 onClick={(e) => onSecondEmotion(e, 'stressed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="stressed"
                 cy="265"
                 r="90"
@@ -2797,6 +3032,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="253"
                 onClick={(e) => onSecondEmotion(e, 'sleepy')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="sleepy"
                 cy="430"
                 r="75"
@@ -2811,6 +3048,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="431"
                 onClick={(e) => onSecondEmotion(e, 'indifferent')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="indifferent"
                 cy="349"
                 r="100"
@@ -2826,6 +3065,8 @@ const BubbleVersion = ({
                 cx="141"
                 cy="627"
                 onClick={(e) => onSecondEmotion(e, 'overwhelmed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="overwhelmed"
                 r="120"
                 fill="url(#paint6_linear_15_346)"
@@ -2839,6 +3080,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="640"
                 onClick={(e) => onSecondEmotion(e, 'out of control')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="out of control"
                 cy="685"
                 r="100"
@@ -2852,6 +3095,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'apathetic')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="apathetic"
                 cx="650"
                 cy="115"
@@ -2867,6 +3112,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="402"
                 onClick={(e) => onSecondEmotion(e, 'unfocused')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="unfocused"
                 cy="652"
                 r="105"
@@ -2880,6 +3127,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'pressured')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="pressured"
                 cx="428"
                 cy="100"
@@ -2894,6 +3143,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'rushed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="rushed"
                 cx="649"
                 cy="459"
@@ -3043,6 +3294,8 @@ const BubbleVersion = ({
                 cx="110"
                 cy="90"
                 onClick={(e) => onSecondEmotion(e, 'startled')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="startled"
                 r="90"
                 fill="url(#paint0_linear_16_2)"
@@ -3056,6 +3309,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="115"
                 onClick={(e) => onSecondEmotion(e, 'amazed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="amazed"
                 cy="303"
                 r="95"
@@ -3070,6 +3325,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="478"
                 onClick={(e) => onSecondEmotion(e, 'excited')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="excited"
                 cy="327"
                 r="90"
@@ -3083,6 +3340,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'eager')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="eager"
                 cx="299"
                 cy="417"
@@ -3097,6 +3356,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'energetic')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="energetic"
                 cx="243"
                 cy="699"
@@ -3112,6 +3373,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="678"
                 onClick={(e) => onSecondEmotion(e, 'awe')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="awe"
                 cy="279"
                 r="50"
@@ -3126,6 +3389,8 @@ const BubbleVersion = ({
                 id="emotion-btn"
                 cx="100"
                 onClick={(e) => onSecondEmotion(e, 'shocked')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="shocked"
                 cy="537"
                 r="100"
@@ -3141,6 +3406,8 @@ const BubbleVersion = ({
                 cx="330"
                 cy="158"
                 onClick={(e) => onSecondEmotion(e, 'confused')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="confused"
                 r="100"
                 fill="url(#paint7_linear_16_2)"
@@ -3155,6 +3422,8 @@ const BubbleVersion = ({
                 cx="578"
                 cy="115"
                 onClick={(e) => onSecondEmotion(e, 'dismayed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="dismayed"
                 r="100"
                 fill="url(#paint8_linear_16_2)"
@@ -3167,6 +3436,8 @@ const BubbleVersion = ({
               <circle
                 id="emotion-btn"
                 onClick={(e) => onSecondEmotion(e, 'perplexed')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="perplexed"
                 cx="654"
                 cy="459"
@@ -3183,6 +3454,8 @@ const BubbleVersion = ({
                 cx="678"
                 cy="699"
                 onClick={(e) => onSecondEmotion(e, 'astonished')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="astonished"
                 r="80"
                 fill="url(#paint10_linear_16_2)"
@@ -3197,6 +3470,8 @@ const BubbleVersion = ({
                 cx="450"
                 cy="597"
                 onClick={(e) => onSecondEmotion(e, 'disillusioned')}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 data-name="disillusioned"
                 r="120"
                 fill="url(#paint11_linear_16_2)"

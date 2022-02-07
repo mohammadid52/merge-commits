@@ -6,10 +6,179 @@ import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
 import React from 'react';
+import {useRouteMatch} from 'react-router';
 import TableBlock from './UniversalLessonBlockComponents/Blocks/TableBlock';
 
-const AllEmotions = ({lessonId}: {lessonId: string}) => {
+const emotionData = {
+  happy: {
+    emoji: '😃',
+    list: [
+      'playful',
+      'content',
+      'accepted',
+      'joyful',
+      'free',
+      'aroused',
+      'optimistic',
+      'cheeky',
+      'proud',
+      'loving',
+      'interested',
+      'thankful',
+      'successful',
+      'powerful',
+      'trusting',
+      'curious',
+      'inquisitve',
+      'intimate',
+      'confident',
+      'valued',
+      'courageous',
+      'sensitive',
+      'inspired',
+      'hopeful',
+      'peaceful',
+      'respected',
+    ],
+  },
+  angry: {
+    emoji: '😡',
+    list: [
+      'let down',
+      'furious',
+      'annoyed',
+      'betrayed',
+      'jealous',
+      'bitter',
+      'humiliated',
+      'mad',
+      'provoked',
+      'numb',
+      'disrespected',
+      'dismissive',
+      'frustrated',
+      'aggressive',
+      'indignant',
+      'skeptical',
+      'distant',
+      'resentful',
+      'withdrawn',
+      'ridiculed',
+      'infuriated',
+      'hostile',
+      'violated',
+      'critical',
+    ],
+  },
+
+  surprised: {
+    emoji: '😱',
+    list: [
+      'startled',
+      'confused',
+      'dismayed',
+      'amazed',
+      'eager',
+      'excited',
+      'perplexed',
+      'awe',
+      'shocked',
+      'disillusioned',
+      'energetic',
+      'astonished',
+    ],
+  },
+  disgusted: {
+    emoji: '🤢',
+    list: [
+      'disapproving',
+      'repelled',
+      'appalled',
+      'hesitant',
+      'awful',
+      'disappointed',
+      'horrified',
+      'revolted',
+      'humiliated',
+      'judgemental',
+      'nauseated',
+      'detestable',
+      'horrified',
+    ],
+  },
+  sad: {
+    emoji: '😔',
+    list: [
+      'lonely',
+      'despair',
+      'isolated',
+      'hurt',
+      'vulnerable',
+      'fragile',
+      'disappointed',
+      'ashamed',
+      'depressed',
+      'embarrased',
+      'guilty',
+      'unimportant',
+      'powerless',
+      'grief',
+      'abandoned',
+      'empty',
+      'vitimized',
+      'remorseful',
+    ],
+  },
+  fearful: {
+    emoji: '😰',
+    list: [
+      'scared',
+      'anxious',
+      'insecure',
+      'distraught',
+      'helpless',
+      'frightened',
+      'rejected',
+      'persecuted',
+      'excluded',
+      'inadequate',
+      'inferior',
+      'threatened',
+      'nervous',
+      'insignificant',
+      'worried',
+      'worthless',
+      'exposed',
+      'weak',
+    ],
+  },
+
+  bad: {
+    emoji: '😩',
+    list: [
+      'bored',
+      'tired',
+      'pressured',
+      'apathetic',
+      'stressed',
+      'indifferent',
+      'rushed',
+      'busy',
+      'overwhelmed',
+      'unfocused',
+      'out of control',
+      'sleepy',
+    ],
+  },
+};
+
+const AllEmotions = () => {
   const {authId, isStudent} = useAuth();
+
+  const router: any = useRouteMatch();
+
+  const lessonId = router.params.lessonID || '999';
+
   const {data = [], isLoading} = useGraphqlQuery<
     ListFeelingsArchivesQueryVariables,
     FeelingsArchive[]
@@ -48,14 +217,36 @@ const AllEmotions = ({lessonId}: {lessonId: string}) => {
     }),
   };
 
+  // const {mutate} = useGraphqlMutation('deleteFeelingsArchive');
+
+  // useEffect(() => {
+  //   const ids = ['qxFkuMJ7vKqWmWDE1vl5UhQa', 'FhCLQwcs4KZlJ9WjqIhRslW_'];
+  //   console.log('deleting');
+
+  //   ids.forEach((id) => mutate({input: {id}}));
+  // }, []);
+
+  const _keys = Object.keys(emotionData);
+
+  function addEmojiToName(names: string[]) {
+    return names.map((name, idx) =>
+      _keys.map((n) => {
+        // @ts-ignore
+        if (emotionData[n].list.includes(name)) {
+          // @ts-ignore
+          return `${emotionData[n].emoji}${name}${idx !== names.length - 1 ? ', ' : ''}`;
+        }
+      })
+    );
+  }
+
   const nameColumn = {
     id: nanoid(24),
     value: 'Emotion Name',
     options: data.map((em) => {
-      const [emoji = ''] = em.sentimentId.split('-');
       return {
         id: nanoid(24),
-        text: `${emoji} ${em.sentimentName}`,
+        text: addEmojiToName(em.sentimentName),
       };
     }),
   };
