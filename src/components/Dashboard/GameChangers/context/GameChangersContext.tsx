@@ -11,7 +11,7 @@ export const GameChangerProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // numbers
-  const [selectedCard, setSelectedCard] = useState<null | number>(3);
+  const [selectedCard, setSelectedCard] = useState<null | number>(null);
   const [initialIndex, setInitialIndex] = useState<number>(1);
   const [countSelected, setCountSelected] = useState<null | number>(null);
   const [counter, setCounter] = useState<number>(1);
@@ -27,7 +27,7 @@ export const GameChangerProvider = ({
 
   // emotion component context
   const [selectedEmotions, setSelectedEmotions] = useState([]);
-  const [primaryEmotion, setPrimaryEmotion] = useState('angry');
+  const [primaryEmotion, setPrimaryEmotion] = useState('');
   const [secondaryEmotion, setSecondaryEmotion] = useState('');
   const [replaceIdx, setReplaceIdx] = useState(null);
   const [showFinalStep, setShowFinalStep] = useState(false);
