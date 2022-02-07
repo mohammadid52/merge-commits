@@ -25,8 +25,12 @@ const BubbleVersion = () => {
     const circleTexts = document.querySelectorAll('#emotion-btn-path');
     // @ts-ignore
     gsap.from([...circles, ...circleTexts], {
-      scale: 0.8,
+      scale: 0.7,
       duration: 0.5,
+      stagger: {
+        from: 'center',
+        each: 0.01,
+      },
       transformOrigin: 'center',
     });
   }, [primaryEmotion]);
