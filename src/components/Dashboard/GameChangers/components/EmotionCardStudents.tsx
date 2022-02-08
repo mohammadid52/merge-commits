@@ -3,6 +3,7 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useInGC from '@customHooks/checkIfGameChanges';
 import useAuth from '@customHooks/useAuth';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
@@ -91,19 +92,14 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     }
   };
 
-  // const deleteM = useGraphqlMutation('deleteFeelingsArchive');
+  const deleteM = useGraphqlMutation('deleteFeelingsArchive');
 
-  // useEffect(() => {
-  //   const ids = [
-  //     'V_v5mvqWE1eCVwN18W1rJvoe',
-  //     'yZhKZetSF3O_-BRwEOMDGbr6',
-  //     'AK6P8yIa2DUEayBcmAAf1JWq',
-  //     '0kmFOoOER2O7dmLIc2MqKNgd',
-  //   ];
-  //   console.log('deleting');
+  useEffect(() => {
+    const ids = ['nQyLvq2ZYNODiXiiLfAtz1_y'];
+    console.log('deleting');
 
-  //   ids.forEach((id) => deleteM.mutate({input: {id}}));
-  // }, []);
+    ids.forEach((id) => deleteM.mutate({input: {id}}));
+  }, []);
 
   return listLoading ? (
     <div className="flex items-center justify-center h-32">
