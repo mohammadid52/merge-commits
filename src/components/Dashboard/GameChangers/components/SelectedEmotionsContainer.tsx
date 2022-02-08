@@ -1,8 +1,9 @@
 import Popover from '@atoms/Popover';
+import Loader from '@components/Atoms/Loader';
 import Tooltip from '@components/Atoms/Tooltip';
+import ThemeModal from '@components/Molecules/ThemeModal';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useNotifications} from '@contexts/NotificationContext';
-import PositiveAlert from '@components/General/Popup';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -15,8 +16,6 @@ import {FiEdit, FiTrash2} from 'react-icons/fi';
 import {useRouteMatch} from 'react-router';
 import {SelectedEmotion, useGameChangers} from '../context/GameChangersContext';
 import Button from './Button';
-import ThemeModal from '@components/Molecules/ThemeModal';
-import Loader from '@components/Atoms/Loader';
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
@@ -130,6 +129,7 @@ const SelectedEmotionsContainer = () => {
       console.error(error);
     } finally {
       setChangesSaved(true);
+      setVisible(false);
     }
   };
 
@@ -151,44 +151,40 @@ const SelectedEmotionsContainer = () => {
 
   const handlePopup = () => setVisible((prev) => !prev);
 
-  const Modal = () => (
-    <ThemeModal open={visible} setOpen={setVisible}>
-      <div className="w-auto">
-        <div className="mt-2">
-          <p className="text-lg leading-5 text-white text-center">
-            Are you sure you want to save this?
-          </p>
-        </div>
-        <div className={`mt-5   sm:mt-6 flex flex-col`}>
-          {/* YES */}
-          <p className={`w-auto flex rounded-md shadow-sm text-white`}>
-            <button
-              type="button"
-              disabled={isLoading}
-              className={`${'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
-              onClick={onSave}>
-              {isLoading ? <Loader color="#fff" /> : 'Yes, Save It!'}
-            </button>
-          </p>
-
-          {/* NO */}
-          <p className={`w-auto flex rounded-md shadow-sm text-white`}>
-            <button
-              disabled={isLoading}
-              type="button"
-              className={`text-gray-500 hover:text-white w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
-              onClick={() => setVisible(false)}>
-              No, Don't Save It
-            </button>
-          </p>
-        </div>
-      </div>
-    </ThemeModal>
-  );
-
   return (
     <>
-      <Modal />
+      <ThemeModal open={visible} max={{w: 132}} setOpen={setVisible}>
+        <div className="w-auto">
+          <div className="mt-2">
+            <p className="text-lg leading-5 text-white text-center">
+              Are you sure you want to save this?
+            </p>
+          </div>
+          <div className={`mt-5   sm:mt-6 flex flex-col`}>
+            {/* YES */}
+            <p className={`w-auto flex rounded-md shadow-sm text-white`}>
+              <button
+                type="button"
+                disabled={isLoading}
+                className={`${'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                onClick={onSave}>
+                {isLoading ? <Loader color="#fff" /> : 'Yes, Save It!'}
+              </button>
+            </p>
+
+            {/* NO */}
+            <p className={`w-auto flex rounded-md shadow-sm text-white`}>
+              <button
+                disabled={isLoading}
+                type="button"
+                className={`text-gray-500 hover:text-white w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                onClick={() => setVisible(false)}>
+                No, Don't Save It
+              </button>
+            </p>
+          </div>
+        </div>
+      </ThemeModal>
       {!showFinalStep && (
         <div className="flex flex-col select-none justify-center 2xl:mt-4 gap-y-4 items-center w-auto">
           <div className="p-2 px-3 emoji-cart-container transition-all  border-0 w-auto  border-gray-800 rounded-md flex flex-row gap-x-4">

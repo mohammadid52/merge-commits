@@ -246,7 +246,7 @@ const AllEmotions = () => {
     options: data.map((em) => {
       return {
         id: nanoid(24),
-        text: addEmojiToName(em.sentimentName),
+        text: em.sentimentName.length > 0 ? addEmojiToName(em.sentimentName) : '',
       };
     }),
   };

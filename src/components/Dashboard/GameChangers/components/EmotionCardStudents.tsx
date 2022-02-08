@@ -95,7 +95,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   const deleteM = useGraphqlMutation('deleteFeelingsArchive');
 
   useEffect(() => {
-    const ids = ['nQyLvq2ZYNODiXiiLfAtz1_y'];
+    const ids = ['of5VajapCVwU9mIX6nFEqQDK'];
     console.log('deleting');
 
     ids.forEach((id) => deleteM.mutate({input: {id}}));
