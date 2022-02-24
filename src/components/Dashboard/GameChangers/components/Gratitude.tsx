@@ -9,19 +9,21 @@ import {CreateGameChangerInput, CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
+import {useGameChangers} from '../context/GameChangersContext';
 
 const Gratitude = () => {
   const {email, authId} = useAuth();
 
   const [error, setError] = useState('');
 
+  const {setIsCompleted, isCompleted} = useGameChangers();
   const [fields, setFields] = useState({summary: '1. \n\n2. \n\n3. \n', summaryHtml: ''});
 
   const mutationLog = useGraphqlMutation<{input: CreateGameChangerLogInput}>(
     'createGameChangerLog',
     {
       onSuccess: () => {
-        setIsSuccess(true);
+        setIsCompleted(true);
       },
     }
   );
@@ -75,12 +77,10 @@ const Gratitude = () => {
     );
   }, []);
 
-  const [isSuccess, setIsSuccess] = useState(false);
-
   return (
     <>
-      <AnimatedContainer show={!isSuccess}>
-        {!isSuccess && (
+      <AnimatedContainer show={!isCompleted}>
+        {!isCompleted && (
           <div>
             <h1 className="text-2xl text-white mb-4">
               Write down 3 things that you feel grateful for right now.
@@ -104,13 +104,6 @@ const Gratitude = () => {
               </div>
             </div>
           </div>
-        )}
-      </AnimatedContainer>
-      <AnimatedContainer show={isSuccess}>
-        {isSuccess && (
-          <h1 className="text-4xl my-4  text-white font-bold text-left">
-            Thanks for your input
-          </h1>
         )}
       </AnimatedContainer>
     </>
