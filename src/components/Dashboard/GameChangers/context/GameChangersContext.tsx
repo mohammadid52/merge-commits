@@ -11,7 +11,7 @@ export const GameChangerProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // numbers
-  const [selectedCard, setSelectedCard] = useState<null | number>(null);
+  const [selectedCard, setSelectedCard] = useState<null | number>(5);
   const [initialIndex, setInitialIndex] = useState<number>(1);
   const [countSelected, setCountSelected] = useState<null | number>(null);
   const [counter, setCounter] = useState<number>(1);

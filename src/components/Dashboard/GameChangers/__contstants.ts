@@ -1,19 +1,24 @@
 import {
   EMOTIONS,
   FOUR_SEVEN_EIGHT,
+  GRATITUDE,
+  SINGING_BOWL,
   SQUARE,
   THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {nanoid} from 'nanoid';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
+import {BsFillJournalBookmarkFill} from 'react-icons/bs';
+import {CgBowl} from 'react-icons/cg';
 import {FcMindMap} from 'react-icons/fc';
+import {RiEmotionHappyLine} from 'react-icons/ri';
 
 const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const cardsList = [
   {
     id: 0,
-    // don't change the id
+
     type: SQUARE,
     title: 'Square Breathing',
     icon: BiRadioCircleMarked,
@@ -30,7 +35,7 @@ const cardsList = [
     iconBackground: 'bg-blue-100',
     subtitle: 'Add 4-7-8 breathing to lesson',
     id: 1,
-    // don't change the id
+
     name: '4-7-8 Breathing',
     type: FOUR_SEVEN_EIGHT,
     title: '4-7-8 Breathing',
@@ -43,7 +48,7 @@ const cardsList = [
     iconBackground: 'bg-yellow-100',
     subtitle: 'Add `Think about it` to lesson',
     id: 2,
-    // don't change the id
+
     name: 'Think About It',
     type: THINK_ABOUT_IT,
     title: 'Think About It',
@@ -51,15 +56,39 @@ const cardsList = [
       'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
   },
   {
-    icon: FcMindMap,
+    icon: RiEmotionHappyLine,
     iconForeground: 'text-green-700',
     iconBackground: 'bg-green-100',
-    subtitle: 'Get emotions feedback',
+    subtitle: 'Get emotion feedback',
     id: 3,
-    // don't change the id
     name: 'Emotions Component',
     type: EMOTIONS,
     title: 'Emotions',
+    desc:
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
+  },
+  {
+    id: 4,
+    name: 'Gratitude Component',
+    subtitle: 'Write 3 things in journal',
+
+    icon: BsFillJournalBookmarkFill,
+    iconForeground: 'text-pink-700',
+    iconBackground: 'bg-pink-100',
+    type: GRATITUDE,
+    title: 'Gratitude',
+    desc:
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
+  },
+  {
+    id: 5,
+    name: 'Singing Meditation',
+    subtitle: 'Use singing meditation',
+    icon: CgBowl,
+    iconForeground: 'text-teal-700',
+    iconBackground: 'bg-teal-100',
+    type: SINGING_BOWL,
+    title: 'Singing Bowl',
     desc:
       'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
   },

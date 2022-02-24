@@ -1,13 +1,20 @@
-import React, {useState} from 'react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {EMOTIONS, GAME_CHANGERS, SQUARE, THINK_ABOUT_IT} from '../common/constants';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import {nanoid} from 'nanoid';
 import Buttons from '@components/Atoms/Buttons';
+import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-import {kebabCase, snakeCase} from 'lodash';
-import FormInput from '@components/Atoms/Form/FormInput';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {snakeCase} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useState} from 'react';
+import {
+  EMOTIONS,
+  GAME_CHANGERS,
+  GRATITUDE,
+  SINGING_BOWL,
+  SQUARE,
+  THINK_ABOUT_IT,
+} from '../common/constants';
 
 interface ActivityModalProps extends IContentTypeComponentProps {
   type: string;
@@ -43,6 +50,10 @@ const ActivityModal = ({
 
       case THINK_ABOUT_IT:
         return 'Think About It';
+      case GRATITUDE:
+        return 'Gratitude Component';
+      case SINGING_BOWL:
+        return 'Singing Bowl Component';
 
       default:
         return '478 Breathing';

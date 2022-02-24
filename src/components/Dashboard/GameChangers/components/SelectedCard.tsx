@@ -11,6 +11,8 @@ import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameCh
 import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
 import {
   EMOTIONS,
+  GRATITUDE,
+  SINGING_BOWL,
   THINK_ABOUT_IT,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
@@ -25,7 +27,9 @@ import moment from 'moment';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
+import Gratitude from './Gratitude';
 import SelectedEmotionsContainer from './SelectedEmotionsContainer';
+import SingingBowl from './SingingBowl';
 
 // Constants
 
@@ -219,6 +223,14 @@ const SelectedCard = ({
                 ) : (
                   <EmotionCardTeachers inLesson={inLesson} />
                 ))}
+            </AnimatedContainer>
+
+            <AnimatedContainer show={selected && selected?.type === GRATITUDE}>
+              {selected?.type === GRATITUDE && <Gratitude />}
+            </AnimatedContainer>
+
+            <AnimatedContainer show={selected && selected?.type === SINGING_BOWL}>
+              {selected?.type === SINGING_BOWL && <SingingBowl />}
             </AnimatedContainer>
 
             {/* Count Selection Section */}

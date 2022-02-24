@@ -44,12 +44,14 @@ import {
   EMOTIONS,
   FORM_TYPES,
   FOUR_SEVEN_EIGHT,
+  GRATITUDE,
   INPUT,
   INPUT_WITH_EMOJI,
   LINK,
   PARAGRAPH,
   SELECT_MANY,
   SELECT_ONE,
+  SINGING_BOWL,
   SQUARE,
   TABLE,
   THINK_ABOUT_IT,
@@ -467,6 +469,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FOUR_SEVEN_EIGHT:
       case THINK_ABOUT_IT:
       case EMOTIONS:
+      case GRATITUDE:
+      case SINGING_BOWL:
         return <ActivityModal type={type} {...commonProps} />;
 
       default:

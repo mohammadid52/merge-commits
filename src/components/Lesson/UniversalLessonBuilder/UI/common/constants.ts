@@ -37,6 +37,8 @@ export const SQUARE = 'square';
 export const FOUR_SEVEN_EIGHT = '478';
 export const THINK_ABOUT_IT = 'think_about_it';
 export const EMOTIONS = 'emotion';
+export const GRATITUDE = 'gratitude';
+export const SINGING_BOWL = 'singing_bowl';
 export const GAME_CHANGERS = 'game_changers';
 
 export const REGEX = {
