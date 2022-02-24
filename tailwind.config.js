@@ -576,6 +576,7 @@ module.exports = {
         '9.5/10': '95%',
       },
       minHeight: {
+        12: '3rem',
         16: '4rem',
         28: '7rem',
         30: '7.5rem',
@@ -746,7 +747,7 @@ module.exports = {
       translate: {
         100: '25rem',
         160: '40rem',
-      }
+      },
     },
   },
   variants: {

@@ -21,6 +21,7 @@ const useAuth = (): {
   const context = useGlobalContext();
 
   const user = context.state.user;
+
   const {authId, role, email, firstName, lastName, image} = user;
 
   const isStudent = role === 'ST';

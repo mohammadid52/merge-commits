@@ -5,6 +5,8 @@ import {GlobalContextProvider} from '@contexts/GlobalContext';
 import MainRouter from './AppMainRouter';
 import {OverlayContextProvider} from '@contexts/OverlayContext';
 import {PageBuilderProvider} from '@contexts/PageBuilderContext';
+import Notification from '@atoms/Notification';
+import NotificationContextProvider from '@contexts/NotificationContext';
 
 const App: React.FC = () => {
   return (
@@ -12,9 +14,12 @@ const App: React.FC = () => {
       <GlobalContextProvider>
         <OverlayContextProvider>
           <PageBuilderProvider>
-            <Router>
-              <MainRouter />
-            </Router>
+            <NotificationContextProvider>
+              <Router>
+                <MainRouter />
+                <Notification />
+              </Router>
+            </NotificationContextProvider>
           </PageBuilderProvider>
         </OverlayContextProvider>
       </GlobalContextProvider>

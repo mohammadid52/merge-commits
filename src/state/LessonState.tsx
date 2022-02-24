@@ -26,6 +26,7 @@ export interface lessonStateType {
   subscription?: any;
   subscribeFunc?: any;
   studentViewing?: string;
+  isLastPage?: boolean;
 }
 
 export const lessonState: lessonStateType = {
@@ -40,6 +41,7 @@ export const lessonState: lessonStateType = {
   lessonProgress: 0,
   canContinue: '',
   updated: false,
+  isLastPage: false,
   requiredInputs: [[]],
   studentData: [[]],
   exerciseData: [[]],

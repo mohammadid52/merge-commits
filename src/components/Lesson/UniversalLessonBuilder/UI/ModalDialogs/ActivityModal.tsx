@@ -1,11 +1,20 @@
-import React from 'react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {SQUARE} from '../common/constants';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import {nanoid} from 'nanoid';
 import Buttons from '@components/Atoms/Buttons';
+import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {snakeCase} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useState} from 'react';
+import {
+  EMOTIONS,
+  GAME_CHANGERS,
+  GRATITUDE,
+  SINGING_BOWL,
+  SQUARE,
+  THINK_ABOUT_IT,
+} from '../common/constants';
 
 interface ActivityModalProps extends IContentTypeComponentProps {
   type: string;
@@ -31,12 +40,31 @@ const ActivityModal = ({
   const {clientKey, userLanguage} = useGlobalContext();
   const {EditQuestionModalDict} = useDictionary(clientKey);
 
+  const getLabel = () => {
+    switch (type) {
+      case SQUARE:
+        return 'Square';
+
+      case EMOTIONS:
+        return 'Emotion';
+
+      case THINK_ABOUT_IT:
+        return 'Think About It';
+      case GRATITUDE:
+        return 'Gratitude Component';
+      case SINGING_BOWL:
+        return 'Singing Bowl Component';
+
+      default:
+        return '478 Breathing';
+    }
+  };
   const onActivityCreate = async () => {
     const value = [
       {
         id: nanoid(20),
-        label: type === SQUARE ? 'Square Breathing' : '478 Breathing',
-        value: type === SQUARE ? 'square-breathing' : '478-breathing',
+        label: type === EMOTIONS ? emotionLabel : getLabel(),
+        value: snakeCase(getLabel()),
       },
     ];
 
@@ -44,7 +72,7 @@ const ActivityModal = ({
     const updatedList: any = createNewBlockULBHandler(
       '',
       '',
-      SQUARE,
+      GAME_CHANGERS,
 
       value,
       0,
@@ -53,12 +81,25 @@ const ActivityModal = ({
     );
     await addToDB(updatedList);
   };
+
+  const [emotionLabel, setEmotionLabel] = useState('');
+
   return (
     <div>
-      <h1>
-        Did you want to add {type === SQUARE ? 'Square' : '4-7-8'} Breathing to this
-        lesson?
-      </h1>
+      {type !== EMOTIONS && <h1>Did you want to add {getLabel()} to this lesson?</h1>}
+
+      {type === EMOTIONS && (
+        <div>
+          <FormInput
+            onChange={(e) => setEmotionLabel(e.target.value)}
+            label={'Emotion Feedback Label'}
+            value={emotionLabel}
+            id={'emotion_feedback_label'}
+            placeHolder={`Enter label for emotion feedback`}
+            type="text"
+          />
+        </div>
+      )}
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">

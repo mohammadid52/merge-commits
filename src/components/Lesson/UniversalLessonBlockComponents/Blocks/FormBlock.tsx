@@ -3,15 +3,11 @@ import AttachmentBlock from '@components/Lesson/UniversalLessonBlockComponents/B
 import OptionBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
 import StarRatingBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
 import WritingExerciseBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
-import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import ReviewSliderBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 import useStudentDataValue from '@customHooks/studentDataValue';
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';

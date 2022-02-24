@@ -530,3 +530,19 @@ icon {
     transform: rotate(90deg);
   }
 }
+
+@media screen and (min-width: 1560px) {
+  .responsive_card {
+    transform: scale(2.5);
+  }
+}
+@media screen and (min-width: 2000px) {
+  .responsive_card {
+    transform: scale(3);
+  }
+}
+@media screen and (min-width: 2500px) {
+  .responsive_card {
+    transform: scale(3.5);
+  }
+}

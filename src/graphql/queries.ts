@@ -6319,6 +6319,1154 @@ export const listPersonSentimentss = /* GraphQL */ `
     }
   }
 `;
+export const getSentiments = /* GraphQL */ `
+  query GetSentiments($id: ID!) {
+    getSentiments(id: $id) {
+      id
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSentimentss = /* GraphQL */ `
+  query ListSentimentss(
+    $filter: ModelSentimentsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSentimentss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSentimentTracker = /* GraphQL */ `
+  query GetSentimentTracker($personAuthID: String!, $date: AWSDate!) {
+    getSentimentTracker(personAuthID: $personAuthID, date: $date) {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        complete
+        roster
+        viewing
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSentimentTrackers = /* GraphQL */ `
+  query ListSentimentTrackers(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelSentimentTrackerFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listSentimentTrackers(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        syllabusLessonID
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFeelingTracker = /* GraphQL */ `
+  query GetFeelingTracker($personAuthID: String!, $date: AWSDate!) {
+    getFeelingTracker(personAuthID: $personAuthID, date: $date) {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        id
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      lessonID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        language
+        SELStructure
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        measurements {
+          nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        duration
+        resources
+        notes
+        targetAudience
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      sentimentType
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeelingTrackers = /* GraphQL */ `
+  query ListFeelingTrackers(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelFeelingTrackerFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFeelingTrackers(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          instructionsTitle
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
+          institutionID
+          duration
+          resources
+          notes
+          targetAudience
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        sentimentName
+        sentimentType
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFeelingsArchive = /* GraphQL */ `
+  query GetFeelingsArchive($id: ID!) {
+    getFeelingsArchive(id: $id) {
+      id
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        addedby
+        createdAt
+        updatedAt
+      }
+      sentimentId
+      sentiment {
+        items {
+          id
+          sentimentName
+          sentimentType
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classRoomID
+      classRoom {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
+      lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      sentimentName
+      comments
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeelingsArchives = /* GraphQL */ `
+  query ListFeelingsArchives(
+    $id: ID
+    $filter: ModelFeelingsArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFeelingsArchives(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          nextToken
+        }
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        sentimentName
+        comments
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getPersonFiles = /* GraphQL */ `
   query GetPersonFiles($id: ID!) {
     getPersonFiles(id: $id) {

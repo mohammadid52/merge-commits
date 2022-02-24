@@ -1397,3 +1397,59 @@
     background-color: unset !important;
   }
 }
+
+.happy_card {
+  background: linear-gradient(131.97deg, #6b83c1 13.18%, #737db8 14.14%, #e8222b 89.82%);
+}
+
+.angry_card {
+  background: linear-gradient(318.86deg, #f14825 -12.45%, #f4b516 83.61%);
+}
+
+.sad_card {
+  background: linear-gradient(318.86deg, #82b9e4 -12.45%, #577cbd 83.61%);
+}
+
+.fearful_card {
+  background: linear-gradient(318.86deg, #faae16 -12.45%, #95cac5 83.61%);
+}
+
+.bad_card {
+  background: linear-gradient(318.86deg, #3c9158 -12.45%, #f9ed51 83.61%);
+}
+
+.surprised_card {
+  background: linear-gradient(29.93deg, #f397b9 17.57%, #eae5f2 97.66%, #eae5f2 97.66%);
+}
+
+.disgusted_card {
+  background: linear-gradient(318.86deg, #6ec59d -12.45%, #d790b6 83.61%);
+}
+
+.happy_card,
+.angry_card,
+.sad_card,
+.fearful_card,
+.bad_card,
+.surprised_card,
+.disgusted_card {
+  animation: scale 300ms ease-in-out;
+}
+
+#emotion-btn,
+#emotion-btn-path {
+  cursor: pointer;
+}
+
+// KEYFRAMES
+
+@keyframes scale {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

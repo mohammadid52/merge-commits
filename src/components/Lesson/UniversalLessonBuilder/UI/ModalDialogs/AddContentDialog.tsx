@@ -1,8 +1,12 @@
 import Buttons from '@components/Atoms/Buttons';
-import {classNames} from '@UlbUI/FormElements/TextInput';
+import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {isEmpty, map} from 'lodash';
+import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import {classNames} from '@UlbUI/FormElements/TextInput';
+import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
@@ -22,10 +26,6 @@ import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
-import {DIVIDER, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -52,6 +52,7 @@ const AddContentDialog = ({
     setActiveContentItem,
     showingPin,
     setSelectedType,
+    emotionComponentExists,
   } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();
@@ -284,6 +285,8 @@ const AddContentDialog = ({
     const onOptions = currentType && !onFinalStep;
     const onInit = !currentType && !onFinalStep;
 
+    const isDisabled = content.type === EMOTIONS && emotionComponentExists;
+
     return (
       <div
         onClick={() => {
@@ -293,7 +296,9 @@ const AddContentDialog = ({
         }}
         className={`relative ${
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
-        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white px-6 py-2 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
+        } ${
+          isDisabled ? 'opacity-60 pointer-events-none' : 'pointer-events-auto'
+        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -329,7 +334,7 @@ const AddContentDialog = ({
         </>
         <>
           {onOptions && (
-            <div className="px-2 dark:text-gray-500 flex items-center justify-between">
+            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
               <Buttons
                 onClick={onCustomPositionClick}
                 overrideClass
