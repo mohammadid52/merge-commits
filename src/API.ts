@@ -70,7 +70,7 @@ export type Institution = {
 
 export type ModelServiceProviderConnection = {
   __typename: "ModelServiceProviderConnection",
-  items?:  Array<ServiceProvider >,
+  items?:  Array<ServiceProvider | null >,
   nextToken?: string | null,
 };
 
@@ -87,7 +87,7 @@ export type ServiceProvider = {
 
 export type ModelStaffConnection = {
   __typename: "ModelStaffConnection",
-  items?:  Array<Staff >,
+  items?:  Array<Staff | null >,
   nextToken?: string | null,
 };
 
@@ -168,13 +168,13 @@ export enum Language {
 
 export type ModelClassStudentConnection = {
   __typename: "ModelClassStudentConnection",
-  items?:  Array<ClassStudent >,
+  items?:  Array<ClassStudent | null >,
   nextToken?: string | null,
 };
 
 export type ModelRoomConnection = {
   __typename: "ModelRoomConnection",
-  items?:  Array<Room >,
+  items?:  Array<Room | null >,
   nextToken?: string | null,
 };
 
@@ -222,7 +222,7 @@ export type Room = {
 
 export type ModelRoomCoTeachersConnection = {
   __typename: "ModelRoomCoTeachersConnection",
-  items?:  Array<RoomCoTeachers >,
+  items?:  Array<RoomCoTeachers | null >,
   nextToken?: string | null,
 };
 
@@ -241,7 +241,7 @@ export type RoomCoTeachers = {
 
 export type ModelRoomCurriculumConnection = {
   __typename: "ModelRoomCurriculumConnection",
-  items?:  Array<RoomCurriculum >,
+  items?:  Array<RoomCurriculum | null >,
   nextToken?: string | null,
 };
 
@@ -279,7 +279,7 @@ export type Curriculum = {
 
 export type ModelSyllabusConnection = {
   __typename: "ModelSyllabusConnection",
-  items?:  Array<Syllabus >,
+  items?:  Array<Syllabus | null >,
   nextToken?: string | null,
 };
 
@@ -304,7 +304,7 @@ export type Syllabus = {
 
 export type ModelSyllabusLessonConnection = {
   __typename: "ModelSyllabusLessonConnection",
-  items?:  Array<SyllabusLesson >,
+  items?:  Array<SyllabusLesson | null >,
   nextToken?: string | null,
 };
 
@@ -412,7 +412,7 @@ export type LessonComponents = {
 
 export type ModelLessonRubricsConnection = {
   __typename: "ModelLessonRubricsConnection",
-  items?:  Array<LessonRubrics >,
+  items?:  Array<LessonRubrics | null >,
   nextToken?: string | null,
 };
 
@@ -592,7 +592,7 @@ export type ComponentSummary = {
 
 export type ModelStudentDataConnection = {
   __typename: "ModelStudentDataConnection",
-  items?:  Array<StudentData >,
+  items?:  Array<StudentData | null >,
   nextToken?: string | null,
 };
 
@@ -620,7 +620,7 @@ export type StudentData = {
 
 export type ModelQuestionDataStudentDataConnection = {
   __typename: "ModelQuestionDataStudentDataConnection",
-  items?:  Array<QuestionDataStudentData >,
+  items?:  Array<QuestionDataStudentData | null >,
   nextToken?: string | null,
 };
 
@@ -674,7 +674,7 @@ export type AnthologyContent = {
 
 export type ModelcommonCheckpointConnection = {
   __typename: "ModelcommonCheckpointConnection",
-  items?:  Array<commonCheckpoint >,
+  items?:  Array<commonCheckpoint | null >,
   nextToken?: string | null,
 };
 
@@ -715,7 +715,7 @@ export type Checkpoint = {
 
 export type ModelCheckpointQuestionsConnection = {
   __typename: "ModelCheckpointQuestionsConnection",
-  items?:  Array<CheckpointQuestions >,
+  items?:  Array<CheckpointQuestions | null >,
   nextToken?: string | null,
 };
 
@@ -757,7 +757,7 @@ export type Option = {
 
 export type ModelcurriculumUnitsConnection = {
   __typename: "ModelcurriculumUnitsConnection",
-  items?:  Array<curriculumUnits >,
+  items?:  Array<curriculumUnits | null >,
   nextToken?: string | null,
 };
 
@@ -796,7 +796,7 @@ export type UniversalSyllabus = {
 
 export type ModelUniversalSyllabusLessonConnection = {
   __typename: "ModelUniversalSyllabusLessonConnection",
-  items?:  Array<UniversalSyllabusLesson >,
+  items?:  Array<UniversalSyllabusLesson | null >,
   nextToken?: string | null,
 };
 
@@ -921,7 +921,7 @@ export type UniversalContentOptions = {
 
 export type ModelUniversalLessonFeedbackConnection = {
   __typename: "ModelUniversalLessonFeedbackConnection",
-  items?:  Array<UniversalLessonFeedback >,
+  items?:  Array<UniversalLessonFeedback | null >,
   nextToken?: string | null,
 };
 
@@ -951,7 +951,7 @@ export type CompleteLesson = {
 
 export type ModelClassroomGroupsConnection = {
   __typename: "ModelClassroomGroupsConnection",
-  items?:  Array<ClassroomGroups >,
+  items?:  Array<ClassroomGroups | null >,
   nextToken?: string | null,
 };
 
@@ -973,7 +973,7 @@ export type ClassroomGroups = {
 
 export type ModelClassroomGroupStudentsConnection = {
   __typename: "ModelClassroomGroupStudentsConnection",
-  items?:  Array<ClassroomGroupStudents >,
+  items?:  Array<ClassroomGroupStudents | null >,
   nextToken?: string | null,
 };
 
@@ -1001,13 +1001,13 @@ export type ImpactLogEntry = {
 
 export type ModelCurriculumConnection = {
   __typename: "ModelCurriculumConnection",
-  items?:  Array<Curriculum >,
+  items?:  Array<Curriculum | null >,
   nextToken?: string | null,
 };
 
 export type ModelClassConnection = {
   __typename: "ModelClassConnection",
-  items?:  Array<Class >,
+  items?:  Array<Class | null >,
   nextToken?: string | null,
 };
 
@@ -3686,6 +3686,7 @@ export type StudentConnections = {
 };
 
 export type UpdateStudentConnectionsInput = {
+  id: string,
   fromEmail?: string | null,
   fromAuthID?: string | null,
   toEmail?: string | null,
@@ -3900,7 +3901,7 @@ export type Community = {
 
 export type ModelCommunityChatConnection = {
   __typename: "ModelCommunityChatConnection",
-  items?:  Array<CommunityChat >,
+  items?:  Array<CommunityChat | null >,
   nextToken?: string | null,
 };
 
@@ -4124,7 +4125,7 @@ export enum ModelSortDirection {
 
 export type ModelPersonConnection = {
   __typename: "ModelPersonConnection",
-  items?:  Array<Person >,
+  items?:  Array<Person | null >,
   nextToken?: string | null,
 };
 
@@ -4151,7 +4152,7 @@ export type ModelInstitutionFilterInput = {
 
 export type ModelInstitutionConnection = {
   __typename: "ModelInstitutionConnection",
-  items?:  Array<Institution >,
+  items?:  Array<Institution | null >,
   nextToken?: string | null,
 };
 
@@ -4295,7 +4296,7 @@ export type ModelTopicFilterInput = {
 
 export type ModelTopicConnection = {
   __typename: "ModelTopicConnection",
-  items?:  Array<Topic >,
+  items?:  Array<Topic | null >,
   nextToken?: string | null,
 };
 
@@ -4309,7 +4310,7 @@ export type ModelCSequencesFilterInput = {
 
 export type ModelCSequencesConnection = {
   __typename: "ModelCSequencesConnection",
-  items?:  Array<CSequences >,
+  items?:  Array<CSequences | null >,
   nextToken?: string | null,
 };
 
@@ -4325,7 +4326,7 @@ export type ModelLearningObjectiveFilterInput = {
 
 export type ModelLearningObjectiveConnection = {
   __typename: "ModelLearningObjectiveConnection",
-  items?:  Array<LearningObjective >,
+  items?:  Array<LearningObjective | null >,
   nextToken?: string | null,
 };
 
@@ -4342,7 +4343,7 @@ export type ModelRubricFilterInput = {
 
 export type ModelRubricConnection = {
   __typename: "ModelRubricConnection",
-  items?:  Array<Rubric >,
+  items?:  Array<Rubric | null >,
   nextToken?: string | null,
 };
 
@@ -4378,7 +4379,7 @@ export type ModelCheckpointFilterInput = {
 
 export type ModelCheckpointConnection = {
   __typename: "ModelCheckpointConnection",
-  items?:  Array<Checkpoint >,
+  items?:  Array<Checkpoint | null >,
   nextToken?: string | null,
 };
 
@@ -4399,7 +4400,7 @@ export type ModelQuestionFilterInput = {
 
 export type ModelQuestionConnection = {
   __typename: "ModelQuestionConnection",
-  items?:  Array<Question >,
+  items?:  Array<Question | null >,
   nextToken?: string | null,
 };
 
@@ -4413,7 +4414,7 @@ export type ModelQuestionSourceFilterInput = {
 
 export type ModelQuestionSourceConnection = {
   __typename: "ModelQuestionSourceConnection",
-  items?:  Array<QuestionSource >,
+  items?:  Array<QuestionSource | null >,
   nextToken?: string | null,
 };
 
@@ -4427,7 +4428,7 @@ export type ModelQuestionTypeFilterInput = {
 
 export type ModelQuestionTypeConnection = {
   __typename: "ModelQuestionTypeConnection",
-  items?:  Array<QuestionType >,
+  items?:  Array<QuestionType | null >,
   nextToken?: string | null,
 };
 
@@ -4445,7 +4446,7 @@ export type ModelRoomMsgsFilterInput = {
 
 export type ModelRoomMsgsConnection = {
   __typename: "ModelRoomMsgsConnection",
-  items?:  Array<RoomMsgs >,
+  items?:  Array<RoomMsgs | null >,
   nextToken?: string | null,
 };
 
@@ -4487,7 +4488,7 @@ export type ModelLessonFilterInput = {
 
 export type ModelLessonConnection = {
   __typename: "ModelLessonConnection",
-  items?:  Array<Lesson >,
+  items?:  Array<Lesson | null >,
   nextToken?: string | null,
 };
 
@@ -4564,7 +4565,7 @@ export type ModelAnthologyCommentFilterInput = {
 
 export type ModelAnthologyCommentConnection = {
   __typename: "ModelAnthologyCommentConnection",
-  items?:  Array<AnthologyComment >,
+  items?:  Array<AnthologyComment | null >,
   nextToken?: string | null,
 };
 
@@ -4584,7 +4585,7 @@ export type ModelQuestionDataFilterInput = {
 
 export type ModelQuestionDataConnection = {
   __typename: "ModelQuestionDataConnection",
-  items?:  Array<QuestionData >,
+  items?:  Array<QuestionData | null >,
   nextToken?: string | null,
 };
 
@@ -4604,7 +4605,7 @@ export type ModelPersonLocationFilterInput = {
 
 export type ModelPersonLocationConnection = {
   __typename: "ModelPersonLocationConnection",
-  items?:  Array<PersonLocation >,
+  items?:  Array<PersonLocation | null >,
   nextToken?: string | null,
 };
 
@@ -4625,7 +4626,7 @@ export type ModelNoticeboardWidgetFilterInput = {
 
 export type ModelNoticeboardWidgetConnection = {
   __typename: "ModelNoticeboardWidgetConnection",
-  items?:  Array<NoticeboardWidget >,
+  items?:  Array<NoticeboardWidget | null >,
   nextToken?: string | null,
 };
 
@@ -4646,7 +4647,7 @@ export type ModelAttendanceFilterInput = {
 
 export type ModelAttendanceConnection = {
   __typename: "ModelAttendanceConnection",
-  items?:  Array<Attendance >,
+  items?:  Array<Attendance | null >,
   nextToken?: string | null,
 };
 
@@ -4668,7 +4669,7 @@ export type ModelPlannerFilterInput = {
 
 export type ModelPlannerConnection = {
   __typename: "ModelPlannerConnection",
-  items?:  Array<Planner >,
+  items?:  Array<Planner | null >,
   nextToken?: string | null,
 };
 
@@ -4710,7 +4711,7 @@ export type ModelUniversalLessonFilterInput = {
 
 export type ModelUniversalLessonConnection = {
   __typename: "ModelUniversalLessonConnection",
-  items?:  Array<UniversalLesson >,
+  items?:  Array<UniversalLesson | null >,
   nextToken?: string | null,
 };
 
@@ -4733,7 +4734,7 @@ export type ModelUniversalLessonStudentDataFilterInput = {
 
 export type ModelUniversalLessonStudentDataConnection = {
   __typename: "ModelUniversalLessonStudentDataConnection",
-  items?:  Array<UniversalLessonStudentData >,
+  items?:  Array<UniversalLessonStudentData | null >,
   nextToken?: string | null,
 };
 
@@ -4756,7 +4757,7 @@ export type ModelUniversalLessonWritingExcercisesFilterInput = {
 
 export type ModelUniversalLessonWritingExcercisesConnection = {
   __typename: "ModelUniversalLessonWritingExcercisesConnection",
-  items?:  Array<UniversalLessonWritingExcercises >,
+  items?:  Array<UniversalLessonWritingExcercises | null >,
   nextToken?: string | null,
 };
 
@@ -4779,7 +4780,7 @@ export type ModelUniversalArchiveDataFilterInput = {
 
 export type ModelUniversalArchiveDataConnection = {
   __typename: "ModelUniversalArchiveDataConnection",
-  items?:  Array<UniversalArchiveData >,
+  items?:  Array<UniversalArchiveData | null >,
   nextToken?: string | null,
 };
 
@@ -4800,7 +4801,7 @@ export type ModelUniversalSurveyStudentDataFilterInput = {
 
 export type ModelUniversalSurveyStudentDataConnection = {
   __typename: "ModelUniversalSurveyStudentDataConnection",
-  items?:  Array<UniversalSurveyStudentData >,
+  items?:  Array<UniversalSurveyStudentData | null >,
   nextToken?: string | null,
 };
 
@@ -4823,7 +4824,7 @@ export type ModelUniversalJournalDataFilterInput = {
 
 export type ModelUniversalJournalDataConnection = {
   __typename: "ModelUniversalJournalDataConnection",
-  items?:  Array<UniversalJournalData >,
+  items?:  Array<UniversalJournalData | null >,
   nextToken?: string | null,
 };
 
@@ -4850,7 +4851,7 @@ export type ModelUniversalSyllabusFilterInput = {
 
 export type ModelUniversalSyllabusConnection = {
   __typename: "ModelUniversalSyllabusConnection",
-  items?:  Array<UniversalSyllabus >,
+  items?:  Array<UniversalSyllabus | null >,
   nextToken?: string | null,
 };
 
@@ -4903,7 +4904,7 @@ export type ModelStudentConnectionsFilterInput = {
 
 export type ModelStudentConnectionsConnection = {
   __typename: "ModelStudentConnectionsConnection",
-  items?:  Array<StudentConnections >,
+  items?:  Array<StudentConnections | null >,
   nextToken?: string | null,
 };
 
@@ -4921,7 +4922,7 @@ export type ModelPersonSentimentsFilterInput = {
 
 export type ModelPersonSentimentsConnection = {
   __typename: "ModelPersonSentimentsConnection",
-  items?:  Array<PersonSentiments >,
+  items?:  Array<PersonSentiments | null >,
   nextToken?: string | null,
 };
 
@@ -4944,7 +4945,7 @@ export type ModelPersonFilesFilterInput = {
 
 export type ModelPersonFilesConnection = {
   __typename: "ModelPersonFilesConnection",
-  items?:  Array<PersonFiles >,
+  items?:  Array<PersonFiles | null >,
   nextToken?: string | null,
 };
 
@@ -4975,7 +4976,7 @@ export type ModelCommunityFilterInput = {
 
 export type ModelCommunityConnection = {
   __typename: "ModelCommunityConnection",
-  items?:  Array<Community >,
+  items?:  Array<Community | null >,
   nextToken?: string | null,
 };
 
@@ -4994,7 +4995,7 @@ export type ModelGameChangerFilterInput = {
 
 export type ModelGameChangerConnection = {
   __typename: "ModelGameChangerConnection",
-  items?:  Array<GameChanger >,
+  items?:  Array<GameChanger | null >,
   nextToken?: string | null,
 };
 
@@ -5012,7 +5013,7 @@ export type ModelGameChangerLogFilterInput = {
 
 export type ModelGameChangerLogConnection = {
   __typename: "ModelGameChangerLogConnection",
-  items?:  Array<GameChangerLog >,
+  items?:  Array<GameChangerLog | null >,
   nextToken?: string | null,
 };
 
@@ -5421,7 +5422,7 @@ export type CreatePersonMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -5476,7 +5477,7 @@ export type UpdatePersonMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -5531,7 +5532,7 @@ export type DeletePersonMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -5573,7 +5574,7 @@ export type CreateInstitutionMutation = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -5588,7 +5589,7 @@ export type CreateInstitutionMutation = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -5624,7 +5625,7 @@ export type CreateInstitutionMutation = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -5645,7 +5646,7 @@ export type CreateInstitutionMutation = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -5659,7 +5660,7 @@ export type CreateInstitutionMutation = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -5673,7 +5674,7 @@ export type CreateInstitutionMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -5713,7 +5714,7 @@ export type UpdateInstitutionMutation = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -5728,7 +5729,7 @@ export type UpdateInstitutionMutation = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -5764,7 +5765,7 @@ export type UpdateInstitutionMutation = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -5785,7 +5786,7 @@ export type UpdateInstitutionMutation = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -5799,7 +5800,7 @@ export type UpdateInstitutionMutation = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -5813,7 +5814,7 @@ export type UpdateInstitutionMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -5853,7 +5854,7 @@ export type DeleteInstitutionMutation = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -5868,7 +5869,7 @@ export type DeleteInstitutionMutation = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -5904,7 +5905,7 @@ export type DeleteInstitutionMutation = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -5925,7 +5926,7 @@ export type DeleteInstitutionMutation = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -5939,7 +5940,7 @@ export type DeleteInstitutionMutation = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -5953,7 +5954,7 @@ export type DeleteInstitutionMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -6476,7 +6477,7 @@ export type CreateRoomMutation = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -6633,7 +6634,7 @@ export type CreateRoomMutation = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -6666,7 +6667,7 @@ export type CreateRoomMutation = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -6721,7 +6722,7 @@ export type UpdateRoomMutation = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -6878,7 +6879,7 @@ export type UpdateRoomMutation = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -6911,7 +6912,7 @@ export type UpdateRoomMutation = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -6966,7 +6967,7 @@ export type DeleteRoomMutation = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -7123,7 +7124,7 @@ export type DeleteRoomMutation = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -7156,7 +7157,7 @@ export type DeleteRoomMutation = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -7758,7 +7759,7 @@ export type CreateClassroomGroupsMutation = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -7951,7 +7952,7 @@ export type UpdateClassroomGroupsMutation = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -8144,7 +8145,7 @@ export type DeleteClassroomGroupsMutation = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -8873,7 +8874,7 @@ export type CreateClassMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -9074,7 +9075,7 @@ export type UpdateClassMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -9275,7 +9276,7 @@ export type DeleteClassMutation = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -9726,7 +9727,7 @@ export type CreateCurriculumMutation = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -9740,7 +9741,7 @@ export type CreateCurriculumMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -9752,7 +9753,7 @@ export type CreateCurriculumMutation = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -9841,7 +9842,7 @@ export type UpdateCurriculumMutation = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -9855,7 +9856,7 @@ export type UpdateCurriculumMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -9867,7 +9868,7 @@ export type UpdateCurriculumMutation = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -9956,7 +9957,7 @@ export type DeleteCurriculumMutation = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -9970,7 +9971,7 @@ export type DeleteCurriculumMutation = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -9982,7 +9983,7 @@ export type DeleteCurriculumMutation = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -10722,7 +10723,7 @@ export type CreateCheckpointMutation = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -10763,7 +10764,7 @@ export type UpdateCheckpointMutation = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -10804,7 +10805,7 @@ export type DeleteCheckpointMutation = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -11811,7 +11812,7 @@ export type CreateLessonMutation = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -11936,7 +11937,7 @@ export type UpdateLessonMutation = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -12061,7 +12062,7 @@ export type DeleteLessonMutation = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -12498,7 +12499,7 @@ export type CreateSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -12543,7 +12544,7 @@ export type UpdateSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -12588,7 +12589,7 @@ export type DeleteSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -12742,7 +12743,7 @@ export type CreateSyllabusLessonMutation = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -12894,7 +12895,7 @@ export type UpdateSyllabusLessonMutation = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -13046,7 +13047,7 @@ export type DeleteSyllabusLessonMutation = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -13239,7 +13240,7 @@ export type CreateStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     checkpointData?:  {
@@ -13251,7 +13252,7 @@ export type CreateStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     anthologyContent?:  Array< {
@@ -13456,7 +13457,7 @@ export type UpdateStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     checkpointData?:  {
@@ -13468,7 +13469,7 @@ export type UpdateStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     anthologyContent?:  Array< {
@@ -13673,7 +13674,7 @@ export type DeleteStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     checkpointData?:  {
@@ -13685,7 +13686,7 @@ export type DeleteStudentDataMutation = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     anthologyContent?:  Array< {
@@ -17921,7 +17922,7 @@ export type CreateUniversalSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -18013,7 +18014,7 @@ export type UpdateUniversalSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -18105,7 +18106,7 @@ export type DeleteUniversalSyllabusMutation = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -18452,7 +18453,7 @@ export type CreateUniversalSyllabusLessonMutation = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -18614,7 +18615,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -18776,7 +18777,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -19676,7 +19677,7 @@ export type CreateCommunityMutation = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -19802,7 +19803,7 @@ export type UpdateCommunityMutation = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -19928,7 +19929,7 @@ export type DeleteCommunityMutation = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -20298,7 +20299,7 @@ export type GetPersonQuery = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -20355,7 +20356,7 @@ export type ListPersonsQuery = {
       addedby?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -20390,7 +20391,7 @@ export type GetInstitutionQuery = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -20405,7 +20406,7 @@ export type GetInstitutionQuery = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -20441,7 +20442,7 @@ export type GetInstitutionQuery = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -20462,7 +20463,7 @@ export type GetInstitutionQuery = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -20476,7 +20477,7 @@ export type GetInstitutionQuery = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -20490,7 +20491,7 @@ export type GetInstitutionQuery = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -20553,7 +20554,7 @@ export type ListInstitutionsQuery = {
       setupComplete?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -20725,7 +20726,7 @@ export type ListStaffsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -20766,7 +20767,7 @@ export type GetRoomQuery = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -20923,7 +20924,7 @@ export type GetRoomQuery = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -20956,7 +20957,7 @@ export type GetRoomQuery = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -21105,7 +21106,7 @@ export type ListRoomsQuery = {
       classSentiment?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -21304,7 +21305,7 @@ export type ListClassroomGroupStudentssQuery = {
       studentNote?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -21493,7 +21494,7 @@ export type GetClassroomGroupsQuery = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -21588,7 +21589,7 @@ export type ListClassroomGroupssQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -21849,7 +21850,7 @@ export type ListRoomCoTeacherssQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22046,7 +22047,7 @@ export type GetClassQuery = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -22128,7 +22129,7 @@ export type ListClasssQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22314,7 +22315,7 @@ export type ListClassStudentsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22398,7 +22399,7 @@ export type GetCurriculumQuery = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -22412,7 +22413,7 @@ export type GetCurriculumQuery = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -22424,7 +22425,7 @@ export type GetCurriculumQuery = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -22492,7 +22493,7 @@ export type ListCurriculumsQuery = {
       syllabiHistory?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22626,7 +22627,7 @@ export type ListTopicsQuery = {
       basic?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22662,7 +22663,7 @@ export type ListCSequencessQuery = {
       sequence?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22702,7 +22703,7 @@ export type ListLearningObjectivesQuery = {
       curriculumID: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22798,7 +22799,7 @@ export type ListRubricsQuery = {
       curriculumID: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22900,7 +22901,7 @@ export type ListRoomCurriculumsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -22930,7 +22931,7 @@ export type GetCheckpointQuery = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -22977,7 +22978,7 @@ export type ListCheckpointsQuery = {
       questionSeq?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23039,7 +23040,7 @@ export type ListQuestionsQuery = {
       published?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23073,7 +23074,7 @@ export type ListQuestionSourcesQuery = {
       name: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23107,7 +23108,7 @@ export type ListQuestionTypesQuery = {
       name: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23213,7 +23214,7 @@ export type ListRoomMsgssQuery = {
         updatedAt: string,
       } | null,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23285,7 +23286,7 @@ export type GetLessonQuery = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -23427,7 +23428,7 @@ export type ListLessonsQuery = {
       targetAudience?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23607,7 +23608,7 @@ export type ListLessonRubricssQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23646,7 +23647,7 @@ export type GetSyllabusQuery = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -23687,7 +23688,7 @@ export type ListSyllabussQuery = {
       status?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -23835,7 +23836,7 @@ export type GetSyllabusLessonQuery = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -23920,7 +23921,7 @@ export type ListSyllabusLessonsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -24110,7 +24111,7 @@ export type GetStudentDataQuery = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     checkpointData?:  {
@@ -24122,7 +24123,7 @@ export type GetStudentDataQuery = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     anthologyContent?:  Array< {
@@ -24248,7 +24249,7 @@ export type ListStudentDatasQuery = {
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -24368,7 +24369,7 @@ export type ListAnthologyCommentsQuery = {
       edited?: boolean | null,
       createdAt?: string | null,
       updatedAt?: string | null,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -24577,7 +24578,7 @@ export type ListQuestionDatasQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -24933,7 +24934,7 @@ export type ListPersonLocationsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -25077,7 +25078,7 @@ export type ListNoticeboardWidgetsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -25534,7 +25535,7 @@ export type ListAttendancesQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -25584,7 +25585,7 @@ export type ListPlannersQuery = {
       duration?: number | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -25824,7 +25825,7 @@ export type ListUniversalLessonsQuery = {
       isUsed?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -25913,7 +25914,7 @@ export type ListUniversalLessonStudentDatasQuery = {
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26002,7 +26003,7 @@ export type ListUniversalLessonWritingExcercisessQuery = {
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26091,7 +26092,7 @@ export type ListUniversalArchiveDatasQuery = {
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26158,7 +26159,7 @@ export type ListUniversalSurveyStudentDatasQuery = {
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26224,7 +26225,7 @@ export type ListUniversalJournalDatasQuery = {
       roomID?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26307,7 +26308,7 @@ export type GetUniversalSyllabusQuery = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -26374,7 +26375,7 @@ export type ListUniversalSyllabussQuery = {
       lessonHistory?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26474,7 +26475,7 @@ export type ListCurriculumUnitssQuery = {
       curriculumId: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26632,7 +26633,7 @@ export type GetUniversalSyllabusLessonQuery = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -26717,7 +26718,7 @@ export type ListUniversalSyllabusLessonsQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -26840,7 +26841,7 @@ export type ListUniversalLessonFeedbacksQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27014,7 +27015,7 @@ export type ListStudentConnectionssQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27126,7 +27127,7 @@ export type ListPersonSentimentssQuery = {
       backstory?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27192,7 +27193,7 @@ export type ListPersonFilessQuery = {
       lessonPageID?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27311,7 +27312,7 @@ export type GetCommunityQuery = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -27411,7 +27412,7 @@ export type ListCommunitysQuery = {
       chatCount?: number | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27457,7 +27458,7 @@ export type ListGameChangersQuery = {
       likes?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27591,7 +27592,7 @@ export type ListGameChangerLogsQuery = {
       endTime?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27633,7 +27634,7 @@ export type ListCommunityChatsQuery = {
       createdAt?: string | null,
       isEditedChat?: boolean | null,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27683,7 +27684,7 @@ export type UserByIdQuery = {
       addedby?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27733,7 +27734,7 @@ export type UsersByRoleQuery = {
       addedby?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27790,7 +27791,7 @@ export type MessagesByRoomIdQuery = {
         updatedAt: string,
       } | null,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -27897,7 +27898,7 @@ export type PersonLocationBySyllabusLessonQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -28031,7 +28032,7 @@ export type AttendanceByStudentQuery = {
       } | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -28718,7 +28719,7 @@ export type OnChangeStudentDataSubscription = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     checkpointData?:  {
@@ -28730,7 +28731,7 @@ export type OnChangeStudentDataSubscription = {
         questionDataID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     anthologyContent?:  Array< {
@@ -28893,7 +28894,7 @@ export type OnChangeSyllabusLessonSubscription = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -28985,7 +28986,7 @@ export type OnChangeRoomSubscription = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -29142,7 +29143,7 @@ export type OnChangeRoomSubscription = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -29175,7 +29176,7 @@ export type OnChangeRoomSubscription = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -29232,7 +29233,7 @@ export type OnCreatePersonSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -29282,7 +29283,7 @@ export type OnUpdatePersonSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -29332,7 +29333,7 @@ export type OnDeletePersonSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     spotlightUser?: boolean | null,
@@ -29369,7 +29370,7 @@ export type OnCreateInstitutionSubscription = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -29384,7 +29385,7 @@ export type OnCreateInstitutionSubscription = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -29420,7 +29421,7 @@ export type OnCreateInstitutionSubscription = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -29441,7 +29442,7 @@ export type OnCreateInstitutionSubscription = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -29455,7 +29456,7 @@ export type OnCreateInstitutionSubscription = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -29469,7 +29470,7 @@ export type OnCreateInstitutionSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -29504,7 +29505,7 @@ export type OnUpdateInstitutionSubscription = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -29519,7 +29520,7 @@ export type OnUpdateInstitutionSubscription = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -29555,7 +29556,7 @@ export type OnUpdateInstitutionSubscription = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -29576,7 +29577,7 @@ export type OnUpdateInstitutionSubscription = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -29590,7 +29591,7 @@ export type OnUpdateInstitutionSubscription = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -29604,7 +29605,7 @@ export type OnUpdateInstitutionSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -29639,7 +29640,7 @@ export type OnDeleteInstitutionSubscription = {
         status?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     staff?:  {
@@ -29654,7 +29655,7 @@ export type OnDeleteInstitutionSubscription = {
         statusChangeDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     rooms?:  {
@@ -29690,7 +29691,7 @@ export type OnDeleteInstitutionSubscription = {
         classSentiment?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     curricula?:  {
@@ -29711,7 +29712,7 @@ export type OnDeleteInstitutionSubscription = {
         syllabiHistory?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     classes?:  {
@@ -29725,7 +29726,7 @@ export type OnDeleteInstitutionSubscription = {
         roomId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     filters?: Array< string | null > | null,
@@ -29739,7 +29740,7 @@ export type OnDeleteInstitutionSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     setupComplete?: boolean | null,
@@ -30227,7 +30228,7 @@ export type OnCreateRoomSubscription = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -30384,7 +30385,7 @@ export type OnCreateRoomSubscription = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -30417,7 +30418,7 @@ export type OnCreateRoomSubscription = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -30467,7 +30468,7 @@ export type OnUpdateRoomSubscription = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -30624,7 +30625,7 @@ export type OnUpdateRoomSubscription = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -30657,7 +30658,7 @@ export type OnUpdateRoomSubscription = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -30707,7 +30708,7 @@ export type OnDeleteRoomSubscription = {
         teacherAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institution?:  {
@@ -30864,7 +30865,7 @@ export type OnDeleteRoomSubscription = {
         curriculumID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     activeLessonId?: string | null,
@@ -30897,7 +30898,7 @@ export type OnDeleteRoomSubscription = {
         groupLocation?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     weekDay?: string | null,
@@ -31479,7 +31480,7 @@ export type OnCreateClassroomGroupsSubscription = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -31667,7 +31668,7 @@ export type OnUpdateClassroomGroupsSubscription = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -31855,7 +31856,7 @@ export type OnDeleteClassroomGroupsSubscription = {
         studentNote?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -32564,7 +32565,7 @@ export type OnCreateClassSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -32760,7 +32761,7 @@ export type OnUpdateClassSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -32956,7 +32957,7 @@ export type OnDeleteClassSubscription = {
         group?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -33387,7 +33388,7 @@ export type OnCreateCurriculumSubscription = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -33401,7 +33402,7 @@ export type OnCreateCurriculumSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -33413,7 +33414,7 @@ export type OnCreateCurriculumSubscription = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -33497,7 +33498,7 @@ export type OnUpdateCurriculumSubscription = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -33511,7 +33512,7 @@ export type OnUpdateCurriculumSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -33523,7 +33524,7 @@ export type OnUpdateCurriculumSubscription = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -33607,7 +33608,7 @@ export type OnDeleteCurriculumSubscription = {
         status?: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabusSeq?: Array< string | null > | null,
@@ -33621,7 +33622,7 @@ export type OnDeleteCurriculumSubscription = {
         checkpointID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalSyllabus?:  {
@@ -33633,7 +33634,7 @@ export type OnDeleteCurriculumSubscription = {
         curriculumId: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
@@ -34293,7 +34294,7 @@ export type OnCreateCheckpointSubscription = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -34329,7 +34330,7 @@ export type OnUpdateCheckpointSubscription = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -34365,7 +34366,7 @@ export type OnDeleteCheckpointSubscription = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     purpose?: string | null,
@@ -35277,7 +35278,7 @@ export type OnCreateLessonSubscription = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -35397,7 +35398,7 @@ export type OnUpdateLessonSubscription = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -35517,7 +35518,7 @@ export type OnDeleteLessonSubscription = {
         rubricID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     institutionID: string,
@@ -35934,7 +35935,7 @@ export type OnCreateSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -35974,7 +35975,7 @@ export type OnUpdateSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -36014,7 +36015,7 @@ export type OnDeleteSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     designers?: Array< string | null > | null,
@@ -36163,7 +36164,7 @@ export type OnCreateSyllabusLessonSubscription = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -36310,7 +36311,7 @@ export type OnUpdateSyllabusLessonSubscription = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -36457,7 +36458,7 @@ export type OnDeleteSyllabusLessonSubscription = {
         studentAuthID: string,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -40481,7 +40482,7 @@ export type OnCreateUniversalSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -40568,7 +40569,7 @@ export type OnUpdateUniversalSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -40655,7 +40656,7 @@ export type OnDeleteUniversalSyllabusSubscription = {
         endDate?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     universalLessonsSeq?: Array< string | null > | null,
@@ -40982,7 +40983,7 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -41139,7 +41140,7 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -41296,7 +41297,7 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
         comment?: string | null,
         createdAt: string,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -42131,7 +42132,7 @@ export type OnCreateCommunitySubscription = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -42252,7 +42253,7 @@ export type OnUpdateCommunitySubscription = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
@@ -42373,7 +42374,7 @@ export type OnDeleteCommunitySubscription = {
         createdAt?: string | null,
         isEditedChat?: boolean | null,
         updatedAt: string,
-      } >,
+      } | null >,
       nextToken?: string | null,
     } | null,
     summaryHtml?: string | null,
