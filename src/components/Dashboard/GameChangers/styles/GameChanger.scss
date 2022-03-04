@@ -443,6 +443,10 @@ icon {
   & .main_circle {
     animation: scale 3s ease-in-out;
   }
+  svg {
+    animation: bounceAnimation 0.7s ease-in-out;
+    animation-delay: 0.3s;
+  }
 
   --tw-border-opacity: 0.3;
   &:hover {
@@ -490,6 +494,19 @@ icon {
   50% {
     transform: scale(0.3);
   }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bounceAnimation {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.9);
+  }
+
   100% {
     transform: scale(1);
   }

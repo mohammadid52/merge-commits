@@ -74,7 +74,7 @@ const GameChangers = () => {
           } `}>
           {selectedCard === null && (
             <h1 className="text-white mb-12  w-auto text-xl tracking-wide font-normal">
-              <span className="font-semibold w-auto">Select</span> breathing exercise
+              <span className="font-semibold w-auto">Select</span> Game Changer
             </h1>
           )}
         </AnimatedContainer>
