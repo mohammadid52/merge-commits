@@ -18,6 +18,11 @@ export const PageBuilderProvider = ({children}: any) => {
   const [selectedType, setSelectedType] = useState(null);
   const [showingBlockPin, setShowingBlockPin] = useState(false);
 
+  // Disable Game Changers - Emotion Component is one already exists on current page -> Here i am saving local state for that
+  const [emotionComponentExists, setEmotionComponentExists] = useState(false);
+
+  const [emotionComponentData, setEmotionComponentData] = useState(null);
+
   const [showMessage, setShowMessage] = useState(false);
 
   return (
@@ -34,6 +39,8 @@ export const PageBuilderProvider = ({children}: any) => {
         moveDir,
         setMoveDir,
         showMovementBox,
+        setEmotionComponentData,
+        emotionComponentData,
         showLocationIcon,
         setShowLocationIcon,
         setShowMovementBox,
@@ -45,6 +52,8 @@ export const PageBuilderProvider = ({children}: any) => {
         setShowingBlockPin,
         showMessage,
         setShowMessage,
+        emotionComponentExists,
+        setEmotionComponentExists,
       }}>
       {children}
     </PageBuilderContext.Provider>

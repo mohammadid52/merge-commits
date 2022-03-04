@@ -126,6 +126,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         (plan: UniversalLessonPage) => plan.id === pageId
       );
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageIdx >= 0 ? pageIdx : 0});
+      lessonDispatch({
+        type: 'SET_LAST_PAGE',
+        payload: universalLessonDetails.lessonPlan.length - 1 === pageIdx,
+      });
     }
   }, [universalLessonDetails, pageId]);
 

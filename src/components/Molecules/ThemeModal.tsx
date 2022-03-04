@@ -61,7 +61,7 @@ const ThemeModal = ({
               className={`${
                 dark ? 'bg-gray-800 ' : 'bg-white'
               } w-auto border-0 border-gray-${dark ? '600' : '200'} max-w-${
-                max.w
+                max.w || 256
               } inline-block align-bottom  rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6`}>
               <div className="w-auto hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button

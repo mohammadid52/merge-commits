@@ -41,16 +41,20 @@ import {
   ATTACHMENTS,
   DATE_PICKER,
   DIVIDER,
+  EMOTIONS,
   FORM_TYPES,
   FOUR_SEVEN_EIGHT,
+  GRATITUDE,
   INPUT,
   INPUT_WITH_EMOJI,
   LINK,
   PARAGRAPH,
   SELECT_MANY,
   SELECT_ONE,
+  SINGING_BOWL,
   SQUARE,
   TABLE,
+  THINK_ABOUT_IT,
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import ImageGallery from '@UlbUI/ImageGallery';
@@ -463,6 +467,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <DocsModal {...commonProps} />;
       case SQUARE:
       case FOUR_SEVEN_EIGHT:
+      case THINK_ABOUT_IT:
+      case EMOTIONS:
+      case GRATITUDE:
+      case SINGING_BOWL:
         return <ActivityModal type={type} {...commonProps} />;
 
       default:
@@ -523,6 +531,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.WRITING_EXERCISE:
       case 'writing-exercise-form-default':
         return 'Writing Exercise Component';
+      case EMOTIONS:
+        return 'Emotion Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

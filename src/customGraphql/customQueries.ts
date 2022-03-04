@@ -5032,3 +5032,139 @@ export const listInstitutionOptions = /* GraphQL */ `
     }
   }
 `;
+
+export const listFeelingsArchives = /* GraphQL */ `
+  query ListFeelingsArchives(
+    $id: ID
+    $filter: ModelFeelingsArchiveFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFeelingsArchives(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        sentimentId
+        sentiment {
+          nextToken
+        }
+        classRoomID
+        classRoom {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          lessonPlan {
+            label
+            title
+          }
+          isUsed
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        sentimentName
+        comments
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

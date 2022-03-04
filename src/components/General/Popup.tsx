@@ -1,5 +1,6 @@
+import Loader from '@components/Atoms/Loader';
 import React from 'react';
-import { useOutsideAlerter } from './hooks/outsideAlerter';
+import {useOutsideAlerter} from './hooks/outsideAlerter';
 
 export interface WritingAlertProps {
   children?: any;
@@ -17,6 +18,7 @@ export interface WritingAlertProps {
   svg?: string;
   theme?: 'dark' | 'light';
   fill?: 'screen' | 'section';
+  disableButton?: boolean;
 }
 
 const PosAlert = (props: WritingAlertProps) => {
@@ -36,8 +38,9 @@ const PosAlert = (props: WritingAlertProps) => {
     button2Color,
     theme,
     fill,
+    disableButton,
   } = props;
-  const { visible, setVisible, ref } = useOutsideAlerter(false);
+  const {visible, setVisible, ref} = useOutsideAlerter(false);
 
   const handleClick = () => {
     setVisible((prevState: any) => !prevState);
@@ -184,9 +187,13 @@ const PosAlert = (props: WritingAlertProps) => {
           <div className="px-2 pt-2">
             <div
               className="absolute w-auto cursor-pointer p-2 hover:text-gray-300"
-              style={{ top: 0, right: 0, color: '#828282' }}
+              style={{top: 0, right: 0, color: '#828282'}}
               onClick={handleClick}>
-              <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                className="h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -196,7 +203,9 @@ const PosAlert = (props: WritingAlertProps) => {
             </div>
 
             <div>
-              <div className="mx-auto flex items-center justify-center h-14 w-20 rounded-full">{switchSVG()}</div>
+              <div className="mx-auto flex items-center justify-center h-14 w-20 rounded-full">
+                {switchSVG()}
+              </div>
 
               {/* MAIN CONTENT */}
               <div className={`mt-3 text-center sm:mt-5 ${switchTheme.font}`}>
@@ -215,22 +224,26 @@ const PosAlert = (props: WritingAlertProps) => {
               <p className={`w-auto flex rounded-md shadow-sm text-white`}>
                 <button
                   type="button"
+                  disabled={disableButton}
                   className={`${
                     button1Color
-                      ? { button1Color }
+                      ? {button1Color}
                       : 'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'
                   } inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                   onClick={handleButton1}>
-                  {button1}
+                  {disableButton ? <Loader color="#fff" /> : button1}
                 </button>
               </p>
 
               {/* NO */}
               <p className={`w-auto flex rounded-md shadow-sm ${switchTheme.font}`}>
                 <button
+                  disabled={disableButton}
                   type="button"
                   className={`${
-                    button2Color ? { button1Color } : `text-gray-500 hover:${switchTheme.font}`
+                    button2Color
+                      ? {button1Color}
+                      : `text-gray-500 hover:${switchTheme.font}`
                   } w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                   onClick={handleButton2}>
                   {button2}

@@ -21,9 +21,9 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import {findIndex, isEmpty, remove, update} from 'lodash';
+import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {v4 as uuidV4} from 'uuid';
 
 const VideoUploadComponent = ({
   customRef,
@@ -375,9 +375,9 @@ const NewLessonPlanSO = ({
   //   }
   // }, true);
 
-  const route: any = useRouteMatch();
-
-  const lessonId = route.params.lessonId;
+  const query = useQuery(location.search);
+  const router: any = useRouteMatch();
+  const lessonId = query.get('lessonId') || router.params.lessonId;
   const classworkPages = universalLessonDetails?.lessonPlan;
   const homeworkPages = universalLessonDetails?.homework || [];
 
@@ -439,7 +439,7 @@ const NewLessonPlanSO = ({
           await updateLessonPageToDB(input);
         } else {
           const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
-          const pageId = uuidV4().toString();
+          const pageId = nanoid(24);
           const input = {
             id: lessonId,
             lessonPlan: [

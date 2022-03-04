@@ -23,14 +23,16 @@ const BottomSection = () => {
     isCompleted,
     setCountSelected,
     setIsActive,
+    goBackCallback,
   } = useGameChangers();
+
   const animation = 'translateY';
   const duration = '1000';
   const commonBtnClass =
     'w-auto cursor-pointer hover:scale-110 hover:text-teal-500 transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
 
   const history = useHistory();
-  const show = selectedCard !== 2;
+  const show = selectedCard !== 2 && selectedCard !== 3 && selectedCard !== 4;
   // because 2 is thinkaboutit card
   return (
     <>
@@ -40,14 +42,18 @@ const BottomSection = () => {
         className="flex items-center justify-center"
         show={selectedCard !== null && !isCompleted}>
         {selectedCard !== null && !isCompleted && (
-          <div className="absolute flex items-center justify-center gap-x-4 bottom-5  w-auto">
+          <div className="absolute flex items-center justify-center gap-x-4 bottom-3 lg:bottom-5  w-auto">
             <Tooltip text="Go back" placement="top">
               <div
                 onClick={() => {
-                  setCountSelected(null);
-                  setSelectedCard(null);
-                  setIsPlayingMusic(false);
-                  setIsActive(false);
+                  if (goBackCallback.current) {
+                    goBackCallback.current();
+                  } else {
+                    setCountSelected(null);
+                    setSelectedCard(null);
+                    setIsPlayingMusic(false);
+                    setIsActive(false);
+                  }
                 }}
                 className={classNames(commonBtnClass, 'text-white')}>
                 <BsChevronLeft />
@@ -105,7 +111,7 @@ const BottomSection = () => {
         className="flex items-center justify-center"
         show={selectedCard === null}>
         {selectedCard === null && (
-          <div className="absolute flex items-center justify-center gap-x-4 bottom-5  w-auto">
+          <div className="absolute flex items-center justify-center gap-x-4 bottom-3 lg:bottom-5  w-auto">
             <Tooltip text="Go back" placement="top">
               <div
                 onClick={() => {

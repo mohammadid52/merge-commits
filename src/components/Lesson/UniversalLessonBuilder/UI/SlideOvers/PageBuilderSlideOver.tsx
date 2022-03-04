@@ -4,6 +4,9 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {Transition} from '@headlessui/react';
 import {
   UniversalLesson,
@@ -14,6 +17,11 @@ import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
 import {reorder} from '@utilities/strings';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {
+  DeleteFeelingsArchiveInput,
+  FeelingsArchive,
+  ListFeelingsArchivesQueryVariables,
+} from 'API';
 import {forEach, isEmpty, remove} from 'lodash';
 import map from 'lodash/map';
 import update from 'lodash/update';
@@ -510,6 +518,8 @@ const PageBuilderSlideOver = ({
     setShowingBlockPin,
     showMessage,
     setShowMessage,
+    setEmotionComponentExists,
+    emotionComponentData,
   } = usePageBuilderContext();
 
   // Remove message after three seconds
@@ -633,13 +643,49 @@ const PageBuilderSlideOver = ({
   const notSelected = isEmpty(selectedComponent);
 
   const onDeleteMode = actionMode === 'delete' && !notSelected;
+
+  const deleteMutation = useGraphqlMutation<{input: DeleteFeelingsArchiveInput}>(
+    'deleteFeelingsArchive'
+  );
+
+  const {authId} = useAuth();
+  const route: any = useRouteMatch();
+
+  const lessonId = route.params.lessonId;
+
+  const {data = [], refetch} = useGraphqlQuery<
+    ListFeelingsArchivesQueryVariables,
+    FeelingsArchive[]
+  >(
+    'listFeelingsArchives',
+    {
+      filter: {
+        personAuthID: {eq: authId},
+        lessonID: {eq: lessonId},
+        // sentimentType: {eq: lessonState.currentPage.toString()},
+      },
+    },
+    //  custom means use query from customQueries file.
+    // enabled allows conditinational fetching. if it is enabled then only the query will be fetched. Default is true
+    {custom: true, enabled: false}
+  );
+
   const onDeleteClick = async () => {
     const currentPage = universalLessonDetails.lessonPlan[lessonState.currentPage];
     const _pageContent = currentPage?.pageContent || [];
+    if (selectedComponent?.isEmotionComponentSelected) {
+      setEmotionComponentExists(false);
+      refetch().then(() => {
+        if (data && data.length > 0) {
+          data.forEach((em) => {
+            deleteMutation.mutate({input: {id: em.id}});
+          });
+        }
+      });
+    }
     if (!notSelected) {
       forEach(selectedComponent?.extras, (obj, idx: number) => {
         const partContent = _pageContent[obj.pageContentIdx]?.partContent || [];
-
         const lastItem = partContent.length === 1;
 
         if (lastItem) {
@@ -667,10 +713,6 @@ const PageBuilderSlideOver = ({
   const onMovementCancel = () => {
     cleanup();
   };
-
-  const route: any = useRouteMatch();
-
-  const lessonId = route.params.lessonId;
 
   const updateData = async (path: string, newValue: any) => {
     update(universalLessonDetails, path, () => [...newValue]);

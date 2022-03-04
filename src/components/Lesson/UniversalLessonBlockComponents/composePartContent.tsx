@@ -116,7 +116,7 @@ const composePartContent = (
     return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   } else if (type.includes(FORM_TYPES.DOCS)) {
     return <DocsBlock value={value} />;
-  } else if (type.includes('square')) {
+  } else if (type.includes('game_changers')) {
     return (
       <GameChangerProvider>
         <ErrorBoundary fallback={<h1>Something wrong with activity</h1>}>

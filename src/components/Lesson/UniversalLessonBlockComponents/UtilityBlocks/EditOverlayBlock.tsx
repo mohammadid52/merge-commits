@@ -1,4 +1,7 @@
-import {SPACER} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {
+  GAME_CHANGERS,
+  SPACER,
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import {usePageBuilderContext} from '@contexts/PageBuilderContext';
@@ -36,7 +39,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     handleEditBlockContent,
   } = props;
 
-  const {previewMode, universalLessonDetails} = useULBContext();
+  const {previewMode, universalLessonDetails, selectedPageID} = useULBContext();
   const {
     showingPin,
     setSelectedComponent,
@@ -118,6 +121,8 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
           class: classString,
           value: contentValue,
         },
+        isEmotionComponentSelected:
+          contentType === GAME_CHANGERS && contentValue[0].value === 'emotion',
       };
 
       if (deleteMode) {
@@ -127,7 +132,12 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             p.pageContentID === pageContentID && p.partContentID === partContentID
         );
         if (exists === -1) {
-          extras.push({pageContentIdx, partContentIdx, pageContentID, partContentID});
+          extras.push({
+            pageContentIdx,
+            partContentIdx,
+            pageContentID,
+            partContentID,
+          });
         } else {
           extras.splice(exists, 1);
         }

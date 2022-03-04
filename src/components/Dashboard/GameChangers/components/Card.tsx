@@ -1,10 +1,39 @@
-import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
-import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
 import {
   SQUARE,
   THINK_ABOUT_IT,
+  FOUR_SEVEN_EIGHT,
+  EMOTIONS,
+  SINGING_BOWL,
+  GRATITUDE,
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import React from 'react';
+import React, {useEffect} from 'react';
+import Button from './Button';
+
+import {
+  SingingBowlSvg,
+  SquareSvg,
+  ThinkAboutItSvg,
+  FSEBreathingSvg,
+  EmotionSvg,
+  GratitudeSvg,
+} from '@components/Dashboard/GameChangers/svg';
+
+const getSVG = (type: string) => {
+  switch (type) {
+    case SQUARE:
+      return <SquareSvg />;
+    case THINK_ABOUT_IT:
+      return <ThinkAboutItSvg />;
+    case FOUR_SEVEN_EIGHT:
+      return <FSEBreathingSvg />;
+    case EMOTIONS:
+      return <EmotionSvg />;
+    case SINGING_BOWL:
+      return <SingingBowlSvg />;
+    case GRATITUDE:
+      return <GratitudeSvg />;
+  }
+};
 
 const Card = ({
   card,
@@ -15,44 +44,28 @@ const Card = ({
   onClick: (id: number) => void;
   selected: boolean;
 }) => {
-  const circularClass = ' rounded-full border-8 border-teal-600';
-
-  const focusIcon = (
-    <div className={`${circularClass}  main_circle h-32 w-32`}>
-      <div className={`${circularClass} h-28 w-28`}>
-        <div className={`${circularClass} h-24 w-24`}>
-          <div className={`${circularClass} h-20 w-20`}>
-            <div className={`${circularClass} main_circle  h-16 w-16`}></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    $('.flickity-button').css('display', 'block');
+  }, []);
 
   return (
     <div
-      className={`carousel-cell box mx-6 z-100  cursor-pointer  h-156 w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+      className={`carousel-cell box mx-6 z-100 my-12 lg:my-0  cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button lg:max-h-156 lg:min-h-156 max-h-104 min-h-104`}>
       <div
         style={{
           background: 'rgba(21, 19, 21, .8)',
         }}
-        className={`h-full inner-card transition-all rounded-xl p-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
-        {card.type === SQUARE ? (
-          focusIcon
-        ) : card.type === THINK_ABOUT_IT ? (
-          <AnimatedMind />
-        ) : (
-          <AnimatedFlower />
-        )}
-        <h1 className="text-4xl my-4  text-white font-bold">{card.title}</h1>
-        <p className="text-base my-2 text-white font-light">{card.desc}</p>
+        className={`h-full inner-card transition-all rounded-xl p-8 lg:py-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
+        {getSVG(card.type)}
+
+        <h1 className="lg:text-4xl text-xl my-4  text-white font-bold">{card.title}</h1>
+        <p className="lg:text-base text-xs my-2 text-white font-light">{card.desc}</p>
       </div>
 
-      <button
+      <Button
         onClick={() => onClick(card.id)}
-        className=" bg-teal-600 hover:bg-teal-700 transition-all w-84  p-2 text-white mt-8 rounded-md px-4">
-        Select {card.type !== THINK_ABOUT_IT ? 'Exercise' : ''}
-      </button>
+        text={`Select ${card.type !== THINK_ABOUT_IT ? 'Exercise' : ''}`}
+      />
     </div>
   );
 };

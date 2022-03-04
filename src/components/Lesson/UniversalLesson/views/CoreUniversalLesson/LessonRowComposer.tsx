@@ -1,11 +1,12 @@
-import {GlobalContext} from '@contexts/GlobalContext';
+import AllEmotions from '@components/Lesson/AllEmotions';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage,
 } from '@interfaces/UniversalLessonInterfaces';
 import {filter} from 'lodash';
-import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
@@ -13,7 +14,7 @@ import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuild
 import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
 
   const gState = gContext.state;
   const {user, lessonPage} = gState;
@@ -66,9 +67,12 @@ const LessonRowComposer = () => {
 
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
+  const lessonState = gContext.lessonState;
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  const isLastPage = PAGES.length - 1 === lessonState.currentPage;
+
   useEffect(() => {
-    const lessonState = gContext.lessonState;
-    const PAGES = lessonState.lessonData.lessonPlan;
     if (PAGES) {
       const CURRENT_PAGE = lessonState.currentPage;
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
@@ -77,10 +81,11 @@ const LessonRowComposer = () => {
     if (lessonState.lessonData) {
       setCurrentLesson(lessonState.lessonData);
     }
-  }, [gContext.lessonState.lessonData, gContext.lessonState.currentPage]);
+  }, [lessonState.lessonData, PAGES, lessonState.currentPage]);
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+
   return (
     <div>
       {removeDownloadablesFromlist &&
@@ -120,7 +125,7 @@ const LessonRowComposer = () => {
                               undefined, // function related to builder
                               undefined, // position number related to builder
                               content.type === 'notes-form' ? notes : [],
-                              true // isStudent
+                              true // isStudent,
                             )}
                           </div>
                         </div>
@@ -131,6 +136,8 @@ const LessonRowComposer = () => {
                   })}
               </BuilderRowWrapper>
             </div>
+
+            {isLastPage && <AllEmotions />}
           </div>
         ))}
 
