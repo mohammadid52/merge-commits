@@ -266,7 +266,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.title,
     time: `${lesson?.estTime} min`,
-    instructions: lesson?.description || '<p></p>',
+    instructions: lesson?.description || '--',
   }));
 
   const lessonPlanTableConfig = {
