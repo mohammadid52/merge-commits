@@ -73,9 +73,10 @@ const Table = ({
                             config?.dataList?.textColor || 'text-gray-500'
                           } px-6 py-4 ${
                             _idx === 0 ? 'w-72' : ''
-                          } whitespace-nowrap text-sm`}>
-                          {_item}
-                        </td>
+                          } whitespace-nowrap text-sm`}
+                          dangerouslySetInnerHTML={{
+                            __html: _item,
+                          }}></td>
                       );
                     })}
                   </tr>
