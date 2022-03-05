@@ -8,6 +8,16 @@ import {partInput} from 'API';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+
+  const UPDATE_ID =
+    lessonState?.universalStudentDataID.length > 0 &&
+    lessonState?.universalStudentDataID[0]?.id;
+
+  const STUDENT_DATA =
+    lessonState?.studentData &&
+    lessonState?.studentData.length > 0 &&
+    lessonState?.studentData;
+
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
@@ -86,24 +96,26 @@ const useStudentTimer = () => {
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   useEffect(() => {
-    if (currentSaveCount < lessonState.saveCount) {
-      setCurrentSaveCount(lessonState.saveCount);
+    if (lessonState.loaded) {
+      if (currentSaveCount < lessonState.saveCount) {
+        setCurrentSaveCount(lessonState.saveCount);
+      }
+
+      if (iAmViewed) {
+        const viewedUpdate = updateStudentLessonData();
+
+        Promise.resolve(viewedUpdate).then((_: void) => {
+          clearUpdateCycle();
+        });
+      } else {
+        const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
+
+        Promise.resolve(standardUpdate).then((_: void) => {
+          clearUpdateCycle();
+        });
+      }
     }
-
-    if (iAmViewed) {
-      const viewedUpdate = updateStudentLessonData();
-
-      Promise.resolve(viewedUpdate).then((_: void) => {
-        clearUpdateCycle();
-      });
-    } else {
-      const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
-
-      Promise.resolve(standardUpdate).then((_: void) => {
-        clearUpdateCycle();
-      });
-    }
-  }, [lessonState.saveCount]);
+  }, [lessonState.saveCount, lessonState.loaded]);
 
   // ##################################################################### //
   // ######################## MAIN SAVE FUNCTIONS ######################## //
@@ -158,20 +170,26 @@ const useStudentTimer = () => {
   };
 
   const updateSurveyData = async () => {
-    let data = {
-      id: lessonState.universalStudentDataID[0]?.id,
-      surveyData: lessonState.studentData,
-      roomID: getRoomData.id,
-    };
+    if (UPDATE_ID && STUDENT_DATA) {
+      let data = {
+        id: UPDATE_ID,
+        surveyData: STUDENT_DATA,
+        roomID: getRoomData.id,
+      };
 
-    try {
-      await API.graphql(
-        graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
-      );
-    } catch (e) {
-      console.error('updateSurveyData - ', e);
-    } finally {
-      return Promise.resolve();
+      // console.log('🚀 ~ file: timer.tsx ~ line 166 ~ updateSurveyData ~ data', data);
+
+      try {
+        await API.graphql(
+          graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
+        );
+
+        console.log('updateSurveyData - success');
+      } catch (e) {
+        console.error('updateSurveyData - ', e);
+      } finally {
+        return Promise.resolve();
+      }
     }
   };
 
