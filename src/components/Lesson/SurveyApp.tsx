@@ -367,6 +367,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           user.authId,
           user.email
         );
+
         lessonDispatch({
           type: 'LOAD_SURVEY_DATA',
           payload: {
@@ -376,6 +377,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
         // console.log('loaded finaldata - ', finalData);
+
         lessonDispatch({
           type: 'LOAD_SURVEY_DATA',
           payload: {
