@@ -651,6 +651,7 @@ module.exports = {
         196: '49rem',
         200: '50rem',
         256: '64rem',
+        '80vw': '80vw',
       },
       maxWidth: {
         48: '12rem',

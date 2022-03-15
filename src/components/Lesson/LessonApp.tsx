@@ -191,6 +191,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           page: UniversalLessonPage
         ) => {
           const pageParts = page.pageContent;
+
           const reducedPageInputs = pageParts.reduce(
             (
               pageInputsAcc: {

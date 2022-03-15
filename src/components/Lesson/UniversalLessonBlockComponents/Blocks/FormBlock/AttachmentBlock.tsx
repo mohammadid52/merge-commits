@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
 import Buttons from '@components/Atoms/Buttons';
+import RequiredMark from '@components/Atoms/RequiredMark';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
@@ -241,6 +242,10 @@ const File = ({
   );
 };
 
+interface IAttachmentProps extends IFormBlockProps {
+  onSuccess?: () => void;
+}
+
 const AttachmentBlock = ({
   inputID,
   label,
@@ -249,7 +254,8 @@ const AttachmentBlock = ({
   index,
   required,
   id,
-}: IFormBlockProps) => {
+  onSuccess,
+}: IAttachmentProps) => {
   const {
     lessonState,
     userLanguage,
@@ -388,6 +394,8 @@ const AttachmentBlock = ({
         graphqlOperation(mutations.createPersonFiles, {input: payload})
       );
       resetAll();
+
+      onSuccess && onSuccess();
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error);
     } finally {
@@ -459,10 +467,6 @@ const AttachmentBlock = ({
       uploadFile(e.target.files);
     }
   };
-
-  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
-    <span className="text-red-500"> {isRequired ? '*' : null}</span>
-  );
 
   const [showModal, setShowModal] = useState(false);
 
