@@ -182,14 +182,16 @@ const File = ({
         </div>
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
-            {/* <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
-              <IoClose className="text-red-500" />
-            </div> */}
+            <div
+              onClick={() => deleteImage(fileKey)}
+              className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800">
+              Delete
+            </div>
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
-              <div
-                onClick={() => setShowMenu(!showMenu)}
-                className={`relative ${btnClass('gray')}`}>
-                <AiOutlineEyeInvisible className="text-gray-500" />
+              <div onClick={() => setShowMenu(!showMenu)} className={`relative`}>
+                <div className="iconoclast:text-400 curate:text-400 hover:iconoclast:text-600 hover:curate:text-600 cursor-pointer font-medium">
+                  Preview
+                </div>
                 <Transition
                   style={{bottom: '1.5rem'}}
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
@@ -214,11 +216,6 @@ const File = ({
                       <dt className="text-sm font-medium text-gray-500">Size</dt>
                       <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
                         <p className="w-auto">{getSizeInBytes(file?.size)}</p>
-                        <div
-                          onClick={() => deleteImage(fileKey)}
-                          className="w-auto text-red-500 hover:text-red-800">
-                          delete
-                        </div>
                       </dd>
                     </div>
                   </dl>
@@ -243,7 +240,7 @@ const File = ({
 };
 
 interface IAttachmentProps extends IFormBlockProps {
-  onSuccess?: () => void;
+  onSuccess?: (fileKeys: string[]) => void;
 }
 
 const AttachmentBlock = ({
@@ -393,9 +390,9 @@ const AttachmentBlock = ({
       const result: any = await API.graphql(
         graphqlOperation(mutations.createPersonFiles, {input: payload})
       );
-      resetAll();
+      onSuccess && onSuccess(filesUploading.map((file: any) => file.fileKey));
 
-      onSuccess && onSuccess();
+      resetAll();
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error);
     } finally {

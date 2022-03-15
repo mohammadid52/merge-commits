@@ -152,6 +152,7 @@ const LessonHeaderBar = ({
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
+    console.log(lessonState);
     if (PAGES) {
       const thisPageData = lessonState?.studentData[pageIdx];
       const thisPageRequired = lessonState?.requiredInputs[pageIdx];
