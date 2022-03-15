@@ -577,7 +577,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           closeAction={closeAction}
           // modalBodyClass="overflow-y-auto 2xl:overflow-y-hidden"
         >
-          <div className="transition-all min-w-256">
+          <div className="transition-all xl:min-w-256">
             <>{modalByType(addContentModal.type)}</>
           </div>
           {/* <UnsavedModal /> */}

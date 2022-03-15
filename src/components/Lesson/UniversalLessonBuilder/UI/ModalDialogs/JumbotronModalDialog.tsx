@@ -313,7 +313,8 @@ const JumbotronModalDialog = ({
     const isValid: boolean = validateFormFields();
     if (isValid) {
       // @ts-ignore
-      let temp = imageInputs?.imageDatame.split('.');
+      let temp = imageInputs.imageData.name.split('.');
+
       const extension = temp.pop();
       const fileName = `${Date.now()}_${temp
         .join(' ')
