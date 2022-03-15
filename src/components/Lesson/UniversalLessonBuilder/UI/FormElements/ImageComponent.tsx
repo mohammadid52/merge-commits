@@ -272,12 +272,12 @@ const ImageFormComponent = ({
                   isEditingMode={isEditingMode}
                   showPreview={true}
                 />
-                <div className="flex flex-col items-center justify-center text-gray-400">
+                {/* <div className="flex flex-col items-center justify-center text-gray-400">
                   --- Or ---
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <Buttons label={'Browse'} onClick={handleGalleryModal} />
-                </div>
+                </div> */}
               </div>
               <div className="disabled col-span-1">
                 <Label dark={false} label="Styles" />
