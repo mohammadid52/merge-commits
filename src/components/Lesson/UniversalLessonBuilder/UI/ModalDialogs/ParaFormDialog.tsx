@@ -38,6 +38,7 @@ const ParaModalComponent = ({
     if (!isEmpty(inputObj)) {
       setIsEditingMode(true);
     }
+    console.log('inputObj', inputObj);
   }, [inputObj]);
 
   const addToDB = async (list: any) => {
@@ -74,7 +75,7 @@ const ParaModalComponent = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-    setFields({...fields, [field]: text, [fieldHtml]: html});
+    setFields({...fields, [`${field}`]: text, [`${fieldHtml}`]: html});
   };
 
   const {paragraph} = fields;
