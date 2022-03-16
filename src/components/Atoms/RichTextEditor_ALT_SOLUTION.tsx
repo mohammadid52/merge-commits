@@ -1,6 +1,6 @@
 import {ContentState, convertToRaw, EditorState, convertFromHTML} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+// import htmlToDraft from 'html-to-draftjs';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -103,59 +103,19 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     }
   };
 
-  // useEffect(() => {
-  //   const editorMounted = () => {
-  //     return (
-  //       editorRef &&
-  //       editorRef.current &&
-  //       editorRef.current !== null &&
-  //       editorRef.current.editor.editor
-  //     );
-  //   };
-  //   if (editorMounted() && withStyles) {
-  //     editorRef.current.editor.editor.addEventListener(
-  //       'paste',
-  //       function (e: React.ClipboardEvent<any>) {
-  //         handlePasteText(e);
-
-  //         // get text representation of clipboard
-  //         // var text = (e.originalEvent || e).clipboardData.getData('text/plain');
-  //         // insert text manually
-  //         // this is also not the recommended way to add text but not the worst idea.
-  //         // If you find better way or in future draftjs provides a feature for this
-  //         // then replace this with that.
-  //         // @ts-ignore
-  //         // editorRef.current.editor.editor.innerHTML = text;
-  //       }
-  //     );
-  //   }
-  //   return () =>
-  //     // @ts-ignore
-  //     editorMounted()
-  //       ? editorRef.current.editor.editor.removeEventListener('paste', handlePasteText)
-  //       : null;
-  // }, []);
-
   const initRef = React.useRef(false);
   const initState = React.useRef(null);
   const initText = React.useRef(undefined);
 
   const initializeEditor = useCallback(() => {
     if (!initRef.current && !initState.current && !initText.current) {
-      // if (initialValue) {
       const initialHtml = initialValue ? initialValue : '<span></span>';
       const initialContent = convertFromHTML(initialHtml);
       initState.current = EditorState.createWithContent(
         ContentState.createFromBlockArray(initialContent.contentBlocks)
       );
       initText.current = initialHtml;
-      // }
-      // else {
-      //   initText.current = '';
-      //   initState.current = EditorState.createWithContent(
-      //     ContentState.createFromText(initText.current)
-      //   );
-      // }
+
       if (initState.current) {
         updateEditorState(initState.current, initText.current);
         initRef.current = true;

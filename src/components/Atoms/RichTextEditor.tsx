@@ -1,7 +1,7 @@
 import {ContentState, convertToRaw, EditorState, convertFromHTML} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import React, {useCallback, useEffect, useState} from 'react';
+// import htmlToDraft from 'html-to-draftjs';
+import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
@@ -41,10 +41,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     wrapperClass = '',
     placeholder,
   } = props;
-  const editorRef = React.useRef(null);
-
-  const [editorState, setEditorState] = useState(null);
-  const editorStateRef = React.useRef(null);
+  const initialState: any = EditorState.createEmpty();
+  const [editorState, setEditorState] = useState(initialState);
 
   const ulbContext = useULBContext();
   const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
@@ -62,110 +60,40 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     'remove',
     'history',
   ];
+  const onEditorStateChange = (editorState: any) => {
+    const editorStateHtml: string = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
 
-  const getEditorStateHtml = (inputState: any) => {
-    return draftToHtml(convertToRaw(inputState.getCurrentContent()));
-  };
+    const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
 
-  const getEditorStateText = (inputState: any) => {
-    return inputState.getCurrentContent()?.getPlainText() || '';
-  };
-
-  const checkNewContent = (a: string, b: string) => {
-    console.log('a', a);
-    console.log('b', b);
-    return a !== b;
-  };
-
-  const updateEditorState = (inputState: any, plainText: string) => {
-    setEditorState(inputState);
-    editorStateRef.current = plainText;
-    console.log('updateEditorState', plainText);
-  };
-
-  const onEditorStateChange = (inputState: any) => {
-    const editorStateHtml = getEditorStateHtml(inputState);
-    const editorStatePlainText = getEditorStateText(inputState);
-    const withStylesHtml = editorRef?.current?.editor.editor.innerHTML;
-    const withStylesText = editorRef?.current?.editor.editor.innerText;
-
-    if (editorStateRef.current && editorRef && editorRef.current) {
-      if (withStyles && checkNewContent(withStylesText, editorStateRef.current)) {
-        // Please don't use this if the content is important and serious
+    if (withStyles) {
+      // Please don't use this if the content is important and serious
+      if (editorRef && editorRef.current) {
         // @ts-ignore
-
+        const withStylesHtml = editorRef?.current?.editor.editor.innerHTML;
         onChange(withStylesHtml, editorStatePlainText);
-        updateEditorState(inputState, withStylesText);
-      } else if (checkNewContent(editorStatePlainText, editorStateRef.current)) {
-        onChange(editorStateHtml, editorStatePlainText);
-        updateEditorState(inputState, editorStatePlainText);
       }
+    } else {
+      onChange(editorStateHtml, editorStatePlainText);
     }
+
+    setEditorState(editorState);
   };
-
-  // useEffect(() => {
-  //   const editorMounted = () => {
-  //     return (
-  //       editorRef &&
-  //       editorRef.current &&
-  //       editorRef.current !== null &&
-  //       editorRef.current.editor.editor
-  //     );
-  //   };
-  //   if (editorMounted() && withStyles) {
-  //     editorRef.current.editor.editor.addEventListener(
-  //       'paste',
-  //       function (e: React.ClipboardEvent<any>) {
-  //         handlePasteText(e);
-
-  //         // get text representation of clipboard
-  //         // var text = (e.originalEvent || e).clipboardData.getData('text/plain');
-  //         // insert text manually
-  //         // this is also not the recommended way to add text but not the worst idea.
-  //         // If you find better way or in future draftjs provides a feature for this
-  //         // then replace this with that.
-  //         // @ts-ignore
-  //         // editorRef.current.editor.editor.innerHTML = text;
-  //       }
-  //     );
-  //   }
-  //   return () =>
-  //     // @ts-ignore
-  //     editorMounted()
-  //       ? editorRef.current.editor.editor.removeEventListener('paste', handlePasteText)
-  //       : null;
-  // }, []);
-
-  const initRef = React.useRef(false);
-  const initState = React.useRef(null);
-  const initText = React.useRef(undefined);
-
-  const initializeEditor = useCallback(() => {
-    if (!initRef.current && !initState.current && !initText.current) {
-      // if (initialValue) {
-      const initialHtml = initialValue ? initialValue : '<span></span>';
-      const initialContent = convertFromHTML(initialHtml);
-      initState.current = EditorState.createWithContent(
-        ContentState.createFromBlockArray(initialContent.contentBlocks)
-      );
-      initText.current = initialHtml;
-      // }
-      // else {
-      //   initText.current = '';
-      //   initState.current = EditorState.createWithContent(
-      //     ContentState.createFromText(initText.current)
-      //   );
-      // }
-      if (initState.current) {
-        updateEditorState(initState.current, initText.current);
-        initRef.current = true;
-      }
-    }
-  }, [setEditorState, getEditorStateText]);
 
   useEffect(() => {
-    initializeEditor();
-  }, [initializeEditor]);
+    const html = initialValue ? initialValue : '<p></p>';
+    const contentBlock = convertFromHTML(html); // changed "htmlToDraft()" to "convertFromHTML()" -> Don't understand why htmlToDraft() was creating extra blank lines
+
+    let editorState;
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      editorState = EditorState.createWithContent(contentState);
+    } else {
+      editorState = EditorState.createEmpty();
+    }
+    setEditorState(editorState);
+  }, []);
 
   const toolbarClassName = `${
     customStyle
@@ -189,6 +117,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       : 'editorClassName '
   }  ${maxHeight ? maxHeight : ''}`;
 
+  const editorRef = React.useRef();
+
   return (
     <Editor
       ref={editorRef}
@@ -197,7 +127,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}
       editorClassName={editorClassName}
-      onEditorStateChange={editorState ? onEditorStateChange : () => {}}
+      onEditorStateChange={onEditorStateChange}
       toolbar={{
         options: features.length > 0 ? features : options,
         inline: {
