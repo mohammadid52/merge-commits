@@ -198,13 +198,13 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 <button
                   title="Select this component"
                   onClick={() => onComponentSelect()}
-                  className={`py-1 px-4 ${
+                  className={`py-1 px-2 ${
                     currentComponentSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {currentComponentSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}
                 </button>
               </div>
@@ -223,7 +223,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 <button
                   title="Select this component"
                   onClick={() => onComponentSelect()}
-                  className={`py-1 px-4 ${
+                  className={`py-1 px-2 ${
                     deleteModeCurrentComponentSelected.find(
                       (p: any) =>
                         p.pageContentID === pageContentID &&
@@ -239,7 +239,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                   ) ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}
                 </button>
               </div>
@@ -257,13 +257,13 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 <button
                   title="Select this block"
                   onClick={() => onComponentSelect(true)}
-                  className={`py-1 px-4 ${
+                  className={`py-1 px-2 ${
                     currentBlockSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {currentBlockSelected ? (
                     <IoLocationSharp className="text-2xl text-gray-400" />
                   ) : (
-                    <div className="w-auto p-1.5 2xl:p-2 rounded-full border-0 border-gray-400 hover:bg-gray-400"></div>
+                    <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}
                 </button>
               </div>
