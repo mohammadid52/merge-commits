@@ -152,17 +152,17 @@ const Toolbar = ({
                     }}
                     icon={AiOutlineFileAdd}
                   />
-                  <Button
+                  {/* <Button                       // Disabled button as the sidepanel is always visible anyway
                     text="Edit Page"
                     color={themeTextColor}
                     top
                     tooltip="Edit this Page"
                     onClick={() => {
-                      setNewLessonPlanShow(true);
+                      setNewLessonPlanShow(true); 
                       setEditMode(true);
                     }}
                     icon={AiOutlineEdit}
-                  />
+                  /> */}
                   <Button
                     color="text-red-400"
                     tooltip="Delete this page"
