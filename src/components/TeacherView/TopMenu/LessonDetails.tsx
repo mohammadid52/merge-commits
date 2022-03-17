@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {GlobalContext} from '@contexts/GlobalContext';
-import Storage from '@aws-amplify/storage';
-import useDictionary from '@customHooks/dictionary';
-import {getLocalStorageData} from '@utilities/localStorage';
 import Buttons from '@components/Atoms/Buttons';
-import {getAsset} from 'assets';
 import {downloadBlob} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Downloadables';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import Storage from '@aws-amplify/storage';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {getAsset} from 'assets';
+import React, {useContext, useState} from 'react';
 
 interface ILessonDetailProps {
   hidden?: boolean;
@@ -41,18 +41,22 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
     }
   };
 
-  async function download() {
-    console.log('downloading');
-    // const result = await Storage.get(`${UPLOAD_KEY}${fileKey}`, {download: true});
-    // @ts-ignore
-    downloadBlob();
+  async function download(key: string, cb: any) {
+    if (key) {
+      const result = await Storage.get(key, {download: true});
+      // @ts-ignore
+      downloadBlob(result.Body, 'lesson_plan', cb);
+    } else {
+      console.log('lesson plan key missing');
+    }
   }
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
-  const [isLessonPlanDownloaded, setIsLessonPlanDownloaded] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
   return (
     <div
       className={`${
@@ -66,14 +70,17 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
           <span>{lessonState.lessonData.title}</span>
         </div>
         <div>
-          {/* <span className="relative mr-0 flex justify-end">
+          <span className="relative mr-0 flex justify-end">
             <Buttons
               overrideClass
               btnClass={`${theme.btn[themeColor]} h-8 font-bold uppercase text-xs rounded items-center w-auto`}
-              label={isLessonPlanDownloaded ? 'Downloaded' : 'Lesson plan'}
-              disabled={isLessonPlanDownloaded}
+              label={isDownloading ? 'Downloading' : 'Lesson plan'}
+              disabled={isDownloading}
               onClick={() => {
-                download();
+                setIsDownloading(true);
+                download(lessonState?.lessonData?.lessonPlanAttachment, () =>
+                  setIsDownloading(false)
+                );
               }}
               insideElement={
                 <a id="download-lesson-plan-file" target="_blank" className={`hidden`}>
@@ -81,7 +88,7 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
                 </a>
               }
             />
-          </span> */}
+          </span>
         </div>
       </div>
 

@@ -1,11 +1,9 @@
 import Highlighted from '@components/Atoms/Highlighted';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-
-import {escapeRegExp} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import Popover from '../../../Atoms/Popover';
 
 interface ICloneModalProps {

@@ -1,21 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../../customHooks/urlParam';
 import * as mutations from '../../../../../../graphql/mutations';
-import {
-  languageList,
-  lessonTypeList,
-  periodOptions,
-  targetAudienceForIconoclast,
-} from '../../../../../../utilities/staticData';
 import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../../Atoms/Form/Selector';
 import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
@@ -37,6 +27,7 @@ interface AddNewLessonFormProps {
   institutionList: any[];
   setUnsavedChanges: Function;
   fetchStaffByInstitution: (institutionID: string) => void;
+  lessonPlanAttachment?: any;
 }
 
 const Card = ({
@@ -79,6 +70,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     postLessonCreation,
 
     lessonId,
+    lessonPlanAttachment,
     institutionList,
   } = props;
 
@@ -411,6 +403,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     targetAudience,
   } = formData;
 
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const onUploadModalClose = () => {
+    setShowUploadModal(false);
+  };
+
   return (
     <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-gray-200">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -423,16 +421,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
           <Card
             cardTitle={'Lesson Details'}
-            // rightSide={
-            //   <Buttons
-            //     btnClass="py-3 px-10"
-            //     label={'Upload lesson plan'}
-            //     // onClick={saveFormData}
-            //     onClick={() => {}}
-            //   />
-            // }
-          >
+            rightSide={
+              <Buttons
+                btnClass="py-3 px-10"
+                label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
+                // onClick={saveFormData}
+                onClick={() => setShowUploadModal(true)}
+              />
+            }>
             <LessonDetails
+              lessonPlanAttachment={lessonPlanAttachment}
+              onClose={onUploadModalClose}
+              showUploadModal={showUploadModal}
               name={name}
               onInputChange={onInputChange}
               lessonId={lessonId}
