@@ -6,6 +6,7 @@ import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
 import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
 import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
 import {classNames} from '@UlbUI/FormElements/TextInput';
+import gsap from 'gsap';
 import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
 import {
@@ -33,6 +34,7 @@ interface AddContentDialog {
   onItemClick?: (type: string, bottom?: boolean) => void;
   isSurvey: boolean;
 }
+
 const AddContentDialog = ({
   onItemClick,
   isSurvey = false,
@@ -419,7 +421,7 @@ const AddContentDialog = ({
         {!isEmpty(activeContentItem) && (
           <>
             <h4 className="dark:text-white m-4 text-base font-medium capitalize">
-              {activeContentItem.type} Component
+              {activeContentItem.name} Component
             </h4>
             <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
               <Item content={activeContentItem} />

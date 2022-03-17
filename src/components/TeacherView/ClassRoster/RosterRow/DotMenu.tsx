@@ -31,10 +31,10 @@ const DotMenu = ({menuItems}: IDotMenuProps) => {
       dir={'top'}
       minWidth={32}
       minHeight={0}
-      padding={2}
+      padding={4}
       rounded="lg"
       setShow={setShowMenu}
-      containerClass={`flex flex-col items-center`}
+      containerClass={`flex flex-col items-center bg-white`}
       content={
         menuItems &&
         menuItems.length > 0 &&

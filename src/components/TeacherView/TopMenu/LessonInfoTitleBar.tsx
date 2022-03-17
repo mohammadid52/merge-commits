@@ -9,7 +9,9 @@ const LessonInfoTitleBar = () => {
 
   return (
     <div className="bg-transparent flex flex-row justify-between">
-      <div title="title" className="h-8 align-middle text-gray-600 text-sm leading-8 ">
+      <div
+        title={lessonState.lessonData.title}
+        className="h-8 align-middle text-gray-600 text-sm leading-8 ">
         <span className="font-bold">{classRoomDict[userLanguage]['LESSON']}: </span>
         <span>{lessonState.lessonData.title}</span>
       </div>

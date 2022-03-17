@@ -121,8 +121,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setModalPopVisible,
   } = useOverlayContext();
 
-  // Manage image gallery component
-  const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
 
   useEffect(() => {
@@ -130,14 +128,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       handleModalPopToggle(dialogLabelList.NEW_PAGE);
     }
   }, []);
-
-  const handleGalleryModal = () => {
-    setOpenGallery((prevShow) => !prevShow);
-  };
-  const onSelectImage = (url: string) => {
-    setSelectedImageFromGallery(url);
-    setOpenGallery(false);
-  };
 
   /**
    *
@@ -363,7 +353,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return (
           <ImageFormComponent
             {...commonProps}
-            handleGalleryModal={handleGalleryModal}
             selectedImageFromGallery={selectedImageFromGallery}
           />
         );
@@ -385,7 +374,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <ImageFormComponent
             {...commonProps}
             customVideo
-            handleGalleryModal={handleGalleryModal}
             selectedImageFromGallery={selectedImageFromGallery}
           />
         );
@@ -625,7 +613,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
 
-      {openGallery && (
+      {/* {openGallery && (
         <Modal
           showHeader={true}
           title={`Select from gallery`}
@@ -636,7 +624,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             <ImageGallery basePath={`ULB/${user.id}`} onSelectImage={onSelectImage} />
           </div>
         </Modal>
-      )}
+      )} */}
 
       <CoreBuilder
         mode={mode}

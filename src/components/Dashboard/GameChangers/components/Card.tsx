@@ -17,6 +17,7 @@ import {
   EmotionSvg,
   GratitudeSvg,
 } from '@components/Dashboard/GameChangers/svg';
+import useInLessonCheck from '@customHooks/checkIfInLesson';
 
 const getSVG = (type: string) => {
   switch (type) {
@@ -44,9 +45,13 @@ const Card = ({
   onClick: (id: number) => void;
   selected: boolean;
 }) => {
+  const inLesson = useInLessonCheck();
   useEffect(() => {
-    $('.flickity-button').css('display', 'block');
-  }, []);
+    if (!inLesson) {
+      $('.flickity-button').css('display', 'block');
+    }
+    console.log('heyya');
+  }, [inLesson]);
 
   return (
     <div

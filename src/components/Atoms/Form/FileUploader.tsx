@@ -29,7 +29,6 @@ const ULBFileUploader = ({
   customVideo = false,
   isEditingMode = false,
 }: IULBFileUploader) => {
-  console.log('🚀 ~ file: FileUploader.tsx ~ line 32 ~ fileUrl', fileUrl);
   const {userLanguage} = useContext(GlobalContext);
   const otherProps: any = {};
   if (acceptedFilesFormat) {
