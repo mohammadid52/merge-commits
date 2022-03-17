@@ -66,7 +66,7 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
           <span>{lessonState.lessonData.title}</span>
         </div>
         <div>
-          <span className="relative mr-0 flex justify-end">
+          {/* <span className="relative mr-0 flex justify-end">
             <Buttons
               overrideClass
               btnClass={`${theme.btn[themeColor]} h-8 font-bold uppercase text-xs rounded items-center w-auto`}
@@ -81,7 +81,7 @@ const LessonDetails = ({hidden}: ILessonDetailProps) => {
                 </a>
               }
             />
-          </span>
+          </span> */}
         </div>
       </div>
 

@@ -423,14 +423,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
           <Card
             cardTitle={'Lesson Details'}
-            rightSide={
-              <Buttons
-                btnClass="py-3 px-10"
-                label={'Upload lesson plan'}
-                // onClick={saveFormData}
-                onClick={() => {}}
-              />
-            }>
+            // rightSide={
+            //   <Buttons
+            //     btnClass="py-3 px-10"
+            //     label={'Upload lesson plan'}
+            //     // onClick={saveFormData}
+            //     onClick={() => {}}
+            //   />
+            // }
+          >
             <LessonDetails
               name={name}
               onInputChange={onInputChange}
