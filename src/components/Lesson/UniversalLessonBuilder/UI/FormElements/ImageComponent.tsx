@@ -31,7 +31,6 @@ interface IImageInput {
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
-  handleGalleryModal: () => void;
   inputObj?: IImageInput[];
   selectedImageFromGallery?: string;
   customVideo?: boolean;
@@ -42,7 +41,7 @@ const ImageFormComponent = ({
   closeAction,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
-  handleGalleryModal,
+
   setUnsavedChanges,
   customVideo = false,
   askBeforeClose,

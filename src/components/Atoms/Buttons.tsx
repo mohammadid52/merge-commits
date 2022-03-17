@@ -18,6 +18,7 @@ interface ButtonProps {
   customStyles?: object;
   loading?: boolean;
   loadingText?: string;
+  insideElement?: React.ReactNode;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
@@ -35,6 +36,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     customStyles,
     loading = false,
     loadingText = 'Loading...',
+    insideElement = null,
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -85,6 +87,8 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
           ) : null}
         </>
       )}
+
+      {insideElement}
     </button>
   );
 };

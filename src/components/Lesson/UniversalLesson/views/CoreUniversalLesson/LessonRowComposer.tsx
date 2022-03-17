@@ -136,10 +136,9 @@ const LessonRowComposer = () => {
                   })}
               </BuilderRowWrapper>
             </div>
-
-            {isLastPage && <AllEmotions />}
           </div>
         ))}
+      {isLastPage && <AllEmotions />}
 
       {user.role === 'ST' && (
         <>
