@@ -48,7 +48,6 @@ const LessonHeaderBar = ({
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
   const handleManualSave = () => {
-    console.log('manual save');
     if (lessonState.updated) {
       setWaiting(true);
       setSafeToLeave(false);
@@ -91,8 +90,6 @@ const LessonHeaderBar = ({
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
-    console.log('handleLeavePopup');
-
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
@@ -107,7 +104,6 @@ const LessonHeaderBar = ({
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
   const handleVideoLinkPopup = (url?: string) => {
-    console.log('handleVideoLinkPopup');
     if (videoLinkModalVisible) {
       // setVideoLink('');
       setVideoLinkModalVisible(false);
@@ -196,7 +192,6 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   const getPageIndex = (pageID: string, pageArray: any[]) => {
-    console.log('find page id for - ', pageID);
     if (pageID && pageArray) {
       return pageArray.findIndex((pageObj: any) => pageObj.id === pageID);
     }

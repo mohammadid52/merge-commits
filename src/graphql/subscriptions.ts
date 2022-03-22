@@ -9724,6 +9724,7 @@ export const onCreateAttendance = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -10024,6 +10025,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -10324,6 +10326,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -10601,6 +10604,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
       language
       designers
       objectives
+      lessonPlanAttachment
       purpose
       introduction
       introductionTitle
@@ -10722,6 +10726,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
       language
       designers
       objectives
+      lessonPlanAttachment
       purpose
       introduction
       introductionTitle
@@ -10843,6 +10848,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
       language
       designers
       objectives
+      lessonPlanAttachment
       purpose
       introduction
       introductionTitle
@@ -11838,6 +11844,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -11983,6 +11990,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -12128,6 +12136,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -12259,6 +12268,7 @@ export const onCreateUniversalLessonFeedback = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -12335,6 +12345,7 @@ export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -12411,6 +12422,7 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -13055,6 +13067,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -13289,6 +13302,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -13523,6 +13537,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -14493,6 +14508,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -14752,6 +14768,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -15011,6 +15028,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle

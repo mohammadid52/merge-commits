@@ -50,13 +50,17 @@ const MESSAGES = {
 };
 
 const ClickOnCircle = ({message, onClose}: {message: string; onClose: () => void}) => (
-  <div className="flex relative items-center justify-between group flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
+  <div className="flex relative items-center justify-between group flex-col p-4 rounded-xl border-0 border-green-300 bg-green-500 bg-opacity-50 ">
+    {' '}
+    {/* // Removed "iconoclast:border-main curate:border-main" to make UI clearer */}
     <p className="w-auto dark:text-white">{message}</p>
     <span
       onClick={onClose}
-      style={{top: '-.5rem', right: '-.5rem'}}
-      className="absolute cursor-pointer -top-1 w-auto -right-1 p-1 rounded-full transition-all">
-      <AiFillCloseCircle className="text-white text-base" />
+      style={{top: '-.75rem', right: '-.75rem'}}
+      className="absolute cursor-pointer -top-1 w-auto -right-1 rounded-full transition-all min-w-6 min-h-6 bg-green-600">
+      <span className="relative flex rounded-full border-0 border-green-300">
+        <AiFillCloseCircle className="text-white text-2xl" />
+      </span>
     </span>
   </div>
 );
@@ -838,7 +842,7 @@ const PageBuilderSlideOver = ({
           <div>
             <OverlayHeaderTitle showBackBtn={false} onBack={toHome} title="Edit page" />
             <AnimatedContainer
-              className={`my-2 w-auto`}
+              className={`my-6 w-auto`}
               animationType="opacity"
               show={notSelected && !onInit}>
               {notSelected && !onInit && (
@@ -877,7 +881,7 @@ const PageBuilderSlideOver = ({
             </AnimatedContainer>
 
             <AnimatedContainer
-              className={`my-2  w-auto`}
+              className={`my-6 2xl:my-8 mt-3 2xl:mt-4 w-auto`}
               animationType="opacity"
               show={notSelected && showMovementBox}>
               {notSelected && showMovementBox && (

@@ -4538,6 +4538,7 @@ export const getAttendance = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -4774,6 +4775,7 @@ export const listAttendances = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -4928,6 +4930,7 @@ export const getUniversalLesson = /* GraphQL */ `
       language
       designers
       objectives
+      lessonPlanAttachment
       purpose
       introduction
       introductionTitle
@@ -5044,6 +5047,7 @@ export const listUniversalLessons = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -5748,6 +5752,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -5883,6 +5888,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -5958,6 +5964,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -6528,6 +6535,7 @@ export const getSentimentTracker = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -7270,6 +7278,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         language
         designers
         objectives
+        lessonPlanAttachment
         purpose
         introduction
         introductionTitle
@@ -7431,6 +7440,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle
@@ -8284,6 +8294,7 @@ export const attendanceByStudent = /* GraphQL */ `
           language
           designers
           objectives
+          lessonPlanAttachment
           purpose
           introduction
           introductionTitle

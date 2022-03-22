@@ -1,25 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Storage from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../../customHooks/urlParam';
 import * as mutations from '../../../../../../graphql/mutations';
-import {
-  languageList,
-  lessonTypeList,
-  periodOptions,
-  targetAudienceForIconoclast,
-} from '../../../../../../utilities/staticData';
 import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../../Atoms/Form/Selector';
 import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
+import LessonDetails from './LessonDetails';
 import MaterialsCard from './MaterialsCard';
 
 interface AddNewLessonFormProps {
@@ -36,24 +27,28 @@ interface AddNewLessonFormProps {
   institutionList: any[];
   setUnsavedChanges: Function;
   fetchStaffByInstitution: (institutionID: string) => void;
+  lessonPlanAttachment?: any;
 }
 
 const Card = ({
   cardTitle,
   className = '',
   children,
+  rightSide,
 }: {
   cardTitle: string;
   className?: string;
   children: React.ReactNode;
+  rightSide?: React.ReactNode;
 }) => {
   return (
     <div
       className={`${className} w-auto min-h-56 min-w-56 customShadow p-4 bg-white rounded-lg my-2 lg:my-0`}>
-      <div className="px-3 mb-2">
+      <div className="px-3 mb-2 flex items-center justify-between">
         <h4 className="half-border relative  w-auto  text-lg font-medium tracking-wide ">
           {cardTitle}
         </h4>
+        {rightSide}
       </div>
 
       {children}
@@ -75,14 +70,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     postLessonCreation,
 
     lessonId,
+    lessonPlanAttachment,
     institutionList,
   } = props;
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {AddNewLessonFormDict} = useDictionary(clientKey);
-  const params = useQuery(location.search);
-  const refName = params.get('refName');
 
   const [validation, setValidation] = useState({
     name: '',
@@ -200,6 +194,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const saveCroppedImage = async (image: string) => {
     toggleCropper();
     setImageData(image ? image : fileObj);
+    // @ts-ignore
     const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setFormData({
       ...formData,
@@ -393,17 +388,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   };
 
-  const inputRef = React.useRef();
-
-  useEffect(() => {
-    if (refName && refName === 'name') {
-      if (inputRef && inputRef?.current) {
-        // @ts-ignore
-        inputRef?.current?.focus();
-      }
-    }
-  }, [refName, inputRef]);
-
   const {
     name,
     type,
@@ -419,6 +403,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     targetAudience,
   } = formData;
 
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const onUploadModalClose = () => {
+    setShowUploadModal(false);
+  };
+
   return (
     <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-gray-200">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -429,98 +419,37 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
       <div className="">
         <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
-          <Card cardTitle={'Lesson Details'}>
-            <div className="px-3">
-              <div className="px-0 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
-                  <span className="text-red-500"> * </span>
-                </label>
-                <FormInput
-                  value={name}
-                  inputRef={inputRef}
-                  id="name"
-                  onChange={onInputChange}
-                  name="name"
-                />
-                {validation.name && (
-                  <p className="text-red-600 text-sm">{validation.name}</p>
-                )}
-              </div>
-              <div className="grid lg:grid-cols-2 gap-x-4">
-                <div className="px-0 py-4">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
-                    <span className="text-red-500"> * </span>
-                  </label>
-                  <Selector
-                    disabled={lessonId !== ''}
-                    selectedItem={type.name}
-                    placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
-                    list={lessonTypeList}
-                    onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
-                  />
-                  {validation.type && (
-                    <p className="text-red-600 text-sm">{validation.type}</p>
-                  )}
-                </div>
-                <div className="px-0 py-4">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['DURATION']}{' '}
-                  </label>
-                  <Selector
-                    selectedItem={duration.toString() || ''}
-                    placeholder={AddNewLessonFormDict[userLanguage]['DURATION']}
-                    list={periodOptions}
-                    onChange={onDurationSelect}
-                  />
-                </div>
-              </div>
-              <div className="grid lg:grid-cols-2 gap-x-4">
-                <div className="px-0 py-4">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['TARGET_AUDIENCE']}{' '}
-                  </label>
-                  <Selector
-                    selectedItem={targetAudience}
-                    placeholder={
-                      AddNewLessonFormDict[userLanguage]['SELECT_TARGET_AUDIENCE']
-                    }
-                    list={targetAudienceForIconoclast}
-                    onChange={onSelectTargetAudience}
-                  />
-                </div>
-                <div className="px-0 py-4">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-                    <span className="text-red-500"> * </span>
-                  </label>
-                  <MultipleSelector
-                    // disabled={lessonId !== ''}
-                    selectedItems={languages}
-                    placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
-                    list={languageList}
-                    onChange={selectLanguage}
-                  />
-                </div>
-              </div>
-              <div className="py-4 col-span-2">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-                </label>
-                <MultipleSelector
-                  selectedItems={selectedDesigners}
-                  placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-                  list={designersList}
-                  onChange={selectDesigner}
-                  noOptionMessage={
-                    designerListLoading
-                      ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING']
-                      : AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
-                  }
-                />
-              </div>
-            </div>
+          <Card
+            cardTitle={'Lesson Details'}
+            rightSide={
+              <Buttons
+                btnClass="py-3 px-10"
+                label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
+                // onClick={saveFormData}
+                onClick={() => setShowUploadModal(true)}
+              />
+            }>
+            <LessonDetails
+              lessonPlanAttachment={lessonPlanAttachment}
+              onClose={onUploadModalClose}
+              showUploadModal={showUploadModal}
+              name={name}
+              onInputChange={onInputChange}
+              lessonId={lessonId}
+              targetAudience={targetAudience}
+              type={type}
+              duration={duration}
+              selectedDesigners={selectedDesigners}
+              languages={languages}
+              designerListLoading={designerListLoading}
+              onDurationSelect={onDurationSelect}
+              onSelectOption={onSelectOption}
+              onSelectTargetAudience={onSelectTargetAudience}
+              selectLanguage={selectLanguage}
+              designersList={designersList}
+              selectDesigner={selectDesigner}
+              validation={validation}
+            />
           </Card>
           <Card cardTitle="Lesson Objectives">
             <div className="max-h-96 px-4 py-6">

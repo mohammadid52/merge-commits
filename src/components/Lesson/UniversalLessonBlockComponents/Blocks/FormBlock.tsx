@@ -89,6 +89,16 @@ export const FormBlock = ({
     setDataValue(id, [value]);
   };
 
+  // This function will mark the required field for Attachment component
+  /**
+   *
+   * @param id string - domID
+   * @param value - attachmentId
+   */
+  const onAttachmentUploadSuccess = (id: string, value: string[]) => {
+    setDataValue(id, value);
+  };
+
   // ##################################################################### //
   // ########################## FORM BLOCK TYPES ######################### //
   // ##################################################################### //
@@ -195,7 +205,14 @@ export const FormBlock = ({
           />
         );
       case FORM_TYPES.ATTACHMENTS:
-        return <AttachmentBlock {...formBlockProps} />;
+        return (
+          <AttachmentBlock
+            onSuccess={(fileKeys: string[]) =>
+              onAttachmentUploadSuccess(inputID, fileKeys)
+            }
+            {...formBlockProps}
+          />
+        );
       case FORM_TYPES.REVIEW_SLIDER:
         return (
           <ReviewSliderBlock

@@ -23,9 +23,10 @@ const BowlSvg = ({animate}: {animate: boolean}) => {
   const [color, setColor] = useState(null);
 
   useEffect(() => {
+    let interval: any = null;
     if (animate) {
       let idx = 0;
-      setInterval(() => {
+      interval = setInterval(() => {
         if (colorList.length - 1 >= idx) {
           setColor(colorList[idx]);
           idx = idx + 1;
@@ -33,7 +34,14 @@ const BowlSvg = ({animate}: {animate: boolean}) => {
           idx = 0;
         }
       }, 1000);
+    } else {
+      clearInterval(interval);
+      setColor(colorList[0]);
     }
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [animate]);
 
   return (
@@ -145,7 +153,11 @@ const SingingBowl = () => {
         />
       </audio>
       <BowlSvg animate={isPlaying} />
-      <Button onClick={start} text={isPlaying ? 'Stop Meditation' : 'Start Meditation'} />
+      <Button
+        width="100%"
+        onClick={start}
+        text={isPlaying ? 'Stop Meditation' : 'Start Meditation'}
+      />
     </div>
   );
 };

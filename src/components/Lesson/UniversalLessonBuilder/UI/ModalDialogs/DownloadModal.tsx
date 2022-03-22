@@ -197,17 +197,19 @@ const File = ({
         </div>
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
-            {/* <div onClick={() => deleteImage(fileKey)} className={btnClass('red')}>
-              <IoClose className="text-red-500" />
-            </div> */}
+            <div
+              onClick={() => deleteImage(fileKey)}
+              className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800">
+              Delete
+            </div>
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
-              <div
-                onClick={() => setShowMenu(!showMenu)}
-                className={`relative ${btnClass('gray')}`}>
-                <AiOutlineEyeInvisible className="text-gray-500" />
+              <div onClick={() => setShowMenu(!showMenu)} className={`relative `}>
+                <div className="iconoclast:text-400 curate:text-400 hover:iconoclast:text-600 hover:curate:text-600 cursor-pointer font-medium">
+                  Preview
+                </div>
                 <Transition
                   style={{bottom: '1.5rem'}}
-                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
+                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-56 p-4"
                   show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
@@ -219,23 +221,22 @@ const File = ({
                         alt={file?.name}
                       />
                     </div>
-                    <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File name</dt>
-                      <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
-                        {file?.name}
-                      </dd>
-                    </div>
-                    <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">Size</dt>
-                      <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                        <p className="w-auto">{getSizeInBytes(file?.size)}</p>
-                        <div
-                          onClick={() => deleteImage(fileKey)}
-                          className="w-auto text-red-500 hover:text-red-800">
-                          delete
-                        </div>
-                      </dd>
-                    </div>
+                    {(file?.name || fileName) && (
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500">File name</dt>
+                        <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
+                          {file?.name || fileName}
+                        </dd>
+                      </div>
+                    )}
+                    {file?.size && (
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500">Size</dt>
+                        <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                          <p className="w-auto">{getSizeInBytes(file?.size)}</p>
+                        </dd>
+                      </div>
+                    )}
                   </dl>
                 </Transition>
               </div>
@@ -273,14 +274,17 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   useEffect(() => {
     if (inputObj && inputObj.length > 0) {
       setIsEditingMode(true);
-      const f: IFile[] = map(inputObj, (d) => ({
-        id: d.id,
-        fileKey: d.value,
-        fileName: d.label,
-        _status: 'other',
-        progress: null,
-        file: null,
-      }));
+      const f: IFile[] = map(inputObj, (d) => {
+        console.log('<<---', d);
+        return {
+          id: d.id,
+          fileKey: d.value,
+          fileName: d.label,
+          _status: 'other',
+          progress: null,
+          file: null,
+        };
+      });
       setFilesUploading(f);
     }
   }, [inputObj]);
@@ -440,6 +444,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         value: f.fileKey,
       };
     });
+
     const parentKey = 'downloadable-files';
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
@@ -506,18 +511,20 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
         className="mt-4 flex flex-col  gap-y-6">
-        {map(filesUploading, (file: IFile) => (
-          <File
-            fileKey={file.fileKey}
-            updateFilename={updateFilename}
-            file={file.file}
-            id={file.id}
-            deleteImage={deleteImage}
-            _status={file._status}
-            progress={file.progress}
-            fileName={file.fileName}
-          />
-        ))}
+        {map(filesUploading, (file: IFile) => {
+          return (
+            <File
+              fileKey={file.fileKey}
+              updateFilename={updateFilename}
+              file={file.file}
+              id={file.id}
+              deleteImage={deleteImage}
+              _status={file._status}
+              progress={file.progress}
+              fileName={file.fileName}
+            />
+          );
+        })}
       </Transition>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
