@@ -74,7 +74,7 @@ const ParaModalComponent = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-    setFields({...fields, [field]: text, [fieldHtml]: html});
+    setFields({...fields, [`${field}`]: text, [`${fieldHtml}`]: html});
   };
 
   const {paragraph} = fields;

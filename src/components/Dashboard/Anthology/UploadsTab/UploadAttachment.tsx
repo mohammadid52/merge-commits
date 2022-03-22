@@ -184,7 +184,9 @@ const File = ({
               <div
                 onClick={() => setShowMenu(!showMenu)}
                 className={`relative ${btnClass('gray')}`}>
-                <AiOutlineEyeInvisible className="text-gray-500" />
+                <div className="iconoclast:text-400 curate:text-400 hover:iconoclast:text-600 hover:curate:text-600 cursor-pointer font-medium">
+                  Preview
+                </div>
                 <Transition
                   style={{bottom: '1.5rem'}}
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
@@ -209,11 +211,6 @@ const File = ({
                       <dt className="text-sm font-medium text-gray-500">Size</dt>
                       <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
                         <p className="w-auto">{getSizeInBytes(file?.size)}</p>
-                        <div
-                          onClick={() => deleteImage(fileKey)}
-                          className="w-auto text-red-500 hover:text-red-800">
-                          delete
-                        </div>
                       </dd>
                     </div>
                   </dl>

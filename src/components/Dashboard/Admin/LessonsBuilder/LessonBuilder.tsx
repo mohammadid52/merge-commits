@@ -568,6 +568,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         return (
           <AddNewLessonForm
             lessonId={lessonId}
+            lessonPlanAttachment={universalLessonDetails?.lessonPlanAttachment}
             changeLessonType={changeLessonType}
             formData={formData}
             setFormData={setFormData}
