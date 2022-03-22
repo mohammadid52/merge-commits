@@ -114,8 +114,11 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               e.stopPropagation();
             }
           }}
-          className="relative w-auto my-4 mx-auto max-w-lg ">
-          <div className={`${modalBodyClass} ${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
+          className="relative w-auto my-4 mx-auto max-w-9/10">
+          <div
+            className={`${modalBodyClass} ${
+              theme.modals[hidePadding ? 'hideBg' : 'content']
+            }`}>
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}

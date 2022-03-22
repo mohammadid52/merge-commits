@@ -94,6 +94,10 @@ const UniversalInput = (props: any) => {
       value: d.value,
       isRequired: d.required,
     }));
+    console.log(
+      '🚀 ~ file: UniversalInput.tsx ~ line 97 ~ inputObjArray ~ inputObjArray',
+      inputObjArray
+    );
 
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {

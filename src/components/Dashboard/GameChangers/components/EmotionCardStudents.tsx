@@ -92,15 +92,6 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     }
   };
 
-  const deleteM = useGraphqlMutation('deleteFeelingsArchive');
-
-  useEffect(() => {
-    const ids = ['of5VajapCVwU9mIX6nFEqQDK'];
-    console.log('deleting');
-
-    ids.forEach((id) => deleteM.mutate({input: {id}}));
-  }, []);
-
   return listLoading ? (
     <div className="flex items-center justify-center h-32">
       <Loader color="#fff" />

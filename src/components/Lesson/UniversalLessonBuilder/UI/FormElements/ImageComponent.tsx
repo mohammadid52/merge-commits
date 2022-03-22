@@ -2,6 +2,7 @@ import Buttons from '@atoms/Buttons';
 import ULBFileUploader from '@atoms/Form/FileUploader';
 import FormInput from '@atoms/Form/FormInput';
 import Storage from '@aws-amplify/storage';
+import {ComponentPropsToStylePropsMapKeys} from '@aws-amplify/ui-react';
 import Label from '@components/Atoms/Form/Label';
 import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import DummyContent from '@components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
@@ -19,7 +20,7 @@ import {
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {getImageFromS3Static} from '@utilities/services';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ProgressBar from '../ProgressBar';
 
 interface IImageInput {
@@ -28,10 +29,10 @@ interface IImageInput {
   height: string;
   caption?: string;
   imageData?: File | null;
+  [key: string]: any;
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
-  handleGalleryModal: () => void;
   inputObj?: IImageInput[];
   selectedImageFromGallery?: string;
   customVideo?: boolean;
@@ -42,7 +43,7 @@ const ImageFormComponent = ({
   closeAction,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
-  handleGalleryModal,
+
   setUnsavedChanges,
   customVideo = false,
   askBeforeClose,
@@ -61,9 +62,9 @@ const ImageFormComponent = ({
     height: 'auto',
     caption: '',
   });
+  const imageInputsRef = useRef<IImageInput | undefined>(undefined);
 
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
-
   const [errors, setErrors] = useState<IImageInput>({
     value: '',
     width: '',
@@ -74,6 +75,7 @@ const ImageFormComponent = ({
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setImageInputs(inputObj[0]);
+      imageInputsRef.current = inputObj[0]; // store the initial inputObj for comparison
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -112,52 +114,99 @@ const ImageFormComponent = ({
     await updateLessonPageToDB(input);
   };
 
+  // ~~~~~~~~~~~~~ SAVE RELATED ~~~~~~~~~~~~ //
+
+  const filterUpdatedInputs = useCallback(
+    (initialInputs: IImageInput, currentInputs: IImageInput) => {
+      if (imageInputsRef.current) {
+        if (!initialInputs || !currentInputs) {
+          console.error(
+            'filterUpdatedInputs: initialInputs or currentInputs is undefined'
+          );
+          return [];
+        } else {
+          const initialKeys = Object.keys(initialInputs);
+          const currentKeys = Object.keys(currentInputs);
+
+          return currentKeys.reduce((updatedKeys: string[], key: string) => {
+            console.log(initialInputs[key], currentInputs[key]);
+            if (
+              initialKeys.indexOf(key) === -1 ||
+              initialInputs[key] !== currentInputs[key]
+            ) {
+              return [...updatedKeys, key];
+            } else {
+              return updatedKeys;
+            }
+          }, []);
+        }
+      } else {
+        console.log('filterUpdatedInputs: imageInputsRef is undefined');
+        return [];
+      }
+    },
+    [imageInputs]
+  );
+
   const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
-    if (isValid) {
-      let {imageData, ...payload} = imageInputs;
-      if (imageInputs.imageData) {
+    const updatedInputs = filterUpdatedInputs(imageInputsRef.current, imageInputs);
+    const imageWasUpdated = updatedInputs.indexOf('imageData') > -1;
+    const styles = getStyles();
+    let {imageData, ...payload} = imageInputs;
+
+    if (isValid && updatedInputs.length > 0) {
+      setIsLoading(true);
+
+      // logic for if new image is uploaded
+      if (imageWasUpdated) {
         let temp = imageData.name.split('.');
         const extension = temp.pop();
         const fileName = `${Date.now()}_${temp
           .join(' ')
           .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-        setIsLoading(true);
+
         await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
 
         payload = {
           ...payload,
           value: `ULB/${user.id}/content_image_${fileName}`,
         };
-        const styles = getStyles();
-        if (isEditingMode) {
-          const updatedList = updateBlockContentULBHandler(
-            '',
-            '',
-            customVideo ? 'custom_video' : 'image',
-            [payload],
-            0,
-            styles
-          );
+      }
 
-          await addToDB(updatedList);
-        } else {
-          const updatedList = createNewBlockULBHandler(
-            '',
-            '',
-            customVideo ? 'custom_video' : 'image',
-            [payload],
-            0,
-            styles
-          );
+      // logic for if something other than an image is updated
+      // if in edit mode, update the block content
+      if (isEditingMode) {
+        const updatedList = updateBlockContentULBHandler(
+          '',
+          '',
+          customVideo ? 'custom_video' : 'image',
+          [payload],
+          0,
+          styles
+        );
 
-          await addToDB(updatedList);
-        }
+        await addToDB(updatedList);
+        setUploadProgress('done');
+      } else {
+        const updatedList = createNewBlockULBHandler(
+          '',
+          '',
+          customVideo ? 'custom_video' : 'image',
+          [payload],
+          0,
+          styles
+        );
+
+        await addToDB(updatedList);
+        setUploadProgress('done');
       }
 
       setIsLoading(false);
       setUnsavedChanges(false);
+    } else {
+      console.log('imageComponent: onSave: error validcating form fields');
     }
   };
 
@@ -217,6 +266,8 @@ const ImageFormComponent = ({
     });
   };
 
+  // ~~~~~~~~~~~ END SAVE RELATED ~~~~~~~~~~ //
+
   useEffect(() => {
     if (uploadProgress === 'done') {
       closeAction();
@@ -272,12 +323,6 @@ const ImageFormComponent = ({
                   isEditingMode={isEditingMode}
                   showPreview={true}
                 />
-                <div className="flex flex-col items-center justify-center text-gray-400">
-                  --- Or ---
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <Buttons label={'Browse'} onClick={handleGalleryModal} />
-                </div>
               </div>
               <div className="disabled col-span-1">
                 <Label dark={false} label="Styles" />

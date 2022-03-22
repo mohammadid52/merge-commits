@@ -68,9 +68,9 @@ const LessonRowComposer = () => {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
   const lessonState = gContext.lessonState;
-  const PAGES = lessonState.lessonData.lessonPlan;
+  const PAGES = lessonState?.lessonData?.lessonPlan || [];
 
-  const isLastPage = PAGES.length - 1 === lessonState.currentPage;
+  const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 
   useEffect(() => {
     if (PAGES) {
@@ -136,10 +136,9 @@ const LessonRowComposer = () => {
                   })}
               </BuilderRowWrapper>
             </div>
-
-            {isLastPage && <AllEmotions />}
           </div>
         ))}
+      {isLastPage && <AllEmotions />}
 
       {user.role === 'ST' && (
         <>

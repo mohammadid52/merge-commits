@@ -860,6 +860,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   language: [Language!]
   designers: [String]
   objectives: [String]
+  lessonPlanAttachment: String
   purpose: String
   introduction: String
   introductionTitle: String
@@ -940,7 +941,6 @@ type UniversalContentOptions {
   text: String
 }
 
-
 type UniversalLessonStudentData
   @model
   @key(fields: ["id"])
@@ -1012,7 +1012,7 @@ type UniversalSurveyStudentData
   currentLocation: String
   lessonProgress: String
   surveyData: [partInput]
-  }
+}
 type ExerciseData {
   id: String!
   entryData: [JournalEntryData]
@@ -1058,8 +1058,7 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus @model @key(fields: ["id"]) 
-{
+type UniversalSyllabus @model @key(fields: ["id"]) {
   id: ID!
   name: String!
   type: String
@@ -1138,12 +1137,10 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   backstory: String
 }
 
-
-type Sentiments @model{
+type Sentiments @model {
   id: ID!
   sentimentName: String!
   sentimentType: String!
-
 }
 
 type SentimentTracker @model @key(fields: ["personAuthID", "date"]) {
@@ -1154,17 +1151,16 @@ type SentimentTracker @model @key(fields: ["personAuthID", "date"]) {
   sentiment: Sentiments @connection(fields: ["sentimentId"])
   classRoomID: ID!
   classRoom: Room @connection(fields: ["classRoomID"])
- syllabusLessonID: ID!
+  syllabusLessonID: ID!
   syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: String!
   sentimentType: String!
-
 }
 
-type FeelingTracker @model @key(fields: ["personAuthID", "date"]){
-  id:ID!
+type FeelingTracker @model @key(fields: ["personAuthID", "date"]) {
+  id: ID!
   personAuthID: String!
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
@@ -1178,11 +1174,10 @@ type FeelingTracker @model @key(fields: ["personAuthID", "date"]){
   time: AWSTime!
   sentimentName: String!
   sentimentType: String!
-
 }
 
 type FeelingsArchive @model @key(fields: ["id"]) {
-  id:ID!
+  id: ID!
   personAuthID: String!
   personEmail: String!
   person: Person @connection(fields: ["personEmail", "personAuthID"])
@@ -1196,7 +1191,6 @@ type FeelingsArchive @model @key(fields: ["id"]) {
   time: AWSTime!
   sentimentName: [String!]
   comments: String
-
 }
 
 type PersonFiles @model @key(fields: ["id"]) {
@@ -1237,14 +1231,13 @@ type Community @model @key(fields: ["id"]) {
   additionalInfo: String
   personAuthID: String!
   personEmail: String!
-  isEditedCard: Boolean 
+  isEditedCard: Boolean
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
-  summaryHtml:String
-  likes:[String]
-  chatCount:Int
+  summaryHtml: String
+  likes: [String]
+  chatCount: Int
 }
-
 
 type GameChanger @model @key(fields: ["id"]) {
   id: ID!
@@ -1253,8 +1246,7 @@ type GameChanger @model @key(fields: ["id"]) {
   objective: String
   gameChangerLinks: [String]
   inputs: [String]
-  likes:[String]
-
+  likes: [String]
 }
 
 type GameChangerLog @model @key(fields: ["id"]) {
@@ -1266,10 +1258,7 @@ type GameChangerLog @model @key(fields: ["id"]) {
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   startTime: AWSDate
   endTime: AWSDate
- 
 }
-
-
 
 type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"]) {
   id: ID!
@@ -1336,4 +1325,4 @@ type Mutation {
   batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
 
-# asdfasdfsd6
+# asdfasdfsd8

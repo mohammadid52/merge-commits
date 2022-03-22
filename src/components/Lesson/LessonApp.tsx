@@ -1,8 +1,10 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import '@components/Dashboard/GameChangers/styles/Flickity.scss';
+import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -14,17 +16,16 @@ import {
   StudentExerciseData,
   StudentPageInput,
   UniversalLessonPage,
+  UniversalLessonStudentData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
+import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {ILessonSurveyApp} from './Lesson';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -191,6 +192,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           page: UniversalLessonPage
         ) => {
           const pageParts = page.pageContent;
+
           const reducedPageInputs = pageParts.reduce(
             (
               pageInputsAcc: {
