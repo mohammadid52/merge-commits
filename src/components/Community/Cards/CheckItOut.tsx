@@ -91,7 +91,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       setError('');
       isValid = true;
     }
-    if (!youtubeVideoLink && !tempData.image && !youtubeVideoLink && isEmpty(file)) {
+    if (!youtubeVideoLink && !tempData?.image && !youtubeVideoLink && isEmpty(file)) {
       setError('Please add youtube/vimeo link');
       isValid = false;
     } else {

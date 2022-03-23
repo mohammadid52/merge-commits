@@ -258,7 +258,7 @@ const Spotlight = ({
       isValid = false;
     } else if (
       !youtubeVideoLink &&
-      !tempData.image &&
+      !tempData?.image &&
       !youtubeVideoLink &&
       isEmpty(file)
     ) {
