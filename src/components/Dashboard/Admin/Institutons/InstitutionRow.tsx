@@ -12,6 +12,7 @@ import {
 import {getImageFromS3} from '../../../../utilities/services';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Tooltip from '../../../Atoms/Tooltip';
+import {ellipsis} from '@utilities/functions';
 
 interface InstitutionRowProps {
   id?: string;
@@ -48,16 +49,6 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
     getUrl();
   }, [instRowProps.image]);
 
-  const eclipse = (text: string, len: number): string => {
-    if (text) {
-      if (text.length <= len) {
-        return text;
-      } else {
-        return `${text.substring(0, len)}...`;
-      }
-    }
-  };
-
   return (
     <div
       id={instRowProps.id}
@@ -93,7 +84,7 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
                 id={instRowProps.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={handleInstitutionView}>
-                {eclipse(instRowProps.name, 22)}
+                {ellipsis(instRowProps.name, 22)}
               </div>
             </Tooltip>
           </div>
