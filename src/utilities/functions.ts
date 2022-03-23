@@ -40,7 +40,7 @@ export const removeExtension = (filename: string) => {
   else return filename.substr(0, lastDotPosition);
 };
 
-export const eclipse = (text: string, len: number): string => {
+export const ellipsis = (text: string, len: number): string => {
   if (text) {
     if (text.length <= len) {
       return text;

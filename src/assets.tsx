@@ -117,6 +117,16 @@ export const general: any = {
   bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif',
 };
 
+export const textEdit: any = {
+  bold: 'https://zoiqclients.s3.amazonaws.com/TextEditor/bold.png',
+  italic: 'https://zoiqclients.s3.amazonaws.com/TextEditor/italic.png',
+  underline: 'https://zoiqclients.s3.amazonaws.com/TextEditor/underline.png',
+  superscript: 'https://zoiqclients.s3.amazonaws.com/TextEditor/superscript.png',
+  subscript: 'https://zoiqclients.s3.amazonaws.com/TextEditor/subscript.png',
+  remove: 'https://zoiqclients.s3.amazonaws.com/TextEditor/trash.png',
+  colorPick: 'https://zoiqclients.s3.amazonaws.com/TextEditor/colorpick.png',
+};
+
 // main logo (dashboard above sidebar)
 // login_page_logo (logo in login pages)
 // loading_logo (logo in loader)
