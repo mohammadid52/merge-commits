@@ -62,7 +62,7 @@ const ImageFormComponent = ({
     height: 'auto',
     caption: '',
   });
-  const imageInputsRef = useRef<IImageInput | undefined>(undefined);
+  const imageInputsRef = useRef<IImageInput>(imageInputs);
 
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
   const [errors, setErrors] = useState<IImageInput>({
@@ -155,6 +155,8 @@ const ImageFormComponent = ({
     const imageWasUpdated = updatedInputs.indexOf('imageData') > -1;
     const styles = getStyles();
     let {imageData, ...payload} = imageInputs;
+
+    console.log('updatedInputs', updatedInputs);
 
     if (isValid && updatedInputs.length > 0) {
       setIsLoading(true);
