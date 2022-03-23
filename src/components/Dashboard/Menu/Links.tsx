@@ -411,10 +411,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   // const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   // const activeClass = 'bg-gray-200 text-dark-gray';
 
-  const ellipse = (string: string = ''): string => {
-    return string.length > 20 ? `${string.slice(0, 20)}...` : string;
-  };
-
   const path = history.location.pathname;
 
   return (

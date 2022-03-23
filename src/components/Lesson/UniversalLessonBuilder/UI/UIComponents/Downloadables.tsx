@@ -6,7 +6,7 @@ import {BsCheckCircle, BsCloudDownload} from 'react-icons/bs';
 import {IoClose} from 'react-icons/io5';
 import {setTimeout} from 'timers';
 import Storage from '@aws-amplify/storage';
-import {eclipse} from '../../../../../utilities/functions';
+import {ellipsis} from '../../../../../utilities/functions';
 import {UPLOAD_KEYS} from '../../../constants';
 
 export function downloadBlob(blob: any, filename: string, cb: any) {
@@ -43,7 +43,7 @@ const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string
   return (
     <div className="col-span-1 flex items-center justify-between text-sm break-all dark:text-gray-400 font-medium">
       <p title={file.fileName} className="w-auto text-gray-500">
-        {eclipse(file.fileName, 50)}
+        {ellipsis(file.fileName, 50)}
       </p>
       {isDownloaded ? (
         <span className="h-6 w-6 block text-green-400">
