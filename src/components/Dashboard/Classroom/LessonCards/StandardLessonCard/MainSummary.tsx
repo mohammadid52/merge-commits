@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {LessonCardProps} from '../../Classroom';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {ellipsis} from '@utilities/functions';
 
 const MainSummary = (props: LessonCardProps) => {
   const {theme} = useContext(GlobalContext);
@@ -14,8 +15,7 @@ const MainSummary = (props: LessonCardProps) => {
 
   return (
     <div className={`sm:h-44 p-4 px-5 flex flex-col justify-start items-center`}>
-      <h1
-        className={`${theme.lessonCard.title} flex-col sm:flex-row w-full font-medium`}>
+      <h1 className={`${theme.lessonCard.title} flex-col sm:flex-row w-full font-medium`}>
         <span className="w-full">
           {lessonProps.lesson && lessonProps.lesson.title
             ? lessonProps.lesson.title
@@ -32,7 +32,7 @@ const MainSummary = (props: LessonCardProps) => {
         dangerouslySetInnerHTML={{
           __html:
             lessonProps.lesson && lessonProps.lesson?.summary
-              ? lessonProps.lesson?.summary
+              ? ellipsis(lessonProps.lesson?.summary, 350)
               : '',
         }}></p>
     </div>
