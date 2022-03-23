@@ -28,7 +28,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                           {teacher.image ? (
                             <img
                               className="h-12 w-12 rounded-full"
-                              src={teacher.image}
+                              src={teacher?.image}
                               alt=""
                             />
                           ) : (
