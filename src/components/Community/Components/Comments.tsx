@@ -38,7 +38,7 @@ const Comment = ({
             />
           </div>
           <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>{chat?.person?.firstName}</strong>{' '}
+            <strong>{chat?.person?.firstName || '[deleted]'}</strong>{' '}
             <span className="text-xs text-gray-600">
               {moment(chat?.createdAt).format('LT')}
             </span>
