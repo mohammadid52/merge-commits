@@ -6,6 +6,8 @@ import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import {textEdit} from 'assets';
+
 // @ts-ignore
 import {BlockPicker} from 'react-color';
 
@@ -154,7 +156,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         editorRef.current.editor.editor.innerHTML = text;
       });
     }
-  }, [editorRef,withStyles]);
+  }, [editorRef, withStyles]);
 
   const toolbarClassName = `${
     customStyle
@@ -196,29 +198,29 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
           className: `toolItemClassName`,
           bold: {
-            icon: 'https://image.flaticon.com/icons/png/512/114/114304.png',
+            icon: textEdit.bold,
             className: 'toolbarCustomIcon',
           },
           italic: {
-            icon: 'https://image.flaticon.com/icons/png/512/1827/1827983.png',
+            icon: textEdit.italic,
             className: 'toolbarCustomIcon',
           },
           underline: {
-            icon: 'https://image.flaticon.com/icons/png/512/154/154623.png',
+            icon: textEdit.underline,
             className: 'toolbarCustomIcon',
           },
           superscript: {
-            icon: 'https://image.flaticon.com/icons/png/512/32/32176.png',
+            icon: textEdit.superscript,
             className: 'toolbarCustomIcon',
           },
           subscript: {
-            icon: 'https://image.flaticon.com/icons/png/512/1828/1828084.png',
+            icon: textEdit.subscript,
             className: 'toolbarCustomIcon',
           },
         },
 
         remove: {
-          icon: 'https://image.flaticon.com/icons/png/512/171/171383.png',
+          icon: textEdit.remove,
           className: 'toolbarCustomIcon',
         },
         list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
@@ -243,7 +245,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           className: 'plainText dropdownClassName toolbarCustomIcon',
         },
         colorPicker: {
-          icon: 'https://image.flaticon.com/icons/png/512/1250/1250615.png',
+          icon: textEdit.colorPick,
           className: ` ${
             customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''
           }  toolItemClassName ${theme} toolbarCustomIcon`,
