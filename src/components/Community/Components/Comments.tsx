@@ -126,17 +126,19 @@ const Comments = ({
     <div className="w-auto mx-5">
       <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
 
-      {orderedList.map((chat, idx) => (
-        <Comment
-          email={email}
-          authId={authId}
-          key={idx}
-          isLast={orderedList.length - 1 === idx}
-          onChatDelete={onChatDelete}
-          onEdit={onEdit}
-          chat={chat}
-        />
-      ))}
+      {orderedList &&
+        orderedList.length > 0 &&
+        orderedList.map((chat, idx) => (
+          <Comment
+            email={email}
+            authId={authId}
+            key={idx}
+            isLast={orderedList.length - 1 === idx}
+            onChatDelete={onChatDelete}
+            onEdit={onEdit}
+            chat={chat}
+          />
+        ))}
     </div>
   );
 };
