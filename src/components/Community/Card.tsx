@@ -288,7 +288,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           </div>
         </div>
         {cardDetails?.cardName && (
-          <h1 className=" text-lg text-gray-800  font-semibold mb-2">
+          <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-5">
             {cardDetails.cardName}
           </h1>
         )}
@@ -314,7 +314,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div className="mb-8">
               {cardDetails?.cardName && (
-                <h1 className=" text-lg text-gray-800  font-semibold mb-2">
+                <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-5">
                   {cardDetails.cardName}
                 </h1>
               )}
@@ -374,7 +374,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     <img
                       className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
                       alt="User avatar"
-                      src={getImageFromS3Static(person.image)}
+                      src={getImageFromS3Static(person?.image)}
                     />
                   </div>
                   <div className="flex flex-col mb-2 ml-4 mt-1">
