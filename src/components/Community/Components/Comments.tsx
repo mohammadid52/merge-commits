@@ -33,7 +33,7 @@ const Comment = ({
           <div className="flex-shrink-0 mr-3 w-auto">
             <img
               className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
-              src={getImageFromS3Static(chat.person.image)}
+              src={getImageFromS3Static(chat?.person?.image)}
               alt=""
             />
           </div>

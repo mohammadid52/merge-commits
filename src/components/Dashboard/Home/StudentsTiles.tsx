@@ -161,7 +161,7 @@ const StudentsTiles = (props: {
                             {student.image ? (
                               <img
                                 className="transform hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
-                                src={student.image}
+                                src={student?.image}
                                 alt=""
                               />
                             ) : (

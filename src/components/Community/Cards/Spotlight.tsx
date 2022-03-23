@@ -145,7 +145,7 @@ const Spotlight = ({
             list.push({
               id: student.student.id,
               name: `${student.student.firstName} ${student.student.lastName}`,
-              image: student.student.image,
+              image: student?.student?.image,
               value: `${student.student.firstName} ${student.student.lastName}`,
             });
             uniqIds.push(student.student.id);

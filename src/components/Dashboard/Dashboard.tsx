@@ -121,7 +121,7 @@ const Dashboard = (props: DashboardProps) => {
   const setUser = (user: userObject) => {
     setUserData({
       role: user.role,
-      image: user.image,
+      image: user?.image,
     });
     let firstName = user.preferredName ? user.preferredName : user.firstName;
     dispatch({
@@ -133,7 +133,7 @@ const Dashboard = (props: DashboardProps) => {
         language: user.language,
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
-        image: user.image,
+        image: user?.image,
         onDemand: user?.onDemand,
       },
     });
@@ -565,7 +565,7 @@ const Dashboard = (props: DashboardProps) => {
    ********************/
 
   const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
-    console.log('reorderSyllabus')
+    console.log('reorderSyllabus');
     let getSyllabusInSequence =
       sequenceArray && sequenceArray.length > 0
         ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {

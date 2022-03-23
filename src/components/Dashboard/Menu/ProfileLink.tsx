@@ -25,7 +25,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(state.user.image);
+      const imageUrl: any = await getImageFromS3(state?.user?.image);
       setImageUrl(imageUrl);
     }
     getUrl();
@@ -38,7 +38,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
       <a className="flex-shrink-0 w-full group block">
         <div className="flex items-center">
           <div style={{width: 48, height: 48, minWidth: 48, minHeight: 48}} className="">
-            {state.user.image ? (
+            {state?.user?.image ? (
               imageUrl.length > 0 ? (
                 <img
                   className="inline-block rounded"
