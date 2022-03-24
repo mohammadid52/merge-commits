@@ -127,7 +127,7 @@ const EmojiFeedback = () => {
     };
 
   const setEmoji = (value: any, duration = 0.4) => {
-    let index = value == 0 ? value : Object.keys(points).indexOf(value),
+    let index = value == 0 ? value : Object.keys(points).indexOf(value.toString()),
       name = points[value].name,
       computed = emoji && window.getComputedStyle(emoji);
     emoji?.classList?.remove('awful', 'bad', 'okay', 'good', 'great');
@@ -181,7 +181,7 @@ const EmojiFeedback = () => {
     },
   });
 
-  setEmoji(0, 0);
+  setEmoji(264, 0);
 
   const onSave = async (response: string) => {
     try {
