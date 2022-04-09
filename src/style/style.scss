@@ -1309,9 +1309,14 @@
     border: 1px solid $gray-600;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    max-height: 70px;
+    width: auto;
+    min-width: 175px;
+    height: auto;
     & .rdw-colorpicker-modal-header {
       color: white;
+    }
+    & .rdw-colorpicker-modal-style-label {
+      width: auto;
     }
     & .rdw-colorpicker-modal-options {
       overflow: hidden;
@@ -1322,6 +1327,10 @@
         &:hover {
           box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
         }
+      }
+      & .rdw-colorpicker-option {
+        margin: 2px;
+        padding: 0;
       }
     }
   }
