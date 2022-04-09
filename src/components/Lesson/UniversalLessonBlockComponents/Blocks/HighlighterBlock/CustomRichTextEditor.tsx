@@ -133,11 +133,11 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const editorRef = React.useRef();
 
-  const header = $('.rdw-colorpicker-modal-header');
-  setTimeout(() => {
-    header.children('span').eq(1).trigger('click');
-  }, 300);
-  header.css({display: 'none'});
+  // const header = $('.rdw-colorpicker-modal-header');
+  // setTimeout(() => {
+  //   header.children('span').eq(1).trigger('click');
+  // }, 300);
+  // header.css({display: 'none'});
 
   useEffect(() => {
     if (editorRef && editorRef?.current && withStyles) {
@@ -246,9 +246,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         },
         colorPicker: {
           icon: textEdit.colorPick,
-          className: ` ${
-            customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''
-          }  toolItemClassName ${theme} toolbarCustomIcon`,
+          className: `
+          ${theme}
+          ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
+          toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
           colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
         },
       }}
