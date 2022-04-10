@@ -128,7 +128,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             }
                             handleEditBlockContent={() => {
                               handleEditBlockContent(
-                                content.type,
+                                content?.value &&
+                                  content?.value[0]?.type === FORM_TYPES.ATTACHMENTS
+                                  ? FORM_TYPES.ATTACHMENTS
+                                  : content.type,
                                 'partContent',
                                 content.value,
                                 pagePart.id,
