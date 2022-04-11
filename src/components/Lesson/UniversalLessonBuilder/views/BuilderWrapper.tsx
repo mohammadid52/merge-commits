@@ -1,6 +1,7 @@
 import Info from '@atoms/Alerts/Info';
 import Buttons from '@atoms/Buttons';
 import Modal from '@atoms/Modal';
+import ActivityModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
 import ContentModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
 import DocsModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -35,8 +36,6 @@ import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import UseTemplateDialog from '@UlbModals/UseTemplateDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
 import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
-import ActivityModal from '@components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
-
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -57,7 +56,6 @@ import {
   THINK_ABOUT_IT,
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
-import ImageGallery from '@UlbUI/ImageGallery';
 import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
 import {capitalizeFirstLetter, wait} from '@utilities/functions';
 import isEmpty from 'lodash/isEmpty';
@@ -152,8 +150,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setSelectedComponent,
     selectedComponent,
     setShowLocationIcon,
-    setNavState,
-    setActionMode,
+
     setActiveContentItem,
   } = usePageBuilderContext();
 
