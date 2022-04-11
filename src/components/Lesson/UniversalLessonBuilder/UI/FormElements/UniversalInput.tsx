@@ -1,6 +1,6 @@
 import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import {map, remove, update} from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
@@ -35,9 +35,20 @@ const UniversalInput = (props: any) => {
     setUnsavedChanges,
     selectedForm,
     createNewContent,
+    inputObj,
   } = props;
 
   const {userLanguage} = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (inputObj && inputObj.length > 0) {
+      if (inputObj[0].type === FORM_TYPES.ATTACHMENTS) {
+        inputObj[0].isRequired && makeRequired(0);
+        update(list[0], `label`, () => inputObj[0].label);
+        update(list[0], 'value', () => inputObj[0].value);
+      }
+    }
+  }, [inputObj, list]);
 
   const addToDB = async (list: any) => {
     closeAction();
@@ -94,10 +105,6 @@ const UniversalInput = (props: any) => {
       value: d.value,
       isRequired: d.required,
     }));
-    console.log(
-      '🚀 ~ file: UniversalInput.tsx ~ line 97 ~ inputObjArray ~ inputObjArray',
-      inputObjArray
-    );
 
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
@@ -159,13 +166,15 @@ const UniversalInput = (props: any) => {
                           </div>
                         </>
                       )}
-                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        Make this required
-                        <ToggleForModal
-                          checked={input.required}
-                          onClick={() => makeRequired(idx, input.required)}
-                        />
-                      </div>
+                      {!hideBtns && (
+                        <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                          Make this required
+                          <ToggleForModal
+                            checked={input.required}
+                            onClick={() => makeRequired(idx, input.required)}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <button
@@ -190,13 +199,15 @@ const UniversalInput = (props: any) => {
                         </div>
                       </>
                     )}
-                    <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                      Make this required
-                      <ToggleForModal
-                        checked={input.required}
-                        onClick={() => makeRequired(idx, input.required)}
-                      />
-                    </div>
+                    {!hideBtns && (
+                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                        Make this required
+                        <ToggleForModal
+                          checked={input.required}
+                          onClick={() => makeRequired(idx, input.required)}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
