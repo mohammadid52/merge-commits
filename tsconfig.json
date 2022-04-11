@@ -38,5 +38,5 @@
     "jsx": "react"
   },
   "include": ["./src/**/*", "src/custom.d.ts"],
-  "exclude": ["build", "bin", "routes", "public", "node-modules", "src/aws-exports.js"]
+  "exclude": ["build", "bin", "routes", "public", "node-modules", "src/aws-exports2.js"]
 }
