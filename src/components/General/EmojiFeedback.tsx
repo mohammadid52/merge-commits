@@ -25,6 +25,7 @@ const EmojiFeedback = () => {
   const {authId, email} = state.user;
 
   const [lastMoodSubmission, setLastMoodSubmission] = useState<any>({});
+
   const [fetched, setFetched] = useState(false);
 
   const [fetching, setFetching] = useState(true);
@@ -158,6 +159,7 @@ const EmojiFeedback = () => {
     setTimeout(() => emoji?.classList?.remove('scale'), 600);
     return value;
   };
+  setEmoji(264, 0);
 
   Draggable.create(drag, {
     type: 'x',
@@ -180,8 +182,6 @@ const EmojiFeedback = () => {
       );
     },
   });
-
-  setEmoji(264, 0);
 
   const onSave = async (response: string) => {
     try {

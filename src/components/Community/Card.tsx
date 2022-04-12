@@ -314,7 +314,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div className="mb-8">
               {cardDetails?.cardName && (
-                <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-5">
+                <h1 className=" text-lg text-gray-800  font-semibold mb-2">
                   {cardDetails.cardName}
                 </h1>
               )}
@@ -334,7 +334,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </p>
                 <p className="text-gray-600">
                   Address:{' '}
-                  <span className="w-auto text-gray-700 font-medium">{address}</span>
+                  <span className="w-auto text-gray-700 font-medium">
+                    {address || '--'}
+                  </span>
                 </p>
               </div>
               <div className="text-sm w-auto">

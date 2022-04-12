@@ -1,15 +1,12 @@
+import {textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import {textEdit} from 'assets';
-
-// @ts-ignore
-import {BlockPicker} from 'react-color';
 
 // const ColorPicker = (props: {
 //   currentState?: any;
@@ -182,6 +179,21 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
       : 'editorClassName'
   }`;
 
+  //rdw-colorpicker-modal-header
+
+  useEffect(() => {
+    $('.rdw-colorpicker-wrapper').on('click', (e) => {
+      // if(e.tar)
+      setTimeout(() => {
+        if (!e.target.classList.contains('rdw-colorpicker-modal-style-label')) {
+          $('.rdw-colorpicker-modal-header').find('span:last-child').trigger('click');
+        }
+      }, 50);
+    });
+  }, []);
+
+  // rdw-colorpicker-modal-style-label-active
+
   return (
     <Editor
       ref={editorRef}
@@ -250,7 +262,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           ${theme}
           ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
           toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-          colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
+          colors: ['#DC2626', '#34D399'],
         },
       }}
     />
