@@ -9,15 +9,6 @@ import {partInput} from 'API';
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
 
-  const UPDATE_ID =
-    lessonState?.universalStudentDataID.length > 0 &&
-    lessonState?.universalStudentDataID[0]?.id;
-
-  const STUDENT_DATA =
-    lessonState?.studentData &&
-    lessonState?.studentData.length > 0 &&
-    lessonState?.studentData;
-
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
@@ -96,26 +87,24 @@ const useStudentTimer = () => {
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   useEffect(() => {
-    if (lessonState.loaded) {
-      if (currentSaveCount < lessonState.saveCount) {
-        setCurrentSaveCount(lessonState.saveCount);
-      }
-
-      if (iAmViewed) {
-        const viewedUpdate = updateStudentLessonData();
-
-        Promise.resolve(viewedUpdate).then((_: void) => {
-          clearUpdateCycle();
-        });
-      } else {
-        const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
-
-        Promise.resolve(standardUpdate).then((_: void) => {
-          clearUpdateCycle();
-        });
-      }
+    if (currentSaveCount < lessonState.saveCount) {
+      setCurrentSaveCount(lessonState.saveCount);
     }
-  }, [lessonState.saveCount, lessonState.loaded]);
+
+    if (iAmViewed) {
+      const viewedUpdate = updateStudentLessonData();
+
+      Promise.resolve(viewedUpdate).then((_: void) => {
+        clearUpdateCycle();
+      });
+    } else {
+      const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
+
+      Promise.resolve(standardUpdate).then((_: void) => {
+        clearUpdateCycle();
+      });
+    }
+  }, [lessonState.saveCount]);
 
   // ##################################################################### //
   // ######################## MAIN SAVE FUNCTIONS ######################## //
@@ -170,14 +159,18 @@ const useStudentTimer = () => {
   };
 
   const updateSurveyData = async () => {
-    if (UPDATE_ID && STUDENT_DATA) {
+    if (
+      lessonState.loaded &&
+      lessonState?.universalStudentDataID[0]?.id &&
+      lessonState?.studentData &&
+      lessonState?.studentData.length > 0 &&
+      lessonState?.studentData
+    ) {
       let data = {
-        id: UPDATE_ID,
-        surveyData: STUDENT_DATA,
+        id: lessonState?.universalStudentDataID[0]?.id,
+        surveyData: lessonState?.studentData,
         roomID: getRoomData.id,
       };
-
-      // console.log('🚀 ~ file: timer.tsx ~ line 166 ~ updateSurveyData ~ data', data);
 
       try {
         await API.graphql(
