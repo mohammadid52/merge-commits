@@ -182,7 +182,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const initializeStudentData = async () => {
     if (studentDataInitialized === false && PAGES) {
-      const mappedPages = PAGES.reduce(
+      const mappedPages = PAGES?.reduce(
         (
           inputs: {
             required: any[];
@@ -193,7 +193,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         ) => {
           const pageParts = page.pageContent;
 
-          const reducedPageInputs = pageParts.reduce(
+          const reducedPageInputs = pageParts?.reduce(
             (
               pageInputsAcc: {
                 requiredIdAcc: string[];
@@ -203,7 +203,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
               pagePart: PagePart
             ) => {
               if (pagePart.hasOwnProperty('partContent')) {
-                const partInputs = pagePart.partContent.reduce(
+                const partInputs = pagePart.partContent?.reduce(
                   (
                     partInputAcc: {
                       requiredIdAcc: string[];
@@ -219,7 +219,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
                     // -------- IF FORM ------- //
                     if (isForm) {
-                      const formSubInputs = partContent.value.reduce(
+                      const formSubInputs = partContent.value?.reduce(
                         (
                           subPartAcc: {reqId: string[]; pgInput: any[]},
                           partContentSub: PartContentSub
@@ -313,7 +313,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         {required: [], initialized: [], exercises: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
+      console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
@@ -334,15 +334,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
-      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+      ?.reduce((acc: any[], studentDataIdObj: any, idx: number) => {
         const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
           (lessonPlanPage: UniversalLessonPage) =>
-            lessonPlanPage.id === studentDataIdObj.lessonPageID
+            lessonPlanPage?.id === studentDataIdObj?.lessonPageID
         );
         const idObj = {
-          id: studentDataIdObj.id,
+          id: studentDataIdObj?.id,
           pageIdx: indexOfPage,
-          lessonPageID: studentDataIdObj.lessonPageID,
+          lessonPageID: studentDataIdObj?.lessonPageID,
           update: false,
         };
         return [...acc, idObj];
@@ -361,18 +361,18 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~ FILTER/MERGE PAGEDATA & EXERCISEDATA  //
   // ------- FILTERING ------ //
   const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
-    return studentDataIdArray.reduce(
+    return studentDataIdArray?.reduce(
       (
         acc: {pageData: StudentPageInput[]; exerciseData: StudentExerciseData[]},
         dataIdObj: any
       ) => {
         const findPageData = studentDataArray.find(
           (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
+            studentDataIdObj?.id === dataIdObj?.id
         )?.pageData;
         const findExerciseData = studentDataArray.find(
           (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
+            studentDataIdObj?.id === dataIdObj?.id
         )?.exerciseData;
 
         return {
@@ -393,37 +393,47 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // -------- MERGING ------- //
   const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
-    const differenceData = studentDataArray.reduce(
-      //@ts-ignore
-      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
-        const notYetSavedData = initStudentDataArray[pageIdx].reduce(
-          (diffPageData: any[], initPageData: any) => {
-            const foundInLoaded = loadedInput.find(
-              (inputObj: any) => inputObj.domID === initPageData.domID
-            );
-            if (foundInLoaded) {
-              return diffPageData;
-            } else {
-              return [...diffPageData, initPageData];
-            }
-          },
-          []
-        );
+    const blankArrRemoved = studentDataArray.filter((e) => e.length > 0);
 
-        return [...diffArray, [...loadedInput, ...notYetSavedData]];
-      },
-      []
-    );
+    const initBlankArrRemoved = initStudentDataArray.filter((e) => e.length > 0);
+
+    const differenceData =
+      blankArrRemoved &&
+      blankArrRemoved.length > 0 &&
+      blankArrRemoved?.reduce(
+        //@ts-ignore
+        (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
+          const notYetSavedData =
+            initBlankArrRemoved &&
+            initBlankArrRemoved.length > 0 &&
+            initBlankArrRemoved[pageIdx]?.reduce(
+              (diffPageData: any[], initPageData: any) => {
+                const foundInLoaded = loadedInput.find(
+                  (inputObj: any) => inputObj.domID === initPageData.domID
+                );
+                if (foundInLoaded) {
+                  return diffPageData;
+                } else {
+                  return [...diffPageData, initPageData];
+                }
+              },
+              []
+            );
+
+          return [...diffArray, [...loadedInput, ...notYetSavedData]];
+        },
+        []
+      );
 
     return differenceData;
   };
 
   // ~~~ CHECK AD MERGE NEW EXERCISE DATA ~~ //
   const mergedExerciseData = (exerciseDataArray: any[], initExerciseDataArray: any[]) => {
-    const differenceData = exerciseDataArray.reduce(
+    const differenceData = exerciseDataArray?.reduce(
       //@ts-ignore
       (diffArray: any[], loadedInput: StudentExerciseData[] | [], pageIdx: number) => {
-        const notYetSavedData = initExerciseDataArray[pageIdx].reduce(
+        const notYetSavedData = initExerciseDataArray[pageIdx]?.reduce(
           (diffExerciseData: any[], initExerciseData: any) => {
             const foundInLoaded = loadedInput.find(
               (inputObj: any) => inputObj.id === initExerciseData.id
@@ -447,11 +457,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
-    const extraPagesArray = lessonPlanPages.reduce(
+    const extraPagesArray = lessonPlanPages?.reduce(
       (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
         const findInStudentDataRecords = studentDataRecords.find(
           //@ts-ignore
-          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+          (data: UniversalLessonStudentData) => data?.lessonPageID === lessonPage.id
         );
         if (findInStudentDataRecords === undefined) {
           return [...extraPageArray, lessonPage];
@@ -461,11 +471,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       },
       []
     );
-    const currentLessonRecords = studentDataRecords.reduce(
+    const currentLessonRecords = studentDataRecords?.reduce(
       (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
         const isStudentDataFromLesson = lessonPlanPages.find(
           //@ts-ignore
-          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
+          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData?.lessonPageID
         );
         if (isStudentDataFromLesson !== undefined) {
           return [...currentLessonRecords, studentData];
@@ -492,28 +502,31 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
         (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
-      const input = {
-        syllabusLessonID: getRoomData.activeSyllabus,
-        lessonID: lessonID,
-        lessonPageID: lessonPage.id,
-        studentID: authId,
-        studentAuthID: authId,
-        studentEmail: email,
-        roomID: getRoomData.id,
-        currentLocation: indexOfPage,
-        lessonProgress: '0',
-        pageData: lessonState.studentData[indexOfPage],
-        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage],
-      };
+      console.log(lessonState.studentData[indexOfPage]);
+      if (lessonState.studentData[indexOfPage]?.length > 0) {
+        const input = {
+          syllabusLessonID: getRoomData.activeSyllabus,
+          lessonID: lessonID,
+          lessonPageID: lessonPage.id,
+          studentID: authId,
+          studentAuthID: authId,
+          studentEmail: email,
+          roomID: getRoomData.id,
+          currentLocation: indexOfPage,
+          lessonProgress: '0',
+          pageData: lessonState.studentData[indexOfPage],
+          hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
+          exerciseData: lessonState.exerciseData[indexOfPage],
+        };
 
-      const newStudentData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalLessonStudentData, {
-          input,
-        })
-      );
-      const returnedData = newStudentData.data.createUniversalLessonStudentData;
-      return returnedData;
+        const newStudentData: any = await API.graphql(
+          graphqlOperation(mutations.createUniversalLessonStudentData, {
+            input,
+          })
+        );
+        const returnedData = newStudentData.data.createUniversalLessonStudentData;
+        return returnedData;
+      }
     });
     return createdRecords;
   };
@@ -563,6 +576,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   const getOrCreateStudentData = async () => {
+    console.log('getOrCreateStudentData called');
     // const syllabusID = getRoomData.activeSyllabus;
 
     // console.log('getOrCreateData - user - ', user);
@@ -583,9 +597,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      console.log(
+        '🚀 ~ file: LessonApp.tsx ~ line 600 ~ getOrCreateStudentData ~ studentDataRows',
+        studentDataRows
+      );
 
       const filteredData = filterExtraPages(PAGES, studentDataRows);
+
       const extraPages = filteredData.extraPages;
+
       const currentStudentData = filteredData.currentRecords;
 
       /**
@@ -594,20 +614,25 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
        *   - if student records exist, but an additional page has been added, create records for these pages
        */
       if (studentDataRows?.length === 0) {
+        console.log('case 1');
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
           user.authId,
           user.email
         );
-        const newRecords = await Promise.all(createNewRecords);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: studentDataIdArray(newRecords),
-          },
-        });
+        if (createNewRecords) {
+          const newRecords = await Promise.all(createNewRecords);
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: studentDataIdArray(newRecords),
+            },
+          });
+        }
       } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
+        console.log('case 2');
+
         const createExtraRecords = await loopCreateStudentData(
           extraPages,
           lessonID,
@@ -621,6 +646,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           combinedStudentDataIdArray,
           combinedRecords
         );
+
         const finalData = mergedStudentData(
           filteredData.pageData,
           lessonState.studentData
@@ -639,11 +665,13 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           },
         });
       } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
+        console.log('case 3');
         const existStudentDataIdArray = studentDataIdArray(currentStudentData);
         const filteredData = filterStudentData(
           existStudentDataIdArray,
           currentStudentData
         );
+
         const finalData = mergedStudentData(
           filteredData.pageData,
           lessonState.studentData
@@ -661,6 +689,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             filteredExerciseData: concatExerciseData,
           },
         });
+      } else {
+        console.log('case 4');
       }
     } catch (err) {
       console.error(err);
@@ -725,8 +755,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   useEffect(() => {
-    const sharedAuthID = displayData[0].studentAuthID;
-    const sharedPageID = displayData[0].lessonPageID;
+    const sharedAuthID = displayData[0]?.studentAuthID;
+    const sharedPageID = displayData[0]?.lessonPageID;
     const isOtherStudent = sharedAuthID !== user.authId;
     if (
       displayData[0].studentAuthID &&
