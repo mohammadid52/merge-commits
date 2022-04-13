@@ -182,7 +182,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const initializeStudentData = async () => {
     if (studentDataInitialized === false && PAGES) {
-      const mappedPages = PAGES.reduce(
+      const mappedPages = PAGES?.reduce(
         (
           inputs: {
             required: any[];
@@ -193,7 +193,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         ) => {
           const pageParts = page.pageContent;
 
-          const reducedPageInputs = pageParts.reduce(
+          const reducedPageInputs = pageParts?.reduce(
             (
               pageInputsAcc: {
                 requiredIdAcc: string[];
@@ -203,7 +203,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
               pagePart: PagePart
             ) => {
               if (pagePart.hasOwnProperty('partContent')) {
-                const partInputs = pagePart.partContent.reduce(
+                const partInputs = pagePart.partContent?.reduce(
                   (
                     partInputAcc: {
                       requiredIdAcc: string[];
@@ -219,7 +219,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
                     // -------- IF FORM ------- //
                     if (isForm) {
-                      const formSubInputs = partContent.value.reduce(
+                      const formSubInputs = partContent.value?.reduce(
                         (
                           subPartAcc: {reqId: string[]; pgInput: any[]},
                           partContentSub: PartContentSub
@@ -313,7 +313,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         {required: [], initialized: [], exercises: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
+      console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
@@ -334,15 +334,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
-      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+      ?.reduce((acc: any[], studentDataIdObj: any, idx: number) => {
         const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
           (lessonPlanPage: UniversalLessonPage) =>
-            lessonPlanPage.id === studentDataIdObj.lessonPageID
+            lessonPlanPage?.id === studentDataIdObj?.lessonPageID
         );
         const idObj = {
-          id: studentDataIdObj.id,
+          id: studentDataIdObj?.id,
           pageIdx: indexOfPage,
-          lessonPageID: studentDataIdObj.lessonPageID,
+          lessonPageID: studentDataIdObj?.lessonPageID,
           update: false,
         };
         return [...acc, idObj];
@@ -361,18 +361,18 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~ FILTER/MERGE PAGEDATA & EXERCISEDATA  //
   // ------- FILTERING ------ //
   const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
-    return studentDataIdArray.reduce(
+    return studentDataIdArray?.reduce(
       (
         acc: {pageData: StudentPageInput[]; exerciseData: StudentExerciseData[]},
         dataIdObj: any
       ) => {
         const findPageData = studentDataArray.find(
           (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
+            studentDataIdObj?.id === dataIdObj?.id
         )?.pageData;
         const findExerciseData = studentDataArray.find(
           (studentDataIdObj: UniversalLessonStudentData) =>
-            studentDataIdObj.id === dataIdObj.id
+            studentDataIdObj?.id === dataIdObj?.id
         )?.exerciseData;
 
         return {
@@ -400,13 +400,13 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     const differenceData =
       blankArrRemoved &&
       blankArrRemoved.length > 0 &&
-      blankArrRemoved.reduce(
+      blankArrRemoved?.reduce(
         //@ts-ignore
         (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
           const notYetSavedData =
             initBlankArrRemoved &&
             initBlankArrRemoved.length > 0 &&
-            initBlankArrRemoved[pageIdx].reduce(
+            initBlankArrRemoved[pageIdx]?.reduce(
               (diffPageData: any[], initPageData: any) => {
                 const foundInLoaded = loadedInput.find(
                   (inputObj: any) => inputObj.domID === initPageData.domID
@@ -430,10 +430,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~ CHECK AD MERGE NEW EXERCISE DATA ~~ //
   const mergedExerciseData = (exerciseDataArray: any[], initExerciseDataArray: any[]) => {
-    const differenceData = exerciseDataArray.reduce(
+    const differenceData = exerciseDataArray?.reduce(
       //@ts-ignore
       (diffArray: any[], loadedInput: StudentExerciseData[] | [], pageIdx: number) => {
-        const notYetSavedData = initExerciseDataArray[pageIdx].reduce(
+        const notYetSavedData = initExerciseDataArray[pageIdx]?.reduce(
           (diffExerciseData: any[], initExerciseData: any) => {
             const foundInLoaded = loadedInput.find(
               (inputObj: any) => inputObj.id === initExerciseData.id
@@ -457,11 +457,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
-    const extraPagesArray = lessonPlanPages.reduce(
+    const extraPagesArray = lessonPlanPages?.reduce(
       (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
         const findInStudentDataRecords = studentDataRecords.find(
           //@ts-ignore
-          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+          (data: UniversalLessonStudentData) => data?.lessonPageID === lessonPage.id
         );
         if (findInStudentDataRecords === undefined) {
           return [...extraPageArray, lessonPage];
@@ -471,11 +471,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       },
       []
     );
-    const currentLessonRecords = studentDataRecords.reduce(
+    const currentLessonRecords = studentDataRecords?.reduce(
       (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
         const isStudentDataFromLesson = lessonPlanPages.find(
           //@ts-ignore
-          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
+          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData?.lessonPageID
         );
         if (isStudentDataFromLesson !== undefined) {
           return [...currentLessonRecords, studentData];
@@ -502,6 +502,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
         (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
+      console.log(lessonState.studentData[indexOfPage]);
       if (lessonState.studentData[indexOfPage]?.length > 0) {
         const input = {
           syllabusLessonID: getRoomData.activeSyllabus,
@@ -525,8 +526,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         );
         const returnedData = newStudentData.data.createUniversalLessonStudentData;
         return returnedData;
-      } else {
-        return null;
       }
     });
     return createdRecords;
@@ -577,6 +576,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   const getOrCreateStudentData = async () => {
+    console.log('getOrCreateStudentData called');
     // const syllabusID = getRoomData.activeSyllabus;
 
     // console.log('getOrCreateData - user - ', user);
@@ -598,11 +598,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
       console.log(
-        '🚀 ~ file: LessonApp.tsx ~ line 597 ~ getOrCreateStudentData ~ studentDataRows',
+        '🚀 ~ file: LessonApp.tsx ~ line 600 ~ getOrCreateStudentData ~ studentDataRows',
         studentDataRows
       );
 
       const filteredData = filterExtraPages(PAGES, studentDataRows);
+
       const extraPages = filteredData.extraPages;
 
       const currentStudentData = filteredData.currentRecords;
@@ -614,7 +615,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
        */
       if (studentDataRows?.length === 0) {
         console.log('case 1');
-
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
@@ -689,6 +689,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             filteredExerciseData: concatExerciseData,
           },
         });
+      } else {
+        console.log('case 4');
       }
     } catch (err) {
       console.error(err);
@@ -753,8 +755,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   useEffect(() => {
-    const sharedAuthID = displayData[0].studentAuthID;
-    const sharedPageID = displayData[0].lessonPageID;
+    const sharedAuthID = displayData[0]?.studentAuthID;
+    const sharedPageID = displayData[0]?.lessonPageID;
     const isOtherStudent = sharedAuthID !== user.authId;
     if (
       displayData[0].studentAuthID &&
