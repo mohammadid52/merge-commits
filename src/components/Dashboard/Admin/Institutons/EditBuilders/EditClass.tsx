@@ -118,7 +118,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(
-      isSuperAdmin ? `/dashboard/manage-institutions/manage-users/${profileId}`: `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/manage-users/${profileId}`
+        : `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
     );
   };
 
@@ -719,65 +721,70 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   </div>
 
                   <div className="mb-4 w-full lg:w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
-                    {classStudents.map((item, index) => (
-                      <div
-                        key={item.id}
-                        className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                        <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                          {index + 1}.
-                        </div>
+                    {classStudents.map((item, index) => {
+                      console.log(
+                        '🚀 ~ file: EditClass.tsx ~ line 723 ~ {classStudents.map ~ item',
+                        item
+                      );
+
+                      return (
                         <div
-                          className={`flex w-5/10 items-center px-4 py-2 whitespace-normal ${
-                            user.role !== 'BLD' ? 'cursor-pointer' : ''
-                          } `}
-                          onClick={() =>{
-                            user.role !== 'BLD' && setStudentProfileID(item.student.id)
-                            user.role !== 'BLD' && setUserModalFormOpen(true)
-                            // user.role !== 'BLD'
-                            //   ? movetoStudentProfile(item.student.id)
-                            //   : null
-                          }
-                          }>
-                          <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                            {item.student.avatar ? (
-                              <img
-                                src={item.student.avatar}
-                                className="h-8 w-8 rounded-full"
-                              />
-                            ) : (
+                          key={item.id}
+                          className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
+                            {index + 1}.
+                          </div>
+                          <div
+                            className={`flex w-5/10 items-center px-4 py-2 whitespace-normal ${
+                              user.role !== 'BLD' ? 'cursor-pointer' : ''
+                            } `}
+                            onClick={() => {
+                              user.role !== 'BLD' && setStudentProfileID(item.student.id);
+                              user.role !== 'BLD' && setUserModalFormOpen(true);
+                              // user.role !== 'BLD'
+                              //   ? movetoStudentProfile(item.student.id)
+                              //   : null
+                            }}>
+                            <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                              {item.student.avatar ? (
+                                <img
+                                  src={item.student.avatar}
+                                  className="h-8 w-8 rounded-full"
+                                />
+                              ) : (
+                                <div
+                                  className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
+                                  style={{
+                                    background: `${stringToHslColor(
+                                      getInitialsFromString(item.student.name)[0] +
+                                        ' ' +
+                                        getInitialsFromString(item.student.name)[1]
+                                    )}`,
+                                    textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                  }}>
+                                  {item.student.name
+                                    ? initials(
+                                        getInitialsFromString(item.student.name)[0],
+                                        getInitialsFromString(item.student.name)[1]
+                                      )
+                                    : initials('N', 'A')}
+                                </div>
+                              )}
+                            </div>
+                            <div className="ml-4">
+                              {/* {item.student.name} */}
                               <div
-                                className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
-                                style={{
-                                  background: `${stringToHslColor(
-                                    getInitialsFromString(item.student.name)[0] +
-                                      ' ' +
-                                      getInitialsFromString(item.student.name)[1]
-                                  )}`,
-                                  textShadow: '0.1rem 0.1rem 2px #423939b3',
-                                }}>
-                                {item.student.name
-                                  ? initials(
-                                      getInitialsFromString(item.student.name)[0],
-                                      getInitialsFromString(item.student.name)[1]
-                                    )
-                                  : initials('N', 'A')}
+                                className={`${
+                                  user.role !== 'BLD' ? 'hover:text-gray-600' : ''
+                                } text-sm leading-5 font-medium text-gray-900`}>
+                                {item.student.name}
                               </div>
-                            )}
-                          </div>
-                          <div className="ml-4">
-                            {/* {item.student.name} */}
-                            <div
-                              className={`${
-                                user.role !== 'BLD' ? 'hover:text-gray-600' : ''
-                              } text-sm leading-5 font-medium text-gray-900`}>
-                              {item.student.name}
-                            </div>
-                            <div className="text-sm leading-5 text-gray-500">
-                              {item.student.email}
+                              <div className="text-sm leading-5 text-gray-500">
+                                {item.student.email}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {/* {studentIdToEdit === item.id ? (
+                          {/* {studentIdToEdit === item.id ? (
                           <div className="w-2/10 mr-6 px-3">
                             <Selector
                               selectedItem={item.group?.name}
@@ -795,32 +802,33 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                             {'-'}
                           </div>
                         )} */}
-                        <div className="w-3/10 px-3 text-gray-900">
-                          {item.createAt
-                            ? new Date(item.createAt).toLocaleDateString()
-                            : '--'}
-                        </div>
+                          <div className="w-3/10 px-3 text-gray-900">
+                            {item.createAt
+                              ? new Date(item.createAt).toLocaleDateString()
+                              : '--'}
+                          </div>
 
-                        <div className="w-1/10 px-3 flex justify-center cursor-pointer">
-                          <DeleteActionBtn handleClick={() => onDelete(item.id)} />
-                          {studentIdToEdit === item.id ? (
-                            <span
-                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
-                                theme.textColor[themeColor]
-                              } ${updating ? 'animate-spin' : ''}`}
-                              onClick={() => setStudentIdToEdit('')}>
-                              {updating ? <FaSpinner /> : <FaTimes />}
-                            </span>
-                          ) : (
-                            <span
-                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                              onClick={() => setStudentIdToEdit(item.id)}>
-                              <HiPencil />
-                            </span>
-                          )}
+                          <div className="w-1/10 px-3 flex justify-center cursor-pointer">
+                            <DeleteActionBtn handleClick={() => onDelete(item.id)} />
+                            {studentIdToEdit === item.id ? (
+                              <span
+                                className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
+                                  theme.textColor[themeColor]
+                                } ${updating ? 'animate-spin' : ''}`}
+                                onClick={() => setStudentIdToEdit('')}>
+                                {updating ? <FaSpinner /> : <FaTimes />}
+                              </span>
+                            ) : (
+                              <span
+                                className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                                onClick={() => setStudentIdToEdit(item.id)}>
+                                <HiPencil />
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </Fragment>
               ) : (
@@ -879,11 +887,11 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   scrollHidden={true}
                   closeAction={() => setUserModalFormOpen(false)}
                   position={'fixed'}>
-                    <User
-                      instituteId={instId}
-                      userId={studentProfileID}
-                      insideModalPopUp={true}
-                    />
+                  <User
+                    instituteId={instId}
+                    userId={studentProfileID}
+                    insideModalPopUp={true}
+                  />
                 </Modal>
               )}
             </Fragment>
