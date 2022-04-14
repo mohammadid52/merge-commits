@@ -43,9 +43,13 @@ const useStudentTimer = () => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [savePending, setSavePending] = useState<boolean>(false);
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   // save intervals
   const VIEWED_INTERVAL = 2000;
   const STANDARD_INTERVAL = 4000;
+  const SURVEY_INTERVAL = 250;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -63,16 +67,29 @@ const useStudentTimer = () => {
           }, VIEWED_INTERVAL)
         );
       } else {
-        setactivityTimeout(
-          setTimeout(() => {
-            lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
-            console.log(
-              '%c standard save: ',
-              'background: #BEFAB5; color: #1E156F',
-              'saved'
-            );
-          }, STANDARD_INTERVAL)
-        );
+        if (isSurvey) {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, SURVEY_INTERVAL)
+          );
+        } else {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, STANDARD_INTERVAL)
+          );
+        }
       }
     }
   }, [lessonState.studentData]);
@@ -82,9 +99,6 @@ const useStudentTimer = () => {
   // ##################################################################### //
 
   const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
-
-  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   useEffect(() => {
     if (currentSaveCount < lessonState.saveCount) {
