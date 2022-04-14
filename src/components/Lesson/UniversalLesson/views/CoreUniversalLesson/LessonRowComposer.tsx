@@ -114,19 +114,13 @@ const LessonRowComposer = () => {
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
                             }`}
                             id={`${content.type === 'notes-form' ? '' : content.id}`}>
-                            {composePartContent(
-                              content.id,
-                              content.type,
-                              content.value,
-                              `pp_${idx}_pc_${idx2}`,
-                              content.class,
-                              pagePart.id,
-                              'lesson',
-                              undefined, // function related to builder
-                              undefined, // position number related to builder
-                              content.type === 'notes-form' ? notes : [],
-                              true // isStudent,
-                            )}
+                            <SingleContentRow
+                              content={content}
+                              idx={idx}
+                              idx2={idx2}
+                              pagePart={pagePart}
+                              notes={notes}
+                            />
                           </div>
                         </div>
                       );
@@ -170,5 +164,37 @@ const LessonRowComposer = () => {
     </div>
   );
 };
+
+interface ISingleRowProps {
+  content: PartContent;
+  idx: number;
+  idx2: number;
+  pagePart: PagePart;
+  notes: any[];
+}
+
+const SingleContentRow = React.memo((props: ISingleRowProps) => {
+  const {content, idx, idx2, pagePart, notes} = props;
+
+  return (
+    <>
+      {content &&
+        pagePart &&
+        composePartContent(
+          content.id,
+          content.type,
+          content.value,
+          `pp_${idx}_pc_${idx2}`,
+          content.class,
+          pagePart.id,
+          'lesson',
+          undefined, // function related to builder
+          undefined, // position number related to builder
+          content.type === 'notes-form' && notes && notes.length > 0 ? notes : [],
+          true // isStudent,
+        )}
+    </>
+  );
+});
 
 export default LessonRowComposer;

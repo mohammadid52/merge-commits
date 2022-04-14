@@ -447,13 +447,16 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
+    const goAhead = typeof studentDataRecords !== 'undefined';
     const extraPagesArray = lessonPlanPages.reduce(
       (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
-        const findInStudentDataRecords = studentDataRecords.find(
-          //@ts-ignore
-          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
-        );
-        if (findInStudentDataRecords === undefined) {
+        const findInStudentDataRecords = goAhead
+          ? studentDataRecords.find(
+              //@ts-ignore
+              (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+            )
+          : undefined;
+        if (typeof findInStudentDataRecords === 'undefined') {
           return [...extraPageArray, lessonPage];
         } else {
           return extraPageArray;
@@ -461,20 +464,23 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       },
       []
     );
-    const currentLessonRecords = studentDataRecords.reduce(
-      (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
-        const isStudentDataFromLesson = lessonPlanPages.find(
-          //@ts-ignore
-          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
-        );
-        if (isStudentDataFromLesson !== undefined) {
-          return [...currentLessonRecords, studentData];
-        } else {
-          return currentLessonRecords;
-        }
-      },
-      []
-    );
+    const currentLessonRecords = goAhead
+      ? studentDataRecords.reduce(
+          (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
+            const isStudentDataFromLesson = lessonPlanPages.find(
+              (lessonPage: UniversalLessonPage) =>
+                //@ts-ignore
+                lessonPage.id === studentData.lessonPageID
+            );
+            if (isStudentDataFromLesson !== undefined) {
+              return [...currentLessonRecords, studentData];
+            } else {
+              return currentLessonRecords;
+            }
+          },
+          []
+        )
+      : [];
     return {
       extraPages: extraPagesArray,
       currentRecords: currentLessonRecords,
@@ -584,16 +590,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
-      const filteredData = filterExtraPages(PAGES, studentDataRows);
-      const extraPages = filteredData.extraPages;
-      const currentStudentData = filteredData.currentRecords;
-
       /**
        * NEW RECORD CREATION LOGIC:
        *   - if no student records for this lesson, make all new records per page
        *   - if student records exist, but an additional page has been added, create records for these pages
        */
-      if (studentDataRows?.length === 0) {
+      if (
+        typeof studentDataRows === 'undefined' ||
+        (studentDataRows && studentDataRows?.length === 0)
+      ) {
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
@@ -607,60 +612,66 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             dataIdReferences: studentDataIdArray(newRecords),
           },
         });
-      } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
-        const createExtraRecords = await loopCreateStudentData(
-          extraPages,
-          lessonID,
-          user.authId,
-          user.email
-        );
-        const extraRecords = await Promise.all(createExtraRecords);
-        const combinedRecords = [...extraRecords, ...currentStudentData];
-        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
-        const filteredData = filterStudentData(
-          combinedStudentDataIdArray,
-          combinedRecords
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: combinedStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
-          },
-        });
-      } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-        const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-        const filteredData = filterStudentData(
-          existStudentDataIdArray,
-          currentStudentData
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
-          },
-        });
+      } else {
+        const filteredData = filterExtraPages(PAGES, studentDataRows);
+        const extraPages = filteredData.extraPages;
+        const currentStudentData = filteredData.currentRecords;
+
+        if (extraPages?.length > 0 && currentStudentData?.length > 0) {
+          const createExtraRecords = await loopCreateStudentData(
+            extraPages,
+            lessonID,
+            user.authId,
+            user.email
+          );
+          const extraRecords = await Promise.all(createExtraRecords);
+          const combinedRecords = [...extraRecords, ...currentStudentData];
+          const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
+          const filteredData = filterStudentData(
+            combinedStudentDataIdArray,
+            combinedRecords
+          );
+          const finalData = mergedStudentData(
+            filteredData.pageData,
+            lessonState.studentData
+          );
+          const concatExerciseData = mergedExerciseData(
+            filteredData.exerciseData,
+            lessonState.exerciseData
+          );
+          // console.log('merged data', finalData);
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: combinedStudentDataIdArray,
+              filteredStudentData: finalData,
+              filteredExerciseData: concatExerciseData,
+            },
+          });
+        } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
+          const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+          const filteredData = filterStudentData(
+            existStudentDataIdArray,
+            currentStudentData
+          );
+          const finalData = mergedStudentData(
+            filteredData.pageData,
+            lessonState.studentData
+          );
+          const concatExerciseData = mergedExerciseData(
+            filteredData.exerciseData,
+            lessonState.exerciseData
+          );
+          // console.log('merged data', finalData);
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: existStudentDataIdArray,
+              filteredStudentData: finalData,
+              filteredExerciseData: concatExerciseData,
+            },
+          });
+        }
       }
     } catch (err) {
       console.error(err);
