@@ -326,6 +326,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setStudents((prevStudents) =>
         prevStudents.filter((student) => student.id !== newMember.id)
       );
+      // setTimeout(() => {
+      //   fetchClassData(classId);
+      // }, 5000);
       setAdding(false);
       setAddMessage({
         message: 'Student added successfully',
