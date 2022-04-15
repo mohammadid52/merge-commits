@@ -9,6 +9,7 @@ import React from 'react';
 import {
   DIVIDER,
   FORM_TYPES,
+  GAME_CHANGERS,
   SPACER,
   TABLE,
 } from '../UniversalLessonBuilder/UI/common/constants';
@@ -116,7 +117,7 @@ const composePartContent = (
     return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   } else if (type.includes(FORM_TYPES.DOCS)) {
     return <DocsBlock value={value} />;
-  } else if (type.includes('game_changers')) {
+  } else if (type.includes(GAME_CHANGERS) || type === 'square') {
     return (
       <GameChangerProvider>
         <ErrorBoundary fallback={<h1>Something wrong with activity</h1>}>
@@ -125,6 +126,7 @@ const composePartContent = (
       </GameChangerProvider>
     );
   } else {
+    console.log('Unidentified component type: => ', type);
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }
 };

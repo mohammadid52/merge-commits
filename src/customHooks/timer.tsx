@@ -180,9 +180,15 @@ const useStudentTimer = () => {
       lessonState?.studentData.length > 0 &&
       lessonState?.studentData
     ) {
+      const surveyData = lessonState?.studentData.map((pageData: any) => {
+        return {
+          domID: pageData.domID,
+          input: pageData.input,
+        };
+      });
       let data = {
         id: lessonState?.universalStudentDataID[0]?.id,
-        surveyData: lessonState?.studentData,
+        surveyData,
         roomID: getRoomData.id,
       };
 
