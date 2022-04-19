@@ -207,7 +207,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         options: features.length > 0 ? features : options,
         inline: {
           inDropdown: false,
-          options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+          options: ['bold', 'italic', 'underline'],
           className: `toolItemClassName`,
           bold: {
             icon: textEdit.bold,

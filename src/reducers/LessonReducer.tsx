@@ -243,6 +243,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: oldStudentData,
       };
     case 'LOAD_STUDENT_DATA':
+      console.log('LOAD_STUDENT_DATA', {payload: action.payload});
       return {
         ...state,
         loaded: true,
@@ -295,6 +296,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         personLocationObj: action.payload,
       };
     case 'UNLOAD_STUDENT_DATA':
+      console.log('unloading student data');
       return {
         ...state,
         loaded: false,
@@ -307,6 +309,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         sharedData: [],
       };
     case 'UPDATE_STUDENT_DATA':
+      console.log('UPDATE_STUDENT_DATA');
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
@@ -396,6 +399,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       };
 
     case 'COMPLETE_STUDENT_UPDATE':
+      console.log('COMPLETE_STUDENT_UPDATE', state.universalStudentDataID);
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
       });

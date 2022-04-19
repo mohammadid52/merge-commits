@@ -25,7 +25,6 @@ const awsmobile = {
   aws_appsync_apiKey: 'da2-7j4nhhaq7nbgrbt42zn6spmx5m',
   aws_user_files_s3_bucket: 'iconoclaststorage83444-uatenv',
   aws_user_files_s3_bucket_region: 'us-east-1',
-  aws_cognito_login_mechanisms: ['EMAIL'],
 };
 
 export default awsmobile;

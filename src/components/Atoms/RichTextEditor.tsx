@@ -41,6 +41,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     wrapperClass = '',
     placeholder,
   } = props;
+
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
@@ -57,7 +58,6 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     'colorPicker',
     'link',
     'emoji',
-    'remove',
     'history',
   ];
   const onEditorStateChange = (editorState: any) => {
@@ -81,18 +81,34 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     setEditorState(editorState);
   };
 
-  useEffect(() => {
-    const html = initialValue ? initialValue : '<p></p>';
-    const contentBlock = convertFromHTML(html); // changed "htmlToDraft()" to "convertFromHTML()" -> Don't understand why htmlToDraft() was creating extra blank lines
-
-    let editorState;
-    if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      editorState = EditorState.createWithContent(contentState);
-    } else {
-      editorState = EditorState.createEmpty();
+  const checkInitialValue = (initValue: any) => {
+    if (typeof initValue === 'object' && initValue?.value) {
+      return initValue?.value;
     }
-    setEditorState(editorState);
+    return initValue;
+  };
+
+  // Adding below code in trycatch because it was giving html.trim error
+  useEffect(() => {
+    const html = initialValue ? checkInitialValue(initialValue) : '<p></p>';
+
+    try {
+      const contentBlock = convertFromHTML(html); // changed "htmlToDraft()" to "convertFromHTML()" -> Don't understand why htmlToDraft() was creating extra blank lines
+
+      let editorState;
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+
+        editorState = EditorState.createWithContent(contentState);
+      } else {
+        editorState = EditorState.createEmpty();
+      }
+      setEditorState(editorState);
+    } catch (error) {
+      console.error('error@RichTextEditor in useEffect: ', error);
+    }
   }, []);
 
   const toolbarClassName = `${
@@ -132,7 +148,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         options: features.length > 0 ? features : options,
         inline: {
           inDropdown: false,
-          options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+          options: ['bold', 'italic', 'underline'],
           className: `${dark ? 'dark' : ''} toolItemClassName`,
         },
         list: {inDropdown: true, className: 'dropdownClassName'},

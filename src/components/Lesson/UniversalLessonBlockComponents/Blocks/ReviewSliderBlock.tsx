@@ -75,7 +75,9 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
           border: !isDark ? '1px solid #ececec' : 'none',
           boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)',
         }}
-        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${values?.cardBgColor} h-auto ${values?.rounded} shadow`}>
+        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${
+          values?.cardBgColor || 'gray-800'
+        } h-auto ${values?.rounded || 'rounded-md'} shadow`}>
         <div className="flex items-center justify-between">
           <p
             className={`${
@@ -90,12 +92,18 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
             {value}
           </p>
         </div>
-        <div className={`range relative rounded-full bg-${values?.bgColor} mt-4`}>
+        <div
+          className={`range relative rounded-full bg-${
+            values?.bgColor || 'gray-800'
+          } mt-4`}>
           <span
-            className={`range-value bg-${values?.fgColor}`}
+            className={`range-value bg-${values?.fgColor || 'gray-900'}`}
             style={slideStyle.range}
           />
-          <span className={`circle bg-${values?.fgColor}`} style={slideStyle.point} />
+          <span
+            className={`circle bg-${values?.fgColor || 'indigo-500'}`}
+            style={slideStyle.point}
+          />
           <input
             className={`range-slide`}
             name="range"

@@ -108,6 +108,8 @@
     "flickity": "^2.2.2",
     "html-to-draftjs": "^1.5.0",
     "moment": "^2.29.1",
+    "sass": "^1.26.11",
+    "sass-loader": "^8.0.2",
     "postcss-import": "^13.0.0",
     "postcss-loader": "^3.0.0",
     "query-string": "^6.13.4",
@@ -127,8 +129,6 @@
     "react-router-dom": "^5.1.2",
     "react-tagsinput": "^3.19.0",
     "react-tiny-link": "^3.6.1",
-    "sass": "^1.50.0",
-    "sass-loader": "^8.0.2",
     "typescript": "^4.0.3",
     "uuid": "^8.3.2",
     "webpack-dev-server": "^3.11.0"

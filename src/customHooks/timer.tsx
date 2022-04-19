@@ -9,15 +9,6 @@ import {partInput} from 'API';
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
 
-  const UPDATE_ID =
-    lessonState?.universalStudentDataID.length > 0 &&
-    lessonState?.universalStudentDataID[0]?.id;
-
-  const STUDENT_DATA =
-    lessonState?.studentData &&
-    lessonState?.studentData.length > 0 &&
-    lessonState?.studentData;
-
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
@@ -52,9 +43,13 @@ const useStudentTimer = () => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [savePending, setSavePending] = useState<boolean>(false);
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   // save intervals
   const VIEWED_INTERVAL = 2000;
   const STANDARD_INTERVAL = 4000;
+  const SURVEY_INTERVAL = 250;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -72,16 +67,29 @@ const useStudentTimer = () => {
           }, VIEWED_INTERVAL)
         );
       } else {
-        setactivityTimeout(
-          setTimeout(() => {
-            lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
-            console.log(
-              '%c standard save: ',
-              'background: #BEFAB5; color: #1E156F',
-              'saved'
-            );
-          }, STANDARD_INTERVAL)
-        );
+        if (isSurvey) {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, SURVEY_INTERVAL)
+          );
+        } else {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, STANDARD_INTERVAL)
+          );
+        }
       }
     }
   }, [lessonState.studentData]);
@@ -92,30 +100,25 @@ const useStudentTimer = () => {
 
   const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
 
-  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
-
   useEffect(() => {
-    if (lessonState.loaded) {
-      if (currentSaveCount < lessonState.saveCount) {
-        setCurrentSaveCount(lessonState.saveCount);
-      }
-
-      if (iAmViewed) {
-        const viewedUpdate = updateStudentLessonData();
-
-        Promise.resolve(viewedUpdate).then((_: void) => {
-          clearUpdateCycle();
-        });
-      } else {
-        const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
-
-        Promise.resolve(standardUpdate).then((_: void) => {
-          clearUpdateCycle();
-        });
-      }
+    if (currentSaveCount < lessonState.saveCount) {
+      setCurrentSaveCount(lessonState.saveCount);
     }
-  }, [lessonState.saveCount, lessonState.loaded]);
+
+    if (iAmViewed) {
+      const viewedUpdate = updateStudentLessonData();
+
+      Promise.resolve(viewedUpdate).then((_: void) => {
+        clearUpdateCycle();
+      });
+    } else {
+      const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
+
+      Promise.resolve(standardUpdate).then((_: void) => {
+        clearUpdateCycle();
+      });
+    }
+  }, [lessonState.saveCount]);
 
   // ##################################################################### //
   // ######################## MAIN SAVE FUNCTIONS ######################## //
@@ -170,14 +173,24 @@ const useStudentTimer = () => {
   };
 
   const updateSurveyData = async () => {
-    if (UPDATE_ID && STUDENT_DATA) {
+    if (
+      lessonState.loaded &&
+      lessonState?.universalStudentDataID[0]?.id &&
+      lessonState?.studentData &&
+      lessonState?.studentData.length > 0 &&
+      lessonState?.studentData
+    ) {
+      const surveyData = lessonState?.studentData.map((pageData: any) => {
+        return {
+          domID: pageData.domID,
+          input: pageData.input,
+        };
+      });
       let data = {
-        id: UPDATE_ID,
-        surveyData: STUDENT_DATA,
+        id: lessonState?.universalStudentDataID[0]?.id,
+        surveyData,
         roomID: getRoomData.id,
       };
-
-      // console.log('🚀 ~ file: timer.tsx ~ line 166 ~ updateSurveyData ~ data', data);
 
       try {
         await API.graphql(
