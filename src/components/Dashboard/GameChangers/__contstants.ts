@@ -13,6 +13,7 @@ import {CgBowl} from 'react-icons/cg';
 import {FcMindMap} from 'react-icons/fc';
 import {RiEmotionHappyLine} from 'react-icons/ri';
 
+//
 const successSound = 'https://selready.s3.us-east-2.amazonaws.com/meditation.mp3';
 
 const cardsList = [

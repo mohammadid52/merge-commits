@@ -105,7 +105,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     }
   }, [lessonState.studentData]);
 
-  const features: string[] = ['colorPicker', 'remove', 'inline'];
+  const features: string[] = ['colorPicker', 'inline'];
 
   return (
     <div className={`p-4 `}>
