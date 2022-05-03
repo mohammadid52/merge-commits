@@ -587,7 +587,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       // );
 
-      // existing student rows
+      // existing student rowss
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
       /**
