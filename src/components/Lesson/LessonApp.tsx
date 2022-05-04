@@ -534,36 +534,34 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     filterObj: any,
     nextToken: string,
     outArray: any[]
-  ) => {
-    if (filterObj) {
-      try {
-        let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-            ...filterObj,
-            nextToken: nextToken,
-          })
-        );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+  ): Promise<any> => {
+    let combined;
+    setLessonDataLoaded(false);
+    try {
+      let studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          ...filterObj,
+          nextToken: nextToken,
+        })
+      );
+      let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
 
-        /**
-         * combination of last fetch results
-         * && current fetch results
-         */
-        let combined = [...outArray, ...studentDataRows];
+      /**
+       * combination of last fetch results
+       * && current fetch results
+       */
+      combined = [...outArray, ...studentDataRows];
 
-        if (theNextToken) {
-          console.log('nextToken fetching more - ', nextToken);
-          loopFetchStudentData(filterObj, theNextToken, combined);
-        } else {
-          // console.log('no more - ', combined);
-          return combined;
-        }
-      } catch (e) {
-        console.error('loopFetchStudentData - ', e);
-        return [];
+      if (theNextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
-    } else {
+      // console.log('no more - ', combined);
+      setLessonDataLoaded(true);
+      return combined;
+    } catch (e) {
+      console.error('loopFetchStudentData - ', e);
       return [];
     }
   };
@@ -589,6 +587,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      // console.log(
+      //   '🚀 ~ file: LessonApp.tsx ~ line 592 ~ getOrCreateStudentData ~ studentDataRows',
+      //   studentDataRows
+      // );
 
       /**
        * NEW RECORD CREATION LOGIC:
