@@ -23,11 +23,6 @@ const TextBlock = (props: IFormBlockProps) => {
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
-  useEffect(() => {
-    const newValue = getDataValue(inputID);
-    console.log('🚀 ~ file: TextBlock.tsx ~ line 28 ~ useEffect ~ newValue', newValue);
-  }, []);
-
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
 
   const onChange = (e: any) => {

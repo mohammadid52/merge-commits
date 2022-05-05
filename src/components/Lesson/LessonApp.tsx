@@ -587,10 +587,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
-      // console.log(
-      //   '🚀 ~ file: LessonApp.tsx ~ line 592 ~ getOrCreateStudentData ~ studentDataRows',
-      //   studentDataRows
-      // );
 
       /**
        * NEW RECORD CREATION LOGIC:
