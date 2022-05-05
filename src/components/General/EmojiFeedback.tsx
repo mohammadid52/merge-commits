@@ -251,23 +251,25 @@ const EmojiFeedback = () => {
                 <li>good</li>
                 <li>great</li>
               </ul>
-              <button
-                onClick={() => {
-                  let x = Draggable.get(drag).x,
-                    value = Object.keys(points).reduce((p: any, c: any) => {
-                      return Math.abs(c - x) < Math.abs(p - x) ? c : p;
+              {fetched && (
+                <button
+                  onClick={() => {
+                    let x = Draggable.get(drag).x,
+                      value = Object.keys(points).reduce((p: any, c: any) => {
+                        return Math.abs(c - x) < Math.abs(p - x) ? c : p;
+                      });
+
+                    let response = points[value].name;
+
+                    setShowSentimentModal(false);
+                    wait(1000).then(async () => {
+                      await onSave(response);
                     });
-
-                  let response = points[value].name;
-
-                  setShowSentimentModal(false);
-                  wait(1000).then(async () => {
-                    await onSave(response);
-                  });
-                }}
-                className="emoji-response-save w-auto">
-                Save
-              </button>
+                  }}
+                  className="emoji-response-save w-auto">
+                  Save
+                </button>
+              )}
             </div>
           </div>
           <svg className="absolute invisible">
