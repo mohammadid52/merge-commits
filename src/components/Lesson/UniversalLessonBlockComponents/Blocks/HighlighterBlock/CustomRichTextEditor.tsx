@@ -7,6 +7,7 @@ import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import EraseBeforeModal from './EraseBeforeModal';
 
 // const ColorPicker = (props: {
 //   currentState?: any;
@@ -77,6 +78,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+
   /**
    * Please don't do this:
    *
@@ -192,80 +194,123 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     });
   }, []);
 
-  // rdw-colorpicker-modal-style-label-active
+  const [clearButtonLoaded, setClearButtonLoaded] = useState(false);
+
+  const [showEraseBeforeModal, setShowEraseBeforeModal] = useState(false);
+
+  const resetText = () => {
+    setEditorState(initialState);
+  };
+
+  const onYes = () => {
+    resetText();
+    onCancel();
+  };
+
+  const onCancel = () => {
+    setShowEraseBeforeModal(false);
+  };
+
+  useEffect(() => {
+    // rdw-editor-toolbar
+    if (!clearButtonLoaded) {
+      const elem = `<div title="Reset text" class="clear-editor-text-btn rdw-option-wrapper iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
+    <img src=${textEdit.reset} alt="">
+    </div>`;
+
+      $('.rdw-editor-toolbar')
+        .append(elem)
+        .on('click', () => setShowEraseBeforeModal(true));
+
+      const modalElement = $('#erase-before-modal');
+
+      $(modalElement).insertBefore('.background-test');
+
+      setClearButtonLoaded(true);
+    }
+  }, []);
 
   return (
-    <Editor
-      ref={editorRef}
-      editorState={editorState}
-      placeholder={placeholder}
-      toolbarClassName={toolbarClassName}
-      wrapperClassName={wrapperClassName}
-      editorClassName={editorClassName}
-      onEditorStateChange={onEditorStateChange}
-      toolbar={{
-        options: features.length > 0 ? features : options,
-        inline: {
-          inDropdown: false,
-          options: ['bold', 'italic', 'underline'],
-          className: `toolItemClassName`,
-          bold: {
-            icon: textEdit.bold,
-            className: 'toolbarCustomIcon',
+    <>
+      <EraseBeforeModal
+        id="erase-before-modal"
+        onYes={onYes}
+        onCancel={onCancel}
+        setShow={setShowEraseBeforeModal}
+        show={showEraseBeforeModal}
+      />
+      <Editor
+        ref={editorRef}
+        editorState={editorState}
+        placeholder={placeholder}
+        toolbarClassName={toolbarClassName}
+        wrapperClassName={wrapperClassName}
+        editorClassName={editorClassName}
+        onEditorStateChange={onEditorStateChange}
+        toolbar={{
+          options: features.length > 0 ? features : options,
+          inline: {
+            inDropdown: false,
+            options: ['bold', 'italic', 'underline'],
+            className: `toolItemClassName`,
+            bold: {
+              icon: textEdit.bold,
+              className: 'toolbarCustomIcon',
+            },
+            italic: {
+              icon: textEdit.italic,
+              className: 'toolbarCustomIcon',
+            },
+            underline: {
+              icon: textEdit.underline,
+              className: 'toolbarCustomIcon',
+            },
+            superscript: {
+              icon: textEdit.superscript,
+              className: 'toolbarCustomIcon',
+            },
+            subscript: {
+              icon: textEdit.subscript,
+              className: 'toolbarCustomIcon',
+            },
           },
-          italic: {
-            icon: textEdit.italic,
-            className: 'toolbarCustomIcon',
-          },
-          underline: {
-            icon: textEdit.underline,
-            className: 'toolbarCustomIcon',
-          },
-          superscript: {
-            icon: textEdit.superscript,
-            className: 'toolbarCustomIcon',
-          },
-          subscript: {
-            icon: textEdit.subscript,
-            className: 'toolbarCustomIcon',
-          },
-        },
 
-        remove: {
-          icon: textEdit.remove,
-          className: 'toolbarCustomIcon',
-        },
-        list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-        textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-        link: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-        history: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-        fontFamily: {
-          options: [
-            'Arial',
-            'Georgia',
-            'Impact',
-            'Courier',
-            'Times New Roman',
-            'Helvetica',
-          ],
-          className: 'plainText dropdownBlockClassName toolbarCustomIcon',
-        },
-        blockType: {
-          className: 'plainText dropdownBlockClassName toolbarCustomIcon',
-        },
-        fontSize: {
-          className: 'plainText dropdownClassName toolbarCustomIcon',
-        },
-        colorPicker: {
-          icon: textEdit.colorPick,
-          className: `
+          remove: {
+            icon: textEdit.remove,
+            className: 'toolbarCustomIcon',
+          },
+          list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          link: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          history: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          fontFamily: {
+            options: [
+              'Arial',
+              'Georgia',
+              'Impact',
+              'Courier',
+              'Times New Roman',
+              'Helvetica',
+            ],
+            className: 'plainText dropdownBlockClassName toolbarCustomIcon',
+          },
+          blockType: {
+            className: 'plainText dropdownBlockClassName toolbarCustomIcon',
+          },
+          fontSize: {
+            className: 'plainText dropdownClassName toolbarCustomIcon',
+          },
+          colorPicker: {
+            icon: textEdit.colorPick,
+            className: `
           ${theme}
           ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
           toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-          colors: ['#DC2626', '#34D399'],
-        },
-      }}
-    />
+            colors: ['#DC2626', '#34D399'],
+          },
+        }}
+      />
+    </>
   );
 };
 

@@ -1086,7 +1086,27 @@
     margin-bottom: 1rem;
     border-radius: 8px; // color: white;
   }
+
+  position: relative;
 }
+
+.clear-editor-text-btn {
+  cursor: pointer;
+  background-color: $green !important;
+  &:hover {
+    background-color: $green !important;
+  }
+  border-radius: 6px;
+  position: absolute;
+  right: 4px;
+  min-width: 25px;
+  width: auto;
+  margin: 0 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .toolbarClassName.mediumDark {
   background-color: rgb(199, 199, 204);
   border: 1px solid #9ca3af;
