@@ -78,6 +78,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+  const [changesArr, setChangesArr] = useState([]);
 
   /**
    * Please don't do this:
@@ -104,6 +105,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     'remove',
     'history',
   ];
+
   const onEditorStateChange = (editorState: any) => {
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
@@ -111,15 +113,18 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
     onChange(editorStateHtml, editorStatePlainText);
     setEditorState(editorState);
+
+    if (
+      changesArr.length === 0 ||
+      editorStateHtml !== changesArr[changesArr.length - 1].editorStateHtml
+    ) {
+      changesArr.push({editorStateHtml, editorStatePlainText});
+      setChangesArr([...changesArr]);
+    }
   };
 
-  /**
-   * On 'initialValue' mount:
-   *  - Allows updating the customRichText editor
-   *  when incoming props are updated
-   */
-  useEffect(() => {
-    const html = initialValue ? initialValue : '<p></p>';
+  const onInit = (value: any) => {
+    const html = value ? value : '<p></p>';
     const contentBlock = htmlToDraft(html);
 
     if (contentBlock) {
@@ -128,6 +133,16 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     } else {
       setEditorState(EditorState.createEmpty());
     }
+  };
+
+  /**
+   * On 'initialValue' mount:
+   *  - Allows updating the customRichText editor
+   *  when incoming props are updated
+   */
+
+  useEffect(() => {
+    onInit(initialValue);
   }, [initialValue]);
 
   const editorRef = React.useRef();
@@ -199,7 +214,12 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const [showEraseBeforeModal, setShowEraseBeforeModal] = useState(false);
 
   const resetText = () => {
-    setEditorState(initialState);
+    changesArr.pop();
+    if (editorRef && editorRef?.current) {
+      // @ts-ignore
+
+      onInit(changesArr[changesArr.length - 1].editorStateHtml);
+    }
   };
 
   const onYes = () => {
@@ -218,13 +238,13 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     <img src=${textEdit.reset} alt="">
     </div>`;
 
-      $('.rdw-editor-toolbar')
-        .append(elem)
-        .on('click', () => setShowEraseBeforeModal(true));
+      $('.rdw-editor-toolbar').append(elem);
+      $('.clear-editor-text-btn').on('click', () => {
+        setShowEraseBeforeModal(true);
+        const modalElement = $('#erase-before-modal');
 
-      const modalElement = $('#erase-before-modal');
-
-      $(modalElement).insertBefore('.background-test');
+        $(modalElement).insertBefore('.background-test');
+      });
 
       setClearButtonLoaded(true);
     }

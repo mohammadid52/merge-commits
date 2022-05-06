@@ -1091,20 +1091,8 @@
 }
 
 .clear-editor-text-btn {
-  cursor: pointer;
-  background-color: $green !important;
-  &:hover {
-    background-color: $green !important;
-  }
-  border-radius: 6px;
   position: absolute;
   right: 4px;
-  min-width: 25px;
-  width: auto;
-  margin: 0 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .toolbarClassName.mediumDark {
