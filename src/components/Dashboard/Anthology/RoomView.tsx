@@ -169,8 +169,8 @@ const RoomView = ({
             className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:grid-cols-5 md:grid-cols-3 lg:max-w-none">
             {mappedNotebookRoomCards &&
               mappedNotebookRoomCards.length > 0 &&
-              mappedNotebookRoomCards}
-            {/* {mapNotebookRoomCards()} */}
+              mappedNotebookRoomCards &&
+              mapNotebookRoomCards()}
 
             <RoomViewCard
               roomID={'private'}

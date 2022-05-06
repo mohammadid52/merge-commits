@@ -9,6 +9,7 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
+import {nanoid} from 'nanoid';
 import {
   PagePart,
   PartContent,
@@ -17,6 +18,7 @@ import {
   StudentPageInput,
   UniversalLessonPage,
   UniversalLessonStudentData,
+  UniversalJournalData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -53,6 +55,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
+
+  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
+    UniversalJournalData[]
+  >([]);
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
@@ -923,6 +929,33 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
+  const createJournalData = async () => {
+    const input = {
+      studentID: user.id,
+      studentAuthID: user.authId,
+      studentEmail: user.email,
+      type: 'journal-entry',
+      entryData: lessonState.studentData[3].map((val: any) => {
+        return {
+          domID: val.domID,
+          type: 'notes_form',
+          input: val.input,
+        };
+      }),
+    };
+    console.log('create input - ', input);
+    try {
+      const newJournalData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalJournalData, {input})
+      );
+
+      const returnedData = newJournalData.data.createUniversalJournalData;
+      return returnedData;
+    } catch (e) {
+      console.error('error creating journal data - ', e);
+    }
+  };
+
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
@@ -951,6 +984,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            createJournalData={createJournalData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}
