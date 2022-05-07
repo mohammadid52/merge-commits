@@ -1,3 +1,4 @@
+import {useNotifications} from '@contexts/NotificationContext';
 import {textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -215,9 +216,8 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const resetText = () => {
     changesArr.pop();
+    setChangesArr([...changesArr]);
     if (editorRef && editorRef?.current) {
-      // @ts-ignore
-
       onInit(changesArr[changesArr.length - 1].editorStateHtml);
     }
   };
@@ -231,6 +231,20 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     setShowEraseBeforeModal(false);
   };
 
+  const {clearNotification, setNotification} = useNotifications();
+
+  const resetHandler = () => {
+    if (changesArr.length > 1) {
+      setShowEraseBeforeModal(true);
+      const modalElement = $('#erase-before-modal');
+      $(modalElement).insertBefore('.background-test');
+      clearNotification();
+    } else {
+      setShowEraseBeforeModal(false);
+      setNotification({title: 'No changes were made', show: true});
+    }
+  };
+
   useEffect(() => {
     // rdw-editor-toolbar
     if (!clearButtonLoaded) {
@@ -239,16 +253,18 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     </div>`;
 
       $('.rdw-editor-toolbar').append(elem);
-      $('.clear-editor-text-btn').on('click', () => {
-        setShowEraseBeforeModal(true);
-        const modalElement = $('#erase-before-modal');
-
-        $(modalElement).insertBefore('.background-test');
-      });
 
       setClearButtonLoaded(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (clearButtonLoaded) {
+      $('.clear-editor-text-btn').on('click', () => {
+        resetHandler();
+      });
+    }
+  }, [changesArr]);
 
   return (
     <>
