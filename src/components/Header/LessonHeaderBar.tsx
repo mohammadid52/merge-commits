@@ -19,6 +19,7 @@ const LessonHeaderBar = ({
   setOverlay,
   isAtEnd,
   setisAtEnd,
+  createJournalData,
   handleRequiredNotification,
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
@@ -54,6 +55,15 @@ const LessonHeaderBar = ({
     } else {
       setWaiting(false);
       setSafeToLeave(true);
+    }
+  };
+
+  const handleNotebookSave = () => {
+    if (leaveAfterCompletion) {
+      createJournalData();
+      setTimeout(() => {
+        history.push(`/dashboard/classroom/${getRoomData.id}`);
+      }, 1500);
     }
   };
 
@@ -281,13 +291,19 @@ const LessonHeaderBar = ({
           setAlert={setLeaveModalVisible}
           header={
             leaveAfterCompletion
-              ? 'Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?'
+              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
-          button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
+          button1={`${
+            !waiting && leaveAfterCompletion
+              ? 'Move to notebook'
+              : !waiting
+              ? 'Go to the dashboard'
+              : 'Saving your data...'
+          }`}
           button2="Stay on lesson"
           svg="question"
-          handleButton1={handleManualSave}
+          handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
           handleButton2={handleLeavePopup}
           theme="dark"
           fill="screen"

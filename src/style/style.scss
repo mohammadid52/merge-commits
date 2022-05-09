@@ -1086,7 +1086,23 @@
     margin-bottom: 1rem;
     border-radius: 8px; // color: white;
   }
+
+  position: relative;
 }
+
+.clear-editor-text-btn {
+  position: absolute;
+  right: 4px;
+
+  &:active img {
+    transform: rotate(-45deg);
+  }
+  img {
+    transition: all 0.15s ease-in-out;
+    transform: rotate(0deg);
+  }
+}
+
 .toolbarClassName.mediumDark {
   background-color: rgb(199, 199, 204);
   border: 1px solid #9ca3af;
