@@ -8056,8 +8056,8 @@ export const usersByRole = /* GraphQL */ `
     }
   }
 `;
-export const messagesByRoomId = /* GraphQL */ `
-  query MessagesByRoomId(
+export const messagesByRoomID = /* GraphQL */ `
+  query MessagesByRoomID(
     $roomID: ID
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
