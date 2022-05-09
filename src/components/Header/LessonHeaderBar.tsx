@@ -295,7 +295,7 @@ const LessonHeaderBar = ({
       </div>
 
       {/* VIDEO POPUP */}
-      {!leaveModalVisible && (
+      {!leaveModalVisible && videoLink && (
         <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
           <Modal
             title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
