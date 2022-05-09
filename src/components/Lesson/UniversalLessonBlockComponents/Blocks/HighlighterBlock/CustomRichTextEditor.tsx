@@ -58,6 +58,7 @@ interface RichTextEditorProps {
   mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
+
   /**
    * Don't use this if the content is serious
    */
@@ -81,10 +82,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
   const [changesArr, setChangesArr] = useState([]);
-  console.log(
-    '🚀 ~ file: CustomRichTextEditor.tsx ~ line 84 ~ CustomRichTextEditor ~ changesArr',
-    changesArr
-  );
 
   /**
    * Please don't do this:
@@ -149,15 +146,9 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   useEffect(() => {
     onInit(initialValue);
-  }, [initialValue]);
+  }, []);
 
   const editorRef = React.useRef();
-
-  // const header = $('.rdw-colorpicker-modal-header');
-  // setTimeout(() => {
-  //   header.children('span').eq(1).trigger('click');
-  // }, 300);
-  // header.css({display: 'none'});
 
   useEffect(() => {
     if (editorRef && editorRef?.current && withStyles) {
