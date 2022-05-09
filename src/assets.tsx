@@ -125,6 +125,7 @@ export const textEdit: any = {
   subscript: 'https://zoiqclients.s3.amazonaws.com/TextEditor/subscript.png',
   remove: 'https://zoiqclients.s3.amazonaws.com/TextEditor/trash.png',
   colorPick: 'https://zoiqclients.s3.amazonaws.com/TextEditor/colorpick.png',
+  reset: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/public/reset.png',
 };
 
 // main logo (dashboard above sidebar)
