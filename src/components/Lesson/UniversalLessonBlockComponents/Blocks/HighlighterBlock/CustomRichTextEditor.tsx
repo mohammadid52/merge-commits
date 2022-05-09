@@ -81,6 +81,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
   const [changesArr, setChangesArr] = useState([]);
+  console.log(
+    '🚀 ~ file: CustomRichTextEditor.tsx ~ line 84 ~ CustomRichTextEditor ~ changesArr',
+    changesArr
+  );
 
   /**
    * Please don't do this:
@@ -212,10 +216,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const [clearButtonLoaded, setClearButtonLoaded] = useState(false);
 
-  console.log(
-    '🚀 ~ file: CustomRichTextEditor.tsx ~ line 218 ~ resetText ~ changesArr',
-    changesArr.length
-  );
   const resetText = () => {
     changesArr.pop();
     setChangesArr([...changesArr]);
@@ -253,12 +253,14 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   useEffect(() => {
     if (ctrlZPressed) {
       resetHandler();
-    } else {
-      $('.clear-editor-text-btn').on('click', () => {
-        resetHandler();
-      });
     }
-  }, [ctrlZPressed, changesArr]);
+  }, [ctrlZPressed]);
+
+  useEffect(() => {
+    $('.clear-editor-text-btn').on('click', () => {
+      resetHandler();
+    });
+  }, [changesArr]);
 
   return (
     <>
