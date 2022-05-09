@@ -9,6 +9,7 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
+import {nanoid} from 'nanoid';
 import {
   PagePart,
   PartContent,
@@ -17,6 +18,7 @@ import {
   StudentPageInput,
   UniversalLessonPage,
   UniversalLessonStudentData,
+  UniversalJournalData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -26,6 +28,8 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {tableCleanupUrl} from '@utilities/urls';
+import axios from 'axios';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -53,6 +57,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
+
+  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
+    UniversalJournalData[]
+  >([]);
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
@@ -534,36 +542,34 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     filterObj: any,
     nextToken: string,
     outArray: any[]
-  ) => {
-    if (filterObj) {
-      try {
-        let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-            ...filterObj,
-            nextToken: nextToken,
-          })
-        );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+  ): Promise<any> => {
+    let combined;
+    setLessonDataLoaded(false);
+    try {
+      let studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          ...filterObj,
+          nextToken: nextToken,
+        })
+      );
+      let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
 
-        /**
-         * combination of last fetch results
-         * && current fetch results
-         */
-        let combined = [...outArray, ...studentDataRows];
+      /**
+       * combination of last fetch results
+       * && current fetch results
+       */
+      combined = [...outArray, ...studentDataRows];
 
-        if (theNextToken) {
-          console.log('nextToken fetching more - ', nextToken);
-          loopFetchStudentData(filterObj, theNextToken, combined);
-        } else {
-          // console.log('no more - ', combined);
-          return combined;
-        }
-      } catch (e) {
-        console.error('loopFetchStudentData - ', e);
-        return [];
+      if (theNextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
-    } else {
+      // console.log('no more - ', combined);
+      setLessonDataLoaded(true);
+      return combined;
+    } catch (e) {
+      console.error('loopFetchStudentData - ', e);
       return [];
     }
   };
@@ -925,6 +931,63 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
+  const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
+    const listFilter = {
+      filter: {
+        studentAuthID: {eq: user.authId},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: getRoomData.activeSyllabus},
+        roomID: {eq: getRoomData.id},
+      },
+    };
+    const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+
+    const result = studentDataRows.map(async (item: any) => {
+      const input = {
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: item.lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: item.currentLocation,
+        lessonProgress: item.lessonProgress,
+        pageData: item.pageData,
+        hasExerciseData: item.hasExerciseData,
+        exerciseData: item.exerciseData,
+      };
+      let newStudentData: any;
+      let returnedData: any;
+      if (item.hasExerciseData) {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalLessonWritingExcercises;
+      } else {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalArchiveData, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalArchiveData;
+      }
+      return returnedData;
+    });
+    return result;
+  };
+
+  const createStudentArchiveData = async () => {
+    try {
+      const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
+      return result;
+    } catch (e) {
+      console.error('error creating journal data - ', e);
+    }
+  };
+
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
@@ -953,6 +1016,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}

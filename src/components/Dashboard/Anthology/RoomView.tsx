@@ -6,6 +6,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import usePrevious from '../../../customHooks/previousProps';
 import {getImageFromS3} from '../../../utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
+import * as queries from '../../../graphql/queries';
 
 interface IRoomViewProps {
   roomIdList: string[];
@@ -130,7 +131,7 @@ const RoomView = ({
         ? getImageURL(curricula?.items[0]?.image)
         : null);
       const curriculumName = curricula?.items[0]?.name;
-      // console.log('curricula - ', curricula);
+      console.log('curricula - ', curricula);
 
       return (
         <RoomViewCard
@@ -167,10 +168,9 @@ const RoomView = ({
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
             }}
             className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:grid-cols-5 md:grid-cols-3 lg:max-w-none">
-            {mappedNotebookRoomCards &&
-              mappedNotebookRoomCards.length > 0 &&
-              mappedNotebookRoomCards}
-            {/* {mapNotebookRoomCards()} */}
+            {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
+              ? mappedNotebookRoomCards
+              : null}
 
             <RoomViewCard
               roomID={'private'}

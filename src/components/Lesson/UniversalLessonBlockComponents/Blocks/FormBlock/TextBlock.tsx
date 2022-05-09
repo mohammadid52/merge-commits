@@ -4,10 +4,11 @@ import useInLessonCheck from '@customHooks/checkIfInLesson';
 import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
+  console.log('🚀 ~ file: TextBlock.tsx ~ line 11 ~ TextBlock ~ inputID', inputID);
   const {
     state: {
       user,
@@ -27,6 +28,7 @@ const TextBlock = (props: IFormBlockProps) => {
   const onChange = (e: any) => {
     if (isInLesson) {
       const {id, value} = e.target;
+      console.log('🚀 ~ file: TextBlock.tsx ~ line 30 ~ onChange ~ value', value);
 
       setDataValue(id, [value]);
     }
