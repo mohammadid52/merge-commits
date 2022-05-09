@@ -28,6 +28,8 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {tableCleanupUrl} from '@utilities/urls';
+import axios from 'axios';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -929,28 +931,60 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
-  const createJournalData = async () => {
-    const input = {
-      studentID: user.id,
-      studentAuthID: user.authId,
-      studentEmail: user.email,
-      type: 'journal-entry',
-      entryData: lessonState.studentData[3].map((val: any) => {
-        return {
-          domID: val.domID,
-          type: 'notes_form',
-          input: val.input,
-        };
-      }),
-    };
-    console.log('create input - ', input);
-    try {
-      const newJournalData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalJournalData, {input})
+  const loopCreateStudentArchiveData = async (
+    lessonPages: any[],
+    lessonID: string,
+    authId: string,
+    email: string
+  ) => {
+    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
+      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
+      const input = {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        lessonPageID: lessonPage.id,
+        studentID: authId,
+        studentAuthID: authId,
+        studentEmail: email,
+        roomID: getRoomData.id,
+        currentLocation: indexOfPage,
+        lessonProgress: '0',
+        pageData: lessonState.studentData[indexOfPage],
+        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
+        exerciseData: lessonState.exerciseData[indexOfPage],
+      };
 
-      const returnedData = newJournalData.data.createUniversalJournalData;
+      const newStudentData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalArchiveData, {
+          input,
+        })
+      );
+      const returnedData = newStudentData.data.createUniversalArchiveData;
       return returnedData;
+    });
+    return createdRecords;
+  };
+
+  const createStudentArchiveData = async () => {
+    try {
+      const result = await loopCreateStudentArchiveData(
+        lessonState.lessonData.lessonPlan,
+        lessonID,
+        user.authId,
+        user.email
+      );
+      const tableCleanup = await axios.post(tableCleanupUrl, {
+        lessonID: lessonID,
+        syllabusID: getRoomData.activeSyllabus,
+        roomID: getRoomData.id,
+      });
+      console.log(
+        '🚀 ~ file: LessonApp.tsx ~ line 983 ~ createStudentArchiveData ~ tableCleanup',
+        tableCleanup
+      );
+      return result;
     } catch (e) {
       console.error('error creating journal data - ', e);
     }
@@ -984,7 +1018,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
-            createJournalData={createJournalData}
+            createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}

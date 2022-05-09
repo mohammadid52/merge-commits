@@ -53,6 +53,8 @@ export interface ITabViewProps extends ITabParentProps {
   setAllStudentData?: any;
   allExerciseData?: any[];
   allUniversalJournalData?: UniversalJournalData[];
+  classNotebook?: any;
+  setClassNotebook?: any;
   setAllUniversalJournalData?: any;
 }
 
@@ -74,7 +76,10 @@ const TabView = ({
   allExerciseData,
   allUniversalJournalData,
   setAllUniversalJournalData,
+  classNotebook,
+  setClassNotebook,
 }: ITabViewProps) => {
+  // console.log('🚀 ~ file: TabView.tsx ~ line 82 ~ classNotebook', classNotebook);
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;

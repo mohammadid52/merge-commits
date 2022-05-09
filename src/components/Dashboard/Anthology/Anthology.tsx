@@ -77,6 +77,7 @@ const Anthology = ({
     const initialDataFetch = async () => {
       await listUniversalJournalData();
       await getStudentData();
+      await getUniversalArchiveData();
     };
     initialDataFetch();
   }, []);
@@ -87,6 +88,7 @@ const Anthology = ({
 
   const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
   const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
+  const [classNotebook, setClassNotebook] = useState<any[]>([]);
 
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
     UniversalJournalData[]
@@ -507,6 +509,26 @@ const Anthology = ({
     }
   }, [allStudentData, sectionRoomID]);
 
+  const getUniversalArchiveData = async () => {
+    try {
+      const archiveData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalArchiveDatas, {
+          filter: {
+            studentID: {
+              eq: state.user.authId,
+            },
+          },
+        })
+      );
+      setClassNotebook(archiveData.data.listUniversalArchiveDatas.items);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: Anthology.tsx ~ line 527 ~ getUniversalArchiveData ~ error',
+        error
+      );
+    }
+  };
+
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
   const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
@@ -518,7 +540,7 @@ const Anthology = ({
 
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
-    const mergeAll = [...allStudentData, ...allUniversalJournalData];
+    const mergeAll = [...allStudentData, ...allUniversalJournalData, ...classNotebook];
     if (mergeAll.length > 0) {
       const uniqueIds = mergeAll.reduce((acc: string[], mixedObj: any) => {
         if (mixedObj.hasOwnProperty('roomID')) {
@@ -536,7 +558,7 @@ const Anthology = ({
       }
     } else {
     }
-  }, [allStudentData, allUniversalJournalData]);
+  }, [allStudentData, allUniversalJournalData, classNotebook]);
 
   // ~~~~~~ PRIVATE ROOM VERIFICATION ~~~~~~ //
 
@@ -763,6 +785,8 @@ const Anthology = ({
               allStudentData={allStudentData}
               setAllStudentData={setAllStudentData}
               allExerciseData={allExerciseData}
+              classNotebook={classNotebook}
+              setClassNotebook={setClassNotebook}
               allUniversalJournalData={allUniversalJournalData}
               setAllUniversalJournalData={setAllUniversalJournalData}
             />
