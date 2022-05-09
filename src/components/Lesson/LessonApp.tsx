@@ -931,59 +931,57 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
-  const loopCreateStudentArchiveData = async (
-    lessonPages: any[],
-    lessonID: string,
-    authId: string,
-    email: string
-  ) => {
-    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
-      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
-      );
-      const input = {
-        syllabusLessonID: getRoomData.activeSyllabus,
-        lessonID: lessonID,
-        lessonPageID: lessonPage.id,
-        studentID: authId,
-        studentAuthID: authId,
-        studentEmail: email,
-        roomID: getRoomData.id,
-        currentLocation: indexOfPage,
-        lessonProgress: '0',
-        pageData: lessonState.studentData[indexOfPage],
-        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage],
-      };
+  const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
+    const listFilter = {
+      filter: {
+        studentAuthID: {eq: user.authId},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: getRoomData.activeSyllabus},
+        roomID: {eq: getRoomData.id},
+      },
+    };
+    const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
-      const newStudentData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalArchiveData, {
-          input,
-        })
-      );
-      const returnedData = newStudentData.data.createUniversalArchiveData;
+    const result = studentDataRows.map(async (item: any) => {
+      const input = {
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: item.lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: item.currentLocation,
+        lessonProgress: item.lessonProgress,
+        pageData: item.pageData,
+        hasExerciseData: item.hasExerciseData,
+        exerciseData: item.exerciseData,
+      };
+      let newStudentData: any;
+      let returnedData: any;
+      if (item.hasExerciseData) {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalLessonWritingExcercises;
+      } else {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalArchiveData, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalArchiveData;
+      }
       return returnedData;
     });
-    return createdRecords;
+    return result;
   };
 
   const createStudentArchiveData = async () => {
     try {
-      const result = await loopCreateStudentArchiveData(
-        lessonState.lessonData.lessonPlan,
-        lessonID,
-        user.authId,
-        user.email
-      );
-      const tableCleanup = await axios.post(tableCleanupUrl, {
-        lessonID: lessonID,
-        syllabusID: getRoomData.activeSyllabus,
-        roomID: getRoomData.id,
-      });
-      console.log(
-        '🚀 ~ file: LessonApp.tsx ~ line 983 ~ createStudentArchiveData ~ tableCleanup',
-        tableCleanup
-      );
+      const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
       return result;
     } catch (e) {
       console.error('error creating journal data - ', e);

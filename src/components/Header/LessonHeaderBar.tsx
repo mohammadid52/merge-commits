@@ -63,7 +63,7 @@ const LessonHeaderBar = ({
       createJournalData();
       setTimeout(() => {
         history.push(`/dashboard/classroom/${getRoomData.id}`);
-      }, 1000);
+      }, 1500);
     }
   };
 
