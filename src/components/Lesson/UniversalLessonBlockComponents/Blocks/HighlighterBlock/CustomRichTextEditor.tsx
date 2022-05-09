@@ -1,4 +1,5 @@
 import {useNotifications} from '@contexts/NotificationContext';
+import useMultiKeypress from '@customHooks/useMultiKeypress';
 import {textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -201,7 +202,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   useEffect(() => {
     $('.rdw-colorpicker-wrapper').on('click', (e) => {
-      // if(e.tar)
       setTimeout(() => {
         if (!e.target.classList.contains('rdw-colorpicker-modal-style-label')) {
           $('.rdw-colorpicker-modal-header').find('span:last-child').trigger('click');
@@ -212,8 +212,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const [clearButtonLoaded, setClearButtonLoaded] = useState(false);
 
-  const [showEraseBeforeModal, setShowEraseBeforeModal] = useState(false);
-
+  console.log(
+    '🚀 ~ file: CustomRichTextEditor.tsx ~ line 218 ~ resetText ~ changesArr',
+    changesArr.length
+  );
   const resetText = () => {
     changesArr.pop();
     setChangesArr([...changesArr]);
@@ -222,25 +224,13 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   };
 
-  const onYes = () => {
-    resetText();
-    onCancel();
-  };
-
-  const onCancel = () => {
-    setShowEraseBeforeModal(false);
-  };
-
   const {clearNotification, setNotification} = useNotifications();
 
   const resetHandler = () => {
     if (changesArr.length > 1) {
-      setShowEraseBeforeModal(true);
-      const modalElement = $('#erase-before-modal');
-      $(modalElement).insertBefore('.background-test');
       clearNotification();
+      resetText();
     } else {
-      setShowEraseBeforeModal(false);
       setNotification({title: 'No changes were made', show: true});
     }
   };
@@ -258,23 +248,20 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   }, []);
 
+  const ctrlZPressed = useMultiKeypress('z');
+
   useEffect(() => {
-    if (clearButtonLoaded) {
+    if (ctrlZPressed) {
+      resetHandler();
+    } else {
       $('.clear-editor-text-btn').on('click', () => {
         resetHandler();
       });
     }
-  }, [changesArr]);
+  }, [ctrlZPressed, changesArr]);
 
   return (
     <>
-      <EraseBeforeModal
-        id="erase-before-modal"
-        onYes={onYes}
-        onCancel={onCancel}
-        setShow={setShowEraseBeforeModal}
-        show={showEraseBeforeModal}
-      />
       <Editor
         ref={editorRef}
         editorState={editorState}
