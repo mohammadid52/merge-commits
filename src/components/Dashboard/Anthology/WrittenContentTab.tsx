@@ -33,6 +33,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
     allUniversalJournalData,
     setAllUniversalJournalData,
   } = props;
+  console.log(
+    '🚀 ~ file: WrittenContentTab.tsx ~ line 36 ~ WrittenContentTab ~ content',
+    content
+  );
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');

@@ -233,7 +233,7 @@ export const FormBlock = ({
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'
-            } rounded-md`}>
+            } rounded-2xl`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
               value={isInLesson ? getValue(inputID) : value}
@@ -251,7 +251,7 @@ export const FormBlock = ({
 
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`border-0 border-gray-700  rounded-md`}>
+          <div className={`border-0 border-gray-700  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
               value={isInLesson ? getValue(inputID) : value}
