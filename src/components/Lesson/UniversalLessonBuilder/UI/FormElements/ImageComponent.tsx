@@ -75,6 +75,7 @@ const ImageFormComponent = ({
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setImageInputs(inputObj[0]);
+
       imageInputsRef.current = inputObj[0]; // store the initial inputObj for comparison
       setIsEditingMode(true);
     }
@@ -151,6 +152,7 @@ const ImageFormComponent = ({
   const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
+    console.log('@onSave line 154 -> ', imageInputsRef.current, imageInputs);
     const updatedInputs = filterUpdatedInputs(imageInputsRef.current, imageInputs);
     const imageWasUpdated = updatedInputs.indexOf('imageData') > -1;
     const styles = getStyles();
@@ -158,7 +160,7 @@ const ImageFormComponent = ({
 
     console.log('updatedInputs', updatedInputs);
 
-    if (isValid && updatedInputs.length > 0) {
+    if (isValid) {
       setIsLoading(true);
 
       // logic for if new image is uploaded
@@ -208,7 +210,7 @@ const ImageFormComponent = ({
       setIsLoading(false);
       setUnsavedChanges(false);
     } else {
-      console.log('imageComponent: onSave: error validcating form fields');
+      console.log('imageComponent: onSave: error validating form fields');
     }
   };
 
@@ -283,7 +285,7 @@ const ImageFormComponent = ({
 
   const [selectedStyles, setSelectedStyles] = useState({
     isRounded: true,
-    isBorder: true,
+    isBorder: false,
   });
   const getStyles = () => {
     let styles = '';
@@ -342,24 +344,6 @@ const ImageFormComponent = ({
                           setSelectedStyles({
                             ...selectedStyles,
                             isRounded: !selectedStyles.isRounded,
-                          });
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
-                    Border
-                    <ToggleForModal
-                      checked={selectedStyles.isBorder}
-                      onClick={() => {
-                        if (!value) {
-                          setError(
-                            `Please select an ${customVideo ? 'video' : 'image'} first`
-                          );
-                        } else {
-                          setSelectedStyles({
-                            ...selectedStyles,
-                            isBorder: !selectedStyles.isBorder,
                           });
                         }
                       }}

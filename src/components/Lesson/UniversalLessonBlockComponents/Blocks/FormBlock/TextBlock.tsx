@@ -28,14 +28,16 @@ const TextBlock = (props: IFormBlockProps) => {
   const onChange = (e: any) => {
     if (isInLesson) {
       const {id, value} = e.target;
-      console.log('🚀 ~ file: TextBlock.tsx ~ line 30 ~ onChange ~ value', value);
 
       setDataValue(id, [value]);
     }
   };
 
   return (
-    <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
+    <div
+      id={id}
+      key={id}
+      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
       <label className={`text-sm ${themeTextColor}`} htmlFor="label">
         {numbered && index} {label} <RequiredMark isRequired={required} />
       </label>
