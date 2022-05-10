@@ -57,6 +57,7 @@ interface RichTextEditorProps {
   dark?: boolean;
   mediumDark?: boolean;
   customStyle?: boolean;
+  inlineOptions?: string[];
   features?: string[];
 
   /**
@@ -64,6 +65,8 @@ interface RichTextEditorProps {
    */
   withStyles?: boolean;
 }
+
+const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
 
 const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
@@ -73,11 +76,11 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     dark = false,
     mediumDark = false,
     customStyle = false,
-    rounded = false,
     features = [],
     withStyles = false,
     theme,
     placeholder = '',
+    inlineOptions = DEFAULT_INLINE_OPTIONS,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -267,7 +270,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           options: features.length > 0 ? features : options,
           inline: {
             inDropdown: false,
-            options: ['bold', 'italic', 'underline'],
+            options: inlineOptions,
             className: `toolItemClassName`,
             bold: {
               icon: textEdit.bold,

@@ -37,9 +37,8 @@ export const ImageBlock = (props: ImageBlockProps) => {
   return (
     <div
       id={id}
-      style={{background: 'rgba(21, 19, 21, 0.8)'}}
       data-id={dataIdAttribute}
-      className={`px-4 py-5 rounded-2xl sm:p-6`}>
+      className={`px-4 py-5 rounded-2xl border-0 border-gray-700 bg-component-dark sm:p-6`}>
       {imageState.url && (
         <img
           className={`${classString} mx-auto h-96 xl:h-132 2xl:h-156`}
@@ -51,7 +50,7 @@ export const ImageBlock = (props: ImageBlockProps) => {
         />
       )}
 
-      <p className="text-left mt-2">{imageState.caption}</p>
+      {imageState.caption && <p className="text-left mt-2">{imageState.caption}</p>}
     </div>
   );
 };

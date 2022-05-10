@@ -225,6 +225,7 @@ export const FormBlock = ({
             value={isInLesson ? getValue(inputID) : value}
           />
         );
+
       case FORM_TYPES.WRITING_EXERCISE:
       case `${FORM_TYPES.WRITING_EXERCISE}-content`:
         return (
@@ -233,7 +234,7 @@ export const FormBlock = ({
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'
-            } rounded-2xl`}>
+            } p-4 rounded-2xl bg-component-dark`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
               value={isInLesson ? getValue(inputID) : value}

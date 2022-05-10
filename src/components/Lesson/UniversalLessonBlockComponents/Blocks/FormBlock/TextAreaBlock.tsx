@@ -29,7 +29,10 @@ const TextAreaBlock = (props: IFormBlockProps) => {
   };
 
   return (
-    <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
+    <div
+      id={id}
+      key={id}
+      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
       <label className={`text-sm ${themeTextColor}`} htmlFor="label">
         {numbered && index} {label} <RequiredMark isRequired={required} />
       </label>

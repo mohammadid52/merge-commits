@@ -29,12 +29,12 @@ const WritingBlock = (props: WritingBlockProps) => {
 
   const {setDataValue} = useStudentDataValue();
 
-  const onAddClick = () => {
+  const onAddClick = (value: string) => {
     let concatenatedValue;
     if (fields.poemText.length > 0) {
-      concatenatedValue = fields.poemText.concat(`\n${selectedLS.text}`);
+      concatenatedValue = fields.poemText.concat(`\n${value}`);
     } else {
-      concatenatedValue = fields.poemText.concat(`${selectedLS.text}`);
+      concatenatedValue = fields.poemText.concat(`${value}`);
     }
 
     setFields({...fields, poemText: concatenatedValue});
@@ -45,14 +45,19 @@ const WritingBlock = (props: WritingBlockProps) => {
     text: '',
   });
 
+  const onLineSelect = (e: any) => {
+    setSelectedLS({...selectedLS, text: e.target.value});
+    onAddClick(e.target.value);
+  };
+
   return (
-    <div className="w-full flex items-center space-x-4">
+    <div className="w-full flex items-center space-x-4 mb-4">
       <div className={`w-full flex flex-col   rounded-lg`}>
         <div>
           <select
             value={selectedLS.text}
-            onChange={(e) => setSelectedLS({...selectedLS, text: e.target.value})}
-            className={`bg-gray-200 dark:bg-charcoal block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-md`}>
+            onChange={onLineSelect}
+            className={`iconoclast:bg-500 curate:bg-500  cursor-pointer block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-2xl`}>
             <option value={''} disabled>
               Select a line starter
             </option>
@@ -64,13 +69,13 @@ const WritingBlock = (props: WritingBlockProps) => {
           </select>
         </div>
       </div>
-      <div
+      {/* <div
         onClick={onAddClick}
         tabIndex={0}
         role="button"
         className="w-auto p-3 bg-gray-200 dark:bg-indigo-400  rounded-md">
         <AiOutlinePlus className="dark:text-white text-gray-600" />
-      </div>
+      </div> */}
     </div>
   );
 };
