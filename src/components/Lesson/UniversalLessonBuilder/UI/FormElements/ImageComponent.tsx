@@ -285,7 +285,7 @@ const ImageFormComponent = ({
 
   const [selectedStyles, setSelectedStyles] = useState({
     isRounded: true,
-    isBorder: true,
+    isBorder: false,
   });
   const getStyles = () => {
     let styles = '';
@@ -344,24 +344,6 @@ const ImageFormComponent = ({
                           setSelectedStyles({
                             ...selectedStyles,
                             isRounded: !selectedStyles.isRounded,
-                          });
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
-                    Border
-                    <ToggleForModal
-                      checked={selectedStyles.isBorder}
-                      onClick={() => {
-                        if (!value) {
-                          setError(
-                            `Please select an ${customVideo ? 'video' : 'image'} first`
-                          );
-                        } else {
-                          setSelectedStyles({
-                            ...selectedStyles,
-                            isBorder: !selectedStyles.isBorder,
                           });
                         }
                       }}

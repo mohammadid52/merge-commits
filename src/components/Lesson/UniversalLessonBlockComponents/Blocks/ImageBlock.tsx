@@ -41,7 +41,10 @@ export const ImageBlock = (props: ImageBlockProps) => {
       className={`px-4 py-5 rounded-2xl border-0 border-gray-700 bg-component-dark sm:p-6`}>
       {imageState.url && (
         <img
-          className={`${classString} mx-auto h-96 xl:h-132 2xl:h-156`}
+          className={`${classString.replace(
+            'rounded-2xl',
+            ''
+          )} mx-auto h-96 xl:h-132 2xl:h-156`}
           style={styleAttribute}
           // width={imageState.width}
           // height={imageState.height}
