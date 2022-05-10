@@ -16,7 +16,7 @@ export const VideoBlock = (props: VideoBlockProps) => {
     <div
       id={id}
       data-id={dataIdAttribute}
-      className={`px-4 py-5 sm:p-6 flex justify-center`}>
+      className={`bg-component-dark border-0 border-gray-700 px-4 py-5 rounded-2xl sm:p-6 flex justify-center`}>
       {url && <ReactPlayer url={url} width={`${width}px`} height={`${height}px`} />}
     </div>
   );

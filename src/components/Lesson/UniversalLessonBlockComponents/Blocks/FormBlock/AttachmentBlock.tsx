@@ -580,7 +580,7 @@ const AttachmentBlock = ({
       )}
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />{' '}
+          {numbered && index} {label}{' '}
           {isUploaded && (
             <button
               title={input.toString()}

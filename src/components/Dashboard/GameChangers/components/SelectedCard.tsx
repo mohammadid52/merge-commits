@@ -192,8 +192,8 @@ const SelectedCard = ({
   return (
     <>
       <div
-        className={`${inLesson ? '' : ''} rounded-2xl box ${
-          inLesson ? 'm-4' : 'm-8'
+        className={`${inLesson ? 'border-0 border-gray-700' : ''} rounded-2xl box ${
+          inLesson ? '' : 'm-8'
         }  z-100  relative w-auto  2xl:m-0 transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
         <audio id="finish-sound">
           <source src={successSound} type="audio/mp3" />
