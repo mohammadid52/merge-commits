@@ -206,7 +206,7 @@ const SelectedCard = ({
         </audio>
         <div
           style={{
-            background: 'rgba(21, 19, 21, .8)',
+            background: 'rgb(27, 25, 29)',
           }}
           className={`h-full  transition-all rounded-2xl  ${
             selected?.type === EMOTIONS ? '' : 'p-16 px-14'

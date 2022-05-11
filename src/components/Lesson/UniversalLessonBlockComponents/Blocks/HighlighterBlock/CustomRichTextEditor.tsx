@@ -9,7 +9,6 @@ import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import EraseBeforeModal from './EraseBeforeModal';
 
 // const ColorPicker = (props: {
 //   currentState?: any;
