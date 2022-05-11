@@ -4,6 +4,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
+import Tooltip from '@atoms/Tooltip';
 
 interface SelectorProps {
   list?: {id: number; name: string | number}[];
@@ -49,7 +50,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const currentRef: any = useRef(null);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-
+  const [showTooltip, setShowTooltip] = useState(false);
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
     onChange(str, name, id);
@@ -169,38 +170,47 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map((item: {name: string; id: any; value: string}, key: number) => (
-                <li
+                <Tooltip
+                  additionalClass="dropdown-tooltip-text"
+                  show={showTooltip}
                   key={key}
-                  onClick={() => updateSelectedItem(item.value, item.name, item.id)}
-                  id={item.id}
-                  tabIndex={-1}
-                  role="option"
-                  className={`hover:${
-                    theme.backGroundLight[themeColor]
-                  } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
-                    themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                  }-600 focus:border-transparent`}>
-                  <span
-                    className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
-                      theme.textColor[themeColor]
-                    } relative w-auto flex items-center`}>
-                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    className={`${
-                      selectedItem === item.name
-                        ? 'font-semibold pl-4'
-                        : 'font-normal pl-9'
-                    } block truncate`}>
-                    {item.name}
-                  </span>
-                </li>
+                  text={item.name}
+                  placement="bottom">
+                  <li
+                    key={key}
+                    onClick={() => updateSelectedItem(item.value, item.name, item.id)}
+                    id={item.id}
+                    tabIndex={-1}
+                    role="option"
+                    className={`hover:${
+                      theme.backGroundLight[themeColor]
+                    } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
+                      themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                    }-600 focus:border-transparent`}>
+                    <span
+                      className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
+                        theme.textColor[themeColor]
+                      } relative w-auto flex items-center`}>
+                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      className={`${
+                        selectedItem === item.name
+                          ? 'font-semibold pl-1'
+                          : 'font-normal pl-4'
+                      } block truncate`}
+                      onMouseEnter={() => setShowTooltip(true)}
+                      onMouseLeave={() => setShowTooltip(false)}>
+                      {item.name}
+                    </span>
+                  </li>
+                </Tooltip>
               ))
             ) : (
               <li className="flex justify-center relative py-2 px-4">
