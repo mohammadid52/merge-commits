@@ -63,6 +63,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     }
   };
 
+  const defaultValueTooltip = `Spring Woods High School- Period 4`;
+
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
     if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
@@ -172,10 +174,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               list.map((item: {name: string; id: any; value: string}, key: number) => (
                 <Tooltip
                   additionalClass="dropdown-tooltip-text"
-                  show={showTooltip}
+                  show={true}
                   key={key}
                   text={item.name}
-                  placement="bottom">
+                  placement={item.name === defaultValueTooltip ? 'bottom' : 'top'}>
                   <li
                     key={key}
                     onClick={() => updateSelectedItem(item.value, item.name, item.id)}
