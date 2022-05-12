@@ -174,10 +174,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               list.map((item: {name: string; id: any; value: string}, key: number) => (
                 <Tooltip
                   additionalClass="dropdown-tooltip-text"
-                  show={true}
+                  show={showTooltip}
                   key={key}
                   text={item.name}
-                  placement={item.name === defaultValueTooltip ? 'bottom' : 'top'}>
+                  placement={'right'}>
                   <li
                     key={key}
                     onClick={() => updateSelectedItem(item.value, item.name, item.id)}
