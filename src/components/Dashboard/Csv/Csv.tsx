@@ -935,7 +935,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           disabled={!selectedInst?.id}
           loading={classRoomLoading}
           selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-          placeholder="select class room"
+          placeholder="select classroom"
           list={instClassRooms}
           onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
         />
