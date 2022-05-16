@@ -87,6 +87,7 @@ const Gratitude = () => {
             </h1>
             <div id="journal-editor">
               <RichTextEditor
+                wrapperClass="bg-component-dark border-none"
                 rounded
                 customStyle
                 dark

@@ -8,7 +8,11 @@ import {
 import {filter} from 'lodash';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {
+  DIVIDER,
+  FORM_TYPES,
+  SPACER,
+} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import LessonModule from './LessonModule';
@@ -86,6 +90,17 @@ const LessonRowComposer = () => {
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
+  const paddingForDarkBg = (type: any) => {
+    switch (type) {
+      case 'video':
+      case FORM_TYPES.WRITING_EXERCISE:
+      case DIVIDER:
+        return 'p-4';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div>
       {removeDownloadablesFromlist &&
@@ -112,7 +127,7 @@ const LessonRowComposer = () => {
                           <div
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
-                            }`}
+                            } ${paddingForDarkBg(content.type)} `}
                             id={`${content.type === 'notes-form' ? '' : content.id}`}>
                             <SingleContentRow
                               content={content}
