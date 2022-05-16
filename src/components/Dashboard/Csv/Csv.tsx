@@ -103,20 +103,24 @@ const Csv = ({institutionId}: ICsvProps) => {
   }, []);
 
   const listInstitutions = async () => {
-    setInstitutionsLoading(true);
-    let institutions: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionsList)
-    );
-    institutions = institutions?.data.listInstitutions?.items || [];
-    institutions = institutions.map((inst: any) => {
-      return {
-        id: inst.id,
-        name: inst.name,
-        value: inst.name,
-      };
-    });
-    setInstitutions(institutions);
-    setInstitutionsLoading(false);
+    try {
+      setInstitutionsLoading(true);
+      let institutions: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionsList)
+      );
+      institutions = institutions?.data.listInstitutions?.items || [];
+      institutions = institutions.map((inst: any) => {
+        return {
+          id: inst.id,
+          name: inst.name,
+          value: inst.name,
+        };
+      });
+      setInstitutions(institutions);
+      setInstitutionsLoading(false);
+    } catch (error) {
+      console.log('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
+    }
   };
 
   const getBasicInstitutionInfo = async (institutionId: string) => {
@@ -242,10 +246,11 @@ const Csv = ({institutionId}: ICsvProps) => {
     try {
       let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
-          id: curriculumId,
+          filter: {curriculumId: {eq: curriculumId}},
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnitss?.items || [];
+
       units = units.map((syl: any) => {
         let unitData = syl.unit;
         return {id: unitData.id, name: unitData.name, value: unitData.name};
@@ -352,7 +357,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       setSurveys(uniqBy(surveys, 'id'));
       setSurveysLoading(false);
     } catch (err) {
-      console.log('fetch surveys list error', err);
+      console.error('fetch surveys list error', err);
     }
   };
 
@@ -935,7 +940,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           disabled={!selectedInst?.id}
           loading={classRoomLoading}
           selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-          placeholder="select class room"
+          placeholder="select classroom"
           list={instClassRooms}
           onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
         />

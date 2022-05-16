@@ -18,10 +18,11 @@ interface WritingBlockProps {
   setSaveAndEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   fields?: {poemHtml: string; poemText: string};
   setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
+  sendTextToEditor?: any;
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-  const {id, linestarters, setFields, fields} = props;
+  const {id, linestarters, sendTextToEditor} = props;
 
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
@@ -30,15 +31,7 @@ const WritingBlock = (props: WritingBlockProps) => {
   const {setDataValue} = useStudentDataValue();
 
   const onAddClick = (value: string) => {
-    let concatenatedValue;
-    if (fields.poemText.length > 0) {
-      concatenatedValue = fields.poemText.concat(`\n${value}`);
-    } else {
-      concatenatedValue = fields.poemText.concat(`${value}`);
-    }
-
-    setFields({...fields, poemText: concatenatedValue});
-    setDataValue(id, [concatenatedValue]);
+    sendTextToEditor(`${value} `, () => setDataValue(id, [value]));
   };
 
   const [selectedLS, setSelectedLS] = useState({

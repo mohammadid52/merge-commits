@@ -68,7 +68,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
   const slideStyle = genSlideStyle(value, values?.max);
 
   return (
-    <div className="p-4" id={id} key={id}>
+    <div className="py-4" id={id} key={id}>
       {/* */}
       <div
         style={{
