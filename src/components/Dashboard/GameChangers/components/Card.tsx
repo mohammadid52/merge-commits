@@ -55,7 +55,7 @@ const Card = ({
 
   return (
     <div
-      className={`carousel-cell box mx-6 z-100 my-12 lg:my-0  cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button lg:max-h-156 lg:min-h-156 max-h-104 min-h-104`}>
+      className={`carousel-cell box mx-6 z-100 my-12 lg:my-0  cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button xl:max-h-156 xl:min-h-156 max-h-104 min-h-104`}>
       <div
         style={{
           background: 'rgba(21, 19, 21, .8)',

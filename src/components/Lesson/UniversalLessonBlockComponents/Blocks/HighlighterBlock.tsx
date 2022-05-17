@@ -105,10 +105,10 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     }
   }, [lessonState.studentData]);
 
-  const features: string[] = ['colorPicker', 'remove', 'inline'];
+  const features: string[] = ['colorPicker', 'inline'];
 
   return (
-    <div className={`p-4 `}>
+    <div className={` py-4 `}>
       <CustomRichTextEditor
         theme={themeColor}
         features={features}

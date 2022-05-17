@@ -363,7 +363,9 @@ const Start: React.FC<StartProps> = ({
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED']
             : isCompleted
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['CLOSED']
-            : classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
+            : isTeacher && !isCompleted && !isActive
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY']
+            : classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED'];
         default:
           return type.toUpperCase();
       }

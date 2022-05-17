@@ -608,7 +608,12 @@ const PageBuilderSlideOver = ({
     if (pageContent.length > 0) {
       if (bottom) {
         hideAllModals();
+
         setAddContentModal({show: true, type});
+        console.log(
+          '🚀 ~ file: PageBuilderSlideOver.tsx ~ line 613 ~ onContentItemClick ~ type',
+          type
+        );
         handleModalPopToggle('', pageContent.length, 'pageContent', selectedPageID);
       } else {
         setShowingPin(true);
@@ -616,6 +621,10 @@ const PageBuilderSlideOver = ({
     } else {
       hideAllModals();
       setAddContentModal({show: true, type});
+      console.log(
+        '🚀 ~ file: PageBuilderSlideOver.tsx ~ line 624 ~ onContentItemClick ~ type',
+        type
+      );
       handleModalPopToggle('');
     }
   };

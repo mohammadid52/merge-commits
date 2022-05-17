@@ -9,6 +9,7 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
+import {nanoid} from 'nanoid';
 import {
   PagePart,
   PartContent,
@@ -17,6 +18,7 @@ import {
   StudentPageInput,
   UniversalLessonPage,
   UniversalLessonStudentData,
+  UniversalJournalData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -26,6 +28,8 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {tableCleanupUrl} from '@utilities/urls';
+import axios from 'axios';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -53,6 +57,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
+
+  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
+    UniversalJournalData[]
+  >([]);
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
@@ -447,13 +455,16 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
+    const goAhead = typeof studentDataRecords !== 'undefined';
     const extraPagesArray = lessonPlanPages.reduce(
       (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
-        const findInStudentDataRecords = studentDataRecords.find(
-          //@ts-ignore
-          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
-        );
-        if (findInStudentDataRecords === undefined) {
+        const findInStudentDataRecords = goAhead
+          ? studentDataRecords.find(
+              //@ts-ignore
+              (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+            )
+          : undefined;
+        if (typeof findInStudentDataRecords === 'undefined') {
           return [...extraPageArray, lessonPage];
         } else {
           return extraPageArray;
@@ -461,20 +472,23 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       },
       []
     );
-    const currentLessonRecords = studentDataRecords.reduce(
-      (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
-        const isStudentDataFromLesson = lessonPlanPages.find(
-          //@ts-ignore
-          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
-        );
-        if (isStudentDataFromLesson !== undefined) {
-          return [...currentLessonRecords, studentData];
-        } else {
-          return currentLessonRecords;
-        }
-      },
-      []
-    );
+    const currentLessonRecords = goAhead
+      ? studentDataRecords.reduce(
+          (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
+            const isStudentDataFromLesson = lessonPlanPages.find(
+              (lessonPage: UniversalLessonPage) =>
+                //@ts-ignore
+                lessonPage.id === studentData.lessonPageID
+            );
+            if (isStudentDataFromLesson !== undefined) {
+              return [...currentLessonRecords, studentData];
+            } else {
+              return currentLessonRecords;
+            }
+          },
+          []
+        )
+      : [];
     return {
       extraPages: extraPagesArray,
       currentRecords: currentLessonRecords,
@@ -528,36 +542,34 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     filterObj: any,
     nextToken: string,
     outArray: any[]
-  ) => {
-    if (filterObj) {
-      try {
-        let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-            ...filterObj,
-            nextToken: nextToken,
-          })
-        );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+  ): Promise<any> => {
+    let combined;
+    setLessonDataLoaded(false);
+    try {
+      let studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          ...filterObj,
+          nextToken: nextToken,
+        })
+      );
+      let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
 
-        /**
-         * combination of last fetch results
-         * && current fetch results
-         */
-        let combined = [...outArray, ...studentDataRows];
+      /**
+       * combination of last fetch results
+       * && current fetch results
+       */
+      combined = [...outArray, ...studentDataRows];
 
-        if (theNextToken) {
-          console.log('nextToken fetching more - ', nextToken);
-          loopFetchStudentData(filterObj, theNextToken, combined);
-        } else {
-          // console.log('no more - ', combined);
-          return combined;
-        }
-      } catch (e) {
-        console.error('loopFetchStudentData - ', e);
-        return [];
+      if (theNextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
-    } else {
+      // console.log('no more - ', combined);
+      setLessonDataLoaded(true);
+      return combined;
+    } catch (e) {
+      console.error('loopFetchStudentData - ', e);
       return [];
     }
   };
@@ -584,16 +596,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
-      const filteredData = filterExtraPages(PAGES, studentDataRows);
-      const extraPages = filteredData.extraPages;
-      const currentStudentData = filteredData.currentRecords;
-
       /**
        * NEW RECORD CREATION LOGIC:
        *   - if no student records for this lesson, make all new records per page
        *   - if student records exist, but an additional page has been added, create records for these pages
        */
-      if (studentDataRows?.length === 0) {
+      if (
+        typeof studentDataRows === 'undefined' ||
+        (studentDataRows && studentDataRows?.length === 0)
+      ) {
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
@@ -607,60 +618,66 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             dataIdReferences: studentDataIdArray(newRecords),
           },
         });
-      } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
-        const createExtraRecords = await loopCreateStudentData(
-          extraPages,
-          lessonID,
-          user.authId,
-          user.email
-        );
-        const extraRecords = await Promise.all(createExtraRecords);
-        const combinedRecords = [...extraRecords, ...currentStudentData];
-        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
-        const filteredData = filterStudentData(
-          combinedStudentDataIdArray,
-          combinedRecords
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: combinedStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
-          },
-        });
-      } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-        const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-        const filteredData = filterStudentData(
-          existStudentDataIdArray,
-          currentStudentData
-        );
-        const finalData = mergedStudentData(
-          filteredData.pageData,
-          lessonState.studentData
-        );
-        const concatExerciseData = mergedExerciseData(
-          filteredData.exerciseData,
-          lessonState.exerciseData
-        );
-        // console.log('merged data', finalData);
-        lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
-          payload: {
-            dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: finalData,
-            filteredExerciseData: concatExerciseData,
-          },
-        });
+      } else {
+        const filteredData = filterExtraPages(PAGES, studentDataRows);
+        const extraPages = filteredData.extraPages;
+        const currentStudentData = filteredData.currentRecords;
+
+        if (extraPages?.length > 0 && currentStudentData?.length > 0) {
+          const createExtraRecords = await loopCreateStudentData(
+            extraPages,
+            lessonID,
+            user.authId,
+            user.email
+          );
+          const extraRecords = await Promise.all(createExtraRecords);
+          const combinedRecords = [...extraRecords, ...currentStudentData];
+          const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
+          const filteredData = filterStudentData(
+            combinedStudentDataIdArray,
+            combinedRecords
+          );
+          const finalData = mergedStudentData(
+            filteredData.pageData,
+            lessonState.studentData
+          );
+          const concatExerciseData = mergedExerciseData(
+            filteredData.exerciseData,
+            lessonState.exerciseData
+          );
+          // console.log('merged data', finalData);
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: combinedStudentDataIdArray,
+              filteredStudentData: finalData,
+              filteredExerciseData: concatExerciseData,
+            },
+          });
+        } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
+          const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+          const filteredData = filterStudentData(
+            existStudentDataIdArray,
+            currentStudentData
+          );
+          const finalData = mergedStudentData(
+            filteredData.pageData,
+            lessonState.studentData
+          );
+          const concatExerciseData = mergedExerciseData(
+            filteredData.exerciseData,
+            lessonState.exerciseData
+          );
+          // console.log('merged data', finalData);
+          lessonDispatch({
+            type: 'LOAD_STUDENT_DATA',
+            payload: {
+              dataIdReferences: existStudentDataIdArray,
+              filteredStudentData: finalData,
+              filteredExerciseData: concatExerciseData,
+            },
+          });
+        }
       }
     } catch (err) {
       console.error(err);
@@ -914,6 +931,63 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
+  const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
+    const listFilter = {
+      filter: {
+        studentAuthID: {eq: user.authId},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: getRoomData.activeSyllabus},
+        roomID: {eq: getRoomData.id},
+      },
+    };
+    const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+
+    const result = studentDataRows.map(async (item: any) => {
+      const input = {
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: item.lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: item.currentLocation,
+        lessonProgress: item.lessonProgress,
+        pageData: item.pageData,
+        hasExerciseData: item.hasExerciseData,
+        exerciseData: item.exerciseData,
+      };
+      let newStudentData: any;
+      let returnedData: any;
+      if (item.hasExerciseData) {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalLessonWritingExcercises;
+      } else {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalArchiveData, {
+            input,
+          })
+        );
+        returnedData = newStudentData.data.createUniversalArchiveData;
+      }
+      return returnedData;
+    });
+    return result;
+  };
+
+  const createStudentArchiveData = async () => {
+    try {
+      const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
+      return result;
+    } catch (e) {
+      console.error('error creating journal data - ', e);
+    }
+  };
+
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
@@ -942,6 +1016,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}

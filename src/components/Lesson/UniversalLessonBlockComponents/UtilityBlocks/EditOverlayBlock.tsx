@@ -77,6 +77,10 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const onComponentCreateClick = () => {
     if (!isEmpty(selectedComponent)) {
       setAddContentModal({show: true, type: selectedType});
+      console.log(
+        '🚀 ~ file: EditOverlayBlock.tsx ~ line 81 ~ onComponentCreateClick ~ selectedType',
+        selectedType
+      );
       const position = selectedComponent.partContentIdx + 1; // this the position idx where the new component will go
 
       if (typeof handleModalPopToggle === 'function') {

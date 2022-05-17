@@ -4,12 +4,13 @@ import Buttons from '@components/Atoms/Buttons';
 import RequiredMark from '@components/Atoms/RequiredMark';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {removeExtension} from '@utilities/functions';
 import {getImageFromS3Static} from '@utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {AiOutlineEyeInvisible} from 'react-icons/ai';
@@ -40,6 +41,8 @@ interface IFileComponent extends IFile {
   UPLOAD_KEY?: string;
   updateFilename: (id: string, filename: string) => void;
 }
+
+const openImg = (url: string) => window.open(url, '_blank');
 
 const File = ({
   _status,
@@ -86,7 +89,7 @@ const File = ({
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
-    window.open(imageUrl, '_blank');
+    openImg(imageUrl);
   };
 
   const genColor = () => {
@@ -481,6 +484,18 @@ const AttachmentBlock = ({
     setFilesUploading([]);
   };
 
+  const {getDataValue} = useStudentDataValue();
+
+  const [isUploaded, setIsUploaded] = useState(false);
+
+  const input = getDataValue(inputID).toString();
+
+  useEffect(() => {
+    setIsUploaded(input.length > 0 ? true : false);
+  }, [inputID, input]);
+
+  const imageUrl = isUploaded ? getImageFromS3Static(`${UPLOAD_KEY}${input}`) : '';
+
   return (
     <>
       {showModal && (
@@ -565,7 +580,17 @@ const AttachmentBlock = ({
       )}
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
+          {numbered && index} {label}{' '}
+          {isUploaded && (
+            <button
+              title={input.toString()}
+              onClick={() => openImg(imageUrl)}
+              className={
+                'italic cursor-pointer hover:text-green-600 w-auto text-sm text-green-500'
+              }>
+              Preview Uploaded File
+            </button>
+          )}
         </label>
         <div className="mt-2">
           <span
@@ -578,7 +603,7 @@ const AttachmentBlock = ({
               lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
             } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
-            Upload Attachments
+            {isUploaded ? 'Update' : 'Upload'} Attachments
           </span>
         </div>
       </div>

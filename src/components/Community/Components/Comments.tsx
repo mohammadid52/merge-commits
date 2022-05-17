@@ -24,7 +24,7 @@ const Comment = ({
   onEdit: (chatId: string, chatValue: string) => void;
 }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const iAmOwnerOfTheChat = authId === chat.personAuthID || email === chat.personEmail;
+  const iAmOwnerOfTheChat = authId === chat?.personAuthID || email === chat?.personEmail;
 
   return (
     <div className="antialiased rela mx-auto sm:max-w-screen">
@@ -38,17 +38,17 @@ const Comment = ({
             />
           </div>
           <div className="flex-1 border-0 rounded-lg relative border-gray-300 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>{chat.person.firstName}</strong>{' '}
+            <strong>{chat?.person?.firstName || '[deleted]'}</strong>{' '}
             <span className="text-xs text-gray-600">
-              {moment(chat.createdAt).format('LT')}
+              {moment(chat?.createdAt).format('LT')}
             </span>
-            {chat.isEditedChat && (
+            {chat?.isEditedChat && (
               <span className="text-xs text-gray-500 ml-2">(edited)</span>
             )}
             <span className="text-blue-700 w-auto font-base text-xs ml-2 cursor-pointer">
-              {chat.person.role}
+              {chat?.person?.role}
             </span>
-            <p className="text-sm w-auto whitespace-pre-line">{chat.msg}</p>
+            <p className="text-sm w-auto whitespace-pre-line">{chat?.msg}</p>
             {iAmOwnerOfTheChat && (
               <div className="w-auto absolute inset-y-0 right-0 p-4">
                 <Popover
@@ -64,7 +64,7 @@ const Comment = ({
                     <dl className="grid grid-cols-1  gap-y-3">
                       <div className="col-span-1">
                         <dt
-                          onClick={() => onEdit(chat.id, chat.msg)}
+                          onClick={() => onEdit(chat?.id, chat?.msg)}
                           className={`cursor-pointer text-gray-800 hover:text-gray-900`}>
                           Edit
                         </dt>
@@ -72,7 +72,7 @@ const Comment = ({
                       <div className="col-span-1">
                         <dt
                           onClick={() => {
-                            onChatDelete(chat.id);
+                            onChatDelete(chat?.id);
                             setShowMenu(false);
                           }}
                           className={`cursor-pointer text-red-500 hover:text-red-600`}>
@@ -126,17 +126,19 @@ const Comments = ({
     <div className="w-auto mx-5">
       <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
 
-      {orderedList.map((chat, idx) => (
-        <Comment
-          email={email}
-          authId={authId}
-          key={idx}
-          isLast={orderedList.length - 1 === idx}
-          onChatDelete={onChatDelete}
-          onEdit={onEdit}
-          chat={chat}
-        />
-      ))}
+      {orderedList &&
+        orderedList.length > 0 &&
+        orderedList.map((chat, idx) => (
+          <Comment
+            email={email}
+            authId={authId}
+            key={idx}
+            isLast={orderedList.length - 1 === idx}
+            onChatDelete={onChatDelete}
+            onEdit={onEdit}
+            chat={chat}
+          />
+        ))}
     </div>
   );
 };

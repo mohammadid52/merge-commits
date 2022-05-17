@@ -8,7 +8,11 @@ import {
 import {filter} from 'lodash';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {
+  DIVIDER,
+  FORM_TYPES,
+  SPACER,
+} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import LessonModule from './LessonModule';
@@ -86,6 +90,17 @@ const LessonRowComposer = () => {
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
+  const paddingForDarkBg = (type: any) => {
+    switch (type) {
+      case 'video':
+      case FORM_TYPES.WRITING_EXERCISE:
+      case DIVIDER:
+        return 'p-4';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div>
       {removeDownloadablesFromlist &&
@@ -112,21 +127,15 @@ const LessonRowComposer = () => {
                           <div
                             className={`${
                               content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
-                            }`}
+                            } ${paddingForDarkBg(content.type)} `}
                             id={`${content.type === 'notes-form' ? '' : content.id}`}>
-                            {composePartContent(
-                              content.id,
-                              content.type,
-                              content.value,
-                              `pp_${idx}_pc_${idx2}`,
-                              content.class,
-                              pagePart.id,
-                              'lesson',
-                              undefined, // function related to builder
-                              undefined, // position number related to builder
-                              content.type === 'notes-form' ? notes : [],
-                              true // isStudent,
-                            )}
+                            <SingleContentRow
+                              content={content}
+                              idx={idx}
+                              idx2={idx2}
+                              pagePart={pagePart}
+                              notes={notes}
+                            />
                           </div>
                         </div>
                       );
@@ -164,11 +173,43 @@ const LessonRowComposer = () => {
               </div>
             )}
           </div>
-          <LessonModule currentLesson={currentLesson} />
+          {/* <LessonModule currentLesson={currentLesson} /> */}
         </>
       )}
     </div>
   );
 };
+
+interface ISingleRowProps {
+  content: PartContent;
+  idx: number;
+  idx2: number;
+  pagePart: PagePart;
+  notes: any[];
+}
+
+const SingleContentRow = React.memo((props: ISingleRowProps) => {
+  const {content, idx, idx2, pagePart, notes} = props;
+
+  return (
+    <>
+      {content &&
+        pagePart &&
+        composePartContent(
+          content.id,
+          content.type,
+          content.value,
+          `pp_${idx}_pc_${idx2}`,
+          content.class,
+          pagePart.id,
+          'lesson',
+          undefined, // function related to builder
+          undefined, // position number related to builder
+          content.type === 'notes-form' && notes && notes.length > 0 ? notes : [],
+          true // isStudent,
+        )}
+    </>
+  );
+});
 
 export default LessonRowComposer;

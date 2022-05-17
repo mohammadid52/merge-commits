@@ -31,10 +31,7 @@ const awsmobile = {
     "aws_appsync_authenticationType": "API_KEY",
     "aws_appsync_apiKey": "da2-atzybdhob5c3npzwamkewtri5y",
     "aws_user_files_s3_bucket": "iconoclaststorage203627-demosite",
-    "aws_user_files_s3_bucket_region": "us-east-1",
-    "aws_cognito_login_mechanisms": [
-        "EMAIL"
-    ]
+    "aws_user_files_s3_bucket_region": "us-east-1"
 };
 
 

@@ -25,6 +25,7 @@ const EmojiFeedback = () => {
   const {authId, email} = state.user;
 
   const [lastMoodSubmission, setLastMoodSubmission] = useState<any>({});
+
   const [fetched, setFetched] = useState(false);
 
   const [fetching, setFetching] = useState(true);
@@ -127,7 +128,7 @@ const EmojiFeedback = () => {
     };
 
   const setEmoji = (value: any, duration = 0.4) => {
-    let index = value == 0 ? value : Object.keys(points).indexOf(value),
+    let index = value == 0 ? value : Object.keys(points).indexOf(value.toString()),
       name = points[value].name,
       computed = emoji && window.getComputedStyle(emoji);
     emoji?.classList?.remove('awful', 'bad', 'okay', 'good', 'great');
@@ -158,6 +159,7 @@ const EmojiFeedback = () => {
     setTimeout(() => emoji?.classList?.remove('scale'), 600);
     return value;
   };
+  setEmoji(264, 0);
 
   Draggable.create(drag, {
     type: 'x',
@@ -180,8 +182,6 @@ const EmojiFeedback = () => {
       );
     },
   });
-
-  setEmoji(0, 0);
 
   const onSave = async (response: string) => {
     try {
@@ -251,23 +251,25 @@ const EmojiFeedback = () => {
                 <li>good</li>
                 <li>great</li>
               </ul>
-              <button
-                onClick={() => {
-                  let x = Draggable.get(drag).x,
-                    value = Object.keys(points).reduce((p: any, c: any) => {
-                      return Math.abs(c - x) < Math.abs(p - x) ? c : p;
+              {fetched && (
+                <button
+                  onClick={() => {
+                    let x = Draggable.get(drag).x,
+                      value = Object.keys(points).reduce((p: any, c: any) => {
+                        return Math.abs(c - x) < Math.abs(p - x) ? c : p;
+                      });
+
+                    let response = points[value].name;
+
+                    setShowSentimentModal(false);
+                    wait(1000).then(async () => {
+                      await onSave(response);
                     });
-
-                  let response = points[value].name;
-
-                  setShowSentimentModal(false);
-                  wait(1000).then(async () => {
-                    await onSave(response);
-                  });
-                }}
-                className="emoji-response-save w-auto">
-                Save
-              </button>
+                  }}
+                  className="emoji-response-save w-auto">
+                  Save
+                </button>
+              )}
             </div>
           </div>
           <svg className="absolute invisible">
