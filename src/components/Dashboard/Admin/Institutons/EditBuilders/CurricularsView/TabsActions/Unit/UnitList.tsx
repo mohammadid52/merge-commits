@@ -13,6 +13,7 @@ import UnitListRow from './UnitListRow';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Selector from '@components/Atoms/Form/Selector';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -32,6 +33,7 @@ export const UnitList = ({instId}: any) => {
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
+
   const [searchInput, setSearchInput] = useState('');
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
@@ -39,6 +41,32 @@ export const UnitList = ({instId}: any) => {
     fetchSyllabusList();
     fetchInstitutions();
   }, []);
+
+  const getUpdatedList = (items: any[]) => {
+    const updatedList = items
+      ?.filter((item: any) => item.lessons.items.length > 0)
+
+      .map((item: any) => {
+        return {
+          ...item,
+          lessons: {
+            ...(item.lessons || {}),
+            items: item.lessons?.items
+              .map((lesson: any) => {
+                if (lesson?.lesson?.id) {
+                  return {
+                    ...lesson,
+                    index: item?.universalLessonsSeq?.indexOf(lesson?.lesson?.id),
+                  };
+                }
+              })
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+          },
+        };
+      });
+
+    return updatedList;
+  };
 
   const fetchSyllabusList = async () => {
     try {
@@ -51,20 +79,9 @@ export const UnitList = ({instId}: any) => {
               },
         })
       );
-      const updatedList: any[] = result.data?.listUniversalSyllabuss.items?.map(
-        (item: any) => ({
-          ...item,
-          lessons: {
-            ...(item.lessons || {}),
-            items: item.lessons?.items
-              ?.map((lesson: any) => ({
-                ...lesson,
-                index: item?.universalLessonsSeq?.indexOf(lesson.lesson.id),
-              }))
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-          },
-        })
-      );
+
+      const updatedList = getUpdatedList(result.data?.listUniversalSyllabuss.items);
+
       setUnits(updatedList);
       setAllUnits(updatedList);
       setLoading(false);
@@ -284,23 +301,29 @@ export const UnitList = ({instId}: any) => {
             </div>
 
             <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {units.map((unit: any, index: number) => (
-                <UnitListRow
-                  key={`unit_list_row_${index}`}
-                  index={index}
-                  item={unit}
-                  checkIfRemovable={checkIfRemovable}
-                  handleToggleDelete={handleToggleDelete}
-                  editCurrentUnit={handleView}
-                  isSuperAdmin={isSuperAdmin}
-                  redirectToInstitution={() =>
-                    redirectToInstitution(unit.institution?.id)
-                  }
-                  redirectToLesson={(lessonId: string) =>
-                    redirectToLesson(unit.institution?.id, lessonId)
-                  }
-                />
-              ))}
+              {units.map((unit: any, index: number) => {
+                return (
+                  <ErrorBoundary
+                    key={`unit_list_row_${index}`}
+                    fallback={<h1 className="hidden"> </h1>}>
+                    <UnitListRow
+                      key={`unit_list_row_${index}`}
+                      index={index}
+                      item={unit}
+                      checkIfRemovable={checkIfRemovable}
+                      handleToggleDelete={handleToggleDelete}
+                      editCurrentUnit={handleView}
+                      isSuperAdmin={isSuperAdmin}
+                      redirectToInstitution={() =>
+                        redirectToInstitution(unit.institution?.id)
+                      }
+                      redirectToLesson={(lessonId: string) =>
+                        redirectToLesson(unit.institution?.id, lessonId)
+                      }
+                    />
+                  </ErrorBoundary>
+                );
+              })}
             </div>
             {deleteModal.show && (
               <ModalPopUp
