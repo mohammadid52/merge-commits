@@ -56,7 +56,7 @@ export const UnitList = ({instId}: any) => {
                 if (lesson?.lesson?.id) {
                   return {
                     ...lesson,
-                    index: item?.universalLessonsSeq?.indexOf(lesson?.lesson?.id),
+                    index: item?.universalLessonsSeq?.indexOf(lesson?.id),
                   };
                 }
               })

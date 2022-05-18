@@ -25,6 +25,7 @@ const UnitListRow = ({
   redirectToInstitution,
   redirectToLesson,
 }: IUnitListRowProps) => {
+  console.log('🚀 ~ file: UnitListRow.tsx ~ line 28 ~ item', item);
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const userLanguage = gContext.userLanguage;
