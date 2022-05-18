@@ -65,6 +65,7 @@ const LessonCourse = ({
   const [units, setUnits] = useState<any>([]);
   const [unitInput, setUnitInput] = useState<any>({});
   const [assignedUnits, setAssignedUnits] = useState<any>([]);
+
   const [deleting, setDeleting] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
@@ -112,7 +113,32 @@ const LessonCourse = ({
           (unit: any) => !addedSyllabusIds.includes(unit?.id)
         )
       );
-      setAssignedUnits(selectedSyllabus);
+
+      const updatedList = selectedSyllabus
+        ?.filter((item: any) => item.lessons.items.length > 0)
+
+        .map((item: any) => {
+          return {
+            ...item,
+            lessons: {
+              ...(item.lessons || {}),
+              items: item.lessons?.items
+                .map((lesson: any) => {
+                  if (lesson?.lesson?.id) {
+                    const idx = item?.universalLessonsSeq?.indexOf(lesson?.id);
+
+                    return {
+                      ...lesson,
+                      index: idx,
+                    };
+                  }
+                })
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+            },
+          };
+        });
+
+      setAssignedUnits(updatedList);
       setAllUnits(result.data?.listUniversalSyllabuss.items);
       setAssignedUnitsLoading(false);
     } catch (error) {
