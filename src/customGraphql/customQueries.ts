@@ -229,6 +229,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
+        completedLessons {
+          lessonID
+          time
+        }
         disabledPages
         studentViewing
         displayData {
@@ -274,6 +278,10 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          completedLessons {
+            lessonID
+            time
+          }
           disabledPages
           studentViewing
           currentPage
@@ -4721,6 +4729,10 @@ export const getScheduleDetails = /* GraphQL */ `
       endTime
       frequency
       weekDay
+      completedLessons {
+        lessonID
+        time
+      }
       lessonImpactLog {
         impactDate
         reasonComment
@@ -4882,6 +4894,24 @@ export const listRoomsBasicDetails = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listRoomsCompletedLessons = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
         createdAt
         updatedAt
       }

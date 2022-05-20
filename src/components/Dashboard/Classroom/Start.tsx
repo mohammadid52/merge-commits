@@ -47,6 +47,7 @@ const Start: React.FC<StartProps> = ({
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
+
   const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
@@ -196,6 +197,17 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
+  const goBackUrl = `/lesson-control/${lessonKey}`;
+
+  const checkIfCompletedBeforeOpen = () => {
+    return (
+      activeRoomInfo?.completedLessons?.findIndex(
+        (item: {lessonID?: string | null; time?: string | null}) =>
+          item.lessonID === lessonProps.lessonID
+      ) > -1
+    );
+  };
+
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
       try {
@@ -227,9 +239,10 @@ const Start: React.FC<StartProps> = ({
         } else {
           await setSyllabusLessonHistory(syllabusProps?.id, [lessonProps.id]);
         }
-        history.push(`${`/lesson-control/${lessonKey}`}`);
+        history.push(goBackUrl);
       } else {
-        toggleLessonSwitchAlert();
+        // toggleLessonSwitchAlert();
+        discardChanges();
       }
       // }
     }
@@ -241,7 +254,7 @@ const Start: React.FC<StartProps> = ({
         input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
       })
     );
-    history.push(`${`/lesson-control/${lessonKey}`}`);
+    history.push(goBackUrl);
   };
 
   const toggleLessonSwitchAlert = () => {
@@ -264,7 +277,9 @@ const Start: React.FC<StartProps> = ({
         show: true,
       }));
     } else {
-      handleMarkAsCompleteClick(lessonIds);
+      if (!checkIfCompletedBeforeOpen()) {
+        handleMarkAsCompleteClick(lessonIds);
+      }
     }
   };
 
@@ -301,7 +316,6 @@ const Start: React.FC<StartProps> = ({
       console.error('handleMarkAsCompleteClick() - ', e);
       setIsLoading(false);
     } finally {
-      history.push(`${`/lesson-control/${lessonKey}`}`);
       discardChanges();
     }
   };

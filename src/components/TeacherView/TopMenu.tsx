@@ -74,12 +74,12 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
                 <div className=" "></div>
               )}
 
-              <HamburgerMenu
+              {/* <HamburgerMenu
                 theme={theme}
                 themeColor={themeColor}
                 handleLeavePopup={handleLeavePopup}
                 handleHomePopup={handleHomePopup}
-              />
+              /> */}
             </div>
           </div>
         </div>

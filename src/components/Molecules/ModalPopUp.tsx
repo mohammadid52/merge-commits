@@ -54,17 +54,6 @@ const ModalPopUp = (props: ModalProps) => {
       <div className={`${className} text-center my-8`}>
         <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
         <div className="flex justify-center mt-16 w-full mx-auto">
-          {noButton && (
-            <Tooltip show={noTooltip ? true : false} placement="bottom" text={noTooltip}>
-              <Buttons
-                label={noButton}
-                btnClass="px-8 py-3 mr-4"
-                onClick={noButtonAction}
-                transparent
-              />
-            </Tooltip>
-          )}
-
           {deleteModal ? (
             <Buttons
               label={deleteLabel ? deleteLabel : 'Delete'}
@@ -94,6 +83,17 @@ const ModalPopUp = (props: ModalProps) => {
                 />
               </Tooltip>
             )
+          )}
+
+          {noButton && (
+            <Tooltip show={noTooltip ? true : false} placement="bottom" text={noTooltip}>
+              <Buttons
+                label={noButton}
+                btnClass="px-8 py-3 mr-4"
+                onClick={noButtonAction}
+                transparent
+              />
+            </Tooltip>
           )}
 
           {!onlyInfo && (
