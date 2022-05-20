@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {tableCleanupUrl} from '@utilities/urls';
+import axios from 'axios';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
@@ -12,8 +13,6 @@ import {awsFormatDate, dateString} from '../../../utilities/time';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import {Lesson} from './Classroom';
-import axios from 'axios';
-import Loader from '@components/Atoms/Loader';
 
 interface StartProps {
   isTeacher?: boolean;
