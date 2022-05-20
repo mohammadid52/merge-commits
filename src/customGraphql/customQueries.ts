@@ -1554,8 +1554,8 @@ export const listSyllabusLessons = /* GraphQL */ `
 `;
 
 export const listAllSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons {
-    listSyllabusLessons {
+  query ListUniversalSyllabusLessons {
+    listUniversalSyllabusLessons {
       nextToken
       items {
         id
@@ -3786,8 +3786,8 @@ export const listQuestionDatas = /* GraphQL */ `
 `;
 
 export const getCompleteLesson = /* GraphQL */ `
-  query GetLesson($id: ID!) {
-    getLesson(id: $id) {
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
       id
       title
       type
@@ -4015,12 +4015,12 @@ export const getChatRooms = /* GraphQL */ `
   }
 `;
 export const listFilteredSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons(
+  query ListUniversalSyllabusLessons(
     $filter: ModelSyllabusLessonFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID

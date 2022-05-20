@@ -18,9 +18,11 @@ const getClassroomLessonplans = async () => {
 // query all syllabus lessons
 const getSyllabusLessons = async () => {
   try {
-    const getQuery: any = await API.graphql(graphqlOperation(customQueries.listAllSyllabusLessons));
-    console.log('getSyllabusLessons: ', getQuery)
-    return await getQuery?.data?.listSyllabusLessons?.items;
+    const getQuery: any = await API.graphql(
+      graphqlOperation(customQueries.listAllSyllabusLessons)
+    );
+    console.log('getSyllabusLessons: ', getQuery);
+    return await getQuery?.data?.listUniversalSyllabusLessons?.items;
   } catch (e) {
     console.error('getSyllabusLessons - ', e);
   }
@@ -29,7 +31,7 @@ const getSyllabusLessons = async () => {
 // reduce into [...acc, {id: asdf4234234, lessonPlanID: 2}]
 const syllabusLessonIdsAndPlanIds = async (arr: any) => {
   const outArray = arr.reduce((acc: any[], val: any) => {
-    return [...acc, { id: val.id, lessonID: val.lessonID }];
+    return [...acc, {id: val.id, lessonID: val.lessonID}];
   }, []);
   return outArray;
 };
@@ -38,13 +40,18 @@ const loopSyllabusLessonIdAndMutate = async (arrIdsAndPlanIdd: any, lessonPlans:
   // console.log('before try mutate: ', arrIdsAndPlanIdd);
   arrIdsAndPlanIdd.reduce((_: any, idPlanIdArr: any, iKey: number) => {
     const lessonPlanLessonIds = lessonPlans.map((lpObj: any) => lpObj.lessonID);
-    const lessonPlanExists = lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID).length > 0;
+    const lessonPlanExists =
+      lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID).length > 0;
 
-    console.log('lesson plans: ', lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID))
+    console.log(
+      'lesson plans: ',
+      lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID)
+    );
     // console.log('loop -> ', lessonPlanLessonIds)
 
     if (lessonPlanExists) {
-      const lessonPlan = lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
+      const lessonPlan =
+        lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
       mutateSingleSyllabusLesson(idPlanIdArr.id, lessonPlan);
       // console.log(idPlanIdArr.lessonID)
     }

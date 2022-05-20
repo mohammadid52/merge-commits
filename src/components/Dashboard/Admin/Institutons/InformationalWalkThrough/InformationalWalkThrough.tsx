@@ -919,12 +919,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 lessonID: {eq: lesson.id},
               })),
             };
-            const result: any = await API.graphql(
-              graphqlOperation(customQueries.listLessonRubricss, {
-                filter,
-                limit: 1,
-              })
-            );
+            // const result: any = await API.graphql(
+            //   graphqlOperation(customQueries.listLessonRubricss, {
+            //     filter,
+            //     limit: 1,
+            //   })
+            // );
             if (universalLessonsList.length) {
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
@@ -934,7 +934,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
             }
             return {
-              lessonRubrics: result?.data?.listLessonRubricss?.items,
+              // lessonRubrics: result?.data?.listLessonRubricss?.items,
               universalLessons: universalLessonsList,
             };
           }

@@ -662,18 +662,18 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const fetchLessonRubrics = async () => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonRubricss, {
-          filter: {
-            lessonID: {eq: lessonId},
-          },
-        })
-      );
-      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-        ...rubric,
-        checked: true,
-      }));
-      setSelectedMeasurements(rubricList);
+      // const result: any = await API.graphql(
+      //   graphqlOperation(customQueries.listLessonRubricss, {
+      //     filter: {
+      //       lessonID: {eq: lessonId},
+      //     },
+      //   })
+      // );
+      // const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
+      //   ...rubric,
+      //   checked: true,
+      // }));
+      // setSelectedMeasurements(rubricList);
     } catch (error) {}
   };
 
