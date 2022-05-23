@@ -1,9 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Noticebar from '@components/Noticebar/Noticebar';
 import {GlobalContext} from '@contexts/GlobalContext';
-import {useHistory} from 'react-router';
 import useNotifications from '@customHooks/notifications';
-import useAuth from '@customHooks/useAuth';
 import {setLocalStorageData} from '@utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -22,15 +20,6 @@ const Lesson = () => {
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
   const urlParams: any = useParams();
-  const {isStudent} = useAuth();
-  const history = useHistory();
-
-  // @ts-ignore
-  useEffect(() => {
-    if (!isStudent) {
-      history.push('/dashboard');
-    }
-  }, [isStudent]);
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -76,22 +65,19 @@ const Lesson = () => {
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
-  if (isStudent) {
-    return (
-      <>
-        <Noticebar notifications={notifications} />
-        {loaded ? (
-          isSurvey ? (
-            <SurveyApp getSyllabusLesson={getSyllabusLesson} />
-          ) : (
-            <LessonApp getSyllabusLesson={getSyllabusLesson} />
-          )
-        ) : null}
-      </>
-    );
-  } else {
-    return null;
-  }
+
+  return (
+    <>
+      <Noticebar notifications={notifications} />
+      {loaded ? (
+        isSurvey ? (
+          <SurveyApp getSyllabusLesson={getSyllabusLesson} />
+        ) : (
+          <LessonApp getSyllabusLesson={getSyllabusLesson} />
+        )
+      ) : null}
+    </>
+  );
 };
 
 export default React.memo(Lesson);
