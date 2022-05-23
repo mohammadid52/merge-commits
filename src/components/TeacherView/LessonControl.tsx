@@ -3,6 +3,7 @@ import UserInformation from '@components/Dashboard/Admin/UserManagement/UserInfo
 import {useNotifications} from '@contexts/NotificationContext';
 import useLessonControls from '@customHooks/lessonControls';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useAuth from '@customHooks/useAuth';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -28,6 +29,15 @@ import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
+
+export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
+  return (
+    roomData?.completedLessons?.findIndex(
+      (item: {lessonID?: string | null; time?: string | null}) =>
+        item.lessonID === lessonID
+    ) > -1
+  );
+};
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -344,9 +354,9 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
 
     if (lessonID) {
-      const isCompleted = checkIfLessonIsCompleted(lessonID);
+      const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
 
-      if (!isCompleted) {
+      if (!isCompleted || !isTeacher) {
         clearNotification();
         lessonDispatch({
           type: 'SET_INITIAL_STATE',
@@ -373,8 +383,8 @@ const LessonControl = () => {
   useEffect(() => {
     const {lessonID} = urlParams;
 
-    const isCompleted = checkIfLessonIsCompleted(lessonID);
-    if (!isCompleted) {
+    const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
+    if (!isCompleted || !isTeacher) {
       if (lessonState.lessonData) {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
         history.push(`${match.url}/${0}`);
@@ -477,6 +487,8 @@ const LessonControl = () => {
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
   const isPresenting = lessonState.displayData[0].isTeacher === true;
 
+  const {isTeacher} = useAuth();
+
   useEffect(() => {
     if (isPresenting && !fullscreen) {
       setFullscreen(true);
@@ -484,15 +496,6 @@ const LessonControl = () => {
       setFullscreen(false);
     }
   }, [isPresenting]);
-
-  const checkIfLessonIsCompleted = (lessonID: string) => {
-    return (
-      getRoomData?.completedLessons?.findIndex(
-        (item: {lessonID?: string | null; time?: string | null}) =>
-          item.lessonID === lessonID
-      ) > -1
-    );
-  };
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //

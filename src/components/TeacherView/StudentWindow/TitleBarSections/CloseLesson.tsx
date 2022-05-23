@@ -1,12 +1,12 @@
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useLessonControls from '@customHooks/lessonControls';
+import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import React, {useState} from 'react';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
-import axios from 'axios';
-import {getLocalStorageData} from '@utilities/localStorage';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import {useHistory, useRouteMatch} from 'react-router';
-import {tableCleanupUrl} from '@utilities/urls';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 const CloseLesson = ({}) => {
   const {mutate, isError, isSuccess, isLoading} = useGraphqlMutation('updateRoom');
@@ -14,8 +14,12 @@ const CloseLesson = ({}) => {
   const roomID = getRoomData.id;
   const history = useHistory();
   const {lessonState, lessonDispatch} = useGlobalContext();
+  const {isStudent, authId} = useAuth();
+  const {handleRoomUpdate, getPageID} = useLessonControls();
 
   const MODAL_TEXT = 'Do you want to mark this lesson as completed?';
+  const MODAL_SUBTEXT =
+    "This will move the writing exercises from the live classroom to the live classroom to the student's notebook and show as completed on the classroom page";
 
   const router: any = useRouteMatch();
   const lessonId = router.params.lessonID || '999';
@@ -45,33 +49,46 @@ const CloseLesson = ({}) => {
     }));
   };
 
+  const lessonData = lessonState.lessonData;
+  const currentPage = lessonState.currentPage;
+
   const handleMarkAsCompleteClick = async () => {
     // UPDATE ROOM MUTATION
     try {
       let allCompletedLessons = getRoomData?.completedLessons || [];
-
-      mutate({
-        input: {
-          id: roomID,
-          completedLessons: [
-            ...allCompletedLessons,
-            {
-              lessonID: lessonId,
-              time: new Date().toISOString(),
-            },
-          ],
-          activeLessons: [lessonId],
+      const displayData = [
+        {
+          isTeacher: false,
+          studentAuthID: 'closed',
+          lessonPageID: '',
+        },
+      ];
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {
+          id: getRoomData.id,
+          displayData: displayData,
         },
       });
 
-      // if (warnModal.lessonID) {
-      //   // POST TO LAMBDA
-      //   await axios.post(tableCleanupUrl, {
-      //     lessonID: warnModal.lessonID,
-      //     syllabusID: getRoomData.activeSyllabus,
-      //     roomID: getRoomData.id,
-      //   });
-      // }
+      setLocalStorageData('room_info', {
+        ...getRoomData,
+        studentViewing: 'closed',
+        displayData: displayData,
+      });
+      await handleRoomUpdate({
+        id: getRoomData.id,
+        studentViewing: 'closed',
+        completedLessons: [
+          ...allCompletedLessons,
+          {
+            lessonID: lessonId,
+            time: new Date().toISOString(),
+          },
+        ],
+        activeLessons: [lessonId],
+        displayData: displayData,
+      });
     } catch (e) {
       console.error('handleMarkAsCompleteClick() - ', e);
     } finally {
@@ -96,6 +113,7 @@ const CloseLesson = ({}) => {
 
       {warnModal.show && (
         <ModalPopUp
+          smallText={MODAL_SUBTEXT}
           closeAction={onCloseModal}
           cancelAction={onCloseModal}
           noButtonAction={noButtonAction}

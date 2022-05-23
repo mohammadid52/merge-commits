@@ -645,15 +645,17 @@ const Dashboard = (props: DashboardProps) => {
 
         scheduleDetails = scheduleDetails?.data?.getRoom;
 
-        if (activeRoomInfo) {
-          const updatedRoomInfo = {
-            ...activeRoomInfo,
-            completedLessons: [...scheduleDetails.completedLessons],
-          };
+        // if (activeRoomInfo) {
+        //   setLessonLoading(false);
+        //   const updatedRoomInfo = {
+        //     ...activeRoomInfo,
+        //     completedLessons: [...scheduleDetails.completedLessons],
+        //   };
 
-          setLocalStorageData('room_info', updatedRoomInfo);
-          setActiveRoomInfo(updatedRoomInfo);
-        }
+        //   setLocalStorageData('room_info', updatedRoomInfo);
+        //   setActiveRoomInfo(updatedRoomInfo);
+        //   setLessonLoading(false);
+        // }
         if (
           scheduleDetails &&
           scheduleDetails.startDate &&
@@ -684,7 +686,6 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
 
   const listSyllabusLessons = async (syllabusID: string) => {
-    setLessonLoading(true);
     dispatch({
       type: 'UPDATE_ROOM',
       payload: {
@@ -698,6 +699,7 @@ const Dashboard = (props: DashboardProps) => {
      */
 
     try {
+      setLessonLoading(true);
       const syllabusLessonFetch = await API.graphql(
         graphqlOperation(customQueries.getUniversalSyllabus, {
           id: syllabusID,
@@ -953,7 +955,7 @@ const Dashboard = (props: DashboardProps) => {
                       visibleLessonGroup={visibleLessonGroup}
                       setVisibleLessonGroup={setVisibleLessonGroup}
                       lessonLoading={lessonLoading}
-                      setLessonLoading={setLessonLoading}
+                      // setLessonLoading={setLessonLoading}
                       syllabusLoading={syllabusLoading}
                       setSyllabusLoading={setSyllabusLoading}
                     />

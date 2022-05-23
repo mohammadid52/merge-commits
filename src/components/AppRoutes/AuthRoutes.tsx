@@ -1,7 +1,6 @@
 import React, {lazy} from 'react';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import PrivateRoute from '../Auth/PrivateRoute';
-import EmojiFeedback from '../General/EmojiFeedback';
 
 const Dashboard = lazy(() => import('../Dashboard/Dashboard'));
 const Lesson = lazy(() => import('../Lesson/Lesson'));
