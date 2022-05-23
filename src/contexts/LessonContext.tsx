@@ -216,15 +216,14 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
 
     try {
       const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.getStudentData, {
-          syllabusLessonID: lessonID,
-          studentID: studentID,
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          filter: {syllabusLessonID: {eq: lessonID}, studentID: {eq: studentID}},
         })
       );
 
-      if (!studentData.data.getStudentData) {
+      if (!studentData.data.listUniversalLessonStudentDatas) {
         const newStudentData: any = await API.graphql(
-          graphqlOperation(customMutations.createStudentData, {
+          graphqlOperation(mutations.createUniversalLessonStudentData, {
             input: {
               lessonProgress: '0',
               currentLocation: '0',
@@ -238,9 +237,11 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         dispatch({
           type: 'SET_STUDENT_INFO',
           payload: {
-            studentDataID: newStudentData.data.createStudentData.id,
-            studentUsername: newStudentData.data.createStudentData.studentID,
-            studentAuthID: newStudentData.data.createStudentData.studentAuthID,
+            studentDataID: newStudentData.data.createUniversalLessonStudentData.id,
+            studentUsername:
+              newStudentData.data.createUniversalLessonStudentData.studentID,
+            studentAuthID:
+              newStudentData.data.createUniversalLessonStudentData.studentAuthID,
           },
         });
         return setData(newStudentData.data.createStudentData);
@@ -248,12 +249,12 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
       dispatch({
         type: 'SET_STUDENT_INFO',
         payload: {
-          studentDataID: studentData.data.getStudentData.id,
-          studentUsername: studentData.data.getStudentData.studentID,
-          studentAuthID: studentData.data.getStudentData.studentAuthID,
+          studentDataID: studentData.data.getUniversalLessonStudentData.id,
+          studentUsername: studentData.data.getUniversalLessonStudentData.studentID,
+          studentAuthID: studentData.data.getUniversalLessonStudentData.studentAuthID,
         },
       });
-      return setData(studentData.data.getStudentData);
+      return setData(studentData.data.getUniversalLessonStudentData);
     } catch (err) {
       console.error(err);
     }
@@ -345,10 +346,10 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
         API.graphql(
-          graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
+          graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
           // @ts-ignore
         ).then((sLessonData: any) => {
-          const sLessonDataData = sLessonData.data.getSyllabusLesson;
+          const sLessonDataData = sLessonData.data.getUniversalLesson;
           setSubscriptionData(sLessonDataData);
         });
       },

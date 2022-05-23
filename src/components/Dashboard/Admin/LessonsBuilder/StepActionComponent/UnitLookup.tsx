@@ -189,7 +189,8 @@ const UnitLookup = (props: UnitLookupProps) => {
       ),
     ])
       .then(([res1, res2]: any) => {
-        const previouslySelectedUnits: any = res2?.data?.listSyllabusLessons?.items;
+        const previouslySelectedUnits: any =
+          res2?.data?.listUniversalSyllabusLessons?.items;
         const curricularsList: any = res1?.data?.getInstitution?.curricula?.items;
 
         const selectedSyllabusId: any = previouslySelectedUnits?.map(
@@ -393,7 +394,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             ) : (
               <div className="text-center p-16 mt-4">
                 <p className="text-gray-600 font-medium">
-                {UnitLookupDict[userLanguage]['NOTADDED']}
+                  {UnitLookupDict[userLanguage]['NOTADDED']}
                 </p>
               </div>
             )}
