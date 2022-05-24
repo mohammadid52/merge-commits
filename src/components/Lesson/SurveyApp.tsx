@@ -320,15 +320,16 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             nextToken: nextToken,
           })
         );
+
         let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items[0];
+
         let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
-        if (surveyDataRow && theNextToken) {
+        if (theNextToken) {
           console.log('nextToken fetching more - ', nextToken);
-          fetchSurveyDataRow(filterObj, theNextToken, []);
-        } else {
-          return surveyDataRow;
+          surveyDataRow = await fetchSurveyDataRow(filterObj, theNextToken, []);
         }
+        return surveyDataRow;
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
         return [];
@@ -352,6 +353,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
       // existing student rows
       const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+
       const surveyDataResponses = surveyDataRow?.surveyData
         ? surveyDataRow.surveyData
         : []; // flat 1D - array
@@ -359,7 +361,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         lessonState?.studentData,
         surveyDataResponses
       ); //  flat 1D - array
-
+      console.log('surveyDataRow length - ', lessonState?.studentData);
       if (surveyDataRow === undefined) {
         const createNewRecords = await createSurveyData(
           lessonState?.studentData,
@@ -368,12 +370,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           user.email
         );
 
-        lessonDispatch({
-          type: 'LOAD_SURVEY_DATA',
-          payload: {
-            dataIdReferences: surveyDataId(createNewRecords),
-          },
-        });
+        // lessonDispatch({
+        //   type: 'LOAD_SURVEY_DATA',
+        //   payload: {
+        //     dataIdReferences: surveyDataId(createNewRecords),
+        //   },
+        // });
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
         // console.log('loaded finaldata - ', finalData);
