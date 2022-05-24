@@ -249,7 +249,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           filter: {curriculumId: {eq: curriculumId}},
         })
       );
-      let units = curriculumUnits?.data.listCurriculumUnitss?.items || [];
+      let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
 
       units = units.map((syl: any) => {
         let unitData = syl.unit;
@@ -300,7 +300,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let studentsAnswersDemographicsCheckpointsQuestions =
-      curriculumData?.data?.listQuestionDatas?.items || [];
+      curriculumData?.data?.listQuestionData?.items || [];
     setDCQAnswers(studentsAnswersDemographicsCheckpointsQuestions);
   };
 
@@ -593,7 +593,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   ) => {
     let studsEmails = classStudents.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
-      graphqlOperation(queries.listUniversalSurveyStudentDatas, {
+      graphqlOperation(queries.listUniversalSurveyStudentData, {
         nextToken: nextToken,
         filter: {
           lessonID: {eq: lessonId},
@@ -602,9 +602,9 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let studentsAnswersSurveyQuestionsData =
-      universalSurveyStudentData.data.listUniversalSurveyStudentDatas.items;
+      universalSurveyStudentData.data.listUniversalSurveyStudentData.items;
     let theNextToken =
-      universalSurveyStudentData.data.listUniversalSurveyStudentDatas?.nextToken;
+      universalSurveyStudentData.data.listUniversalSurveyStudentData?.nextToken;
 
     /**
      * combination of last fetch results

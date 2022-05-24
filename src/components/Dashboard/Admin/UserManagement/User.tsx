@@ -215,7 +215,7 @@ const User = (props: IUserProps) => {
     const results: any = await API.graphql(
       graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
     );
-    const questionData: any = results.data.listQuestionDatas?.items;
+    const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
   };
 
@@ -459,12 +459,12 @@ const User = (props: IUserProps) => {
     setLoading(true);
     try {
       const studentDataFetch: any = await API.graphql(
-        graphqlOperation(queries.listStudentDatas, {
+        graphqlOperation(queries.listStudentData, {
           filter: {studentAuthID: {eq: user.authId}},
         })
       );
       const response = await studentDataFetch;
-      const arrayOfResponseObjects = response?.data?.listStudentDatas?.items;
+      const arrayOfResponseObjects = response?.data?.listStudentData?.items;
 
       const reducedAnthologyContent = arrayOfResponseObjects.reduce(
         (acc: AnthologyMapItem[], contentObj: any) => {
@@ -514,9 +514,7 @@ const User = (props: IUserProps) => {
 
   if (status !== 'done') {
     return insideModalPopUp ? (
-      <div
-        className={`pl-0 lg:pl-12 w-256`}
-        style={{height: 'calc(100vh - 150px)'}}>
+      <div className={`pl-0 lg:pl-12 w-256`} style={{height: 'calc(100vh - 150px)'}}>
         <Loader />
       </div>
     ) : (

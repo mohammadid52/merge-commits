@@ -126,7 +126,7 @@ const Spotlight = ({
     );
     const data = [
       ...response?.data?.listRooms?.items,
-      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item: any) => ({
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
         ...item,
         ...item.room,
         teacher: item.room?.teacher,
@@ -192,11 +192,11 @@ const Spotlight = ({
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
 
       if (listStaffs?.length === 0) {
       } else {

@@ -552,8 +552,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           nextToken: nextToken,
         })
       );
-      let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+      let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+      let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
 
       /**
        * combination of last fetch results
@@ -724,7 +724,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
 
       if (studentDataRows.length > 0) {
         lessonDispatch({

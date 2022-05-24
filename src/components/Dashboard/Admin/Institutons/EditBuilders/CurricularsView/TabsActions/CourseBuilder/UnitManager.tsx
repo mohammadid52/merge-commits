@@ -193,7 +193,7 @@ const UnitManager = ({
           filter: {institutionID: {eq: institutionId}},
         })
       );
-      const savedData = result.data.listUniversalSyllabuss;
+      const savedData = result.data.listUniversalSyllabi;
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
       );

@@ -28,16 +28,16 @@ const Students = (props: any) => {
     );
     const data = [
       ...response?.data?.listRooms?.items,
-      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item:any) => ({
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
         ...item,
         ...item.room,
-        teacher: item.room?.teacher
+        teacher: item.room?.teacher,
       })),
     ];
 
     let list: any[] = [];
     let uniqIds: string[] = [];
-    
+
     if (data?.length) {
       data.forEach((item: any) => {
         item?.class?.students?.items.forEach((student: any) => {

@@ -125,7 +125,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           limit: 500,
         })
       );
-      let data = list.data.listPersons.items;
+      let data = list.data.listPeople.items;
       const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
@@ -183,7 +183,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // ********
 
       const staff: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: institutions.length
             ? {
                 ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
@@ -196,7 +196,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // confirm with Mike. If we have to show multiple entries with institute name
       // remove this staffUserIds logic and add institute name in the oject
       const staffUserIds: Array<string> = [];
-      let staffMembers: any = staff.data.listStaffs.items;
+      let staffMembers: any = staff.data.listStaff.items;
       staffMembers = staffMembers.filter((member: any) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);

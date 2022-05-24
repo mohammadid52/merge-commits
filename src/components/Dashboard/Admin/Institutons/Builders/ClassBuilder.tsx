@@ -142,7 +142,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           limit: 300,
         })
       );
-      const sortedList = list.data.listPersons.items.sort((a: any, b: any) =>
+      const sortedList = list.data.listPeople.items.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
       const personsList = Promise.all(
@@ -188,7 +188,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         limit: 300,
       })
     );
-    const students = result.data.listPersons.items;
+    const students = result.data.listPeople.items;
     const mappedStudents = students.map((item: any, i: any) => ({
       id: item.id,
       name: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -286,14 +286,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const checkUniqClassName = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
+        graphqlOperation(queries.listClasses, {
           filter: {
             institutionID: {eq: classData.instituteId},
             name: {eq: classData.name},
           },
         })
       );
-      return list.data.listClasss.items.length === 0 ? true : false;
+      return list.data.listClasses.items.length === 0 ? true : false;
     } catch {
       setMessages({
         show: true,

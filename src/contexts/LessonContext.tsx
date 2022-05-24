@@ -221,7 +221,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         })
       );
 
-      if (!studentData.data.listUniversalLessonStudentDatas) {
+      if (!studentData.data.listUniversalLessonStudentData) {
         const newStudentData: any = await API.graphql(
           graphqlOperation(mutations.createUniversalLessonStudentData, {
             input: {

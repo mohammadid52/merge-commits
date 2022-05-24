@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import differenceBy from 'lodash/differenceBy';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -15,15 +15,15 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import { getFilterORArray } from '../../../../../utilities/strings';
+import {getFilterORArray} from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { getImageFromS3 } from '../../../../../utilities/services';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {getImageFromS3} from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import {LessonEditDict} from '../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../utilities/functions';
 
 interface EditRoomProps {}
 
@@ -34,14 +34,14 @@ const EditRoom = (props: EditRoomProps) => {
   const initialData = {
     id: '',
     name: '',
-    institute: { id: '', name: '', value: '' },
-    teacher: { id: '', name: '', value: '' },
+    institute: {id: '', name: '', value: ''},
+    teacher: {id: '', name: '', value: ''},
     coTeachers: [{}],
-    classRoom: { id: '', name: '', value: '' },
-    curricular: { id: '', name: '', value: '' },
+    classRoom: {id: '', name: '', value: ''},
+    curricular: {id: '', name: '', value: ''},
     maxPersons: '',
   };
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
@@ -58,13 +58,13 @@ const EditRoom = (props: EditRoomProps) => {
   const [originalTeacher, setOriginalTeacher] = useState([]);
   const [coTeachersList, setCoTeachersList] = useState(teachersList);
   const [selectedCoTeachers, setSelectedCoTeachers] = useState<
-    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+    {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
 
-  const { BreadcrumsTitles, RoomEDITdict } = useDictionary(clientKey);
+  const {BreadcrumsTitles, RoomEDITdict} = useDictionary(clientKey);
 
   const params = useQuery();
   const breadCrumsList = [
@@ -127,7 +127,9 @@ const EditRoom = (props: EditRoomProps) => {
       },
     });
 
-    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    const filteredDefaultTeacher: object[] = teachersList.filter(
+      (coTeacher: any) => coTeacher.id !== id
+    );
     setUnsavedChanges(true);
     setCoTeachersList(filteredDefaultTeacher);
     setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
@@ -140,7 +142,7 @@ const EditRoom = (props: EditRoomProps) => {
 
     if (!selectedItem) {
       const selectedItem = coTeachersList.find((item) => item.id === id);
-      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+      updatedList = [...currentCoTeachers, {id, name, value, ...selectedItem}];
     } else {
       updatedList = currentCoTeachers.filter((item) => item.id !== id);
     }
@@ -168,10 +170,10 @@ const EditRoom = (props: EditRoomProps) => {
           name: name,
           value: val,
         },
-        teacher: { id: '', name: '', value: '' },
+        teacher: {id: '', name: '', value: ''},
         coTeachers: [{}],
-        classRoom: { id: '', name: '', value: '' },
-        curricular: { id: '', name: '', value: '' },
+        classRoom: {id: '', name: '', value: ''},
+        curricular: {id: '', name: '', value: ''},
       });
       setUnsavedChanges(true);
 
@@ -275,11 +277,11 @@ const EditRoom = (props: EditRoomProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        graphqlOperation(queries.listStaff, {
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -288,15 +290,23 @@ const EditRoom = (props: EditRoomProps) => {
         });
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) =>
-          a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
+          a.staffMember?.firstName?.toLowerCase() >
+          b.staffMember?.firstName?.toLowerCase()
+            ? 1
+            : -1
         );
         const filterByRole = sortedList.filter(
-          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+          (teacher: any) =>
+            teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
         );
         const staffList = filterByRole.map((item: any) => ({
           id: item.staffMember?.id,
-          name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
-          value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+          name: `${item.staffMember?.firstName || ''} ${
+            item.staffMember?.lastName || ''
+          }`,
+          value: `${item.staffMember?.firstName || ''} ${
+            item.staffMember?.lastName || ''
+          }`,
           email: item.staffMember?.email ? item.staffMember?.email : '',
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
           image: item.staffMember?.image,
@@ -304,7 +314,7 @@ const EditRoom = (props: EditRoomProps) => {
 
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
-        const filteredArray = staffList.filter((member: { id: string }) => {
+        const filteredArray = staffList.filter((member: {id: string}) => {
           const duplicate = uniqIDs.includes(member.id);
           uniqIDs.push(member.id);
           return !duplicate;
@@ -325,11 +335,11 @@ const EditRoom = (props: EditRoomProps) => {
     const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        graphqlOperation(queries.listClasses, {
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listClass = list.data.listClasss?.items;
+      const listClass = list.data.listClasses?.items;
       if (listClass.length === 0) {
         setMessages({
           show: true,
@@ -337,11 +347,14 @@ const EditRoom = (props: EditRoomProps) => {
           isError: true,
         });
       } else {
-        const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
+        const sortedList = listClass.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        );
         const filteredClassList = sortedList.filter((classItem: any) => {
           return (
             classItem?.institution.isServiceProvider === false ||
-            (classItem?.institution.isServiceProvider === true && classItem.institution.id === instId)
+            (classItem?.institution.isServiceProvider === true &&
+              classItem.institution.id === instId)
           );
         });
         const classList = filteredClassList.map((item: any, i: any) => ({
@@ -363,11 +376,11 @@ const EditRoom = (props: EditRoomProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        graphqlOperation(queries.listCurricula, {
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
+      const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
       const curricularList = sortedList.map((item: any, i: any) => ({
@@ -390,8 +403,8 @@ const EditRoom = (props: EditRoomProps) => {
       const list: any = await API.graphql(
         graphqlOperation(queries.listRooms, {
           filter: {
-            institutionID: { eq: roomData.institute.id },
-            name: { eq: roomData.name },
+            institutionID: {eq: roomData.institute.id},
+            name: {eq: roomData.name},
           },
         })
       );
@@ -477,7 +490,7 @@ const EditRoom = (props: EditRoomProps) => {
         };
 
         const addCurricular: any = await API.graphql(
-          graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput })
+          graphqlOperation(mutation.updateRoomCurriculum, {input: curricularInput})
         );
         setLoading(false);
         setMessages({
@@ -512,12 +525,16 @@ const EditRoom = (props: EditRoomProps) => {
           id: roomData.id,
           institutionID: roomData.institute.id,
           classID: roomData.classRoom.id,
-          teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id).authId,
-          teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
+          teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id)
+            .authId,
+          teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id)
+            .email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
         };
-        const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
+        const newRoom: any = await API.graphql(
+          graphqlOperation(mutation.updateRoom, {input: input})
+        );
 
         const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
         await saveRoomTeachers(roomData.id);
@@ -564,7 +581,9 @@ const EditRoom = (props: EditRoomProps) => {
     if (newItems.length > 0) {
       await Promise.all(
         newItems.map(async (teacher) => {
-          await API.graphql(graphqlOperation(customMutations.createRoomCoTeachers, { input: teacher }));
+          await API.graphql(
+            graphqlOperation(customMutations.createRoomCoTeachers, {input: teacher})
+          );
         })
       );
     }
@@ -575,7 +594,9 @@ const EditRoom = (props: EditRoomProps) => {
           const input = {
             id: id,
           };
-          await API.graphql(graphqlOperation(mutation.deleteRoomCoTeachers, { input: input }));
+          await API.graphql(
+            graphqlOperation(mutation.deleteRoomCoTeachers, {input: input})
+          );
         })
       );
     }
@@ -598,7 +619,9 @@ const EditRoom = (props: EditRoomProps) => {
     const currID = params.get('id');
     if (currID) {
       try {
-        const result: any = await API.graphql(graphqlOperation(customQueries.getRoom, { id: currID }));
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getRoom, {id: currID})
+        );
         const savedData = result.data.getRoom;
         const curricularId = savedData.curricula.items[0].curriculumID;
 
@@ -635,8 +658,12 @@ const EditRoom = (props: EditRoomProps) => {
           },
           teacher: {
             id: savedData.teacher?.id,
-            name: `${savedData.teacher?.firstName || ''} ${savedData.teacher?.lastName || ''}`,
-            value: `${savedData.teacher?.firstName || ''} ${savedData.teacher?.lastName || ''}`,
+            name: `${savedData.teacher?.firstName || ''} ${
+              savedData.teacher?.lastName || ''
+            }`,
+            value: `${savedData.teacher?.firstName || ''} ${
+              savedData.teacher?.lastName || ''
+            }`,
           },
           classRoom: {
             id: savedData.class?.id,
@@ -688,17 +715,31 @@ const EditRoom = (props: EditRoomProps) => {
     getInstitutionList();
   }, []);
 
-  const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
+  const {name, curricular, classRoom, maxPersons, institute, teacher} = roomData;
 
   return (
     <div className="">
       {/* Section Header */}
-      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
+      <BreadCrums
+        unsavedChanges={unsavedChanges}
+        toggleModal={toggleModal}
+        items={breadCrumsList}
+      />
       <div className="flex justify-between">
-        <SectionTitle title={RoomEDITdict[userLanguage]['TITLE']} subtitle={RoomEDITdict[userLanguage]['SUBTITLE']} />
-        {params.get('from') ? <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
-        </div> : null}
+        <SectionTitle
+          title={RoomEDITdict[userLanguage]['TITLE']}
+          subtitle={RoomEDITdict[userLanguage]['SUBTITLE']}
+        />
+        {params.get('from') ? (
+          <div className="flex justify-end py-4 mb-4 w-5/10">
+            <Buttons
+              label="Go Back"
+              btnClass="mr-4"
+              onClick={goBack}
+              Icon={IoArrowUndoCircleOutline}
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Body section */}
@@ -734,7 +775,8 @@ const EditRoom = (props: EditRoomProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomEDITdict[userLanguage]['TEACHER_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['TEACHER_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <SelectorWithAvatar
                   selectedItem={teacher}
@@ -757,7 +799,8 @@ const EditRoom = (props: EditRoomProps) => {
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Selector
                   selectedItem={classRoom.value}
@@ -779,7 +822,8 @@ const EditRoom = (props: EditRoomProps) => {
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"
@@ -818,7 +862,12 @@ const EditRoom = (props: EditRoomProps) => {
           />
         </div>
         {warnModal.show && (
-          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
+          <ModalPopUp
+            closeAction={toggleModal}
+            saveAction={onModalSave}
+            saveLabel="Yes"
+            message={warnModal.message}
+          />
         )}
       </PageWrapper>
     </div>

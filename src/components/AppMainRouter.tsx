@@ -103,7 +103,7 @@ const MainRouter: React.FC = () => {
             lastLoggedIn: userInfo.lastLoggedIn,
             lastLoggedOut: userInfo.lastLoggedOut,
             associateInstitute:
-              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
           },

@@ -99,23 +99,22 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const listNoticeboardWidgets = async () => {
     setLoading(true);
     try {
-      const noticeboardWidgetsFetch: any = await API.graphql(
-        graphqlOperation(queries.listNoticeboardWidgets, {
-          filter: {roomID: {eq: activeRoom}},
-        })
-      );
-      const response = await noticeboardWidgetsFetch;
-      const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-      setWidgetData(arrayOfResponseObjects);
-
-      // dispatch to context to show widsgets in noticeboard-admin
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'widgets',
-          data: arrayOfResponseObjects,
-        },
-      });
+      // const noticeboardWidgetsFetch: any = await API.graphql(
+      //   graphqlOperation(queries.listNoticeboardWidgets, {
+      //     filter: {roomID: {eq: activeRoom}},
+      //   })
+      // );
+      // const response = await noticeboardWidgetsFetch;
+      // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+      // setWidgetData(arrayOfResponseObjects);
+      // // dispatch to context to show widsgets in noticeboard-admin
+      // dispatch({
+      //   type: 'UPDATE_ROOM',
+      //   payload: {
+      //     property: 'widgets',
+      //     data: arrayOfResponseObjects,
+      //   },
+      // });
     } catch (e) {
       console.error('listNoticeboardWidgetsFetch: -> ', e);
     } finally {
@@ -349,11 +348,11 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       type: newWidgetData.type,
     };
     try {
-      const noticeboardWidgetUpdate: any = await API.graphql(
-        graphqlOperation(mutations.updateNoticeboardWidget, {
-          input: input,
-        })
-      );
+      // const noticeboardWidgetUpdate: any = await API.graphql(
+      //   graphqlOperation(mutations.updateNoticeboardWidget, {
+      //     input: input,
+      //   })
+      // );
     } catch (e) {
       console.error('noticeboardWidgetUpdate: widget: ', e);
     } finally {
@@ -373,11 +372,11 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       roomID: activeRoom,
     };
     try {
-      const noticeboardWidgetCreate: any = await API.graphql(
-        graphqlOperation(mutations.createNoticeboardWidget, {
-          input: input,
-        })
-      );
+      // const noticeboardWidgetCreate: any = await API.graphql(
+      //   graphqlOperation(mutations.createNoticeboardWidget, {
+      //     input: input,
+      //   })
+      // );
     } catch (e) {
       console.error('noticeboardWidgetCreate: widget: ', e);
     } finally {
@@ -394,11 +393,11 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     };
 
     try {
-      const noticeboardWidgetDelete: any = await API.graphql(
-        graphqlOperation(mutations.deleteNoticeboardWidget, {
-          input: input,
-        })
-      );
+      // const noticeboardWidgetDelete: any = await API.graphql(
+      //   graphqlOperation(mutations.deleteNoticeboardWidget, {
+      //     input: input,
+      //   })
+      // );
     } catch (e) {
       console.error('error deleting widget, -> ', e);
     } finally {

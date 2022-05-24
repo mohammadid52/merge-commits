@@ -172,7 +172,7 @@ const Registration = ({
         })
       );
       setGroups(
-        list?.data?.listClassroomGroupss.items?.map((item: any) => ({
+        list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
           id: item.id,
         }))

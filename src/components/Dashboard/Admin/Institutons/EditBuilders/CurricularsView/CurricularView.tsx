@@ -242,7 +242,7 @@ const CurricularView = (props: CurricularViewProps) => {
         filter: {...createFilterToFetchSpecificItemsOnly(designersId, 'id')},
       })
     );
-    const personsData = result.data.listPersons.items.map((person: any) => {
+    const personsData = result.data.listPeople.items.map((person: any) => {
       const name = `${person.firstName || ''} ${person.lastName || ''}`;
       return name;
     });
