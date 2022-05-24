@@ -11,7 +11,7 @@ import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import { GlobalContext } from '@contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 interface ICoursePartnerProps {
   roomData: any;
@@ -53,7 +53,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
           },
         })
       );
-      setClassRoomGroups(list?.data?.listClassroomGroupss.items);
+      setClassRoomGroups(list?.data?.listClassroomGroups.items);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -130,7 +130,9 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
 
   const redirectToUserPage = (studentId: string) => {
     history.push(
-      isSuperAdmin ? `/dashboard/manage-institutions/users/${studentId}` : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/users/${studentId}`
+        : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
     );
   };
 

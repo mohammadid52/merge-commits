@@ -100,7 +100,7 @@ const LessonCourse = ({
       let selectedSyllabus: any = [];
       addedSyllabus.map((item) => {
         selectedSyllabus.push({
-          ...result.data?.listUniversalSyllabuss.items.find(
+          ...result.data?.listUniversalSyllabi.items.find(
             (unit: any) => item?.syllabusID === unit?.id
           ),
           id: item?.id,
@@ -109,7 +109,7 @@ const LessonCourse = ({
       });
       const addedSyllabusIds = addedSyllabus.map((item) => item.syllabusID);
       setUnits(
-        result.data?.listUniversalSyllabuss.items.filter(
+        result.data?.listUniversalSyllabi.items.filter(
           (unit: any) => !addedSyllabusIds.includes(unit?.id)
         )
       );
@@ -139,7 +139,7 @@ const LessonCourse = ({
         });
 
       setAssignedUnits(updatedList);
-      setAllUnits(result.data?.listUniversalSyllabuss.items);
+      setAllUnits(result.data?.listUniversalSyllabi.items);
       setAssignedUnitsLoading(false);
     } catch (error) {
       setAssignedUnitsLoading(false);

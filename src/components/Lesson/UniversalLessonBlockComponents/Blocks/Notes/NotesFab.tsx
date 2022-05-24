@@ -400,12 +400,12 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       };
 
       const notesData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalDatas, {
+        graphqlOperation(queries.listUniversalJournalData, {
           filter: {...listFilter.filter, type: {eq: 'class-note'}},
         })
       );
 
-      const notesDataRows = notesData.data.listUniversalJournalDatas.items;
+      const notesDataRows = notesData.data.listUniversalJournalData.items;
 
       const notesFormIndex = findIndex(notesDataRows, (d: any) =>
         d.entryData[0].domID.includes('notes_form')

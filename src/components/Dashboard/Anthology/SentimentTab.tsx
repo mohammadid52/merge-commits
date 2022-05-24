@@ -148,7 +148,7 @@ const SentimentTab = () => {
         graphqlOperation(customQueries.listPersonSentimentss, payload)
       );
 
-      const temp = res.data.listPersonSentimentss?.items.map((record: any) => ({
+      const temp = res.data.listPersonSentiments?.items.map((record: any) => ({
         ...record,
         personAuthID: record.personAuthID,
         personEmail: record.personEmail,
@@ -172,7 +172,7 @@ const SentimentTab = () => {
         }
       }
 
-      setNextToken(res.data.listPersonSentimentss.nextToken);
+      setNextToken(res.data.listPersonSentiments.nextToken);
     } catch (error) {
       console.error(error);
     } finally {

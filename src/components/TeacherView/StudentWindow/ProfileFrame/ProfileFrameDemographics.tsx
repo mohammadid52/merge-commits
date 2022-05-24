@@ -203,7 +203,7 @@ const ProfileFrameDemographics = ({
     const results: any = await API.graphql(
       graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
     );
-    const questionData: any = results.data.listQuestionDatas?.items;
+    const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
   };
 

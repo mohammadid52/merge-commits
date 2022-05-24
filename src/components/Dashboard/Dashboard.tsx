@@ -254,7 +254,7 @@ const Dashboard = (props: DashboardProps) => {
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = [
         ...response?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map(
           (item: any) => ({
             ...item,
             ...item.room,
@@ -360,7 +360,7 @@ const Dashboard = (props: DashboardProps) => {
       //@ts-ignore
       const arrayOfResponseObjects = [
         ...classIdFromRoomsFetch?.data?.listRooms?.items,
-        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map(
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map(
           (item: any) => ({
             ...item,
             ...item.room,
@@ -407,7 +407,7 @@ const Dashboard = (props: DashboardProps) => {
 
         // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
         const roomCurriculumsFetch = await API.graphql(
-          graphqlOperation(queries.listRoomCurriculums, {
+          graphqlOperation(queries.listRoomCurricula, {
             filter: {
               roomID: {eq: state.activeRoom},
             },
@@ -416,7 +416,7 @@ const Dashboard = (props: DashboardProps) => {
         console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
         const response = await roomCurriculumsFetch;
         // @ts-ignore
-        const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+        const arrayOfResponseObjects = response?.data?.listRoomCurricula?.items;
 
         if (arrayOfResponseObjects.length > 0) {
           setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);

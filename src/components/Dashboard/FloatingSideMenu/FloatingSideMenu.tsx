@@ -152,9 +152,9 @@ const FloatingSideMenu = () => {
       };
 
       const notesData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
-      const notesDataRows = notesData.data.listUniversalJournalDatas.items;
+      const notesDataRows = notesData.data.listUniversalJournalData.items;
 
       const notesFormIndex = findIndex(
         notesDataRows,

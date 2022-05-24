@@ -526,7 +526,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         const onDrop = async () => {
           closeLessonAction();
           const result: any = await API.graphql(
-            graphqlOperation(mutations.deleteSyllabusLesson, {
+            graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
               input: {id: item.uniqlessonId},
             })
           );

@@ -23,7 +23,7 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {partInput} from 'API';
+import {PartInput} from 'API';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
@@ -242,7 +242,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   const filterExtraQuestions = (initialDataFlattened: any[], surveyData: any[]) => {
     //@ts-ignore
     const extraQuestionsArray = initialDataFlattened.reduce(
-      (extraQuestions: any[], question: partInput) => {
+      (extraQuestions: any[], question: PartInput) => {
         const findInStudentDataRecords = surveyData.find(
           //@ts-ignore
           (data: partInput) => data.domID === question.domID
@@ -315,13 +315,13 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     if (filterObj) {
       try {
         let surveyData: any = await API.graphql(
-          graphqlOperation(queries.listUniversalSurveyStudentDatas, {
+          graphqlOperation(queries.listUniversalSurveyStudentData, {
             ...filterObj,
             nextToken: nextToken,
           })
         );
-        let surveyDataRow = surveyData.data.listUniversalSurveyStudentDatas.items[0];
-        let theNextToken = surveyData.data.listUniversalSurveyStudentDatas?.nextToken;
+        let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items[0];
+        let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
         if (surveyDataRow && theNextToken) {
           console.log('nextToken fetching more - ', nextToken);

@@ -172,7 +172,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           limit: 500,
         })
       );
-      students = students.data.listPersons.items;
+      students = students.data.listPeople.items;
       students = students.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -207,7 +207,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         },
       })
     );
-    const students = result.data.listPersons.items;
+    const students = result.data.listPeople.items;
     const mappedStudents = students.map((item: any, i: any) => ({
       id: item.id,
       name: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -238,7 +238,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         })
       );
       setGroups(
-        list?.data?.listClassroomGroupss.items?.map((item: any) => ({
+        list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
           id: item.id,
         }))

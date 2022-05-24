@@ -44,9 +44,9 @@ const CommanCommunityContent = ({
         limit: 12,
       };
       const res: any = await API.graphql(
-        graphqlOperation(queries.listCommunitys, payload)
+        graphqlOperation(queries.listCommunities, payload)
       );
-      const data = res.data.listCommunitys.items;
+      const data = res.data.listCommunities.items;
       if (data.length > 0) {
         const orderedList = orderBy(data, ['createdAt'], 'desc');
         setCommonList([...orderedList]);

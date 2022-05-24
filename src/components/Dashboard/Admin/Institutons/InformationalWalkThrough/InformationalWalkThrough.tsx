@@ -587,7 +587,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         try {
           if (instId) {
             const result: any = await API.graphql(
-              graphqlOperation(queries.listStaffs, {
+              graphqlOperation(queries.listStaff, {
                 filter: {
                   or: [
                     {
@@ -601,7 +601,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               redirectToSelectedSection(redirectionUrl, replaceObject);
             }
             return {
-              staff: result.data.listStaffs.items.filter(
+              staff: result.data.listStaff.items.filter(
                 (member: any) => member.staffMember.role === 'TR'
               ),
             };
@@ -737,13 +737,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         try {
           if (instId) {
             let universalSyllabus: any = await API.graphql(
-              graphqlOperation(queries.listUniversalSyllabuss, {
+              graphqlOperation(queries.listUniversalSyllabi, {
                 filter: {
                   institutionID: {eq: instId},
                 },
               })
             );
-            universalSyllabus = universalSyllabus?.data?.listUniversalSyllabuss?.items;
+            universalSyllabus = universalSyllabus?.data?.listUniversalSyllabi?.items;
             if (redirectionUrl) {
               if (universalSyllabus?.length) {
                 redirectToSelectedSection(redirectionUrl, {

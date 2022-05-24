@@ -277,11 +277,11 @@ const EditRoom = (props: EditRoomProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -335,11 +335,11 @@ const EditRoom = (props: EditRoomProps) => {
     const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listClasss, {
+        graphqlOperation(queries.listClasses, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listClass = list.data.listClasss?.items;
+      const listClass = list.data.listClasses?.items;
       if (listClass.length === 0) {
         setMessages({
           show: true,
@@ -376,11 +376,11 @@ const EditRoom = (props: EditRoomProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
+        graphqlOperation(queries.listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
+      const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
       const curricularList = sortedList.map((item: any, i: any) => ({
@@ -619,7 +619,6 @@ const EditRoom = (props: EditRoomProps) => {
     const currID = params.get('id');
     if (currID) {
       try {
-        console.log('called from EditRoom.tsx');
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getRoom, {id: currID})
         );

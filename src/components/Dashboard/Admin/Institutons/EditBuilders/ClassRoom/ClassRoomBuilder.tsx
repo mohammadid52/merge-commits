@@ -92,11 +92,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
@@ -147,11 +147,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
+        graphqlOperation(queries.listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
+      const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
       const curricularList = sortedList.map((item: any, i: any) => ({
