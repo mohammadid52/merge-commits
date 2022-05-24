@@ -80,7 +80,7 @@ export const UnitList = ({instId}: any) => {
         })
       );
 
-      const updatedList = getUpdatedList(result.data?.listUniversalSyllabuss.items);
+      const updatedList = getUpdatedList(result.data?.listUniversalSyllabi.items);
 
       setUnits(updatedList);
       setAllUnits(updatedList);

@@ -302,7 +302,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           })
         ),
       ]);
-      const sortedDesignersList: any = personsList?.data?.listPersons?.items?.map(
+      const sortedDesignersList: any = personsList?.data?.listPeople?.items?.map(
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,

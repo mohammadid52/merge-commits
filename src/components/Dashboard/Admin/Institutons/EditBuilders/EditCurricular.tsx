@@ -207,7 +207,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
         })
       );
-      const savedData = result.data.listPersons;
+      const savedData = result.data.listPeople;
       const updatedList = savedData?.items.map(
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
@@ -301,14 +301,14 @@ const EditCurricular = (props: EditCurricularProps) => {
   const checkUniqCurricularName = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
+        graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: curricularData.institute.id},
             name: {eq: curricularData.name},
           },
         })
       );
-      return list.data.listCurriculums.items.length === 0 ? true : false;
+      return list.data.listCurricula.items.length === 0 ? true : false;
     } catch {
       setMessages({
         show: true,
@@ -464,7 +464,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     setShowCropper(!showCropper);
   };
 
-  const saveCroppedImage = async (image: string) => {
+  const saveCroppedImage = async (image: any) => {
     setImageLoading(true);
     toggleCropper();
     setS3Image(image ? image : fileObj);

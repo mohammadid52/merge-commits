@@ -257,7 +257,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
       })
     );
-    const savedData = result.data.listPersons;
+    const savedData = result.data.listPeople;
     const updatedList = savedData?.items.map(
       (item: {id: string; firstName: string; lastName: string}) => ({
         id: item?.id,

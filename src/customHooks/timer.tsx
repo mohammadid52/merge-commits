@@ -4,7 +4,7 @@ import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {getLocalStorageData} from '../utilities/localStorage';
-import {partInput} from 'API';
+import {PartInput} from 'API';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);

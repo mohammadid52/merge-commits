@@ -200,8 +200,8 @@ const LessonControl = () => {
             nextToken: nextToken,
           })
         );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+        let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
 
         /**
          * combination of last fetch results

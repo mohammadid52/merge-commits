@@ -258,14 +258,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const checkUniqCurricularName = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
+        graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: curricularData.institute.id},
             name: {eq: curricularData.name},
           },
         })
       );
-      return list.data.listCurriculums.items.length === 0 ? true : false;
+      return list.data.listCurricula.items.length === 0 ? true : false;
     } catch {
       setMessages({
         show: true,
@@ -313,7 +313,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     setShowCropper(!showCropper);
   };
 
-  const saveCroppedImage = async (image: string) => {
+  const saveCroppedImage = async (image: any) => {
     setImageLoading(true);
     toggleCropper();
     setS3Image(image ? image : fileObj);
