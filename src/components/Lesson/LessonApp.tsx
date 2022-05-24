@@ -542,7 +542,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     outArray: any[]
   ): Promise<any> => {
     let combined;
-    // setLessonDataLoaded(false);
+    setLessonDataLoaded(false);
     try {
       let studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
@@ -564,7 +564,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
       // console.log('no more - ', combined);
-      // setLessonDataLoaded(true);
+      setLessonDataLoaded(true);
       return combined;
     } catch (e) {
       console.error('loopFetchStudentData - ', e);
