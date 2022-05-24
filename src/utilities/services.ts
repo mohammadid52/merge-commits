@@ -1,6 +1,6 @@
 // import AWS from 'aws-sdk';
 import Storage from '@aws-amplify/storage';
-import awsconfig from '../aws-exports2';
+import awsconfig from '../aws-exports';
 
 // ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //
 const {CognitoIdentityClient} = require('@aws-sdk/client-cognito-identity');

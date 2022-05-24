@@ -55,7 +55,7 @@ export const getCorrectUrl = (clientKey: string) => {
  * @returns
  */
 
-import * as awsconfig2 from '../aws-exports2';
+import * as awsconfig2 from '../aws-exports';
 
 export const getBackendKey = (input: any) => {
   console.log('input', input);
