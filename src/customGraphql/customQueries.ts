@@ -4182,11 +4182,21 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
           id
           type
           typeID
-          checkpointID
-          createdAt
-          updatedAt
+          checkpoint {
+            id
+            questions {
+              items {
+                id
+                question {
+                  id
+                  label
+                  type
+                  question
+                }
+              }
+            }
+          }
         }
-        nextToken
       }
       universalSyllabus {
         items {
