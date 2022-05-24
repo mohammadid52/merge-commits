@@ -1,9 +1,6 @@
 enum Language {
   EN
   ES
-  VT
-  TR
-  CZ
 }
 
 enum PersonStatus {
@@ -24,16 +21,12 @@ enum Role {
 }
 
 #Person - App users table.
-type Person
-  @model
-  @key(fields: ["email", "authId"])
-  @key(name: "byUserId", fields: ["id"], queryField: "userById")
-  @key(name: "byRole", fields: ["role"], queryField: "usersByRole") {
-  id: ID!
+type Person @model @auth(rules: [{allow: public}]) {
+  id: ID! @index(name: "byUserId", queryField: "userById")
   authId: String!
   status: PersonStatus!
-  email: String!
-  role: Role!
+  email: String! @primaryKey(sortKeyFields: ["authId"])
+  role: Role! @index(name: "byRole", queryField: "usersByRole")
   type: String
   firstName: String!
   preferredName: String
@@ -52,14 +45,14 @@ type Person
   onDemand: Boolean
   sentiments: [String]
   passcode: String
-  classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
+  classes: [ClassStudent] @hasMany(indexName: "classByStudent", fields: ["email"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
   addedby: String
 }
 
-type Institution @model @key(fields: ["id"]) {
-  id: ID!
+type Institution @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   name: String!
   type: String!
   district: String
@@ -73,42 +66,38 @@ type Institution @model @key(fields: ["id"]) {
   image: String
   isServiceProvider: Boolean
   serviceProviders: [ServiceProvider]
-    @connection(keyName: "providersByPartner", fields: ["id"])
-  staff: [Staff] @connection(keyName: "staffByInstitution", fields: ["id"])
-  rooms: [Room] @connection(keyName: "roomByInstitution", fields: ["id"])
-  curricula: [Curriculum] @connection(keyName: "curriculumByInstitution", fields: ["id"])
-  classes: [Class] @connection(keyName: "classByInstitution", fields: ["id"])
+    @hasMany(indexName: "providersByPartner", fields: ["id"])
+  staff: [Staff] @hasMany(indexName: "staffByInstitution", fields: ["id"])
+  rooms: [Room] @hasMany(indexName: "roomByInstitution", fields: ["id"])
+  curricula: [Curriculum] @hasMany(indexName: "curriculumByInstitution", fields: ["id"])
+  classes: [Class] @hasMany(indexName: "classByInstitution", fields: ["id"])
   filters: [String]
-  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
+  checkpoints: [commonCheckpoint] @hasMany(indexName: "byType", fields: ["id"])
   setupComplete: Boolean
 }
 
-type ServiceProvider
-  @model(queries: null)
-  @key(name: "providersByPartner", fields: ["partnerID", "providerID"]) {
+type ServiceProvider @model(queries: null) @auth(rules: [{allow: public}]) {
   id: ID!
-  partnerID: ID!
+  partnerID: ID! @index(name: "providersByPartner", sortKeyFields: ["providerID"])
   providerID: ID!
   status: String
-  providerInstitution: Institution @connection(fields: ["providerID"])
+  providerInstitution: Institution @hasOne(fields: ["providerID"])
 }
 
-type Staff
-  @model
-  @key(name: "staffByInstitution", fields: ["institutionID", "staffEmail"]) {
+type Staff @model @auth(rules: [{allow: public}]) {
   id: ID!
-  institutionID: ID!
+  institutionID: ID! @index(name: "staffByInstitution", sortKeyFields: ["staffEmail"])
   staffAuthID: String!
   staffEmail: String!
   status: String
   statusChangeDate: AWSDate
-  staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
-  institution: Institution @connection(fields: ["institutionID"])
+  staffMember: Person @hasOne(fields: ["staffEmail", "staffAuthID"])
+  institution: Institution @belongsTo(fields: ["institutionID"])
 }
 
-type Room @model @key(name: "roomByInstitution", fields: ["institutionID"]) {
+type Room @model @auth(rules: [{allow: public}]) {
   id: ID!
-  institutionID: ID!
+  institutionID: ID! @index(name: "roomByInstitution")
   classID: ID
   teacherAuthID: String!
   teacherEmail: String!
@@ -125,11 +114,11 @@ type Room @model @key(name: "roomByInstitution", fields: ["institutionID"]) {
   notes: String
   activeSyllabus: String
   frequency: String
-  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
-  institution: Institution @connection(fields: ["institutionID"])
-  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
-  class: Class @connection(fields: ["classID"])
-  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  coTeachers: [RoomCoTeachers] @hasMany(indexName: "byRoom", fields: ["id"])
+  institution: Institution @belongsTo(fields: ["institutionID"])
+  teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @hasOne(fields: ["classID"])
+  curricula: [RoomCurriculum] @hasMany(indexName: "curriculumByRoom", fields: ["id"])
   activeLessonId: String
   ClosedPages: [String]
   disabledPages: [String]
@@ -139,7 +128,7 @@ type Room @model @key(name: "roomByInstitution", fields: ["institutionID"]) {
   completedLessons: [CompleteLesson]
   activeLessons: [String]
   classroomGroups: [ClassroomGroups]
-    @connection(keyName: "groupsByClassroom", fields: ["id"])
+    @hasMany(indexName: "groupsByClassroom", fields: ["id"])
   weekDay: String
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
@@ -152,31 +141,29 @@ type StudentSharing {
   lessonPageID: String
 }
 
-type ClassroomGroupStudents
-  @model
-  @key(name: "studentsByCRgroup", fields: ["classRoomGroupID"]) {
+type ClassroomGroupStudents @model @auth(rules: [{allow: public}]) {
   id: ID!
-  classRoomGroupID: ID!
-  classRoomGroup: ClassroomGroups @connection(fields: ["classRoomGroupID"])
+  classRoomGroupID: ID! @index(name: "studentsByCRgroup")
+  classRoomGroup: ClassroomGroups @belongsTo(fields: ["classRoomGroupID"])
   studentEmail: String!
   studentAuthId: String!
-  student: Person @connection(fields: ["studentEmail", "studentAuthId"])
+  student: Person @hasOne(fields: ["studentEmail", "studentAuthId"])
   studentType: String
   studentNote: String
 }
 
-type ClassroomGroups @model @key(name: "groupsByClassroom", fields: ["classRoomID"]) {
+type ClassroomGroups @model @auth(rules: [{allow: public}]) {
   id: ID!
-  classRoomID: ID!
-  classRoom: Room @connection(fields: ["classRoomID"])
+  classRoomID: ID! @index(name: "groupsByClassroom")
+  classRoom: Room @belongsTo(fields: ["classRoomID"])
   groupName: String
   groupType: String
   advisorEmail: String!
   advisorAuthId: String!
-  groupAdvisor: Person @connection(fields: ["advisorEmail", "advisorAuthId"])
+  groupAdvisor: Person @hasOne(fields: ["advisorEmail", "advisorAuthId"])
   groupLocation: String
   classroomGroupsStudents: [ClassroomGroupStudents]
-    @connection(keyName: "studentsByCRgroup", fields: ["id"])
+    @hasMany(indexName: "studentsByCRgroup", fields: ["id"])
 }
 
 type ImpactLogEntry {
@@ -201,48 +188,42 @@ type CompleteLesson {
   time: AWSDateTime
 }
 
-type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
+type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   id: ID!
-  roomID: ID!
+  roomID: ID! @index(name: "byRoom", sortKeyFields: ["teacherID"])
   teacherID: ID!
   teacherEmail: String!
   teacherAuthID: String!
-  room: Room @connection(fields: ["roomID"])
-  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  room: Room @belongsTo(fields: ["roomID"])
+  teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Class @model @key(name: "classByInstitution", fields: ["institutionID"]) {
+type Class @model @auth(rules: [{allow: public}]) {
   id: ID!
-  institutionID: ID!
+  institutionID: ID! @index(name: "classByInstitution")
   type: String
   name: String!
   roomId: ID!
-  institution: Institution @connection(fields: ["institutionID"])
-  room: Room @connection(fields: ["roomId"])
-  students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
+  institution: Institution @belongsTo(fields: ["institutionID"])
+  room: Room @hasOne(fields: ["roomId"])
+  students: [ClassStudent]! @hasMany(indexName: "byClass", fields: ["id"])
 }
 
-type ClassStudent
-  @model
-  @key(name: "byClass", fields: ["classID", "studentID"])
-  @key(name: "classByStudent", fields: ["studentEmail"]) {
+type ClassStudent @model @auth(rules: [{allow: public}]) {
   id: ID!
-  classID: ID!
+  classID: ID! @index(name: "byClass", sortKeyFields: ["studentID"])
   studentID: ID!
-  studentEmail: String!
+  studentEmail: String! @index(name: "classByStudent")
   studentAuthID: String!
   status: String
   group: String
-  class: Class @connection(fields: ["classID"])
-  student: Person @connection(fields: ["studentEmail", "studentAuthID"])
+  class: Class @belongsTo(fields: ["classID"])
+  student: Person @belongsTo(fields: ["studentEmail", "studentAuthID"])
 }
 
-type Curriculum
-  @model
-  @key(fields: ["id"])
-  @key(name: "curriculumByInstitution", fields: ["institutionID"]) {
-  id: ID!
-  institutionID: ID!
+type Curriculum @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  institutionID: ID! @index(name: "curriculumByInstitution")
   name: String!
   type: String
   image: String
@@ -250,25 +231,21 @@ type Curriculum
   description: String
   objectives: [String]
   languages: [Language]
-  institution: Institution @connection(fields: ["institutionID"])
+  institution: Institution @belongsTo(fields: ["institutionID"])
   designers: [String]
-  syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
   universalSyllabusSeq: [String]
-  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
+  checkpoints: [commonCheckpoint] @hasMany(indexName: "byType", fields: ["id"])
   universalSyllabus: [curriculumUnits]
-    @connection(keyName: "unitsbyCurriculum", fields: ["id"])
+    @hasMany(indexName: "unitsbyCurriculum", fields: ["id"])
   syllabiHistory: [String]
 }
 
-type Topic
-  @model
-  @key(fields: ["id"])
-  @key(name: "topicByCurriculum", fields: ["curriculumID"]) {
-  id: ID!
-  curriculumID: ID!
+type Topic @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  curriculumID: ID! @index(name: "topicByCurriculum")
   learningObjectiveID: ID!
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
-  learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
+  curriculum: Curriculum @hasOne(fields: ["curriculumID"])
+  learningObjective: LearningObjective @hasOne(fields: ["learningObjectiveID"])
   name: String!
   description: String
   distinguished: String
@@ -277,119 +254,37 @@ type Topic
   basic: String
 }
 
-type CSequences @key(fields: ["id"]) @model {
-  id: ID!
+type CSequences @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   sequence: [String]
 }
 
-type LearningObjective @model @key(fields: ["id"]) {
-  id: ID!
+type LearningObjective @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   name: String!
   description: String
   curriculumID: ID!
 }
 
-type Rubric @model @key(fields: ["id"]) {
-  id: ID!
+type Rubric @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   name: String
   criteria: String
   topicID: ID!
-  topic: Topic @connection(fields: ["topicID"])
+  topic: Topic @hasOne(fields: ["topicID"])
   curriculumID: ID!
 }
 
-type RoomCurriculum @model @key(name: "curriculumByRoom", fields: ["roomID"]) {
+type RoomCurriculum @model @auth(rules: [{allow: public}]) {
   id: ID!
-  roomID: ID!
+  roomID: ID! @index(name: "curriculumByRoom")
   curriculumID: ID!
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
-}
-
-type DataObject {
-  name: String!
-  data: String!
+  curriculum: Curriculum @hasOne(fields: ["curriculumID"])
 }
 
 type AdditionalInputs {
   name: String
   input: String
-}
-
-type TruthGameInputs {
-  id: String
-  label: String
-  isLie: Boolean
-  text: String
-}
-
-type PollOption {
-  id: String
-  option: String
-  isChoice: Boolean
-}
-type PollInputs {
-  id: String
-  question: String
-  option: [PollOption]
-}
-
-type AdventureNodeOptions {
-  id: String
-  text: String
-  nextText: String
-}
-
-type AdventureGameInputs {
-  id: String
-  text: String
-  options: [AdventureNodeOptions]
-}
-
-type WarmUpData {
-  story: [String]
-  title: String
-  additional: [AdditionalInputs]
-  truthGame: [TruthGameInputs]
-  poll: [PollInputs]
-  adventureGame: [AdventureGameInputs]
-}
-
-type SelectedWord {
-  id: Int
-  text: String
-}
-
-type Selection {
-  anchor: String
-  color: String
-  content: [SelectedWord]
-  focus: String
-  id: Int
-}
-
-type RawSelection {
-  color: String
-  selected: [String]
-}
-
-type CoreLessonData {
-  selected: [Selection]
-  rawSelected: [RawSelection]
-  selectGroup: Int
-}
-
-type LineInput {
-  example: String
-  id: Int
-  menuOpen: Boolean
-  text: String
-}
-
-type ActivityData {
-  editInput: String
-  editMode: Boolean
-  lines: [LineInput]
-  title: String
 }
 
 type ComponentSummary {
@@ -402,24 +297,6 @@ type ComponentSummary {
   displayMode: String
 }
 
-type Quote {
-  id: String
-  source: String
-  text: String!
-}
-
-type Link {
-  id: String
-  type: String
-  text: String
-  link: String
-}
-
-type AdditionalContent {
-  video: String
-  links: [Link]
-}
-
 type StudentInfo {
   id: String
   firstName: String
@@ -430,62 +307,9 @@ type StudentInfo {
 type DisplayData {
   breakdownComponent: String
   studentInfo: StudentInfo
-  warmUpData: WarmUpData
-  corelessonData: CoreLessonData
-  activityData: ActivityData
 }
 
-type Instructions {
-  video: Boolean!
-  link: String
-  text: [String!]!
-}
-
-type Breakdown {
-  included: Boolean!
-  reflectionQuestions: [String]
-}
-
-type TruthGameInput {
-  id: String
-  label: String
-}
-
-type Inputs {
-  title: Boolean!
-  example: String
-  titleExample: String
-  textExample: String
-  listInputNumber: Int
-  truthGameInputs: [TruthGameInput]
-  additionalInputs: [WritingPrompts!]
-  pollInputs: [PollInputs]
-  adventureGameInputs: [AdventureGameInputs]
-}
-
-type WritingPrompts {
-  id: Int
-  name: String!
-  prompt: String!
-  example: String!
-}
-
-type Content {
-  video: Boolean!
-  link: String
-  title: String!
-  artist: String!
-  text: [String!]!
-}
-
-type Tool {
-  id: String
-  name: String!
-  color: String!
-  icon: String!
-}
-
-type Checkpoint @model {
+type Checkpoint @model @auth(rules: [{allow: public}]) {
   id: ID!
   label: String!
   title: String
@@ -494,7 +318,7 @@ type Checkpoint @model {
   type: String!
   instructionsTitle: String
   instructions: String
-  questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
+  questions: [CheckpointQuestions]! @hasMany(indexName: "byCheckpoint", fields: ["id"])
   purpose: String
   objectives: String
   designers: [String]
@@ -504,28 +328,22 @@ type Checkpoint @model {
   questionSeq: [String]
 }
 
-type commonCheckpoint
-  @model(queries: null)
-  @key(name: "byType", fields: ["typeID", "checkpointID"]) {
+type commonCheckpoint @model(queries: null) @auth(rules: [{allow: public}]) {
   id: ID!
   type: String!
-  typeID: ID!
+  typeID: ID! @index(name: "byType", sortKeyFields: ["checkpointID"])
   checkpointID: ID!
-  institution: Institution @connection(fields: ["typeID"])
-  curriculum: Curriculum @connection(fields: ["typeID"])
-  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+  curriculum: Curriculum @belongsTo(fields: ["typeID"])
+  checkpoint: Checkpoint @hasOne(fields: ["checkpointID"])
 }
 
-type CheckpointQuestions
-  @model(queries: null)
-  @key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
-  @key(name: "byQuestion", fields: ["questionID", "checkpointID"]) {
+type CheckpointQuestions @model(queries: null) @auth(rules: [{allow: public}]) {
   id: ID!
-  checkpointID: ID!
-  questionID: ID!
+  checkpointID: ID! @index(name: "byCheckpoint", sortKeyFields: ["questionID"])
+  questionID: ID! @index(name: "byQuestion", sortKeyFields: ["checkpointID"])
   required: Boolean!
-  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
-  question: Question @connection(fields: ["questionID"])
+  checkpoint: Checkpoint @belongsTo(fields: ["checkpointID"])
+  question: Question @hasOne(fields: ["questionID"])
 }
 
 type Option {
@@ -535,7 +353,7 @@ type Option {
   color: String
 }
 
-type Question @model {
+type Question @model @auth(rules: [{allow: public}]) {
   id: ID!
   label: String!
   type: String!
@@ -548,12 +366,12 @@ type Question @model {
   published: Boolean
 }
 
-type QuestionSource @model {
+type QuestionSource @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
 }
 
-type QuestionType @model {
+type QuestionType @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
 }
@@ -564,134 +382,33 @@ type QuestionResponse {
   otherResponse: String
 }
 
-type RoomMsgs
-  @model
-  @key(
-    name: "byRoomID"
-    fields: ["roomID", "createdAt"]
-    queryField: "messagesByRoomID"
-  ) {
+type RoomMsgs @model @auth(rules: [{allow: public}]) {
   id: ID!
   roomID: ID!
+    @index(name: "byRoomID", sortKeyFields: ["createdAt"], queryField: "messagesByRoomID")
   senderAuthID: String!
   senderEmail: String!
   body: String!
   createdAt: AWSDateTime
-  sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
+  sender: Person @hasOne(fields: ["senderEmail", "senderAuthID"])
 }
 
-type Lesson @model @key(fields: ["id"]) {
-  id: ID!
-  title: String!
-  type: String!
-  label: String
-  instructions: [String]
-  instructionsTitle: String
-  theme: Theme
-  grades: [Int]
-  artistID: ID
-  language: [Language!]
-  SELStructure: String
-  connection: String
-  summary: String
-  purpose: String
-  designers: [String]
-  objectives: [String]
-  doFirstID: ID
-  warmUpId: ID
-  coreLessonId: ID
-  activityId: ID
-  filters: [String]
-  coverImage: String
-  summaryTitle: String
-  introductionTitle: String
-  introduction: String
-  connectionTitle: String
-  lessonPlan: [LessonComponents]
-  measurements: [LessonRubrics]! @connection(keyName: "byLesson", fields: ["id"])
-  institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
-  duration: Int
-  resources: String
-  notes: String
-  targetAudience: String
-}
-
-type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
-  id: ID!
-  lessonID: ID!
-  rubricID: ID!
-  lesson: Lesson @connection(fields: ["lessonID"])
-  rubric: Rubric @connection(fields: ["rubricID"])
-}
-
-type LessonComponents {
-  type: String
-  LessonComponentID: ID!
-  sequence: Int
-  stage: String
-}
-
-type Syllabus
-  @model
-  @key(fields: ["id"])
-  @key(name: "syllabusByCurriculum", fields: ["curriculumID"]) {
-  id: ID!
-  name: String!
-  type: String
-  description: String
-  methodology: String
-  policies: String
-  pupose: String
-  objectives: String
-  curriculumID: ID!
-  languages: [Language]
-  lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
-  designers: [String]
-  status: Boolean
-}
-
-type SyllabusLesson
-  @model
-  @key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"]) {
-  id: ID!
-  syllabusID: ID!
-  lessonID: ID!
-  unit: String
-  sequence: Int
-  status: String
-  lesson: Lesson @connection(fields: ["lessonID"])
-  complete: Boolean
-  roster: [String!]
-  viewing: String
-  displayData: DisplayData
-  lessonPlan: [ComponentSummary!]
-  startDate: AWSDate
-  endDate: AWSDate
-  data: [StudentData] @connection(keyName: "bySyllabusLesson", fields: ["id"])
-}
-
-type StudentData
-  @model(subscriptions: null)
-  @key(fields: ["syllabusLessonID", "studentID"])
-  @key(name: "bySyllabusLesson", fields: ["syllabusLessonID", "studentID"]) {
+type StudentData @model(subscriptions: null) @auth(rules: [{allow: public}]) {
   id: ID!
   lessonProgress: String!
   currentLocation: String
   status: String!
   saveType: String
   syllabusLessonID: ID!
-  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
+    @primaryKey(sortKeyFields: ["studentID"])
+    @index(name: "bySyllabusLesson", sortKeyFields: ["studentID"])
   studentID: String!
   studentAuthID: String!
-  student: Person! @connection(fields: ["studentID", "studentAuthID"])
-  warmupData: WarmUpData
-  corelessonData: CoreLessonData
-  activityData: ActivityData
+  student: Person! @hasOne(fields: ["studentID", "studentAuthID"])
   doFirstData: [QuestionDataStudentData]!
-    @connection(name: "byStudentData", fields: ["id"])
+    @hasMany(indexName: "byStudentData", fields: ["id"])
   checkpointData: [QuestionDataStudentData]!
-    @connection(name: "byStudentData", fields: ["id"])
+    @hasMany(indexName: "byStudentData", fields: ["id"])
   anthologyContent: [AnthologyContent]
 }
 
@@ -707,12 +424,12 @@ type AnthologyContent {
   edited: Boolean
 }
 
-type AnthologyComment @model {
+type AnthologyComment @model @auth(rules: [{allow: public}]) {
   id: ID!
   text: String
   email: String!
   authID: String!
-  person: Person @connection(fields: ["email", "authID"])
+  person: Person @hasOne(fields: ["email", "authID"])
   attachments: [Attachment]
   edited: Boolean
   createdAt: AWSDateTime
@@ -726,28 +443,25 @@ type Attachment {
   size: Int
 }
 
-type QuestionData @model {
+type QuestionData @model @auth(rules: [{allow: public}]) {
   id: ID!
   syllabusLessonID: ID!
   checkpointID: ID!
   email: String!
   authID: String!
-  person: Person @connection(fields: ["email", "authID"])
+  person: Person @hasOne(fields: ["email", "authID"])
   componentType: String
   scheduleID: String
   lessonID: String
   responseObject: [QuestionResponse]
-  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
 
-type QuestionDataStudentData
-  @model(queries: null)
-  @key(name: "byStudentData", fields: ["studentDataID", "questionDataID"]) {
+type QuestionDataStudentData @model(queries: null) @auth(rules: [{allow: public}]) {
   id: ID!
-  studentDataID: ID!
-  studentData: StudentData @connection(fields: ["studentDataID"])
+  studentDataID: ID! @index(name: "byStudentData", sortKeyFields: ["questionDataID"])
+  studentData: StudentData
   questionDataID: ID!
-  questionData: QuestionData @connection(fields: ["questionDataID"])
+  questionData: QuestionData @hasOne(fields: ["questionDataID"])
 }
 
 type Theme {
@@ -755,41 +469,22 @@ type Theme {
   name: String!
   summary: [String!]!
   summaryLabel: String!
-  quote: [Quote]
   connection: String
   images: [String!]!
-  additionalContent: AdditionalContent
 }
 
-type PersonLocation
-  @model
-  @key(fields: ["personEmail", "personAuthID"])
-  @key(
-    name: "bySyllabusLesson"
-    fields: ["syllabusLessonID"]
-    queryField: "personLocationBySyllabusLesson"
-  ) {
+type PersonLocation @model @auth(rules: [{allow: public}]) {
   id: ID!
   personAuthID: String!
-  personEmail: String!
+  personEmail: String! @primaryKey(sortKeyFields: ["personAuthID"])
   syllabusLessonID: ID!
+    @index(name: "bySyllabusLesson", queryField: "personLocationBySyllabusLesson")
   lessonID: ID!
   roomID: ID!
   currentLocation: String
   lessonProgress: String
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
-  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
-  room: Room @connection(fields: ["roomID"])
-}
-
-type WidgetContent {
-  text: String
-  image: String
-}
-
-type Quotes {
-  text: String
-  author: String
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
+  room: Room @hasOne(fields: ["roomID"])
 }
 
 type Links {
@@ -797,31 +492,10 @@ type Links {
   url: String
 }
 
-type NoticeboardWidget @model {
-  id: ID!
-  teacherAuthID: String!
-  teacherEmail: String!
-  roomID: String
-  type: String
-  placement: String
-  title: String
-  description: String
-  content: WidgetContent
-  quotes: [Quotes]
-  links: [Links]
-  active: Boolean
-  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
-}
-
-type Attendance
-  @model
-  @key(
-    name: "byStudent"
-    fields: ["studentID", "date"]
-    queryField: "attendanceByStudent"
-  ) {
+type Attendance @model @auth(rules: [{allow: public}]) {
   id: ID!
   studentID: ID!
+    @index(name: "byStudent", sortKeyFields: ["date"], queryField: "attendanceByStudent")
   curriculumID: ID!
   syllabusID: ID!
   lessonID: ID!
@@ -829,34 +503,21 @@ type Attendance
   date: AWSDate
   time: AWSTime
   isComplete: Boolean
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
-  syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
-  lesson: UniversalLesson @connection(fields: ["lessonID"])
-  room: Room @connection(fields: ["roomID"])
-}
-
-type Planner @model {
-  id: ID!
-  type: String
-  lessonID: ID
-  lessonName: String
-  syllabusID: ID
-  roomID: ID
-  description: String
-  startDate: AWSDate
-  endDate: AWSDate
-  duration: Int
+  curriculum: Curriculum @hasOne(fields: ["curriculumID"])
+  syllabus: UniversalSyllabus @hasOne(fields: ["syllabusID"])
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
+  room: Room @hasOne(fields: ["roomID"])
 }
 
 # Universal lesson tables ----------------------------------------------
 
-type UniversalLesson @model @key(fields: ["id"]) {
-  id: ID!
+type UniversalLesson @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   type: String!
   label: String
   title: String!
   institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
+  institution: Institution @hasOne(fields: ["institutionID"])
   language: [Language!]
   designers: [String]
   objectives: [String]
@@ -941,12 +602,10 @@ type UniversalContentOptions {
   text: String
 }
 
-type UniversalLessonStudentData
-  @model
-  @key(fields: ["id"])
-  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-  id: ID!
+type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   syllabusLessonID: ID!
+    @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
   lessonPageID: ID!
   studentID: ID!
@@ -955,17 +614,15 @@ type UniversalLessonStudentData
   roomID: String
   currentLocation: String
   lessonProgress: String
-  pageData: [partInput]
+  pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
 }
 
-type UniversalLessonWritingExcercises
-  @model
-  @key(fields: ["id"])
-  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-  id: ID!
+type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   syllabusLessonID: ID!
+    @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
   lessonPageID: ID!
   studentID: ID!
@@ -974,17 +631,15 @@ type UniversalLessonWritingExcercises
   roomID: String
   currentLocation: String
   lessonProgress: String
-  pageData: [partInput]
+  pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
 }
 
-type UniversalArchiveData
-  @model
-  @key(fields: ["id"])
-  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-  id: ID!
+type UniversalArchiveData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   syllabusLessonID: ID!
+    @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
   lessonPageID: ID!
   studentID: ID!
@@ -993,17 +648,15 @@ type UniversalArchiveData
   roomID: String
   currentLocation: String
   lessonProgress: String
-  pageData: [partInput]
+  pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
 }
 
-type UniversalSurveyStudentData
-  @model
-  @key(fields: ["id"])
-  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-  id: ID!
+type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   syllabusLessonID: ID!
+    @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
   studentID: ID!
   studentAuthID: ID!
@@ -1011,7 +664,7 @@ type UniversalSurveyStudentData
   roomID: String
   currentLocation: String
   lessonProgress: String
-  surveyData: [partInput]
+  surveyData: [PartInput]
 }
 type ExerciseData {
   id: String!
@@ -1020,8 +673,8 @@ type ExerciseData {
   shared: Boolean
 }
 
-type UniversalJournalData @model @key(fields: ["id"]) {
-  id: ID!
+type UniversalJournalData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   studentID: ID!
   studentAuthID: ID!
   studentEmail: String!
@@ -1043,10 +696,10 @@ type JournalEntryData {
 
 type StudentPageInput {
   pagePartID: String
-  pagePartInput: [partInput]
+  pagePartInput: [PartInput]
 }
 
-type partInput {
+type PartInput {
   domID: String
   options: [String]
   input: [String]
@@ -1058,12 +711,12 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus @model @key(fields: ["id"]) {
-  id: ID!
+type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   name: String!
   type: String
   institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
+  institution: Institution @hasOne(fields: ["institutionID"])
   description: String
   methodology: String
   policies: String
@@ -1071,7 +724,7 @@ type UniversalSyllabus @model @key(fields: ["id"]) {
   objectives: String
   languages: [Language]
   lessons: [UniversalSyllabusLesson]
-    @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+    @hasMany(indexName: "UniversalLessonsBySyllabus", fields: ["id"])
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
@@ -1079,21 +732,17 @@ type UniversalSyllabus @model @key(fields: ["id"]) {
   lessonHistory: [String]
 }
 
-type curriculumUnits
-  @model
-  @key(name: "unitsbyCurriculum", fields: ["curriculumId", "unitId"]) {
+type curriculumUnits @model @auth(rules: [{allow: public}]) {
   id: ID!
   unitId: ID!
-  unit: UniversalSyllabus @connection(fields: ["unitId"])
-  curriculumId: ID!
+  unit: UniversalSyllabus @hasOne(fields: ["unitId"])
+  curriculumId: ID! @index(name: "unitsbyCurriculum", sortKeyFields: ["unitId"])
 }
 
 # Need to add universalStudentData field
-type UniversalSyllabusLesson
-  @model
-  @key(name: "UniversalLessonsBySyllabus", fields: ["syllabusID", "lessonID"]) {
+type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
   id: ID!
-  syllabusID: ID!
+  syllabusID: ID! @index(name: "UniversalLessonsBySyllabus", sortKeyFields: ["lessonID"])
   lessonID: ID!
   unit: String
   sequence: Int
@@ -1101,100 +750,99 @@ type UniversalSyllabusLesson
   complete: Boolean
   roster: [String!]
   viewing: String
-  lesson: UniversalLesson @connection(fields: ["lessonID"])
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   displayData: DisplayData
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
   endDate: AWSDate
-  feedback: [UniversalLessonFeedback] @connection(fields: ["id"])
+  feedback: [UniversalLessonFeedback] @hasMany(fields: ["id"])
 }
 
-type UniversalLessonFeedback @model {
+type UniversalLessonFeedback @model @auth(rules: [{allow: public}]) {
   id: ID!
   syllabusLessonID: ID!
   liked: String
   comment: String
-  syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
+  syllabusLesson: UniversalSyllabusLesson @hasOne(fields: ["syllabusLessonID"])
 }
 
-type StudentConnections @model {
+type StudentConnections @model @auth(rules: [{allow: public}]) {
   fromEmail: String!
   fromAuthID: String!
   toEmail: String!
   toAuthID: String!
   remarks: String
-  fromStudent: Person @connection(fields: ["fromEmail", "fromAuthID"])
-  toStudent: Person @connection(fields: ["toEmail", "toAuthID"])
+  fromStudent: Person @hasOne(fields: ["fromEmail", "fromAuthID"])
+  toStudent: Person @hasOne(fields: ["toEmail", "toAuthID"])
 }
 
-type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
-  personAuthID: String!
+type PersonSentiments @model @auth(rules: [{allow: public}]) {
+  personAuthID: String! @primaryKey(sortKeyFields: ["date"])
   personEmail: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   date: AWSDate!
   time: AWSTime!
   responseText: String
   backstory: String
 }
 
-type Sentiments @model {
+type Sentiments @model @auth(rules: [{allow: public}]) {
   id: ID!
   sentimentName: String!
   sentimentType: String!
 }
 
-type SentimentTracker @model @key(fields: ["personAuthID", "date"]) {
-  personAuthID: String!
+type SentimentTracker @model @auth(rules: [{allow: public}]) {
+  personAuthID: String! @primaryKey(sortKeyFields: ["date"])
   personEmail: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   sentimentId: ID!
-  sentiment: Sentiments @connection(fields: ["sentimentId"])
+  sentiment: Sentiments @hasOne(fields: ["sentimentId"])
   classRoomID: ID!
-  classRoom: Room @connection(fields: ["classRoomID"])
+  classRoom: Room @hasOne(fields: ["classRoomID"])
   syllabusLessonID: ID!
-  syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
+  syllabusLesson: UniversalSyllabusLesson @hasOne(fields: ["syllabusLessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: String!
   sentimentType: String!
 }
 
-type FeelingTracker @model @key(fields: ["personAuthID", "date"]) {
+type FeelingTracker @model @auth(rules: [{allow: public}]) {
   id: ID!
-  personAuthID: String!
+  personAuthID: String! @primaryKey(sortKeyFields: ["date"])
   personEmail: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   sentimentId: ID!
-  sentiment: Sentiments @connection(fields: ["sentimentId"])
+  sentiment: Sentiments @hasOne(fields: ["sentimentId"])
   classRoomID: ID!
-  classRoom: Room @connection(fields: ["classRoomID"])
+  classRoom: Room @hasOne(fields: ["classRoomID"])
   lessonID: ID!
-  lesson: Lesson @connection(fields: ["lessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: String!
   sentimentType: String!
 }
 
-type FeelingsArchive @model @key(fields: ["id"]) {
-  id: ID!
+type FeelingsArchive @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   personAuthID: String!
   personEmail: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   sentimentId: ID!
-  sentiment: [Sentiments] @connection(fields: ["sentimentId"])
+  sentiment: [Sentiments] @hasMany(fields: ["sentimentId"])
   classRoomID: ID!
-  classRoom: Room @connection(fields: ["classRoomID"])
+  classRoom: Room @hasOne(fields: ["classRoomID"])
   lessonID: ID!
-  lesson: UniversalLesson @connection(fields: ["lessonID"])
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   date: AWSDate!
   time: AWSTime!
   sentimentName: [String!]
   comments: String
 }
 
-type PersonFiles @model @key(fields: ["id"]) {
-  id: ID!
+type PersonFiles @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   personAuthID: String!
   personEmail: String!
   uploadedAt: AWSDateTime
@@ -1214,10 +862,10 @@ type File {
   fileSize: Int
 }
 
-type Community @model @key(fields: ["id"]) {
-  id: ID!
+type Community @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
+  institution: Institution @hasOne(fields: ["institutionID"])
   cardName: String
   cardType: String
   cardDate: AWSDate
@@ -1232,15 +880,15 @@ type Community @model @key(fields: ["id"]) {
   personAuthID: String!
   personEmail: String!
   isEditedCard: Boolean
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
-  chat: [CommunityChat] @connection(keyName: "chatByCommunity", fields: ["id"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
+  chat: [CommunityChat] @hasMany(indexName: "chatByCommunity", fields: ["id"])
   summaryHtml: String
   likes: [String]
   chatCount: Int
 }
 
-type GameChanger @model @key(fields: ["id"]) {
-  id: ID!
+type GameChanger @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   gameChangerName: String
   title: String
   objective: String
@@ -1249,20 +897,20 @@ type GameChanger @model @key(fields: ["id"]) {
   likes: [String]
 }
 
-type GameChangerLog @model @key(fields: ["id"]) {
-  id: ID!
+type GameChangerLog @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
   gameChangerID: ID!
-  gameChanger: GameChanger @connection(fields: ["gameChangerID"])
+  gameChanger: GameChanger @hasOne(fields: ["gameChangerID"])
   personEmail: String!
   personAuthID: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   startTime: AWSDate
   endTime: AWSDate
 }
 
-type CommunityChat @model @key(name: "chatByCommunity", fields: ["communityId"]) {
+type CommunityChat @model @auth(rules: [{allow: public}]) {
   id: ID!
-  communityId: ID!
+  communityId: ID! @index(name: "chatByCommunity")
   personAuthID: String!
   personEmail: String!
   msg: String
@@ -1286,8 +934,6 @@ type Subscription {
   ): PersonLocation @aws_subscribe(mutations: ["deletePersonLocation"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
-  onChangeSyllabusLesson(id: ID!): SyllabusLesson
-    @aws_subscribe(mutations: ["updateSyllabusLesson"])
   onChangeUniversalLessonStudentData(
     syllabusLessonID: ID!
     lessonID: ID!
@@ -1321,8 +967,6 @@ input DeleteLessonRubricsInput {
 
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
-  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
-  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
 
-# asdfasdfsd8
+# asdfasdfsd9
