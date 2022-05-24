@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import StageIcon from './StageIcon';
 import {
   StudentPageInput,
@@ -7,6 +7,9 @@ import {
 import {AiOutlineHome} from 'react-icons/ai';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {useRouteMatch} from 'react-router';
+import useLessonControls from '@customHooks/lessonControls';
 
 interface IProgressBarProps {
   handleHome?: () => void;
@@ -16,6 +19,14 @@ interface IProgressBarProps {
   studentData?: any[];
   requiredInputs?: any[];
 }
+
+const Disabled = ({text}: {text: string}) => {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
+      <p className="text-center font-bold text-sm">text</p>
+    </div>
+  );
+};
 
 const ProgressBar = ({
   handleHome,
@@ -28,6 +39,8 @@ const ProgressBar = ({
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const user = gContext.state.user;
+
+  const getRoomData = getLocalStorageData('room_info');
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
@@ -116,16 +129,38 @@ const ProgressBar = ({
   const isOnDemand = user.onDemand;
   const isTeacherPresenting = lessonState.displayData[0].isTeacher === true;
 
+  const router: any = useRouteMatch();
+  const lessonId = router.params.lessonID || '999';
+
+  const isClosedLocalStorage =
+    getRoomData.completedLessons.findIndex(
+      (item: {lessonID?: string | null; time?: string | null}) =>
+        item.lessonID === lessonId
+    ) > -1;
+
+  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
+
+  const {resetViewAndShare} = useLessonControls();
+  const reset = async () => {
+    await resetViewAndShare();
+  };
+
+  useEffect(() => {
+    // reset displayData
+    if (!isClosedLocalStorage && isClosed) {
+      reset();
+    }
+  }, [isClosed, isClosedLocalStorage]);
+
   return (
     <nav
       className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
       aria-label="Breadcrumb">
       {isTeacherPresenting && !isOnDemand && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
-          <p className="text-center font-bold text-sm">
-            Disabled when teacher is presenting!
-          </p>
-        </div>
+        <Disabled text={'Disabled when teacher is presenting!'} />
+      )}
+      {isClosed && isClosedLocalStorage && (
+        <Disabled text={'Disabled when lesson/survey is closed'} />
       )}
       <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
         {/* 1 */}

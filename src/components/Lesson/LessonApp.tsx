@@ -9,16 +9,15 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
-import {nanoid} from 'nanoid';
 import {
   PagePart,
   PartContent,
   PartContentSub,
   StudentExerciseData,
   StudentPageInput,
+  UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData,
-  UniversalJournalData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -28,8 +27,6 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {tableCleanupUrl} from '@utilities/urls';
-import axios from 'axios';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -86,6 +83,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     ).subscribe({
       next: (roomData: any) => {
         const updatedRoomData = roomData.value.data.onChangeRoom;
+
         setSubscriptionData(updatedRoomData);
       },
     });
@@ -544,7 +542,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     outArray: any[]
   ): Promise<any> => {
     let combined;
-    setLessonDataLoaded(false);
+    // setLessonDataLoaded(false);
     try {
       let studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
@@ -566,7 +564,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
       // console.log('no more - ', combined);
-      setLessonDataLoaded(true);
+      // setLessonDataLoaded(true);
       return combined;
     } catch (e) {
       console.error('loopFetchStudentData - ', e);

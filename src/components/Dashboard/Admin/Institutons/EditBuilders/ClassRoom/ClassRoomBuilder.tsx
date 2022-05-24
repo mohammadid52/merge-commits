@@ -207,6 +207,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
+          console.log('called from ClassRoomBuilder.tsx');
+
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
@@ -373,7 +375,9 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
           onClick={() =>
             history.push(
-              isSuperAdmin ? `/dashboard/manage-institutions/class-rooms` : `/dashboard/manage-institutions/institution/${instId}/class-rooms`
+              isSuperAdmin
+                ? `/dashboard/manage-institutions/class-rooms`
+                : `/dashboard/manage-institutions/institution/${instId}/class-rooms`
             )
           }>
           <span className="w-auto mr-2">

@@ -678,6 +678,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
+          console.log('called from ClassRoomForm.tsx');
+
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );

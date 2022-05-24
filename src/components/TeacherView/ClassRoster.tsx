@@ -69,6 +69,7 @@ const ClassRoster = ({
       if (deleteSubscription) {
         deleteSubscription.unsubscribe();
       }
+
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},

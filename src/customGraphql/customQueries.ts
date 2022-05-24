@@ -229,6 +229,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
+        completedLessons {
+          lessonID
+          time
+        }
         disabledPages
         studentViewing
         displayData {
@@ -274,6 +278,10 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          completedLessons {
+            lessonID
+            time
+          }
           disabledPages
           studentViewing
           currentPage
@@ -1554,8 +1562,8 @@ export const listSyllabusLessons = /* GraphQL */ `
 `;
 
 export const listAllSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons {
-    listSyllabusLessons {
+  query ListUniversalSyllabusLessons {
+    listUniversalSyllabusLessons {
       nextToken
       items {
         id
@@ -3786,8 +3794,8 @@ export const listQuestionDatas = /* GraphQL */ `
 `;
 
 export const getCompleteLesson = /* GraphQL */ `
-  query GetLesson($id: ID!) {
-    getLesson(id: $id) {
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
       id
       title
       type
@@ -4015,12 +4023,12 @@ export const getChatRooms = /* GraphQL */ `
   }
 `;
 export const listFilteredSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons(
+  query ListUniversalSyllabusLessons(
     $filter: ModelSyllabusLessonFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID
@@ -4721,6 +4729,10 @@ export const getScheduleDetails = /* GraphQL */ `
       endTime
       frequency
       weekDay
+      completedLessons {
+        lessonID
+        time
+      }
       lessonImpactLog {
         impactDate
         reasonComment
@@ -4882,6 +4894,24 @@ export const listRoomsBasicDetails = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listRoomsCompletedLessons = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
         createdAt
         updatedAt
       }
