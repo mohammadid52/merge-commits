@@ -285,7 +285,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
             },
           })
         );
-        authIds = staff.data?.listStaffs.items.map((staff: any) => staff.staffAuthID);
+        authIds = staff.data?.listStaff.items.map((staff: any) => staff.staffAuthID);
       }
 
       const authIdFilter: any = authIds.map((item: any) => {

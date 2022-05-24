@@ -267,7 +267,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
       let cCheckpoints: any = [];
-      // console.log('curricularCheckpoints', curricularCheckpoints)
+      console.log('curricularCheckpoints', curricularCheckpoints);
       curricularCheckpoints.map((cc: any) => {
         cCheckpoints.push(cc.checkpoint.id);
         let questions = cc.checkpoint?.questions?.items || [];
