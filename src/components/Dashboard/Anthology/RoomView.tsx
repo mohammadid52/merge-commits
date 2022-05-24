@@ -82,7 +82,6 @@ const RoomView = ({
           setFilteredRooms(responseArray);
         })
         .then((_: void) => {
-          console.log('loaded');
           setLoaded(true);
         });
     } catch (e) {
@@ -131,7 +130,6 @@ const RoomView = ({
         ? getImageURL(curricula?.items[0]?.image)
         : null);
       const curriculumName = curricula?.items[0]?.name;
-      console.log('curricula - ', curricula);
 
       return (
         <RoomViewCard

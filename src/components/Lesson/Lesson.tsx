@@ -1,16 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react';
-import LessonApp from './LessonApp';
-import Noticebar from '@components/Noticebar/Noticebar';
-import useNotifications from '@customHooks/notifications';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
-import {setLocalStorageData} from '@utilities/localStorage';
+import Noticebar from '@components/Noticebar/Noticebar';
 import {GlobalContext} from '@contexts/GlobalContext';
-import SurveyApp from './SurveyApp';
+import useNotifications from '@customHooks/notifications';
+import {setLocalStorageData} from '@utilities/localStorage';
+import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
+import * as customQueries from '../../customGraphql/customQueries';
+import LessonApp from './LessonApp';
+import SurveyApp from './SurveyApp';
 
 export interface ILessonSurveyApp {
   getSyllabusLesson: (lessonID?: string) => Promise<void>;

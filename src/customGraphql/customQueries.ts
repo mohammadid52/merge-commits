@@ -229,6 +229,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         }
         activeLessonId
         ClosedPages
+        completedLessons {
+          lessonID
+          time
+        }
         disabledPages
         studentViewing
         displayData {
@@ -274,6 +278,10 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
           frequency
           activeLessonId
           ClosedPages
+          completedLessons {
+            lessonID
+            time
+          }
           disabledPages
           studentViewing
           currentPage
@@ -4122,46 +4130,77 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
       id
+      institutionID
+      name
+      type
+      image
+      summary
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
+      designers
+      universalSyllabusSeq
       checkpoints {
         items {
           id
           type
           typeID
-          checkpoint {
-            id
-            questions {
-              items {
-                id
-                question {
-                  id
-                  label
-                  type
-                  question
-                }
-              }
-            }
-          }
-        }
-      }
-      syllabi {
-        items {
-          id
-          name
-          type
+          checkpointID
+          createdAt
+          updatedAt
         }
         nextToken
       }
       universalSyllabus {
         items {
           id
-          unit {
-            name
-            type
-            universalLessonsSeq
-          }
+          unitId
+          curriculumId
+          createdAt
+          updatedAt
         }
         nextToken
       }
+      syllabiHistory
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -4721,6 +4760,10 @@ export const getScheduleDetails = /* GraphQL */ `
       endTime
       frequency
       weekDay
+      completedLessons {
+        lessonID
+        time
+      }
       lessonImpactLog {
         impactDate
         reasonComment
@@ -4882,6 +4925,24 @@ export const listRoomsBasicDetails = /* GraphQL */ `
           lessonImpact
           adjustment
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listRoomsCompletedLessons = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
         createdAt
         updatedAt
       }

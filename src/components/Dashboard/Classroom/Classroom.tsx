@@ -112,6 +112,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     syllabusLoading,
     handleRoomSelection,
   } = props;
+
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //

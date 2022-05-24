@@ -24,7 +24,7 @@ import moment, {Moment} from 'moment';
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -88,15 +88,13 @@ const Dashboard = (props: DashboardProps) => {
   const clientKey = gContext.clientKey;
 
   const {updateAuthState} = props;
-  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
-  const getRoomData = getLocalStorageData('room_info');
   const {notifications} = useNotifications('global');
 
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
@@ -644,8 +642,20 @@ const Dashboard = (props: DashboardProps) => {
         let scheduleDetails: any = await API.graphql(
           graphqlOperation(customQueries.getScheduleDetails, {id: activeRoomInfo.id})
         );
+
         scheduleDetails = scheduleDetails?.data?.getRoom;
 
+        // if (activeRoomInfo) {
+        //   setLessonLoading(false);
+        //   const updatedRoomInfo = {
+        //     ...activeRoomInfo,
+        //     completedLessons: [...scheduleDetails.completedLessons],
+        //   };
+
+        //   setLocalStorageData('room_info', updatedRoomInfo);
+        //   setActiveRoomInfo(updatedRoomInfo);
+        //   setLessonLoading(false);
+        // }
         if (
           scheduleDetails &&
           scheduleDetails.startDate &&
@@ -676,7 +686,6 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
 
   const listSyllabusLessons = async (syllabusID: string) => {
-    setLessonLoading(true);
     dispatch({
       type: 'UPDATE_ROOM',
       payload: {
@@ -690,6 +699,7 @@ const Dashboard = (props: DashboardProps) => {
      */
 
     try {
+      setLessonLoading(true);
       const syllabusLessonFetch = await API.graphql(
         graphqlOperation(customQueries.getUniversalSyllabus, {
           id: syllabusID,
@@ -945,7 +955,7 @@ const Dashboard = (props: DashboardProps) => {
                       visibleLessonGroup={visibleLessonGroup}
                       setVisibleLessonGroup={setVisibleLessonGroup}
                       lessonLoading={lessonLoading}
-                      setLessonLoading={setLessonLoading}
+                      // setLessonLoading={setLessonLoading}
                       syllabusLoading={syllabusLoading}
                       setSyllabusLoading={setSyllabusLoading}
                     />

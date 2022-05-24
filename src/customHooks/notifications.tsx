@@ -105,10 +105,19 @@ const useLessonControlNotifications = () => {
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
   const isPresenting = lessonState.displayData[0].isTeacher === true;
   const studentIsViewed = lessonState.studentViewing !== '';
+  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
   const studentIsShared =
     lessonState.displayData &&
     lessonState.displayData[0].studentAuthID !== '' &&
-    lessonState.displayData[0].isTeacher === false;
+    !isClosed &&
+    !isPresenting;
+  const isLessonClosed = lessonState.displayData && isClosed && isPresenting;
+
+  const history = useHistory();
+
+  const goToDashboard = () => {
+    history.push('/dashboard');
+  };
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -122,6 +131,21 @@ const useLessonControlNotifications = () => {
       },
       action: () => {
         resetViewAndShare();
+      },
+      cancel: () => {
+        //
+      },
+    },
+    {
+      check: isLessonClosed,
+      notification: {
+        label: 'This lesson/survey is closed',
+        message: ``,
+        type: 'info',
+        cta: 'Go to dashboard',
+      },
+      action: () => {
+        goToDashboard();
       },
       cancel: () => {
         //
@@ -193,6 +217,11 @@ const useLessonNotifications = () => {
   const match = useRouteMatch();
   const getNavigationState = getSessionStorageData('navigation_state');
 
+  const navigateToHome = () => {
+    navigateCancel();
+    history.push('/');
+  };
+
   // ~~~~~~~~ FUNCTIONS - NAVIGATION ~~~~~~~ //
   const navigateAway = () => {
     setSessionStorageData('navigation_state', {
@@ -255,16 +284,26 @@ const useLessonNotifications = () => {
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //a
   const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const iAmViewed = lessonState.studentViewing === user.authId;
+  const isLessonPageID = lessonState.displayData[0].lessonPageID !== '';
   const iAmShared = lessonState.displayData[0].studentAuthID === user.authId;
+  const isClosed =
+    lessonState.displayData[0].studentAuthID === 'closed' && !isLessonPageID;
+
   const anyPageIsShared =
-    lessonState.displayData[0].lessonPageID !== '' &&
-    lessonState.displayData[0].isTeacher === false;
+    isLessonPageID && lessonState.displayData[0].isTeacher === false;
   const thisPageIsShared =
     lessonPlan &&
     !teacherIsPresenting &&
     lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage]?.id;
   const canNavigateBack =
     !anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
+
+  const goToDashboard = () => {
+    history.push('/dashboard');
+  };
+
+  // console.log('lessonState.isCompleted', lessonState.isCompleted);
+  // const isCompleted = false;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -278,6 +317,22 @@ const useLessonNotifications = () => {
       },
       action: () => {
         //
+      },
+      cancel: () => {
+        //
+      },
+    },
+    {
+      check: isClosed,
+      notification: {
+        label: 'Teacher has closed this lesson. Your poems are moved to notebook section',
+        message: null,
+        type: 'alert',
+
+        cta: 'Go to Notebook',
+      },
+      action: () => {
+        goToDashboard();
       },
       cancel: () => {
         //

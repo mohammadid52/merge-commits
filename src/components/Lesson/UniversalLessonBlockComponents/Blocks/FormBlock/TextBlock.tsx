@@ -8,7 +8,7 @@ import React, {useContext, useEffect} from 'react';
 
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
-  console.log('🚀 ~ file: TextBlock.tsx ~ line 11 ~ TextBlock ~ inputID', inputID);
+
   const {
     state: {
       user,

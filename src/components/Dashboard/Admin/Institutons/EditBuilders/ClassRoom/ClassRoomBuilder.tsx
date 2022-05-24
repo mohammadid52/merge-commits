@@ -207,6 +207,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
+          console.log('called from ClassRoomBuilder.tsx');
+
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
