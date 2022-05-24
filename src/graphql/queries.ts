@@ -6788,11 +6788,7 @@ export const usersByRole = /* GraphQL */ `
 `;
 export const messagesByRoomID = /* GraphQL */ `
   query MessagesByRoomID(
-<<<<<<< HEAD
-    $roomID: ID
-=======
     $roomID: ID!
->>>>>>> new-dev
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelRoomMsgsFilterInput
