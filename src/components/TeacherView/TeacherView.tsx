@@ -5,6 +5,7 @@ import LessonControl from './LessonControl';
 
 const TeacherView = () => {
   const {notifications} = useNotifications('lessonControl');
+
   return (
     <>
       <Noticebar notifications={notifications} />

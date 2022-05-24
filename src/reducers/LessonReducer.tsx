@@ -8,6 +8,36 @@ import {
 } from '../interfaces/UniversalLessonInterfaces';
 import {lessonStateType, lessonState as initialLessonState} from '../state/LessonState';
 
+const LESSON_REDUCER_TYPES = {
+  TEST: 'TEST',
+  SET_INITIAL_STATE: 'SET_INITIAL_STATE',
+  SET_UPDATE_STATE: 'SET_UPDATE_STATE',
+  SET_SUBSCRIBE_FUNCTION: 'SET_SUBSCRIBE_FUNCTION',
+  SET_SUBSCRIPTION: 'SET_SUBSCRIPTION',
+  SET_ROOM_SUBSCRIPTION_DATA: 'SET_ROOM_SUBSCRIPTION_DATA',
+  SET_LESSON_DATA: 'SET_LESSON_DATA',
+  SET_INITIAL_STUDENT_DATA: 'SET_INITIAL_STUDENT_DATA',
+  LOAD_STUDENT_DATA: 'LOAD_STUDENT_DATA',
+  LOAD_SURVEY_DATA: 'LOAD_SURVEY_DATA',
+  LOAD_STUDENT_SUBSCRIPTION_DATA: 'LOAD_STUDENT_SUBSCRIPTION_DATA',
+  LOAD_STUDENT_SHARE_DATA: 'LOAD_STUDENT_SHARE_DATA',
+  UPDATE_PERSON_LOCATION: 'UPDATE_PERSON_LOCATION',
+  UNLOAD_STUDENT_DATA: 'UNLOAD_STUDENT_DATA',
+  UNLOAD_STUDENT_SHARE_DATA: 'UNLOAD_STUDENT_SHARE_DATA',
+  SET_UPDATE_STATUS: 'SET_UPDATE_STATUS',
+  UPDATE_STUDENT_DATA: 'UPDATE_STUDENT_DATA',
+  UPDATE_SURVEY_DATA: 'UPDATE_SURVEY_DATA',
+  COMPLETE_STUDENT_UPDATE: 'COMPLETE_STUDENT_UPDATE',
+  SET_CURRENT_PAGE: 'SET_CURRENT_PAGE',
+  SET_CLOSED_PAGES: 'SET_CLOSED_PAGES',
+  TOGGLE_OPEN_PAGE: 'TOGGLE_OPEN_PAGE',
+  TOGGLE_CLOSE_PAGE: 'TOGGLE_CLOSE_PAGE',
+  INCREMENT_SAVE_COUNT: 'INCREMENT_SAVE_COUNT',
+  SET_LAST_PAGE: 'SET_LAST_PAGE',
+  CLEANUP: 'CLEANUP',
+  ADD_NEW_INPUT: 'ADD_NEW_INPUT',
+};
+
 export type LessonActions =
   | {
       type: 'TEST';
@@ -154,11 +184,15 @@ export type LessonActions =
   | {
       type: 'ADD_NEW_INPUT';
       payload?: any;
+    }
+  | {
+      type: 'SET_COMPLETED_LESSONS';
+      payload?: any;
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
-    case 'TEST':
+    case LESSON_REDUCER_TYPES.TEST:
       console.log('lessonReducer test...');
       break;
     case 'SET_INITIAL_STATE':
@@ -166,28 +200,29 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         universalLessonID: action.payload.universalLessonID,
       };
-    case 'SET_LAST_PAGE':
+
+    case LESSON_REDUCER_TYPES.SET_LAST_PAGE:
       return {
         ...state,
         isLastPage: action.payload,
       };
-    case 'SET_UPDATE_STATE':
+    case LESSON_REDUCER_TYPES.SET_UPDATE_STATE:
       return {
         ...state,
         updated: action.payload,
       };
-    case 'SET_SUBSCRIBE_FUNCTION':
+    case LESSON_REDUCER_TYPES.SET_SUBSCRIBE_FUNCTION:
       return {
         ...state,
         subscribeFunc: action.payload.subscribeFunc,
       };
-    case 'SET_SUBSCRIPTION':
+    case LESSON_REDUCER_TYPES.SET_SUBSCRIPTION:
       return {
         ...state,
         subscription: action.payload.subscription,
       };
-    case 'SET_ROOM_SUBSCRIPTION_DATA':
-      // console.log('SET_ROOM_SUBSCRIPTION_DATA - ', state.currentPage);
+    case LESSON_REDUCER_TYPES.SET_ROOM_SUBSCRIPTION_DATA:
+      console.log('SET_ROOM_SUBSCRIPTION_DATA - ', action.payload);
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
@@ -216,23 +251,23 @@ export const lessonReducer = (state: any, action: LessonActions) => {
             ? action.payload.studentViewing
             : state.studentViewing,
       };
-    case 'SET_LESSON_DATA':
+    case LESSON_REDUCER_TYPES.SET_LESSON_DATA:
       return {
         ...state,
         lessonData: action.payload,
       };
-    case 'SET_INITIAL_STUDENT_DATA':
+    case LESSON_REDUCER_TYPES.SET_INITIAL_STUDENT_DATA:
       const requiredInputs = action.payload.requiredInputs;
       const studentData = action.payload.studentData;
       const exerciseData = action.payload.exerciseData;
-      console.log('SET_INITIAL_STUDENT_DATA - ', action.payload);
+
       return {
         ...state,
         requiredInputs: requiredInputs,
         studentData: studentData,
         exerciseData: exerciseData,
       };
-    case 'ADD_NEW_INPUT':
+    case LESSON_REDUCER_TYPES.ADD_NEW_INPUT:
       let oldStudentData = [...state.studentData];
       const _newInput = {domID: action.payload.domID, input: action.payload.input};
       const currentPageStudentData = [...oldStudentData[state.currentPage], _newInput];
@@ -242,7 +277,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         studentData: oldStudentData,
       };
-    case 'LOAD_STUDENT_DATA':
+    case LESSON_REDUCER_TYPES.LOAD_STUDENT_DATA:
       console.log('LOAD_STUDENT_DATA', {payload: action.payload});
       return {
         ...state,
@@ -255,7 +290,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           ? action.payload.filteredExerciseData
           : state.exerciseData,
       };
-    case 'LOAD_SURVEY_DATA':
+    case LESSON_REDUCER_TYPES.LOAD_SURVEY_DATA:
       return {
         ...state,
         loaded: true,
@@ -264,7 +299,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           ? action.payload.surveyData
           : state.studentData,
       };
-    case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
+    case LESSON_REDUCER_TYPES.LOAD_STUDENT_SUBSCRIPTION_DATA:
       const stDataIdx = action.payload.stDataIdx;
       const subData = action.payload.subData;
       const newStudentData =
@@ -285,17 +320,17 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       } else {
         return state;
       }
-    case 'LOAD_STUDENT_SHARE_DATA':
+    case LESSON_REDUCER_TYPES.LOAD_STUDENT_SHARE_DATA:
       return {
         ...state,
         sharedData: action.payload,
       };
-    case 'UPDATE_PERSON_LOCATION':
+    case LESSON_REDUCER_TYPES.UPDATE_PERSON_LOCATION:
       return {
         ...state,
         personLocationObj: action.payload,
       };
-    case 'UNLOAD_STUDENT_DATA':
+    case LESSON_REDUCER_TYPES.UNLOAD_STUDENT_DATA:
       console.log('unloading student data');
       return {
         ...state,
@@ -303,12 +338,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         universalStudentDataID: [],
         studentData: [],
       };
-    case 'UNLOAD_STUDENT_SHARE_DATA':
+    case LESSON_REDUCER_TYPES.UNLOAD_STUDENT_SHARE_DATA:
       return {
         ...state,
         sharedData: [],
       };
-    case 'UPDATE_STUDENT_DATA':
+    case LESSON_REDUCER_TYPES.UPDATE_STUDENT_DATA:
       console.log('UPDATE_STUDENT_DATA');
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
@@ -383,7 +418,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: mappedStudentData,
         exerciseData: mappedExerciseData,
       };
-    case 'UPDATE_SURVEY_DATA':
+    case LESSON_REDUCER_TYPES.UPDATE_SURVEY_DATA:
       const surveyDomID = action.payload.data.domID;
       const newSurveyInput = action.payload.data.input;
 
@@ -398,7 +433,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: updatedSurveyStudentData,
       };
 
-    case 'COMPLETE_STUDENT_UPDATE':
+    case LESSON_REDUCER_TYPES.COMPLETE_STUDENT_UPDATE:
       console.log('COMPLETE_STUDENT_UPDATE', state.universalStudentDataID);
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
@@ -408,14 +443,14 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         universalStudentDataID: resetDataIdArray,
         updated: false,
       };
-    case 'SET_CURRENT_PAGE':
+    case LESSON_REDUCER_TYPES.SET_CURRENT_PAGE:
       return {
         ...state,
         currentPage: action.payload,
         lessonProgress:
           action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
       };
-    case 'TOGGLE_OPEN_PAGE':
+    case LESSON_REDUCER_TYPES.TOGGLE_OPEN_PAGE:
       const mappedOpenPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
           if (idx <= action.payload) {
@@ -426,7 +461,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
       return {...state, lessonData: {...state.lessonData, lessonPlan: mappedOpenPages}};
-    case 'TOGGLE_CLOSE_PAGE':
+    case LESSON_REDUCER_TYPES.TOGGLE_CLOSE_PAGE:
       const mappedClosePages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
           if (idx >= action.payload) {
@@ -437,9 +472,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
       return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosePages}};
-    case 'INCREMENT_SAVE_COUNT':
+    case LESSON_REDUCER_TYPES.INCREMENT_SAVE_COUNT:
       return {...state, saveCount: state.saveCount + 1};
-    case 'CLEANUP':
+    case LESSON_REDUCER_TYPES.CLEANUP:
       console.log('cleanup...');
       return initialLessonState;
     default:

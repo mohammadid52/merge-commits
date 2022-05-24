@@ -5,6 +5,8 @@ import useDictionary from '../../customHooks/dictionary';
 import {getLocalStorageData} from '../../utilities/localStorage';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
+import CloseLesson from './StudentWindow/TitleBarSections/CloseLesson';
+import FullscreenToggle from './StudentWindow/TitleBarSections/FullscreenToggle';
 import HamburgerMenu from './TopMenu/HamburgerMenu';
 import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
@@ -57,13 +59,28 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
             <div className="h-8 align-middle text-sm font-semibold text-gray-600 leading-8 ">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
             </div>
+            {/* RIGHT - FULLSCREEN BUTTON */}
+            <div className="w-auto gap-1 flex items-center">
+              <CloseLesson />
 
-            <HamburgerMenu
-              theme={theme}
-              themeColor={themeColor}
-              handleLeavePopup={handleLeavePopup}
-              handleHomePopup={handleHomePopup}
-            />
+              {breakpoint === 'xl' || breakpoint === '2xl' ? (
+                <FullscreenToggle
+                  theme={theme}
+                  themeColor={themeColor}
+                  fullscreen={fullscreen}
+                  handleFullscreen={handleFullscreen}
+                />
+              ) : (
+                <div className=" "></div>
+              )}
+
+              {/* <HamburgerMenu
+                theme={theme}
+                themeColor={themeColor}
+                handleLeavePopup={handleLeavePopup}
+                handleHomePopup={handleHomePopup}
+              /> */}
+            </div>
           </div>
         </div>
       </div>
