@@ -150,7 +150,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           filter: {institutionID: {eq: institutionID}},
         })
       );
-      const listStaffs = staffList.data.listStaffs;
+      const listStaffs = staffList.data.listStaff;
       const updatedList = listStaffs?.items.map((item: any) => ({
         id: item?.id,
         name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,

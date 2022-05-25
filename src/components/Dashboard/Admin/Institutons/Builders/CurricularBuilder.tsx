@@ -237,7 +237,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           filter: {institutionID: {eq: params.get('id')}},
         })
       );
-      const savedData = result.data.listStaffs;
+      const savedData = result.data.listStaff;
       const updatedList = savedData?.items.map(
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
