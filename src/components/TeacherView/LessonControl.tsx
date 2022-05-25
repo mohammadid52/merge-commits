@@ -1,7 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import UserInformation from '@components/Dashboard/Admin/UserManagement/UserInformation';
+import {useNotifications} from '@contexts/NotificationContext';
 import useLessonControls from '@customHooks/lessonControls';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useAuth from '@customHooks/useAuth';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -27,6 +29,15 @@ import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
+
+export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
+  return (
+    roomData?.completedLessons?.findIndex(
+      (item: {lessonID?: string | null; time?: string | null}) =>
+        item.lessonID === lessonID
+    ) > -1
+  );
+};
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -189,8 +200,8 @@ const LessonControl = () => {
             nextToken: nextToken,
           })
         );
-        let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+        let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+        let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
 
         /**
          * combination of last fetch results
@@ -336,15 +347,28 @@ const LessonControl = () => {
     }
   };
 
+  const {clearNotification, setNotification} = useNotifications();
+
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
 
     if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) =>
-        console.log('Lesson Mount - ', 'Lesson fetched!')
-      );
+      const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
+
+      if (!isCompleted || !isTeacher) {
+        clearNotification();
+        lessonDispatch({
+          type: 'SET_INITIAL_STATE',
+          payload: {universalLessonID: lessonID},
+        });
+        getSyllabusLesson(lessonID).then((_: void) =>
+          console.log('Lesson Mount - ', 'Lesson fetched!')
+        );
+      } else {
+        setNotification({title: 'Lesson/Survey is closed', show: true});
+        history.push('/');
+      }
     }
     return () => {
       if (subscription) {
@@ -357,24 +381,29 @@ const LessonControl = () => {
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   useEffect(() => {
-    if (lessonState.lessonData) {
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-      history.push(`${match.url}/${0}`);
+    const {lessonID} = urlParams;
 
-      const getRoomData = getLocalStorageData('room_info');
-      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+    const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
+    if (!isCompleted || !isTeacher) {
+      if (lessonState.lessonData) {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/${0}`);
 
-      if (
-        lessonState.lessonData.lessonPlan &&
-        lessonState.lessonData.lessonPlan.length > 0
-      ) {
-        lessonDispatch({
-          type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          payload: {
-            ClosedPages: getRoomData.ClosedPages,
-            studentViewing: '',
-          },
-        });
+        const getRoomData = getLocalStorageData('room_info');
+        setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+
+        if (
+          lessonState.lessonData.lessonPlan &&
+          lessonState.lessonData.lessonPlan.length > 0
+        ) {
+          lessonDispatch({
+            type: 'SET_ROOM_SUBSCRIPTION_DATA',
+            payload: {
+              ClosedPages: getRoomData.ClosedPages,
+              studentViewing: '',
+            },
+          });
+        }
       }
     }
   }, [lessonState.lessonData.id]);
@@ -457,6 +486,8 @@ const LessonControl = () => {
   const anyoneIsViewed = lessonState.studentViewing !== '';
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
   const isPresenting = lessonState.displayData[0].isTeacher === true;
+
+  const {isTeacher} = useAuth();
 
   useEffect(() => {
     if (isPresenting && !fullscreen) {

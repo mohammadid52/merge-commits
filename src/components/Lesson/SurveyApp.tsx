@@ -23,7 +23,7 @@ import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {partInput} from 'API';
+import {PartInput} from 'API';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
@@ -242,7 +242,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   const filterExtraQuestions = (initialDataFlattened: any[], surveyData: any[]) => {
     //@ts-ignore
     const extraQuestionsArray = initialDataFlattened.reduce(
-      (extraQuestions: any[], question: partInput) => {
+      (extraQuestions: any[], question: PartInput) => {
         const findInStudentDataRecords = surveyData.find(
           //@ts-ignore
           (data: partInput) => data.domID === question.domID
@@ -315,20 +315,22 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     if (filterObj) {
       try {
         let surveyData: any = await API.graphql(
-          graphqlOperation(queries.listUniversalSurveyStudentDatas, {
+          graphqlOperation(queries.listUniversalSurveyStudentData, {
             ...filterObj,
             nextToken: nextToken,
           })
         );
-        let surveyDataRow = surveyData.data.listUniversalSurveyStudentDatas.items[0];
-        let theNextToken = surveyData.data.listUniversalSurveyStudentDatas?.nextToken;
 
-        if (surveyDataRow && theNextToken) {
+        let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items[0];
+
+        let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
+
+        if (theNextToken) {
           console.log('nextToken fetching more - ', nextToken);
-          fetchSurveyDataRow(filterObj, theNextToken, []);
-        } else {
-          return surveyDataRow;
+          surveyDataRow = fetchSurveyDataRow(filterObj, theNextToken, []);
         }
+
+        return surveyDataRow;
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
         return [];
@@ -352,6 +354,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
       // existing student rows
       const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+
       const surveyDataResponses = surveyDataRow?.surveyData
         ? surveyDataRow.surveyData
         : []; // flat 1D - array
@@ -359,7 +362,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         lessonState?.studentData,
         surveyDataResponses
       ); //  flat 1D - array
-
+      console.log(
+        '🚀 ~ file: SurveyApp.tsx ~ line 367 ~ getOrCreateSurveyData ~ surveyDataRow === undefined',
+        surveyDataRow === undefined
+      );
       if (surveyDataRow === undefined) {
         const createNewRecords = await createSurveyData(
           lessonState?.studentData,

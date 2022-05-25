@@ -16,9 +16,9 @@ const FullscreenToggle = ({
   handleFullscreen,
 }: IFullscreenToggleProps) => {
   return (
-    <div className="w-1/3 w-auto flex justify-end">
+    <div title="Show/Hide fullscreen" className="w-8 flex flex-col content-between ">
       <div
-        className={`text-gray-600 hover:${theme.textColor[themeColor]} w-8 flex justify-center items-center cursor-pointer text-xl z-50 px-2`}
+        className={`text-gray-600 hover:iconoclast:text-500 hover:curate:text-500 cursor-pointer`}
         onClick={handleFullscreen}>
         <IconContext.Provider
           value={{

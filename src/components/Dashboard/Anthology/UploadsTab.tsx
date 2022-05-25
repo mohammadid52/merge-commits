@@ -58,9 +58,9 @@ const UploadsTab = ({
       };
 
       const personLessonFiles: any = await API.graphql(
-        graphqlOperation(queries.listPersonFiless, listFilter)
+        graphqlOperation(queries.listPersonFiles, listFilter)
       );
-      const personLessonFilesRows = personLessonFiles.data.listPersonFiless.items;
+      const personLessonFilesRows = personLessonFiles.data.listPersonFiles.items;
 
       if (personLessonFilesRows?.length > 0) {
         setAllPersonLessonFiles(personLessonFilesRows);

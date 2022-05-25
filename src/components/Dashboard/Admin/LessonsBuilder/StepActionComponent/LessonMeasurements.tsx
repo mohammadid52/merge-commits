@@ -60,30 +60,29 @@ const LessonMeasurements = ({lessonId}: any) => {
 
   const fetchRubricsList = async () => {
     try {
-      const [results, topics]: any = await Promise.all([
-        await API.graphql(
-          graphqlOperation(customQueries.listLessonRubricss, {
-            filter: {
-              lessonID: {eq: lessonId},
-            },
-          })
-        ),
-        await API.graphql(graphqlOperation(customQueries.listTopics)),
-      ]);
-
-      const topicsList = topics.data?.listTopics?.items;
-      const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
-        return {
-          id: item.id,
-          rubricID: item.rubricID,
-          measurement: item?.rubric?.name,
-          topic:
-            topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
-          curriculumId: item?.rubric?.curriculumID,
-        };
-      });
-      setLessonMeasurements([...lessonRubrics]);
-      setLoading(false);
+      // const [results, topics]: any = await Promise.all([
+      //   await API.graphql(
+      //     graphqlOperation(customQueries.listLessonRubricss, {
+      //       filter: {
+      //         lessonID: {eq: lessonId},
+      //       },
+      //     })
+      //   ),
+      //   await API.graphql(graphqlOperation(customQueries.listTopics)),
+      // ]);
+      // const topicsList = topics.data?.listTopics?.items;
+      // const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
+      //   return {
+      //     id: item.id,
+      //     rubricID: item.rubricID,
+      //     measurement: item?.rubric?.name,
+      //     topic:
+      //       topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
+      //     curriculumId: item?.rubric?.curriculumID,
+      //   };
+      // });
+      // setLessonMeasurements([...lessonRubrics]);
+      //setLoading(false);
     } catch {
       setMessages({
         measurementError: '',
@@ -96,25 +95,25 @@ const LessonMeasurements = ({lessonId}: any) => {
 
   const fetchMeasurementList = async () => {
     try {
-      let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
-      list = list.data.listRubrics?.items || [];
-      const measuList = list.sort((a: any, b: any) =>
-        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      );
-      const filteredList = measuList.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-          value: item.name,
-        };
-      });
-      setMeasurementList(filteredList);
+      // let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
+      // list = list.data.listRubrics?.items || [];
+      // const measuList = list.sort((a: any, b: any) =>
+      //   a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+      // );
+      // const filteredList = measuList.map((item: any) => {
+      //   return {
+      //     id: item.id,
+      //     name: item.name,
+      //     value: item.name,
+      //   };
+      // });
+      // setMeasurementList(filteredList);
     } catch {
       console.log('Error while fetching lesson data');
     }
   };
 
-  const addNewMeasurement = async() => {
+  const addNewMeasurement = async () => {
     try {
       const input = {
         lessonID: lessonId,

@@ -117,7 +117,7 @@ const Anthology = ({
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
       if (studentDataRows?.length > 0) {
         setAllStudentData(studentDataRows);
       }
@@ -252,11 +252,11 @@ const Anthology = ({
 
       const journalEntryData: any = await API.graphql(
         graphqlOperation(
-          queries.listUniversalJournalDatas,
+          queries.listUniversalJournalData,
           isTeacher ? listFilterIfTeacher : listFilter
         )
       );
-      const journalEntryDataRows = journalEntryData.data.listUniversalJournalDatas.items;
+      const journalEntryDataRows = journalEntryData.data.listUniversalJournalData.items;
 
       if (journalEntryDataRows?.length > 0) {
         console.log('anthology - universalJournalDatas exist ', journalEntryDataRows);
@@ -512,7 +512,7 @@ const Anthology = ({
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalArchiveDatas, {
+        graphqlOperation(queries.listUniversalArchiveData, {
           filter: {
             studentID: {
               eq: state.user.authId,
@@ -520,7 +520,7 @@ const Anthology = ({
           },
         })
       );
-      setClassNotebook(archiveData.data.listUniversalArchiveDatas.items);
+      setClassNotebook(archiveData.data.listUniversalArchiveData.items);
     } catch (error) {
       console.log(
         '🚀 ~ file: Anthology.tsx ~ line 527 ~ getUniversalArchiveData ~ error',

@@ -29,7 +29,7 @@ import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {fetchDesigners} from '../../../../../../../utilities/utils';
-import { DeleteActionBtn } from '../../../../../../Atoms/Buttons/DeleteActionBtn';
+import {DeleteActionBtn} from '../../../../../../Atoms/Buttons/DeleteActionBtn';
 
 interface EditSyllabusProps {}
 interface InitialData {
@@ -216,18 +216,18 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         }
         setLessonsIds(savedData.universalLessonsSeq || []);
         const associatedLessons = savedData.lessons?.items;
-        await Promise.all(
-          associatedLessons.map(async (lesson: any) => {
-            const result: any = await API.graphql(
-              graphqlOperation(customQueries.listLessonRubricss, {
-                filter: {
-                  lessonID: {eq: lesson.lessonID},
-                },
-              })
-            );
-            lesson.measurements = result.data?.listLessonRubricss.items;
-          })
-        );
+        // await Promise.all(
+        //   associatedLessons.map(async (lesson: any) => {
+        //     const result: any = await API.graphql(
+        //       graphqlOperation(customQueries.listLessonRubricss, {
+        //         filter: {
+        //           lessonID: {eq: lesson.lessonID},
+        //         },
+        //       })
+        //     );
+        //     lesson.measurements = result.data?.listLessonRubricss.items;
+        //   })
+        // );
         const sortedLessonsList = [...savedData.lessons?.items]
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
@@ -526,7 +526,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         const onDrop = async () => {
           closeLessonAction();
           const result: any = await API.graphql(
-            graphqlOperation(mutations.deleteSyllabusLesson, {
+            graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
               input: {id: item.uniqlessonId},
             })
           );

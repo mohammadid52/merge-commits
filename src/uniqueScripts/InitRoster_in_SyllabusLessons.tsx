@@ -6,8 +6,10 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 // query all syllabus lessons
 const getSyllabusLessons = async () => {
   try {
-    const getQuery: any = await API.graphql(graphqlOperation(customQueries.listAllSyllabusLessons));
-    return await getQuery?.data?.listSyllabusLessons?.items;
+    const getQuery: any = await API.graphql(
+      graphqlOperation(customQueries.listAllSyllabusLessons)
+    );
+    return await getQuery?.data?.listUniversalSyllabusLessons?.items;
   } catch (e) {
     console.error('getSyllabusLessons - ', e);
   }
@@ -16,7 +18,7 @@ const getSyllabusLessons = async () => {
 // reduce into [...acc, {id: asdf4234234}]
 const syllabusLessonIds = async (arr: any) => {
   const outArray = arr.reduce((acc: any[], val: any) => {
-    return [...acc, { id: val.id }];
+    return [...acc, {id: val.id}];
   }, []);
   return outArray;
 };
@@ -24,7 +26,7 @@ const syllabusLessonIds = async (arr: any) => {
 const loopSyllabusLessonIdAndMutate = async (sylLessonIds: any) => {
   try {
     sylLessonIds.reduce((_: any, idArr: any) => {
-        mutateSingleSyllabusLesson(idArr.id, []);
+      mutateSingleSyllabusLesson(idArr.id, []);
     });
   } catch (e) {
     console.error('loop mutate: ', e);
@@ -38,8 +40,8 @@ const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
       graphqlOperation(customMutations.updateSyllabusLesson, {
         input: {
           id: sylID,
-          displayData:{
-            breakdownComponent: ""
+          displayData: {
+            breakdownComponent: '',
           },
           roster: content,
         },

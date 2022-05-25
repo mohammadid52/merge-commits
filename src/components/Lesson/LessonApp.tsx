@@ -9,16 +9,15 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
-import {nanoid} from 'nanoid';
 import {
   PagePart,
   PartContent,
   PartContentSub,
   StudentExerciseData,
   StudentPageInput,
+  UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData,
-  UniversalJournalData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -28,8 +27,6 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {tableCleanupUrl} from '@utilities/urls';
-import axios from 'axios';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -86,6 +83,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     ).subscribe({
       next: (roomData: any) => {
         const updatedRoomData = roomData.value.data.onChangeRoom;
+
         setSubscriptionData(updatedRoomData);
       },
     });
@@ -552,8 +550,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           nextToken: nextToken,
         })
       );
-      let studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      let theNextToken = studentData.data.listUniversalLessonStudentDatas?.nextToken;
+      let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+      let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
 
       /**
        * combination of last fetch results
@@ -724,7 +722,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
-      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
 
       if (studentDataRows.length > 0) {
         lessonDispatch({

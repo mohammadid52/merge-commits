@@ -194,7 +194,7 @@ const InstitutionAdd = () => {
 
   const [fileObj, setFileObj] = useState({});
 
-  const saveCroppedImage = async (image: string) => {
+  const saveCroppedImage = async (image: any) => {
     setImageLoading(true);
     toggleCropper();
     setS3Image(image ? image : fileObj);

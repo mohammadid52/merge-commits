@@ -144,11 +144,11 @@ const PreviewForm = (props: PreviewFormProps) => {
     if (lessonID) {
       try {
         const result: any = await API.graphql(
-          graphqlOperation(queries.listSyllabusLessons, {
+          graphqlOperation(queries.listUniversalSyllabusLessons, {
             filter: {lessonID: {eq: lessonID}},
           })
         );
-        const savedData = result?.data?.listSyllabusLessons?.items;
+        const savedData = result?.data?.listUniversalSyllabusLessons?.items;
         if (savedData?.length) {
           const syllabusLessonId = savedData.map((item: any) => item.id);
           setRelatedUnitsID([...syllabusLessonId]);
@@ -172,7 +172,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           id: lessonID,
         })
       );
-      const savedData: any = result.data.getLesson;
+      const savedData: any = result.data.getUniversalLesson;
       setFetchingQuestionSequence(true);
       const checkpointSequence = await Promise.all(
         savedData?.checkpoints?.items?.map(async (checkpoint: any) => {

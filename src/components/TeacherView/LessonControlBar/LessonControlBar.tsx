@@ -27,7 +27,8 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
   };
 
   // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
-  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
+  const anyoneIsShared = !isClosed && lessonState.displayData[0].studentAuthID !== '';
   const isPresenting = lessonState.displayData[0].isTeacher === true;
 
   return (

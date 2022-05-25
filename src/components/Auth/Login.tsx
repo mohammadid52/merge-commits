@@ -99,7 +99,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             role: userInfo.role,
             image: userInfo.image,
             associateInstitute:
-              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
           },

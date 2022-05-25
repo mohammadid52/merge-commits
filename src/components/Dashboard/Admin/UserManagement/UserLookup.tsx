@@ -231,11 +231,11 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
   const fetchAllPerson = async () => {
     let resp: any = await API.graphql(
-      graphqlOperation(queries.listPersons, {
+      graphqlOperation(queries.listPeople, {
         limit: 500,
       })
     );
-    const users = resp?.data?.listPersons?.items;
+    const users = resp?.data?.listPeople?.items;
     return users;
   };
 
@@ -285,7 +285,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
             },
           })
         );
-        authIds = staff.data?.listStaffs.items.map((staff: any) => staff.staffAuthID);
+        authIds = staff.data?.listStaff.items.map((staff: any) => staff.staffAuthID);
       }
 
       const authIdFilter: any = authIds.map((item: any) => {
@@ -301,13 +301,13 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         let response: any;
         if (isTeacher || isBuilder) {
           users = await API.graphql(
-            graphqlOperation(queries.listPersons, {
+            graphqlOperation(queries.listPeople, {
               filter: {
                 or: [...authIdFilter],
               },
             })
           );
-          response = users?.data?.listPersons?.items;
+          response = users?.data?.listPeople?.items;
         } else {
           users = await fetchAllPerson();
           response = users;
@@ -420,12 +420,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               </button>
             </>
           )}
-          {state.user.role !== 'SUP' && <Buttons
-            label={UserLookupDict[userLanguage]['button']['add']}
-            onClick={handleLink}
-            btnClass={isInInstitute ? '' : 'mr-4 w-full'}
-            Icon={AiOutlineUsergroupAdd}
-          />}
+          {state.user.role !== 'SUP' && (
+            <Buttons
+              label={UserLookupDict[userLanguage]['button']['add']}
+              onClick={handleLink}
+              btnClass={isInInstitute ? '' : 'mr-4 w-full'}
+              Icon={AiOutlineUsergroupAdd}
+            />
+          )}
         </div>
       </div>
 
