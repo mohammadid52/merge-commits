@@ -68,7 +68,7 @@ const RoomsList = (props: RoomListProps) => {
         graphqlOperation(customQueries.listStaffOptions)
       );
       setStaffList(
-        list.data.listStaffs.items
+        list.data.listStaff.items
           ?.filter(
             ({staffMember}: any) =>
               staffMember?.role === 'TR' || staffMember?.role === 'FLW'
