@@ -327,8 +327,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
         if (theNextToken) {
           console.log('nextToken fetching more - ', nextToken);
-          surveyDataRow = await fetchSurveyDataRow(filterObj, theNextToken, []);
+          surveyDataRow = fetchSurveyDataRow(filterObj, theNextToken, []);
         }
+
         return surveyDataRow;
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
@@ -361,7 +362,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         lessonState?.studentData,
         surveyDataResponses
       ); //  flat 1D - array
-      console.log('surveyDataRow length - ', lessonState?.studentData);
+      console.log(
+        '🚀 ~ file: SurveyApp.tsx ~ line 367 ~ getOrCreateSurveyData ~ surveyDataRow === undefined',
+        surveyDataRow === undefined
+      );
       if (surveyDataRow === undefined) {
         const createNewRecords = await createSurveyData(
           lessonState?.studentData,
@@ -370,12 +374,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           user.email
         );
 
-        // lessonDispatch({
-        //   type: 'LOAD_SURVEY_DATA',
-        //   payload: {
-        //     dataIdReferences: surveyDataId(createNewRecords),
-        //   },
-        // });
+        lessonDispatch({
+          type: 'LOAD_SURVEY_DATA',
+          payload: {
+            dataIdReferences: surveyDataId(createNewRecords),
+          },
+        });
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
         // console.log('loaded finaldata - ', finalData);
