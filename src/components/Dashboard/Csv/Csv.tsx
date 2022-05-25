@@ -366,12 +366,14 @@ const Csv = ({institutionId}: ICsvProps) => {
     if (selectedSurvey) {
       clearCSVData();
     }
+    setSCQAnswers([]);
     setSelectedsurvey(survey);
     await listQuestions(survey.id);
   };
 
   const listQuestions = async (lessonId: string) => {
     try {
+      setCsvGettingReady(true);
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
@@ -401,6 +403,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
       await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
       setIsCSVReady(true);
+      setCsvGettingReady(false);
     } catch (err) {
       console.log('list questions error', err);
     }
@@ -591,6 +594,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     nextToken?: string,
     outArray?: any[]
   ) => {
+    setCsvGettingReady(true);
     let studsEmails = classStudents.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalSurveyStudentData, {
@@ -610,17 +614,22 @@ const Csv = ({institutionId}: ICsvProps) => {
      * combination of last fetch results
      * && current fetch results
      */
-    let combined = [...studentsAnswersSurveyQuestionsData, ...outArray];
+    let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
     // console.log('combined - - - -', combined);
 
     if (theNextToken) {
-      getStudentsSurveyQuestionsResponse(lessonId, theNextToken, combined);
-    } else {
-      console.log('fetched from universalSurveyData');
-      setSCQAnswers(combined);
+      combined = await getStudentsSurveyQuestionsResponse(
+        lessonId,
+        theNextToken,
+        combined
+      );
     }
-
+    console.log('fetched from universalSurveyData');
+    setSCQAnswers((prevState: any) => {
+      return [...prevState, combined];
+    });
+    setCsvGettingReady(false);
     return;
   };
 
@@ -684,8 +693,9 @@ const Csv = ({institutionId}: ICsvProps) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
+        // console.log('🚀 ~ file: Csv.tsx ~ line 697 ~ data ~ SCQAnswers', SCQAnswers);
 
-        SCQAnswers.map((answerArray: any) => {
+        SCQAnswers[0].map((answerArray: any) => {
           if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
             answerArray.surveyData.map((singleAnswer: any) => {
@@ -754,7 +764,6 @@ const Csv = ({institutionId}: ICsvProps) => {
         } else {
           notTakenSurvey++;
         }
-
         return {
           ...stu,
           institute: selectedInst.name,
@@ -857,28 +866,32 @@ const Csv = ({institutionId}: ICsvProps) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {CSVData.map((listItem, idx) => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.id}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.firstName}
-                      </td>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.lastName}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.email}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.hasTakenSurvey ? 'Yes' : 'No'}
-                      </td>
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {getFormatedDate(listItem.last)}
-                      </td>
-                    </tr>
-                  ))}
+                  {CSVData.map((listItem, idx) => {
+                    return (
+                      <tr
+                        key={idx}
+                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                        <td style={{width: '15%'}} className={tdataStyles}>
+                          {listItem.id}
+                        </td>
+                        <td style={{width: '20%'}} className={tdataStyles}>
+                          {listItem.firstName}
+                        </td>
+                        <td style={{width: '15%'}} className={tdataStyles}>
+                          {listItem.lastName}
+                        </td>
+                        <td style={{width: '20%'}} className={tdataStyles}>
+                          {listItem.email}
+                        </td>
+                        <td style={{width: '20%'}} className={tdataStyles}>
+                          {listItem.hasTakenSurvey ? 'Yes' : 'No'}
+                        </td>
+                        <td style={{width: '10%'}} className={tdataStyles}>
+                          {getFormatedDate(listItem.last)}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
