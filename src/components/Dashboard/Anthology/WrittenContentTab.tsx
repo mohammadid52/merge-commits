@@ -30,10 +30,17 @@ const WrittenContentTab = (props: ITabViewProps) => {
     content,
     allStudentData,
     setAllStudentData,
+    classNotebook,
     allUniversalJournalData,
     setAllUniversalJournalData,
+    allUniversalClassData,
+    setAllUniversalClassData,
   } = props;
-
+  console.log('classnotebookkkkkkkkkkkkkkkkkkkk', classNotebook);
+  console.log('class workkkkkkkkkkkkkkkkkkkkk', allUniversalClassData);
+  console.log('subbbbbbbbbbbbbbbbbbbbbbbbbbbbb', subSection);
+  console.log('mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn', mainSection);
+  console.log('ccccccccccccccccccccccccccccccccccccccccccccc', content);
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -262,6 +269,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
 
   return (
     <>
+      {console.log('subsection', subSection === 'Work')}
       {viewEditMode.mode === 'create' && viewEditMode.dataID === createTemplate.id && (
         <ContentCard hasBackground={false}>
           <div id={`anthology_${subSection}_create`} className={`flex flex-col px-6 p-2`}>
@@ -321,6 +329,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
                 }
                 allUniversalJournalData={allUniversalJournalData}
                 setAllUniversalJournalData={setAllUniversalJournalData}
+                allUniversalClassData={allUniversalClassData}
+                setAllUniversalClassData={setAllUniversalClassData}
                 allStudentData={allStudentData}
                 setAllStudentData={setAllStudentData}
               />
@@ -328,12 +338,33 @@ const WrittenContentTab = (props: ITabViewProps) => {
           );
         })
       ) : (
-        <div className="p-12 flex flex-center items-center">
-          <p className="text-center text-lg text-gray-500">
-            No content for {subSection} section
-          </p>
+        // <div className="p-12 flex flex-center items-center">
+        //   <p className="text-center text-lg text-gray-500">
+        //     No content for {subSection} section
+        //   </p>
+        // </div>
+        <div>
+          {subSection === 'Work' ? (
+            <div className="work">
+              {allUniversalClassData.map((first: any) =>
+                first.pageData.map((three: any) => {
+                  return <p>{three.input}</p>;
+                })
+              )}
+            </div>
+          ) : (
+            <div className="note">
+              {classNotebook.map((element: any) =>
+                element.pageData.map((second: any) => {
+                  return <p>{second.input}</p>;
+                })
+              )}
+            </div>
+          )}
         </div>
       )}
+      {/* <div>{classNotebook[1].pageData[1].input}</div>
+      <div>{allUniversalClassData[1].pageData[1].input}</div> */}
     </>
   );
 };
