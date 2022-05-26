@@ -36,11 +36,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
     allUniversalClassData,
     setAllUniversalClassData,
   } = props;
-  console.log('classnotebookkkkkkkkkkkkkkkkkkkk', classNotebook);
-  console.log('class workkkkkkkkkkkkkkkkkkkkk', allUniversalClassData);
-  console.log('subbbbbbbbbbbbbbbbbbbbbbbbbbbbb', subSection);
-  console.log('mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn', mainSection);
-  console.log('ccccccccccccccccccccccccccccccccccccccccccccc', content);
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -184,10 +179,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
-    console.log(
-      '🚀 ~ file: WrittenContentTab.tsx ~ line 179 ~ editModeView ~ contentObj',
-      contentObj.entryData
-    );
     const notesExist = contentObj.entryData[0].domID.includes('notes_form');
     const filtered = filter(
       contentObj?.entryData,
@@ -269,7 +260,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
 
   return (
     <>
-      {console.log('subsection', subSection === 'Work')}
       {viewEditMode.mode === 'create' && viewEditMode.dataID === createTemplate.id && (
         <ContentCard hasBackground={false}>
           <div id={`anthology_${subSection}_create`} className={`flex flex-col px-6 p-2`}>
@@ -338,13 +328,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
           );
         })
       ) : (
-        // <div className="p-12 flex flex-center items-center">
-        //   <p className="text-center text-lg text-gray-500">
-        //     No content for {subSection} section
-        //   </p>
-        // </div>
-        <div>
-          {subSection === 'Work' ? (
+        <>
+          {subSection === 'Work' && allUniversalClassData.length > 0 ? (
             <div className="work">
               {allUniversalClassData.map((first: any) =>
                 first.pageData.map((three: any) => {
@@ -353,18 +338,26 @@ const WrittenContentTab = (props: ITabViewProps) => {
               )}
             </div>
           ) : (
-            <div className="note">
-              {classNotebook.map((element: any) =>
-                element.pageData.map((second: any) => {
-                  return <p>{second.input}</p>;
-                })
-              )}
+            subSection === 'Notes' &&
+            classNotebook.length > 0 && (
+              <div className="note">
+                {classNotebook.map((element: any) =>
+                  element.pageData.map((second: any) => {
+                    return <p>{second.input}</p>;
+                  })
+                )}
+              </div>
+            )
+          )}
+          {allUniversalClassData.length === 0 && classNotebook.length === 0 && (
+            <div className="p-12 flex flex-center items-center">
+              <p className="text-center text-lg text-gray-500">
+                No content for {subSection} section
+              </p>
             </div>
           )}
-        </div>
+        </>
       )}
-      {/* <div>{classNotebook[1].pageData[1].input}</div>
-      <div>{allUniversalClassData[1].pageData[1].input}</div> */}
     </>
   );
 };
