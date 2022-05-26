@@ -54,11 +54,11 @@ export interface ITabViewProps extends ITabParentProps {
   setAllStudentData?: any;
   allExerciseData?: any[];
   allUniversalJournalData?: UniversalJournalData[];
-  allUniversalClassData?:UniversalClassData[];
+  allUniversalClassData?: UniversalClassData[];
   classNotebook?: any;
   setClassNotebook?: any;
   setAllUniversalJournalData?: any;
-  setAllUniversalClassData?:any;
+  setAllUniversalClassData?: any;
 }
 
 const TabView = ({
@@ -82,9 +82,8 @@ const TabView = ({
   classNotebook,
   setClassNotebook,
   allUniversalClassData,
-  setAllUniversalClassData
+  setAllUniversalClassData,
 }: ITabViewProps) => {
-  // console.log('🚀 ~ file: TabView.tsx ~ line 82 ~ classNotebook', classNotebook);
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
@@ -101,7 +100,6 @@ const TabView = ({
     allUniversalJournalData?.length > 0
       ? allUniversalJournalData.reduce(
           (acc: UniversalJournalData[], data: UniversalJournalData) => {
-            {console.log("d------------------------------",data)}
             if (subSection === 'Journal' && data.type === 'journal-entry') {
               return [...acc, data];
             } else if (
@@ -118,49 +116,40 @@ const TabView = ({
         )
       : [];
 
-
-      const filteredClassContent =
-      allUniversalClassData?.length > 0
-        ? allUniversalClassData.reduce(
-            (acc: UniversalClassData[], data: UniversalClassData) => {
-             {console.log("dadddddddddddddd",data)}
-             {console.log("daddddddddddddddd1",(subSection === 'work' ))}
-             {console.log("daddddddddddddddd2",(
+  const filteredClassContent =
+    allUniversalClassData?.length > 0
+      ? allUniversalClassData.reduce(
+          (acc: UniversalClassData[], data: UniversalClassData) => {
+            if (subSection === 'work') {
+              return [...acc, data];
+            } else if (
+              subSection === ' Note' &&
+              data.type === 'Class Note' &&
               data.roomID === sectionRoomID
-            ))}
-           
-              if (subSection === 'work' ) {
-                return [...acc, data];
-              } else if (
-                subSection === ' Note' &&
-                data.type === 'Class Note'&&
-                data.roomID === sectionRoomID
-              ) {
-               
-                return( [...acc, data]);
-              } else {
-                return acc;
-              }
-            },
-            []
-          ) 
-        : [];      
-
-        const pickClassContent = () => {
-          console.log("check",filteredClassContent);
-          if (mainSection === 'Class' && sectionRoomID !== '') {
-            if (subSection == 'class Work') {
-              console.log("check7889",filteredClassContent);
-              return filteredClassContent;
+            ) {
+              return [...acc, data];
             } else {
-              return allExerciseData;
+              return acc;
             }
-          } else if (mainSection === 'Private') {
-            return filteredJournalContent;
-          } else {
-            return [];
-          }
-        };
+          },
+          []
+        )
+      : [];
+
+  const pickClassContent = () => {
+    console.log('check', filteredClassContent);
+    if (mainSection === 'Class' && sectionRoomID !== '') {
+      if (subSection == 'class Work') {
+        return filteredClassContent;
+      } else {
+        return allExerciseData;
+      }
+    } else if (mainSection === 'Private') {
+      return filteredJournalContent;
+    } else {
+      return [];
+    }
+  };
 
   const WrittenContent = (
     <WrittenContentTab
@@ -252,7 +241,6 @@ const TabView = ({
 
   return (
     <>
-    {console.log("condition",allUniversalClassData?.length > 0)}
       <div
         className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
         <div
