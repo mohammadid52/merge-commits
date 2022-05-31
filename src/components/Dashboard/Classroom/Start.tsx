@@ -28,6 +28,7 @@ interface StartProps {
   preview?: boolean;
   activeRoomInfo?: any;
   isUsed?: boolean;
+  pageNumber?: number;
 }
 
 const Start: React.FC<StartProps> = ({
@@ -37,6 +38,7 @@ const Start: React.FC<StartProps> = ({
   lessonProps,
   syllabusProps,
   lessonKey,
+  pageNumber,
   open,
   accessible,
   type,
@@ -214,7 +216,7 @@ const Start: React.FC<StartProps> = ({
         if (!attendanceRecorded) {
           await recordAttendance(lessonProps);
         }
-        history.push(`/lesson/${lessonKey}/0`);
+        history.push(`/lesson/${lessonKey}/${pageNumber}`);
       } catch (error) {
         setLoading(false);
       }

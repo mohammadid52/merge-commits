@@ -106,6 +106,7 @@ const MainRouter: React.FC = () => {
               instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
+            lessons: userInfo.lessons,
           },
         });
       } else {
