@@ -2438,6 +2438,7 @@ export const getUniversalLesson = /* GraphQL */ `
         }
       }
       rubrics
+      isUsed
       createdAt
       updatedAt
     }

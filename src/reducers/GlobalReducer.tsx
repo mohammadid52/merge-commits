@@ -72,6 +72,7 @@ type globalActions =
         lastLoggedIn?: string;
         associateInstitute?: any[];
         onDemand?: any;
+        lessons?: any[];
       };
     }
   | {
@@ -79,6 +80,12 @@ type globalActions =
       payload: {
         email: string;
         authId: string;
+      };
+    }
+  | {
+      type: 'LESSON_PAYLOAD';
+      payload: {
+        lessonsData: any[];
       };
     }
   | {
@@ -198,6 +205,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lastLoggedOut: action.payload.lastLoggedOut,
           associateInstitute: action.payload.associateInstitute,
           onDemand: action.payload?.onDemand,
+          lessons: action.payload?.lessons,
         },
       };
     case 'LOG_IN':
@@ -209,6 +217,13 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           ...state.user,
           email: action.payload.email,
           authId: action.payload.authId,
+        },
+      };
+    case 'LESSON_PAYLOAD':
+      return {
+        ...state,
+        lessonsPayload: {
+          lessonsData: action.payload.lessonsData,
         },
       };
     case 'PREV_LOG_IN':

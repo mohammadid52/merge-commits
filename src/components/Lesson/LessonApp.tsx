@@ -27,6 +27,7 @@ import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {v4 as uuidV4} from 'uuid';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -34,6 +35,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
+
   const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
@@ -839,16 +841,32 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
+  const getLessonCurrentPage = async () => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonID,
+          studentEmail: user.email,
+          studentAuthID: user.authId,
+        })
+      );
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      return currentPage;
+    } catch (error) {}
+  };
+
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;
 
+    const currentPageLocation = await getLessonCurrentPage();
     const newLocation = {
       personAuthID: user?.authId,
       personEmail: user?.email,
       syllabusLessonID: getRoomData.activeSyllabus,
       lessonID: lessonID,
       roomID: getRoomData.id,
-      currentLocation: '0',
+      currentLocation: currentPageLocation,
       lessonProgress: '0',
     };
     try {
@@ -872,6 +890,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
 
   const updatePersonLocation = async (updatedLocationObj: any) => {
+    const currentPageLocation = await getLessonCurrentPage();
     const locationUpdateProps = {
       id: updatedLocationObj.id,
       personAuthID: updatedLocationObj.personAuthID,
@@ -879,7 +898,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       lessonID: updatedLocationObj.lessonID,
       syllabusLessonID: updatedLocationObj.syllabusLessonID,
       roomID: updatedLocationObj.roomID,
-      currentLocation: updatedLocationObj.currentLocation,
+      currentLocation: currentPageLocation,
       lessonProgress: updatedLocationObj.lessonProgress,
     };
     try {
@@ -939,6 +958,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       },
     };
     const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+    const currentPageLocation = await getLessonCurrentPage();
 
     const result = studentDataRows.map(async (item: any) => {
       const input = {
@@ -949,7 +969,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         studentAuthID: item.studentAuthID,
         studentEmail: item.studentEmail,
         roomID: item.roomID,
-        currentLocation: item.currentLocation,
+        currentLocation: currentPageLocation,
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
@@ -983,6 +1003,64 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       return result;
     } catch (e) {
       console.error('error creating journal data - ', e);
+    }
+  };
+
+  useEffect(() => {
+    handleLessonMutateData();
+  }, [lessonState.currentPage]);
+
+  const handleLessonMutateData = async () => {
+    try {
+      let payload;
+      const existingLesson: any = await API.graphql(
+        graphqlOperation(queries.listPersonLessonsData, {
+          filter: {
+            lessonID: {eq: lessonID},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email},
+          },
+        })
+      );
+      if (!existingLesson.data.listPersonLessonsData.items.length) {
+        payload = {
+          id: uuidV4(),
+          studentAuthID: user.authId,
+          studentEmail: user.email,
+          lessonID: lessonID,
+          //prettier-ignore
+          pages: `{
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)}
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+          ratings: 0,
+        };
+
+        await API.graphql(
+          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+        );
+      } else {
+        payload = {
+          studentAuthID: user.authId,
+          studentEmail: user.email,
+          lessonID: lessonID,
+          //prettier-ignore
+          pages: `{
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)}
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+        };
+        await API.graphql(
+          graphqlOperation(mutations.updatePersonLessonsData, {
+            input: payload,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: Start.tsx ~ line 215 ~ handleLessonMutateData ~ error',
+        error
+      );
     }
   };
 
