@@ -137,7 +137,6 @@ const TabView = ({
       : [];
 
   const pickClassContent = () => {
-    console.log('check', filteredClassContent);
     if (mainSection === 'Class' && sectionRoomID !== '') {
       if (subSection == 'class Work') {
         return filteredClassContent;

@@ -105,7 +105,7 @@ const UnderlinedTabs = (props: TabsProps) => {
       {tabs.map((tab, key) => (
         <div
           key={key}
-          className={`w-full ${activeTab !== tab.index ? 'hidden' : 'block'}`}>
+          className={`w-full p-4 ${activeTab !== tab.index ? 'hidden' : 'block'}`}>
           {activeTab === tab.index ? <>{tab.content}</> : null}
         </div>
       ))}
