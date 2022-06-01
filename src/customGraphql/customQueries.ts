@@ -3419,7 +3419,7 @@ export const userById = /* GraphQL */ `
 `;
 export const getUserProfile = /* GraphQL */ `
   query UserById(
-    $id: ID
+    $id: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelPersonFilterInput
     $limit: Int
