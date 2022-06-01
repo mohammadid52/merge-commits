@@ -448,9 +448,9 @@ const Start: React.FC<StartProps> = ({
   const updateBtnText = () => {
     switch (buttonText) {
       case 'SURVEY OPEN':
-        return 'Go To Survey';
+        return 'GO TO SURVEY';
       case 'START LESSON':
-        return 'Go To Lesson';
+        return 'GO TO LESSON';
 
       default:
         return buttonText;
