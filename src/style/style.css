@@ -269,7 +269,7 @@ span {
   width: auto;
 }
 .on {
-  color: #000;
+  color: rgb(255, 204, 0);
 }
 .off {
   color: #ccc;

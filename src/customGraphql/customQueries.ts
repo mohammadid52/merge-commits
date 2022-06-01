@@ -4370,7 +4370,7 @@ export const getInstListForNonAdmin = /* GraphQL */ `
 
 export const attendanceByStudent = /* GraphQL */ `
   query AttendanceByStudent(
-    $studentID: ID
+    $studentID: ID!
     $date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAttendanceFilterInput

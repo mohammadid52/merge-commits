@@ -27,6 +27,7 @@ const StarRating = ({
   }, [rating]);
   return (
     <div className="flex justify-end px-4 gap-1">
+      {/* <p>Rate Lesson</p> */}
       {[...Array(5)].map((star, index) => {
         index += 1;
         return (
