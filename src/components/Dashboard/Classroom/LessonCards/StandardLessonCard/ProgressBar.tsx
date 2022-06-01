@@ -21,7 +21,9 @@ const ProgressBar = ({value, max, lessonProps, getLessonByType}: ProgressBarProp
 
   return (
     <div className="flex justify-end px-4 flex-wrap mb-3">
-      <div className="flex justify-end mb-1">{progressValue}% complete</div>
+      <div className="flex justify-end mb-1">
+        {progressValue > 0 ? progressValue : 0}% complete
+      </div>
       <div className="progress-bar">
         <label
           className="progress-value block"

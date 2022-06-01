@@ -55,17 +55,13 @@ const StandardLessonCard = (props: LessonCardProps) => {
        */}
       <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
-        {!existsOrNot ? (
-          <ProgressBar
-            lessonProps={lessonProps}
-            user={user}
-            value="50"
-            max="100"
-            getLessonByType={getLessonByType}
-          />
-        ) : (
-          <></>
-        )}
+        <ProgressBar
+          lessonProps={lessonProps}
+          user={user}
+          value=""
+          max="100"
+          getLessonByType={getLessonByType}
+        />
         {lessonProps.lesson.type !== 'survey' && !existsOrNot ? (
           <Rating
             user={user}
