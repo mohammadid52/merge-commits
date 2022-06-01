@@ -131,6 +131,7 @@ export type Person = {
   sentiments?: Array< string | null > | null,
   passcode?: string | null,
   classes?: ModelClassStudentConnection | null,
+  lessons?: ModelPersonLessonsDataConnection | null,
   spotlightUser?: boolean | null,
   spotlightDate?: string | null,
   addedby?: string | null,
@@ -167,6 +168,25 @@ export type ModelClassStudentConnection = {
   __typename: "ModelClassStudentConnection",
   items:  Array<ClassStudent | null >,
   nextToken?: string | null,
+};
+
+export type ModelPersonLessonsDataConnection = {
+  __typename: "ModelPersonLessonsDataConnection",
+  items:  Array<PersonLessonsData | null >,
+  nextToken?: string | null,
+};
+
+export type PersonLessonsData = {
+  __typename: "PersonLessonsData",
+  id: string,
+  studentAuthID: string,
+  studentEmail: string,
+  lessonID: string,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type ModelRoomConnection = {
@@ -791,6 +811,53 @@ export type DeletePersonInput = {
   authId: string,
 };
 
+export type CreatePersonLessonsDataInput = {
+  id?: string | null,
+  studentAuthID: string,
+  studentEmail: string,
+  lessonID: string,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+};
+
+export type ModelPersonLessonsDataConditionInput = {
+  studentAuthID?: ModelStringInput | null,
+  studentEmail?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  pages?: ModelStringInput | null,
+  ratings?: ModelIntInput | null,
+  and?: Array< ModelPersonLessonsDataConditionInput | null > | null,
+  or?: Array< ModelPersonLessonsDataConditionInput | null > | null,
+  not?: ModelPersonLessonsDataConditionInput | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type UpdatePersonLessonsDataInput = {
+  id?: string | null,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  lessonID: string,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+};
+
+export type DeletePersonLessonsDataInput = {
+  lessonID: string,
+};
+
 export type CreateInstitutionInput = {
   id?: string | null,
   name: string,
@@ -1008,18 +1075,6 @@ export type ModelRoomConditionInput = {
   and?: Array< ModelRoomConditionInput | null > | null,
   or?: Array< ModelRoomConditionInput | null > | null,
   not?: ModelRoomConditionInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateRoomInput = {
@@ -3570,6 +3625,19 @@ export type ModelPersonConnection = {
   nextToken?: string | null,
 };
 
+export type ModelPersonLessonsDataFilterInput = {
+  id?: ModelIDInput | null,
+  studentAuthID?: ModelStringInput | null,
+  studentEmail?: ModelStringInput | null,
+  lessonID?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  pages?: ModelStringInput | null,
+  ratings?: ModelIntInput | null,
+  and?: Array< ModelPersonLessonsDataFilterInput | null > | null,
+  or?: Array< ModelPersonLessonsDataFilterInput | null > | null,
+  not?: ModelPersonLessonsDataFilterInput | null,
+};
+
 export type ModelInstitutionFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -4538,6 +4606,10 @@ export type BatchAddClassStudentMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -4591,6 +4663,22 @@ export type CreatePersonMutation = {
         studentAuthID: string,
         status?: string | null,
         group?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -4651,6 +4739,22 @@ export type UpdatePersonMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     spotlightUser?: boolean | null,
     spotlightDate?: string | null,
     addedby?: string | null,
@@ -4706,9 +4810,85 @@ export type DeletePersonMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     spotlightUser?: boolean | null,
     spotlightDate?: string | null,
     addedby?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreatePersonLessonsDataMutationVariables = {
+  input: CreatePersonLessonsDataInput,
+  condition?: ModelPersonLessonsDataConditionInput | null,
+};
+
+export type CreatePersonLessonsDataMutation = {
+  createPersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdatePersonLessonsDataMutationVariables = {
+  input: UpdatePersonLessonsDataInput,
+  condition?: ModelPersonLessonsDataConditionInput | null,
+};
+
+export type UpdatePersonLessonsDataMutation = {
+  updatePersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeletePersonLessonsDataMutationVariables = {
+  input: DeletePersonLessonsDataInput,
+  condition?: ModelPersonLessonsDataConditionInput | null,
+};
+
+export type DeletePersonLessonsDataMutation = {
+  deletePersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5360,6 +5540,10 @@ export type CreateStaffMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -5458,6 +5642,10 @@ export type UpdateStaffMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -5554,6 +5742,10 @@ export type DeleteStaffMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -5722,6 +5914,10 @@ export type CreateRoomMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -5969,6 +6165,10 @@ export type UpdateRoomMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -6212,6 +6412,10 @@ export type DeleteRoomMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -6466,6 +6670,10 @@ export type CreateClassroomGroupStudentsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -6599,6 +6807,10 @@ export type UpdateClassroomGroupStudentsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -6730,6 +6942,10 @@ export type DeleteClassroomGroupStudentsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -6909,6 +7125,10 @@ export type CreateClassroomGroupsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -7104,6 +7324,10 @@ export type UpdateClassroomGroupsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -7295,6 +7519,10 @@ export type DeleteClassroomGroupsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -7489,6 +7717,10 @@ export type CreateRoomCoTeachersMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -7665,6 +7897,10 @@ export type UpdateRoomCoTeachersMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -7839,6 +8075,10 @@ export type DeleteRoomCoTeachersMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -8565,6 +8805,10 @@ export type CreateClassStudentMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -8686,6 +8930,10 @@ export type UpdateClassStudentMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -8805,6 +9053,10 @@ export type DeleteClassStudentMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -10568,6 +10820,10 @@ export type CreateRoomMsgsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -10619,6 +10875,10 @@ export type UpdateRoomMsgsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -10674,6 +10934,10 @@ export type DeleteRoomMsgsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -10727,6 +10991,10 @@ export type CreateStudentDataMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -10821,6 +11089,10 @@ export type UpdateStudentDataMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -10913,6 +11185,10 @@ export type DeleteStudentDataMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -11001,6 +11277,10 @@ export type CreateAnthologyCommentMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -11059,6 +11339,10 @@ export type UpdateAnthologyCommentMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -11121,6 +11405,10 @@ export type DeleteAnthologyCommentMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -11180,6 +11468,10 @@ export type CreateQuestionDataMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -11244,6 +11536,10 @@ export type UpdateQuestionDataMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -11304,6 +11600,10 @@ export type DeleteQuestionDataMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -11761,6 +12061,10 @@ export type CreatePersonLocationMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -11940,6 +12244,10 @@ export type UpdatePersonLocationMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -12117,6 +12425,10 @@ export type DeletePersonLocationMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15454,6 +15766,10 @@ export type CreateStudentConnectionsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -15487,6 +15803,10 @@ export type CreateStudentConnectionsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15543,6 +15863,10 @@ export type UpdateStudentConnectionsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -15576,6 +15900,10 @@ export type UpdateStudentConnectionsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15632,6 +15960,10 @@ export type DeleteStudentConnectionsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -15665,6 +15997,10 @@ export type DeleteStudentConnectionsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15716,6 +16052,10 @@ export type CreatePersonSentimentsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15772,6 +16112,10 @@ export type UpdatePersonSentimentsMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -15824,6 +16168,10 @@ export type DeletePersonSentimentsMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -15926,6 +16274,10 @@ export type CreateSentimentTrackerMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -16186,6 +16538,10 @@ export type UpdateSentimentTrackerMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -16442,6 +16798,10 @@ export type DeleteSentimentTrackerMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -16703,6 +17063,10 @@ export type CreateFeelingTrackerMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -16890,6 +17254,10 @@ export type UpdateFeelingTrackerMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -17081,6 +17449,10 @@ export type DeleteFeelingTrackerMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -17268,6 +17640,10 @@ export type CreateFeelingsArchiveMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -17553,6 +17929,10 @@ export type UpdateFeelingsArchiveMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -17834,6 +18214,10 @@ export type DeleteFeelingsArchiveMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -18266,6 +18650,10 @@ export type CreateCommunityMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -18392,6 +18780,10 @@ export type UpdateCommunityMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -18516,6 +18908,10 @@ export type DeleteCommunityMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -18660,6 +19056,10 @@ export type CreateGameChangerLogMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -18726,6 +19126,10 @@ export type UpdateGameChangerLogMutation = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -18790,6 +19194,10 @@ export type DeleteGameChangerLogMutation = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -18909,6 +19317,22 @@ export type GetPersonQuery = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     spotlightUser?: boolean | null,
     spotlightDate?: string | null,
     addedby?: string | null,
@@ -18958,9 +19382,59 @@ export type ListPeopleQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetPersonLessonsDataQueryVariables = {
+  lessonID: string,
+};
+
+export type GetPersonLessonsDataQuery = {
+  getPersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListPersonLessonsDataQueryVariables = {
+  lessonID?: string | null,
+  filter?: ModelPersonLessonsDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListPersonLessonsDataQuery = {
+  listPersonLessonsData?:  {
+    __typename: "ModelPersonLessonsDataConnection",
+    items:  Array< {
+      __typename: "PersonLessonsData",
+      id: string,
+      studentAuthID: string,
+      studentEmail: string,
+      lessonID: string,
+      lessonType?: string | null,
+      pages?: string | null,
+      ratings?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -19208,6 +19682,10 @@ export type GetStaffQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -19448,6 +19926,10 @@ export type GetRoomQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -19837,6 +20319,10 @@ export type GetClassroomGroupStudentsQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -20080,6 +20566,10 @@ export type GetClassroomGroupsQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -20363,6 +20853,10 @@ export type GetRoomCoTeachersQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -20848,6 +21342,10 @@ export type GetClassStudentQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -21729,6 +22227,10 @@ export type GetRoomMsgsQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -21836,6 +22338,10 @@ export type GetStudentDataQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -22005,6 +22511,10 @@ export type GetAnthologyCommentQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -22124,6 +22634,10 @@ export type GetQuestionDataQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -22252,6 +22766,10 @@ export type GetPersonLocationQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -24222,6 +24740,10 @@ export type GetStudentConnectionsQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -24255,6 +24777,10 @@ export type GetStudentConnectionsQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -24392,6 +24918,10 @@ export type GetPersonSentimentsQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -24540,6 +25070,10 @@ export type GetSentimentTrackerQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -24918,6 +25452,10 @@ export type GetFeelingTrackerQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -25206,6 +25744,10 @@ export type GetFeelingsArchiveQuery = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -25746,6 +26288,10 @@ export type GetCommunityQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -25967,6 +26513,10 @@ export type GetGameChangerLogQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -26131,6 +26681,10 @@ export type UserByIdQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -26181,9 +26735,40 @@ export type UsersByRoleQuery = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type LessonsByTypeQueryVariables = {
+  lessonType: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPersonLessonsDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type LessonsByTypeQuery = {
+  lessonsByType?:  {
+    __typename: "ModelPersonLessonsDataConnection",
+    items:  Array< {
+      __typename: "PersonLessonsData",
+      id: string,
+      studentAuthID: string,
+      studentEmail: string,
+      lessonID: string,
+      lessonType?: string | null,
+      pages?: string | null,
+      ratings?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -26520,6 +27105,10 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -26700,6 +27289,10 @@ export type OnDeletePersonLocationItemSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -26876,6 +27469,10 @@ export type OnChangeStudentDataSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -27085,6 +27682,10 @@ export type OnChangeRoomSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -27259,6 +27860,22 @@ export type OnCreatePersonSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     spotlightUser?: boolean | null,
     spotlightDate?: string | null,
     addedby?: string | null,
@@ -27304,6 +27921,22 @@ export type OnUpdatePersonSubscription = {
         studentAuthID: string,
         status?: string | null,
         group?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -27359,9 +27992,70 @@ export type OnDeletePersonSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    lessons?:  {
+      __typename: "ModelPersonLessonsDataConnection",
+      items:  Array< {
+        __typename: "PersonLessonsData",
+        id: string,
+        studentAuthID: string,
+        studentEmail: string,
+        lessonID: string,
+        lessonType?: string | null,
+        pages?: string | null,
+        ratings?: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     spotlightUser?: boolean | null,
     spotlightDate?: string | null,
     addedby?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreatePersonLessonsDataSubscription = {
+  onCreatePersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdatePersonLessonsDataSubscription = {
+  onUpdatePersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeletePersonLessonsDataSubscription = {
+  onDeletePersonLessonsData?:  {
+    __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -27978,6 +28672,10 @@ export type OnCreateStaffSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -28071,6 +28769,10 @@ export type OnUpdateStaffSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -28162,6 +28864,10 @@ export type OnDeleteStaffSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -28325,6 +29031,10 @@ export type OnCreateRoomSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -28567,6 +29277,10 @@ export type OnUpdateRoomSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -28805,6 +29519,10 @@ export type OnDeleteRoomSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -29054,6 +29772,10 @@ export type OnCreateClassroomGroupStudentsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -29182,6 +29904,10 @@ export type OnUpdateClassroomGroupStudentsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -29308,6 +30034,10 @@ export type OnDeleteClassroomGroupStudentsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -29482,6 +30212,10 @@ export type OnCreateClassroomGroupsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -29672,6 +30406,10 @@ export type OnUpdateClassroomGroupsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -29858,6 +30596,10 @@ export type OnDeleteClassroomGroupsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -30047,6 +30789,10 @@ export type OnCreateRoomCoTeachersSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -30218,6 +30964,10 @@ export type OnUpdateRoomCoTeachersSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -30387,6 +31137,10 @@ export type OnDeleteRoomCoTeachersSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -31093,6 +31847,10 @@ export type OnCreateClassStudentSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -31209,6 +31967,10 @@ export type OnUpdateClassStudentSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -31323,6 +32085,10 @@ export type OnDeleteClassStudentSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -32901,6 +33667,10 @@ export type OnCreateRoomMsgsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -32947,6 +33717,10 @@ export type OnUpdateRoomMsgsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -32997,6 +33771,10 @@ export type OnDeleteRoomMsgsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -33041,6 +33819,10 @@ export type OnCreateAnthologyCommentSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -33098,6 +33880,10 @@ export type OnUpdateAnthologyCommentSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -33151,6 +33937,10 @@ export type OnDeleteAnthologyCommentSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -33207,6 +33997,10 @@ export type OnCreateQuestionDataSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -33266,6 +34060,10 @@ export type OnUpdateQuestionDataSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -33321,6 +34119,10 @@ export type OnDeleteQuestionDataSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -33758,6 +34560,10 @@ export type OnCreatePersonLocationSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -33932,6 +34738,10 @@ export type OnUpdatePersonLocationSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -34104,6 +34914,10 @@ export type OnDeletePersonLocationSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37271,6 +38085,10 @@ export type OnCreateStudentConnectionsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -37304,6 +38122,10 @@ export type OnCreateStudentConnectionsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37355,6 +38177,10 @@ export type OnUpdateStudentConnectionsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -37388,6 +38214,10 @@ export type OnUpdateStudentConnectionsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37439,6 +38269,10 @@ export type OnDeleteStudentConnectionsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -37472,6 +38306,10 @@ export type OnDeleteStudentConnectionsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37518,6 +38356,10 @@ export type OnCreatePersonSentimentsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37569,6 +38411,10 @@ export type OnUpdatePersonSentimentsSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -37616,6 +38462,10 @@ export type OnDeletePersonSentimentsSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37698,6 +38548,10 @@ export type OnCreateSentimentTrackerSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -37953,6 +38807,10 @@ export type OnUpdateSentimentTrackerSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -38204,6 +39062,10 @@ export type OnDeleteSentimentTrackerSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -38460,6 +39322,10 @@ export type OnCreateFeelingTrackerSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -38642,6 +39508,10 @@ export type OnUpdateFeelingTrackerSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -38828,6 +39698,10 @@ export type OnDeleteFeelingTrackerSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -39010,6 +39884,10 @@ export type OnCreateFeelingsArchiveSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -39290,6 +40168,10 @@ export type OnUpdateFeelingsArchiveSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -39566,6 +40448,10 @@ export type OnDeleteFeelingsArchiveSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -39978,6 +40864,10 @@ export type OnCreateCommunitySubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -40099,6 +40989,10 @@ export type OnUpdateCommunitySubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -40218,6 +41112,10 @@ export type OnDeleteCommunitySubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,
@@ -40342,6 +41240,10 @@ export type OnCreateGameChangerLogSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -40403,6 +41305,10 @@ export type OnUpdateGameChangerLogSubscription = {
         __typename: "ModelClassStudentConnection",
         nextToken?: string | null,
       } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
+        nextToken?: string | null,
+      } | null,
       spotlightUser?: boolean | null,
       spotlightDate?: string | null,
       addedby?: string | null,
@@ -40462,6 +41368,10 @@ export type OnDeleteGameChangerLogSubscription = {
       passcode?: string | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      lessons?:  {
+        __typename: "ModelPersonLessonsDataConnection",
         nextToken?: string | null,
       } | null,
       spotlightUser?: boolean | null,

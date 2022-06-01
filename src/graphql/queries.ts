@@ -42,6 +42,20 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
@@ -94,9 +108,57 @@ export const listPeople = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPersonLessonsData = /* GraphQL */ `
+  query GetPersonLessonsData($lessonID: String!) {
+    getPersonLessonsData(lessonID: $lessonID) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonLessonsData = /* GraphQL */ `
+  query ListPersonLessonsData(
+    $lessonID: String
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLessonsData(
+      lessonID: $lessonID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
         createdAt
         updatedAt
       }
@@ -319,6 +381,9 @@ export const getStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -532,6 +597,9 @@ export const getRoom = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -888,6 +956,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1114,6 +1185,9 @@ export const getClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1373,6 +1447,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1814,6 +1891,9 @@ export const getClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2609,6 +2689,9 @@ export const getRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2705,6 +2788,9 @@ export const getStudentData = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2863,6 +2949,9 @@ export const getAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2974,6 +3063,9 @@ export const getQuestionData = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3089,6 +3181,9 @@ export const getPersonLocation = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4922,6 +5017,9 @@ export const getStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -4953,6 +5051,9 @@ export const getStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5082,6 +5183,9 @@ export const getPersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5219,6 +5323,9 @@ export const getSentimentTracker = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5574,6 +5681,9 @@ export const getFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -5846,6 +5956,9 @@ export const getFeelingsArchive = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -6353,6 +6466,9 @@ export const getCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6564,6 +6680,9 @@ export const getGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6724,6 +6843,9 @@ export const userById = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6776,9 +6898,42 @@ export const usersByRole = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const lessonsByType = /* GraphQL */ `
+  query LessonsByType(
+    $lessonType: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    lessonsByType(
+      lessonType: $lessonType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
         createdAt
         updatedAt
       }

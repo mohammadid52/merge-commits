@@ -46,9 +46,20 @@ type Person @model @auth(rules: [{allow: public}]) {
   sentiments: [String]
   passcode: String
   classes: [ClassStudent] @hasMany(indexName: "classByStudent", fields: ["email"])
+  lessons: [PersonLessonsData] @hasMany(indexName: "byStudentAuthID", fields: ["authId"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
   addedby: String
+}
+
+type PersonLessonsData @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  studentAuthID: String! @index(name: "byStudentAuthID")
+  studentEmail: String!
+  lessonID: String! @primaryKey
+  lessonType: String @index(name: "byLessonType", queryField: "lessonsByType")
+  pages: AWSJSON
+  ratings: Int @default(value: "0")
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {
@@ -969,4 +980,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
 
-# asdfasdfsd12
+# asdfasdfsd9
