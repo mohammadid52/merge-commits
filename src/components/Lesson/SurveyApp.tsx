@@ -25,6 +25,7 @@ import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {PartInput} from 'API';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import {v4 as uuidV4} from 'uuid';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -592,6 +593,67 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
   const userAtEnd = () => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
+  };
+
+  useEffect(() => {
+    handleSurveyMutateData();
+  }, [lessonState.currentPage]);
+
+  const handleSurveyMutateData = async () => {
+    try {
+      let payload;
+      const existingLesson: any = await API.graphql(
+        graphqlOperation(queries.listPersonLessonsData, {
+          filter: {
+            lessonID: {eq: lessonID},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email},
+          },
+        })
+      );
+      if (!existingLesson.data.listPersonLessonsData.items.length) {
+        payload = {
+          id: uuidV4(),
+          studentAuthID: user.authId,
+          studentEmail: user.email,
+          lessonID: lessonID,
+          lessonType: lessonState.lessonData?.type,
+          //prettier-ignore
+          pages: `{
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+        };
+
+        await API.graphql(
+          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+        );
+      } else {
+        payload = {
+          studentAuthID: user.authId,
+          studentEmail: user.email,
+          lessonID: lessonID,
+          lessonType: lessonState.lessonData?.type,
+          //prettier-ignore
+          pages: `{
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+        };
+        await API.graphql(
+          graphqlOperation(mutations.updatePersonLessonsData, {
+            input: payload,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
+        error
+      );
+    }
   };
 
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
