@@ -33,7 +33,7 @@ const HeroBanner = (props: HeroBannerProps) => {
           {isOnDemandStudent && (
             <div className="flex justify-center">
               <h3 className="w-auto h-auto px-6 py-1 rounded bg-yellow-400 bg-opacity-60 text-white text-sm 2xl:text-base text-center font-normal">
-                On-Demand
+                Self-Paced
               </h3>
             </div>
           )}
