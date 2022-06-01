@@ -63,6 +63,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
+  console.log(
+    '🚀 ~ file: LessonApp.tsx ~ line 66 ~ LessonApp ~ CURRENT_PAGE',
+    CURRENT_PAGE
+  );
 
   const topLessonRef = useRef();
 
@@ -1031,7 +1035,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)}
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0,
         };
@@ -1047,7 +1052,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)}
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
         };
         await API.graphql(

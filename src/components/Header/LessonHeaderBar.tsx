@@ -138,6 +138,7 @@ const LessonHeaderBar = ({
     : '';
   useEffect(() => {
     if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+      console.log('I am running...');
       setVideoLink(thisPageVideoLink);
 
       if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {

@@ -3419,7 +3419,7 @@ export const userById = /* GraphQL */ `
 `;
 export const getUserProfile = /* GraphQL */ `
   query UserById(
-    $id: ID
+    $id: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelPersonFilterInput
     $limit: Int
@@ -4370,7 +4370,7 @@ export const getInstListForNonAdmin = /* GraphQL */ `
 
 export const attendanceByStudent = /* GraphQL */ `
   query AttendanceByStudent(
-    $studentID: ID
+    $studentID: ID!
     $date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAttendanceFilterInput
