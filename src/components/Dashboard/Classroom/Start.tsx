@@ -443,15 +443,27 @@ const Start: React.FC<StartProps> = ({
     });
   };
 
+  const buttonText = `${firstPart()} ${secondPart()}`;
+
+  const updateBtnText = () => {
+    switch (buttonText) {
+      case 'SURVEY OPEN':
+        return 'Go To Survey';
+      case 'START LESSON':
+        return 'Go To Lesson';
+
+      default:
+        return buttonText;
+    }
+  };
+
   return (
     <div>
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
-          loading
-            ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
-            : `${firstPart()} ${secondPart()}`
+          loading ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT : updateBtnText()
         }
         disabled={
           loading ||
