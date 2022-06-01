@@ -744,6 +744,7 @@ export const onCreatePerson = /* GraphQL */ `
           studentAuthID
           studentEmail
           lessonID
+          lessonType
           pages
           ratings
           createdAt
@@ -805,6 +806,7 @@ export const onUpdatePerson = /* GraphQL */ `
           studentAuthID
           studentEmail
           lessonID
+          lessonType
           pages
           ratings
           createdAt
@@ -866,6 +868,7 @@ export const onDeletePerson = /* GraphQL */ `
           studentAuthID
           studentEmail
           lessonID
+          lessonType
           pages
           ratings
           createdAt
@@ -888,6 +891,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
       studentAuthID
       studentEmail
       lessonID
+      lessonType
       pages
       ratings
       createdAt
@@ -902,6 +906,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
       studentAuthID
       studentEmail
       lessonID
+      lessonType
       pages
       ratings
       createdAt
@@ -916,6 +921,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
       studentAuthID
       studentEmail
       lessonID
+      lessonType
       pages
       ratings
       createdAt
