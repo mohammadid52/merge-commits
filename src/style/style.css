@@ -260,3 +260,32 @@ span {
     height: 4rem;
   }
 }
+
+.rating {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: auto;
+}
+.on {
+  color: rgb(255, 204, 0);
+}
+.off {
+  color: #ccc;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 200px;
+  height: 14px;
+  background-color: #ccc;
+}
+
+.progress-value {
+  height: 14px;
+  background-color: rgb(255, 204, 0);
+  max-width: 100%;
+  width: 0%;
+  transition: 0.3s all;
+}

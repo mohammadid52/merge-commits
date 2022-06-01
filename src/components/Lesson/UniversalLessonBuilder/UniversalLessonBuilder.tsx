@@ -13,7 +13,7 @@ import {
 import {replaceTailwindClass} from '@lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
 import BuilderWrapper from '@lesson/UniversalLessonBuilder/views/BuilderWrapper';
 import {API, graphqlOperation} from 'aws-amplify';
-import {findIndex, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
@@ -40,11 +40,10 @@ const initialUniversalLessonPagePartContent: PartContent = {
  * THE BUILDER PARENT                      *
  *******************************************/
 const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
-  const history = useHistory();
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {state, dispatch, lessonState} = useContext(GlobalContext);
 
   const {selectedComponent} = usePageBuilderContext();
 
@@ -250,6 +249,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       );
       setUniversalLessonDetails({...updatedPage});
       return updatedPage;
+    } else {
+      console.log('selected component not found @UnivesalLessonBuilder.tsx');
     }
   };
 

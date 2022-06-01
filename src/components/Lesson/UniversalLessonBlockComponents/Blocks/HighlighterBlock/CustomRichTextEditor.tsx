@@ -81,8 +81,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     placeholder = '',
     inlineOptions = DEFAULT_INLINE_OPTIONS,
   } = props;
+
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+
   const [changesArr, setChangesArr] = useState([]);
 
   /**
@@ -147,8 +149,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
    */
 
   useEffect(() => {
-    onInit(initialValue);
-  }, []);
+    if (initialValue) {
+      onInit(initialValue);
+    }
+  }, [initialValue]);
 
   const editorRef = React.useRef();
 
