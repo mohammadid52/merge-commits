@@ -239,7 +239,7 @@ const ClassRoster = ({
     }
   }, [roster]);
 
-  // ~~~ FILTER INACTIVE // ON-DEMAND ST ~~~ //
+  // ~~~ FILTER INACTIVE // Self-Paced ST ~~~ //
 
   const inactiveStudents = roster.reduce(
     (studentAcc: {notInClass: any[]; onDemand: any[]}, student: any) => {
@@ -486,7 +486,7 @@ const ClassRoster = ({
         sectionTitle={
           lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['ON_DEMAND']
         }
-        emptyMessage={'No on-demand students'}
+        emptyMessage={'No self-paced students'}
       />
     </div>
   );
