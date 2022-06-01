@@ -6,6 +6,7 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -70,6 +71,8 @@ export interface Lesson {
 export interface LessonProps extends DashboardProps {
   lessons: Lesson[];
   syllabus?: any;
+  handleLessonMutationRating: (lessonID: string, ratingValue: string) => void;
+  getLessonRating: (lessonId: string, userEmail: string, userAuthId: string) => any;
 }
 
 export interface LessonCardProps {
@@ -82,9 +85,13 @@ export interface LessonCardProps {
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
+  pageNumber?: number;
+  handleLessonMutationRating?: (lessonID: string, ratingValue: string) => void;
+  getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
   roomID?: string;
   getImageFromS3?: boolean;
   preview?: boolean;
+  user?: any;
 }
 
 const range = (from: number, to: number, step: number = 1) => {
@@ -347,6 +354,43 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     },
   ];
 
+  const getLessonRating = async (
+    lessonId: string,
+    userEmail: string,
+    userAuthId: string
+  ) => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonId,
+          studentEmail: userEmail,
+          studentAuthId: userAuthId,
+        })
+      );
+
+      const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      return {
+        ratingValue,
+        currentPage,
+      };
+    } catch (error) {}
+  };
+
+  const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updatePersonLessonsData, {
+          input: {
+            lessonID: lessonID,
+            ratings: ratingValue,
+          },
+        })
+      );
+    } catch (error) {}
+  };
+
   return (
     <>
       <DashboardContainer
@@ -440,6 +484,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       lessonLoading={lessonLoading || settingLessons || syllabusLoading}
                       lessons={lessonData}
                       syllabus={syllabusData}
+                      handleLessonMutationRating={handleLessonMutationRating}
+                      getLessonRating={getLessonRating}
                     />
                   </div>
                 </div>

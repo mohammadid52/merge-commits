@@ -260,3 +260,17 @@ span {
     height: 4rem;
   }
 }
+
+.rating {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: auto;
+}
+.on {
+  color: rgb(255, 204, 0);
+}
+.off {
+  color: #ccc;
+}

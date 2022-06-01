@@ -14,6 +14,7 @@ const BottomBar = (props: LessonCardProps) => {
     syllabusProps,
     accessible,
     lessonType,
+    pageNumber,
   } = props;
 
   return (
@@ -75,6 +76,7 @@ const BottomBar = (props: LessonCardProps) => {
           <Start
             preview={preview}
             roomID={roomID}
+            pageNumber={pageNumber}
             isTeacher={isTeacher}
             lessonKey={lessonProps ? lessonProps.lessonID : null}
             isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
