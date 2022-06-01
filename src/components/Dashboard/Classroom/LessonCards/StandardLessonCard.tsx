@@ -6,6 +6,7 @@ import SideImage from './StandardLessonCard/SideImage';
 import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 import Rating from './StandardLessonCard/Rating';
+import ProgressBar from './StandardLessonCard/ProgressBar';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -20,11 +21,11 @@ const StandardLessonCard = (props: LessonCardProps) => {
     user,
     handleLessonMutationRating,
     getLessonRating,
+    getLessonByType,
     getImageFromS3 = true,
     preview = false,
   } = props;
   const {theme} = useContext(GlobalContext);
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
 
   useEffect(() => {
@@ -37,7 +38,6 @@ const StandardLessonCard = (props: LessonCardProps) => {
       if (typeof value === 'undefined') {
         setexistsOrNot(true);
       }
-      setPageNumber(value.currentPage);
       return;
     } catch (error) {}
   };
@@ -55,6 +55,13 @@ const StandardLessonCard = (props: LessonCardProps) => {
        */}
       <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
+        <ProgressBar
+          lessonProps={lessonProps}
+          user={user}
+          value=""
+          max="100"
+          getLessonByType={getLessonByType}
+        />
         {lessonProps.lesson.type !== 'survey' && !existsOrNot ? (
           <Rating
             user={user}
@@ -71,7 +78,6 @@ const StandardLessonCard = (props: LessonCardProps) => {
           preview={preview}
           accessible={accessible}
           roomID={roomID}
-          pageNumber={pageNumber}
           lessonProps={lessonProps}
           syllabusProps={syllabusProps}
           lessonType={lessonType}

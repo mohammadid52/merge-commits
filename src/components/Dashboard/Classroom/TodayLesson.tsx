@@ -24,6 +24,7 @@ const Today: React.FC<LessonProps> = ({
   syllabus,
   handleLessonMutationRating,
   getLessonRating,
+  getLessonByType,
 }: LessonProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -109,6 +110,7 @@ const Today: React.FC<LessonProps> = ({
                       user={state.user}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={getLessonRating}
+                      getLessonByType={getLessonByType}
                     />
                   </div>
                 );

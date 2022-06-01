@@ -73,6 +73,7 @@ export interface LessonProps extends DashboardProps {
   syllabus?: any;
   handleLessonMutationRating: (lessonID: string, ratingValue: string) => void;
   getLessonRating: (lessonId: string, userEmail: string, userAuthId: string) => any;
+  getLessonByType: (type: string, lessonID: string) => any;
 }
 
 export interface LessonCardProps {
@@ -88,6 +89,7 @@ export interface LessonCardProps {
   pageNumber?: number;
   handleLessonMutationRating?: (lessonID: string, ratingValue: string) => void;
   getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
+  getLessonByType?: (type: string, lessonID: string) => any;
   roomID?: string;
   getImageFromS3?: boolean;
   preview?: boolean;
@@ -391,6 +393,26 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     } catch (error) {}
   };
 
+  const getLessonByType = async (type: string, lessonID: string) => {
+    try {
+      const getLessonByType: any = await API.graphql(
+        graphqlOperation(queries.lessonsByType, {
+          lessonType: type,
+          filter: {lessonID: {eq: lessonID}},
+        })
+      );
+      const pageNumber = getLessonByType.data.lessonsByType.items[0].pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      const totalPages = JSON.parse(pageNumber).totalPages;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      return {
+        lessonProgress,
+        currentPage,
+        totalPages,
+      };
+    } catch (error) {}
+  };
+
   return (
     <>
       <DashboardContainer
@@ -486,6 +508,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       syllabus={syllabusData}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={getLessonRating}
+                      getLessonByType={getLessonByType}
                     />
                   </div>
                 </div>

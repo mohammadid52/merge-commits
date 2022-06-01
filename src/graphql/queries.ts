@@ -48,6 +48,7 @@ export const getPerson = /* GraphQL */ `
           studentAuthID
           studentEmail
           lessonID
+          lessonType
           pages
           ratings
           createdAt
@@ -127,6 +128,7 @@ export const getPersonLessonsData = /* GraphQL */ `
       studentAuthID
       studentEmail
       lessonID
+      lessonType
       pages
       ratings
       createdAt
@@ -154,6 +156,7 @@ export const listPersonLessonsData = /* GraphQL */ `
         studentAuthID
         studentEmail
         lessonID
+        lessonType
         pages
         ratings
         createdAt
@@ -6901,6 +6904,36 @@ export const usersByRole = /* GraphQL */ `
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const lessonsByType = /* GraphQL */ `
+  query LessonsByType(
+    $lessonType: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    lessonsByType(
+      lessonType: $lessonType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
         createdAt
         updatedAt
       }

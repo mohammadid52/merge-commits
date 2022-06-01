@@ -1032,6 +1032,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,
+          lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
@@ -1049,6 +1050,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,
+          lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
