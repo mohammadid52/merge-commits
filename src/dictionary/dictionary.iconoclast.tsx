@@ -659,7 +659,7 @@ const classRoomDict: any = {
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     LESSON_SUB_TITLE_ASYNC:
-      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
+      'You are currently following lessons "self-paced", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -700,7 +700,7 @@ const classRoomDict: any = {
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
     LESSON_SUB_TITLE_ASYNC:
-      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
+      'You are currently following lessons "self-paced", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -2776,7 +2776,7 @@ const UserEditDict: any = {
       save: 'Save',
       cancel: 'Cancel',
     },
-    ondemand: 'On-Demand',
+    ondemand: 'Self-Paced',
     SUPER_ADMIN: 'Super Admin',
   },
   ES: {
@@ -2807,7 +2807,7 @@ const UserInformationDict: any = {
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
-    ondemand: 'On-Demand',
+    ondemand: 'Self-Paced',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
