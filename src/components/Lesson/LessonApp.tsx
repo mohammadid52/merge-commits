@@ -63,10 +63,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
-  console.log(
-    '🚀 ~ file: LessonApp.tsx ~ line 66 ~ LessonApp ~ CURRENT_PAGE',
-    CURRENT_PAGE
-  );
 
   const topLessonRef = useRef();
 

@@ -18,7 +18,9 @@ const StarRating = ({
 
   useEffect(() => {
     getLessonRating(lessonProps.lesson.id, user.email, user.authId).then((value: any) => {
-      setRating(value.ratingValue);
+      if (value) {
+        setRating(value.ratingValue);
+      }
     });
   }, []);
 

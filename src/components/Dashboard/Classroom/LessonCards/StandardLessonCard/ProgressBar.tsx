@@ -14,8 +14,10 @@ const ProgressBar = ({value, max, lessonProps, getLessonByType}: ProgressBarProp
 
   useEffect(() => {
     getLessonByType(lessonProps.lesson.type, lessonProps.lesson.id).then((value: any) => {
-      const percentCorrect = (value.lessonProgress * 100) / value.totalPages;
-      setProgressValue(Math.round(percentCorrect));
+      if (value) {
+        const percentCorrect = (value.lessonProgress * 100) / value.totalPages;
+        setProgressValue(Math.round(percentCorrect));
+      }
     });
   }, []);
 
