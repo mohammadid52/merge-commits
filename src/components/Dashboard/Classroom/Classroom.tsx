@@ -373,9 +373,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
       const currentPage = JSON.parse(pageNumber).currentPage;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      const totalPages = JSON.parse(pageNumber).totalPages;
       return {
         ratingValue,
         currentPage,
+        lessonProgress,
+        totalPages,
       };
     } catch (error) {}
   };
