@@ -61,28 +61,28 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const pageBuilderContext = isInLesson ? undefined : usePageBuilderContext();
 
-  const setNecessaryData = () => {
-    if (switchContext && pageBuilderContext) {
-      const currentPage: UniversalLessonPage = get(
-        switchContext.universalLessonDetails,
-        `lessonPlan[${lessonState.currentPage}]`,
-        null
-      );
+  // const setNecessaryData = () => {
+  //   if (switchContext && pageBuilderContext) {
+  //     const currentPage: UniversalLessonPage = get(
+  //       switchContext.universalLessonDetails,
+  //       `lessonPlan[${lessonState.currentPage}]`,
+  //       null
+  //     );
 
-      const pageContentIdx = findIndex(
-        currentPage?.pageContent,
-        (d: any) => d.id === pagePartId
-      );
+  //     const pageContentIdx = findIndex(
+  //       currentPage?.pageContent,
+  //       (d: any) => d.id === pagePartId
+  //     );
 
-      const pageContent = currentPage.pageContent[pageContentIdx];
-      const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
+  //     const pageContent = currentPage.pageContent[pageContentIdx];
+  //     const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
 
-      pageBuilderContext.setSelectedComponent({pageContentIdx, partContentIdx});
-    }
-  };
+  //     pageBuilderContext.setSelectedComponent({pageContentIdx, partContentIdx});
+  //   }
+  // };
 
   useEffect(() => {
-    setNecessaryData();
+    // setNecessaryData();
     return () => {
       pageBuilderContext.setSelectedComponent(null);
     };
