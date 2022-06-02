@@ -152,7 +152,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     if (initialValue) {
       onInit(initialValue);
     }
-  }, [initialValue]);
+  }, []);
 
   const editorRef = React.useRef();
 
