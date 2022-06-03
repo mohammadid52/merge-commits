@@ -24,6 +24,7 @@ import {getAsset} from '../../../../../../../assets';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {goBackBreadCrumb} from '../../../../../../../utilities/functions';
 import {BsArrowLeft} from 'react-icons/bs';
+import {v4 as uuidv4} from 'uuid';
 
 interface ProfileCheckpointlookupProps {
   instId?: string;
@@ -35,7 +36,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const urlParams: any = useParams();
-  const curricularId = urlParams.courseId;
+  const {courseId} = urlParams;
   const institutionId = urlParams.institutionId || instId;
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
@@ -60,12 +61,12 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddExistingCheckpoint'],
-      url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
+      url: `/dashboard/curricular/${courseId}/checkpoint/addNew`,
       last: true,
     },
   ];
@@ -104,10 +105,12 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
   };
   const saveCommonCurricular = async (checkpointID: string) => {
     let profileCheckpointInput = {
+      id: uuidv4(),
       type: 'curricular',
-      typeID: curricularId,
+      typeID: courseId,
       checkpointID: checkpointID,
     };
+
     await API.graphql(
       graphqlOperation(customMutations.createCommonCheckpoint, {
         input: profileCheckpointInput,
@@ -137,7 +140,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
         ),
         await API.graphql(
           graphqlOperation(customQueries.getCurriculumCheckpoints, {
-            id: curricularId,
+            id: courseId,
           })
         ),
       ]);
