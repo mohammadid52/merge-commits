@@ -1109,7 +1109,7 @@ export const deleteLessonRubrics = /* GraphQL */ `
 export const createCommonCheckpoint = /* GraphQL */ `
   mutation CreateCommonCheckpoint(
     $input: CreateCommonCheckpointInput!
-    $condition: ModelcommonCheckpointConditionInput
+    $condition: ModelCommonCheckpointConditionInput
   ) {
     createCommonCheckpoint(input: $input, condition: $condition) {
       id
@@ -1124,7 +1124,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
 export const deleteCommonCheckpoint = /* GraphQL */ `
   mutation DeleteCommonCheckpoint(
     $input: DeleteCommonCheckpointInput!
-    $condition: ModelcommonCheckpointConditionInput
+    $condition: ModelCommonCheckpointConditionInput
   ) {
     deleteCommonCheckpoint(input: $input, condition: $condition) {
       id

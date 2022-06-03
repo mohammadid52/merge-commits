@@ -21,6 +21,7 @@ import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {goBackBreadCrumb} from '../../../../../../../utilities/functions';
+import {v4 as uuidv4} from 'uuid';
 
 interface AddProfileCheckpointProps {}
 
@@ -28,7 +29,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const {} = props;
   const history = useHistory();
   const urlParams: any = useParams();
-  const curricularId = urlParams.curricularId;
+  const {courseId} = urlParams;
   const institutionId = urlParams.institutionId;
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -69,12 +70,12 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddCheckpint'],
-      url: `/dashboard/manage-institutions/curricular/${curricularId}/checkpoint/addNew`,
+      url: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
       last: true,
     },
   ];
@@ -207,8 +208,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         const newCheckpoint = results?.data?.createCheckpoint;
         if (newCheckpoint) {
           let profileCheckpointInput = {
+            id: uuidv4(),
             type: 'curricular',
-            typeID: curricularId,
+            typeID: courseId,
             checkpointID: newCheckpoint.id,
           };
           await API.graphql(
