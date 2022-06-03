@@ -58,6 +58,7 @@ const HighlighterFormDialog = ({
         [{id: uuidv4().toString(), value: inputFieldValue}],
         0
       );
+
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
@@ -80,10 +81,8 @@ const HighlighterFormDialog = ({
     setInputFieldValue(html);
   };
 
-
   return (
     <>
-      
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
           {inputFieldValue && (

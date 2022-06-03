@@ -226,31 +226,46 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     contentType: string,
     inputObj: any,
     addBlockAtPosition: number,
-    classString?: string
+    classString?: string,
+    customPageContentId?: string,
+    pageContentIdx?: number,
+    partContentIdx?: number
   ) => {
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
     const pageContent = lessonPlan[lessonState.currentPage].pageContent;
 
-    if (!isEmpty(selectedComponent)) {
-      const partContent = pageContent[selectedComponent.pageContentIdx].partContent;
+    let idxData = {
+      pageContentIdx:
+        selectedComponent?.pageContentIdx !== undefined
+          ? selectedComponent?.pageContentIdx
+          : pageContentIdx,
+      partContentIdx:
+        selectedComponent?.partContentIdx !== undefined
+          ? selectedComponent?.partContentIdx
+          : partContentIdx,
+    };
 
-      partContent[selectedComponent.partContentIdx] = {
-        ...partContent[selectedComponent.partContentIdx],
-        class: classString || partContent[selectedComponent.partContentIdx].class,
+    if (idxData.pageContentIdx !== undefined && idxData.pageContentIdx !== undefined) {
+      const partContent = pageContent[idxData.pageContentIdx].partContent;
+
+      partContent[idxData.partContentIdx] = {
+        ...partContent[idxData.partContentIdx],
+        class: classString || partContent[idxData.partContentIdx].class,
         type: contentType,
         value: inputObj,
       };
 
       const updatedPage = update(
         universalLessonDetails,
-        `lessonPlan[${lessonState.currentPage}].pageContent[${selectedComponent.pageContentIdx}].partContent`,
+        `lessonPlan[${lessonState.currentPage}].pageContent[${idxData.pageContentIdx}].partContent`,
         () => [...partContent]
       );
+
       setUniversalLessonDetails({...updatedPage});
       return updatedPage;
     } else {
-      console.log('selected component not found @UnivesalLessonBuilder.tsx');
+      console.log('index data missing @UnivesalLessonBuilder.tsx');
     }
   };
 
