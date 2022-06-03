@@ -34,6 +34,11 @@ const UnitManager = ({
   syllabusIds,
   setSyllabusIds,
 }: any) => {
+  // console.log(
+  //   '🚀 ~ file: UnitManager.tsx ~ line 37 ~ courseData',
+  //   courseData,
+  //   syllabusIds
+  // );
   const history = useHistory();
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);

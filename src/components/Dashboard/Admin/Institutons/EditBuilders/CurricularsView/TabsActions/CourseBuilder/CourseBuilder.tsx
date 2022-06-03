@@ -96,7 +96,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           ),
         ]);
         const savedData = curriculumResult.data.getCurriculum;
-        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnitss?.items]
+        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnits?.items]
           .map((t: any) => {
             let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
             return {...t, index};

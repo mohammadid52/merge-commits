@@ -3076,25 +3076,6 @@ export const getCurriculum = /* GraphQL */ `
       }
       designers
       image
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabus {
         items {
           id
@@ -3985,13 +3966,6 @@ export const getInstitutionCurriculars = /* GraphQL */ `
           type
           languages
           designers
-          syllabi {
-            items {
-              id
-              name
-              type
-            }
-          }
           createdAt
           updatedAt
         }
@@ -5041,7 +5015,7 @@ export const listStaffOptions = /* GraphQL */ `
 
 export const listCurriculumUnitss = /* GraphQL */ `
   query ListCurriculumUnits(
-    $filter: ModelcurriculumUnitsFilterInput
+    $filter: ModelCurriculumUnitsFilterInput
     $limit: Int
     $nextToken: String
   ) {
