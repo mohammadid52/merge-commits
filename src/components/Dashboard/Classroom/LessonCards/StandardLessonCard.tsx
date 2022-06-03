@@ -27,6 +27,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   } = props;
   const {theme} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   useEffect(() => {
     checkValueOrNull();
@@ -35,8 +36,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const checkValueOrNull = async () => {
     try {
       const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
-      if (typeof value === 'undefined') {
-        setexistsOrNot(true);
+      if (typeof value === 'undefined') setexistsOrNot(true);
+
+      if (value) {
+        if (value.lessonProgress === value.totalPages) setIsCompleted(true);
       }
       return;
     } catch (error) {}
@@ -62,7 +65,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           max="100"
           getLessonByType={getLessonByType}
         />
-        {lessonProps.lesson.type !== 'survey' && !existsOrNot ? (
+        {lessonProps.lesson.type !== 'survey' && !existsOrNot && isCompleted ? (
           <Rating
             user={user}
             getLessonRating={getLessonRating}

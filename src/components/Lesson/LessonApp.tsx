@@ -35,7 +35,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
-
   const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
@@ -1010,6 +1009,26 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     handleLessonMutateData();
   }, [lessonState.currentPage]);
 
+  const getLessonCompletedValue = async () => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonID,
+          studentEmail: user.email,
+          studentAuthId: user.authId,
+        })
+      );
+
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      const totalPages = JSON.parse(pageNumber).totalPages;
+      return {
+        lessonProgress,
+        totalPages,
+      };
+    } catch (error) {}
+  };
+
   const handleLessonMutateData = async () => {
     try {
       let payload;
@@ -1032,8 +1051,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0,
         };
@@ -1050,8 +1069,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
         };
         await API.graphql(
@@ -1096,6 +1115,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            getLessonCompletedValue={getLessonCompletedValue}
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

@@ -289,3 +289,26 @@ span {
   width: 0%;
   transition: 0.3s all;
 }
+
+.descriptive {
+  height: 90px;
+  padding-right: 15px;
+}
+
+.hover-overflow-auto:hover {
+  overflow: auto;
+}
+
+.descriptive::-webkit-scrollbar {
+  width: 5px;
+}
+.descriptive::-webkit-scrollbar-track {
+  background: #fff;
+}
+.descriptive::-webkit-scrollbar-thumb {
+  background: #babac0;
+  border-radius: 20px;
+}
+.descriptive::-webkit-scrollbar-thumb:hover {
+  background: #babac0;
+}
