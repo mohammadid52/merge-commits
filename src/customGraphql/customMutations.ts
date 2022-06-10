@@ -1432,7 +1432,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
 export const deleteCurriculumUnits = /* GraphQL */ `
   mutation DeleteCurriculumUnits(
     $input: DeleteCurriculumUnitsInput!
-    $condition: ModelcurriculumUnitsConditionInput
+    $condition: ModelCurriculumUnitsConditionInput
   ) {
     deleteCurriculumUnits(input: $input, condition: $condition) {
       id
