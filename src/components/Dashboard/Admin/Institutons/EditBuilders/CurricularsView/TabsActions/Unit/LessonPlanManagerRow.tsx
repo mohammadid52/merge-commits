@@ -52,7 +52,7 @@ const LessonPlanManagerRow = ({
       {checkIfRemovable(lessonObject, syllabusObject) ? (
         <span
           className={`w-2.5/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-          onClick={() => handleToggleDelete(lessonObject.name, lessonObject)}>
+          onClick={() => handleToggleDelete(lessonObject.title, lessonObject)}>
           {/* <DeleteActionBtn
             handleClick={() => handleToggleDelete(lessonObject.name, lessonObject)}
           /> */}
