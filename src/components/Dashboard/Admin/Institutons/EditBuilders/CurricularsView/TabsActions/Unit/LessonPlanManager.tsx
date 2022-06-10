@@ -236,7 +236,7 @@ const LessonPlanManager = ({
         updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
       )
       .filter((item: any) => (item.lessonPlan ? true : false))
-      .map((item: {id: string; title: string; type: string, targetAudience: string}) => ({
+      .map((item: {id: string; title: string; type: string; targetAudience: string}) => ({
         id: item.id,
         // name: `${item.title} - ${item.type && getLessonType(item.type)}`,
         name: `${item.title} - ${item.targetAudience || 'All'}`,
@@ -360,7 +360,7 @@ const LessonPlanManager = ({
         list.filter((_item: any) => _item.id !== lesson.id)
       );
       setSavedLessonsList((prevList: any) =>
-        prevList.filter((lesson: any) => lesson.id !== lesson.uniqlessonId)
+        prevList.filter((item: any) => item.id !== lesson.uniqlessonId)
       );
     } catch (e) {
       console.error('error deleting...', e);
