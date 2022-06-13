@@ -13,6 +13,7 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
 import {orderBy, uniqBy} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
+import {useHistory} from 'react-router';
 
 interface ICsvProps {
   institutionId?: string;
@@ -21,6 +22,7 @@ interface ICsvProps {
 const UploadCsv = ({institutionId}: ICsvProps) => {
   const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
   const {CsvDict} = useDictionary(clientKey);
+  const history = useHistory();
 
   const [file, setFile] = useState<any>(null);
   const [reason, setReason] = useState<string>('');
@@ -109,6 +111,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           if (result.length > 0) {
             await createSurveyData(result);
             await createUploadLogs();
+            setFile(null);
+            history.push('/dashboard/manage-institutions/research-and-analytics');
           }
         };
 
