@@ -9049,6 +9049,114 @@ export const deleteUniversalSurveyStudentData = /* GraphQL */ `
     }
   }
 `;
+export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation CreateTemporaryUniversalUploadSurveyData(
+    $input: CreateTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    createTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation UpdateTemporaryUniversalUploadSurveyData(
+    $input: UpdateTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    updateTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation DeleteTemporaryUniversalUploadSurveyData(
+    $input: DeleteTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    deleteTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUploadLogs = /* GraphQL */ `
+  mutation CreateUploadLogs(
+    $input: CreateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    createUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUploadLogs = /* GraphQL */ `
+  mutation UpdateUploadLogs(
+    $input: UpdateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    updateUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUploadLogs = /* GraphQL */ `
+  mutation DeleteUploadLogs(
+    $input: DeleteUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    deleteUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUniversalJournalData = /* GraphQL */ `
   mutation CreateUniversalJournalData(
     $input: CreateUniversalJournalDataInput!

@@ -9059,6 +9059,87 @@ export const onDeleteUniversalSurveyStudentData = /* GraphQL */ `
     }
   }
 `;
+export const onCreateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnCreateTemporaryUniversalUploadSurveyData {
+    onCreateTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnUpdateTemporaryUniversalUploadSurveyData {
+    onUpdateTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnDeleteTemporaryUniversalUploadSurveyData {
+    onDeleteTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUploadLogs = /* GraphQL */ `
+  subscription OnCreateUploadLogs {
+    onCreateUploadLogs {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUploadLogs = /* GraphQL */ `
+  subscription OnUpdateUploadLogs {
+    onUpdateUploadLogs {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUploadLogs = /* GraphQL */ `
+  subscription OnDeleteUploadLogs {
+    onDeleteUploadLogs {
+      id
+      User_id
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUniversalJournalData = /* GraphQL */ `
   subscription OnCreateUniversalJournalData {
     onCreateUniversalJournalData {

@@ -922,6 +922,8 @@ const Institute_info: any = {
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lesson Manager',
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
+      DOWNLOAD_CSV: 'Download CSV',
+      UPLOAD_CSV: 'Upload CSV',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
