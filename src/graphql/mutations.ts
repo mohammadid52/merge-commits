@@ -9108,11 +9108,13 @@ export const createUploadLogs = /* GraphQL */ `
     createUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
@@ -9127,11 +9129,13 @@ export const updateUploadLogs = /* GraphQL */ `
     updateUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
@@ -9146,11 +9150,13 @@ export const deleteUploadLogs = /* GraphQL */ `
     deleteUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt

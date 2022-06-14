@@ -4405,11 +4405,13 @@ export const getUploadLogs = /* GraphQL */ `
     getUploadLogs(id: $id) {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
@@ -4434,11 +4436,13 @@ export const listUploadLogs = /* GraphQL */ `
       items {
         id
         User_id
+        UploadType
         Date
         Curricullum_id
         Unit_id
         lesson_id
         Class_id
+        PaperSurveyURL
         Reason
         createdAt
         updatedAt

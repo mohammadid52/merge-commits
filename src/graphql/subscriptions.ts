@@ -9097,11 +9097,13 @@ export const onCreateUploadLogs = /* GraphQL */ `
     onCreateUploadLogs {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
@@ -9113,11 +9115,13 @@ export const onUpdateUploadLogs = /* GraphQL */ `
     onUpdateUploadLogs {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
@@ -9129,11 +9133,13 @@ export const onDeleteUploadLogs = /* GraphQL */ `
     onDeleteUploadLogs {
       id
       User_id
+      UploadType
       Date
       Curricullum_id
       Unit_id
       lesson_id
       Class_id
+      PaperSurveyURL
       Reason
       createdAt
       updatedAt
