@@ -685,6 +685,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         {label: 'Unit', key: 'unit'},
         {label: 'Classroom', key: 'classroom'},
         {label: 'Survey name', key: 'surveyName'},
+        {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
         ...demographicsQuestionHeaders, // Enable this line for demographics question
         ...surveyQuestionHeaders,
       ]);
@@ -693,11 +694,13 @@ const Csv = ({institutionId}: ICsvProps) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
+        let universalSurveyStudentID = '';
         // console.log('🚀 ~ file: Csv.tsx ~ line 697 ~ data ~ SCQAnswers', SCQAnswers);
 
         SCQAnswers[0].map((answerArray: any) => {
           if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
+            universalSurveyStudentID = answerArray.id;
             answerArray.surveyData.map((singleAnswer: any) => {
               if (qids.indexOf(singleAnswer.domID) >= 0) {
                 surveyAnswerDates.push(answerArray.updatedAt);
@@ -764,6 +767,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         } else {
           notTakenSurvey++;
         }
+
         return {
           ...stu,
           institute: selectedInst.name,
@@ -771,6 +775,9 @@ const Csv = ({institutionId}: ICsvProps) => {
           unit: selectedUnit.name,
           classroom: selectedClassRoom.name,
           surveyName: selectedSurvey.name,
+          universalSurveyStudentID: universalSurveyStudentID
+            ? universalSurveyStudentID
+            : 'Not-taken-yet',
           ...studentAnswers,
           hasTakenSurvey,
           first:

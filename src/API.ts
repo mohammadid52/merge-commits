@@ -2666,6 +2666,100 @@ export type DeleteUniversalSurveyStudentDataInput = {
   id: string,
 };
 
+export type CreateTemporaryUniversalUploadSurveyDataInput = {
+  id?: string | null,
+  updatedUserId: string,
+  surveyData?: Array< string | null > | null,
+};
+
+export type ModelTemporaryUniversalUploadSurveyDataConditionInput = {
+  updatedUserId?: ModelIDInput | null,
+  surveyData?: ModelStringInput | null,
+  and?: Array< ModelTemporaryUniversalUploadSurveyDataConditionInput | null > | null,
+  or?: Array< ModelTemporaryUniversalUploadSurveyDataConditionInput | null > | null,
+  not?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
+};
+
+export type TemporaryUniversalUploadSurveyData = {
+  __typename: "TemporaryUniversalUploadSurveyData",
+  id: string,
+  updatedUserId: string,
+  surveyData?: Array< string | null > | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateTemporaryUniversalUploadSurveyDataInput = {
+  id: string,
+  updatedUserId?: string | null,
+  surveyData?: Array< string | null > | null,
+};
+
+export type DeleteTemporaryUniversalUploadSurveyDataInput = {
+  id: string,
+};
+
+export type CreateUploadLogsInput = {
+  id?: string | null,
+  User_id: string,
+  UploadType?: string | null,
+  Date?: string | null,
+  Curricullum_id?: string | null,
+  Unit_id?: string | null,
+  lesson_id?: string | null,
+  Class_id?: string | null,
+  PaperSurveyURL?: Array< string | null > | null,
+  Reason?: string | null,
+};
+
+export type ModelUploadLogsConditionInput = {
+  User_id?: ModelIDInput | null,
+  UploadType?: ModelStringInput | null,
+  Date?: ModelStringInput | null,
+  Curricullum_id?: ModelIDInput | null,
+  Unit_id?: ModelIDInput | null,
+  lesson_id?: ModelIDInput | null,
+  Class_id?: ModelIDInput | null,
+  PaperSurveyURL?: ModelStringInput | null,
+  Reason?: ModelStringInput | null,
+  and?: Array< ModelUploadLogsConditionInput | null > | null,
+  or?: Array< ModelUploadLogsConditionInput | null > | null,
+  not?: ModelUploadLogsConditionInput | null,
+};
+
+export type UploadLogs = {
+  __typename: "UploadLogs",
+  id: string,
+  User_id: string,
+  UploadType?: string | null,
+  Date?: string | null,
+  Curricullum_id?: string | null,
+  Unit_id?: string | null,
+  lesson_id?: string | null,
+  Class_id?: string | null,
+  PaperSurveyURL?: Array< string | null > | null,
+  Reason?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateUploadLogsInput = {
+  id: string,
+  User_id?: string | null,
+  UploadType?: string | null,
+  Date?: string | null,
+  Curricullum_id?: string | null,
+  Unit_id?: string | null,
+  lesson_id?: string | null,
+  Class_id?: string | null,
+  PaperSurveyURL?: Array< string | null > | null,
+  Reason?: string | null,
+};
+
+export type DeleteUploadLogsInput = {
+  id: string,
+};
+
 export type CreateUniversalJournalDataInput = {
   id?: string | null,
   studentID: string,
@@ -4189,6 +4283,43 @@ export type ModelUniversalSurveyStudentDataFilterInput = {
 export type ModelUniversalSurveyStudentDataConnection = {
   __typename: "ModelUniversalSurveyStudentDataConnection",
   items:  Array<UniversalSurveyStudentData | null >,
+  nextToken?: string | null,
+};
+
+export type ModelTemporaryUniversalUploadSurveyDataFilterInput = {
+  id?: ModelIDInput | null,
+  updatedUserId?: ModelIDInput | null,
+  surveyData?: ModelStringInput | null,
+  and?: Array< ModelTemporaryUniversalUploadSurveyDataFilterInput | null > | null,
+  or?: Array< ModelTemporaryUniversalUploadSurveyDataFilterInput | null > | null,
+  not?: ModelTemporaryUniversalUploadSurveyDataFilterInput | null,
+};
+
+export type ModelTemporaryUniversalUploadSurveyDataConnection = {
+  __typename: "ModelTemporaryUniversalUploadSurveyDataConnection",
+  items:  Array<TemporaryUniversalUploadSurveyData | null >,
+  nextToken?: string | null,
+};
+
+export type ModelUploadLogsFilterInput = {
+  id?: ModelIDInput | null,
+  User_id?: ModelIDInput | null,
+  UploadType?: ModelStringInput | null,
+  Date?: ModelStringInput | null,
+  Curricullum_id?: ModelIDInput | null,
+  Unit_id?: ModelIDInput | null,
+  lesson_id?: ModelIDInput | null,
+  Class_id?: ModelIDInput | null,
+  PaperSurveyURL?: ModelStringInput | null,
+  Reason?: ModelStringInput | null,
+  and?: Array< ModelUploadLogsFilterInput | null > | null,
+  or?: Array< ModelUploadLogsFilterInput | null > | null,
+  not?: ModelUploadLogsFilterInput | null,
+};
+
+export type ModelUploadLogsConnection = {
+  __typename: "ModelUploadLogsConnection",
+  items:  Array<UploadLogs | null >,
   nextToken?: string | null,
 };
 
@@ -14473,6 +14604,123 @@ export type DeleteUniversalSurveyStudentDataMutation = {
   } | null,
 };
 
+export type CreateTemporaryUniversalUploadSurveyDataMutationVariables = {
+  input: CreateTemporaryUniversalUploadSurveyDataInput,
+  condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
+};
+
+export type CreateTemporaryUniversalUploadSurveyDataMutation = {
+  createTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateTemporaryUniversalUploadSurveyDataMutationVariables = {
+  input: UpdateTemporaryUniversalUploadSurveyDataInput,
+  condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
+};
+
+export type UpdateTemporaryUniversalUploadSurveyDataMutation = {
+  updateTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteTemporaryUniversalUploadSurveyDataMutationVariables = {
+  input: DeleteTemporaryUniversalUploadSurveyDataInput,
+  condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
+};
+
+export type DeleteTemporaryUniversalUploadSurveyDataMutation = {
+  deleteTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateUploadLogsMutationVariables = {
+  input: CreateUploadLogsInput,
+  condition?: ModelUploadLogsConditionInput | null,
+};
+
+export type CreateUploadLogsMutation = {
+  createUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUploadLogsMutationVariables = {
+  input: UpdateUploadLogsInput,
+  condition?: ModelUploadLogsConditionInput | null,
+};
+
+export type UpdateUploadLogsMutation = {
+  updateUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUploadLogsMutationVariables = {
+  input: DeleteUploadLogsInput,
+  condition?: ModelUploadLogsConditionInput | null,
+};
+
+export type DeleteUploadLogsMutation = {
+  deleteUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateUniversalJournalDataMutationVariables = {
   input: CreateUniversalJournalDataInput,
   condition?: ModelUniversalJournalDataConditionInput | null,
@@ -24022,6 +24270,96 @@ export type ListUniversalSurveyStudentDataQuery = {
         options?: Array< string | null > | null,
         input?: Array< string | null > | null,
       } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetTemporaryUniversalUploadSurveyDataQueryVariables = {
+  id: string,
+};
+
+export type GetTemporaryUniversalUploadSurveyDataQuery = {
+  getTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListTemporaryUniversalUploadSurveyDataQueryVariables = {
+  id?: string | null,
+  filter?: ModelTemporaryUniversalUploadSurveyDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListTemporaryUniversalUploadSurveyDataQuery = {
+  listTemporaryUniversalUploadSurveyData?:  {
+    __typename: "ModelTemporaryUniversalUploadSurveyDataConnection",
+    items:  Array< {
+      __typename: "TemporaryUniversalUploadSurveyData",
+      id: string,
+      updatedUserId: string,
+      surveyData?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUploadLogsQueryVariables = {
+  id: string,
+};
+
+export type GetUploadLogsQuery = {
+  getUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUploadLogsQueryVariables = {
+  id?: string | null,
+  filter?: ModelUploadLogsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUploadLogsQuery = {
+  listUploadLogs?:  {
+    __typename: "ModelUploadLogsConnection",
+    items:  Array< {
+      __typename: "UploadLogs",
+      id: string,
+      User_id: string,
+      UploadType?: string | null,
+      Date?: string | null,
+      Curricullum_id?: string | null,
+      Unit_id?: string | null,
+      lesson_id?: string | null,
+      Class_id?: string | null,
+      PaperSurveyURL?: Array< string | null > | null,
+      Reason?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -36867,6 +37205,93 @@ export type OnDeleteUniversalSurveyStudentDataSubscription = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateTemporaryUniversalUploadSurveyDataSubscription = {
+  onCreateTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateTemporaryUniversalUploadSurveyDataSubscription = {
+  onUpdateTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteTemporaryUniversalUploadSurveyDataSubscription = {
+  onDeleteTemporaryUniversalUploadSurveyData?:  {
+    __typename: "TemporaryUniversalUploadSurveyData",
+    id: string,
+    updatedUserId: string,
+    surveyData?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUploadLogsSubscription = {
+  onCreateUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUploadLogsSubscription = {
+  onUpdateUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUploadLogsSubscription = {
+  onDeleteUploadLogs?:  {
+    __typename: "UploadLogs",
+    id: string,
+    User_id: string,
+    UploadType?: string | null,
+    Date?: string | null,
+    Curricullum_id?: string | null,
+    Unit_id?: string | null,
+    lesson_id?: string | null,
+    Class_id?: string | null,
+    PaperSurveyURL?: Array< string | null > | null,
+    Reason?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
