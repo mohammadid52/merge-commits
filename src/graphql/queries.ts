@@ -4368,7 +4368,34 @@ export const getTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     getTemporaryUniversalUploadSurveyData(id: $id) {
       id
       updatedUserId
-      surveyData
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
       createdAt
       updatedAt
     }
@@ -4392,7 +4419,25 @@ export const listTemporaryUniversalUploadSurveyData = /* GraphQL */ `
       items {
         id
         updatedUserId
-        surveyData
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+        }
         createdAt
         updatedAt
       }
@@ -4405,6 +4450,32 @@ export const getUploadLogs = /* GraphQL */ `
     getUploadLogs(id: $id) {
       id
       User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
       Date
       Curricullum_id
@@ -4436,6 +4507,14 @@ export const listUploadLogs = /* GraphQL */ `
       items {
         id
         User_id
+        TemporaryUniversalUploadSurveyDataID
+        TemporaryUniversalUploadSurveyData {
+          id
+          updatedUserId
+          universalSurveyId
+          createdAt
+          updatedAt
+        }
         UploadType
         Date
         Curricullum_id

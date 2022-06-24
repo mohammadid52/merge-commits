@@ -9060,7 +9060,34 @@ export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     ) {
       id
       updatedUserId
-      surveyData
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
       createdAt
       updatedAt
     }
@@ -9077,7 +9104,34 @@ export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     ) {
       id
       updatedUserId
-      surveyData
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
       createdAt
       updatedAt
     }
@@ -9094,7 +9148,34 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     ) {
       id
       updatedUserId
-      surveyData
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
       createdAt
       updatedAt
     }
@@ -9108,6 +9189,32 @@ export const createUploadLogs = /* GraphQL */ `
     createUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
       Date
       Curricullum_id
@@ -9129,6 +9236,32 @@ export const updateUploadLogs = /* GraphQL */ `
     updateUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
       Date
       Curricullum_id
@@ -9150,6 +9283,32 @@ export const deleteUploadLogs = /* GraphQL */ `
     deleteUploadLogs(input: $input, condition: $condition) {
       id
       User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
       Date
       Curricullum_id

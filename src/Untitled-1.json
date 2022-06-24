@@ -1,0 +1,120 @@
+[
+    {
+        domID: "9e4f5d31-2779-4ddc-b3d9-da625cbac2c3",
+        input: [
+            "Testing"
+        ],
+    },
+    {
+        domID: "4d112d1a-4898-4d11-8590-5839021a3b8d",
+        input: [
+            ""
+        ],
+
+    },
+    {
+    domID: "00bb68f6-5a97-4992-b776-e10bb66c5bd9",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "8b20eb59-fe3a-4375-8dfa-bb6e67b1537b",
+        input: [
+            "Third Testing"
+        ],
+    },
+    {
+        domID: "34f9c661-f6b7-41e8-a6c8-09bc49833e64",
+        input: [
+            ""
+        ],
+
+    },
+    {
+        domID: "76e54b80-094c-4de3-9ebe-81ba2c210ab8",
+        input: [
+            "Fourth Testing"
+        ],
+
+    },
+    {
+        domID: "8142d700-a5f9-4c5d-959e-a5b3f1f06999",
+        input: [
+            ""
+        ],
+
+    },
+    {
+        domID: "c93aadf9-b712-46de-8ad0-3fe4acef762f",
+        input: [
+            ""
+        ],
+
+    },
+    {
+        domID: "5a736fd9-19d8-44b2-9dff-44f3c455f1fb",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "8c60be0a-c05c-4836-8702-82ad36d8362a",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "aa841b8a-d06d-4b6a-8e95-3d3fda8c9fb9",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "cc1151b8-899f-4a25-830a-364835b1b774",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "d31fb4b6-52ec-4abe-9188-503bed26c9d3",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "967efb2d-6b1d-4e47-8dfb-17880aa8bd30",
+        input: [
+            ""
+        ],
+
+    },
+    {
+        domID: "240ba089-7512-4d3e-b190-a639923a5a77",
+        input: [
+            ""
+        ]
+    },
+    {
+        domID: "dc308174-a202-4054-abdf-22d259feba49",
+        input: [
+            ""
+        ],
+    },
+    {
+        domID: "903a6e35-2760-42db-9bba-e9e897d7c144",
+        input: [
+            ""
+        ],
+    }
+]
+
+mutation MyMutation {
+  updateUniversalSurveyStudentData(input: {id: "e536d746-b0f6-466b-b074-407a89d1ca4a", surveyData: [{domID: "9e4f5d31-2779-4ddc-b3d9-da625cbac2c3", input: ["Testing"]}, {domID: "4d112d1a-4898-4d11-8590-5839021a3b8d", input: [""]}, {domID: "00bb68f6-5a97-4992-b776-e10bb66c5bd9", input: [""]}, {domID: "8b20eb59-fe3a-4375-8dfa-bb6e67b1537b", input: ["Third Testing"]}, {domID: "34f9c661-f6b7-41e8-a6c8-09bc49833e64", input: [""]}, {domID: "76e54b80-094c-4de3-9ebe-81ba2c210ab8", input: ["Fourth Testing"]}, {domID: "8142d700-a5f9-4c5d-959e-a5b3f1f06999", input: [""]}, {domID: "c93aadf9-b712-46de-8ad0-3fe4acef762f", input: [""]}, {domID: "5a736fd9-19d8-44b2-9dff-44f3c455f1fb", input: [""]}, {domID: "8c60be0a-c05c-4836-8702-82ad36d8362a", input: [""]}, {domID: "aa841b8a-d06d-4b6a-8e95-3d3fda8c9fb9", input: [""]}, {domID: "cc1151b8-899f-4a25-830a-364835b1b774", input: [""]}, {domID: "d31fb4b6-52ec-4abe-9188-503bed26c9d3", input: [""]}, {domID: "967efb2d-6b1d-4e47-8dfb-17880aa8bd30", input: [""]}, {domID: "240ba089-7512-4d3e-b190-a639923a5a77", input: [""]}, {domID: "dc308174-a202-4054-abdf-22d259feba49", input: [""]}, {domID: "903a6e35-2760-42db-9bba-e9e897d7c144", input: [""]}]}) {
+    lessonID
+    surveyData {
+      domID
+      input
+    }
+  }
+}

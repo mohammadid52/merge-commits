@@ -2,7 +2,6 @@ import React, {useEffect, useState, useContext, useRef} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
 import * as queries from '@graphql/queries';
 import Selector from '../../Atoms/Form/Selector';
 import DateAndTime from '../DateAndTime/DateAndTime';
@@ -12,7 +11,8 @@ import {v4 as uuidv4} from 'uuid';
 import {Storage} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
-
+import Papa from 'papaparse';
+import useStudentDataValue from '@customHooks/studentDataValue';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -34,10 +34,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     name: '',
     value: '',
   });
+  const [surveyData, setSurveyData] = useState<any[]>([]);
+  const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
+
   const [imgUrl, setImgUrl] = useState<string[] | Object[]>([]);
 
   const fileReader = new FileReader();
   const fileInputRef = useRef<HTMLInputElement>();
+  const csvInputRef = useRef<HTMLInputElement>();
 
   const reasonDropdown = [
     {
@@ -96,32 +100,99 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const handleUpload = async (e: any) => {
     try {
+      setFile(null);
+      setSurveyData([]);
+      setNewUniversalSurveyData([]);
       setFile(e.target.files[0]);
+      fileReader.onload = async (event: any) => {
+        const result: any = Papa.parse(event.target.result, {header: true});
+        result.data.forEach(async (item: any) => {
+          for (let [key, value] of Object.entries(item)) {
+            if (key === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
+              const getUniversalSurveyStudent: any = await API.graphql(
+                graphqlOperation(queries.getUniversalSurveyStudentData, {
+                  id: value,
+                })
+              );
+              const returnedData =
+                getUniversalSurveyStudent.data.getUniversalSurveyStudentData;
+              let input: any = {
+                lessonID: '',
+                studentAuthID: '',
+                studentEmail: '',
+                syllabusLessonID: '',
+                UniversalSurveyStudentID: '',
+                surveyData: [],
+              };
+              for (let [key, value] of Object.entries(item)) {
+                const surveyDomId = key.split('-s-')[1];
+                if (surveyDomId) {
+                  const findSurveyDatabasedonDomId = returnedData.surveyData.filter(
+                    (item: any) => item.domID === surveyDomId
+                  );
+
+                  const updateSurveyInput = findSurveyDatabasedonDomId.find(
+                    (item: any) =>
+                      item.domID === surveyDomId && ((item.input = [value]), true)
+                  );
+
+                  input = {
+                    UniversalSurveyStudentID: returnedData.id,
+                    surveyData: [...input.surveyData, updateSurveyInput],
+                  };
+
+                  setSurveyData((prev: any) => {
+                    return [...prev, input];
+                  });
+                }
+              }
+            } else if (key === 'UniversalSurveyStudentID' && value === 'Not-taken-yet') {
+              let input: any = {
+                lessonID: '',
+                studentAuthID: '',
+                studentEmail: '',
+                syllabusLessonID: '',
+                surveyData: [],
+              };
+              for (let [key, value] of Object.entries(item)) {
+                let surveyDomId = key.split('-s-')[1];
+                if (surveyDomId) {
+                  input = {
+                    lessonID: item.SurveyID,
+                    studentAuthID: item.AuthId,
+                    studentEmail: item.Email,
+                    syllabusLessonID: item.UnitID,
+                    surveyData: [
+                      ...input.surveyData,
+                      {
+                        domID: surveyDomId,
+                        input: [value],
+                        options: !value ? false : true,
+                      },
+                    ],
+                  };
+                }
+              }
+              setNewUniversalSurveyData((prev: any) => {
+                return [...prev, input];
+              });
+            }
+          }
+        });
+      };
+      fileReader.readAsText(e.target.files[0]);
     } catch (error) {
       console.log('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
     }
   };
 
-  const csvFileToArray = (string: any) => {
-    const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
-    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
-
-    const array = csvRows.map((i: any) => {
-      const values = i.split(',');
-      const obj = csvHeader.reduce((object: any, header: any, index: any) => {
-        object[header] = values[index];
-        return object;
-      }, {});
-      return JSON.stringify(obj);
-    });
-    return array;
-  };
-  const createSurveyData = async (data: any[]) => {
+  const createTempSurveyData = async (SurveyId: string, surveyData: string[]) => {
     try {
       const value = {
         id: uuidv4(),
         updatedUserId: state.user.authId,
-        surveyData: data,
+        universalSurveyId: SurveyId,
+        surveyData: surveyData,
       };
 
       const newSurveyData: any = await API.graphql(
@@ -131,7 +202,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
 
       const returnedData = newSurveyData.data.createTemporaryUniversalUploadSurveyData;
-      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -140,11 +210,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const createUploadLogs = async () => {
+  const createUploadLogs = async (surveyTempID: any, unitID: any, lessonID: any) => {
     try {
       const value = {
         id: uuidv4(),
+        TemporaryUniversalUploadSurveyDataID: surveyTempID,
         User_id: state.user.authId,
+        Unit_id: unitID,
+        lesson_id: lessonID,
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         ...(imgUrl && {PaperSurveyURL: imgUrl}),
@@ -158,7 +231,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
 
       const returnedData = newUploadLogs.data.createUploadLogs;
-      console.log('createUploadLogs', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -167,32 +239,107 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const handleExistingUpload = async () => {
+    try {
+      let index = [],
+        data: any = [];
+      for (let i = surveyData.length - 1; i >= 0; i--) {
+        if (index.indexOf(surveyData[i].UniversalSurveyStudentID) === -1) {
+          index.push(surveyData[i].UniversalSurveyStudentID);
+          data.unshift(surveyData[i]);
+        }
+      }
+      data.forEach(async (item: any) => {
+        const updateData: any = await API.graphql(
+          graphqlOperation(mutations.updateUniversalSurveyStudentData, {
+            input: {
+              id: item.UniversalSurveyStudentID,
+              surveyData: item.surveyData,
+            },
+          })
+        );
+        if (updateData) {
+          const createTempSurveyresult = await createTempSurveyData(
+            updateData.data.updateUniversalSurveyStudentData.id,
+            item.surveyData
+          );
+          createTempSurveyresult &&
+            (await createUploadLogs(
+              createTempSurveyresult.id,
+              item.syllabusLessonID,
+              item.lessonID
+            ));
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 169 ~ handleExistingUpload ~ error',
+        error
+      );
+    }
+  };
+
+  const handleNewUniversalUpload = async () => {
+    try {
+      const changedSurveyData = newUniversalSurveyData.filter((data: any) => {
+        return data.surveyData.some((sData: any) => {
+          return sData.options === true;
+        });
+      });
+      changedSurveyData.forEach(async (item: any) => {
+        const createData: any = await API.graphql(
+          graphqlOperation(mutations.createUniversalSurveyStudentData, {
+            input: {
+              lessonID: item.lessonID,
+              studentAuthID: item.studentAuthID,
+              studentEmail: item.studentEmail,
+              studentID: item.studentAuthID,
+              syllabusLessonID: item.syllabusLessonID,
+              surveyData: item.surveyData,
+            },
+          })
+        );
+        if (createData) {
+          const createTempSurveyresult = await createTempSurveyData(
+            createData.data.createUniversalSurveyStudentData.id,
+            item.surveyData
+          );
+          createTempSurveyresult &&
+            (await createUploadLogs(
+              createTempSurveyresult.id,
+              item.syllabusLessonID,
+              item.lessonID
+            ));
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 172 ~ handleUniversalUpload ~ error',
+        error
+      );
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     try {
       e.preventDefault();
-      if (file) {
-        fileReader.onload = async (event: any) => {
-          const result = csvFileToArray(event.target.result);
-          if (result.length > 0) {
-            await createSurveyData(result);
-            await createUploadLogs();
-            setSelectedReason({
-              id: 0,
-              name: '',
-              value: '',
-            });
-            setImgUrl([]);
-            setFile(null);
-            setReason('');
-            setSuccess(true);
-            setTimeout(() => {
-              setSuccess(false);
-            }, 2000);
-          }
-        };
-
-        fileReader.readAsText(file);
-      }
+      setLoading(true);
+      await handleExistingUpload();
+      await handleNewUniversalUpload();
+      setSelectedReason({
+        id: 0,
+        name: '',
+        value: '',
+      });
+      setImgUrl([]);
+      csvInputRef.current.value = '';
+      setFile(null);
+      setReason('');
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        setLoading(false);
+      }, 4000);
     } catch (error) {
       console.log('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
     }
@@ -239,7 +386,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
       </div>
-      <input id="csvFile" type="file" accept=".csv,.xlsx,.xls" onChange={handleUpload} />
+      <input
+        id="csvFile"
+        type="file"
+        accept=".csv,.xlsx,.xls"
+        ref={csvInputRef}
+        onChange={handleUpload}
+      />
       <br />
       <Selector
         btnClass={!file && 'cursor-not-allowed'}

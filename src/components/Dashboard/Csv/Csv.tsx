@@ -662,15 +662,17 @@ const Csv = ({institutionId}: ICsvProps) => {
       let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         surveyQuestionOptions[ques.question.id] = ques.question.options;
-        return {label: `${ques.question.question}`, key: `${ques.question.id}`};
+        return {
+          label: `${ques.question.question}-s-${ques.question.id}`,
+          key: `${ques.question.id}`,
+        };
       });
-
       /* Enable this code if demographics questions */
 
       let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         return {
-          label: `${ques.question.question} (demographic)`,
+          label: `${ques.question.question}-d-${ques.question.id} (demographic)`,
           key: `${ques.question.id}`,
         };
       });
@@ -683,8 +685,10 @@ const Csv = ({institutionId}: ICsvProps) => {
         {label: 'Institute', key: 'institute'},
         {label: 'Curriculum', key: 'curriculum'},
         {label: 'Unit', key: 'unit'},
+        {label: 'UnitID', key: 'unitId'},
         {label: 'Classroom', key: 'classroom'},
         {label: 'Survey name', key: 'surveyName'},
+        {label: 'SurveyID', key: 'surveyId'},
         {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
         ...demographicsQuestionHeaders, // Enable this line for demographics question
         ...surveyQuestionHeaders,
@@ -773,8 +777,10 @@ const Csv = ({institutionId}: ICsvProps) => {
           institute: selectedInst.name,
           curriculum: selectedCurriculum.name,
           unit: selectedUnit.name,
+          unitId: selectedUnit.id,
           classroom: selectedClassRoom.name,
           surveyName: selectedSurvey.name,
+          surveyId: selectedSurvey.id,
           universalSurveyStudentID: universalSurveyStudentID
             ? universalSurveyStudentID
             : 'Not-taken-yet',
