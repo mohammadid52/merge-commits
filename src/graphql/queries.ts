@@ -4363,6 +4363,94 @@ export const listUniversalSurveyStudentData = /* GraphQL */ `
     }
   }
 `;
+export const getTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  query GetTemporaryUniversalUploadSurveyData($id: ID!) {
+    getTemporaryUniversalUploadSurveyData(id: $id) {
+      id
+      updatedUserId
+      surveyData
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  query ListTemporaryUniversalUploadSurveyData(
+    $id: ID
+    $filter: ModelTemporaryUniversalUploadSurveyDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTemporaryUniversalUploadSurveyData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        updatedUserId
+        surveyData
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUploadLogs = /* GraphQL */ `
+  query GetUploadLogs($id: ID!) {
+    getUploadLogs(id: $id) {
+      id
+      User_id
+      UploadType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        User_id
+        UploadType
+        Date
+        Curricullum_id
+        Unit_id
+        lesson_id
+        Class_id
+        PaperSurveyURL
+        Reason
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUniversalJournalData = /* GraphQL */ `
   query GetUniversalJournalData($id: ID!) {
     getUniversalJournalData(id: $id) {
