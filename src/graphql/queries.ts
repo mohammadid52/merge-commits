@@ -4075,6 +4075,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4122,6 +4123,7 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4157,6 +4159,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4204,6 +4207,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4239,6 +4243,7 @@ export const getUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4286,6 +4291,7 @@ export const listUniversalArchiveData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4320,6 +4326,7 @@ export const getUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -4355,6 +4362,7 @@ export const listUniversalSurveyStudentData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -4383,6 +4391,7 @@ export const getTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -4395,6 +4404,7 @@ export const getTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -4437,6 +4447,7 @@ export const listTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -4472,6 +4483,7 @@ export const getUploadLogs = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt

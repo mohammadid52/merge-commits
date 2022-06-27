@@ -8608,6 +8608,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8649,6 +8650,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8690,6 +8692,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8734,6 +8737,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8778,6 +8782,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8822,6 +8827,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8863,6 +8869,7 @@ export const createUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8904,6 +8911,7 @@ export const updateUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8945,6 +8953,7 @@ export const deleteUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8985,6 +8994,7 @@ export const createUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9014,6 +9024,7 @@ export const updateUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9043,6 +9054,7 @@ export const deleteUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9075,6 +9087,7 @@ export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -9087,6 +9100,7 @@ export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9119,6 +9133,7 @@ export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -9131,6 +9146,7 @@ export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9163,6 +9179,7 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -9175,6 +9192,7 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -9211,6 +9229,7 @@ export const createUploadLogs = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -9258,6 +9277,7 @@ export const updateUploadLogs = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt
@@ -9305,6 +9325,7 @@ export const deleteUploadLogs = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         createdAt
         updatedAt

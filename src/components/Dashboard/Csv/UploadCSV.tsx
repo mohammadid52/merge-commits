@@ -12,7 +12,7 @@ import {Storage} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
 import Papa from 'papaparse';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import * as customQueries from '../../../customGraphql/customQueries';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -25,6 +25,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [reason, setReason] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const [surveyQuestions, setSurveyQuestions] = useState([]);
   const [selectedReason, setSelectedReason] = useState<{
     id: number;
     name: string;
@@ -98,14 +99,154 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const listQuestions = async (lessonId: string) => {
+    try {
+      let universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      let lessonObject = universalLesson.data.getUniversalLesson;
+      let questionsListdata = await getQuestionListFromLesson(lessonObject);
+      let questionList = questionsListdata.questionList;
+      // console.log('questionList', questionList)
+      let questions: any = [];
+      if (questionList) {
+        questionList.map((listItem: any) => {
+          listItem.map((item: any) => {
+            questions.push({
+              question: {
+                id: item.questionID,
+                question: item.questionString,
+                type: item.type,
+                options: item.options,
+              },
+            });
+          });
+        });
+      }
+
+      setSurveyQuestions(questions);
+      return questions;
+    } catch (err) {
+      console.log('list questions error', err);
+    }
+  };
+
+  const getQuestionListFromLesson = async (lessonObj: any) => {
+    if (lessonObj?.lessonPlan) {
+      const mappedPages = lessonObj?.lessonPlan.reduce(
+        (
+          inputs: {
+            questionList: any[];
+          },
+          page: any
+        ) => {
+          const pageParts = page.pageContent;
+          const reducedPageInputs = pageParts.reduce(
+            (
+              pageInputsAcc: {
+                pageInputAcc: any[];
+              },
+              pagePart: any
+            ) => {
+              if (pagePart.hasOwnProperty('partContent')) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {
+                      pageInputAcc: any[];
+                    },
+                    partContent: any
+                  ) => {
+                    //  CHECK WHICH INPUT TYPE  //
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+
+                    // -------- IF FORM ------- //
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
+                          return {
+                            ...subPartAcc,
+
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                questionID: partContentSub.id,
+                                type: partContentSub.type,
+                                questionString: partContentSub.label,
+                                options: partContentSub.options,
+                              },
+                            ],
+                          };
+                        },
+                        {pgInput: []}
+                      );
+
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput,
+                        ],
+                      };
+                    }
+                    // ---- IF OTHER INPUT ---- //
+                    else if (isOtherInput) {
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            questionID: partContent.id,
+                            type: partContent.type,
+                            questionString: partContent.label,
+                            options: partContent.options,
+                          },
+                        ],
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  {pageInputAcc: []}
+                );
+
+                return {
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc,
+                  ],
+                };
+              } else {
+                return pageInputsAcc;
+              }
+            },
+            {pageInputAcc: []}
+          );
+
+          return {
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+          };
+        },
+
+        {questionList: []}
+      );
+      return mappedPages;
+    }
+  };
+
   const handleUpload = async (e: any) => {
     try {
       setFile(null);
       setSurveyData([]);
       setNewUniversalSurveyData([]);
       setFile(e.target.files[0]);
+      let surveyQuestionOptions: any = {};
       fileReader.onload = async (event: any) => {
         const result: any = Papa.parse(event.target.result, {header: true});
+        const listOptionsId = await listQuestions(result.data[0].SurveyID);
+        listOptionsId.map((ques: any) => {
+          return (surveyQuestionOptions[ques.question.id] = ques.question.options);
+        });
         result.data.forEach(async (item: any) => {
           for (let [key, value] of Object.entries(item)) {
             if (key === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
@@ -132,12 +273,24 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                   );
 
                   const updateSurveyInput = findSurveyDatabasedonDomId.find(
-                    (item: any) =>
-                      item.domID === surveyDomId && ((item.input = [value]), true)
+                    (item: any) => {
+                      let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+                        (option: any) => {
+                          return option.text === value;
+                        }
+                      );
+                      if (selectedOption.length > 0 && item.domID === surveyDomId) {
+                        return (item.input = [selectedOption[0].id]);
+                      } else {
+                        return (item.input = [value]);
+                      }
+                    }
                   );
 
                   input = {
                     UniversalSurveyStudentID: returnedData.id,
+                    lessonID: item.SurveyID,
+                    syllabusLessonID: item.UnitID,
                     surveyData: [...input.surveyData, updateSurveyInput],
                   };
 
@@ -156,7 +309,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               };
               for (let [key, value] of Object.entries(item)) {
                 let surveyDomId = key.split('-s-')[1];
+
                 if (surveyDomId) {
+                  let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+                    (option: any) => {
+                      return option.text === value;
+                    }
+                  );
                   input = {
                     lessonID: item.SurveyID,
                     studentAuthID: item.AuthId,
@@ -166,8 +325,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       ...input.surveyData,
                       {
                         domID: surveyDomId,
-                        input: [value],
-                        options: !value ? false : true,
+                        input:
+                          selectedOption.length > 0 ? [selectedOption[0].id] : [value],
+                        options: null,
+                        hasTakenSurvey: !value ? false : true,
                       },
                     ],
                   };
@@ -249,6 +410,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           data.unshift(surveyData[i]);
         }
       }
+
       data.forEach(async (item: any) => {
         const updateData: any = await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {
@@ -283,7 +445,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     try {
       const changedSurveyData = newUniversalSurveyData.filter((data: any) => {
         return data.surveyData.some((sData: any) => {
-          return sData.options === true;
+          return sData.hasTakenSurvey === true;
         });
       });
       changedSurveyData.forEach(async (item: any) => {
