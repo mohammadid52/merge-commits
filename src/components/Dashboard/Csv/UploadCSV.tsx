@@ -2,7 +2,6 @@ import React, {useEffect, useState, useContext, useRef} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
 import * as queries from '@graphql/queries';
 import Selector from '../../Atoms/Form/Selector';
 import DateAndTime from '../DateAndTime/DateAndTime';
@@ -12,7 +11,8 @@ import {v4 as uuidv4} from 'uuid';
 import {Storage} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
-
+import Papa from 'papaparse';
+import * as customQueries from '../../../customGraphql/customQueries';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -25,6 +25,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [reason, setReason] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const [surveyQuestions, setSurveyQuestions] = useState([]);
   const [selectedReason, setSelectedReason] = useState<{
     id: number;
     name: string;
@@ -34,10 +35,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     name: '',
     value: '',
   });
+  const [surveyData, setSurveyData] = useState<any[]>([]);
+  const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
+
   const [imgUrl, setImgUrl] = useState<string[] | Object[]>([]);
 
   const fileReader = new FileReader();
   const fileInputRef = useRef<HTMLInputElement>();
+  const csvInputRef = useRef<HTMLInputElement>();
 
   const reasonDropdown = [
     {
@@ -94,34 +99,261 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const listQuestions = async (lessonId: string) => {
+    try {
+      let universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      let lessonObject = universalLesson.data.getUniversalLesson;
+      let questionsListdata = await getQuestionListFromLesson(lessonObject);
+      let questionList = questionsListdata.questionList;
+      // console.log('questionList', questionList)
+      let questions: any = [];
+      if (questionList) {
+        questionList.map((listItem: any) => {
+          listItem.map((item: any) => {
+            questions.push({
+              question: {
+                id: item.questionID,
+                question: item.questionString,
+                type: item.type,
+                options: item.options,
+              },
+            });
+          });
+        });
+      }
+
+      setSurveyQuestions(questions);
+      return questions;
+    } catch (err) {
+      console.log('list questions error', err);
+    }
+  };
+
+  const getQuestionListFromLesson = async (lessonObj: any) => {
+    if (lessonObj?.lessonPlan) {
+      const mappedPages = lessonObj?.lessonPlan.reduce(
+        (
+          inputs: {
+            questionList: any[];
+          },
+          page: any
+        ) => {
+          const pageParts = page.pageContent;
+          const reducedPageInputs = pageParts.reduce(
+            (
+              pageInputsAcc: {
+                pageInputAcc: any[];
+              },
+              pagePart: any
+            ) => {
+              if (pagePart.hasOwnProperty('partContent')) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {
+                      pageInputAcc: any[];
+                    },
+                    partContent: any
+                  ) => {
+                    //  CHECK WHICH INPUT TYPE  //
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+
+                    // -------- IF FORM ------- //
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
+                          return {
+                            ...subPartAcc,
+
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                questionID: partContentSub.id,
+                                type: partContentSub.type,
+                                questionString: partContentSub.label,
+                                options: partContentSub.options,
+                              },
+                            ],
+                          };
+                        },
+                        {pgInput: []}
+                      );
+
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput,
+                        ],
+                      };
+                    }
+                    // ---- IF OTHER INPUT ---- //
+                    else if (isOtherInput) {
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            questionID: partContent.id,
+                            type: partContent.type,
+                            questionString: partContent.label,
+                            options: partContent.options,
+                          },
+                        ],
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  {pageInputAcc: []}
+                );
+
+                return {
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc,
+                  ],
+                };
+              } else {
+                return pageInputsAcc;
+              }
+            },
+            {pageInputAcc: []}
+          );
+
+          return {
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+          };
+        },
+
+        {questionList: []}
+      );
+      return mappedPages;
+    }
+  };
+
   const handleUpload = async (e: any) => {
     try {
+      setFile(null);
+      setSurveyData([]);
+      setNewUniversalSurveyData([]);
       setFile(e.target.files[0]);
+      let surveyQuestionOptions: any = {};
+      fileReader.onload = async (event: any) => {
+        const result: any = Papa.parse(event.target.result, {header: true});
+        const listOptionsId = await listQuestions(result.data[0].SurveyID);
+        listOptionsId.map((ques: any) => {
+          return (surveyQuestionOptions[ques.question.id] = ques.question.options);
+        });
+        result.data.forEach(async (item: any) => {
+          for (let [key, value] of Object.entries(item)) {
+            if (key === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
+              const getUniversalSurveyStudent: any = await API.graphql(
+                graphqlOperation(queries.getUniversalSurveyStudentData, {
+                  id: value,
+                })
+              );
+              const returnedData =
+                getUniversalSurveyStudent.data.getUniversalSurveyStudentData;
+              let input: any = {
+                lessonID: '',
+                studentAuthID: '',
+                studentEmail: '',
+                syllabusLessonID: '',
+                UniversalSurveyStudentID: '',
+                surveyData: [],
+              };
+              for (let [key, value] of Object.entries(item)) {
+                const surveyDomId = key.split('-s-')[1];
+                if (surveyDomId) {
+                  const findSurveyDatabasedonDomId = returnedData.surveyData.filter(
+                    (item: any) => item.domID === surveyDomId
+                  );
+
+                  const updateSurveyInput = findSurveyDatabasedonDomId.find(
+                    (item: any) => {
+                      let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+                        (option: any) => {
+                          return option.text === value;
+                        }
+                      );
+                      if (selectedOption.length > 0 && item.domID === surveyDomId) {
+                        return (item.input = [selectedOption[0].id]);
+                      } else {
+                        return (item.input = [value]);
+                      }
+                    }
+                  );
+
+                  input = {
+                    UniversalSurveyStudentID: returnedData.id,
+                    lessonID: item.SurveyID,
+                    syllabusLessonID: item.UnitID,
+                    surveyData: [...input.surveyData, updateSurveyInput],
+                  };
+
+                  setSurveyData((prev: any) => {
+                    return [...prev, input];
+                  });
+                }
+              }
+            } else if (key === 'UniversalSurveyStudentID' && value === 'Not-taken-yet') {
+              let input: any = {
+                lessonID: '',
+                studentAuthID: '',
+                studentEmail: '',
+                syllabusLessonID: '',
+                surveyData: [],
+              };
+              for (let [key, value] of Object.entries(item)) {
+                let surveyDomId = key.split('-s-')[1];
+
+                if (surveyDomId) {
+                  let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+                    (option: any) => {
+                      return option.text === value;
+                    }
+                  );
+                  input = {
+                    lessonID: item.SurveyID,
+                    studentAuthID: item.AuthId,
+                    studentEmail: item.Email,
+                    syllabusLessonID: item.UnitID,
+                    surveyData: [
+                      ...input.surveyData,
+                      {
+                        domID: surveyDomId,
+                        input:
+                          selectedOption.length > 0 ? [selectedOption[0].id] : [value],
+                        options: null,
+                        hasTakenSurvey: !value ? false : true,
+                      },
+                    ],
+                  };
+                }
+              }
+              setNewUniversalSurveyData((prev: any) => {
+                return [...prev, input];
+              });
+            }
+          }
+        });
+      };
+      fileReader.readAsText(e.target.files[0]);
     } catch (error) {
       console.log('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
     }
   };
 
-  const csvFileToArray = (string: any) => {
-    const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
-    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
-
-    const array = csvRows.map((i: any) => {
-      const values = i.split(',');
-      const obj = csvHeader.reduce((object: any, header: any, index: any) => {
-        object[header] = values[index];
-        return object;
-      }, {});
-      return JSON.stringify(obj);
-    });
-    return array;
-  };
-  const createSurveyData = async (data: any[]) => {
+  const createTempSurveyData = async (SurveyId: string, surveyData: string[]) => {
     try {
       const value = {
         id: uuidv4(),
         updatedUserId: state.user.authId,
-        surveyData: data,
+        universalSurveyId: SurveyId,
+        surveyData: surveyData,
       };
 
       const newSurveyData: any = await API.graphql(
@@ -131,7 +363,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
 
       const returnedData = newSurveyData.data.createTemporaryUniversalUploadSurveyData;
-      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -140,11 +371,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const createUploadLogs = async () => {
+  const createUploadLogs = async (surveyTempID: any, unitID: any, lessonID: any) => {
     try {
       const value = {
         id: uuidv4(),
+        TemporaryUniversalUploadSurveyDataID: surveyTempID,
         User_id: state.user.authId,
+        Unit_id: unitID,
+        lesson_id: lessonID,
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         ...(imgUrl && {PaperSurveyURL: imgUrl}),
@@ -158,7 +392,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
 
       const returnedData = newUploadLogs.data.createUploadLogs;
-      console.log('createUploadLogs', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -167,32 +400,108 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const handleExistingUpload = async () => {
+    try {
+      let index = [],
+        data: any = [];
+      for (let i = surveyData.length - 1; i >= 0; i--) {
+        if (index.indexOf(surveyData[i].UniversalSurveyStudentID) === -1) {
+          index.push(surveyData[i].UniversalSurveyStudentID);
+          data.unshift(surveyData[i]);
+        }
+      }
+
+      data.forEach(async (item: any) => {
+        const updateData: any = await API.graphql(
+          graphqlOperation(mutations.updateUniversalSurveyStudentData, {
+            input: {
+              id: item.UniversalSurveyStudentID,
+              surveyData: item.surveyData,
+            },
+          })
+        );
+        if (updateData) {
+          const createTempSurveyresult = await createTempSurveyData(
+            updateData.data.updateUniversalSurveyStudentData.id,
+            item.surveyData
+          );
+          createTempSurveyresult &&
+            (await createUploadLogs(
+              createTempSurveyresult.id,
+              item.syllabusLessonID,
+              item.lessonID
+            ));
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 169 ~ handleExistingUpload ~ error',
+        error
+      );
+    }
+  };
+
+  const handleNewUniversalUpload = async () => {
+    try {
+      const changedSurveyData = newUniversalSurveyData.filter((data: any) => {
+        return data.surveyData.some((sData: any) => {
+          return sData.hasTakenSurvey === true;
+        });
+      });
+      changedSurveyData.forEach(async (item: any) => {
+        const createData: any = await API.graphql(
+          graphqlOperation(mutations.createUniversalSurveyStudentData, {
+            input: {
+              lessonID: item.lessonID,
+              studentAuthID: item.studentAuthID,
+              studentEmail: item.studentEmail,
+              studentID: item.studentAuthID,
+              syllabusLessonID: item.syllabusLessonID,
+              surveyData: item.surveyData,
+            },
+          })
+        );
+        if (createData) {
+          const createTempSurveyresult = await createTempSurveyData(
+            createData.data.createUniversalSurveyStudentData.id,
+            item.surveyData
+          );
+          createTempSurveyresult &&
+            (await createUploadLogs(
+              createTempSurveyresult.id,
+              item.syllabusLessonID,
+              item.lessonID
+            ));
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 172 ~ handleUniversalUpload ~ error',
+        error
+      );
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     try {
       e.preventDefault();
-      if (file) {
-        fileReader.onload = async (event: any) => {
-          const result = csvFileToArray(event.target.result);
-          if (result.length > 0) {
-            await createSurveyData(result);
-            await createUploadLogs();
-            setSelectedReason({
-              id: 0,
-              name: '',
-              value: '',
-            });
-            setImgUrl([]);
-            setFile(null);
-            setReason('');
-            setSuccess(true);
-            setTimeout(() => {
-              setSuccess(false);
-            }, 2000);
-          }
-        };
-
-        fileReader.readAsText(file);
-      }
+      setLoading(true);
+      await handleExistingUpload();
+      await handleNewUniversalUpload();
+      setSelectedReason({
+        id: 0,
+        name: '',
+        value: '',
+      });
+      setImgUrl([]);
+      csvInputRef.current.value = '';
+      setFile(null);
+      setReason('');
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        setLoading(false);
+      }, 4000);
     } catch (error) {
       console.log('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
     }
@@ -239,7 +548,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
       </div>
-      <input id="csvFile" type="file" accept=".csv,.xlsx,.xls" onChange={handleUpload} />
+      <input
+        id="csvFile"
+        type="file"
+        accept=".csv,.xlsx,.xls"
+        ref={csvInputRef}
+        onChange={handleUpload}
+      />
       <br />
       <Selector
         btnClass={!file && 'cursor-not-allowed'}
