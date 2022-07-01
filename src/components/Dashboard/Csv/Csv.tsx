@@ -1017,7 +1017,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         </button>
         <button
           type="button"
-          className={`col-end-5 ${
+          className={`col-end-5 mt-1 ${
             isSuperAdmin ? 'mt-5' : ''
           } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
           style={{
@@ -1026,11 +1026,9 @@ const Csv = ({institutionId}: ICsvProps) => {
           }}
           disabled={!isCSVDownloadReady}>
           <PDFDownloadLink
-            document={<SurveyPDF lessonPDFData={lessonPDFData} />}
+            document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
             fileName={`${selectedSurvey?.name}.pdf`}>
-            {({blob, url, loading, error}) =>
-              loading ? 'Loading document...' : 'Download Survey PDF!'
-            }
+            {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
           </PDFDownloadLink>
         </button>
       </div>

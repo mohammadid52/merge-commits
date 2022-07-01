@@ -8,6 +8,7 @@ const iconoclast_assets: any = {
     'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-COLOR.svg',
   logo_symbol:
     'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png',
+  pdf_symbol: `https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.png`,
   faviconDefault:
     'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/favicon.ico',
   favicon16x16:
@@ -46,6 +47,7 @@ const curate_assets: any = {
     'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png',
   logo_symbol:
     'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_blue_icon_169x169+(2).png',
+  pdf_symbol: `https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png`,
   faviconDefault:
     'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon.ico',
   favicon16x16:
@@ -80,6 +82,7 @@ const demo_assets: any = {
   login_page_logo: 'https://selready.s3.us-east-2.amazonaws.com/EFLBlue.png',
   loading_logo: 'https://selready.s3.us-east-2.amazonaws.com/EFLBlue.png',
   logo_symbol: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  pdf_symbol: `https://selready.s3.us-east-2.amazonaws.com/EFLBlue.png`,
   faviconDefault: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
   favicon16x16: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
   favicon32x32: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
