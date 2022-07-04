@@ -67,8 +67,8 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
 
   const questionStylesheet = {
     div: {
-      marginTop: 10,
-      fontSize: 14,
+      marginTop: 8,
+      fontSize: 16,
     },
   };
 

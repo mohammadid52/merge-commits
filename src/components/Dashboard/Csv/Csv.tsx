@@ -1025,11 +1025,15 @@ const Csv = ({institutionId}: ICsvProps) => {
             opacity: isCSVDownloadReady ? 1 : 0.5,
           }}
           disabled={!isCSVDownloadReady}>
-          <PDFDownloadLink
-            document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
-            fileName={`${selectedSurvey?.name}.pdf`}>
-            {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
-          </PDFDownloadLink>
+          {lessonPDFData.length > 0 ? (
+            <PDFDownloadLink
+              document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
+              fileName={`${selectedSurvey?.name}.pdf`}>
+              {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
+            </PDFDownloadLink>
+          ) : (
+            'Download Survey PDF'
+          )}
         </button>
       </div>
       <div>
