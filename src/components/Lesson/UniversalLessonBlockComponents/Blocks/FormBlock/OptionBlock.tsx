@@ -152,7 +152,7 @@ const OptionBlock = (props: IOptionProps) => {
   } = gState;
 
   const isStudent = user.role === 'ST';
-  const isInLesson = useInLessonCheck();
+  const isInLesson = isStudent ? useInLessonCheck() : false;
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 

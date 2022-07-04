@@ -12,6 +12,8 @@ import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
 import {orderBy, uniqBy} from 'lodash';
+import {PDFDownloadLink, PDFViewer} from '@react-pdf/renderer';
+import SurveyPDF from './SurveyPDF';
 
 interface ICsvProps {
   institutionId?: string;
@@ -46,6 +48,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false);
   const [CSVHeaders, setCSVHeaders] = useState([]);
   const [CSVData, setCSVData] = useState([]);
+  const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 
   const [SCQAnswers, setSCQAnswers] = useState([]);
   const [DCQAnswers, setDCQAnswers] = useState([]);
@@ -380,6 +383,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
+      setLessonPDFData(lessonObject.lessonPlan);
       let questionsListdata = await getQuestionListFromLesson(lessonObject);
       let questionList = questionsListdata.questionList;
       // console.log('questionList', questionList)
@@ -1009,6 +1013,26 @@ const Csv = ({institutionId}: ICsvProps) => {
             </CSVLink>
           ) : (
             'Download CSV'
+          )}
+        </button>
+        <button
+          type="button"
+          className={`col-end-5 mt-1 ${
+            isSuperAdmin ? 'mt-5' : ''
+          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+          style={{
+            /* stylelint-disable */
+            opacity: isCSVDownloadReady ? 1 : 0.5,
+          }}
+          disabled={!isCSVDownloadReady}>
+          {lessonPDFData.length > 0 ? (
+            <PDFDownloadLink
+              document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
+              fileName={`${selectedSurvey?.name}.pdf`}>
+              {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
+            </PDFDownloadLink>
+          ) : (
+            'Download Survey PDF'
           )}
         </button>
       </div>

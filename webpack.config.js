@@ -60,7 +60,7 @@ module.exports = {
       }),
     ],
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
-    mainFields: ['module', 'main'],
+    mainFields: ['browser', 'module', 'main'],
     modules: [
       path.resolve('./src'),
       path.resolve('./frontend'),
