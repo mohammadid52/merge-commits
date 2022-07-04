@@ -131,7 +131,7 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
                             <React.Fragment key={v.id}>
                               <Html stylesheet={questionStylesheet}>{questionHtml}</Html>
                               <Text style={styles.optionsWrap}>
-                                {v.options.map((option: any) => {
+                                {v.options.map((option: any, i: any, arr: any[]) => {
                                   const optionHtml = `
                                   <html>
                                   <body>
@@ -143,7 +143,9 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
                                     }
                                   </style>
                                     <div className='option-wrap'>
-                                      <span>${option.text} | </span>
+                                      <span>${option.text} ${
+                                    arr.length - 1 === i ? '' : '|'
+                                  } </span>
                                     </div>
                                     </body>
                                   </html>
