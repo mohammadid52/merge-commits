@@ -704,11 +704,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       csvInputRef.current.value = '';
       setFile(null);
       setReason('');
-      setSuccess(true);
+      setTimeout(() => {
+        setLoading(false);
+        setSuccess(true);
+      }, 1500);
       setTimeout(() => {
         setSuccess(false);
-        setLoading(false);
-      }, 4000);
+      }, 4500);
     } catch (error) {
       console.log('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
     }
@@ -832,7 +834,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           }}
           disabled={!reason || loading || !selectedReason.value}
           onClick={(e) => handleSubmit(e)}>
-          Upload CSV
+          {loading ? 'Uploading Please wait...' : 'Upload CSV'}
           {/* )} */}
         </button>
       </div>
