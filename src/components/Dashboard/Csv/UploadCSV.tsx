@@ -37,6 +37,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   });
   const [surveyData, setSurveyData] = useState<any[]>([]);
   const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
+  const [demographicsData, setDemographicsData] = useState<any[]>([]);
+  const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
 
   const [imgUrl, setImgUrl] = useState<string[] | Object[]>([]);
 
@@ -337,6 +339,73 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               setNewUniversalSurveyData((prev: any) => {
                 return [...prev, input];
               });
+            } else if (key === 'DemographicsDataID' && value !== 'No-demographics-data') {
+              const getDemographicsData: any = await API.graphql(
+                graphqlOperation(queries.getQuestionData, {
+                  id: value,
+                })
+              );
+              let input: any = {
+                questionDataId: '',
+                responseObject: [],
+              };
+              const returnedData = getDemographicsData.data.getQuestionData;
+              for (let [key, value] of Object.entries(item)) {
+                const demographicsQuesId = key.split('-d-')[1]?.split(' ')[0];
+                if (demographicsQuesId) {
+                  const findDemographicsQuesIdResponse = returnedData.responseObject.filter(
+                    (item: any) => item.qid === demographicsQuesId
+                  );
+                  const updateDemographicsQuesResponse = findDemographicsQuesIdResponse.find(
+                    (item: any) => {
+                      if (item.qid === demographicsQuesId) {
+                        item.response = [value];
+                        return true;
+                      }
+                    }
+                  );
+
+                  input = {
+                    questionDataId: returnedData.id,
+                    responseObject: [
+                      ...input.responseObject,
+                      updateDemographicsQuesResponse,
+                    ],
+                  };
+
+                  setDemographicsData((prev: any) => {
+                    return [...prev, input];
+                  });
+                }
+              }
+            } else if (key === 'DemographicsDataID' && value === 'No-demographics-data') {
+              let input: any = {
+                authId: '',
+                email: '',
+                syllabusLessonID: '',
+                responseObject: [],
+              };
+              for (let [key, value] of Object.entries(item)) {
+                const demographicsQuesId = key.split('-d-')[1]?.split(' ')[0];
+                if (demographicsQuesId) {
+                  input = {
+                    authId: item.AuthId,
+                    email: item.Email,
+                    syllabusLessonID: item.UnitID,
+                    responseObject: [
+                      ...input.responseObject,
+                      {
+                        qid: demographicsQuesId,
+                        response: [value],
+                        demographicsUpdated: !value ? false : true,
+                      },
+                    ],
+                  };
+                }
+              }
+              setNewDemographicsData((prev: any) => {
+                return [...prev, input];
+              });
             }
           }
         });
@@ -371,16 +440,50 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const createUploadLogs = async (surveyTempID: any, unitID: any, lessonID: any) => {
+  const createTempDemographicsData = async (demoTempID: any, responseObject: any[]) => {
     try {
       const value = {
         id: uuidv4(),
-        TemporaryUniversalUploadSurveyDataID: surveyTempID,
+        updatedUserId: state.user.authId,
+        questionDataID: demoTempID,
+        responseObject: responseObject,
+      };
+
+      const newDemographicsData: any = await API.graphql(
+        graphqlOperation(mutations.createTemporaryDemographicsUploadData, {
+          input: value,
+        })
+      );
+
+      const returnedData = newDemographicsData.data.createTemporaryDemographicsUploadData;
+
+      return returnedData;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 447 ~ createTempDemographicsData ~ error',
+        error
+      );
+    }
+  };
+
+  const createUploadLogs = async (
+    surveyTempID: any,
+    demoTempID: any,
+    updateType: any,
+    unitID: any,
+    lessonID: any
+  ) => {
+    try {
+      const value = {
+        id: uuidv4(),
+        ...(surveyTempID !== '' && {TemporaryUniversalUploadSurveyDataID: surveyTempID}),
+        ...(demoTempID !== '' && {TemporaryDemographicsUploadDataID: demoTempID}),
         User_id: state.user.authId,
         Unit_id: unitID,
         lesson_id: lessonID,
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
+        updateType: updateType,
         ...(imgUrl && {PaperSurveyURL: imgUrl}),
         Reason: reason,
       };
@@ -400,7 +503,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const handleExistingUpload = async () => {
+  const handleSurveyExistingUpload = async () => {
     try {
       let index = [],
         data: any = [];
@@ -410,7 +513,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           data.unshift(surveyData[i]);
         }
       }
-
       data.forEach(async (item: any) => {
         const updateData: any = await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {
@@ -425,11 +527,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             updateData.data.updateUniversalSurveyStudentData.id,
             item.surveyData
           );
+
           createTempSurveyresult &&
             (await createUploadLogs(
               createTempSurveyresult.id,
-              item.syllabusLessonID,
-              item.lessonID
+              '',
+              'SURVEY_DATA_UPDATE',
+              updateData.data.updateUniversalSurveyStudentData.syllabusLessonID,
+              updateData.data.updateUniversalSurveyStudentData.lessonID
             ));
         }
       });
@@ -441,7 +546,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const handleNewUniversalUpload = async () => {
+  const handleNewSurveyUniversalUpload = async () => {
     try {
       const changedSurveyData = newUniversalSurveyData.filter((data: any) => {
         return data.surveyData.some((sData: any) => {
@@ -469,6 +574,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           createTempSurveyresult &&
             (await createUploadLogs(
               createTempSurveyresult.id,
+              '',
+              'SURVEY_DATA_UPDATE',
               item.syllabusLessonID,
               item.lessonID
             ));
@@ -482,12 +589,112 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const handleDemographicsExistingUpload = async () => {
+    try {
+      let index = [],
+        data: any = [];
+      for (let i = demographicsData.length - 1; i >= 0; i--) {
+        if (index.indexOf(demographicsData[i].questionDataId) === -1) {
+          index.push(demographicsData[i].questionDataId);
+          data.unshift(demographicsData[i]);
+        }
+      }
+
+      data.forEach(async (item: any) => {
+        const updateDemographicsData: any = await API.graphql(
+          graphqlOperation(mutations.updateQuestionData, {
+            input: {
+              id: item.questionDataId,
+              responseObject: item.responseObject,
+            },
+          })
+        );
+
+        if (updateDemographicsData) {
+          const createTempDemographicsDataResult = await createTempDemographicsData(
+            updateDemographicsData.data.updateQuestionData.id,
+            item.responseObject
+          );
+          createTempDemographicsDataResult &&
+            (await createUploadLogs(
+              '',
+              createTempDemographicsDataResult.id,
+              'DEMOGRAPHIC_DATA_UPDATE',
+              updateDemographicsData.data.updateQuestionData.syllabusLessonID,
+              updateDemographicsData.data.updateQuestionData.lessonID
+            ));
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsExistingUpload ~ error',
+        error
+      );
+    }
+  };
+
+  const handleDemographicsNewUpload = async () => {
+    try {
+      const changedDemographicsUpdatedData = newDemographicsData.filter((data: any) => {
+        return data.responseObject.some((dData: any) => {
+          return dData.demographicsUpdated === true;
+        });
+      });
+      changedDemographicsUpdatedData.forEach(async (item: any) => {
+        const createCheckpointData: any = await API.graphql(
+          graphqlOperation(mutations.createCheckpoint, {
+            input: {
+              label: 'IA1',
+              type: 'profile',
+              title: 'Profile Details',
+              stage: 'checkpoint',
+            },
+          })
+        );
+        if (createCheckpointData) {
+          const createDemographicsQuestionData: any = await API.graphql(
+            graphqlOperation(mutations.createQuestionData, {
+              input: {
+                authID: item.authId,
+                checkpointID: createCheckpointData.data.createCheckpoint.id,
+                email: item.email,
+                responseObject: item.responseObject,
+                syllabusLessonID: '999999',
+              },
+            })
+          );
+          if (createDemographicsQuestionData) {
+            const createTempDemographicsDataResult = await createTempDemographicsData(
+              createDemographicsQuestionData.data.createQuestionData.id,
+              item.responseObject
+            );
+            createTempDemographicsDataResult &&
+              (await createUploadLogs(
+                '',
+                createTempDemographicsDataResult.id,
+                'DEMOGRAPHIC_DATA_UPDATE',
+                createDemographicsQuestionData.data.createQuestionData.syllabusLessonID,
+                createDemographicsQuestionData.data.createQuestionData.lessonID
+              ));
+          }
+        }
+      });
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsNewUpload ~ error',
+        error
+      );
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     try {
       e.preventDefault();
       setLoading(true);
-      await handleExistingUpload();
-      await handleNewUniversalUpload();
+      await handleSurveyExistingUpload();
+      await handleNewSurveyUniversalUpload();
+      await handleDemographicsExistingUpload();
+      await handleDemographicsNewUpload();
       setSelectedReason({
         id: 0,
         name: '',

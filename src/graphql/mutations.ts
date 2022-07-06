@@ -6315,6 +6315,7 @@ export const createQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6375,6 +6376,7 @@ export const updateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6435,6 +6437,7 @@ export const deleteQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6552,6 +6555,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -6672,6 +6676,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -6792,6 +6797,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -9199,6 +9205,219 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     }
   }
 `;
+export const createTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation CreateTemporaryDemographicsUploadData(
+    $input: CreateTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    createTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation UpdateTemporaryDemographicsUploadData(
+    $input: UpdateTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    updateTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation DeleteTemporaryDemographicsUploadData(
+    $input: DeleteTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    deleteTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUploadLogs = /* GraphQL */ `
   mutation CreateUploadLogs(
     $input: CreateUploadLogsInput!
@@ -9234,7 +9453,34 @@ export const createUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
+      updateType
       Date
       Curricullum_id
       Unit_id
@@ -9282,7 +9528,34 @@ export const updateUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
+      updateType
       Date
       Curricullum_id
       Unit_id
@@ -9330,7 +9603,34 @@ export const deleteUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
+      updateType
       Date
       Curricullum_id
       Unit_id
