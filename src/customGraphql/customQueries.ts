@@ -2496,6 +2496,9 @@ export const listInstitutions = /* GraphQL */ `
           items {
             staffAuthID
             staffEmail
+            staffMember {
+              role
+            }
           }
         }
         rooms {
@@ -2505,6 +2508,23 @@ export const listInstitutions = /* GraphQL */ `
           nextToken
         }
         classes {
+          items {
+            name
+            institutionID
+            students {
+              items {
+                studentEmail
+                studentAuthID
+                status
+                student {
+                  role
+                  status
+                  type
+                }
+              }
+              nextToken
+            }
+          }
           nextToken
         }
         filters
@@ -5210,6 +5230,18 @@ export const listFeelingsArchives = /* GraphQL */ `
         comments
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listAllClasses = /* GraphQL */ `
+  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
+    listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        name
+        id
       }
       nextToken
     }
