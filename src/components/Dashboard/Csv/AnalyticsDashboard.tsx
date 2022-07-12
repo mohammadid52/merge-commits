@@ -47,6 +47,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     inactiveStudent: 0,
   });
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const [selectedInstitute, setSelectedInstitute] = useState<{
     id: string;
@@ -311,6 +312,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   };
 
   const onInstitutionSelected = async (id: any, name: string, value: string) => {
+    setIsChecked(false);
     let instituteDropdownValue = {id, name, value};
     setSelectedInstitute(instituteDropdownValue);
     const {
@@ -425,6 +427,104 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       },
     ];
   };
+
+  const getServiceProviderData = async () => {
+    try {
+      if (!isChecked) {
+        const allLessonValue = AllInstitutions.find(
+          (institute) => institute.id === selectedInstitute.id
+        );
+        if (allLessonValue) {
+          const returnedData = allLessonValue.serviceProviders.items.map(
+            (provider: any) => {
+              console.log(
+                '🚀 ~ file: AnalyticsDashboard.tsx ~ line 766 ~ returnedData ~ provider.providerInstitution.id',
+                provider.providerInstitution.id
+              );
+              const lessonList = AllUniversalLessons.filter(
+                (lesson: any) =>
+                  lesson.institutionID === provider.providerInstitution.id &&
+                  lesson.type === 'lesson'
+              ).length;
+
+              const surveyList = AllUniversalSurveys.filter(
+                (survey: any) =>
+                  survey.institutionID === provider.providerInstitution.id &&
+                  survey.type === 'survey'
+              ).length;
+
+              const fellows = AllInstitutions.filter(
+                (institute: any) => institute.id === provider.providerInstitution.id
+              );
+
+              const fellowList = fellows[0].staff.items.filter(
+                (staffList: any) => staffList.staffMember.role === 'FLW'
+              ).length;
+
+              return {
+                lessonList,
+                surveyList,
+                fellowList,
+              };
+            }
+          );
+          console.log(
+            '🚀 ~ file: AnalyticsDashboard.tsx ~ line 785 ~ returnedData ~ returnedData',
+            returnedData
+          );
+          setAllData({
+            allInstitutions: AllData.allInstitutions,
+            allStudents: AllData.allStudents,
+            allClasses: AllData.allClasses,
+            allFellows: AllData.allFellows + returnedData[0].fellowList,
+            allUniversalLessons: (AllData.allUniversalLessons +
+              returnedData[0].lessonList) as any,
+            allUniversalSurveys: (AllData.allUniversalSurveys +
+              returnedData[0].surveyList) as any,
+            activeStudent: AllData.activeStudent,
+            inactiveStudent: AllData.inactiveStudent,
+          });
+        }
+      } else if (isChecked) {
+        const {
+          classList,
+          studentList,
+          fellowList,
+          lessonList,
+          surveyList,
+          ActiveStudentCount,
+          InactiveStudentCount,
+        } = await getInstituteName(selectedInstitute.id);
+        setAllData({
+          allInstitutions: AllData.allInstitutions,
+          allStudents: studentList,
+          allClasses: classList,
+          allFellows: fellowList,
+          allUniversalLessons: lessonList as any,
+          allUniversalSurveys: surveyList as any,
+          activeStudent: ActiveStudentCount,
+          inactiveStudent: InactiveStudentCount,
+        });
+      }
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 756 ~ getServiceProviderData ~ error',
+        error
+      );
+    }
+  };
+
+  const toggleCheckBox = async () => {
+    setIsChecked(!isChecked);
+    await getServiceProviderData();
+  };
+
+  const onPieEnter = useCallback(
+    (_, index) => {
+      setActiveIndex(index);
+    },
+    [setActiveIndex]
+  );
 
   const COLORS = [
     '#084081',
@@ -712,13 +812,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     );
   };
 
-  const onPieEnter = useCallback(
-    (_, index) => {
-      setActiveIndex(index);
-    },
-    [setActiveIndex]
-  );
-
   const PieChartWrapper = ({
     getNameandValuefromData = () => {
       return {name: '', value: 0, key: ''} as any;
@@ -764,54 +857,64 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             </span>
           </div>
         </div>
-        <Selector
-          loading={loading}
-          disabled={loading}
-          selectedItem={selectedInstitute ? selectedInstitute.name : ''}
-          placeholder="select an institution"
-          list={AllInstitutions}
-          additionalClass="w-1/3 mb-2"
-          onChange={(value, name, id) => onInstitutionSelected(id, name, value)}
-        />
-        <div className="flex flex-wrap mx-2">
+        <div className="flex gap-4 justify-between items-center">
+          <Selector
+            loading={loading}
+            disabled={loading}
+            selectedItem={selectedInstitute ? selectedInstitute.name : ''}
+            placeholder="select an institution"
+            list={AllInstitutions}
+            additionalClass="w-1/3"
+            onChange={(value, name, id) => onInstitutionSelected(id, name, value)}
+          />
+          {selectedInstitute.id !== '' && (
+            <span className="cursor-pointer">
+              <input
+                type="checkbox"
+                className="form-checkbox w-4 h-4"
+                checked={isChecked}
+                onChange={toggleCheckBox}
+                id="provider-checkbox"
+              />
+              <label
+                htmlFor="provider-checkbox"
+                className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
+                With Service Providers
+              </label>
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap my-4 ">
           {loading ? (
             <div className="flex flex-col justify-center items-center">
               <ComponentLoading />
             </div>
           ) : (
             <>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-500">
-                  Total {AllData.allInstitutions} Institutions
+              <div className="analytic-wrap gap-4 flex-wrap grid">
+                <div className="analytic-badge">
+                  <h2>{AllData.allInstitutions}</h2> Institutions
                 </div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">Total {AllData.allStudents} Students</div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">Total {AllData.allFellows} Fellows</div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-500">Total {AllData.allClasses} Classes</div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">
-                  Total {AllData.allUniversalLessons} Lessons
+                <div className="analytic-badge">
+                  <h2>{AllData.allStudents}</h2> Students
                 </div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">
-                  Total {AllData.allUniversalSurveys} Surveys
+                <div className="analytic-badge">
+                  <h2>{AllData.allFellows}</h2> Fellows
                 </div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">
-                  Total {AllData.activeStudent} Active Students
+                <div className="analytic-badge">
+                  <h2>{AllData.allClasses}</h2> Classes
                 </div>
-              </div>
-              <div className="w-1/3 px-2 my-2">
-                <div className="bg-gray-400">
-                  Total {AllData.inactiveStudent} Inactive Students
+                <div className="analytic-badge">
+                  <h2>{AllData.allUniversalLessons}</h2> Lessons
+                </div>
+                <div className="analytic-badge">
+                  <h2>{AllData.allUniversalSurveys}</h2> Surveys
+                </div>
+                <div className="analytic-badge">
+                  <h2>{AllData.activeStudent}</h2> Active Students
+                </div>
+                <div className="analytic-badge">
+                  <h2>{AllData.inactiveStudent}</h2> Inactive Students
                 </div>
               </div>
               <div className="flex flex-wrap mx-2">

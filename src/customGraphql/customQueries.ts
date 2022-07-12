@@ -2490,6 +2490,18 @@ export const listInstitutions = /* GraphQL */ `
         image
         isServiceProvider
         serviceProviders {
+          items {
+            partnerID
+            id
+            providerInstitution {
+              id
+              isServiceProvider
+              name
+              phone
+              type
+              state
+            }
+          }
           nextToken
         }
         staff {

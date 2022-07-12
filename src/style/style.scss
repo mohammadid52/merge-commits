@@ -1510,3 +1510,27 @@
 .dropdown-tooltip-text {
   position: unset !important;
 }
+
+.analytic-wrap {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.analytic-badge {
+  width: 100%;
+  color: #2b2e40;
+  border: 1px solid #2b2e40;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 24px 8px;
+  background-color: #f7fbff;
+
+  h2 {
+    font-size: 42px;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #be2026;
+  }
+}
