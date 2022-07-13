@@ -7,7 +7,7 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import useDictionary from '../../../customHooks/dictionary';
 import * as customQueries from '../../../customGraphql/customQueries';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
-import {PieChart, Pie, Cell, Sector} from 'recharts';
+import {PieChart, Pie, Cell, Tooltip} from 'recharts';
 
 interface ICsvProps {
   institutionId?: string;
@@ -46,7 +46,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     activeStudent: 0,
     inactiveStudent: 0,
   });
-  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const [selectedInstitute, setSelectedInstitute] = useState<{
@@ -519,13 +518,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     await getServiceProviderData();
   };
 
-  const onPieEnter = useCallback(
-    (_, index) => {
-      setActiveIndex(index);
-    },
-    [setActiveIndex]
-  );
-
   const COLORS = [
     '#084081',
     '#4eb3d3',
@@ -583,7 +575,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               {obj.name}
             </text>
             <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Active/Inactive'}
+              {' Active/Inactive '}
             </text>
             <text
               x={obj.cx}
@@ -687,131 +679,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     );
   };
 
-  const renderActiveShape = (props: any) => {
-    const {
-      cx,
-      cy,
-      midAngle,
-      innerRadius,
-      outerRadius,
-      startAngle,
-      endAngle,
-      fill,
-      percent,
-      value,
-      key,
-      tooltipPayload,
-    } = props;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 10;
-    const ey = my;
-    const textAnchor = cos >= 0 ? 'start' : 'end';
-
-    return (
-      <g>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-        />
-        <Sector
-          cx={cx}
-          cy={cy}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          innerRadius={outerRadius + 6}
-          outerRadius={outerRadius + 10}
-          fill={fill}
-        />
-        {key === 'Institute' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Institute: ${tooltipPayload[0].name}`}</text>
-          </>
-        )}
-        {key === 'Active' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Active : ${
-              tooltipPayload[0].value === 10 ? 0 : tooltipPayload[0].value
-            }`}</text>
-          </>
-        )}
-        {key === 'Inactive' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Inactive : ${
-              tooltipPayload[0].value === 10 ? 0 : tooltipPayload[0].value
-            }`}</text>
-          </>
-        )}
-        {key === 'Classes' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Total Class: ${
-              tooltipPayload[0].value === 10 ? 0 : tooltipPayload[0].value
-            }`}</text>
-          </>
-        )}
-        {key === 'Lessons' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Total Lesson: ${
-              tooltipPayload[0].value === 10 ? 0 : tooltipPayload[0].value
-            }`}</text>
-          </>
-        )}
-        {key === 'Surveys' && (
-          <>
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text
-              x={ex + (cos >= 0 ? 1 : -1) * 12}
-              y={ey}
-              textAnchor={textAnchor}
-              fill="#333">{`Total Survey: ${
-              tooltipPayload[0].value === 10 ? 0 : tooltipPayload[0].value
-            }`}</text>
-          </>
-        )}
-      </g>
-    );
-  };
-
   const PieChartWrapper = ({
     getNameandValuefromData = () => {
       return {name: '', value: 0, key: ''} as any;
@@ -819,26 +686,84 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   }) => {
     const chartData = getNameandValuefromData();
     return (
-      <PieChart width={1000} height={400}>
+      <PieChart width={500} height={380}>
         <Pie
           dataKey="value"
           data={chartData}
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          // cx={270}
           isAnimationActive={false}
+          innerRadius={65}
+          outerRadius={160}
           cy={180}
-          innerRadius={60}
-          outerRadius={140}
-          onMouseEnter={onPieEnter}
           label={renderCustomizedLabel}
           labelLine={false}>
-          {chartData.map((entry: any, index: any) => (
+          {chartData.map((_: any, index: any) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
+        <Tooltip content={<CustomTooltip />} />
       </PieChart>
     );
+  };
+
+  const CustomTooltip = ({active, payload}: any) => {
+    if (active && payload?.length) {
+      return (
+        <>
+          {payload[0].payload.key === 'Institute' && (
+            <div className="piechart-tooltip">
+              <p>
+                Institute Name: &nbsp;
+                <span>{`${payload[0].name}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Active' && (
+            <div className="piechart-tooltip">
+              <p>
+                Active students: &nbsp;
+                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Inactive' && (
+            <div className="piechart-tooltip">
+              <p>
+                Inactive students: &nbsp;
+                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Classes' && (
+            <div className="piechart-tooltip">
+              <p>
+                Total Classrooms: &nbsp;
+                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Inactive_Classes' && null}
+          {payload[0].payload.key === 'Lessons' && (
+            <div className="piechart-tooltip">
+              <p>
+                Total Lessons: &nbsp;
+                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Inactive_Lessons' && null}
+          {payload[0].payload.key === 'Surveys' && (
+            <div className="piechart-tooltip">
+              <p>
+                Total Surveys: &nbsp;
+                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
+              </p>
+            </div>
+          )}
+          {payload[0].payload.key === 'Inactive_Surveys' && null}
+        </>
+      );
+    }
+    return null;
   };
 
   return (
