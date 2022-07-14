@@ -2517,6 +2517,11 @@ export const listInstitutions = /* GraphQL */ `
           nextToken
         }
         curricula {
+          items {
+            id
+            name
+            type
+          }
           nextToken
         }
         classes {
@@ -5254,6 +5259,35 @@ export const listAllClasses = /* GraphQL */ `
       items {
         name
         id
+        institutionID
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listCurriculas = /* GraphQL */ `
+  query ListCurricula(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurricula(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        institutionID
+        type
+        createdAt
+        updatedAt
       }
       nextToken
     }

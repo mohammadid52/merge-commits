@@ -15,13 +15,12 @@ interface ICsvProps {
 
 interface IAllDataProps {
   allInstitutions: number;
+  allCourseData: number;
   allStudents: number;
   allFellows: number;
   allUniversalLessons: number;
   allUniversalSurveys: number;
   allClasses: number;
-  activeStudent: number;
-  inactiveStudent: number;
 }
 
 const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
@@ -33,18 +32,20 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const [_, setAllFellows] = useState<any[]>([]);
   const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
-  const [___, setAllClasses] = useState<any[]>([]);
-  const [_____, setActiveStudent] = useState<any[]>([]);
-  const [____, setInactiveStudent] = useState<any[]>([]);
+  const [AllCourses, setAllCourses] = useState<any[]>([]);
+  const [AllClasses, setAllClasses] = useState<any[]>([]);
+  console.log(
+    '🚀 ~ file: AnalyticsDashboard.tsx ~ line 37 ~ AnalyticsDashboard ~ AllClasses',
+    AllClasses
+  );
   const [AllData, setAllData] = useState<IAllDataProps>({
     allInstitutions: 0,
+    allCourseData: 0,
     allStudents: 0,
     allFellows: 0,
     allUniversalLessons: 0,
     allUniversalSurveys: 0,
     allClasses: 0,
-    activeStudent: 0,
-    inactiveStudent: 0,
   });
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
@@ -65,6 +66,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const getAllDataReadyForChart = async () => {
     setLoading(true);
     const instituteDetails = await listInstitutions(undefined, []);
+    const courseDetails = await listAllCourses(undefined, []);
     const studentsDetails = await listAllStudentsAndFellow(`ST`, undefined, []);
     const fellowDetails = await listAllStudentsAndFellow(`FLW`, undefined, []);
     const lessonDetails = await listAllLessons(`lesson`, undefined, []);
@@ -72,6 +74,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     const classDetails = await listAllClasses(undefined, []);
     await findActiveandInactiveStudent(
       instituteDetails,
+      courseDetails,
       studentsDetails,
       fellowDetails,
       lessonDetails,
@@ -147,6 +150,32 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const listAllCourses = async (nextToken: string, outArray: any[]): Promise<any> => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculas, {
+          nextToken: nextToken,
+        })
+      );
+      let returnedData = result.data.listCurricula?.items;
+      let NextToken = result.data.listCurricula?.nextToken;
+
+      let combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        combined = await listAllCourses(NextToken, combined);
+      }
+
+      setAllCourses(combined);
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllCourses ~ error',
+        error
+      );
+    }
+  };
+
   const listAllLessons = async (
     lessonType: string,
     nextToken: string,
@@ -217,31 +246,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       );
       if (instituteData) {
         const classList = instituteData.classes.items.length;
+        const courseList = instituteData.curricula.items.length;
         const studentList = instituteData.classes.items.reduce(
           (acc: any, curr: any) => acc + curr.students.items.length,
           0
         );
-        const ActiveStudentCount = instituteData.classes.items
-          .map((classData: any) => {
-            const filteredActiveStudent = classData.students.items.filter(
-              (student: any) => student.student.status === 'ACTIVE'
-            ).length;
-            return filteredActiveStudent;
-          })
-          .reduce((acc: any, curr: any) => {
-            return acc + curr;
-          }, 0);
-
-        const InactiveStudentCount = instituteData.classes.items
-          .map((classData: any) => {
-            const filteredInactiveStudent = classData.students.items.filter(
-              (student: any) => student.student.status === 'INACTIVE'
-            ).length;
-            return filteredInactiveStudent;
-          })
-          .reduce((acc: any, curr: any) => {
-            return acc + curr;
-          }, 0);
 
         const fellowList = instituteData.staff.items.filter(
           (staffList: any) => staffList.staffMember.role === 'FLW'
@@ -259,12 +268,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
 
         return {
           classList,
+          courseList,
           studentList,
           fellowList: fellowList ? fellowList : 0,
           lessonList: lessonList ? lessonList : 0,
           surveyList: surveyList ? surveyList : 0,
-          ActiveStudentCount,
-          InactiveStudentCount,
         };
       }
     } catch (error) {
@@ -277,6 +285,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
 
   const findActiveandInactiveStudent = async (
     instituteDetails: any[],
+    courseDetails: any[],
     studentsDetails: any[],
     fellowDetails: any[],
     lessonDetails: any[],
@@ -284,23 +293,14 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     classDetails: any[]
   ) => {
     try {
-      const ActiveStudentCount = studentsDetails.filter(
-        (student: any) => student.status === 'ACTIVE'
-      );
-      const InactiveStudentCount = studentsDetails.filter(
-        (student: any) => student.status === 'INACTIVE'
-      );
-      setActiveStudent(ActiveStudentCount);
-      setInactiveStudent(InactiveStudentCount);
       setAllData({
         allInstitutions: instituteDetails.length,
+        allCourseData: courseDetails.length,
         allStudents: studentsDetails.length,
         allClasses: classDetails.length,
         allFellows: fellowDetails.length,
         allUniversalLessons: lessonDetails.length,
         allUniversalSurveys: surveyDetails.length,
-        activeStudent: ActiveStudentCount.length,
-        inactiveStudent: InactiveStudentCount.length,
       });
     } catch (error) {
       console.log(
@@ -316,33 +316,30 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     setSelectedInstitute(instituteDropdownValue);
     const {
       classList,
+      courseList,
       studentList,
       fellowList,
       lessonList,
       surveyList,
-      ActiveStudentCount,
-      InactiveStudentCount,
     } = await getInstituteName(id);
     console.log(
       '🚀 ~ file: AnalyticsDashboard.tsx ~ line 202 ~ getInstituteName ~ studentList',
       studentList,
+      courseList,
       classList,
       fellowList,
       lessonList,
-      surveyList,
-      ActiveStudentCount,
-      InactiveStudentCount
+      surveyList
     );
 
     setAllData({
       allInstitutions: 1,
+      allCourseData: courseList,
       allStudents: studentList,
       allClasses: classList,
       allFellows: fellowList,
       allUniversalLessons: lessonList as any,
       allUniversalSurveys: surveyList as any,
-      activeStudent: ActiveStudentCount,
-      inactiveStudent: InactiveStudentCount,
     });
   };
 
@@ -360,26 +357,19 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const getActiveandInactiveStudent = () => {
-    try {
-      return [
-        {
-          name: 'Active',
-          value: AllData.activeStudent === 0 ? 10 : AllData.activeStudent,
-          key: `Active`,
-        },
-        {
-          name: 'Inactive',
-          value: AllData.inactiveStudent === 0 ? 10 : AllData.inactiveStudent,
-          key: `Inactive`,
-        },
-      ];
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 232 ~ getActiveandInactiveStudent ~ error',
-        error
-      );
-    }
+  const getCourseCount = () => {
+    return [
+      {
+        name: 'Course',
+        value: AllData.allCourseData === 0 ? 10 : AllData.allCourseData,
+        key: 'Course',
+      },
+      {
+        name: '',
+        value: AllData.allCourseData === 0 ? 0 : 220,
+        key: 'Inactive_Course',
+      },
+    ];
   };
 
   const getClassesCount = () => {
@@ -412,7 +402,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     ];
   };
 
-  const getUniversalSurveysCount = () => {
+  const getUniversalSurveysCount = (): any => {
     return [
       {
         name: 'Surveys',
@@ -460,10 +450,21 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 (staffList: any) => staffList.staffMember.role === 'FLW'
               ).length;
 
+              const courseList = AllCourses.filter(
+                (course: any) => course.institutionID === provider.providerInstitution.id
+              ).length;
+
+              const classList = AllClasses.filter(
+                (classList: any) =>
+                  classList.institutionID === provider.providerInstitution.id
+              ).length;
+
               return {
                 lessonList,
                 surveyList,
                 fellowList,
+                courseList,
+                classList,
               };
             }
           );
@@ -473,36 +474,33 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           );
           setAllData({
             allInstitutions: AllData.allInstitutions,
+            allCourseData: AllData.allCourseData + returnedData[0].courseList,
             allStudents: AllData.allStudents,
-            allClasses: AllData.allClasses,
+            allClasses: AllData.allClasses + returnedData[0].classList,
             allFellows: AllData.allFellows + returnedData[0].fellowList,
             allUniversalLessons: (AllData.allUniversalLessons +
               returnedData[0].lessonList) as any,
             allUniversalSurveys: (AllData.allUniversalSurveys +
               returnedData[0].surveyList) as any,
-            activeStudent: AllData.activeStudent,
-            inactiveStudent: AllData.inactiveStudent,
           });
         }
       } else if (isChecked) {
         const {
           classList,
+          courseList,
           studentList,
           fellowList,
           lessonList,
           surveyList,
-          ActiveStudentCount,
-          InactiveStudentCount,
         } = await getInstituteName(selectedInstitute.id);
         setAllData({
           allInstitutions: AllData.allInstitutions,
+          allCourseData: courseList,
           allStudents: studentList,
           allClasses: classList,
           allFellows: fellowList,
           allUniversalLessons: lessonList as any,
           allUniversalSurveys: surveyList as any,
-          activeStudent: ActiveStudentCount,
-          inactiveStudent: InactiveStudentCount,
         });
       }
     } catch (error) {
@@ -563,7 +561,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             </text>
           </>
         )}
-        {obj.key === 'Active' && (
+        {obj.key === 'Course' && (
           <>
             <text
               x={x}
@@ -575,7 +573,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               {obj.name}
             </text>
             <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {' Active/Inactive '}
+              {'Course'}
             </text>
             <text
               x={obj.cx}
@@ -583,23 +581,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               textAnchor="middle"
               fontSize={11}
               fill={'#999'}>
-              {'Students'}
+              {'Details'}
             </text>
           </>
         )}
-        {obj.key === 'Inactive' && (
-          <>
-            <text
-              x={x}
-              y={y}
-              fontSize={12}
-              fill="white"
-              textAnchor={'middle'}
-              dominantBaseline="central">
-              {obj.name}
-            </text>
-          </>
-        )}
+        {obj.key === 'Inactive_course' && null}
         {obj.key === 'Classes' && (
           <>
             <text
@@ -717,22 +703,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               </p>
             </div>
           )}
-          {payload[0].payload.key === 'Active' && (
+          {payload[0].payload.key === 'Course' && (
             <div className="piechart-tooltip">
               <p>
-                Active students: &nbsp;
+                Total Courses: &nbsp;
                 <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
               </p>
             </div>
           )}
-          {payload[0].payload.key === 'Inactive' && (
-            <div className="piechart-tooltip">
-              <p>
-                Inactive students: &nbsp;
-                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
-              </p>
-            </div>
-          )}
+          {payload[0].payload.key === 'Inactive_Course' && null}
           {payload[0].payload.key === 'Classes' && (
             <div className="piechart-tooltip">
               <p>
@@ -821,6 +800,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                   <h2>{AllData.allInstitutions}</h2> Institutions
                 </div>
                 <div className="analytic-badge">
+                  <h2>{AllData.allCourseData}</h2> Courses
+                </div>
+                <div className="analytic-badge">
                   <h2>{AllData.allStudents}</h2> Students
                 </div>
                 <div className="analytic-badge">
@@ -835,16 +817,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 <div className="analytic-badge">
                   <h2>{AllData.allUniversalSurveys}</h2> Surveys
                 </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.activeStudent}</h2> Active Students
-                </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.inactiveStudent}</h2> Inactive Students
-                </div>
               </div>
               <div className="flex flex-wrap mx-2">
                 <PieChartWrapper getNameandValuefromData={getNameandValueofInstitute} />
-                <PieChartWrapper getNameandValuefromData={getActiveandInactiveStudent} />
+                <PieChartWrapper getNameandValuefromData={getCourseCount} />
                 <PieChartWrapper getNameandValuefromData={getClassesCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalLessonsCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalSurveysCount} />
