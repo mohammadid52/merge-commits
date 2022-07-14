@@ -34,10 +34,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
   const [AllCourses, setAllCourses] = useState<any[]>([]);
   const [AllClasses, setAllClasses] = useState<any[]>([]);
-  console.log(
-    '🚀 ~ file: AnalyticsDashboard.tsx ~ line 37 ~ AnalyticsDashboard ~ AllClasses',
-    AllClasses
-  );
   const [AllData, setAllData] = useState<IAllDataProps>({
     allInstitutions: 0,
     allCourseData: 0,
