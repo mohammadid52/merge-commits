@@ -2500,6 +2500,70 @@ export const listInstitutions = /* GraphQL */ `
               phone
               type
               state
+              rooms {
+                nextToken
+                items {
+                  institutionID
+                  maxPersons
+                  teacherAuthID
+                  teacherEmail
+                  teacher {
+                    authId
+                    id
+                    firstName
+                    lastName
+                  }
+                  class {
+                    id
+                    name
+                    room {
+                      institutionID
+                      classID
+                      name
+                      teacherAuthID
+                      teacherEmail
+                      updatedAt
+                      teacher {
+                        id
+                        role
+                        status
+                        firstName
+                        lastName
+                      }
+                      coTeachers {
+                        items {
+                          id
+                          roomID
+                        }
+                        nextToken
+                      }
+                    }
+                  }
+                  classroomGroups {
+                    items {
+                      classroomGroupsStudents {
+                        items {
+                          id
+                          studentAuthId
+                          studentEmail
+                          studentType
+                        }
+                        nextToken
+                      }
+                    }
+                    nextToken
+                  }
+                  coTeachers {
+                    items {
+                      id
+                      teacherAuthID
+                      teacherEmail
+                      teacherID
+                    }
+                    nextToken
+                  }
+                }
+              }
             }
           }
           nextToken
@@ -2526,6 +2590,7 @@ export const listInstitutions = /* GraphQL */ `
         }
         classes {
           items {
+            id
             name
             institutionID
             students {
@@ -2540,6 +2605,45 @@ export const listInstitutions = /* GraphQL */ `
                 }
               }
               nextToken
+            }
+            room {
+              curricula {
+                nextToken
+                items {
+                  id
+                  roomID
+                  curriculumID
+                  curriculum {
+                    id
+                    name
+                  }
+                }
+              }
+              coTeachers {
+                nextToken
+                items {
+                  id
+                  teacherEmail
+                  teacherID
+                  teacherAuthID
+                  teacher {
+                    id
+                    lastName
+                    firstName
+                    role
+                  }
+                }
+              }
+              teacherAuthID
+              teacherEmail
+              teacher {
+                email
+                authId
+                id
+                firstName
+                lastName
+                role
+              }
             }
           }
           nextToken
@@ -5260,6 +5364,18 @@ export const listAllClasses = /* GraphQL */ `
         name
         id
         institutionID
+        room {
+          teacherAuthID
+          teacherEmail
+          teacher {
+            id
+            lastName
+            firstName
+            email
+            role
+            authId
+          }
+        }
       }
       nextToken
     }

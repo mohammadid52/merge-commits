@@ -30,6 +30,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const [AllInstitutions, setAllInstitutions] = useState<any[]>([]);
   const [__, setAllStudents] = useState<any[]>([]);
   const [_, setAllFellows] = useState<any[]>([]);
+  const [___, setAllTeachers] = useState<any[]>([]);
   const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
   const [AllCourses, setAllCourses] = useState<any[]>([]);
@@ -65,6 +66,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     const courseDetails = await listAllCourses(undefined, []);
     const studentsDetails = await listAllStudentsAndFellow(`ST`, undefined, []);
     const fellowDetails = await listAllStudentsAndFellow(`FLW`, undefined, []);
+    const teacherDetails = await listAllStudentsAndFellow(`TR`, undefined, []);
     const lessonDetails = await listAllLessons(`lesson`, undefined, []);
     const surveyDetails = await listAllLessons(`survey`, undefined, []);
     const classDetails = await listAllClasses(undefined, []);
@@ -73,6 +75,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       courseDetails,
       studentsDetails,
       fellowDetails,
+      teacherDetails,
       lessonDetails,
       surveyDetails,
       classDetails
@@ -135,6 +138,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         setAllStudents(combined);
       } else if (peopleType === 'FLW') {
         setAllFellows(combined);
+      } else if (peopleType === 'TR') {
+        setAllTeachers(combined);
       }
 
       return combined;
@@ -249,7 +254,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         );
 
         const fellowList = instituteData.staff.items.filter(
-          (staffList: any) => staffList.staffMember.role === 'FLW'
+          (staffList: any) =>
+            staffList.staffMember.role === 'FLW' || staffList.staffMember.role === 'TR'
         ).length;
 
         const lessonList = AllUniversalLessons.filter(
@@ -284,6 +290,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     courseDetails: any[],
     studentsDetails: any[],
     fellowDetails: any[],
+    teacherDetails: any[],
     lessonDetails: any[],
     surveyDetails: any[],
     classDetails: any[]
@@ -294,7 +301,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         allCourseData: courseDetails.length,
         allStudents: studentsDetails.length,
         allClasses: classDetails.length,
-        allFellows: fellowDetails.length,
+        allFellows: fellowDetails.length + teacherDetails.length,
         allUniversalLessons: lessonDetails.length,
         allUniversalSurveys: surveyDetails.length,
       });
@@ -416,16 +423,12 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const getServiceProviderData = async () => {
     try {
       if (!isChecked) {
-        const allLessonValue = AllInstitutions.find(
+        const instituteDetails = AllInstitutions.find(
           (institute) => institute.id === selectedInstitute.id
         );
-        if (allLessonValue) {
-          const returnedData = allLessonValue.serviceProviders.items.map(
+        if (instituteDetails) {
+          const returnedData = instituteDetails.serviceProviders.items.map(
             (provider: any) => {
-              console.log(
-                '🚀 ~ file: AnalyticsDashboard.tsx ~ line 766 ~ returnedData ~ provider.providerInstitution.id',
-                provider.providerInstitution.id
-              );
               const lessonList = AllUniversalLessons.filter(
                 (lesson: any) =>
                   lesson.institutionID === provider.providerInstitution.id &&
@@ -443,7 +446,12 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               );
 
               const fellowList = fellows[0].staff.items.filter(
-                (staffList: any) => staffList.staffMember.role === 'FLW'
+                (staffList: any) =>
+                  (staffList.staffMember.role === 'FLW' ||
+                    staffList.staffMember.role === 'TR') &&
+                  !instituteDetails.staff.items.find(
+                    (staff: any) => staff.staffEmail === staffList.staffEmail
+                  )
               ).length;
 
               const courseList = AllCourses.filter(
