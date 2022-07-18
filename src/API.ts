@@ -477,8 +477,8 @@ export type UniversalLesson = {
   studentMaterials?: string | null,
   targetAudience?: string | null,
   isUsed?: boolean | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type UniversalLessonPlan = {
@@ -2197,6 +2197,8 @@ export type CreateUniversalLessonInput = {
   studentMaterials?: string | null,
   targetAudience?: string | null,
   isUsed?: boolean | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type UniversalLessonPlanInput = {
@@ -2284,6 +2286,8 @@ export type ModelUniversalLessonConditionInput = {
   studentMaterials?: ModelStringInput | null,
   targetAudience?: ModelStringInput | null,
   isUsed?: ModelBooleanInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonConditionInput | null > | null,
   or?: Array< ModelUniversalLessonConditionInput | null > | null,
   not?: ModelUniversalLessonConditionInput | null,
@@ -2335,6 +2339,8 @@ export type UpdateUniversalLessonInput = {
   studentMaterials?: string | null,
   targetAudience?: string | null,
   isUsed?: boolean | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type DeleteUniversalLessonInput = {
@@ -2621,6 +2627,8 @@ export type CreateUniversalSurveyStudentDataInput = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   surveyData?: Array< PartInputInput | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type ModelUniversalSurveyStudentDataConditionInput = {
@@ -2632,6 +2640,8 @@ export type ModelUniversalSurveyStudentDataConditionInput = {
   roomID?: ModelStringInput | null,
   currentLocation?: ModelStringInput | null,
   lessonProgress?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUniversalSurveyStudentDataConditionInput | null > | null,
   or?: Array< ModelUniversalSurveyStudentDataConditionInput | null > | null,
   not?: ModelUniversalSurveyStudentDataConditionInput | null,
@@ -2649,8 +2659,8 @@ export type UniversalSurveyStudentData = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   surveyData?:  Array<PartInput | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type UpdateUniversalSurveyStudentDataInput = {
@@ -2664,6 +2674,8 @@ export type UpdateUniversalSurveyStudentDataInput = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   surveyData?: Array< PartInputInput | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
 };
 
 export type DeleteUniversalSurveyStudentDataInput = {
@@ -4255,6 +4267,8 @@ export type ModelUniversalLessonFilterInput = {
   studentMaterials?: ModelStringInput | null,
   targetAudience?: ModelStringInput | null,
   isUsed?: ModelBooleanInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonFilterInput | null > | null,
   or?: Array< ModelUniversalLessonFilterInput | null > | null,
   not?: ModelUniversalLessonFilterInput | null,
@@ -4345,6 +4359,8 @@ export type ModelUniversalSurveyStudentDataFilterInput = {
   roomID?: ModelStringInput | null,
   currentLocation?: ModelStringInput | null,
   lessonProgress?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   and?: Array< ModelUniversalSurveyStudentDataFilterInput | null > | null,
   or?: Array< ModelUniversalSurveyStudentDataFilterInput | null > | null,
   not?: ModelUniversalSurveyStudentDataFilterInput | null,
@@ -12983,8 +12999,8 @@ export type CreateAttendanceMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -13307,8 +13323,8 @@ export type UpdateAttendanceMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -13631,8 +13647,8 @@ export type DeleteAttendanceMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -13895,8 +13911,8 @@ export type CreateUniversalLessonMutation = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14033,8 +14049,8 @@ export type UpdateUniversalLessonMutation = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14171,8 +14187,8 @@ export type DeleteUniversalLessonMutation = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14637,8 +14653,8 @@ export type CreateUniversalSurveyStudentDataMutation = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14671,8 +14687,8 @@ export type UpdateUniversalSurveyStudentDataMutation = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14705,8 +14721,8 @@ export type DeleteUniversalSurveyStudentDataMutation = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -14739,8 +14755,8 @@ export type CreateTemporaryUniversalUploadSurveyDataMutation = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -14788,8 +14804,8 @@ export type UpdateTemporaryUniversalUploadSurveyDataMutation = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -14837,8 +14853,8 @@ export type DeleteTemporaryUniversalUploadSurveyDataMutation = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -15106,8 +15122,8 @@ export type CreateUploadLogsMutation = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -15189,8 +15205,8 @@ export type UpdateUploadLogsMutation = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -15272,8 +15288,8 @@ export type DeleteUploadLogsMutation = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -15978,8 +15994,8 @@ export type CreateUniversalSyllabusLessonMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -16126,8 +16142,8 @@ export type UpdateUniversalSyllabusLessonMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -16274,8 +16290,8 @@ export type DeleteUniversalSyllabusLessonMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -16374,8 +16390,8 @@ export type CreateUniversalLessonFeedbackMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -16461,8 +16477,8 @@ export type UpdateUniversalLessonFeedbackMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -16548,8 +16564,8 @@ export type DeleteUniversalLessonFeedbackMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -17319,8 +17335,8 @@ export type CreateSentimentTrackerMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -17581,8 +17597,8 @@ export type UpdateSentimentTrackerMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -17843,8 +17859,8 @@ export type DeleteSentimentTrackerMutation = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -18732,8 +18748,8 @@ export type CreateFeelingsArchiveMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -19019,8 +19035,8 @@ export type UpdateFeelingsArchiveMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -19306,8 +19322,8 @@ export type DeleteFeelingsArchiveMutation = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -24047,8 +24063,8 @@ export type GetAttendanceQuery = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -24268,8 +24284,8 @@ export type ListAttendancesQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       room?:  {
         __typename: "Room",
@@ -24442,8 +24458,8 @@ export type GetUniversalLessonQuery = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -24545,8 +24561,8 @@ export type ListUniversalLessonsQuery = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -24853,8 +24869,8 @@ export type GetUniversalSurveyStudentDataQuery = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -24887,8 +24903,8 @@ export type ListUniversalSurveyStudentDataQuery = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -24922,8 +24938,8 @@ export type GetTemporaryUniversalUploadSurveyDataQuery = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -24969,8 +24985,8 @@ export type ListTemporaryUniversalUploadSurveyDataQuery = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -25128,8 +25144,8 @@ export type GetUploadLogsQuery = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -25652,8 +25668,8 @@ export type GetUniversalSyllabusLessonQuery = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -25749,8 +25765,8 @@ export type ListUniversalSyllabusLessonsQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -25834,8 +25850,8 @@ export type GetUniversalLessonFeedbackQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -26464,8 +26480,8 @@ export type GetSentimentTrackerQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -27185,8 +27201,8 @@ export type GetFeelingsArchiveQuery = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -27316,8 +27332,8 @@ export type ListFeelingsArchivesQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       date: string,
       time: string,
@@ -28221,8 +28237,8 @@ export type AttendanceByStudentQuery = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       room?:  {
         __typename: "Room",
@@ -36453,8 +36469,8 @@ export type OnCreateAttendanceSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -36772,8 +36788,8 @@ export type OnUpdateAttendanceSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -37091,8 +37107,8 @@ export type OnDeleteAttendanceSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     room?:  {
       __typename: "Room",
@@ -37350,8 +37366,8 @@ export type OnCreateUniversalLessonSubscription = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -37483,8 +37499,8 @@ export type OnUpdateUniversalLessonSubscription = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -37616,8 +37632,8 @@ export type OnDeleteUniversalLessonSubscription = {
     studentMaterials?: string | null,
     targetAudience?: string | null,
     isUsed?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -38032,8 +38048,8 @@ export type OnCreateUniversalSurveyStudentDataSubscription = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -38061,8 +38077,8 @@ export type OnUpdateUniversalSurveyStudentDataSubscription = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -38090,8 +38106,8 @@ export type OnDeleteUniversalSurveyStudentDataSubscription = {
       } | null > | null,
       hasTakenSurvey?: boolean | null,
     } | null > | null,
-    createdAt: string,
-    updatedAt: string,
+    createdAt?: string | null,
+    updatedAt?: string | null,
   } | null,
 };
 
@@ -38119,8 +38135,8 @@ export type OnCreateTemporaryUniversalUploadSurveyDataSubscription = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -38163,8 +38179,8 @@ export type OnUpdateTemporaryUniversalUploadSurveyDataSubscription = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -38207,8 +38223,8 @@ export type OnDeleteTemporaryUniversalUploadSurveyDataSubscription = {
         input?: Array< string | null > | null,
         hasTakenSurvey?: boolean | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     surveyData?:  Array< {
       __typename: "PartInput",
@@ -38456,8 +38472,8 @@ export type OnCreateUploadLogsSubscription = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -38534,8 +38550,8 @@ export type OnUpdateUploadLogsSubscription = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -38612,8 +38628,8 @@ export type OnDeleteUploadLogsSubscription = {
         roomID?: string | null,
         currentLocation?: string | null,
         lessonProgress?: string | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       surveyData?:  Array< {
         __typename: "PartInput",
@@ -39268,8 +39284,8 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -39411,8 +39427,8 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -39554,8 +39570,8 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     displayData?:  {
       __typename: "DisplayData",
@@ -39649,8 +39665,8 @@ export type OnCreateUniversalLessonFeedbackSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -39731,8 +39747,8 @@ export type OnUpdateUniversalLessonFeedbackSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -39813,8 +39829,8 @@ export type OnDeleteUniversalLessonFeedbackSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -40534,8 +40550,8 @@ export type OnCreateSentimentTrackerSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -40791,8 +40807,8 @@ export type OnUpdateSentimentTrackerSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -41048,8 +41064,8 @@ export type OnDeleteSentimentTrackerSubscription = {
         studentMaterials?: string | null,
         targetAudience?: string | null,
         isUsed?: boolean | null,
-        createdAt: string,
-        updatedAt: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
       } | null,
       displayData?:  {
         __typename: "DisplayData",
@@ -41917,8 +41933,8 @@ export type OnCreateFeelingsArchiveSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -42199,8 +42215,8 @@ export type OnUpdateFeelingsArchiveSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,
@@ -42481,8 +42497,8 @@ export type OnDeleteFeelingsArchiveSubscription = {
       studentMaterials?: string | null,
       targetAudience?: string | null,
       isUsed?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
     date: string,
     time: string,

@@ -8,6 +8,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import * as customQueries from '../../../customGraphql/customQueries';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import {PieChart, Pie, Cell, Tooltip} from 'recharts';
+import moment from 'moment';
 
 interface ICsvProps {
   institutionId?: string;
@@ -21,6 +22,7 @@ interface IAllDataProps {
   allUniversalLessons: number;
   allUniversalSurveys: number;
   allClasses: number;
+  allTakenSurveys?: number;
 }
 
 const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
@@ -43,7 +45,13 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     allUniversalLessons: 0,
     allUniversalSurveys: 0,
     allClasses: 0,
+    allTakenSurveys: 0,
   });
+
+  const [allUniversalSurveyStudentData, setAllUniversalSurveyStudentData] = useState<
+    any[]
+  >([]);
+
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const [selectedInstitute, setSelectedInstitute] = useState<{
@@ -56,8 +64,47 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     value: '',
   });
 
+  const [selectedTimelineActivity, setSelectedTimelineActivity] = useState<{
+    id: string;
+    name: string;
+    value: string;
+  }>({
+    id: '',
+    name: '',
+    value: '',
+  });
+
+  const TimeLineActivity = [
+    {
+      id: 1,
+      name: 'All',
+      value: 'all',
+    },
+    {
+      id: 2,
+      name: 'Today',
+      value: 'today',
+    },
+    {
+      id: 3,
+      name: 'This Week',
+      value: 'thisWeek',
+    },
+    {
+      id: 4,
+      name: 'This Month',
+      value: 'thisMonth',
+    },
+    {
+      id: 5,
+      name: 'This Year',
+      value: 'thisYear',
+    },
+  ];
+
   useEffect(() => {
     getAllDataReadyForChart();
+    listUniversalSurveyData(undefined, []);
   }, []);
 
   const getAllDataReadyForChart = async () => {
@@ -240,6 +287,34 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const listUniversalSurveyData = async (
+    nextToken: string,
+    outArray: any[]
+  ): Promise<any> => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.listUniversalSurveyStudentData, {
+          nextToken: nextToken,
+        })
+      );
+      let returnedData = result.data.listUniversalSurveyStudentData?.items;
+      let NextToken = result.data.listUniversalSurveyStudentData?.nextToken;
+
+      let combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        combined = await listUniversalSurveyData(NextToken, combined);
+      }
+      setAllUniversalSurveyStudentData(combined);
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 435 ~ allUniversalSurveyData ~ error',
+        error
+      );
+    }
+  };
+
   const getInstituteName = async (instituteId: string) => {
     try {
       const instituteData = AllInstitutions.find(
@@ -267,6 +342,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           (survey: any) =>
             survey.institutionID === instituteId && survey.type === 'survey'
         ).length;
+
+        const surveyLists = AllUniversalSurveys.filter(
+          (survey: any) =>
+            survey.institutionID === instituteId && survey.type === 'survey'
+        );
+        console.log(
+          '🚀 ~ file: AnalyticsDashboard.tsx ~ line 313 ~ getInstituteName ~ surveyLists',
+          surveyLists
+        );
 
         return {
           classList,
@@ -346,6 +430,170 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     });
   };
 
+  const filterUniversalSurveyIDswithData = async (timelineDropdownValue: {
+    id: string;
+    name: string;
+    value: string;
+  }) => {
+    try {
+      let surveyLists: any[];
+      let filterAlluniversalSurveyStudentData: any[];
+      let updatedSurveyList: any[];
+      let duplicateDataIds: any[];
+      let filteredSurveyListIDs: any[];
+      const todayDate = moment().format();
+      const oneDayBefore = moment().subtract(1, 'days').format();
+      const currentWeek = moment().subtract(7, 'days').format();
+      const currentMonth = moment().subtract(30, 'days').format();
+      const currentYear = moment().subtract(365, 'days').format();
+      if (isChecked) {
+        const instituteDetails = AllInstitutions.find(
+          (institute) => institute.id === selectedInstitute.id
+        );
+
+        if (instituteDetails) {
+          const returnedData = instituteDetails.serviceProviders.items.map(
+            (serviceProvider: any) => {
+              surveyLists = AllUniversalSurveys.filter(
+                (survey: any) =>
+                  survey.institutionID === serviceProvider.providerInstitution.id &&
+                  survey.type === 'survey'
+              );
+
+              filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
+                (survey: any) => {
+                  if (timelineDropdownValue.value === 'all') {
+                    return survey;
+                  } else if (timelineDropdownValue.value === 'today') {
+                    return (
+                      survey.createdAt >= oneDayBefore &&
+                      survey.createdAt <= todayDate &&
+                      surveyLists.find(
+                        (surveyList: any) => surveyList.id === survey.lessonID
+                      )
+                    );
+                  } else if (timelineDropdownValue.value === 'thisWeek') {
+                    return (
+                      survey.createdAt >= currentWeek &&
+                      survey.createdAt <= todayDate &&
+                      surveyLists.find(
+                        (surveyList: any) => surveyList.id === survey.lessonID
+                      )
+                    );
+                  } else if (timelineDropdownValue.value === 'thisMonth') {
+                    return (
+                      survey.createdAt >= currentMonth &&
+                      survey.createdAt <= todayDate &&
+                      surveyLists.find(
+                        (surveyList: any) => surveyList.id === survey.lessonID
+                      )
+                    );
+                  } else if (timelineDropdownValue.value === 'thisYear') {
+                    return (
+                      survey.createdAt >= currentYear &&
+                      survey.createdAt <= todayDate &&
+                      surveyLists.find(
+                        (surveyList: any) => surveyList.id === survey.lessonID
+                      )
+                    );
+                  }
+                }
+              );
+              updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
+                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+              );
+
+              duplicateDataIds = updatedSurveyList.map((o) => o.id);
+              filteredSurveyListIDs = updatedSurveyList.filter(
+                ({id}, index) => !duplicateDataIds.includes(id, index + 1)
+              );
+              return filteredSurveyListIDs;
+            }
+          );
+          return returnedData[0];
+        }
+      } else {
+        surveyLists = AllUniversalSurveys.filter(
+          (survey: any) =>
+            survey.institutionID === selectedInstitute.id && survey.type === 'survey'
+        );
+
+        filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
+          (survey: any) => {
+            if (timelineDropdownValue.value === 'all') {
+              return survey;
+            } else if (timelineDropdownValue.value === 'today') {
+              return (
+                survey.createdAt >= oneDayBefore &&
+                survey.createdAt <= todayDate &&
+                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+              );
+            } else if (timelineDropdownValue.value === 'thisWeek') {
+              return (
+                survey.createdAt >= currentWeek &&
+                survey.createdAt <= todayDate &&
+                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+              );
+            } else if (timelineDropdownValue.value === 'thisMonth') {
+              return (
+                survey.createdAt >= currentMonth &&
+                survey.createdAt <= todayDate &&
+                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+              );
+            } else if (timelineDropdownValue.value === 'thisYear') {
+              return (
+                survey.createdAt >= currentYear &&
+                survey.createdAt <= todayDate &&
+                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+              );
+            }
+          }
+        );
+        updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
+          surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+        );
+
+        duplicateDataIds = updatedSurveyList.map((o) => o.id);
+        filteredSurveyListIDs = updatedSurveyList.filter(
+          ({id}, index) => !duplicateDataIds.includes(id, index + 1)
+        );
+
+        return filteredSurveyListIDs;
+      }
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 437 ~ filterUniversalSurveyIDswithData ~ error',
+        error
+      );
+    }
+  };
+
+  const onTimelineActivitySelected = async (id: any, name: string, value: string) => {
+    let timelineDropdownValue = {id, name, value};
+    setSelectedTimelineActivity(timelineDropdownValue);
+    const takenSurvey = await filterUniversalSurveyIDswithData(timelineDropdownValue);
+    console.log(
+      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 578 ~ onTimelineActivitySelected ~ takenSurvey',
+      takenSurvey
+    );
+
+    setAllData({
+      allInstitutions: AllData.allInstitutions,
+      allCourseData: AllData.allCourseData,
+      allStudents: AllData.allStudents,
+      allClasses: AllData.allClasses,
+      allFellows: AllData.allFellows,
+      allUniversalLessons: AllData.allUniversalLessons as any,
+      allUniversalSurveys: AllData.allUniversalSurveys as any,
+      allTakenSurveys: takenSurvey.length,
+    });
+
+    console.log(
+      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 501 ~ onTimelineActivitySelected ~ data',
+      takenSurvey
+    );
+  };
+
   const getNameandValueofInstitute = () => {
     try {
       const instituteData = AllInstitutions.map((institute: any) => {
@@ -374,6 +622,21 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       },
     ];
   };
+
+  // const getTakenSurveyCount = () => {
+  //   return [
+  //     {
+  //       name: 'Taken Survey',
+  //       value: AllData.allTakenSurveys === 0 ? 10 : AllData.allTakenSurveys,
+  //       key: 'taken_Survey',
+  //     },
+  //     {
+  //       name: 'Total Survey',
+  //       value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
+  //       key: 'total_Survey',
+  //     },
+  //   ];
+  // };
 
   const getClassesCount = () => {
     return [
@@ -776,20 +1039,35 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             onChange={(value, name, id) => onInstitutionSelected(id, name, value)}
           />
           {selectedInstitute.id !== '' && (
-            <span className="cursor-pointer">
-              <input
-                type="checkbox"
-                className="form-checkbox w-4 h-4"
-                checked={isChecked}
-                onChange={toggleCheckBox}
-                id="provider-checkbox"
+            <>
+              <span className="cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="form-checkbox w-4 h-4"
+                  checked={isChecked}
+                  onChange={toggleCheckBox}
+                  id="provider-checkbox"
+                />
+                <label
+                  htmlFor="provider-checkbox"
+                  className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
+                  With Service Providers
+                </label>
+              </span>
+              <Selector
+                loading={loading}
+                disabled={loading}
+                selectedItem={
+                  selectedTimelineActivity ? selectedTimelineActivity.name : ''
+                }
+                placeholder="Activity timeline"
+                list={TimeLineActivity}
+                additionalClass="w-1/3"
+                onChange={(value, name, id) =>
+                  onTimelineActivitySelected(id, name, value)
+                }
               />
-              <label
-                htmlFor="provider-checkbox"
-                className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
-                With Service Providers
-              </label>
-            </span>
+            </>
           )}
         </div>
         <div className="flex flex-wrap my-4 ">
@@ -821,6 +1099,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 <div className="analytic-badge">
                   <h2>{AllData.allUniversalSurveys}</h2> Surveys
                 </div>
+                {selectedTimelineActivity.id !== '' && (
+                  <div className="analytic-badge">
+                    <h2>
+                      {AllData.allTakenSurveys === 0 ? 0 : AllData.allTakenSurveys}/
+                      {AllData.allUniversalSurveys}
+                    </h2>{' '}
+                    Surveys Taken
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap mx-2">
                 <PieChartWrapper getNameandValuefromData={getNameandValueofInstitute} />
@@ -828,6 +1115,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 <PieChartWrapper getNameandValuefromData={getClassesCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalLessonsCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalSurveysCount} />
+                {/* {selectedTimelineActivity.id !== '' && (
+                  <PieChartWrapper getNameandValuefromData={getTakenSurveyCount} />
+                )} */}
               </div>
             </>
           )}
