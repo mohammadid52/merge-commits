@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as queries from '@graphql/queries';
@@ -7,8 +7,8 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import useDictionary from '../../../customHooks/dictionary';
 import * as customQueries from '../../../customGraphql/customQueries';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
-import {PieChart, Pie, Cell, Tooltip} from 'recharts';
 import moment from 'moment';
+import PieChartWrapper from './DashboardTreeComponents/AnalyticsPieChart';
 
 interface ICsvProps {
   institutionId?: string;
@@ -36,7 +36,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
   const [AllCourses, setAllCourses] = useState<any[]>([]);
-  const [AllClasses, setAllClasses] = useState<any[]>([]);
+  const [AllRooms, setAllRooms] = useState<any[]>([]);
   const [AllData, setAllData] = useState<IAllDataProps>({
     allInstitutions: 0,
     allCourseData: 0,
@@ -116,7 +116,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     const teacherDetails = await listAllStudentsAndFellow(`TR`, undefined, []);
     const lessonDetails = await listAllLessons(`lesson`, undefined, []);
     const surveyDetails = await listAllLessons(`survey`, undefined, []);
-    const classDetails = await listAllClasses(undefined, []);
+    const classDetails = await listAllRooms(undefined, []);
     await findActiveandInactiveStudent(
       instituteDetails,
       courseDetails,
@@ -144,7 +144,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        console.log('nextToken fetching more - ', nextToken);
+        // console.log('nextToken fetching more - ', nextToken);
         combined = await listInstitutions(NextToken, combined);
       }
 
@@ -261,23 +261,23 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const listAllClasses = async (nextToken: string, outArray: any[]): Promise<any> => {
+  const listAllRooms = async (nextToken: string, outArray: any[]): Promise<any> => {
     let combined;
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listAllClasses, {
+        graphqlOperation(customQueries.listRooms, {
           nextToken: nextToken,
         })
       );
-      let returnedData = result.data.listClasses?.items;
-      let NextToken = result.data.listClasses?.nextToken;
+      let returnedData = result.data.listRooms?.items;
+      let NextToken = result.data.listRooms?.nextToken;
 
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        combined = await listAllClasses(NextToken, combined);
+        combined = await listAllRooms(NextToken, combined);
       }
-      setAllClasses(combined);
+      setAllRooms(combined);
       return combined;
     } catch (error) {
       console.log(
@@ -321,7 +321,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         (institute) => institute.id === instituteId
       );
       if (instituteData) {
-        const classList = instituteData.classes.items.length;
+        const classList = instituteData.rooms.items.length;
         const courseList = instituteData.curricula.items.length;
         const studentList = instituteData.classes.items.reduce(
           (acc: any, curr: any) => acc + curr.students.items.length,
@@ -342,15 +342,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           (survey: any) =>
             survey.institutionID === instituteId && survey.type === 'survey'
         ).length;
-
-        const surveyLists = AllUniversalSurveys.filter(
-          (survey: any) =>
-            survey.institutionID === instituteId && survey.type === 'survey'
-        );
-        console.log(
-          '🚀 ~ file: AnalyticsDashboard.tsx ~ line 313 ~ getInstituteName ~ surveyLists',
-          surveyLists
-        );
 
         return {
           classList,
@@ -398,9 +389,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   };
 
   const onInstitutionSelected = async (id: any, name: string, value: string) => {
-    setIsChecked(false);
+    setIsChecked(true);
     let instituteDropdownValue = {id, name, value};
     setSelectedInstitute(instituteDropdownValue);
+
     const {
       classList,
       courseList,
@@ -409,25 +401,41 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       lessonList,
       surveyList,
     } = await getInstituteName(id);
-    console.log(
-      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 202 ~ getInstituteName ~ studentList',
-      studentList,
-      courseList,
-      classList,
-      fellowList,
-      lessonList,
-      surveyList
-    );
 
-    setAllData({
-      allInstitutions: 1,
-      allCourseData: courseList,
-      allStudents: studentList,
-      allClasses: classList,
-      allFellows: fellowList,
-      allUniversalLessons: lessonList as any,
-      allUniversalSurveys: surveyList as any,
-    });
+    const {
+      lessonListByProvider,
+      surveyListByProvider,
+      fellowListByProvider,
+      courseListByProvider,
+      classListByProvider,
+    } = await getServiceProviderData(id);
+
+    if (selectedTimelineActivity.id !== '') {
+      const takenSurvey = await filterUniversalSurveyIDswithData(
+        selectedTimelineActivity
+      );
+
+      setAllData({
+        allInstitutions: 1,
+        allCourseData: courseList + courseListByProvider,
+        allStudents: studentList,
+        allClasses: classList + classListByProvider,
+        allFellows: fellowList + fellowListByProvider,
+        allUniversalLessons: (lessonList + lessonListByProvider) as any,
+        allUniversalSurveys: (surveyList + surveyListByProvider) as any,
+        allTakenSurveys: takenSurvey.length,
+      });
+    } else {
+      setAllData({
+        allInstitutions: 1,
+        allCourseData: courseList + courseListByProvider,
+        allStudents: studentList,
+        allClasses: classList + classListByProvider,
+        allFellows: fellowList + fellowListByProvider,
+        allUniversalLessons: (lessonList + lessonListByProvider) as any,
+        allUniversalSurveys: (surveyList + surveyListByProvider) as any,
+      });
+    }
   };
 
   const filterUniversalSurveyIDswithData = async (timelineDropdownValue: {
@@ -451,7 +459,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           (institute) => institute.id === selectedInstitute.id
         );
 
-        if (instituteDetails) {
+        if (instituteDetails?.serviceProviders?.items?.length > 0) {
           const returnedData = instituteDetails.serviceProviders.items.map(
             (serviceProvider: any) => {
               surveyLists = AllUniversalSurveys.filter(
@@ -511,54 +519,54 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             }
           );
           return returnedData[0];
-        }
-      } else {
-        surveyLists = AllUniversalSurveys.filter(
-          (survey: any) =>
-            survey.institutionID === selectedInstitute.id && survey.type === 'survey'
-        );
+        } else {
+          surveyLists = AllUniversalSurveys.filter(
+            (survey: any) =>
+              survey.institutionID === selectedInstitute.id && survey.type === 'survey'
+          );
 
-        filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
-          (survey: any) => {
-            if (timelineDropdownValue.value === 'all') {
-              return survey;
-            } else if (timelineDropdownValue.value === 'today') {
-              return (
-                survey.createdAt >= oneDayBefore &&
-                survey.createdAt <= todayDate &&
-                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-              );
-            } else if (timelineDropdownValue.value === 'thisWeek') {
-              return (
-                survey.createdAt >= currentWeek &&
-                survey.createdAt <= todayDate &&
-                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-              );
-            } else if (timelineDropdownValue.value === 'thisMonth') {
-              return (
-                survey.createdAt >= currentMonth &&
-                survey.createdAt <= todayDate &&
-                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-              );
-            } else if (timelineDropdownValue.value === 'thisYear') {
-              return (
-                survey.createdAt >= currentYear &&
-                survey.createdAt <= todayDate &&
-                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-              );
+          filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
+            (survey: any) => {
+              if (timelineDropdownValue.value === 'all') {
+                return survey;
+              } else if (timelineDropdownValue.value === 'today') {
+                return (
+                  survey.createdAt >= oneDayBefore &&
+                  survey.createdAt <= todayDate &&
+                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+                );
+              } else if (timelineDropdownValue.value === 'thisWeek') {
+                return (
+                  survey.createdAt >= currentWeek &&
+                  survey.createdAt <= todayDate &&
+                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+                );
+              } else if (timelineDropdownValue.value === 'thisMonth') {
+                return (
+                  survey.createdAt >= currentMonth &&
+                  survey.createdAt <= todayDate &&
+                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+                );
+              } else if (timelineDropdownValue.value === 'thisYear') {
+                return (
+                  survey.createdAt >= currentYear &&
+                  survey.createdAt <= todayDate &&
+                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+                );
+              }
             }
-          }
-        );
-        updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
-          surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-        );
+          );
+          updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
+            surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
+          );
 
-        duplicateDataIds = updatedSurveyList.map((o) => o.id);
-        filteredSurveyListIDs = updatedSurveyList.filter(
-          ({id}, index) => !duplicateDataIds.includes(id, index + 1)
-        );
+          duplicateDataIds = updatedSurveyList.map((o) => o.id);
+          filteredSurveyListIDs = updatedSurveyList.filter(
+            ({id}, index) => !duplicateDataIds.includes(id, index + 1)
+          );
 
-        return filteredSurveyListIDs;
+          return filteredSurveyListIDs;
+        }
       }
     } catch (error) {
       console.log(
@@ -572,10 +580,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     let timelineDropdownValue = {id, name, value};
     setSelectedTimelineActivity(timelineDropdownValue);
     const takenSurvey = await filterUniversalSurveyIDswithData(timelineDropdownValue);
-    console.log(
-      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 578 ~ onTimelineActivitySelected ~ takenSurvey',
-      takenSurvey
-    );
 
     setAllData({
       allInstitutions: AllData.allInstitutions,
@@ -587,17 +591,17 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       allUniversalSurveys: AllData.allUniversalSurveys as any,
       allTakenSurveys: takenSurvey.length,
     });
-
-    console.log(
-      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 501 ~ onTimelineActivitySelected ~ data',
-      takenSurvey
-    );
   };
 
   const getNameandValueofInstitute = () => {
     try {
       const instituteData = AllInstitutions.map((institute: any) => {
-        return {name: institute.name, value: 350, key: 'Institute'};
+        return {
+          name: institute.name,
+          value: 350,
+          key: 'Institute',
+          allData: AllData,
+        };
       });
       return instituteData;
     } catch (error) {
@@ -614,6 +618,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         name: 'Course',
         value: AllData.allCourseData === 0 ? 10 : AllData.allCourseData,
         key: 'Course',
+        allData: AllData,
       },
       {
         name: '',
@@ -623,20 +628,22 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     ];
   };
 
-  // const getTakenSurveyCount = () => {
-  //   return [
-  //     {
-  //       name: 'Taken Survey',
-  //       value: AllData.allTakenSurveys === 0 ? 10 : AllData.allTakenSurveys,
-  //       key: 'taken_Survey',
-  //     },
-  //     {
-  //       name: 'Total Survey',
-  //       value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
-  //       key: 'total_Survey',
-  //     },
-  //   ];
-  // };
+  const getTakenSurveyCount = () => {
+    return [
+      {
+        name: 'Taken Survey',
+        value: AllData.allTakenSurveys === 0 ? 5 : AllData.allTakenSurveys,
+        key: 'taken_Survey',
+        allData: AllData,
+      },
+      {
+        name: 'Total Survey',
+        value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
+        key: 'total_Survey',
+        allData: AllData,
+      },
+    ];
+  };
 
   const getClassesCount = () => {
     return [
@@ -644,6 +651,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         name: 'Classrooms',
         value: AllData.allClasses === 0 ? 10 : AllData.allClasses,
         key: `Classes`,
+        allData: AllData,
       },
       {
         name: '',
@@ -659,6 +667,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         name: 'Lessons',
         value: AllData.allUniversalLessons === 0 ? 10 : AllData.allUniversalLessons,
         key: `Lessons`,
+        allData: AllData,
       },
       {
         name: '',
@@ -674,6 +683,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         name: 'Surveys',
         value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
         key: `Surveys`,
+        allData: AllData,
       },
       {
         name: '',
@@ -683,92 +693,64 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     ];
   };
 
-  const getServiceProviderData = async () => {
+  const getServiceProviderData = async (id: string) => {
     try {
-      if (!isChecked) {
-        const instituteDetails = AllInstitutions.find(
-          (institute) => institute.id === selectedInstitute.id
+      const instituteDetails = AllInstitutions.find((institute) => institute.id === id);
+      if (instituteDetails?.serviceProviders?.items?.length > 0) {
+        const returnedData = instituteDetails?.serviceProviders?.items?.map(
+          (provider: any) => {
+            const lessonListByProvider = AllUniversalLessons.filter(
+              (lesson: any) =>
+                lesson.institutionID === provider?.providerInstitution?.id &&
+                lesson.type === 'lesson'
+            ).length;
+
+            const surveyListByProvider = AllUniversalSurveys.filter(
+              (survey: any) =>
+                survey.institutionID === provider?.providerInstitution?.id &&
+                survey.type === 'survey'
+            ).length;
+
+            const fellows = AllInstitutions.filter(
+              (institute: any) => institute.id === provider?.providerInstitution?.id
+            );
+
+            const fellowListByProvider = fellows[0]?.staff?.items?.filter(
+              (staffList: any) =>
+                (staffList.staffMember.role === 'FLW' ||
+                  staffList.staffMember.role === 'TR') &&
+                !instituteDetails.staff?.items?.find(
+                  (staff: any) => staff?.staffEmail === staffList?.staffEmail
+                )
+            ).length;
+
+            const courseListByProvider = AllCourses.filter(
+              (course: any) => course.institutionID === provider?.providerInstitution?.id
+            ).length;
+
+            const classListByProvider = AllRooms.filter(
+              (classList: any) =>
+                classList.institutionID === provider?.providerInstitution?.id
+            ).length;
+
+            return {
+              lessonListByProvider,
+              surveyListByProvider,
+              fellowListByProvider,
+              courseListByProvider,
+              classListByProvider,
+            };
+          }
         );
-        if (instituteDetails) {
-          const returnedData = instituteDetails.serviceProviders.items.map(
-            (provider: any) => {
-              const lessonList = AllUniversalLessons.filter(
-                (lesson: any) =>
-                  lesson.institutionID === provider.providerInstitution.id &&
-                  lesson.type === 'lesson'
-              ).length;
-
-              const surveyList = AllUniversalSurveys.filter(
-                (survey: any) =>
-                  survey.institutionID === provider.providerInstitution.id &&
-                  survey.type === 'survey'
-              ).length;
-
-              const fellows = AllInstitutions.filter(
-                (institute: any) => institute.id === provider.providerInstitution.id
-              );
-
-              const fellowList = fellows[0].staff.items.filter(
-                (staffList: any) =>
-                  (staffList.staffMember.role === 'FLW' ||
-                    staffList.staffMember.role === 'TR') &&
-                  !instituteDetails.staff.items.find(
-                    (staff: any) => staff.staffEmail === staffList.staffEmail
-                  )
-              ).length;
-
-              const courseList = AllCourses.filter(
-                (course: any) => course.institutionID === provider.providerInstitution.id
-              ).length;
-
-              const classList = AllClasses.filter(
-                (classList: any) =>
-                  classList.institutionID === provider.providerInstitution.id
-              ).length;
-
-              return {
-                lessonList,
-                surveyList,
-                fellowList,
-                courseList,
-                classList,
-              };
-            }
-          );
-          console.log(
-            '🚀 ~ file: AnalyticsDashboard.tsx ~ line 785 ~ returnedData ~ returnedData',
-            returnedData
-          );
-          setAllData({
-            allInstitutions: AllData.allInstitutions,
-            allCourseData: AllData.allCourseData + returnedData[0].courseList,
-            allStudents: AllData.allStudents,
-            allClasses: AllData.allClasses + returnedData[0].classList,
-            allFellows: AllData.allFellows + returnedData[0].fellowList,
-            allUniversalLessons: (AllData.allUniversalLessons +
-              returnedData[0].lessonList) as any,
-            allUniversalSurveys: (AllData.allUniversalSurveys +
-              returnedData[0].surveyList) as any,
-          });
-        }
-      } else if (isChecked) {
-        const {
-          classList,
-          courseList,
-          studentList,
-          fellowList,
-          lessonList,
-          surveyList,
-        } = await getInstituteName(selectedInstitute.id);
-        setAllData({
-          allInstitutions: AllData.allInstitutions,
-          allCourseData: courseList,
-          allStudents: studentList,
-          allClasses: classList,
-          allFellows: fellowList,
-          allUniversalLessons: lessonList as any,
-          allUniversalSurveys: surveyList as any,
-        });
+        return returnedData[0];
+      } else {
+        return {
+          lessonListByProvider: 0,
+          surveyListByProvider: 0,
+          fellowListByProvider: 0,
+          courseListByProvider: 0,
+          classListByProvider: 0,
+        };
       }
     } catch (error) {
       console.log(
@@ -779,237 +761,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   };
 
   const toggleCheckBox = async () => {
-    setIsChecked(!isChecked);
-    await getServiceProviderData();
-  };
-
-  const COLORS = [
-    '#084081',
-    '#4eb3d3',
-    '#2b8cbe',
-    '#0868ac',
-    '#7bccc4',
-    '#a8ddb5',
-    '#ccebc5',
-    '#e0f3db',
-    '#f7fcf0',
-  ];
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = (obj: {
-    cx: number;
-    cy: number;
-    midAngle: number;
-    innerRadius: number;
-    outerRadius: number;
-    percent: number;
-    index: number;
-    name: string;
-    key: string;
-    tooltipPayload: string;
-  }) => {
-    const radius = obj.innerRadius + (obj.outerRadius - obj.innerRadius) * 0.5;
-    const x = obj.cx + radius * Math.cos(-obj.midAngle * RADIAN);
-    const y = obj.cy + radius * Math.sin(-obj.midAngle * RADIAN);
-    return (
-      <>
-        {obj.key === 'Institute' && (
-          <>
-            <text></text>
-            <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Institute'}
-            </text>
-            <text
-              x={obj.cx}
-              y={obj.cy + 20}
-              textAnchor="middle"
-              fontSize={11}
-              fill={'#999'}>
-              {'Details'}
-            </text>
-          </>
-        )}
-        {obj.key === 'Course' && (
-          <>
-            <text
-              x={x}
-              y={y}
-              fontSize={12}
-              fill="white"
-              textAnchor={'middle'}
-              dominantBaseline="central">
-              {obj.name}
-            </text>
-            <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Course'}
-            </text>
-            <text
-              x={obj.cx}
-              y={obj.cy + 20}
-              textAnchor="middle"
-              fontSize={11}
-              fill={'#999'}>
-              {'Details'}
-            </text>
-          </>
-        )}
-        {obj.key === 'Inactive_course' && null}
-        {obj.key === 'Classes' && (
-          <>
-            <text
-              x={x}
-              y={y}
-              fontSize={12}
-              fill="white"
-              textAnchor={'middle'}
-              dominantBaseline="central">
-              {obj.name}
-            </text>
-            <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Classes'}
-            </text>
-            <text
-              x={obj.cx}
-              y={obj.cy + 20}
-              textAnchor="middle"
-              fontSize={11}
-              fill={'#999'}>
-              {'Details'}
-            </text>
-          </>
-        )}
-        {obj.key === 'Inactive_Classes' && null}
-        {obj.key === 'Lessons' && (
-          <>
-            <text
-              x={x}
-              y={y}
-              fontSize={12}
-              fill="white"
-              textAnchor={'middle'}
-              dominantBaseline="central">
-              {obj.name}
-            </text>
-            <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Lessons'}
-            </text>
-            <text
-              x={obj.cx}
-              y={obj.cy + 20}
-              textAnchor="middle"
-              fontSize={11}
-              fill={'#999'}>
-              {'Details'}
-            </text>
-          </>
-        )}
-        {obj.key === 'Inactive_Lessons' && null}
-        {obj.key === 'Surveys' && (
-          <>
-            <text
-              x={x}
-              y={y}
-              fontSize={12}
-              fill="white"
-              textAnchor={'middle'}
-              dominantBaseline="central">
-              {obj.name}
-            </text>
-            <text x={obj.cx} y={obj.cy} dy={8} textAnchor="middle" fill={'#333'}>
-              {'Surveys'}
-            </text>
-            <text
-              x={obj.cx}
-              y={obj.cy + 20}
-              textAnchor="middle"
-              fontSize={11}
-              fill={'#999'}>
-              {'Details'}
-            </text>
-          </>
-        )}
-        {obj.key === 'Inactive_Surveys' && null}
-      </>
-    );
-  };
-
-  const PieChartWrapper = ({
-    getNameandValuefromData = () => {
-      return {name: '', value: 0, key: ''} as any;
-    },
-  }) => {
-    const chartData = getNameandValuefromData();
-    return (
-      <PieChart width={500} height={380}>
-        <Pie
-          dataKey="value"
-          data={chartData}
-          isAnimationActive={false}
-          innerRadius={65}
-          outerRadius={160}
-          cy={180}
-          label={renderCustomizedLabel}
-          labelLine={false}>
-          {chartData.map((_: any, index: any) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-      </PieChart>
-    );
-  };
-
-  const CustomTooltip = ({active, payload}: any) => {
-    if (active && payload?.length) {
-      return (
-        <>
-          {payload[0].payload.key === 'Institute' && (
-            <div className="piechart-tooltip">
-              <p>
-                Institute Name: &nbsp;
-                <span>{`${payload[0].name}`}</span>
-              </p>
-            </div>
-          )}
-          {payload[0].payload.key === 'Course' && (
-            <div className="piechart-tooltip">
-              <p>
-                Total Courses: &nbsp;
-                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
-              </p>
-            </div>
-          )}
-          {payload[0].payload.key === 'Inactive_Course' && null}
-          {payload[0].payload.key === 'Classes' && (
-            <div className="piechart-tooltip">
-              <p>
-                Total Classrooms: &nbsp;
-                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
-              </p>
-            </div>
-          )}
-          {payload[0].payload.key === 'Inactive_Classes' && null}
-          {payload[0].payload.key === 'Lessons' && (
-            <div className="piechart-tooltip">
-              <p>
-                Total Lessons: &nbsp;
-                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
-              </p>
-            </div>
-          )}
-          {payload[0].payload.key === 'Inactive_Lessons' && null}
-          {payload[0].payload.key === 'Surveys' && (
-            <div className="piechart-tooltip">
-              <p>
-                Total Surveys: &nbsp;
-                <span>{`${payload[0].value === 10 ? 0 : payload[0].value}`}</span>
-              </p>
-            </div>
-          )}
-          {payload[0].payload.key === 'Inactive_Surveys' && null}
-        </>
-      );
-    }
-    return null;
+    // setIsChecked(!isChecked);
+    // await getServiceProviderData();
   };
 
   return (
@@ -1040,17 +793,17 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           />
           {selectedInstitute.id !== '' && (
             <>
-              <span className="cursor-pointer">
+              <span className="cursor-not-allowed">
                 <input
                   type="checkbox"
-                  className="form-checkbox w-4 h-4"
+                  className="form-checkbox w-4 h-4 cursor-not-allowed"
                   checked={isChecked}
                   onChange={toggleCheckBox}
                   id="provider-checkbox"
                 />
                 <label
                   htmlFor="provider-checkbox"
-                  className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
+                  className={`w-auto ml-2 leading-5 text-xs text-gray-600 cursor-not-allowed`}>
                   With Service Providers
                 </label>
               </span>
@@ -1115,9 +868,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 <PieChartWrapper getNameandValuefromData={getClassesCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalLessonsCount} />
                 <PieChartWrapper getNameandValuefromData={getUniversalSurveysCount} />
-                {/* {selectedTimelineActivity.id !== '' && (
+                {selectedTimelineActivity.id !== '' && (
                   <PieChartWrapper getNameandValuefromData={getTakenSurveyCount} />
-                )} */}
+                )}
               </div>
             </>
           )}

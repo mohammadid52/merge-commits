@@ -2503,10 +2503,15 @@ export const listInstitutions = /* GraphQL */ `
               rooms {
                 nextToken
                 items {
+                  classID
                   institutionID
                   maxPersons
                   teacherAuthID
                   teacherEmail
+                  class {
+                    id
+                    name
+                  }
                   teacher {
                     authId
                     id
@@ -2578,6 +2583,18 @@ export const listInstitutions = /* GraphQL */ `
           }
         }
         rooms {
+          items {
+            classID
+            id
+            institutionID
+            name
+            teacherAuthID
+            teacherEmail
+            class {
+              id
+              name
+            }
+          }
           nextToken
         }
         curricula {
