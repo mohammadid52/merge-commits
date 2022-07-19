@@ -36,7 +36,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
   const [AllCourses, setAllCourses] = useState<any[]>([]);
-  const [AllRooms, setAllRooms] = useState<any[]>([]);
+  const [____, setAllRooms] = useState<any[]>([]);
   const [AllData, setAllData] = useState<IAllDataProps>({
     allInstitutions: 0,
     allCourseData: 0,
@@ -392,6 +392,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     setIsChecked(true);
     let instituteDropdownValue = {id, name, value};
     setSelectedInstitute(instituteDropdownValue);
+    setSelectedTimelineActivity({
+      id: '',
+      name: '',
+      value: '',
+    });
 
     const {
       classList,
@@ -402,39 +407,18 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       surveyList,
     } = await getInstituteName(id);
 
-    const {
-      lessonListByProvider,
-      surveyListByProvider,
-      fellowListByProvider,
-      courseListByProvider,
-    } = await getServiceProviderData(id);
+    const {fellowListByProvider, courseListByProvider} = await getServiceProviderData(id);
 
-    if (selectedTimelineActivity.id !== '') {
-      const takenSurvey = await filterUniversalSurveyIDswithData(
-        selectedTimelineActivity
-      );
-
-      setAllData({
-        allInstitutions: 1,
-        allCourseData: courseList + courseListByProvider,
-        allStudents: studentList,
-        allClasses: classList,
-        allFellows: fellowList + fellowListByProvider,
-        allUniversalLessons: (lessonList + lessonListByProvider) as any,
-        allUniversalSurveys: (surveyList + surveyListByProvider) as any,
-        allTakenSurveys: takenSurvey.length,
-      });
-    } else {
-      setAllData({
-        allInstitutions: 1,
-        allCourseData: courseList + courseListByProvider,
-        allStudents: studentList,
-        allClasses: classList,
-        allFellows: fellowList + fellowListByProvider,
-        allUniversalLessons: (lessonList + lessonListByProvider) as any,
-        allUniversalSurveys: (surveyList + surveyListByProvider) as any,
-      });
-    }
+    setAllData({
+      allInstitutions: 1,
+      allCourseData: courseList + courseListByProvider,
+      allStudents: studentList,
+      allClasses: classList,
+      allFellows: fellowList + fellowListByProvider,
+      allUniversalLessons: lessonList as any,
+      allUniversalSurveys: surveyList as any,
+      allTakenSurveys: 0,
+    });
   };
 
   const filterUniversalSurveyIDswithData = async (timelineDropdownValue: {
@@ -458,7 +442,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           (institute) => institute.id === selectedInstitute.id
         );
 
-        if (instituteDetails?.serviceProviders?.items?.length > 0) {
+        if (
+          instituteDetails?.serviceProviders?.items?.length > 0 &&
+          AllData.allUniversalSurveys > 0
+        ) {
           const returnedData = instituteDetails.serviceProviders.items.map(
             (serviceProvider: any) => {
               surveyLists = AllUniversalSurveys.filter(
@@ -698,18 +685,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       if (instituteDetails?.serviceProviders?.items?.length > 0) {
         const returnedData = instituteDetails?.serviceProviders?.items?.map(
           (provider: any) => {
-            const lessonListByProvider = AllUniversalLessons.filter(
-              (lesson: any) =>
-                lesson.institutionID === provider?.providerInstitution?.id &&
-                lesson.type === 'lesson'
-            ).length;
-
-            const surveyListByProvider = AllUniversalSurveys.filter(
-              (survey: any) =>
-                survey.institutionID === provider?.providerInstitution?.id &&
-                survey.type === 'survey'
-            ).length;
-
             const fellows = AllInstitutions.filter(
               (institute: any) => institute.id === provider?.providerInstitution?.id
             );
@@ -728,8 +703,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             ).length;
 
             return {
-              lessonListByProvider,
-              surveyListByProvider,
               fellowListByProvider,
               courseListByProvider,
             };
@@ -738,8 +711,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         return returnedData[0];
       } else {
         return {
-          lessonListByProvider: 0,
-          surveyListByProvider: 0,
           fellowListByProvider: 0,
           courseListByProvider: 0,
         };
