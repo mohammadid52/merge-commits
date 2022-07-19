@@ -407,7 +407,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       surveyListByProvider,
       fellowListByProvider,
       courseListByProvider,
-      classListByProvider,
     } = await getServiceProviderData(id);
 
     if (selectedTimelineActivity.id !== '') {
@@ -419,7 +418,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         allInstitutions: 1,
         allCourseData: courseList + courseListByProvider,
         allStudents: studentList,
-        allClasses: classList + classListByProvider,
+        allClasses: classList,
         allFellows: fellowList + fellowListByProvider,
         allUniversalLessons: (lessonList + lessonListByProvider) as any,
         allUniversalSurveys: (surveyList + surveyListByProvider) as any,
@@ -430,7 +429,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         allInstitutions: 1,
         allCourseData: courseList + courseListByProvider,
         allStudents: studentList,
-        allClasses: classList + classListByProvider,
+        allClasses: classList,
         allFellows: fellowList + fellowListByProvider,
         allUniversalLessons: (lessonList + lessonListByProvider) as any,
         allUniversalSurveys: (surveyList + surveyListByProvider) as any,
@@ -728,17 +727,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               (course: any) => course.institutionID === provider?.providerInstitution?.id
             ).length;
 
-            const classListByProvider = AllRooms.filter(
-              (classList: any) =>
-                classList.institutionID === provider?.providerInstitution?.id
-            ).length;
-
             return {
               lessonListByProvider,
               surveyListByProvider,
               fellowListByProvider,
               courseListByProvider,
-              classListByProvider,
             };
           }
         );
@@ -749,7 +742,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           surveyListByProvider: 0,
           fellowListByProvider: 0,
           courseListByProvider: 0,
-          classListByProvider: 0,
         };
       }
     } catch (error) {
