@@ -9,16 +9,17 @@ import * as customQueries from '../../../customGraphql/customQueries';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import moment from 'moment';
 import PieChartWrapper from './DashboardTreeComponents/AnalyticsPieChart';
+import {RefreshIcon} from '@heroicons/react/outline';
 
 interface ICsvProps {
   institutionId?: string;
 }
-
 interface IAllDataProps {
   allInstitutions: number;
   allCourseData: number;
   allStudents: number;
   allFellows: number;
+  allCoFellows: number;
   allUniversalLessons: number;
   allUniversalSurveys: number;
   allClasses: number;
@@ -30,18 +31,20 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const {CsvDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState<boolean>(false);
   const [AllInstitutions, setAllInstitutions] = useState<any[]>([]);
-  const [__, setAllStudents] = useState<any[]>([]);
-  const [_, setAllFellows] = useState<any[]>([]);
-  const [___, setAllTeachers] = useState<any[]>([]);
+  const [AllStudents, setAllStudents] = useState<any[]>([]);
+  const [AllFellows, setAllFellows] = useState<any[]>([]);
+  const [AllTeachers, setAllTeachers] = useState<any[]>([]);
+
   const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
   const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
   const [AllCourses, setAllCourses] = useState<any[]>([]);
-  const [____, setAllRooms] = useState<any[]>([]);
+  const [AllRooms, setAllRooms] = useState<any[]>([]);
   const [AllData, setAllData] = useState<IAllDataProps>({
     allInstitutions: 0,
     allCourseData: 0,
     allStudents: 0,
     allFellows: 0,
+    allCoFellows: 0,
     allUniversalLessons: 0,
     allUniversalSurveys: 0,
     allClasses: 0,
@@ -329,8 +332,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         );
 
         const fellowList = instituteData.staff.items.filter(
-          (staffList: any) =>
-            staffList.staffMember.role === 'FLW' || staffList.staffMember.role === 'TR'
+          (staffList: any) => staffList.staffMember.role === 'TR'
+        ).length;
+
+        const coFellowLists = instituteData.staff.items.filter(
+          (staffList: any) => staffList.staffMember.role === 'FLW'
         ).length;
 
         const lessonList = AllUniversalLessons.filter(
@@ -348,6 +354,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           courseList,
           studentList,
           fellowList: fellowList ? fellowList : 0,
+          coFellowLists: coFellowLists ? coFellowLists : 0,
           lessonList: lessonList ? lessonList : 0,
           surveyList: surveyList ? surveyList : 0,
         };
@@ -376,7 +383,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         allCourseData: courseDetails.length,
         allStudents: studentsDetails.length,
         allClasses: classDetails.length,
-        allFellows: fellowDetails.length + teacherDetails.length,
+        allFellows: teacherDetails.length,
+        allCoFellows: fellowDetails.length,
         allUniversalLessons: lessonDetails.length,
         allUniversalSurveys: surveyDetails.length,
       });
@@ -403,11 +411,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       courseList,
       studentList,
       fellowList,
+      coFellowLists,
       lessonList,
       surveyList,
     } = await getInstituteName(id);
-
-    const {fellowListByProvider, courseListByProvider} = await getServiceProviderData(id);
+    const {
+      fellowListByProvider,
+      courseListByProvider,
+      coFellowListByProviders,
+    } = await getServiceProviderData(id);
 
     setAllData({
       allInstitutions: 1,
@@ -415,6 +427,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       allStudents: studentList,
       allClasses: classList,
       allFellows: fellowList + fellowListByProvider,
+      allCoFellows: coFellowLists + coFellowListByProviders,
       allUniversalLessons: lessonList as any,
       allUniversalSurveys: surveyList as any,
       allTakenSurveys: 0,
@@ -573,6 +586,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       allStudents: AllData.allStudents,
       allClasses: AllData.allClasses,
       allFellows: AllData.allFellows,
+      allCoFellows: AllData.allCoFellows,
       allUniversalLessons: AllData.allUniversalLessons as any,
       allUniversalSurveys: AllData.allUniversalSurveys as any,
       allTakenSurveys: takenSurvey.length,
@@ -691,8 +705,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
 
             const fellowListByProvider = fellows[0]?.staff?.items?.filter(
               (staffList: any) =>
-                (staffList.staffMember.role === 'FLW' ||
-                  staffList.staffMember.role === 'TR') &&
+                staffList.staffMember.role === 'TR' &&
+                !instituteDetails.staff?.items?.find(
+                  (staff: any) => staff?.staffEmail === staffList?.staffEmail
+                )
+            ).length;
+
+            const coFellowListByProviders = fellows[0]?.staff?.items?.filter(
+              (staffList: any) =>
+                staffList.staffMember.role === 'FLW' &&
                 !instituteDetails.staff?.items?.find(
                   (staff: any) => staff?.staffEmail === staffList?.staffEmail
                 )
@@ -705,14 +726,17 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             return {
               fellowListByProvider,
               courseListByProvider,
+              coFellowListByProviders,
             };
           }
         );
+
         return returnedData[0];
       } else {
         return {
           fellowListByProvider: 0,
           courseListByProvider: 0,
+          coFellowListByProviders: 0,
         };
       }
     } catch (error) {
@@ -723,9 +747,33 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const toggleCheckBox = async () => {
-    // setIsChecked(!isChecked);
-    // await getServiceProviderData();
+  // const toggleCheckBox = async () => {
+  //   // setIsChecked(!isChecked);
+  //   // await getServiceProviderData();
+  // };
+
+  const onResetClick = () => {
+    setSelectedTimelineActivity({
+      id: '',
+      name: '',
+      value: '',
+    });
+    setSelectedInstitute({
+      id: '',
+      name: '',
+      value: '',
+    });
+    setAllData({
+      allInstitutions: AllInstitutions.length,
+      allCourseData: AllCourses.length,
+      allStudents: AllStudents.length,
+      allClasses: AllRooms.length,
+      allFellows: AllTeachers.length,
+      allCoFellows: AllFellows.length,
+      allUniversalLessons: AllUniversalLessons.length,
+      allUniversalSurveys: AllUniversalSurveys.length,
+      allTakenSurveys: 0,
+    });
   };
 
   return (
@@ -756,7 +804,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           />
           {selectedInstitute.id !== '' && (
             <>
-              <span className="cursor-not-allowed">
+              {/* <span className="cursor-not-allowed">
                 <input
                   type="checkbox"
                   className="form-checkbox w-4 h-4 cursor-not-allowed"
@@ -768,6 +816,17 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                   htmlFor="provider-checkbox"
                   className={`w-auto ml-2 leading-5 text-xs text-gray-600 cursor-not-allowed`}>
                   With Service Providers
+                </label>
+              </span> */}
+              <span className="flex flex-wrap cursor-pointer">
+                <RefreshIcon
+                  className="form-checkbox w-4 h-4 ml-2 cursor-pointer text-gray-600"
+                  onClick={onResetClick}
+                />
+                <label
+                  className={`w-auto ml-2 mb-1 leading-4 text-xs text-gray-600 cursor-pointer`}
+                  onClick={onResetClick}>
+                  Reset selectors
                 </label>
               </span>
               <Selector
@@ -804,7 +863,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                   <h2>{AllData.allStudents}</h2> Students
                 </div>
                 <div className="analytic-badge">
-                  <h2>{AllData.allFellows}</h2> Fellows
+                  <h2>
+                    {AllData.allFellows}/{AllData.allCoFellows}
+                  </h2>{' '}
+                  Fellows / Co-Fellows
                 </div>
                 <div className="analytic-badge">
                   <h2>{AllData.allClasses}</h2> Classes
