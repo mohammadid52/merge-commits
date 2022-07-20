@@ -831,6 +831,22 @@ export const listRooms = /* GraphQL */ `
         name
         maxPersons
         activeSyllabus
+        coTeachers {
+          nextToken
+          items {
+            id
+            roomID
+            teacherAuthID
+            teacherEmail
+            teacher {
+              authId
+              id
+              role
+              lastName
+              firstName
+            }
+          }
+        }
         teacher {
           firstName
           preferredName
@@ -2593,6 +2609,30 @@ export const listInstitutions = /* GraphQL */ `
             class {
               id
               name
+            }
+            teacher {
+              authId
+              id
+              role
+              firstName
+              lastName
+            }
+            coTeachers {
+              nextToken
+              items {
+                roomID
+                id
+                teacherEmail
+                teacherAuthID
+                teacherID
+                teacher {
+                  authId
+                  id
+                  firstName
+                  lastName
+                  role
+                }
+              }
             }
           }
           nextToken

@@ -10,6 +10,7 @@ import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import moment from 'moment';
 import PieChartWrapper from './DashboardTreeComponents/AnalyticsPieChart';
 import {RefreshIcon} from '@heroicons/react/outline';
+import _ from 'lodash';
 
 interface ICsvProps {
   institutionId?: string;
@@ -115,11 +116,13 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     const instituteDetails = await listInstitutions(undefined, []);
     const courseDetails = await listAllCourses(undefined, []);
     const studentsDetails = await listAllStudentsAndFellow(`ST`, undefined, []);
-    const fellowDetails = await listAllStudentsAndFellow(`FLW`, undefined, []);
-    const teacherDetails = await listAllStudentsAndFellow(`TR`, undefined, []);
     const lessonDetails = await listAllLessons(`lesson`, undefined, []);
     const surveyDetails = await listAllLessons(`survey`, undefined, []);
-    const classDetails = await listAllRooms(undefined, []);
+    const {classDetails, fellowDetails, teacherDetails} = await listAllRooms(
+      undefined,
+      []
+    );
+
     await findActiveandInactiveStudent(
       instituteDetails,
       courseDetails,
@@ -186,10 +189,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
 
       if (peopleType === 'ST') {
         setAllStudents(combined);
-      } else if (peopleType === 'FLW') {
-        setAllFellows(combined);
-      } else if (peopleType === 'TR') {
-        setAllTeachers(combined);
       }
 
       return combined;
@@ -281,7 +280,41 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         combined = await listAllRooms(NextToken, combined);
       }
       setAllRooms(combined);
-      return combined;
+
+      const fellowList = combined.map((item: any) => {
+        return {
+          id: item.id,
+          teacherEmail: item.teacherEmail,
+          teacherAuthID: item.teacherAuthID,
+          teacherFirstName: item.teacher.firstName,
+          teacherLastName: item.teacher.lastName,
+        };
+      });
+
+      const filteredFellowList = _.uniqBy(fellowList, 'teacherAuthID');
+      setAllTeachers(filteredFellowList);
+
+      const coFellowLists = combined.map((coTeachersList: any) => {
+        const coFellowList = coTeachersList.coTeachers.items.map((coTeacher: any) => {
+          return {
+            id: coTeacher.id,
+            roomID: coTeacher.roomID,
+            teacherEmail: coTeacher.teacherEmail,
+            teacherAuthID: coTeacher.teacherAuthID,
+            teacherFirstName: coTeacher.teacher.firstName,
+            teacherLastName: coTeacher.teacher.lastName,
+          };
+        });
+        return _.uniqBy(coFellowList, 'teacherAuthID');
+      });
+      const filteredCoFellowList = _.uniqBy(coFellowLists.flat(), 'teacherAuthID');
+      setAllFellows(filteredCoFellowList);
+
+      return {
+        classDetails: combined,
+        fellowDetails: filteredCoFellowList,
+        teacherDetails: filteredFellowList,
+      };
     } catch (error) {
       console.log(
         '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllClasses ~ error',
@@ -331,13 +364,34 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           0
         );
 
-        const fellowList = instituteData.staff.items.filter(
-          (staffList: any) => staffList.staffMember.role === 'TR'
-        ).length;
+        const fellowList = instituteData.rooms.items.map((item: any) => {
+          return {
+            id: item.id,
+            teacherEmail: item.teacherEmail,
+            teacherAuthID: item.teacherAuthID,
+            teacherFirstName: item.teacher.firstName,
+            teacherLastName: item.teacher.lastName,
+          };
+        });
 
-        const coFellowLists = instituteData.staff.items.filter(
-          (staffList: any) => staffList.staffMember.role === 'FLW'
-        ).length;
+        const filteredFellowList = _.uniqBy(fellowList, 'teacherAuthID');
+
+        const coFellowLists = instituteData.rooms.items.map((coTeachersList: any) => {
+          const coFellowList = coTeachersList.coTeachers.items.map((coTeacher: any) => {
+            return {
+              id: coTeacher.id,
+              roomID: coTeacher.roomID,
+              teacherEmail: coTeacher.teacherEmail,
+              teacherAuthID: coTeacher.teacherAuthID,
+              teacherFirstName: coTeacher.teacher.firstName,
+              teacherLastName: coTeacher.teacher.lastName,
+            };
+          });
+          //store uniqBy value in array
+          return _.uniqBy(coFellowList, 'teacherAuthID');
+        });
+
+        const filteredCoFellowList = _.uniqBy(coFellowLists.flat(), 'teacherAuthID');
 
         const lessonList = AllUniversalLessons.filter(
           (lesson: any) =>
@@ -353,8 +407,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           classList,
           courseList,
           studentList,
-          fellowList: fellowList ? fellowList : 0,
-          coFellowLists: coFellowLists ? coFellowLists : 0,
+          fellowList: filteredFellowList ? filteredFellowList.length : 0,
+          coFellowLists: filteredCoFellowList ? filteredCoFellowList.length : 0,
           lessonList: lessonList ? lessonList : 0,
           surveyList: surveyList ? surveyList : 0,
         };
@@ -416,9 +470,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       surveyList,
     } = await getInstituteName(id);
     const {
-      fellowListByProvider,
+      filteredFellowListByProvider,
       courseListByProvider,
-      coFellowListByProviders,
+      filteredCoFellowListByProviders,
     } = await getServiceProviderData(id);
 
     setAllData({
@@ -426,8 +480,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       allCourseData: courseList + courseListByProvider,
       allStudents: studentList,
       allClasses: classList,
-      allFellows: fellowList + fellowListByProvider,
-      allCoFellows: coFellowLists + coFellowListByProviders,
+      allFellows: fellowList,
+      allCoFellows: coFellowLists,
       allUniversalLessons: lessonList as any,
       allUniversalSurveys: surveyList as any,
       allTakenSurveys: 0,
@@ -703,20 +757,43 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               (institute: any) => institute.id === provider?.providerInstitution?.id
             );
 
-            const fellowListByProvider = fellows[0]?.staff?.items?.filter(
-              (staffList: any) =>
-                staffList.staffMember.role === 'TR' &&
-                !instituteDetails.staff?.items?.find(
-                  (staff: any) => staff?.staffEmail === staffList?.staffEmail
-                )
+            const fellowListByProvider = fellows[0].rooms.items.map((item: any) => {
+              return {
+                id: item.id,
+                teacherEmail: item.teacherEmail,
+                teacherAuthID: item.teacherAuthID,
+                teacherFirstName: item.teacher.firstName,
+                teacherLastName: item.teacher.lastName,
+              };
+            });
+
+            const filteredFellowListByProvider = _.uniqBy(
+              fellowListByProvider,
+              'teacherAuthID'
             ).length;
 
-            const coFellowListByProviders = fellows[0]?.staff?.items?.filter(
-              (staffList: any) =>
-                staffList.staffMember.role === 'FLW' &&
-                !instituteDetails.staff?.items?.find(
-                  (staff: any) => staff?.staffEmail === staffList?.staffEmail
-                )
+            const coFellowListByProviders = fellows[0].rooms.items.map(
+              (coTeachersList: any) => {
+                const coFellowList = coTeachersList.coTeachers.items.map(
+                  (coTeacher: any) => {
+                    return {
+                      id: coTeacher.id,
+                      roomID: coTeacher.roomID,
+                      teacherEmail: coTeacher.teacherEmail,
+                      teacherAuthID: coTeacher.teacherAuthID,
+                      teacherFirstName: coTeacher.teacher.firstName,
+                      teacherLastName: coTeacher.teacher.lastName,
+                    };
+                  }
+                );
+                //store uniqBy value in array
+                return _.uniqBy(coFellowList, 'teacherAuthID');
+              }
+            );
+
+            const filteredCoFellowListByProviders = _.uniqBy(
+              coFellowListByProviders.flat(),
+              'teacherAuthID'
             ).length;
 
             const courseListByProvider = AllCourses.filter(
@@ -724,9 +801,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             ).length;
 
             return {
-              fellowListByProvider,
+              filteredFellowListByProvider,
               courseListByProvider,
-              coFellowListByProviders,
+              filteredCoFellowListByProviders,
             };
           }
         );
@@ -734,9 +811,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         return returnedData[0];
       } else {
         return {
-          fellowListByProvider: 0,
+          filteredFellowListByProvider: 0,
           courseListByProvider: 0,
-          coFellowListByProviders: 0,
+          filteredCoFellowListByProviders: 0,
         };
       }
     } catch (error) {
