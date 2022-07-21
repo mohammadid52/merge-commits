@@ -110,7 +110,7 @@ const DropdownForm = (props: DropdownProps) => {
               role="listbox"
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-item-3"
-              className={`max-h-60 ${listClassName} rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5`}>
+              className={`max-h-30 ${listClassName} rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5`}>
               {items.length ? (
                 items.map((item: {code: string; name: string}, key: number) => (
                   <li
