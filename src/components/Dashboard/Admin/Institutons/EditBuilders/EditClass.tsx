@@ -88,6 +88,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     theme,
   } = useContext(GlobalContext);
   const isSuperAdmin = user.role === 'SUP';
+  const isAdmin = user.role === 'ADM';
+  const isBuilder = user.role === 'BLD';
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {editClassDict, RegistrationDict, UserDict} = useDictionary('curate');
   const dictionary = editClassDict[userLanguage];
@@ -118,7 +120,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(
-      isSuperAdmin
+      isSuperAdmin || isAdmin || isBuilder
         ? `/dashboard/manage-institutions/manage-users/${profileId}`
         : `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
     );

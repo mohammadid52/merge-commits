@@ -22,7 +22,7 @@ const RoomsList = (props: RoomListProps) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute},
     },
     theme,
     userLanguage,
@@ -54,7 +54,7 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
-  const editCurrentRoom = (id: string) => {
+  const editCurrentRoom = (id: string, instId: string) => {
     history.push(
       isSuperAdmin
         ? `/dashboard/manage-institutions/room-edit/${id}`
@@ -105,17 +105,20 @@ const RoomsList = (props: RoomListProps) => {
   const fetchRoomList = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(
-          customQueries.listRoomsDashboard,
-          !isSuperAdmin
-            ? {
-                filter: {
-                  institutionID: {eq: instId},
-                },
-              }
-            : {}
-        )
+        graphqlOperation(customQueries.listRoomsDashboard)
       );
+      // const list: any = await API.graphql(
+      //   graphqlOperation(
+      //     customQueries.listRoomsDashboard,
+      //     !isSuperAdmin || !isAdmin || !isBuilder
+      //       ? {
+      //           filter: {
+      //             institutionID: {eq: instId},
+      //           },
+      //         }
+      //       : {}
+      //   )
+      // );
       const newList = list.data.listRooms.items;
       setRoomList(newList);
       setAllRooms(newList);
@@ -131,13 +134,17 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   useEffect(() => {
-    fetchRoomList();
-    fetchStaffOptions();
+    if (instId === associateInstitute[0].institution.id) {
+      fetchRoomList();
+      fetchStaffOptions();
+    }
   }, [instId]);
 
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (isSuperAdmin || isAdmin || isBuilder) {
       fetchInstitutions();
+      fetchRoomList();
+      fetchStaffOptions();
     }
   }, [isSuperAdmin]);
 
@@ -165,6 +172,9 @@ const RoomsList = (props: RoomListProps) => {
           (institutionId ? item.institution?.id === institutionId : true) &&
           (staffMemberId ? item.teacherAuthID === staffMemberId : true)
       )
+    );
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`
     );
     // if (searchValue && institutionId && staffMemberId) {
     //   setRoomList(
@@ -205,7 +215,10 @@ const RoomsList = (props: RoomListProps) => {
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    onSearch(searchInput, '', '');
+    history.push(
+      `/dashboard/manage-institutions/institution/${associateInstitute[0].institution.id}/class-rooms`
+    );
+    // onSearch(searchInput, '', '');
   };
 
   const onStaffSelectionRemove = () => {
@@ -223,8 +236,22 @@ const RoomsList = (props: RoomListProps) => {
           <div className={`flex justify-end`}>
             <div
               className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'lg:w-144' : 'lg:w-96 mr-4'
+                isSuperAdmin || isAdmin || isBuilder ? 'lg:w-144' : 'lg:w-96 mr-4'
               }`}>
+              {(isSuperAdmin || isAdmin || isBuilder) && (
+                <Selector
+                  placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={`w-auto md:w-52 lg:w-48 ${
+                    isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
+                  }`}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
               <SearchInput
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
@@ -234,30 +261,20 @@ const RoomsList = (props: RoomListProps) => {
                 closeAction={removeSearchAction}
                 style={`mr-4 w-auto md:w-40 lg:w-48`}
               />
-              <Selector
+              {/* <Selector
                 placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
                 list={staffList}
                 selectedItem={selectedStaff?.name}
                 onChange={handleStaffChange}
                 arrowHidden={true}
-                additionalClass={`w-auto md:w-52 lg:w-48 ${isSuperAdmin ? 'mr-4' : ''}`}
+                additionalClass={`w-auto md:w-52 lg:w-48 ${
+                  isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
+                }`}
                 isClearable
                 onClear={onStaffSelectionRemove}
-              />
-              {isSuperAdmin && (
-                <Selector
-                  placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto md:w-52 lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
-                />
-              )}
+              /> */}
             </div>
-            {!isSuperAdmin && (
+            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
               <AddButton
                 label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                 onClick={createNewRoom}
@@ -284,25 +301,25 @@ const RoomsList = (props: RoomListProps) => {
                 <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
-                {isSuperAdmin && (
-                  <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                {(isSuperAdmin || isAdmin || isBuilder) && (
+                  <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{InstitueRomms[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
                 <div
                   className={`${
-                    isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+                    isSuperAdmin || isAdmin || isBuilder ? 'w-2/10' : 'w-3/10'
                   } px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
                 {/* <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
                 </div> */}
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
 
-                <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CURRICULUM']}</span>
                 </div>
 
@@ -313,64 +330,67 @@ const RoomsList = (props: RoomListProps) => {
             </div>
 
             <div className="m-auto max-h-88 overflow-y-auto overflow-x-auto">
-              {roomList.map((item: any, i: number) => (
-                <div
-                  key={i}
-                  className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 cursor-pointer ${
-                    i % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}
-                  onClick={() => editCurrentRoom(item.id)}>
+              {roomList.map((item: any, i: number) => {
+                return (
                   <div
-                    className={
-                      'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
-                    }>
-                    {i + 1}.
-                  </div>
-                  {isSuperAdmin && (
+                    key={i}
+                    className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 cursor-pointer ${
+                      i % 2 !== 0 ? 'bg-gray-50' : ''
+                    }`}
+                    onClick={() => editCurrentRoom(item.id, item.institutionID)}>
                     <div
-                      className="flex w-1.5/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        history.push(
-                          `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
-                        );
-                      }}>
-                      {item.institution?.name}
+                      className={
+                        'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
+                      }>
+                      {i + 1}.
                     </div>
-                  )}
-                  <div
-                    className={`flex ${
-                      isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-                    } items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all`}>
-                    {item.name}
-                  </div>
-                  {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
+                    {(isSuperAdmin || isAdmin || isBuilder) && (
+                      <div
+                        className="flex w-3/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          isSuperAdmin &&
+                            history.push(
+                              `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+                            );
+                        }}>
+                        {item.institution?.name}
+                      </div>
+                    )}
+                    <div
+                      className={`flex ${
+                        isSuperAdmin || isAdmin || isBuilder ? 'w-2/10' : 'w-3/10'
+                      } items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all`}>
+                      {item.name}
+                    </div>
+                    {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                     {item.class?.name}
                   </div> */}
-                  <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
-                    {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
+                    <div className="flex w-1.5/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
+                      {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
+                    </div>
+                    <div className="flex w-1.5/10 items-center px-4 py-2 text-left text-s leading-4">
+                      {item?.curricula?.items
+                        ?.map((d: any) => {
+                          return d?.curriculum?.name;
+                        })
+                        .join(',') || '-'}
+                    </div>
+                    <span
+                      className={`w-1/10 h-6 flex px-4 items-center text-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+                      onClick={() => editCurrentRoom(item.id, item.institutionID)}>
+                      <Tooltip text="Click to edit class" placement="left">
+                        {InstitueRomms[userLanguage]['EDIT']}
+                      </Tooltip>
+                    </span>
                   </div>
-                  <div className="flex w-3/10 items-center px-4 py-2 text-left text-s leading-4">
-                    {item?.curricula?.items
-                      ?.map((d: any) => {
-                        return d?.curriculum?.name;
-                      })
-                      .join(',') || '-'}
-                  </div>
-                  <span
-                    className={`w-1/10 h-6 flex px-4 items-center text-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
-                    onClick={() => editCurrentRoom(item.id)}>
-                    <Tooltip text="Click to edit class" placement="left">
-                      {InstitueRomms[userLanguage]['EDIT']}
-                    </Tooltip>
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </>
         ) : (
           <Fragment>
-            {!isSuperAdmin && (
+            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
               <div className="flex justify-center mt-8">
                 <AddButton
                   className="mx-4"
