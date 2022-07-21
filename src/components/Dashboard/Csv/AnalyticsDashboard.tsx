@@ -352,6 +352,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   };
 
   const getInstituteName = async (instituteId: string) => {
+    console.log(
+      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 355 ~ getInstituteName ~ instituteId',
+      instituteId
+    );
     try {
       const instituteData = AllInstitutions.find(
         (institute) => institute.id === instituteId
@@ -469,15 +473,15 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       lessonList,
       surveyList,
     } = await getInstituteName(id);
-    const {
-      filteredFellowListByProvider,
-      courseListByProvider,
-      filteredCoFellowListByProviders,
-    } = await getServiceProviderData(id);
+    // const {
+    //   filteredFellowListByProvider,
+    //   courseListByProvider,
+    //   filteredCoFellowListByProviders,
+    // } = await getServiceProviderData(id);
 
     setAllData({
       allInstitutions: 1,
-      allCourseData: courseList + courseListByProvider,
+      allCourseData: courseList,
       allStudents: studentList,
       allClasses: classList,
       allFellows: fellowList,
