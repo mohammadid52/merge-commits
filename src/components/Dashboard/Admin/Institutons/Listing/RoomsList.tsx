@@ -245,7 +245,7 @@ const RoomsList = (props: RoomListProps) => {
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
                   arrowHidden={true}
-                  additionalClass={`w-auto md:w-52 lg:w-48 ${
+                  additionalClass={`w-60 ${
                     isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
                   }`}
                   isClearable
@@ -298,7 +298,7 @@ const RoomsList = (props: RoomListProps) => {
                 className={`flex justify-between bg-gray-50 pl-4 ${
                   roomList.length > 4 ? 'pr-6' : 'pr-4'
                 } py-2 whitespace-nowrap`}>
-                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/12 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
@@ -319,7 +319,7 @@ const RoomsList = (props: RoomListProps) => {
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
 
-                <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/12 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CURRICULUM']}</span>
                 </div>
 
@@ -340,7 +340,7 @@ const RoomsList = (props: RoomListProps) => {
                     onClick={() => editCurrentRoom(item.id, item.institutionID)}>
                     <div
                       className={
-                        'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
+                        'flex w-1/12 items-center justify-left px-4 py-2 text-left text-s leading-4'
                       }>
                       {i + 1}.
                     </div>
@@ -369,7 +369,7 @@ const RoomsList = (props: RoomListProps) => {
                     <div className="flex w-1.5/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                       {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                     </div>
-                    <div className="flex w-1.5/10 items-center px-4 py-2 text-left text-s leading-4">
+                    <div className="flex w-3/12 items-center px-4 py-2 text-left text-s leading-4">
                       {item?.curricula?.items
                         ?.map((d: any) => {
                           return d?.curriculum?.name;
