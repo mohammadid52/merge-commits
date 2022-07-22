@@ -542,7 +542,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         if (roomData.id) {
           const input = {
             id: roomData.id,
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             classID: roomData.classRoom.id,
             teacherAuthID: teachersList.find(
               (item: any) => item.id === roomData.teacher.id
@@ -830,10 +830,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   } = roomData;
 
   const selectInstitute = (institute: any) => {
-    console.log(
-      '🚀 ~ file: ClassRoomForm.tsx ~ line 833 ~ selectInstitute ~ institute',
-      institute
-    );
     setRoomData({
       ...roomData,
       institute: {

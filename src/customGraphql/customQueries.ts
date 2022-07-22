@@ -1069,6 +1069,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         institution {
           id
           name
