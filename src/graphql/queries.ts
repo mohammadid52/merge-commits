@@ -3080,6 +3080,7 @@ export const getQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -3136,6 +3137,7 @@ export const listQuestionData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -4456,6 +4458,115 @@ export const listTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     }
   }
 `;
+export const getTemporaryDemographicsUploadData = /* GraphQL */ `
+  query GetTemporaryDemographicsUploadData($id: ID!) {
+    getTemporaryDemographicsUploadData(id: $id) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTemporaryDemographicsUploadData = /* GraphQL */ `
+  query ListTemporaryDemographicsUploadData(
+    $id: ID
+    $filter: ModelTemporaryDemographicsUploadDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTemporaryDemographicsUploadData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUploadLogs = /* GraphQL */ `
   query GetUploadLogs($id: ID!) {
     getUploadLogs(id: $id) {
@@ -4488,7 +4599,34 @@ export const getUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
       UploadType
+      updateType
       Date
       Curricullum_id
       Unit_id
@@ -4527,7 +4665,16 @@ export const listUploadLogs = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        TemporaryDemographicsUploadDataID
+        TemporaryDemographicsUploadData {
+          id
+          updatedUserId
+          questionDataID
+          createdAt
+          updatedAt
+        }
         UploadType
+        updateType
         Date
         Curricullum_id
         Unit_id

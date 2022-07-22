@@ -88,6 +88,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     theme,
   } = useContext(GlobalContext);
   const isSuperAdmin = user.role === 'SUP';
+  const isAdmin = user.role === 'ADM';
+  const isBuilder = user.role === 'BLD';
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {editClassDict, RegistrationDict, UserDict} = useDictionary('curate');
   const dictionary = editClassDict[userLanguage];
@@ -118,19 +120,60 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(
-      isSuperAdmin
+      isSuperAdmin || isAdmin || isBuilder
         ? `/dashboard/manage-institutions/manage-users/${profileId}`
         : `/dashboard/manage-institutions/institution/${instId}/manage-users/${profileId}`
     );
   };
 
-  const fetchClassData = async (classId: string) => {
+  const getAllClassStudentByClassId = async (
+    filter: any,
+    nextToken: string,
+    outArray: any[]
+  ): Promise<any> => {
+    let combined: any[];
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
-          filter: {classID: {eq: classId}},
+          ...filter,
+          nextToken: nextToken,
         })
       );
+
+      let returnedData = result.data.listClassStudents?.items;
+      let NextToken = result.data.listClassStudents?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        combined = await getAllClassStudentByClassId(filter, NextToken, combined);
+      }
+
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
+        error
+      );
+    }
+  };
+
+  const fetchClassData = async (classId: string) => {
+    try {
+      const classFilter = {
+        filter: {
+          classID: {
+            eq: classId,
+          },
+        },
+      };
+
+      // const result: any = await API.graphql(
+      //   graphqlOperation(customQueries.listClassStudentsForRoom, {
+      //     filter: {classID: {eq: classId}},
+      //   })
+      // );
+      const result = await getAllClassStudentByClassId(classFilter, undefined, []);
       // const result: any = await API.graphql(
       //   graphqlOperation(customQueries.getClassDetails, {id: classId})
       // );
@@ -146,7 +189,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       //   },
       // });
       const selectedStudentsIds: any = [];
-      const selectedStudents = result.data.listClassStudents?.items.map((stu: any) => {
+      const selectedStudents = result?.map((stu: any) => {
         selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
@@ -725,11 +768,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
                   <div className="mb-4 w-full lg:w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => {
-                      console.log(
-                        '🚀 ~ file: EditClass.tsx ~ line 723 ~ {classStudents.map ~ item',
-                        item
-                      );
-
                       return (
                         <div
                           key={item.id}
