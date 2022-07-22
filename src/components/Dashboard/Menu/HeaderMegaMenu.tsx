@@ -156,12 +156,12 @@ const HeaderMegaMenu = () => {
           active: location.pathname.indexOf('research-and-analytics') > -1,
           title: Institute_info[userLanguage]['TABS']['UPLOAD_CSV'],
         },
-        {
-          key: 'analytics_dashboard',
-          redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
-          active: location.pathname.indexOf('research-and-analytics') > -1,
-          title: Institute_info[userLanguage]['TABS']['ANALYTICS_DASHBOARD'],
-        },
+        // {
+        //   key: 'analytics_dashboard',
+        //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
+        //   active: location.pathname.indexOf('research-and-analytics') > -1,
+        //   title: Institute_info[userLanguage]['TABS']['ANALYTICS_DASHBOARD'],
+        // },
       ],
     },
   ].filter(Boolean);
