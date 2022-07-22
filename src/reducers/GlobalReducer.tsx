@@ -67,6 +67,10 @@ type globalActions =
         onBoardSurvey: boolean;
         role: string;
         isSuperAdmin: boolean;
+        isAdmin: boolean;
+        isBuilder: boolean;
+        isTeacher: boolean;
+        isStudent: boolean;
         image: string;
         lastLoggedOut?: string;
         lastLoggedIn?: string;
@@ -198,6 +202,10 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           language: action.payload.language,
           role: action.payload.role,
           isSuperAdmin: action.payload.role === 'SUP',
+          isAdmin: action.payload.role === 'ADM',
+          isBuilder: action.payload.role === 'BLD',
+          isTeacher: action.payload.role === 'TR',
+          isStudent: action.payload.role === 'ST',
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
           location: action.payload.location,

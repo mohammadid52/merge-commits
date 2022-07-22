@@ -17,7 +17,7 @@ const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~ USER ROLES ~~~~~~~~~~~~~ //
   const isStudent = user.role === 'ST';
   const isTeacher = user.role === 'TR' || user.role === 'FLW';
-  const isInLesson = useInLessonCheck();
+  const isInLesson = isStudent ? useInLessonCheck() : false;
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';

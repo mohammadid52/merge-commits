@@ -60,6 +60,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [selectedCoTeachers, setSelectedCoTeachers] = useState<
     {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
+  const [AllInstitutions, setAllInstitutions] = useState([]);
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -76,6 +77,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
   useEffect(() => {
     setIsMounted(true);
+    listInstitutions(undefined, []);
   }, []);
 
   const onModalSave = () => {
@@ -88,6 +90,34 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...warnModal,
       show: !warnModal.show,
     });
+  };
+
+  const listInstitutions = async (nextToken: string, outArray: any[]): Promise<any> => {
+    let combined;
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutions, {
+          nextToken: nextToken,
+        })
+      );
+      let returnedData = result.data.listInstitutions?.items;
+      let NextToken = result.data.listInstitutions?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await listInstitutions(NextToken, combined);
+      }
+
+      setAllInstitutions(combined);
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listInstitutions ~ error',
+        error
+      );
+    }
   };
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -793,11 +823,26 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     curricular,
     classRoom,
     maxPersons,
-    // institute,
+    institute,
     teacher,
     conferenceCallLink,
     location: roomLocation,
   } = roomData;
+
+  const selectInstitute = (institute: any) => {
+    console.log(
+      '🚀 ~ file: ClassRoomForm.tsx ~ line 833 ~ selectInstitute ~ institute',
+      institute
+    );
+    setRoomData({
+      ...roomData,
+      institute: {
+        id: institute.id,
+        name: institute.name,
+        value: institute.name,
+      },
+    });
+  };
 
   return (
     <div className="">
@@ -812,6 +857,20 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               {RoomEDITdict[userLanguage].HEADING}
             </div>
             <div className="grid grid-cols-2">
+              <div className="px-3 py-4">
+                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                  Institute <span className="text-red-500"> *</span>
+                </label>
+                <Selector
+                  selectedItem={institute.value}
+                  placeholder="Select Institute"
+                  list={AllInstitutions}
+                  onChange={(value, name, id) => {
+                    let institute = {value, name, id};
+                    selectInstitute(institute);
+                  }}
+                />
+              </div>
               <div className="px-3 py-4">
                 <FormInput
                   value={name}
@@ -840,13 +899,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
              * Hide institution drop down since all the things are tied to the
              * Institute, will add this later if need to add builders separately.
              */}
-            {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Institute  <span className="text-red-500"> *</span>
-              </label>
-              <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div> */}
-
             <div>
               <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
