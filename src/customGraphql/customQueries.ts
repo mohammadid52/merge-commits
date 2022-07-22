@@ -812,6 +812,7 @@ export const listClassStudentsForRoom = /* GraphQL */ `
         }
         createdAt
       }
+      nextToken
     }
   }
 `;
@@ -2634,6 +2635,27 @@ export const listInstitutions = /* GraphQL */ `
                 }
               }
             }
+            curricula {
+              nextToken
+              items {
+                id
+                roomID
+                curriculumID
+                curriculum {
+                  id
+                  name
+                  type
+                  institutionID
+                  institution {
+                    address
+                    type
+                    district
+                    id
+                    name
+                  }
+                }
+              }
+            }
           }
           nextToken
         }
@@ -2673,6 +2695,8 @@ export const listInstitutions = /* GraphQL */ `
                   curriculum {
                     id
                     name
+                    type
+                    institutionID
                   }
                 }
               }
