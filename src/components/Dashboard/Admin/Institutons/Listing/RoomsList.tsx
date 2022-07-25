@@ -64,24 +64,6 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
-  const StatusList = [
-    {
-      id: 1,
-      name: 'ACTIVE',
-      value: 'ACTIVE',
-    },
-    {
-      id: 2,
-      name: 'INACTIVE',
-      value: 'INACTIVE',
-    },
-    {
-      id: 3,
-      name: 'TRAINING',
-      value: 'TRAINING',
-    },
-  ];
-
   const fetchStaffOptions = async () => {
     try {
       const list: any = await API.graphql(
@@ -421,11 +403,13 @@ const RoomsList = (props: RoomListProps) => {
                       </td>
                       <td className="text-s leading-4 whitespace-normal break-normal">
                         <Selector
-                          list={StatusList}
+                          // list={StatusList}
                           selectedItem={getStatus?.value ? getStatus?.value : 'ACTIVE'}
-                          onChange={(value, name) =>
-                            handleStatusChange(value, name, item.id)
-                          }
+                          onChange={(value, name) => {
+                            // handleStatusChange(value, name, item.id)
+                          }}
+                          disabled
+                          arrowHidden={true}
                           placeholder={getStatus?.value ? getStatus?.value : 'ACTIVE'}
                           additionalClass={`w-auto md:w-52 lg:w-48`}
                         />
