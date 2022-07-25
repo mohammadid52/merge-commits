@@ -882,6 +882,7 @@ export const getRoom = /* GraphQL */ `
       teacherAuthID
       teacherEmail
       name
+      status
       maxPersons
       institution {
         id

@@ -31,6 +31,24 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const match = useRouteMatch();
   const {roomId}: any = useParams();
 
+  const StatusList = [
+    {
+      id: 1,
+      name: 'ACTIVE',
+      value: 'ACTIVE',
+    },
+    {
+      id: 2,
+      name: 'INACTIVE',
+      value: 'INACTIVE',
+    },
+    {
+      id: 3,
+      name: 'TRAINING',
+      value: 'TRAINING',
+    },
+  ];
+
   const initialData = {
     id: '',
     name: '',
@@ -40,6 +58,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     classRoom: {id: '', name: '', value: ''},
     curricular: {id: '', name: '', value: ''},
     maxPersons: '',
+    status: '',
     conferenceCallLink: '',
     location: '',
   };
@@ -172,6 +191,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         name: name,
         value: val,
       },
+    });
+    setUnsavedChanges(true);
+
+    removeErrorMsg();
+  };
+
+  const selectStatus = (val: string) => {
+    setRoomData({
+      ...roomData,
+      status: val,
     });
     setUnsavedChanges(true);
 
@@ -552,6 +581,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: roomData.maxPersons,
+            status: roomData.status || 'ACTIVE',
             location: roomData.location,
             conferenceCallLink: roomData.conferenceCallLink,
           };
@@ -576,7 +606,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           // );
         } else {
           const input = {
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             activeSyllabus: roomData.curricular.id
               ? await getFirstSyllabus(roomData.curricular.id)
               : '',
@@ -589,6 +619,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: 0,
+            status: roomData.status || 'ACTIVE',
           };
 
           const newRoom: any = await API.graphql(
@@ -597,7 +628,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const roomId = newRoom.data.createRoom.id;
           const classInput = {
             name: roomData.name,
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             roomId,
           };
           const newClass: any = await API.graphql(
@@ -764,6 +795,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             // ***** UNCOMMENT THIS ******
             // coTeachers: savedData.coTeachers,
             maxPersons: savedData.maxPersons,
+            status: savedData.status,
             location: savedData.location,
             conferenceCallLink: savedData.conferenceCallLink,
           });
@@ -825,6 +857,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     maxPersons,
     institute,
     teacher,
+    status,
     conferenceCallLink,
     location: roomLocation,
   } = roomData;
@@ -854,13 +887,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             </div>
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Institute <span className="text-red-500"> *</span>
-                </label>
                 <Selector
                   selectedItem={institute.value}
-                  placeholder="Select Institute"
+                  placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
                   list={AllInstitutions}
+                  isRequired
                   onChange={(value, name, id) => {
                     let institute = {value, name, id};
                     selectInstitute(institute);
@@ -887,6 +919,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <Selector
+                  selectedItem={status}
+                  placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['STATUS_LABEL']}
+                  labelTextClass={'text-xs'}
+                  list={StatusList}
+                  isRequired
+                  onChange={selectStatus}
                 />
               </div>
             </div>
