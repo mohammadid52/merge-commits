@@ -36,6 +36,8 @@ const DropdownForm = (props: DropdownProps) => {
       return 'Suspended';
     } else if (userInfo === 'INACTIVE') {
       return 'Inactive';
+    } else if (userInfo === 'TRAINING') {
+      return 'Training';
     } else if (userInfo === 'HOLD') {
       return 'Hold';
     } else if (userInfo === 'ADM') {

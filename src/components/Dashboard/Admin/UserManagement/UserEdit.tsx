@@ -61,7 +61,9 @@ const UserEdit = (props: UserInfoProps) => {
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const isSuperAdmin = state.user.role === 'SUP';
-  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(clientKey);
+  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(
+    clientKey
+  );
   const [checkpointData, setCheckpointData] = useState<any>({});
   console.log(
     '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
@@ -117,7 +119,11 @@ const UserEdit = (props: UserInfoProps) => {
       setUpdating(false);
       // setStatus('loading');
 
-      history.push(isSuperAdmin ? `/dashboard/manage-institutions/manage-users` : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
+      history.push(
+        isSuperAdmin
+          ? `/dashboard/manage-institutions/manage-users`
+          : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`
+      );
     } catch (error) {
       console.error(error);
     }
@@ -405,9 +411,13 @@ const UserEdit = (props: UserInfoProps) => {
       name: 'Inactive',
     },
     {
-      code: 'HOLD',
-      name: 'Hold',
+      code: 'TRAINING',
+      name: 'Training',
     },
+    // {
+    //   code: 'HOLD',
+    //   name: 'Hold',
+    // },
   ];
 
   const Role = [
