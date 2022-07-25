@@ -37,7 +37,6 @@ const RoomsList = (props: RoomListProps) => {
   const [allRooms, setAllRooms] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState<any[]>([{id: '', name: '', value: ''}]);
   const [searchInput, setSearchInput] = useState('');
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
@@ -124,15 +123,6 @@ const RoomsList = (props: RoomListProps) => {
       const newList = list.data.listRooms.items;
       setRoomList(newList);
       setAllRooms(newList);
-      const allStatus = newList?.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-          value: item.status,
-        };
-      });
-      setStatus(allStatus);
-
       setLoading(false);
     } catch {
       setMessages({
@@ -237,29 +227,6 @@ const RoomsList = (props: RoomListProps) => {
     onSearch(searchInput, selectedInstitution?.id, '');
   };
 
-  const handleStatusChange = async (name: string, value: string, roomID: string) => {
-    try {
-      const newStatusList = [...status];
-      const index = newStatusList.findIndex((item: any) => item.id === roomID);
-      newStatusList[index].value = value;
-      setStatus(newStatusList);
-      const updatedRoomResponse = await API.graphql(
-        graphqlOperation(mutations.updateRoom, {
-          input: {
-            id: roomID,
-            status: value,
-          },
-        })
-      );
-      console.log(
-        '🚀 ~ file: RoomsList.tsx ~ line 264 ~ handleStatusChange ~ updatedRoomResponse',
-        updatedRoomResponse
-      );
-    } catch (e) {
-      console.log('🚀 ~ file: RoomsList.tsx ~ line 250 ~ handleStatusChange ~ e', e);
-    }
-  };
-
   return (
     <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
       <div className="">
@@ -362,9 +329,6 @@ const RoomsList = (props: RoomListProps) => {
               </thead>
               <tbody>
                 {roomList.map((item: any, i: number) => {
-                  const getStatus: {id: ''; name: ''; value: ''} = status?.find(
-                    (s: any) => s?.id === item?.id
-                  );
                   return (
                     <tr key={i} className={``}>
                       <td className={''}>{i + 1}.</td>
@@ -386,9 +350,6 @@ const RoomsList = (props: RoomListProps) => {
                         className={`text-s leading-4 font-medium whitespace-normal break-normal`}>
                         {item.name}
                       </td>
-                      {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
-                    {item.class?.name}
-                  </div> */}
                       <td className="text-s leading-4 whitespace-normal break-normal">
                         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                       </td>
@@ -402,17 +363,9 @@ const RoomsList = (props: RoomListProps) => {
                           .join(',') || '-'}
                       </td>
                       <td className="text-s leading-4 whitespace-normal break-normal">
-                        <Selector
-                          // list={StatusList}
-                          selectedItem={getStatus?.value ? getStatus?.value : 'ACTIVE'}
-                          onChange={(value, name) => {
-                            // handleStatusChange(value, name, item.id)
-                          }}
-                          disabled
-                          arrowHidden={true}
-                          placeholder={getStatus?.value ? getStatus?.value : 'ACTIVE'}
-                          additionalClass={`w-auto md:w-52 lg:w-48`}
-                        />
+                        <div className="w-auto md:w-32 lg:w-28">
+                          {item.status ? item.status : 'ACTIVE'}
+                        </div>
                       </td>
                       <td
                         className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
