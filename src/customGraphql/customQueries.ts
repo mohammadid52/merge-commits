@@ -3657,6 +3657,7 @@ export const getUserProfile = /* GraphQL */ `
         image
         language
         filters
+        statusReason
         lastLoggedIn
         lastLoggedOut
         onDemand

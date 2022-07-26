@@ -66,6 +66,7 @@ export interface UserInfo {
   role: string;
   status: string;
   inactiveStatusDate?: string;
+  statusReason?: string;
   phone: string;
   updatedAt: string;
   birthdate?: string;
@@ -146,6 +147,7 @@ const User = (props: IUserProps) => {
     externalId: null,
     firstName: '',
     inactiveStatusDate: '',
+    statusReason: '',
     grade: null,
     image: null,
     institution: null,

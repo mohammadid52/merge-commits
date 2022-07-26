@@ -25,6 +25,7 @@ import Loader from '../../../Atoms/Loader';
 import {AiFillCheckCircle, AiOutlineCheckCircle} from 'react-icons/ai';
 import {getImageFromS3} from '../../../../utilities/services';
 import moment from 'moment';
+import TextArea from '../../../Atoms/Form/TextArea';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -124,6 +125,9 @@ const UserEdit = (props: UserInfoProps) => {
         inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD'),
       }),
       role: editUser.role,
+      ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
+        statusReason: editUser.statusReason,
+      }),
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
@@ -689,7 +693,7 @@ const UserEdit = (props: UserInfoProps) => {
     setShowEmoji({show: false, cId: '', qId: ''});
   };
 
-  let onDateChange = (e: any) => {
+  const onDateChange = (e: any) => {
     e.persist();
     setInactiveDate(e.target.value);
     let result = moment(e.target.value, 'MM/DD/YYYY', true).isValid();
@@ -701,6 +705,16 @@ const UserEdit = (props: UserInfoProps) => {
         };
       });
     }
+  };
+
+  const onStatusReasonChange = (e: any) => {
+    e.persist();
+    setEditUser(() => {
+      return {
+        ...editUser,
+        statusReason: e.target.value,
+      };
+    });
   };
 
   return (
@@ -849,6 +863,17 @@ const UserEdit = (props: UserInfoProps) => {
                     <span className="w-auto inline-flex text-xs mt-2 leading-5 font-semibold rounded bg-gray-200 text-gray-600 px-2">
                       Format-- MM/DD/YYYY i.e (02/06/2022)
                     </span>
+                  </div>
+                )}
+                {(editUser.status === 'SUSPENDED' || editUser.status === 'INACTIVE') && (
+                  <div className="sm:col-span-3 p-2">
+                    <TextArea
+                      value={editUser.statusReason}
+                      id="statusReason"
+                      onChange={onStatusReasonChange}
+                      name="statusReason"
+                      label={UserEditDict[userLanguage]['status_reason']}
+                    />
                   </div>
                 )}
               </div>
