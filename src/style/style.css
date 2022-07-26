@@ -312,3 +312,39 @@ span {
 .descriptive::-webkit-scrollbar-thumb:hover {
   background: #babac0;
 }
+
+* .table-custom-responsive thead,
+* .table-custom-responsive tbody,
+* .table-custom-responsive th,
+* .table-custom-responsive td,
+* .table-custom-responsive tr {
+  width: auto !important;
+}
+
+.table-custom-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-custom-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
+}
+
+.table-custom-responsive table th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.table-custom-responsive .table-striped tbody tr:nth-of-type(even) {
+  background-color: rgb(249 250 251);
+}
+
+.table-custom-responsive table td,
+.table-custom-responsive table th {
+  padding: 0.75rem;
+  vertical-align: middle;
+}

@@ -24,6 +24,8 @@ import Storage from '@aws-amplify/storage';
 import Loader from '../../../Atoms/Loader';
 import {AiFillCheckCircle, AiOutlineCheckCircle} from 'react-icons/ai';
 import {getImageFromS3} from '../../../../utilities/services';
+import moment from 'moment';
+import TextArea from '../../../Atoms/Form/TextArea';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -60,8 +62,25 @@ const UserEdit = (props: UserInfoProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const [inactiveDate, setInactiveDate] = useState(
+    new Date().getMonth() > 9
+      ? new Date().getMonth() +
+          1 +
+          '/' +
+          new Date().getDate() +
+          '/' +
+          new Date().getFullYear()
+      : '0' +
+          (new Date().getMonth() + 1) +
+          '/' +
+          new Date().getDate() +
+          '/' +
+          new Date().getFullYear()
+  );
   const isSuperAdmin = state.user.role === 'SUP';
-  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(clientKey);
+  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(
+    clientKey
+  );
   const [checkpointData, setCheckpointData] = useState<any>({});
   console.log(
     '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
@@ -102,7 +121,13 @@ const UserEdit = (props: UserInfoProps) => {
       language: editUser.language,
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
+      ...(editUser.status === 'INACTIVE' && {
+        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD'),
+      }),
       role: editUser.role,
+      ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
+        statusReason: editUser.statusReason,
+      }),
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
@@ -117,7 +142,11 @@ const UserEdit = (props: UserInfoProps) => {
       setUpdating(false);
       // setStatus('loading');
 
-      history.push(isSuperAdmin ? `/dashboard/manage-institutions/manage-users` : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`);
+      history.push(
+        isSuperAdmin
+          ? `/dashboard/manage-institutions/manage-users`
+          : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`
+      );
     } catch (error) {
       console.error(error);
     }
@@ -405,9 +434,13 @@ const UserEdit = (props: UserInfoProps) => {
       name: 'Inactive',
     },
     {
-      code: 'HOLD',
-      name: 'Hold',
+      code: 'TRAINING',
+      name: 'Training',
     },
+    // {
+    //   code: 'HOLD',
+    //   name: 'Hold',
+    // },
   ];
 
   const Role = [
@@ -660,6 +693,30 @@ const UserEdit = (props: UserInfoProps) => {
     setShowEmoji({show: false, cId: '', qId: ''});
   };
 
+  const onDateChange = (e: any) => {
+    e.persist();
+    setInactiveDate(e.target.value);
+    let result = moment(e.target.value, 'MM/DD/YYYY', true).isValid();
+    if (result) {
+      setEditUser(() => {
+        return {
+          ...editUser,
+          inactiveStatusDate: e.target.value,
+        };
+      });
+    }
+  };
+
+  const onStatusReasonChange = (e: any) => {
+    e.persist();
+    setEditUser(() => {
+      return {
+        ...editUser,
+        statusReason: e.target.value,
+      };
+    });
+  };
+
   return (
     <div className="h-full w-3/4 md:px-2 pt-2">
       <form>
@@ -792,6 +849,29 @@ const UserEdit = (props: UserInfoProps) => {
                       items={OnDemand}
                     />
                   </div>
+                )}
+                {(editUser.status === 'SUSPENDED' || editUser.status === 'INACTIVE') && (
+                  <>
+                    <div className="sm:col-span-3 p-2">
+                      <FormInput
+                        value={inactiveDate}
+                        id={'inactive_date'}
+                        label={UserEditDict[userLanguage]['inactive_date']}
+                        placeHolder="MM/DD/YYYY"
+                        name="inactive_date"
+                        onChange={onDateChange}
+                      />
+                    </div>
+                    <div className="sm:col-span-3 p-2">
+                      <TextArea
+                        value={editUser.statusReason}
+                        id="statusReason"
+                        onChange={onStatusReasonChange}
+                        name="statusReason"
+                        label={UserEditDict[userLanguage]['status_reason']}
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             )}

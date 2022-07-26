@@ -47,7 +47,8 @@ import Feedback from './Feedback';
 import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
-
+import FormInput from '../../../Atoms/Form/FormInput';
+import Selector from '@components/Atoms/Form/Selector';
 export interface UserInfo {
   authId: string;
   courses?: string;
@@ -65,6 +66,8 @@ export interface UserInfo {
   preferredName?: string;
   role: string;
   status: string;
+  inactiveStatusDate?: string;
+  statusReason?: string;
   phone: string;
   updatedAt: string;
   birthdate?: string;
@@ -144,6 +147,8 @@ const User = (props: IUserProps) => {
     email: '',
     externalId: null,
     firstName: '',
+    inactiveStatusDate: '',
+    statusReason: '',
     grade: null,
     image: null,
     institution: null,
@@ -1431,6 +1436,11 @@ const User = (props: IUserProps) => {
     return `hover:bg-${theme}-600 bg-${theme}-500`;
   };
 
+  const statusDate = (dateValue: string) => {
+    const date = new Date(dateValue);
+    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+  };
+
   const isTeacher =
     state.user.role === 'TR' ||
     state.user.role === 'FLW' ||
@@ -1572,6 +1582,19 @@ const User = (props: IUserProps) => {
                       <p className="text-md md:text-lg">{`${
                         user.institution ? user.institution : ''
                       }`}</p>
+                    </div>
+                    <div className="sm:col-span-3 p-2 mt-18">
+                      <Selector
+                        selectedItem={statusDate(user.inactiveStatusDate)}
+                        onChange={() => {}}
+                        disabled
+                        arrowHidden={true}
+                        placeholder={'Status'}
+                        label={'Status Date'}
+                        labelTextClass={'text-sm text-justify'}
+                        btnClass={'cursor-not-allowed'}
+                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
+                      />
                     </div>
                   </div>
                   <Switch>

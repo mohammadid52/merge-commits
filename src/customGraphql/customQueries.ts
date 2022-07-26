@@ -882,6 +882,7 @@ export const getRoom = /* GraphQL */ `
       teacherAuthID
       teacherEmail
       name
+      status
       maxPersons
       institution {
         id
@@ -1069,6 +1070,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         institution {
           id
           name
@@ -3647,6 +3649,7 @@ export const getUserProfile = /* GraphQL */ `
         lastName
         externalId
         grade
+        inactiveStatusDate
         onBoardSurvey
         offBoardSurvey
         phone
@@ -3654,6 +3657,7 @@ export const getUserProfile = /* GraphQL */ `
         image
         language
         filters
+        statusReason
         lastLoggedIn
         lastLoggedOut
         onDemand
