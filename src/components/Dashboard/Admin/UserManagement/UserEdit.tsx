@@ -850,31 +850,31 @@ const UserEdit = (props: UserInfoProps) => {
                     />
                   </div>
                 )}
-                {editUser.status === 'INACTIVE' && (
-                  <div className="sm:col-span-3 p-2">
-                    <FormInput
-                      value={inactiveDate}
-                      id={'inactive_date'}
-                      label={UserEditDict[userLanguage]['inactive_date']}
-                      placeHolder="MM/DD/YYYY"
-                      name="inactive_date"
-                      onChange={onDateChange}
-                    />
-                    <span className="w-auto inline-flex text-xs mt-2 leading-5 font-semibold rounded bg-gray-200 text-gray-600 px-2">
-                      Format-- MM/DD/YYYY i.e (02/06/2022)
-                    </span>
-                  </div>
-                )}
                 {(editUser.status === 'SUSPENDED' || editUser.status === 'INACTIVE') && (
-                  <div className="sm:col-span-3 p-2">
-                    <TextArea
-                      value={editUser.statusReason}
-                      id="statusReason"
-                      onChange={onStatusReasonChange}
-                      name="statusReason"
-                      label={UserEditDict[userLanguage]['status_reason']}
-                    />
-                  </div>
+                  <>
+                    <div className="sm:col-span-3 p-2">
+                      <FormInput
+                        value={inactiveDate}
+                        id={'inactive_date'}
+                        label={UserEditDict[userLanguage]['inactive_date']}
+                        placeHolder="MM/DD/YYYY"
+                        name="inactive_date"
+                        onChange={onDateChange}
+                      />
+                      <span className="w-auto inline-flex text-xs mt-2 leading-5 font-semibold rounded bg-gray-200 text-gray-600 px-2">
+                        Format-- MM/DD/YYYY i.e (02/06/2022)
+                      </span>
+                    </div>
+                    <div className="sm:col-span-3 p-2">
+                      <TextArea
+                        value={editUser.statusReason}
+                        id="statusReason"
+                        onChange={onStatusReasonChange}
+                        name="statusReason"
+                        label={UserEditDict[userLanguage]['status_reason']}
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             )}

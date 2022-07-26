@@ -2783,7 +2783,7 @@ const UserEditDict: any = {
     lastname: 'Last Name',
     nickname: 'Nickname',
     status: 'Status',
-    inactive_date: 'Inactive Date',
+    inactive_date: 'Inactive or Suspension Date',
     status_reason: 'Inactive or Suspension Reason',
     role: 'Role',
     button: {
