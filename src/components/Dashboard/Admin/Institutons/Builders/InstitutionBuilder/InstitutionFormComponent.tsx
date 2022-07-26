@@ -230,7 +230,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           const newInstitute: any = await API.graphql(
             graphqlOperation(customMutations.createInstitution, {input: payload})
           );
-          postMutation(newInstitute.data?.createInstitution);
         }
         setSaving(false);
         setServerMessage({
