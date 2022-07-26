@@ -861,9 +861,6 @@ const UserEdit = (props: UserInfoProps) => {
                         name="inactive_date"
                         onChange={onDateChange}
                       />
-                      <span className="w-auto inline-flex text-xs mt-2 leading-5 font-semibold rounded bg-gray-200 text-gray-600 px-2">
-                        Format-- MM/DD/YYYY i.e (02/06/2022)
-                      </span>
                     </div>
                     <div className="sm:col-span-3 p-2">
                       <TextArea
