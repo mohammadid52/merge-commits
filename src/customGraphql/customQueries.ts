@@ -3649,6 +3649,7 @@ export const getUserProfile = /* GraphQL */ `
         lastName
         externalId
         grade
+        inactiveStatusDate
         onBoardSurvey
         offBoardSurvey
         phone

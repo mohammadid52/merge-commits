@@ -24,6 +24,7 @@ import Storage from '@aws-amplify/storage';
 import Loader from '../../../Atoms/Loader';
 import {AiFillCheckCircle, AiOutlineCheckCircle} from 'react-icons/ai';
 import {getImageFromS3} from '../../../../utilities/services';
+import moment from 'moment';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -60,6 +61,21 @@ const UserEdit = (props: UserInfoProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const [inactiveDate, setInactiveDate] = useState(
+    new Date().getMonth() > 9
+      ? new Date().getMonth() +
+          1 +
+          '/' +
+          new Date().getDate() +
+          '/' +
+          new Date().getFullYear()
+      : '0' +
+          (new Date().getMonth() + 1) +
+          '/' +
+          new Date().getDate() +
+          '/' +
+          new Date().getFullYear()
+  );
   const isSuperAdmin = state.user.role === 'SUP';
   const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(
     clientKey
@@ -104,6 +120,9 @@ const UserEdit = (props: UserInfoProps) => {
       language: editUser.language,
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
+      ...(editUser.status === 'INACTIVE' && {
+        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD'),
+      }),
       role: editUser.role,
       status: editUser.status,
       phone: editUser.phone,
@@ -670,6 +689,20 @@ const UserEdit = (props: UserInfoProps) => {
     setShowEmoji({show: false, cId: '', qId: ''});
   };
 
+  let onDateChange = (e: any) => {
+    e.persist();
+    setInactiveDate(e.target.value);
+    let result = moment(e.target.value, 'MM/DD/YYYY', true).isValid();
+    if (result) {
+      setEditUser(() => {
+        return {
+          ...editUser,
+          inactiveStatusDate: e.target.value,
+        };
+      });
+    }
+  };
+
   return (
     <div className="h-full w-3/4 md:px-2 pt-2">
       <form>
@@ -801,6 +834,21 @@ const UserEdit = (props: UserInfoProps) => {
                       isRequired
                       items={OnDemand}
                     />
+                  </div>
+                )}
+                {editUser.status === 'INACTIVE' && (
+                  <div className="sm:col-span-3 p-2">
+                    <FormInput
+                      value={inactiveDate}
+                      id={'inactive_date'}
+                      label={UserEditDict[userLanguage]['inactive_date']}
+                      placeHolder="MM/DD/YYYY"
+                      name="inactive_date"
+                      onChange={onDateChange}
+                    />
+                    <span className="w-auto inline-flex text-xs mt-2 leading-5 font-semibold rounded bg-gray-200 text-gray-600 px-2">
+                      Format-- MM/DD/YYYY i.e (02/06/2022)
+                    </span>
                   </div>
                 )}
               </div>
