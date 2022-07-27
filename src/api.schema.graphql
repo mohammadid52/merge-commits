@@ -62,6 +62,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   lessons: [PersonLessonsData] @hasMany(indexName: "byStudentAuthID", fields: ["authId"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
+  statusReason: String
   addedby: String
 }
 
