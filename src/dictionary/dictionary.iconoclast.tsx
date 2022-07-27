@@ -3989,12 +3989,20 @@ const CsvDict: any = {
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
     SELECT_FILTERS: 'Select Filters',
+    SELECT_REASON: 'Select Reason',
+    REASON: 'Reason....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Upload Multipe Survey Images',
+    DESCRIBE_REASON: 'Describe Reason',
   },
   ES: {
     TITLE: 'Investigar & Analítica',
     SELECT_INST: 'Seleccione instituto',
     SELECT_FILTERS: 'Seleccione Filtros',
     SELECT_CLASSROOM: 'Seleccione salón de clases',
+    SELECT_REASON: 'Seleccionar motivo',
+    REASON: 'Razón....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Cargar imágenes de encuestas múltiples',
+    DESCRIBE_REASON: 'Describa la razón',
   },
 };
 
