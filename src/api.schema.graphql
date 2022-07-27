@@ -7,6 +7,7 @@ enum PersonStatus {
   ACTIVE
   SUSPENDED
   INACTIVE
+  TRAINING
   HOLD
 }
 
@@ -18,6 +19,17 @@ enum Role {
   CRD
   TR
   ST
+}
+
+enum RoomStatus {
+  ACTIVE
+  INACTIVE
+  TRAINING
+}
+
+enum UpdateType {
+  DEMOGRAPHIC_DATA_UPDATE
+  SURVEY_DATA_UPDATE
 }
 
 #Person - App users table.
@@ -37,6 +49,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   offBoardSurvey: Boolean
   phone: String
   birthdate: AWSDate
+  inactiveStatusDate: AWSDate
   image: String
   language: Language!
   filters: [String]
@@ -46,9 +59,21 @@ type Person @model @auth(rules: [{allow: public}]) {
   sentiments: [String]
   passcode: String
   classes: [ClassStudent] @hasMany(indexName: "classByStudent", fields: ["email"])
+  lessons: [PersonLessonsData] @hasMany(indexName: "byStudentAuthID", fields: ["authId"])
   spotlightUser: Boolean
   spotlightDate: AWSDate
+  statusReason: String
   addedby: String
+}
+
+type PersonLessonsData @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  studentAuthID: String! @index(name: "byStudentAuthID")
+  studentEmail: String!
+  lessonID: String! @primaryKey
+  lessonType: String @index(name: "byLessonType", queryField: "lessonsByType")
+  pages: AWSJSON
+  ratings: Int @default(value: "0")
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {
@@ -103,6 +128,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   teacherEmail: String!
   name: String!
   maxPersons: Int
+  status: RoomStatus @default(value: "ACTIVE")
   filters: [String]
   location: String
   startDate: AWSDate
@@ -379,6 +405,7 @@ type QuestionType @model @auth(rules: [{allow: public}]) {
 type QuestionResponse {
   qid: String
   response: [String]
+  demographicsUpdated: Boolean
   otherResponse: String
 }
 
@@ -546,6 +573,8 @@ type UniversalLesson @model @auth(rules: [{allow: public}]) {
   studentMaterials: String
   targetAudience: String
   isUsed: Boolean
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 type UniversalLessonPlan {
@@ -665,7 +694,47 @@ type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {
   currentLocation: String
   lessonProgress: String
   surveyData: [PartInput]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
+
+type TemporaryUniversalUploadSurveyData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  updatedUserId: ID!
+  universalSurveyId: ID
+  universalSurveyStudentData: UniversalSurveyStudentData
+    @hasOne(fields: ["universalSurveyId"])
+  surveyData: [PartInput]
+}
+
+type TemporaryDemographicsUploadData @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  updatedUserId: ID!
+  questionDataID: ID
+  QuestionData: QuestionData @hasOne(fields: ["questionDataID"])
+  responseObject: [QuestionResponse]
+}
+
+type UploadLogs @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  User_id: ID!
+  TemporaryUniversalUploadSurveyDataID: ID
+  TemporaryUniversalUploadSurveyData: TemporaryUniversalUploadSurveyData
+    @hasOne(fields: ["TemporaryUniversalUploadSurveyDataID"])
+  TemporaryDemographicsUploadDataID: ID
+  TemporaryDemographicsUploadData: TemporaryDemographicsUploadData
+    @hasOne(fields: ["TemporaryDemographicsUploadDataID"])
+  UploadType: String
+  updateType: UpdateType
+  Date: AWSDate
+  Curricullum_id: ID
+  Unit_id: ID
+  lesson_id: ID
+  Class_id: ID
+  PaperSurveyURL: [String]
+  Reason: String
+}
+
 type ExerciseData {
   id: String!
   entryData: [JournalEntryData]
@@ -704,6 +773,7 @@ type PartInput {
   options: [String]
   input: [String]
   comments: [InputComment]
+  hasTakenSurvey: Boolean
 }
 
 type InputComment {
@@ -969,4 +1039,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
 
-# asdfasdfsd11
+# asdfasdfsd9
