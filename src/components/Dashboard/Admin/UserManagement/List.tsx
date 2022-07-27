@@ -118,7 +118,7 @@ const List = (props: ListProps) => {
       <div
         id={item.id}
         className="flex justify-between bg-white w-full border-b-0 border-gray-200">
-        <div className="w-4/10 px-8 py-4 whitespace-nowrap">
+        <div className="w-4/10 px-8 py-4">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-10 w-10">
               {item.image ? (
@@ -148,7 +148,7 @@ const List = (props: ListProps) => {
                   item.preferredName ? item.preferredName : item.firstName
                 }`}
               </div>
-              <div id={item.id} className="text-sm leading-5 text-gray-500">
+              <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
                 {item.email}
               </div>
             </div>
