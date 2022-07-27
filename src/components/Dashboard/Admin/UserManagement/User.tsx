@@ -1583,19 +1583,21 @@ const User = (props: IUserProps) => {
                         user.institution ? user.institution : ''
                       }`}</p>
                     </div>
-                    <div className="sm:col-span-3 p-2 mt-18">
-                      <Selector
-                        selectedItem={statusDate(user.inactiveStatusDate)}
-                        onChange={() => {}}
-                        disabled
-                        arrowHidden={true}
-                        placeholder={'Status'}
-                        label={'Status Date'}
-                        labelTextClass={'text-sm text-justify'}
-                        btnClass={'cursor-not-allowed'}
-                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                      />
-                    </div>
+                    {user.inactiveStatusDate && (
+                      <div className="sm:col-span-3 p-2 mt-18">
+                        <Selector
+                          selectedItem={statusDate(user.inactiveStatusDate)}
+                          onChange={() => {}}
+                          disabled
+                          arrowHidden={true}
+                          placeholder={'Status'}
+                          label={'Status Date'}
+                          labelTextClass={'text-sm text-justify'}
+                          btnClass={'cursor-not-allowed'}
+                          additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
+                        />
+                      </div>
+                    )}
                   </div>
                   <Switch>
                     <Route
