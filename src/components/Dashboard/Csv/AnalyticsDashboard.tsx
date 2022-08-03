@@ -539,7 +539,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 type="button"
                 disabled={loading}
                 className={`col-end-5 w-1/3 mt-5  inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}>
-                Import data to Athena
+                Export data to Athena
               </button>
             </>
           )}
