@@ -4,6 +4,7 @@ import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {getLocalStorageData} from '../utilities/localStorage';
+import {filterData} from '../utilities/UploadArchiveData';
 import {PartInput} from 'API';
 
 const useStudentTimer = () => {
@@ -196,7 +197,7 @@ const useStudentTimer = () => {
         await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
         );
-
+        // await filterData();
         console.log('updateSurveyData - success');
       } catch (e) {
         console.error('updateSurveyData - ', e);
