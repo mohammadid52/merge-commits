@@ -1039,4 +1039,4 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
 
-# asdfasdfsd10
+# asdfasdfsd11
