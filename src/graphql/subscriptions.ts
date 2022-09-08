@@ -37,6 +37,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -53,6 +54,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -115,6 +117,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -125,6 +128,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -211,6 +215,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -227,6 +232,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -289,6 +295,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -299,6 +306,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -377,6 +385,7 @@ export const onChangeStudentData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -393,6 +402,7 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -567,6 +577,7 @@ export const onChangeRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -583,6 +594,7 @@ export const onChangeRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -721,6 +733,7 @@ export const onCreatePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -759,6 +772,7 @@ export const onCreatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -783,6 +797,7 @@ export const onUpdatePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -821,6 +836,7 @@ export const onUpdatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -845,6 +861,7 @@ export const onDeletePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -883,6 +900,7 @@ export const onDeletePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -1478,6 +1496,7 @@ export const onCreateStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1494,6 +1513,7 @@ export const onCreateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1565,6 +1585,7 @@ export const onUpdateStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1581,6 +1602,7 @@ export const onUpdateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1652,6 +1674,7 @@ export const onDeleteStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1668,6 +1691,7 @@ export const onDeleteStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1801,6 +1825,7 @@ export const onCreateRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1817,6 +1842,7 @@ export const onCreateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2024,6 +2050,7 @@ export const onUpdateRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2040,6 +2067,7 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2247,6 +2275,7 @@ export const onDeleteRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2263,6 +2292,7 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2383,6 +2413,57 @@ export const onDeleteRoom = /* GraphQL */ `
     }
   }
 `;
+export const onCreateArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnCreateArchiveSurveyDataSQL {
+    onCreateArchiveSurveyDataSQL {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnUpdateArchiveSurveyDataSQL {
+    onUpdateArchiveSurveyDataSQL {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnDeleteArchiveSurveyDataSQL {
+    onDeleteArchiveSurveyDataSQL {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateClassroomGroupStudents = /* GraphQL */ `
   subscription OnCreateClassroomGroupStudents {
     onCreateClassroomGroupStudents {
@@ -2443,6 +2524,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2453,6 +2535,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2482,6 +2565,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2498,6 +2582,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2569,6 +2654,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2579,6 +2665,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2608,6 +2695,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2624,6 +2712,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2695,6 +2784,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2705,6 +2795,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2734,6 +2825,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2750,6 +2842,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2824,6 +2917,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2834,6 +2928,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2900,6 +2995,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2916,6 +3012,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3002,6 +3099,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3012,6 +3110,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3078,6 +3177,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3094,6 +3194,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3180,6 +3281,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3190,6 +3292,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3256,6 +3359,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3272,6 +3376,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3361,6 +3466,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3371,6 +3477,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3433,6 +3540,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3449,6 +3557,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3524,6 +3633,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3534,6 +3644,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3596,6 +3707,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3612,6 +3724,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3687,6 +3800,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3697,6 +3811,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3759,6 +3874,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3775,6 +3891,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3887,6 +4004,7 @@ export const onCreateClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3897,6 +4015,7 @@ export const onCreateClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4065,6 +4184,7 @@ export const onUpdateClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -4075,6 +4195,7 @@ export const onUpdateClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4243,6 +4364,7 @@ export const onDeleteClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -4253,6 +4375,7 @@ export const onDeleteClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4407,6 +4530,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4423,6 +4547,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -4521,6 +4646,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4537,6 +4663,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -4635,6 +4762,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4651,6 +4779,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6104,6 +6233,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6120,6 +6250,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6153,6 +6284,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6169,6 +6301,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6202,6 +6335,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6218,6 +6352,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6249,6 +6384,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6265,6 +6401,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6304,6 +6441,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6320,6 +6458,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6359,6 +6498,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6375,6 +6515,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6415,6 +6556,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6431,6 +6573,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6473,6 +6616,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6489,6 +6633,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6531,6 +6676,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6547,6 +6693,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6595,6 +6742,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6605,6 +6753,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6652,6 +6801,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6662,6 +6812,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6713,6 +6864,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6723,6 +6875,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6770,6 +6923,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6780,6 +6934,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6831,6 +6986,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6841,6 +6997,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6888,6 +7045,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6898,6 +7056,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6946,6 +7105,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6962,6 +7122,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7024,6 +7185,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7034,6 +7196,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7112,6 +7275,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7128,6 +7292,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7190,6 +7355,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7200,6 +7366,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7278,6 +7445,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7294,6 +7462,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7356,6 +7525,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7366,6 +7536,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7655,6 +7826,7 @@ export const onCreateAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7665,6 +7837,7 @@ export const onCreateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7954,6 +8127,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7964,6 +8138,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -8253,6 +8428,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -8263,6 +8439,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9260,6 +9437,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9270,6 +9448,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9325,6 +9504,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9335,6 +9515,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9390,6 +9571,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9400,6 +9582,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -10762,6 +10945,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10778,6 +10962,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10798,6 +10983,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10814,6 +11000,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10848,6 +11035,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10864,6 +11052,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10884,6 +11073,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10900,6 +11090,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10934,6 +11125,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10950,6 +11142,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10970,6 +11163,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10986,6 +11180,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11017,6 +11212,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11033,6 +11229,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11067,6 +11264,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11083,6 +11281,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11117,6 +11316,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11133,6 +11333,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11200,6 +11401,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11216,6 +11418,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11287,6 +11490,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11297,6 +11501,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11439,6 +11644,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11455,6 +11661,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11526,6 +11733,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11536,6 +11744,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11678,6 +11887,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11694,6 +11904,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11765,6 +11976,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11775,6 +11987,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11918,6 +12131,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11934,6 +12148,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12005,6 +12220,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12015,6 +12231,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12093,6 +12310,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12109,6 +12327,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12180,6 +12399,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12190,6 +12410,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12268,6 +12489,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12284,6 +12506,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12355,6 +12578,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12365,6 +12589,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12443,6 +12668,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12459,6 +12685,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12533,6 +12760,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12543,6 +12771,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12707,6 +12936,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12723,6 +12953,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12797,6 +13028,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12807,6 +13039,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12971,6 +13204,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12987,6 +13221,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13061,6 +13296,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -13071,6 +13307,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -13357,6 +13594,7 @@ export const onCreateCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13373,6 +13611,7 @@ export const onCreateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13470,6 +13709,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13486,6 +13726,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13583,6 +13824,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13599,6 +13841,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13703,6 +13946,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13719,6 +13963,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13764,6 +14009,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13780,6 +14026,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13825,6 +14072,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13841,6 +14089,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
