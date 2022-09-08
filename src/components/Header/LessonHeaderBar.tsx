@@ -21,6 +21,7 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
+  getLessonCompletedValue,
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -59,6 +60,7 @@ const LessonHeaderBar = ({
   };
 
   const handleNotebookSave = () => {
+    console.log('🚀 ~ file: LessonHeaderBar.tsx ~ line 64 ~ handleNotebookSave');
     if (leaveAfterCompletion) {
       createJournalData();
       setTimeout(() => {
@@ -66,6 +68,22 @@ const LessonHeaderBar = ({
       }, 1500);
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getLessonCompletedValue().then((value: any) => {
+        if (value.lessonProgress === value.totalPages) {
+          setLeaveAfterCompletion(true);
+        } else {
+          setLeaveAfterCompletion(false);
+        }
+      });
+    }, 1300);
+
+    return () => {
+      clearTimeout();
+    };
+  }, [lessonState.currentPage]);
 
   useEffect(() => {
     if (!lessonState.updated) {
@@ -109,7 +127,7 @@ const LessonHeaderBar = ({
     } else {
       setLeaveModalVisible(true);
     }
-    setLeaveAfterCompletion(isLeavingAfterCompletion);
+    // setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
@@ -138,6 +156,7 @@ const LessonHeaderBar = ({
     : '';
   useEffect(() => {
     if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+      console.log('I am running...');
       setVideoLink(thisPageVideoLink);
 
       if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {

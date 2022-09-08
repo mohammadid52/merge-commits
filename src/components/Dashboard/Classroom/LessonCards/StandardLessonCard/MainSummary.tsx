@@ -14,7 +14,7 @@ const MainSummary = (props: LessonCardProps) => {
   };
 
   return (
-    <div className={`sm:h-44 p-4 px-5 flex flex-col justify-start items-center`}>
+    <div className={`sm:h-44 p-5 px-5 flex flex-col justify-start items-center`}>
       <h1 className={`${theme.lessonCard.title} flex-col sm:flex-row w-full font-medium`}>
         <span className="w-full">
           {lessonProps.lesson && lessonProps.lesson.title
@@ -27,14 +27,16 @@ const MainSummary = (props: LessonCardProps) => {
             : ''}
         </span>
       </h1>
-      <p
-        className="overflow-ellipsis overflow-hidden ... text-md mt-1 text-gray-500 text-left"
-        dangerouslySetInnerHTML={{
-          __html:
-            lessonProps.lesson && lessonProps.lesson?.summary
-              ? ellipsis(lessonProps.lesson?.summary, 350)
-              : '',
-        }}></p>
+      <div className="descriptive overflow-hidden hover-overflow-auto">
+        <p
+          className="text-md mt-1 text-gray-500 text-left"
+          dangerouslySetInnerHTML={{
+            __html:
+              lessonProps.lesson && lessonProps.lesson?.summary
+                ? lessonProps.lesson?.summary
+                : '',
+          }}></p>
+      </div>
     </div>
   );
 };

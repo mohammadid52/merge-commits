@@ -34,6 +34,9 @@ export interface globalStateType {
     lastLoggedOut?: string;
     lastLoggedIn?: string;
   };
+  lessonsPayload: {
+    lessonsData: any[];
+  };
 }
 
 // test comment
@@ -72,5 +75,8 @@ export const globalState: globalStateType = {
     location: [],
     lastLoggedIn: '',
     lastLoggedOut: '',
+  },
+  lessonsPayload: {
+    lessonsData: [],
   },
 };

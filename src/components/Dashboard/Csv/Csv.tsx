@@ -12,6 +12,9 @@ import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
 import {orderBy, uniqBy} from 'lodash';
+import {PDFDownloadLink} from '@react-pdf/renderer';
+import SurveyPDF from './SurveyPDF';
+import Loader from '@atoms/Loader';
 
 interface ICsvProps {
   institutionId?: string;
@@ -46,6 +49,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false);
   const [CSVHeaders, setCSVHeaders] = useState([]);
   const [CSVData, setCSVData] = useState([]);
+  const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 
   const [SCQAnswers, setSCQAnswers] = useState([]);
   const [DCQAnswers, setDCQAnswers] = useState([]);
@@ -380,6 +384,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
+      setLessonPDFData(lessonObject.lessonPlan);
       let questionsListdata = await getQuestionListFromLesson(lessonObject);
       let questionList = questionsListdata.questionList;
       // console.log('questionList', questionList)
@@ -662,15 +667,17 @@ const Csv = ({institutionId}: ICsvProps) => {
       let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         surveyQuestionOptions[ques.question.id] = ques.question.options;
-        return {label: `${ques.question.question}`, key: `${ques.question.id}`};
+        return {
+          label: `${ques.question.question}-s-${ques.question.id}`,
+          key: `${ques.question.id}`,
+        };
       });
-
       /* Enable this code if demographics questions */
 
       let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         return {
-          label: `${ques.question.question} (demographic)`,
+          label: `${ques.question.question}-d-${ques.question.id} (demographic)`,
           key: `${ques.question.id}`,
         };
       });
@@ -683,8 +690,12 @@ const Csv = ({institutionId}: ICsvProps) => {
         {label: 'Institute', key: 'institute'},
         {label: 'Curriculum', key: 'curriculum'},
         {label: 'Unit', key: 'unit'},
+        {label: 'UnitID', key: 'unitId'},
         {label: 'Classroom', key: 'classroom'},
         {label: 'Survey name', key: 'surveyName'},
+        {label: 'SurveyID', key: 'surveyId'},
+        {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
+        {label: 'DemographicsDataID', key: 'demographicsDataID'},
         ...demographicsQuestionHeaders, // Enable this line for demographics question
         ...surveyQuestionHeaders,
       ]);
@@ -693,11 +704,13 @@ const Csv = ({institutionId}: ICsvProps) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
-        // console.log('🚀 ~ file: Csv.tsx ~ line 697 ~ data ~ SCQAnswers', SCQAnswers);
+        let universalSurveyStudentID = '';
+        let demographicsDataID = '';
 
         SCQAnswers[0].map((answerArray: any) => {
           if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
+            universalSurveyStudentID = answerArray.id;
             answerArray.surveyData.map((singleAnswer: any) => {
               if (qids.indexOf(singleAnswer.domID) >= 0) {
                 surveyAnswerDates.push(answerArray.updatedAt);
@@ -743,6 +756,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         /* Enable this code if demographics questions */
         DCQAnswers.map((ans: any) => {
           if (ans.person.id === stu.id) {
+            demographicsDataID = ans.id;
             ans.responseObject.map((resp: any) => {
               if (qids.indexOf(resp.qid) >= 0) {
                 studentAnswers[resp.qid] =
@@ -764,13 +778,22 @@ const Csv = ({institutionId}: ICsvProps) => {
         } else {
           notTakenSurvey++;
         }
+
         return {
           ...stu,
           institute: selectedInst.name,
           curriculum: selectedCurriculum.name,
           unit: selectedUnit.name,
+          unitId: selectedUnit.id,
           classroom: selectedClassRoom.name,
           surveyName: selectedSurvey.name,
+          surveyId: selectedSurvey.id,
+          universalSurveyStudentID: universalSurveyStudentID
+            ? universalSurveyStudentID
+            : 'Not-taken-yet',
+          demographicsDataID: demographicsDataID
+            ? demographicsDataID
+            : 'No-demographics-data',
           ...studentAnswers,
           hasTakenSurvey,
           first:
@@ -998,6 +1021,26 @@ const Csv = ({institutionId}: ICsvProps) => {
             'Download CSV'
           )}
         </button>
+        <button
+          type="button"
+          className={`col-end-5 mt-1 ${
+            isSuperAdmin ? 'mt-5' : ''
+          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+          style={{
+            /* stylelint-disable */
+            opacity: isCSVDownloadReady ? 1 : 0.5,
+          }}
+          disabled={!isCSVDownloadReady}>
+          {lessonPDFData.length > 0 ? (
+            <PDFDownloadLink
+              document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
+              fileName={`${selectedSurvey?.name}.pdf`}>
+              {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
+            </PDFDownloadLink>
+          ) : (
+            'Download Survey PDF'
+          )}
+        </button>
       </div>
       <div>
         <SectionTitleV3 title={'Survey results'} />
@@ -1005,9 +1048,24 @@ const Csv = ({institutionId}: ICsvProps) => {
           <Table />
         ) : (
           <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            {csvGettingReady
-              ? 'Populating Data'
-              : 'Select filters options to populate data'}
+            {csvGettingReady ? (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <Loader color="rgba(107, 114, 128, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Populating data please wait...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Select filters options to populate data
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

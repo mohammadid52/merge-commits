@@ -10,6 +10,9 @@ import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import Buttons from '@atoms/Buttons';
 import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
+import {findIndex, get} from 'lodash';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {usePageBuilderContext} from '@contexts/PageBuilderContext';
 
 interface HighlighterBlockProps extends RowWrapperProps {
   id?: string;
@@ -58,12 +61,31 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const onHighlighterBlockCreate = async () => {
     setSaving(true);
+
+    const currentPage: UniversalLessonPage = get(
+      switchContext.universalLessonDetails,
+      `lessonPlan[${lessonState.currentPage}]`,
+      null
+    );
+
+    const pageContentIdx = findIndex(
+      currentPage?.pageContent,
+      (d: any) => d.id === pagePartId
+    );
+
+    const pageContent = currentPage.pageContent[pageContentIdx];
+    const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
+
     const updatedList = updateBlockContentULBHandler(
       pagePartId,
       'partContent',
       'highlighter-input',
-      [{id: uuidv4().toString(), value: editorState}],
-      position
+      [{id: uuidv4().toString(), value: staticText}],
+      position,
+      '',
+      '',
+      pageContentIdx,
+      partContentIdx
     );
 
     await addToDB(updatedList);
@@ -77,10 +99,13 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const isStudent = user && user.role === 'ST';
   const [editorState, setEditorState] = useState('');
 
+  const [staticText, setStaticText] = useState('');
+
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
   useEffect(() => {
     if (!isEmpty(value)) {
       setEditorState(value[0].value);
+      setStaticText(value[0].value);
     }
   }, [value]);
 
@@ -108,7 +133,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const features: string[] = ['colorPicker', 'inline'];
 
   return (
-    <div className={` py-4 `}>
+    <div className={` p-4 `}>
       <CustomRichTextEditor
         theme={themeColor}
         features={features}
@@ -117,7 +142,11 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         customStyle
         dark={theme === 'dark'}
         initialValue={isInLesson && isStudent ? getDataValue(id)[0] : editorState}
-        onChange={isInLesson && isStudent ? (html) => setDataValue(id, [html]) : () => {}}
+        onChange={
+          isInLesson && isStudent
+            ? (html) => setDataValue(id, [html])
+            : (html) => setStaticText(html)
+        }
       />
       {!isInLesson && !previewMode && (
         <div className="w-auto flex items-center justify-end mt-4">

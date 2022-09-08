@@ -42,6 +42,20 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
@@ -94,9 +108,57 @@ export const listPeople = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPersonLessonsData = /* GraphQL */ `
+  query GetPersonLessonsData($lessonID: String!) {
+    getPersonLessonsData(lessonID: $lessonID) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonLessonsData = /* GraphQL */ `
+  query ListPersonLessonsData(
+    $lessonID: String
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLessonsData(
+      lessonID: $lessonID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
         createdAt
         updatedAt
       }
@@ -153,6 +215,7 @@ export const getInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -319,6 +382,9 @@ export const getStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -447,6 +513,7 @@ export const getRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -534,6 +601,9 @@ export const getRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -573,6 +643,7 @@ export const getRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -670,6 +741,7 @@ export const listRooms = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -795,6 +867,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -886,6 +959,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -980,6 +1056,7 @@ export const getClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -1116,6 +1193,9 @@ export const getClassroomGroups = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1159,6 +1239,7 @@ export const listClassroomGroups = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1243,6 +1324,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -1375,6 +1457,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1407,6 +1492,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1520,6 +1606,7 @@ export const getClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -1684,6 +1771,7 @@ export const listClasses = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1760,6 +1848,7 @@ export const getClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1814,6 +1903,9 @@ export const getClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2609,6 +2701,9 @@ export const getRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2705,6 +2800,9 @@ export const getStudentData = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2863,6 +2961,9 @@ export const getAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2976,6 +3077,9 @@ export const getQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2988,6 +3092,7 @@ export const getQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -3044,6 +3149,7 @@ export const listQuestionData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -3091,6 +3197,9 @@ export const getPersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -3105,6 +3214,7 @@ export const getPersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3279,6 +3389,7 @@ export const listPersonLocations = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -3497,6 +3608,7 @@ export const getAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3702,6 +3814,7 @@ export const listAttendances = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -3980,6 +4093,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4027,6 +4141,7 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4062,6 +4177,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4109,6 +4225,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4144,6 +4261,7 @@ export const getUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -4191,6 +4309,7 @@ export const listUniversalArchiveData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
         hasExerciseData
         exerciseData {
@@ -4225,6 +4344,7 @@ export const getUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -4260,7 +4380,324 @@ export const listUniversalSurveyStudentData = /* GraphQL */ `
           domID
           options
           input
+          hasTakenSurvey
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  query GetTemporaryUniversalUploadSurveyData($id: ID!) {
+    getTemporaryUniversalUploadSurveyData(id: $id) {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  query ListTemporaryUniversalUploadSurveyData(
+    $id: ID
+    $filter: ModelTemporaryUniversalUploadSurveyDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTemporaryUniversalUploadSurveyData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTemporaryDemographicsUploadData = /* GraphQL */ `
+  query GetTemporaryDemographicsUploadData($id: ID!) {
+    getTemporaryDemographicsUploadData(id: $id) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTemporaryDemographicsUploadData = /* GraphQL */ `
+  query ListTemporaryDemographicsUploadData(
+    $id: ID
+    $filter: ModelTemporaryDemographicsUploadDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTemporaryDemographicsUploadData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUploadLogs = /* GraphQL */ `
+  query GetUploadLogs($id: ID!) {
+    getUploadLogs(id: $id) {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        User_id
+        TemporaryUniversalUploadSurveyDataID
+        TemporaryUniversalUploadSurveyData {
+          id
+          updatedUserId
+          universalSurveyId
+          createdAt
+          updatedAt
+        }
+        TemporaryDemographicsUploadDataID
+        TemporaryDemographicsUploadData {
+          id
+          updatedUserId
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        UploadType
+        updateType
+        Date
+        Curricullum_id
+        Unit_id
+        lesson_id
+        Class_id
+        PaperSurveyURL
+        Reason
         createdAt
         updatedAt
       }
@@ -4922,6 +5359,9 @@ export const getStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -4953,6 +5393,9 @@ export const getStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5082,6 +5525,9 @@ export const getPersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5221,6 +5667,9 @@ export const getSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -5244,6 +5693,7 @@ export const getSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -5491,6 +5941,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -5574,6 +6025,9 @@ export const getFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -5597,6 +6051,7 @@ export const getFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -5780,6 +6235,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -5848,6 +6304,9 @@ export const getFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -5874,6 +6333,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -6137,6 +6597,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -6353,6 +6814,9 @@ export const getCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6564,6 +7028,9 @@ export const getGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6724,6 +7191,9 @@ export const userById = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6776,9 +7246,42 @@ export const usersByRole = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const lessonsByType = /* GraphQL */ `
+  query LessonsByType(
+    $lessonType: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    lessonsByType(
+      lessonType: $lessonType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
         createdAt
         updatedAt
       }
@@ -6908,6 +7411,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -7043,6 +7547,7 @@ export const attendanceByStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate

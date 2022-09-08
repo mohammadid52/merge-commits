@@ -12,7 +12,7 @@ import usePrevious from '../../../customHooks/previousProps';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
 import {
-  UniversalJournalData,
+  UniversalJournalData,UniversalClassData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
 import Buttons from '../../Atoms/Buttons';
@@ -27,6 +27,7 @@ import {useHistory} from 'react-router-dom';
 import {userInfo} from 'os';
 import update from 'lodash/update';
 import ChangePasscode from '../Profile/ChangePasscode';
+import { GetUniversalLessonWritingExcercisesQuery } from 'API';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -78,6 +79,7 @@ const Anthology = ({
       await listUniversalJournalData();
       await getStudentData();
       await getUniversalArchiveData();
+      await getUniversalLessonWritingExercises();
     };
     initialDataFetch();
   }, []);
@@ -89,10 +91,13 @@ const Anthology = ({
   const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
   const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
   const [classNotebook, setClassNotebook] = useState<any[]>([]);
-
+  const [exerciseData,setExerciseData]=useState<GetUniversalLessonWritingExcercisesQuery[]>([])
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
     UniversalJournalData[]
   >([]);
+  const [allUniversalClassData, setAllUniversalClassData] = useState<
+  UniversalClassData[]
+>([]);
 
   // ##################################################################### //
   // ##################### CRUD STUDENT EXERCISE DATA #################### //
@@ -529,6 +534,28 @@ const Anthology = ({
     }
   };
 
+
+
+  const getUniversalLessonWritingExercises = async () => {
+    try {
+      const allUniversalClassData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessonWritingExcercises, {
+          filter: {
+            studentID: {
+              eq: state.user.authId,
+            },
+          },
+        })
+      );
+      setAllUniversalClassData(allUniversalClassData.data.listUniversalLessonWritingExcercises.items);
+    }catch (error) {
+      console.log(
+        '🚀 ~ file: Anthology.tsx ~ line 548 ~ getUniversalLessonWritingExcercises ~ error',
+        error
+      );
+    }
+  }
+
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
   const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
@@ -540,7 +567,7 @@ const Anthology = ({
 
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
-    const mergeAll = [...allStudentData, ...allUniversalJournalData, ...classNotebook];
+    const mergeAll = [...allStudentData, ...allUniversalJournalData, ...classNotebook ,...allUniversalClassData];
     if (mergeAll.length > 0) {
       const uniqueIds = mergeAll.reduce((acc: string[], mixedObj: any) => {
         if (mixedObj.hasOwnProperty('roomID')) {
@@ -558,7 +585,7 @@ const Anthology = ({
       }
     } else {
     }
-  }, [allStudentData, allUniversalJournalData, classNotebook]);
+  }, [allStudentData, allUniversalJournalData, classNotebook ,allUniversalClassData]);
 
   // ~~~~~~ PRIVATE ROOM VERIFICATION ~~~~~~ //
 
@@ -787,6 +814,8 @@ const Anthology = ({
               allExerciseData={allExerciseData}
               classNotebook={classNotebook}
               setClassNotebook={setClassNotebook}
+              allUniversalClassData={allUniversalClassData}
+              setAllUniversalClassData={setAllUniversalClassData}
               allUniversalJournalData={allUniversalJournalData}
               setAllUniversalJournalData={setAllUniversalJournalData}
             />

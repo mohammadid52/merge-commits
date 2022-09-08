@@ -33,7 +33,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
 
   const {clientKey, state, userLanguage} = useContext(GlobalContext);
   const isSuperAdmin: boolean = state.user.role === 'SUP';
-
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
   const [curricularList, setCurricularList] = useState([]);
@@ -377,7 +376,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             history.push(
               isSuperAdmin
                 ? `/dashboard/manage-institutions/class-rooms`
-                : `/dashboard/manage-institutions/institution/${instId}/class-rooms`
+                : `/dashboard/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/class-rooms`
             )
           }>
           <span className="w-auto mr-2">

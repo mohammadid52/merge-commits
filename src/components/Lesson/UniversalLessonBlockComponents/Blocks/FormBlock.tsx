@@ -75,7 +75,7 @@ export const FormBlock = ({
   // ##################################################################### //
 
   const isStudent = user.role === 'ST';
-  const isInLesson = useInLessonCheck();
+  const isInLesson = isStudent ? useInLessonCheck() : false;
 
   useEffect(() => {
     if (PAGES) {

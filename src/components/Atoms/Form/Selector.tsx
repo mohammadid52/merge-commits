@@ -13,6 +13,7 @@ interface SelectorProps {
   additionalClass?: string;
   arrowHidden?: boolean;
   placeholder: string;
+  placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
   isRequired?: boolean;
@@ -45,6 +46,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     width = 'w-full',
     isClearable = false,
     onClear,
+    placement = 'right',
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -177,7 +179,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   show={showTooltip}
                   key={key}
                   text={item.name}
-                  placement={'right'}>
+                  placement={placement}>
                   <li
                     key={key}
                     onClick={() => updateSelectedItem(item.value, item.name, item.id)}

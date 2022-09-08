@@ -260,3 +260,91 @@ span {
     height: 4rem;
   }
 }
+
+.rating {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: auto;
+}
+.on {
+  color: rgb(255, 204, 0);
+}
+.off {
+  color: #ccc;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 200px;
+  height: 14px;
+  background-color: #ccc;
+}
+
+.progress-value {
+  height: 14px;
+  background-color: rgb(255, 204, 0);
+  max-width: 100%;
+  width: 0%;
+  transition: 0.3s all;
+}
+
+.descriptive {
+  height: 90px;
+  padding-right: 15px;
+}
+
+.hover-overflow-auto:hover {
+  overflow: auto;
+}
+
+.descriptive::-webkit-scrollbar {
+  width: 5px;
+}
+.descriptive::-webkit-scrollbar-track {
+  background: #fff;
+}
+.descriptive::-webkit-scrollbar-thumb {
+  background: #babac0;
+  border-radius: 20px;
+}
+.descriptive::-webkit-scrollbar-thumb:hover {
+  background: #babac0;
+}
+
+* .table-custom-responsive thead,
+* .table-custom-responsive tbody,
+* .table-custom-responsive th,
+* .table-custom-responsive td,
+* .table-custom-responsive tr {
+  width: auto !important;
+}
+
+.table-custom-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-custom-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
+}
+
+.table-custom-responsive table th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.table-custom-responsive .table-striped tbody tr:nth-of-type(even) {
+  background-color: rgb(249 250 251);
+}
+
+.table-custom-responsive table td,
+.table-custom-responsive table th {
+  padding: 0.75rem;
+  vertical-align: middle;
+}

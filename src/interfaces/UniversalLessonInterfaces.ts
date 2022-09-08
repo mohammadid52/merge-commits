@@ -139,6 +139,30 @@ export interface UniversalJournalData {
   recordID?: string;
 }
 
+export interface UniversalClassData {
+  id: string;
+  syllabusLessonID?: string;
+  lessonID:string;
+  lessonPageID:string;
+  studentID: string;
+  studentAuthID: string;
+  studentEmail: string;
+  type?: string;
+  feedbacks?: string[];
+  shared?: boolean;
+  excerciseData?:{id:string};
+  entryData?: {domID: string; type: string; input: string}[];
+  pageData?:{domID:string; options:string; input:string}[];
+  comment?:{commentBy:string;comment:string}
+  roomID?: string;
+  currentLocation?:string[];
+  lessonProgress?:string;
+  updatedAt?: any;
+  createdAt?: any;
+  recordID?: string;
+}
+
+
 export interface IFormBlockProps {
   id?: string;
   label?: string;

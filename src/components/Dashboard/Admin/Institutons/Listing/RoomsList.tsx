@@ -5,6 +5,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
@@ -22,7 +23,7 @@ const RoomsList = (props: RoomListProps) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute},
     },
     theme,
     userLanguage,
@@ -54,7 +55,7 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
-  const editCurrentRoom = (id: string) => {
+  const editCurrentRoom = (id: string, instId: string) => {
     history.push(
       isSuperAdmin
         ? `/dashboard/manage-institutions/room-edit/${id}`
@@ -105,17 +106,20 @@ const RoomsList = (props: RoomListProps) => {
   const fetchRoomList = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(
-          customQueries.listRoomsDashboard,
-          !isSuperAdmin
-            ? {
-                filter: {
-                  institutionID: {eq: instId},
-                },
-              }
-            : {}
-        )
+        graphqlOperation(customQueries.listRoomsDashboard)
       );
+      // const list: any = await API.graphql(
+      //   graphqlOperation(
+      //     customQueries.listRoomsDashboard,
+      //     !isSuperAdmin || !isAdmin || !isBuilder
+      //       ? {
+      //           filter: {
+      //             institutionID: {eq: instId},
+      //           },
+      //         }
+      //       : {}
+      //   )
+      // );
       const newList = list.data.listRooms.items;
       setRoomList(newList);
       setAllRooms(newList);
@@ -131,13 +135,17 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   useEffect(() => {
-    fetchRoomList();
-    fetchStaffOptions();
+    if (instId === associateInstitute[0].institution.id) {
+      fetchRoomList();
+      fetchStaffOptions();
+    }
   }, [instId]);
 
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (isSuperAdmin || isAdmin || isBuilder) {
       fetchInstitutions();
+      fetchRoomList();
+      fetchStaffOptions();
     }
   }, [isSuperAdmin]);
 
@@ -165,6 +173,9 @@ const RoomsList = (props: RoomListProps) => {
           (institutionId ? item.institution?.id === institutionId : true) &&
           (staffMemberId ? item.teacherAuthID === staffMemberId : true)
       )
+    );
+    history.push(
+      `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`
     );
     // if (searchValue && institutionId && staffMemberId) {
     //   setRoomList(
@@ -205,7 +216,10 @@ const RoomsList = (props: RoomListProps) => {
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    onSearch(searchInput, '', '');
+    history.push(
+      `/dashboard/manage-institutions/institution/${associateInstitute[0].institution.id}/class-rooms`
+    );
+    // onSearch(searchInput, '', '');
   };
 
   const onStaffSelectionRemove = () => {
@@ -214,17 +228,31 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   return (
-    <div className="flex m-auto justify-center p-4 pt-0 pl-12">
+    <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
       <div className="">
         <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
-          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
+          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-8">
             {InstitueRomms[userLanguage]['TITLE']}
           </h3>
-          <div className={`flex justify-end`}>
+          <div className={`flex md:justify-end flex-wrap`}>
             <div
               className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'lg:w-144' : 'lg:w-96 mr-4'
+                isSuperAdmin || isAdmin || isBuilder ? 'lg:w-144' : 'lg:w-96 mr-4'
               }`}>
+              {(isSuperAdmin || isAdmin || isBuilder) && (
+                <Selector
+                  placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={`w-60 ${
+                    isSuperAdmin || isAdmin || isBuilder ? 'mr-4 mb-8' : ''
+                  }`}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
               <SearchInput
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
@@ -232,33 +260,24 @@ const RoomsList = (props: RoomListProps) => {
                   onSearch(searchInput, selectedInstitution?.id, selectedStaff?.id)
                 }
                 closeAction={removeSearchAction}
-                style={`mr-4 w-auto md:w-40 lg:w-48`}
+                style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
               />
-              <Selector
+              {/* <Selector
                 placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
                 list={staffList}
                 selectedItem={selectedStaff?.name}
                 onChange={handleStaffChange}
                 arrowHidden={true}
-                additionalClass={`w-auto md:w-52 lg:w-48 ${isSuperAdmin ? 'mr-4' : ''}`}
+                additionalClass={`w-auto md:w-52 lg:w-48 ${
+                  isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
+                }`}
                 isClearable
                 onClear={onStaffSelectionRemove}
-              />
-              {isSuperAdmin && (
-                <Selector
-                  placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto md:w-52 lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
-                />
-              )}
+              /> */}
             </div>
-            {!isSuperAdmin && (
+            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
               <AddButton
+                className="mb-8"
                 label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                 onClick={createNewRoom}
               />
@@ -275,102 +294,98 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           </div>
         ) : roomList.length ? (
-          <>
-            <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div
-                className={`flex justify-between bg-gray-50 pl-4 ${
-                  roomList.length > 4 ? 'pr-6' : 'pr-4'
-                } py-2 whitespace-nowrap`}>
-                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['NO']}</span>
-                </div>
-                {isSuperAdmin && (
-                  <div className="w-1.5/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{InstitueRomms[userLanguage]['INSTITUTION_NAME']}</span>
-                  </div>
-                )}
-                <div
-                  className={`${
-                    isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-                  } px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                  <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
-                </div>
-                {/* <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
-                </div> */}
-                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
-                </div>
-
-                <div className="w-3/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['CURRICULUM']}</span>
-                </div>
-
-                <div className="w-1/10 px-4 py-2 bg-gray-50 flex text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{InstitueRomms[userLanguage]['ACTION']}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="m-auto max-h-88 overflow-y-auto overflow-x-auto">
-              {roomList.map((item: any, i: number) => (
-                <div
-                  key={i}
-                  className={`flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200 cursor-pointer ${
-                    i % 2 !== 0 ? 'bg-gray-50' : ''
-                  }`}
-                  onClick={() => editCurrentRoom(item.id)}>
-                  <div
-                    className={
-                      'flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4'
-                    }>
-                    {i + 1}.
-                  </div>
-                  {isSuperAdmin && (
-                    <div
-                      className="flex w-1.5/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        history.push(
-                          `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
-                        );
-                      }}>
-                      {item.institution?.name}
-                    </div>
+          <div className="table-custom-responsive max-h-88 overflow-y-auto">
+            <table className="border-collapse table-auto w-full table-hover table-striped">
+              <thead className="thead-light">
+                <tr>
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['NO']}
+                  </th>
+                  {(isSuperAdmin || isAdmin || isBuilder) && (
+                    <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      {InstitueRomms[userLanguage]['INSTITUTION_NAME']}
+                    </th>
                   )}
-                  <div
-                    className={`flex ${
-                      isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-                    } items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal break-normal md:break-all`}>
-                    {item.name}
-                  </div>
-                  {/* <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
-                    {item.class?.name}
-                  </div> */}
-                  <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
-                    {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
-                  </div>
-                  <div className="flex w-3/10 items-center px-4 py-2 text-left text-s leading-4">
-                    {item?.curricula?.items
-                      ?.map((d: any) => {
-                        return d?.curriculum?.name;
-                      })
-                      .join(',') || '-'}
-                  </div>
-                  <span
-                    className={`w-1/10 h-6 flex px-4 items-center text-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
-                    onClick={() => editCurrentRoom(item.id)}>
-                    <Tooltip text="Click to edit class" placement="left">
-                      {InstitueRomms[userLanguage]['EDIT']}
-                    </Tooltip>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
+                  <th
+                    className={`bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                    {InstitueRomms[userLanguage]['CLASSROOMS_NAME']}
+                  </th>
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['TEACHER']}
+                  </th>
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['CURRICULUM']}
+                  </th>
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['STATUS']}
+                  </th>
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['ACTION']}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {roomList.map((item: any, i: number) => {
+                  return (
+                    <tr key={i} className={``}>
+                      <td className={''}>{i + 1}.</td>
+                      {(isSuperAdmin || isAdmin || isBuilder) && (
+                        <td
+                          className="text-s leading-4 font-medium whitespace-normal break-normal"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            isSuperAdmin &&
+                              history.push(
+                                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+                              );
+                          }}>
+                          {item.institution?.name}
+                        </td>
+                      )}
+                      <td
+                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+                        className={`text-s leading-4 font-medium whitespace-normal break-normal`}>
+                        {item.name}
+                      </td>
+                      <td className="text-s leading-4 whitespace-normal break-normal">
+                        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
+                      </td>
+                      <td
+                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+                        className="text-s leading-4  whitespace-normal break-normal">
+                        {item?.curricula?.items
+                          ?.map((d: any) => {
+                            return d?.curriculum?.name;
+                          })
+                          .join(',') || '-'}
+                      </td>
+                      <td className="text-s leading-4 whitespace-normal break-normal">
+                        <div className="w-auto md:w-32 lg:w-28">
+                          {item.status ? item.status : 'ACTIVE'}
+                        </div>
+                      </td>
+                      <td
+                        className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+                        onClick={() => editCurrentRoom(item.id, item.institutionID)}>
+                        <Tooltip
+                          additionalClass="mt-9"
+                          text="Click to edit class"
+                          placement="left">
+                          {InstitueRomms[userLanguage]['EDIT']}
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <Fragment>
-            {!isSuperAdmin && (
+            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
               <div className="flex justify-center mt-8">
                 <AddButton
                   className="mx-4"

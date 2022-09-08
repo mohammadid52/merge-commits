@@ -67,11 +67,16 @@ type globalActions =
         onBoardSurvey: boolean;
         role: string;
         isSuperAdmin: boolean;
+        isAdmin: boolean;
+        isBuilder: boolean;
+        isTeacher: boolean;
+        isStudent: boolean;
         image: string;
         lastLoggedOut?: string;
         lastLoggedIn?: string;
         associateInstitute?: any[];
         onDemand?: any;
+        lessons?: any[];
       };
     }
   | {
@@ -79,6 +84,12 @@ type globalActions =
       payload: {
         email: string;
         authId: string;
+      };
+    }
+  | {
+      type: 'LESSON_PAYLOAD';
+      payload: {
+        lessonsData: any[];
       };
     }
   | {
@@ -191,6 +202,10 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           language: action.payload.language,
           role: action.payload.role,
           isSuperAdmin: action.payload.role === 'SUP',
+          isAdmin: action.payload.role === 'ADM',
+          isBuilder: action.payload.role === 'BLD',
+          isTeacher: action.payload.role === 'TR',
+          isStudent: action.payload.role === 'ST',
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
           location: action.payload.location,
@@ -198,6 +213,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lastLoggedOut: action.payload.lastLoggedOut,
           associateInstitute: action.payload.associateInstitute,
           onDemand: action.payload?.onDemand,
+          lessons: action.payload?.lessons,
         },
       };
     case 'LOG_IN':
@@ -209,6 +225,13 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           ...state.user,
           email: action.payload.email,
           authId: action.payload.authId,
+        },
+      };
+    case 'LESSON_PAYLOAD':
+      return {
+        ...state,
+        lessonsPayload: {
+          lessonsData: action.payload.lessonsData,
         },
       };
     case 'PREV_LOG_IN':

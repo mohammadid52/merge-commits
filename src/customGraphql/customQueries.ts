@@ -812,6 +812,7 @@ export const listClassStudentsForRoom = /* GraphQL */ `
         }
         createdAt
       }
+      nextToken
     }
   }
 `;
@@ -831,6 +832,22 @@ export const listRooms = /* GraphQL */ `
         name
         maxPersons
         activeSyllabus
+        coTeachers {
+          nextToken
+          items {
+            id
+            roomID
+            teacherAuthID
+            teacherEmail
+            teacher {
+              authId
+              id
+              role
+              lastName
+              firstName
+            }
+          }
+        }
         teacher {
           firstName
           preferredName
@@ -865,6 +882,7 @@ export const getRoom = /* GraphQL */ `
       teacherAuthID
       teacherEmail
       name
+      status
       maxPersons
       institution {
         id
@@ -1052,6 +1070,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         institution {
           id
           name
@@ -2438,6 +2457,7 @@ export const getUniversalLesson = /* GraphQL */ `
         }
       }
       rubrics
+      isUsed
       createdAt
       updatedAt
     }
@@ -2489,21 +2509,226 @@ export const listInstitutions = /* GraphQL */ `
         image
         isServiceProvider
         serviceProviders {
+          items {
+            partnerID
+            id
+            providerInstitution {
+              id
+              isServiceProvider
+              name
+              phone
+              type
+              state
+              rooms {
+                nextToken
+                items {
+                  classID
+                  institutionID
+                  maxPersons
+                  teacherAuthID
+                  teacherEmail
+                  class {
+                    id
+                    name
+                  }
+                  teacher {
+                    authId
+                    id
+                    firstName
+                    lastName
+                  }
+                  class {
+                    id
+                    name
+                    room {
+                      institutionID
+                      classID
+                      name
+                      teacherAuthID
+                      teacherEmail
+                      updatedAt
+                      teacher {
+                        id
+                        role
+                        status
+                        firstName
+                        lastName
+                      }
+                      coTeachers {
+                        items {
+                          id
+                          roomID
+                        }
+                        nextToken
+                      }
+                    }
+                  }
+                  classroomGroups {
+                    items {
+                      classroomGroupsStudents {
+                        items {
+                          id
+                          studentAuthId
+                          studentEmail
+                          studentType
+                        }
+                        nextToken
+                      }
+                    }
+                    nextToken
+                  }
+                  coTeachers {
+                    items {
+                      id
+                      teacherAuthID
+                      teacherEmail
+                      teacherID
+                    }
+                    nextToken
+                  }
+                }
+              }
+            }
+          }
           nextToken
         }
         staff {
           items {
             staffAuthID
             staffEmail
+            staffMember {
+              role
+            }
           }
         }
         rooms {
+          items {
+            classID
+            id
+            institutionID
+            name
+            teacherAuthID
+            teacherEmail
+            class {
+              id
+              name
+            }
+            teacher {
+              authId
+              id
+              role
+              firstName
+              lastName
+            }
+            coTeachers {
+              nextToken
+              items {
+                roomID
+                id
+                teacherEmail
+                teacherAuthID
+                teacherID
+                teacher {
+                  authId
+                  id
+                  firstName
+                  lastName
+                  role
+                }
+              }
+            }
+            curricula {
+              nextToken
+              items {
+                id
+                roomID
+                curriculumID
+                curriculum {
+                  id
+                  name
+                  type
+                  institutionID
+                  institution {
+                    address
+                    type
+                    district
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
           nextToken
         }
         curricula {
+          items {
+            id
+            name
+            type
+          }
           nextToken
         }
         classes {
+          items {
+            id
+            name
+            institutionID
+            students {
+              items {
+                studentEmail
+                studentAuthID
+                status
+                student {
+                  role
+                  status
+                  type
+                }
+              }
+              nextToken
+            }
+            room {
+              curricula {
+                nextToken
+                items {
+                  id
+                  roomID
+                  curriculumID
+                  curriculum {
+                    id
+                    name
+                    type
+                    institutionID
+                  }
+                }
+              }
+              coTeachers {
+                nextToken
+                items {
+                  id
+                  teacherEmail
+                  teacherID
+                  teacherAuthID
+                  teacher {
+                    id
+                    lastName
+                    firstName
+                    role
+                  }
+                }
+              }
+              teacherAuthID
+              teacherEmail
+              teacher {
+                email
+                authId
+                id
+                firstName
+                lastName
+                role
+              }
+            }
+          }
           nextToken
         }
         filters
@@ -3075,25 +3300,6 @@ export const getCurriculum = /* GraphQL */ `
       }
       designers
       image
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabus {
         items {
           id
@@ -3418,7 +3624,7 @@ export const userById = /* GraphQL */ `
 `;
 export const getUserProfile = /* GraphQL */ `
   query UserById(
-    $id: ID
+    $id: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelPersonFilterInput
     $limit: Int
@@ -3443,6 +3649,7 @@ export const getUserProfile = /* GraphQL */ `
         lastName
         externalId
         grade
+        inactiveStatusDate
         onBoardSurvey
         offBoardSurvey
         phone
@@ -3450,6 +3657,7 @@ export const getUserProfile = /* GraphQL */ `
         image
         language
         filters
+        statusReason
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -3984,13 +4192,6 @@ export const getInstitutionCurriculars = /* GraphQL */ `
           type
           languages
           designers
-          syllabi {
-            items {
-              id
-              name
-              type
-            }
-          }
           createdAt
           updatedAt
         }
@@ -4369,7 +4570,7 @@ export const getInstListForNonAdmin = /* GraphQL */ `
 
 export const attendanceByStudent = /* GraphQL */ `
   query AttendanceByStudent(
-    $studentID: ID
+    $studentID: ID!
     $date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAttendanceFilterInput
@@ -5040,7 +5241,7 @@ export const listStaffOptions = /* GraphQL */ `
 
 export const listCurriculumUnitss = /* GraphQL */ `
   query ListCurriculumUnits(
-    $filter: ModelcurriculumUnitsFilterInput
+    $filter: ModelCurriculumUnitsFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -5233,6 +5434,59 @@ export const listFeelingsArchives = /* GraphQL */ `
         time
         sentimentName
         comments
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listAllClasses = /* GraphQL */ `
+  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
+    listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        name
+        id
+        institutionID
+        room {
+          teacherAuthID
+          teacherEmail
+          teacher {
+            id
+            lastName
+            firstName
+            email
+            role
+            authId
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listCurriculas = /* GraphQL */ `
+  query ListCurricula(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurricula(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        institutionID
+        type
         createdAt
         updatedAt
       }

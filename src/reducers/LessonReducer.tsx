@@ -36,6 +36,7 @@ const LESSON_REDUCER_TYPES = {
   SET_LAST_PAGE: 'SET_LAST_PAGE',
   CLEANUP: 'CLEANUP',
   ADD_NEW_INPUT: 'ADD_NEW_INPUT',
+  SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
 };
 
 export type LessonActions =
@@ -188,6 +189,12 @@ export type LessonActions =
   | {
       type: 'SET_COMPLETED_LESSONS';
       payload?: any;
+    }
+  | {
+      type: 'SET_LESSON_PAYLOAD';
+      payload?: {
+        lessonPayload?: any;
+      };
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
@@ -477,6 +484,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case LESSON_REDUCER_TYPES.CLEANUP:
       console.log('cleanup...');
       return initialLessonState;
+    case LESSON_REDUCER_TYPES.SET_LESSON_PAYLOAD:
+      return {
+        ...state,
+        lessonPayload: action.payload,
+      };
     default:
       return state;
   }

@@ -63,7 +63,7 @@ const DashboardContainer = ({
                 {isTeacher ? (
                   <span className="font-semibold">{'Classroom Manager'}</span>
                 ) : isOnDemandStudent ? (
-                  <span className="font-semibold">{'Classroom Lessons On-Demand'}</span>
+                  <span className="font-semibold">{'Classroom Lessons Self-Paced'}</span>
                 ) : (
                   <span className="font-semibold">{'Classroom Lessons'}</span>
                 )}

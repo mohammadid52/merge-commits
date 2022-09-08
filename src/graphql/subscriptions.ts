@@ -48,6 +48,9 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -62,6 +65,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -218,6 +222,9 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -232,6 +239,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -380,6 +388,9 @@ export const onChangeStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -451,6 +462,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -478,6 +490,7 @@ export const onChangeRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -565,6 +578,9 @@ export const onChangeRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -604,6 +620,7 @@ export const onChangeRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -726,6 +743,20 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
@@ -769,6 +800,20 @@ export const onUpdatePerson = /* GraphQL */ `
           studentAuthID
           status
           group
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
           createdAt
           updatedAt
         }
@@ -822,9 +867,68 @@ export const onDeletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePersonLessonsData = /* GraphQL */ `
+  subscription OnCreatePersonLessonsData {
+    onCreatePersonLessonsData {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePersonLessonsData = /* GraphQL */ `
+  subscription OnUpdatePersonLessonsData {
+    onUpdatePersonLessonsData {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePersonLessonsData = /* GraphQL */ `
+  subscription OnDeletePersonLessonsData {
+    onDeletePersonLessonsData {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
       createdAt
       updatedAt
     }
@@ -879,6 +983,7 @@ export const onCreateInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1002,6 +1107,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1125,6 +1231,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1382,6 +1489,9 @@ export const onCreateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1464,6 +1574,9 @@ export const onUpdateStaff = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1550,6 +1663,9 @@ export const onDeleteStaff = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1608,6 +1724,7 @@ export const onCreateRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -1695,6 +1812,9 @@ export const onCreateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1734,6 +1854,7 @@ export const onCreateRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1826,6 +1947,7 @@ export const onUpdateRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -1913,6 +2035,9 @@ export const onUpdateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1952,6 +2077,7 @@ export const onUpdateRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2044,6 +2170,7 @@ export const onDeleteRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -2131,6 +2258,9 @@ export const onDeleteRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2170,6 +2300,7 @@ export const onDeleteRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2268,6 +2399,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2359,6 +2491,9 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2390,6 +2525,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2481,6 +2617,9 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2512,6 +2651,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2605,6 +2745,9 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2631,6 +2774,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2765,6 +2909,9 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2805,6 +2952,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2939,6 +3087,9 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2979,6 +3130,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3113,6 +3265,9 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3156,6 +3311,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3286,6 +3442,9 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3315,6 +3474,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3445,6 +3605,9 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3474,6 +3637,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3604,6 +3768,9 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3670,6 +3837,7 @@ export const onCreateClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3847,6 +4015,7 @@ export const onUpdateClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -4024,6 +4193,7 @@ export const onDeleteClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -4191,6 +4361,7 @@ export const onCreateClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -4245,6 +4416,9 @@ export const onCreateClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4301,6 +4475,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -4355,6 +4530,9 @@ export const onUpdateClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4411,6 +4589,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -4465,6 +4644,9 @@ export const onDeleteClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -5933,6 +6115,9 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -5977,6 +6162,9 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -6025,6 +6213,9 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6067,6 +6258,9 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -6121,6 +6315,9 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6171,6 +6368,9 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -6226,6 +6426,9 @@ export const onCreateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6238,6 +6441,7 @@ export const onCreateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6280,6 +6484,9 @@ export const onUpdateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6292,6 +6499,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6334,6 +6542,9 @@ export const onDeleteQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6346,6 +6557,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
       }
       createdAt
@@ -6460,6 +6672,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -6577,6 +6790,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -6694,6 +6908,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
         }
         createdAt
@@ -6742,6 +6957,9 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6756,6 +6974,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -6904,6 +7123,9 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6918,6 +7140,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -7066,6 +7289,9 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -7080,6 +7306,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -7378,6 +7605,7 @@ export const onCreateAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -7676,6 +7904,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -7974,6 +8203,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -8471,6 +8701,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8509,6 +8740,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8547,6 +8779,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8585,6 +8818,7 @@ export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8623,6 +8857,7 @@ export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8661,6 +8896,7 @@ export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8699,6 +8935,7 @@ export const onCreateUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8737,6 +8974,7 @@ export const onUpdateUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8775,6 +9013,7 @@ export const onDeleteUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -8812,6 +9051,7 @@ export const onCreateUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -8838,6 +9078,7 @@ export const onUpdateUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -8864,7 +9105,539 @@ export const onDeleteUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnCreateTemporaryUniversalUploadSurveyData {
+    onCreateTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnUpdateTemporaryUniversalUploadSurveyData {
+    onUpdateTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  subscription OnDeleteTemporaryUniversalUploadSurveyData {
+    onDeleteTemporaryUniversalUploadSurveyData {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
+  subscription OnCreateTemporaryDemographicsUploadData {
+    onCreateTemporaryDemographicsUploadData {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
+  subscription OnUpdateTemporaryDemographicsUploadData {
+    onUpdateTemporaryDemographicsUploadData {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
+  subscription OnDeleteTemporaryDemographicsUploadData {
+    onDeleteTemporaryDemographicsUploadData {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUploadLogs = /* GraphQL */ `
+  subscription OnCreateUploadLogs {
+    onCreateUploadLogs {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUploadLogs = /* GraphQL */ `
+  subscription OnUpdateUploadLogs {
+    onUpdateUploadLogs {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUploadLogs = /* GraphQL */ `
+  subscription OnDeleteUploadLogs {
+    onDeleteUploadLogs {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
       createdAt
       updatedAt
     }
@@ -10000,6 +10773,9 @@ export const onCreateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10031,6 +10807,9 @@ export const onCreateStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -10080,6 +10859,9 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10111,6 +10893,9 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -10160,6 +10945,9 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10191,6 +10979,9 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -10235,6 +11026,9 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -10284,6 +11078,9 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10329,6 +11126,9 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -10411,6 +11211,9 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10434,6 +11237,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -10646,6 +11450,9 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10669,6 +11476,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -10881,6 +11689,9 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -10904,6 +11715,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -11117,6 +11929,9 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -11140,6 +11955,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -11288,6 +12104,9 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -11311,6 +12130,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -11459,6 +12279,9 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -11482,6 +12305,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -11630,6 +12454,9 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -11656,6 +12483,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -11890,6 +12718,9 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -11916,6 +12747,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -12150,6 +12982,9 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -12176,6 +13011,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -12532,6 +13368,9 @@ export const onCreateCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -12642,6 +13481,9 @@ export const onUpdateCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -12750,6 +13592,9 @@ export const onDeleteCommunity = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -12869,6 +13714,9 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -12927,6 +13775,9 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -12983,6 +13834,9 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser

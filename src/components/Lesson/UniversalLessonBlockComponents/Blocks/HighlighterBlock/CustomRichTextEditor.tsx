@@ -1,4 +1,5 @@
 import {useNotifications} from '@contexts/NotificationContext';
+import useAuth from '@customHooks/useAuth';
 import useMultiKeypress from '@customHooks/useMultiKeypress';
 import {textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
@@ -71,6 +72,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
     initialValue,
+
     fullWHOverride,
     dark = false,
     mediumDark = false,
@@ -81,8 +83,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     placeholder = '',
     inlineOptions = DEFAULT_INLINE_OPTIONS,
   } = props;
+
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+
   const [changesArr, setChangesArr] = useState([]);
 
   /**
@@ -146,9 +150,18 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
    *  when incoming props are updated
    */
 
+  const {isStudent} = useAuth();
+
+  const deps = !isStudent ? [initialValue] : [];
+
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
-    onInit(initialValue);
-  }, []);
+    if (initialValue && !loaded) {
+      onInit(initialValue);
+      setLoaded(true);
+    }
+  }, deps);
 
   const editorRef = React.useRef();
 

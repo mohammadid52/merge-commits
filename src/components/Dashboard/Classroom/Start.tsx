@@ -28,6 +28,7 @@ interface StartProps {
   preview?: boolean;
   activeRoomInfo?: any;
   isUsed?: boolean;
+  pageNumber?: number;
 }
 
 const Start: React.FC<StartProps> = ({
@@ -51,6 +52,9 @@ const Start: React.FC<StartProps> = ({
   const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
+  const lessonState = gContext.lessonState;
+
+  const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
@@ -62,6 +66,7 @@ const Start: React.FC<StartProps> = ({
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(0);
   const [warnModal, setWarnModal] = useState({
     show: false,
     activeLessonsId: [],
@@ -82,6 +87,9 @@ const Start: React.FC<StartProps> = ({
     }
   }, [state.roomData.syllabus]);
 
+  // useEffect(() => {
+  //   getLessonCurrentPage(lessonKey, user.email, user.authId);
+  // }, []);
   // const mutateToggleEnableDisable = async () => {
   //   const mutatedLessonData = {
   //     id: lessonKey,
@@ -110,6 +118,33 @@ const Start: React.FC<StartProps> = ({
   //     payload: {property: 'lessons', data: arrayWithToggledLesson},
   //   });
   // };
+
+  const getLessonCurrentPage = async (
+    lessonId: string,
+    userEmail: string,
+    userAuthId: string
+  ) => {
+    try {
+      console.log('I am running...');
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonId,
+          studentEmail: userEmail,
+          studentAuthId: userAuthId,
+        })
+      );
+
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: currentPage,
+      });
+
+      setPageNumber(currentPage);
+      return;
+    } catch (error) {}
+  };
 
   // ~~~~~~~~~~~~~~ ATTENDANCE ~~~~~~~~~~~~~ //
 
@@ -214,7 +249,9 @@ const Start: React.FC<StartProps> = ({
         if (!attendanceRecorded) {
           await recordAttendance(lessonProps);
         }
-        history.push(`/lesson/${lessonKey}/0`);
+        await getLessonCurrentPage(lessonKey, user.email, user.authId);
+        history.push(`/lesson/${lessonKey}/${pageNumber}`);
+        // history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);
       }
@@ -406,15 +443,27 @@ const Start: React.FC<StartProps> = ({
     });
   };
 
+  const buttonText = `${firstPart()} ${secondPart()}`;
+
+  const updateBtnText = () => {
+    switch (buttonText) {
+      case 'SURVEY OPEN':
+        return 'GO TO SURVEY';
+      case 'START LESSON':
+        return 'GO TO LESSON';
+
+      default:
+        return buttonText;
+    }
+  };
+
   return (
     <div>
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
-          loading
-            ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
-            : `${firstPart()} ${secondPart()}`
+          loading ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT : updateBtnText()
         }
         disabled={
           loading ||
