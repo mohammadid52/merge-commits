@@ -68,14 +68,14 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
     if (thereAreStudents && validDate) {
       try {
         let result: any = await API.graphql(
-          graphqlOperation(queries.listPersonSentimentss, {
+          graphqlOperation(queries.listPersonSentiments, {
             filter: {
               date: {eq: dateString},
               ...listQuery,
             },
           })
         );
-        return result.data.listPersonSentimentss.items;
+        return result.data.listPersonSentiments.items;
       } catch (e) {
         console.error('fetchStudentSentiments - ', e);
         return [];
@@ -238,6 +238,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       </div>
     </>
   );
-};;
+};
 
 export default LessonInfoFrame;

@@ -32,7 +32,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
         filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]},
       })
     );
-    const savedData = result.data.listPersons;
+    const savedData = result.data.listPeople;
     const updatedList = savedData?.items.map(
       (item: {id: string; firstName: string; lastName: string}) => ({
         id: item?.id,

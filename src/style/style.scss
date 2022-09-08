@@ -1086,7 +1086,23 @@
     margin-bottom: 1rem;
     border-radius: 8px; // color: white;
   }
+
+  position: relative;
 }
+
+.clear-editor-text-btn {
+  position: absolute;
+  right: 4px;
+
+  &:active img {
+    transform: rotate(-45deg);
+  }
+  img {
+    transition: all 0.15s ease-in-out;
+    transform: rotate(0deg);
+  }
+}
+
 .toolbarClassName.mediumDark {
   background-color: rgb(199, 199, 204);
   border: 1px solid #9ca3af;
@@ -1094,6 +1110,9 @@
 }
 
 .editorClassName {
+  resize: vertical;
+  // min-height: 20rem;
+
   &.dark {
     background-color: $gray-700;
     color: white;
@@ -1105,7 +1124,7 @@
     background-color: rgba(237, 242, 247, 1);
   }
   border-radius: 8px;
-  height: 20rem;
+  // height: 20rem;
   padding: 1rem;
   &.dark::-webkit-scrollbar {
     height: 8px;
@@ -1136,6 +1155,18 @@
   &.light::-webkit-scrollbar-track {
     border-radius: 10px;
     background: #fff;
+  }
+
+  @media only screen and (max-width: 1600px) {
+    max-height: 30rem;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    max-height: 20rem;
+  }
+
+  @media only screen and (max-width: 600px) {
+    max-height: 10rem;
   }
 }
 
@@ -1460,5 +1491,60 @@
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+.bg-component-dark {
+  background-color: $dark-component-bg !important;
+}
+
+.border-none {
+  border-color: transparent !important;
+}
+
+.dropdown-tooltip-text:before {
+  max-width: 200px !important;
+  background-color: rgba(59, 72, 80, 1);
+}
+
+.dropdown-tooltip-text {
+  position: unset !important;
+}
+
+.analytic-wrap {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.analytic-badge {
+  width: 100%;
+  color: #2b2e40;
+  border: 1px solid #2b2e40;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 24px 8px;
+  background-color: #f7fbff;
+
+  h2 {
+    font-size: 42px;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #be2026;
+  }
+}
+
+.piechart-tooltip {
+  padding: 10px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(204, 204, 204);
+  white-space: wrap;
+  max-width: 320px;
+  border-radius: 4px;
+
+  p span {
+    font-weight: 400;
+    color: #2b2e40;
   }
 }

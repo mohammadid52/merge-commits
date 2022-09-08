@@ -152,7 +152,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
 
   return (
     <div
-      className={`relative w-full py-1 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
+      className={`relative w-full py-2 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
       {/* LEFT - TITLEBAR CONTROL */}
       <OpenClosePagesToggle
         theme={theme}
@@ -172,18 +172,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
         lessonData={lessonState.lessonData}
         currentPage={lessonState.currentPage}
       />
-
-      {/* RIGHT - FULLSCREEN BUTTON */}
-      {breakpoint === 'xl' || breakpoint === '2xl' ? (
-        <FullscreenToggle
-          theme={theme}
-          themeColor={themeColor}
-          fullscreen={fullscreen}
-          handleFullscreen={handleFullscreen}
-        />
-      ) : (
-        <div className="w-1/3 flex justify-center h-8 align-middle leading-8 "></div>
-      )}
+      <div className="w-1/3 flex justify-center h-8 align-middle leading-8 "></div>
     </div>
   );
 };

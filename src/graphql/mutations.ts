@@ -45,6 +45,7 @@ export const batchAddClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -101,217 +102,12 @@ export const batchAddClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const batchAddLessonRubrics = /* GraphQL */ `
-  mutation BatchAddLessonRubrics($lessonRubrics: [CreateLessonRubricsInput]) {
-    batchAddLessonRubrics(lessonRubrics: $lessonRubrics) {
-      id
-      lessonID
-      rubricID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      rubric {
-        id
-        name
-        criteria
-        topicID
-        topic {
-          id
-          curriculumID
-          learningObjectiveID
-          name
-          description
-          distinguished
-          excelled
-          adequite
-          basic
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const batchDeleteLessonRubrics = /* GraphQL */ `
-  mutation BatchDeleteLessonRubrics(
-    $lessonRubrics: [DeleteLessonRubricsInput]
-  ) {
-    batchDeleteLessonRubrics(lessonRubrics: $lessonRubrics) {
-      id
-      lessonID
-      rubricID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      rubric {
-        id
-        name
-        criteria
-        topicID
-        topic {
-          id
-          curriculumID
-          learningObjectiveID
-          name
-          description
-          distinguished
-          excelled
-          adequite
-          basic
-          createdAt
-          updatedAt
-        }
-        curriculumID
         createdAt
         updatedAt
       }
@@ -358,6 +154,20 @@ export const createPerson = /* GraphQL */ `
           studentAuthID
           status
           group
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
           createdAt
           updatedAt
         }
@@ -414,6 +224,20 @@ export const updatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
@@ -465,9 +289,77 @@ export const deletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      lessons {
+        items {
+          id
+          studentAuthID
+          studentEmail
+          lessonID
+          lessonType
+          pages
+          ratings
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       spotlightUser
       spotlightDate
       addedby
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPersonLessonsData = /* GraphQL */ `
+  mutation CreatePersonLessonsData(
+    $input: CreatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    createPersonLessonsData(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePersonLessonsData = /* GraphQL */ `
+  mutation UpdatePersonLessonsData(
+    $input: UpdatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    updatePersonLessonsData(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePersonLessonsData = /* GraphQL */ `
+  mutation DeletePersonLessonsData(
+    $input: DeletePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    deletePersonLessonsData(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
       createdAt
       updatedAt
     }
@@ -525,6 +417,7 @@ export const createInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -651,6 +544,7 @@ export const updateInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -777,6 +671,7 @@ export const deleteInstitution = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1008,10 +903,7 @@ export const deleteServiceProvider = /* GraphQL */ `
   }
 `;
 export const createStaff = /* GraphQL */ `
-  mutation CreateStaff(
-    $input: CreateStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation CreateStaff($input: CreateStaffInput!, $condition: ModelStaffConditionInput) {
     createStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1044,6 +936,9 @@ export const createStaff = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1095,10 +990,7 @@ export const createStaff = /* GraphQL */ `
   }
 `;
 export const updateStaff = /* GraphQL */ `
-  mutation UpdateStaff(
-    $input: UpdateStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
     updateStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1131,6 +1023,9 @@ export const updateStaff = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1182,10 +1077,7 @@ export const updateStaff = /* GraphQL */ `
   }
 `;
 export const deleteStaff = /* GraphQL */ `
-  mutation DeleteStaff(
-    $input: DeleteStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation DeleteStaff($input: DeleteStaffInput!, $condition: ModelStaffConditionInput) {
     deleteStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1218,6 +1110,9 @@ export const deleteStaff = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -1269,10 +1164,7 @@ export const deleteStaff = /* GraphQL */ `
   }
 `;
 export const createRoom = /* GraphQL */ `
-  mutation CreateRoom(
-    $input: CreateRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation CreateRoom($input: CreateRoomInput!, $condition: ModelRoomConditionInput) {
     createRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1281,6 +1173,7 @@ export const createRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -1368,6 +1261,9 @@ export const createRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1407,6 +1303,7 @@ export const createRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1490,10 +1387,7 @@ export const createRoom = /* GraphQL */ `
   }
 `;
 export const updateRoom = /* GraphQL */ `
-  mutation UpdateRoom(
-    $input: UpdateRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
     updateRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1502,6 +1396,7 @@ export const updateRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -1589,6 +1484,9 @@ export const updateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1600,7 +1498,6 @@ export const updateRoom = /* GraphQL */ `
         institutionID
         type
         name
-        roomId
         institution {
           id
           name
@@ -1628,6 +1525,7 @@ export const updateRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1711,10 +1609,7 @@ export const updateRoom = /* GraphQL */ `
   }
 `;
 export const deleteRoom = /* GraphQL */ `
-  mutation DeleteRoom(
-    $input: DeleteRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation DeleteRoom($input: DeleteRoomInput!, $condition: ModelRoomConditionInput) {
     deleteRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1723,6 +1618,7 @@ export const deleteRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      status
       filters
       location
       startDate
@@ -1810,6 +1706,9 @@ export const deleteRoom = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -1849,6 +1748,7 @@ export const deleteRoom = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -1950,6 +1850,7 @@ export const createClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2041,6 +1942,9 @@ export const createClassroomGroupStudents = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2075,6 +1979,7 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2166,6 +2071,9 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2200,6 +2108,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -2293,6 +2202,9 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -2322,6 +2234,7 @@ export const createClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2456,6 +2369,9 @@ export const createClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2499,6 +2415,7 @@ export const updateClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2633,6 +2550,9 @@ export const updateClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2676,6 +2596,7 @@ export const deleteClassroomGroups = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2810,6 +2731,9 @@ export const deleteClassroomGroups = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -2856,6 +2780,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -2986,6 +2911,9 @@ export const createRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3018,6 +2946,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3148,6 +3077,9 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -3180,6 +3112,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3312,6 +3245,9 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -3324,10 +3260,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
   }
 `;
 export const createClass = /* GraphQL */ `
-  mutation CreateClass(
-    $input: CreateClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation CreateClass($input: CreateClassInput!, $condition: ModelClassConditionInput) {
     createClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -3379,6 +3312,7 @@ export const createClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3504,10 +3438,7 @@ export const createClass = /* GraphQL */ `
   }
 `;
 export const updateClass = /* GraphQL */ `
-  mutation UpdateClass(
-    $input: UpdateClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation UpdateClass($input: UpdateClassInput!, $condition: ModelClassConditionInput) {
     updateClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -3559,6 +3490,7 @@ export const updateClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3684,10 +3616,7 @@ export const updateClass = /* GraphQL */ `
   }
 `;
 export const deleteClass = /* GraphQL */ `
-  mutation DeleteClass(
-    $input: DeleteClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation DeleteClass($input: DeleteClassInput!, $condition: ModelClassConditionInput) {
     deleteClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -3739,6 +3668,7 @@ export const deleteClass = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -3909,6 +3839,7 @@ export const createClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -3963,6 +3894,9 @@ export const createClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4022,6 +3956,7 @@ export const updateClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -4076,6 +4011,9 @@ export const updateClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4135,6 +4073,7 @@ export const deleteClassStudent = /* GraphQL */ `
           teacherEmail
           name
           maxPersons
+          status
           filters
           location
           startDate
@@ -4189,6 +4128,9 @@ export const deleteClassStudent = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -4255,25 +4197,6 @@ export const createCurriculum = /* GraphQL */ `
         updatedAt
       }
       designers
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4355,25 +4278,6 @@ export const updateCurriculum = /* GraphQL */ `
         updatedAt
       }
       designers
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4455,25 +4359,6 @@ export const deleteCurriculum = /* GraphQL */ `
         updatedAt
       }
       designers
-      syllabi {
-        items {
-          id
-          name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          designers
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       universalSyllabusSeq
       checkpoints {
         items {
@@ -4503,10 +4388,7 @@ export const deleteCurriculum = /* GraphQL */ `
   }
 `;
 export const createTopic = /* GraphQL */ `
-  mutation CreateTopic(
-    $input: CreateTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation CreateTopic($input: CreateTopicInput!, $condition: ModelTopicConditionInput) {
     createTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -4541,9 +4423,6 @@ export const createTopic = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -4575,10 +4454,7 @@ export const createTopic = /* GraphQL */ `
   }
 `;
 export const updateTopic = /* GraphQL */ `
-  mutation UpdateTopic(
-    $input: UpdateTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation UpdateTopic($input: UpdateTopicInput!, $condition: ModelTopicConditionInput) {
     updateTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -4613,9 +4489,6 @@ export const updateTopic = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -4647,10 +4520,7 @@ export const updateTopic = /* GraphQL */ `
   }
 `;
 export const deleteTopic = /* GraphQL */ `
-  mutation DeleteTopic(
-    $input: DeleteTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation DeleteTopic($input: DeleteTopicInput!, $condition: ModelTopicConditionInput) {
     deleteTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -4685,9 +4555,6 @@ export const deleteTopic = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5000,9 +4867,6 @@ export const createRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5058,9 +4922,6 @@ export const updateRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5116,9 +4977,6 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5249,50 +5107,13 @@ export const deleteCheckpoint = /* GraphQL */ `
 export const createCommonCheckpoint = /* GraphQL */ `
   mutation CreateCommonCheckpoint(
     $input: CreateCommonCheckpointInput!
-    $condition: ModelcommonCheckpointConditionInput
+    $condition: ModelCommonCheckpointConditionInput
   ) {
     createCommonCheckpoint(input: $input, condition: $condition) {
       id
       type
       typeID
       checkpointID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
       curriculum {
         id
         institutionID
@@ -5323,9 +5144,6 @@ export const createCommonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5367,50 +5185,13 @@ export const createCommonCheckpoint = /* GraphQL */ `
 export const updateCommonCheckpoint = /* GraphQL */ `
   mutation UpdateCommonCheckpoint(
     $input: UpdateCommonCheckpointInput!
-    $condition: ModelcommonCheckpointConditionInput
+    $condition: ModelCommonCheckpointConditionInput
   ) {
     updateCommonCheckpoint(input: $input, condition: $condition) {
       id
       type
       typeID
       checkpointID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
       curriculum {
         id
         institutionID
@@ -5441,9 +5222,6 @@ export const updateCommonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5485,50 +5263,13 @@ export const updateCommonCheckpoint = /* GraphQL */ `
 export const deleteCommonCheckpoint = /* GraphQL */ `
   mutation DeleteCommonCheckpoint(
     $input: DeleteCommonCheckpointInput!
-    $condition: ModelcommonCheckpointConditionInput
+    $condition: ModelCommonCheckpointConditionInput
   ) {
     deleteCommonCheckpoint(input: $input, condition: $condition) {
       id
       type
       typeID
       checkpointID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
       curriculum {
         id
         institutionID
@@ -5559,9 +5300,6 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -5963,6 +5701,9 @@ export const createRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -6010,6 +5751,9 @@ export const updateRoomMsgs = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -6061,1194 +5805,15 @@ export const deleteRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
       }
-      updatedAt
-    }
-  }
-`;
-export const createLesson = /* GraphQL */ `
-  mutation CreateLesson(
-    $input: CreateLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    createLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      instructionsTitle
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      language
-      SELStructure
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      doFirstID
-      warmUpId
-      coreLessonId
-      activityId
-      filters
-      coverImage
-      summaryTitle
-      introductionTitle
-      introduction
-      connectionTitle
-      lessonPlan {
-        type
-        LessonComponentID
-        sequence
-        stage
-      }
-      measurements {
-        items {
-          id
-          lessonID
-          rubricID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institutionID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
-      duration
-      resources
-      notes
-      targetAudience
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLesson = /* GraphQL */ `
-  mutation UpdateLesson(
-    $input: UpdateLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    updateLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      instructionsTitle
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      language
-      SELStructure
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      doFirstID
-      warmUpId
-      coreLessonId
-      activityId
-      filters
-      coverImage
-      summaryTitle
-      introductionTitle
-      introduction
-      connectionTitle
-      lessonPlan {
-        type
-        LessonComponentID
-        sequence
-        stage
-      }
-      measurements {
-        items {
-          id
-          lessonID
-          rubricID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institutionID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
-      duration
-      resources
-      notes
-      targetAudience
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLesson = /* GraphQL */ `
-  mutation DeleteLesson(
-    $input: DeleteLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    deleteLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      instructionsTitle
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      language
-      SELStructure
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      doFirstID
-      warmUpId
-      coreLessonId
-      activityId
-      filters
-      coverImage
-      summaryTitle
-      introductionTitle
-      introduction
-      connectionTitle
-      lessonPlan {
-        type
-        LessonComponentID
-        sequence
-        stage
-      }
-      measurements {
-        items {
-          id
-          lessonID
-          rubricID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institutionID
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
-        setupComplete
-        createdAt
-        updatedAt
-      }
-      duration
-      resources
-      notes
-      targetAudience
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLessonRubrics = /* GraphQL */ `
-  mutation CreateLessonRubrics(
-    $input: CreateLessonRubricsInput!
-    $condition: ModelLessonRubricsConditionInput
-  ) {
-    createLessonRubrics(input: $input, condition: $condition) {
-      id
-      lessonID
-      rubricID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      rubric {
-        id
-        name
-        criteria
-        topicID
-        topic {
-          id
-          curriculumID
-          learningObjectiveID
-          name
-          description
-          distinguished
-          excelled
-          adequite
-          basic
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLessonRubrics = /* GraphQL */ `
-  mutation UpdateLessonRubrics(
-    $input: UpdateLessonRubricsInput!
-    $condition: ModelLessonRubricsConditionInput
-  ) {
-    updateLessonRubrics(input: $input, condition: $condition) {
-      id
-      lessonID
-      rubricID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      rubric {
-        id
-        name
-        criteria
-        topicID
-        topic {
-          id
-          curriculumID
-          learningObjectiveID
-          name
-          description
-          distinguished
-          excelled
-          adequite
-          basic
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLessonRubrics = /* GraphQL */ `
-  mutation DeleteLessonRubrics(
-    $input: DeleteLessonRubricsInput!
-    $condition: ModelLessonRubricsConditionInput
-  ) {
-    deleteLessonRubrics(input: $input, condition: $condition) {
-      id
-      lessonID
-      rubricID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      rubric {
-        id
-        name
-        criteria
-        topicID
-        topic {
-          id
-          curriculumID
-          learningObjectiveID
-          name
-          description
-          distinguished
-          excelled
-          adequite
-          basic
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSyllabus = /* GraphQL */ `
-  mutation CreateSyllabus(
-    $input: CreateSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    createSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSyllabus = /* GraphQL */ `
-  mutation UpdateSyllabus(
-    $input: UpdateSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    updateSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSyllabus = /* GraphQL */ `
-  mutation DeleteSyllabus(
-    $input: DeleteSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    deleteSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSyllabusLesson = /* GraphQL */ `
-  mutation CreateSyllabusLesson(
-    $input: CreateSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    createSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          syllabusLessonID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSyllabusLesson = /* GraphQL */ `
-  mutation UpdateSyllabusLesson(
-    $input: UpdateSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    updateSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          syllabusLessonID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSyllabusLesson = /* GraphQL */ `
-  mutation DeleteSyllabusLesson(
-    $input: DeleteSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    deleteSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          syllabusLessonID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
       updatedAt
     }
   }
@@ -7265,70 +5830,6 @@ export const createStudentData = /* GraphQL */ `
       status
       saveType
       syllabusLessonID
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       studentID
       studentAuthID
       student {
@@ -7358,57 +5859,14 @@ export const createStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
       }
       doFirstData {
         items {
@@ -7458,70 +5916,6 @@ export const updateStudentData = /* GraphQL */ `
       status
       saveType
       syllabusLessonID
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       studentID
       studentAuthID
       student {
@@ -7551,57 +5945,14 @@ export const updateStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
       }
       doFirstData {
         items {
@@ -7651,70 +6002,6 @@ export const deleteStudentData = /* GraphQL */ `
       status
       saveType
       syllabusLessonID
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       studentID
       studentAuthID
       student {
@@ -7744,57 +6031,14 @@ export const deleteStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
       }
       doFirstData {
         items {
@@ -7869,6 +6113,9 @@ export const createAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -7924,6 +6171,9 @@ export const updateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -7977,6 +6227,9 @@ export const deleteAnthologyComment = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -8035,6 +6288,9 @@ export const createQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -8047,71 +6303,8 @@ export const createQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8156,6 +6349,9 @@ export const updateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -8168,71 +6364,8 @@ export const updateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8277,6 +6410,9 @@ export const deleteQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -8289,71 +6425,8 @@ export const deleteQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        demographicsUpdated
         otherResponse
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8375,21 +6448,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         status
         saveType
         syllabusLessonID
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
         studentID
         studentAuthID
         student {
@@ -8421,18 +6479,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           addedby
           createdAt
           updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
         }
         doFirstData {
           nextToken
@@ -8497,22 +6543,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
-        }
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -8537,21 +6569,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         status
         saveType
         syllabusLessonID
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
         studentID
         studentAuthID
         student {
@@ -8583,18 +6600,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           addedby
           createdAt
           updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
         }
         doFirstData {
           nextToken
@@ -8659,22 +6664,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
-        }
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -8699,21 +6690,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         status
         saveType
         syllabusLessonID
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
         studentID
         studentAuthID
         student {
@@ -8745,18 +6721,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           addedby
           createdAt
           updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
         }
         doFirstData {
           nextToken
@@ -8821,22 +6785,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          demographicsUpdated
           otherResponse
-        }
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -8887,73 +6837,12 @@ export const createPersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
-        createdAt
-        updatedAt
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -8965,6 +6854,7 @@ export const createPersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -9116,73 +7006,12 @@ export const updatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
-        createdAt
-        updatedAt
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9194,6 +7023,7 @@ export const updatePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -9345,73 +7175,12 @@ export const deletePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
-        createdAt
-        updatedAt
-      }
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          instructionsTitle
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
-          introduction
-          connectionTitle
-          institutionID
-          duration
-          resources
-          notes
-          targetAudience
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        data {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9423,6 +7192,7 @@ export const deletePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -9533,201 +7303,6 @@ export const deletePersonLocation = /* GraphQL */ `
     }
   }
 `;
-export const createNoticeboardWidget = /* GraphQL */ `
-  mutation CreateNoticeboardWidget(
-    $input: CreateNoticeboardWidgetInput!
-    $condition: ModelNoticeboardWidgetConditionInput
-  ) {
-    createNoticeboardWidget(input: $input, condition: $condition) {
-      id
-      teacherAuthID
-      teacherEmail
-      roomID
-      type
-      placement
-      title
-      description
-      content {
-        text
-        image
-      }
-      quotes {
-        text
-        author
-      }
-      links {
-        text
-        url
-      }
-      active
-      teacher {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        addedby
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateNoticeboardWidget = /* GraphQL */ `
-  mutation UpdateNoticeboardWidget(
-    $input: UpdateNoticeboardWidgetInput!
-    $condition: ModelNoticeboardWidgetConditionInput
-  ) {
-    updateNoticeboardWidget(input: $input, condition: $condition) {
-      id
-      teacherAuthID
-      teacherEmail
-      roomID
-      type
-      placement
-      title
-      description
-      content {
-        text
-        image
-      }
-      quotes {
-        text
-        author
-      }
-      links {
-        text
-        url
-      }
-      active
-      teacher {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        addedby
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteNoticeboardWidget = /* GraphQL */ `
-  mutation DeleteNoticeboardWidget(
-    $input: DeleteNoticeboardWidgetInput!
-    $condition: ModelNoticeboardWidgetConditionInput
-  ) {
-    deleteNoticeboardWidget(input: $input, condition: $condition) {
-      id
-      teacherAuthID
-      teacherEmail
-      roomID
-      type
-      placement
-      title
-      description
-      content {
-        text
-        image
-      }
-      quotes {
-        text
-        author
-      }
-      links {
-        text
-        url
-      }
-      active
-      teacher {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        addedby
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createAttendance = /* GraphQL */ `
   mutation CreateAttendance(
     $input: CreateAttendanceInput!
@@ -9773,9 +7348,6 @@ export const createAttendance = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -9922,6 +7494,7 @@ export const createAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -10077,9 +7650,6 @@ export const updateAttendance = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -10226,6 +7796,7 @@ export const updateAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -10381,9 +7952,6 @@ export const deleteAttendance = /* GraphQL */ `
           updatedAt
         }
         designers
-        syllabi {
-          nextToken
-        }
         universalSyllabusSeq
         checkpoints {
           nextToken
@@ -10530,6 +8098,7 @@ export const deleteAttendance = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -10635,69 +8204,6 @@ export const deleteAttendance = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createPlanner = /* GraphQL */ `
-  mutation CreatePlanner(
-    $input: CreatePlannerInput!
-    $condition: ModelPlannerConditionInput
-  ) {
-    createPlanner(input: $input, condition: $condition) {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePlanner = /* GraphQL */ `
-  mutation UpdatePlanner(
-    $input: UpdatePlannerInput!
-    $condition: ModelPlannerConditionInput
-  ) {
-    updatePlanner(input: $input, condition: $condition) {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePlanner = /* GraphQL */ `
-  mutation DeletePlanner(
-    $input: DeletePlannerInput!
-    $condition: ModelPlannerConditionInput
-  ) {
-    deletePlanner(input: $input, condition: $condition) {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
       createdAt
       updatedAt
     }
@@ -11102,6 +8608,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11143,6 +8650,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11184,6 +8692,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11206,10 +8715,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: CreateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    createUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    createUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -11228,6 +8734,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11250,10 +8757,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: UpdateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    updateUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    updateUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -11272,6 +8776,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11294,10 +8799,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: DeleteUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    deleteUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    deleteUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -11316,6 +8818,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11357,6 +8860,7 @@ export const createUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11398,6 +8902,7 @@ export const updateUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11439,6 +8944,7 @@ export const deleteUniversalArchiveData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       hasExerciseData
       exerciseData {
@@ -11479,6 +8985,7 @@ export const createUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -11508,6 +9015,7 @@ export const updateUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -11537,7 +9045,566 @@ export const deleteUniversalSurveyStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+        hasTakenSurvey
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation CreateTemporaryUniversalUploadSurveyData(
+    $input: CreateTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    createTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation UpdateTemporaryUniversalUploadSurveyData(
+    $input: UpdateTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    updateTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
+  mutation DeleteTemporaryUniversalUploadSurveyData(
+    $input: DeleteTemporaryUniversalUploadSurveyDataInput!
+    $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
+  ) {
+    deleteTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      universalSurveyId
+      universalSurveyStudentData {
+        id
+        syllabusLessonID
+        lessonID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation CreateTemporaryDemographicsUploadData(
+    $input: CreateTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    createTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation UpdateTemporaryDemographicsUploadData(
+    $input: UpdateTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    updateTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTemporaryDemographicsUploadData = /* GraphQL */ `
+  mutation DeleteTemporaryDemographicsUploadData(
+    $input: DeleteTemporaryDemographicsUploadDataInput!
+    $condition: ModelTemporaryDemographicsUploadDataConditionInput
+  ) {
+    deleteTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+      id
+      updatedUserId
+      questionDataID
+      QuestionData {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          addedby
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      responseObject {
+        qid
+        response
+        demographicsUpdated
+        otherResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUploadLogs = /* GraphQL */ `
+  mutation CreateUploadLogs(
+    $input: CreateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    createUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUploadLogs = /* GraphQL */ `
+  mutation UpdateUploadLogs(
+    $input: UpdateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    updateUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUploadLogs = /* GraphQL */ `
+  mutation DeleteUploadLogs(
+    $input: DeleteUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    deleteUploadLogs(input: $input, condition: $condition) {
+      id
+      User_id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryUniversalUploadSurveyData {
+        id
+        updatedUserId
+        universalSurveyId
+        universalSurveyStudentData {
+          id
+          syllabusLessonID
+          lessonID
+          studentID
+          studentAuthID
+          studentEmail
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        createdAt
+        updatedAt
+      }
+      TemporaryDemographicsUploadDataID
+      TemporaryDemographicsUploadData {
+        id
+        updatedUserId
+        questionDataID
+        QuestionData {
+          id
+          syllabusLessonID
+          checkpointID
+          email
+          authID
+          componentType
+          scheduleID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        responseObject {
+          qid
+          response
+          demographicsUpdated
+          otherResponse
+        }
+        createdAt
+        updatedAt
+      }
+      UploadType
+      updateType
+      Date
+      Curricullum_id
+      Unit_id
+      lesson_id
+      Class_id
+      PaperSurveyURL
+      Reason
       createdAt
       updatedAt
     }
@@ -11870,7 +9937,7 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
 export const createCurriculumUnits = /* GraphQL */ `
   mutation CreateCurriculumUnits(
     $input: CreateCurriculumUnitsInput!
-    $condition: ModelcurriculumUnitsConditionInput
+    $condition: ModelCurriculumUnitsConditionInput
   ) {
     createCurriculumUnits(input: $input, condition: $condition) {
       id
@@ -11925,7 +9992,7 @@ export const createCurriculumUnits = /* GraphQL */ `
 export const updateCurriculumUnits = /* GraphQL */ `
   mutation UpdateCurriculumUnits(
     $input: UpdateCurriculumUnitsInput!
-    $condition: ModelcurriculumUnitsConditionInput
+    $condition: ModelCurriculumUnitsConditionInput
   ) {
     updateCurriculumUnits(input: $input, condition: $condition) {
       id
@@ -11980,7 +10047,7 @@ export const updateCurriculumUnits = /* GraphQL */ `
 export const deleteCurriculumUnits = /* GraphQL */ `
   mutation DeleteCurriculumUnits(
     $input: DeleteCurriculumUnitsInput!
-    $condition: ModelcurriculumUnitsConditionInput
+    $condition: ModelCurriculumUnitsConditionInput
   ) {
     deleteCurriculumUnits(input: $input, condition: $condition) {
       id
@@ -12141,18 +10208,6 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
           preferredName
           lastName
         }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
       }
       lessonPlan {
         id
@@ -12290,18 +10345,6 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
           preferredName
           lastName
         }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
       }
       lessonPlan {
         id
@@ -12438,18 +10481,6 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
           firstName
           preferredName
           lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
         }
       }
       lessonPlan {
@@ -12725,7 +10756,6 @@ export const createStudentConnections = /* GraphQL */ `
     $condition: ModelStudentConnectionsConditionInput
   ) {
     createStudentConnections(input: $input, condition: $condition) {
-      id
       fromEmail
       fromAuthID
       toEmail
@@ -12756,6 +10786,9 @@ export const createStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -12791,12 +10824,16 @@ export const createStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
       }
+      id
       createdAt
       updatedAt
     }
@@ -12808,7 +10845,6 @@ export const updateStudentConnections = /* GraphQL */ `
     $condition: ModelStudentConnectionsConditionInput
   ) {
     updateStudentConnections(input: $input, condition: $condition) {
-      id
       fromEmail
       fromAuthID
       toEmail
@@ -12839,6 +10875,9 @@ export const updateStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -12874,12 +10913,16 @@ export const updateStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
       }
+      id
       createdAt
       updatedAt
     }
@@ -12891,7 +10934,6 @@ export const deleteStudentConnections = /* GraphQL */ `
     $condition: ModelStudentConnectionsConditionInput
   ) {
     deleteStudentConnections(input: $input, condition: $condition) {
-      id
       fromEmail
       fromAuthID
       toEmail
@@ -12922,6 +10964,9 @@ export const deleteStudentConnections = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -12957,12 +11002,16 @@ export const deleteStudentConnections = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
         createdAt
         updatedAt
       }
+      id
       createdAt
       updatedAt
     }
@@ -13001,6 +11050,9 @@ export const createPersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -13053,6 +11105,9 @@ export const updatePersonSentiments = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -13101,6 +11156,9 @@ export const deletePersonSentiments = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -13195,6 +11253,9 @@ export const createSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -13218,6 +11279,7 @@ export const createSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -13433,6 +11495,9 @@ export const updateSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -13456,6 +11521,7 @@ export const updateSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -13671,6 +11737,9 @@ export const deleteSentimentTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -13694,6 +11763,7 @@ export const deleteSentimentTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -13910,6 +11980,9 @@ export const createFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -13933,6 +12006,7 @@ export const createFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -14039,76 +12113,6 @@ export const createFeelingTracker = /* GraphQL */ `
         updatedAt
       }
       lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
       date
       time
       sentimentName
@@ -14154,6 +12158,9 @@ export const updateFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -14177,6 +12184,7 @@ export const updateFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -14283,76 +12291,6 @@ export const updateFeelingTracker = /* GraphQL */ `
         updatedAt
       }
       lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
       date
       time
       sentimentName
@@ -14398,6 +12336,9 @@ export const deleteFeelingTracker = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -14421,6 +12362,7 @@ export const deleteFeelingTracker = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -14527,76 +12469,6 @@ export const deleteFeelingTracker = /* GraphQL */ `
         updatedAt
       }
       lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        language
-        SELStructure
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        doFirstID
-        warmUpId
-        coreLessonId
-        activityId
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
-        introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        duration
-        resources
-        notes
-        targetAudience
-        createdAt
-        updatedAt
-      }
       date
       time
       sentimentName
@@ -14642,6 +12514,9 @@ export const createFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -14668,6 +12543,7 @@ export const createFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -14905,6 +12781,9 @@ export const updateFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -14931,6 +12810,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -15168,6 +13048,9 @@ export const deleteFeelingsArchive = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -15194,6 +13077,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        status
         filters
         location
         startDate
@@ -15562,6 +13446,9 @@ export const createCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -15675,6 +13562,9 @@ export const updateCommunity = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -15786,6 +13676,9 @@ export const deleteCommunity = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser
@@ -15917,6 +13810,9 @@ export const createGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -15978,6 +13874,9 @@ export const updateGameChangerLog = /* GraphQL */ `
         classes {
           nextToken
         }
+        lessons {
+          nextToken
+        }
         spotlightUser
         spotlightDate
         addedby
@@ -16037,6 +13936,9 @@ export const deleteGameChangerLog = /* GraphQL */ `
         sentiments
         passcode
         classes {
+          nextToken
+        }
+        lessons {
           nextToken
         }
         spotlightUser

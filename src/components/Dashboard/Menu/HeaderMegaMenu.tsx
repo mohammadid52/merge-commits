@@ -141,8 +141,28 @@ const HeaderMegaMenu = () => {
     {
       title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
-      redirectionUrl: `${baseUrl}/research-and-analytics`,
-      active: location.pathname.indexOf('research-and-analytics') > -1,
+      type: 'dropdown',
+      children: [
+        {
+          key: 'download_csv',
+          redirectionUrl: `${baseUrl}/research-and-analytics`,
+          active: false,
+          title: Institute_info[userLanguage]['TABS']['DOWNLOAD_CSV'],
+        },
+
+        {
+          key: 'upload_csv',
+          redirectionUrl: `${baseUrl}/research-and-analytics/upload-csv`,
+          active: location.pathname.indexOf('research-and-analytics') > -1,
+          title: Institute_info[userLanguage]['TABS']['UPLOAD_CSV'],
+        },
+        // {
+        //   key: 'analytics_dashboard',
+        //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
+        //   active: location.pathname.indexOf('research-and-analytics') > -1,
+        //   title: Institute_info[userLanguage]['TABS']['ANALYTICS_DASHBOARD'],
+        // },
+      ],
     },
   ].filter(Boolean);
 

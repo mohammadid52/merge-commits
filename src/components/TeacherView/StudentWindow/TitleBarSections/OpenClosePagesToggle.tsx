@@ -25,7 +25,6 @@ const OpenClosePagesToggle = ({
 }: IOpenClosePagesToggle) => {
   return (
     <div className="w-1/3 flex justify-start h-8 align-middle leading-8 ">
-      <span className="mr-2 w-auto text-sm text-gray-600 font-bold">Workspace:</span>
       {/**
        *
        * TITLEBAR LESSON CONTROL

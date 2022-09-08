@@ -34,6 +34,11 @@ const UnitManager = ({
   syllabusIds,
   setSyllabusIds,
 }: any) => {
+  // console.log(
+  //   '🚀 ~ file: UnitManager.tsx ~ line 37 ~ courseData',
+  //   courseData,
+  //   syllabusIds
+  // );
   const history = useHistory();
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -193,7 +198,7 @@ const UnitManager = ({
           filter: {institutionID: {eq: institutionId}},
         })
       );
-      const savedData = result.data.listUniversalSyllabuss;
+      const savedData = result.data.listUniversalSyllabi;
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
       );

@@ -468,7 +468,7 @@ const Card = ({
             filter: {or: filterArray},
           })
         );
-        const persons = _res.data.listPersons.items;
+        const persons = _res.data.listPeople.items;
         orderedList = orderedList.map((d) => ({
           ...d,
           person: persons.find((p: any) => p.authId === d.personAuthID),

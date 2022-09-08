@@ -15,6 +15,7 @@ import RichTextEditor from '../../Atoms/RichTextEditor';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
 import SingleNote from './WrittenContentTab/SingleNote';
+import ReactHtmlParser from 'react-html-parser';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {
@@ -30,9 +31,16 @@ const WrittenContentTab = (props: ITabViewProps) => {
     content,
     allStudentData,
     setAllStudentData,
+    classNotebook,
     allUniversalJournalData,
     setAllUniversalJournalData,
+    allUniversalClassData,
+    setAllUniversalClassData,
   } = props;
+  console.log(
+    '🚀 ~ file: WrittenContentTab.tsx ~ line 40 ~ WrittenContentTab ~ allUniversalClassData',
+    allUniversalClassData
+  );
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -176,10 +184,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
-    console.log(
-      '🚀 ~ file: WrittenContentTab.tsx ~ line 179 ~ editModeView ~ contentObj',
-      contentObj.entryData
-    );
     const notesExist = contentObj.entryData[0].domID.includes('notes_form');
     const filtered = filter(
       contentObj?.entryData,
@@ -258,6 +262,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       </>
     );
   };
+  console.log(classNotebook);
 
   return (
     <>
@@ -320,6 +325,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
                 }
                 allUniversalJournalData={allUniversalJournalData}
                 setAllUniversalJournalData={setAllUniversalJournalData}
+                allUniversalClassData={allUniversalClassData}
+                setAllUniversalClassData={setAllUniversalClassData}
                 allStudentData={allStudentData}
                 setAllStudentData={setAllStudentData}
               />
@@ -327,11 +334,76 @@ const WrittenContentTab = (props: ITabViewProps) => {
           );
         })
       ) : (
-        <div className="p-12 flex flex-center items-center">
-          <p className="text-center text-lg text-gray-500">
-            No content for {subSection} section
-          </p>
-        </div>
+        <>
+          {subSection === 'Work' && allUniversalClassData.length > 0 ? (
+            <div className="work">
+              {allUniversalClassData.map((first: any) =>
+                first.pageData.map((three: any) => {
+                  return (
+                    <div
+                      dangerouslySetInnerHTML={{__html: three.input || '<p></p>'}}></div>
+                  );
+                })
+              )}
+            </div>
+          ) : (
+            subSection === 'Notes' &&
+            classNotebook.length > 0 && (
+              <div className="note">
+                {classNotebook.map((element: any) =>
+                  element.pageData.map((second: any) => {
+                    return (
+                      <div dangerouslySetInnerHTML={{__html: second.input || '<p></p>'}}>
+                        {/* {second.input ? ReactHtmlParser(second.input) : '<p></p>'} */}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )
+          )}
+          {/* 
+Where I’m from we live life in summer,
+We speak in family tongues about family through neighbors eyes
+Our dialects change through ever changing Barrios, Cuadras, y Casa ajenas
+Where I’m from la Lechuza, El Diablo, La Llorona all become curfews and
+there is no talks of American birds and bees
+Reputations follow like 14 year old backpacks
+on our 14 year old soldiers
+Where I’m from education is a thought as crazy as equality
+Tree branches are signs of disciplinary actions
+“Moms are Mami’s” “Tia’s are Titi’s”
+“Grandpa’s are Popo’s”
+“Fathers have always been gone,
+OYEME!
+Where I’m from Music is our narrator
+moving us like revolution once did
+Young developing flowers shaking and stepping to beats they don’t understand yet
+Perversion is an uncle not allowed near the kids, but always welcomed home
+Where I’m from the dinner table is time of conferences
+of who needs to go get a job?
+Who needs to go get some water?
+Or who just needs to go?!
+“Sana, sana culita de rana” is our doctor
+Where I’m from children carry sun like descriptive terms
+Neck dirt necklaces tell you when it’s time to go in along with,
+“OYE YA METE TE”!
+Where I’m from everyone is Christian and has a Catholic neighbor
+Love is what is allowed or how good young couples are at sneaking around
+Babies make babies and keep family close and machetes even closer
+Where I’m from my grandmother is beautiful
+Aunts and uncles are extended family and
+Everyone has the right to spank your butt, POM TOMA!
+Where I’m from, it’s yellow, green, and gold and it’s beautiful. */}
+
+          {allUniversalClassData.length === 0 && classNotebook.length === 0 && (
+            <div className="p-12 flex flex-center items-center">
+              <p className="text-center text-lg text-gray-500">
+                No content for {subSection} section
+              </p>
+            </div>
+          )}
+        </>
       )}
     </>
   );

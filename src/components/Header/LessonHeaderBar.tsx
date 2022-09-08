@@ -19,7 +19,9 @@ const LessonHeaderBar = ({
   setOverlay,
   isAtEnd,
   setisAtEnd,
+  createJournalData,
   handleRequiredNotification,
+  getLessonCompletedValue,
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -56,6 +58,32 @@ const LessonHeaderBar = ({
       setSafeToLeave(true);
     }
   };
+
+  const handleNotebookSave = () => {
+    console.log('🚀 ~ file: LessonHeaderBar.tsx ~ line 64 ~ handleNotebookSave');
+    if (leaveAfterCompletion) {
+      createJournalData();
+      setTimeout(() => {
+        history.push(`/dashboard/classroom/${getRoomData.id}`);
+      }, 1500);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getLessonCompletedValue().then((value: any) => {
+        if (value.lessonProgress === value.totalPages) {
+          setLeaveAfterCompletion(true);
+        } else {
+          setLeaveAfterCompletion(false);
+        }
+      });
+    }, 1300);
+
+    return () => {
+      clearTimeout();
+    };
+  }, [lessonState.currentPage]);
 
   useEffect(() => {
     if (!lessonState.updated) {
@@ -99,7 +127,7 @@ const LessonHeaderBar = ({
     } else {
       setLeaveModalVisible(true);
     }
-    setLeaveAfterCompletion(isLeavingAfterCompletion);
+    // setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
@@ -128,6 +156,7 @@ const LessonHeaderBar = ({
     : '';
   useEffect(() => {
     if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
+      console.log('I am running...');
       setVideoLink(thisPageVideoLink);
 
       if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
@@ -281,13 +310,19 @@ const LessonHeaderBar = ({
           setAlert={setLeaveModalVisible}
           header={
             leaveAfterCompletion
-              ? 'Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?'
+              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
-          button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
+          button1={`${
+            !waiting && leaveAfterCompletion
+              ? 'Move to notebook'
+              : !waiting
+              ? 'Go to the dashboard'
+              : 'Saving your data...'
+          }`}
           button2="Stay on lesson"
           svg="question"
-          handleButton1={handleManualSave}
+          handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
           handleButton2={handleLeavePopup}
           theme="dark"
           fill="screen"
@@ -295,7 +330,7 @@ const LessonHeaderBar = ({
       </div>
 
       {/* VIDEO POPUP */}
-      {!leaveModalVisible && (
+      {!leaveModalVisible && videoLink && (
         <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
           <Modal
             title={`Video for "${getPageLabel(lessonState.currentPage)}"`}

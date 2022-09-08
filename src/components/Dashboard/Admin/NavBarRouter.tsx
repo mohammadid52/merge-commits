@@ -18,6 +18,8 @@ import StaffBuilder from './Institutons/Listing/StaffBuilder';
 import Students from './Institutons/Students';
 import Registration from './UserManagement/Registration';
 import Csv from '../Csv/Csv';
+import UploadCsv from '../Csv/UploadCSV';
+import AnalyticsDashboard from '../Csv/AnalyticsDashboard';
 import AddProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
 import ProfileCheckpointlookup from './Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
 import EditProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
@@ -93,6 +95,16 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/research-and-analytics`}
         exact
         render={() => <Csv institutionId={institute?.id} />}
+      />
+      <Route
+        path={`${match.url}/research-and-analytics/upload-csv`}
+        exact
+        render={() => <UploadCsv institutionId={institute?.id} />}
+      />
+      <Route
+        path={`${match.url}/research-and-analytics/analytics-dashboard`}
+        exact
+        render={() => <AnalyticsDashboard institutionId={institute?.id} />}
       />
       <Route
         path={`${match.url}/staff`}

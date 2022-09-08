@@ -139,7 +139,7 @@ const InstitutionLookup: React.FC = () => {
         },
       })
     );
-    let userInstitutes: any = fetchInstitutionData.data?.listStaffs?.items;
+    let userInstitutes: any = fetchInstitutionData.data?.listStaff?.items;
     return userInstitutes
       .filter((inst: any) => inst.institution)
       .map((inst: any) => inst.institution);

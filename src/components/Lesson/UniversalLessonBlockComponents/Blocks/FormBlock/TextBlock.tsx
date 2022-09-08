@@ -4,10 +4,11 @@ import useInLessonCheck from '@customHooks/checkIfInLesson';
 import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
+
   const {
     state: {
       user,
@@ -33,7 +34,10 @@ const TextBlock = (props: IFormBlockProps) => {
   };
 
   return (
-    <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
+    <div
+      id={id}
+      key={id}
+      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
       <label className={`text-sm ${themeTextColor}`} htmlFor="label">
         {numbered && index} {label} <RequiredMark isRequired={required} />
       </label>

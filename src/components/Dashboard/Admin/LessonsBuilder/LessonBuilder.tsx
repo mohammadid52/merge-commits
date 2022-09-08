@@ -150,7 +150,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           filter: {institutionID: {eq: institutionID}},
         })
       );
-      const listStaffs = staffList.data.listStaffs;
+      const listStaffs = staffList.data.listStaff;
       const updatedList = listStaffs?.items.map((item: any) => ({
         id: item?.id,
         name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
@@ -521,28 +521,28 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setUpdating(true);
       const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
-      if (newRubrics?.length) {
-        await API.graphql(
-          graphqlOperation(mutations.batchAddLessonRubrics, {
-            lessonRubrics: newRubrics.map((rubric: any) => ({
-              lessonID: lessonId,
-              rubricID: rubric.rubricID,
-            })),
-          })
-        );
-      }
+      // if (newRubrics?.length) {
+      //   await API.graphql(
+      //     graphqlOperation(mutations.batchAddLessonRubrics, {
+      //       lessonRubrics: newRubrics.map((rubric: any) => ({
+      //         lessonID: lessonId,
+      //         rubricID: rubric.rubricID,
+      //       })),
+      //     })
+      //   );
+      // }
       const rubricsToBeRemoved = rubrics.filter(
         (rubric: any) => rubric.id && !rubric.checked
       );
-      if (rubricsToBeRemoved?.length) {
-        await API.graphql(
-          graphqlOperation(mutations.batchDeleteLessonRubrics, {
-            lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
-              id: rubric.id,
-            })),
-          })
-        );
-      }
+      // if (rubricsToBeRemoved?.length) {
+      //   await API.graphql(
+      //     graphqlOperation(mutations.batchDeleteLessonRubrics, {
+      //       lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
+      //         id: rubric.id,
+      //       })),
+      //     })
+      //   );
+      // }
       setServerMessage({
         isError: false,
         message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
@@ -662,18 +662,18 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const fetchLessonRubrics = async () => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonRubricss, {
-          filter: {
-            lessonID: {eq: lessonId},
-          },
-        })
-      );
-      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-        ...rubric,
-        checked: true,
-      }));
-      setSelectedMeasurements(rubricList);
+      // const result: any = await API.graphql(
+      //   graphqlOperation(customQueries.listLessonRubricss, {
+      //     filter: {
+      //       lessonID: {eq: lessonId},
+      //     },
+      //   })
+      // );
+      // const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
+      //   ...rubric,
+      //   checked: true,
+      // }));
+      // setSelectedMeasurements(rubricList);
     } catch (error) {}
   };
 

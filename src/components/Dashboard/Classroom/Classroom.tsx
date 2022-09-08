@@ -6,6 +6,7 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -70,6 +71,9 @@ export interface Lesson {
 export interface LessonProps extends DashboardProps {
   lessons: Lesson[];
   syllabus?: any;
+  handleLessonMutationRating: (lessonID: string, ratingValue: string) => void;
+  getLessonRating: (lessonId: string, userEmail: string, userAuthId: string) => any;
+  getLessonByType: (type: string, lessonID: string) => any;
 }
 
 export interface LessonCardProps {
@@ -82,9 +86,14 @@ export interface LessonCardProps {
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
+  pageNumber?: number;
+  handleLessonMutationRating?: (lessonID: string, ratingValue: string) => void;
+  getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
+  getLessonByType?: (type: string, lessonID: string) => any;
   roomID?: string;
   getImageFromS3?: boolean;
   preview?: boolean;
+  user?: any;
 }
 
 const range = (from: number, to: number, step: number = 1) => {
@@ -112,6 +121,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     syllabusLoading,
     handleRoomSelection,
   } = props;
+
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //
@@ -346,6 +356,67 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     },
   ];
 
+  const getLessonRating = async (
+    lessonId: string,
+    userEmail: string,
+    userAuthId: string
+  ) => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonId,
+          studentEmail: userEmail,
+          studentAuthId: userAuthId,
+        })
+      );
+
+      const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      const totalPages = JSON.parse(pageNumber).totalPages;
+      return {
+        ratingValue,
+        currentPage,
+        lessonProgress,
+        totalPages,
+      };
+    } catch (error) {}
+  };
+
+  const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {
+    try {
+      await API.graphql(
+        graphqlOperation(mutations.updatePersonLessonsData, {
+          input: {
+            lessonID: lessonID,
+            ratings: ratingValue,
+          },
+        })
+      );
+    } catch (error) {}
+  };
+
+  const getLessonByType = async (type: string, lessonID: string) => {
+    try {
+      const getLessonByType: any = await API.graphql(
+        graphqlOperation(queries.lessonsByType, {
+          lessonType: type,
+          filter: {lessonID: {eq: lessonID}},
+        })
+      );
+      const pageNumber = getLessonByType.data.lessonsByType.items[0].pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      const totalPages = JSON.parse(pageNumber).totalPages;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      return {
+        lessonProgress,
+        currentPage,
+        totalPages,
+      };
+    } catch (error) {}
+  };
+
   return (
     <>
       <DashboardContainer
@@ -439,6 +510,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       lessonLoading={lessonLoading || settingLessons || syllabusLoading}
                       lessons={lessonData}
                       syllabus={syllabusData}
+                      handleLessonMutationRating={handleLessonMutationRating}
+                      getLessonRating={getLessonRating}
+                      getLessonByType={getLessonByType}
                     />
                   </div>
                 </div>

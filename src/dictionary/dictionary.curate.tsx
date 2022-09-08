@@ -672,7 +672,7 @@ const classRoomDict: any = {
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     LESSON_SUB_TITLE_ASYNC:
-      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
+      'You are currently following lessons "self-paced", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -713,7 +713,7 @@ const classRoomDict: any = {
     LESSON_TITLE: 'TBD',
     LESSON_SUB_TITLE: 'TBD',
     LESSON_SUB_TITLE_ASYNC:
-      'You are currently following lessons "on-demand", which means that you can enter any lesson at any time',
+      'You are currently following lessons "self-paced", which means that you can enter any lesson at any time',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -922,6 +922,8 @@ const Institute_info: any = {
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lesson Manager',
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
+      DOWNLOAD_CSV: 'Download CSV',
+      UPLOAD_CSV: 'Upload CSV',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
@@ -1547,6 +1549,10 @@ const RoomBuilderdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
     CURRICULUM_PLACEHOLDER: 'Select Course',
+    INSTITUTION_LABEL: 'Institution',
+    INSTITUTION_PLACEHOLDER: 'Select Institution',
+    STATUS_LABEL: 'Status',
+    STATUS_PLACEHOLDER: 'Select Status',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     BUTTON: {
@@ -1704,6 +1710,10 @@ const RoomEDITdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
     CURRICULUM_PLACEHOLDER: 'Select Course',
+    INSTITUTION_LABEL: 'Institution',
+    INSTITUTION_PLACEHOLDER: 'Select Institution',
+    STATUS_LABEL: 'Status',
+    STATUS_PLACEHOLDER: 'Select Status',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     CONFERENCE_CALL_LINK_LABEL: 'Conference link',
@@ -2787,7 +2797,7 @@ const UserEditDict: any = {
       save: 'Save',
       cancel: 'Cancel',
     },
-    ondemand: 'On-Demand',
+    ondemand: 'Self-Paced',
     SUPER_ADMIN: 'Super Admin',
   },
   ES: {
@@ -2818,7 +2828,7 @@ const UserInformationDict: any = {
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
-    ondemand: 'On-Demand',
+    ondemand: 'Self-Paced',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',

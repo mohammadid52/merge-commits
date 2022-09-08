@@ -10,6 +10,7 @@ import {useHistory, NavLink} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import axios from 'axios';
+import {setLocalStorageData} from 'utilities/localStorage';
 
 import * as queries from '../../graphql/queries';
 import * as customQueries from '../../customGraphql/customQueries';
@@ -99,9 +100,10 @@ const Login = ({updateAuthState}: LoginProps) => {
             role: userInfo.role,
             image: userInfo.image,
             associateInstitute:
-              instInfo?.data?.listStaffs?.items.filter((item: any) => item.institution) ||
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
+            lessons: userInfo.lessons,
           },
         });
         const input = {
@@ -331,6 +333,7 @@ const Login = ({updateAuthState}: LoginProps) => {
   };
 
   useEffect(() => {
+    setLocalStorageData('lessonPayload', []);
     checkLoginCred();
   }, []);
 

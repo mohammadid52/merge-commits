@@ -75,7 +75,7 @@ export const FormBlock = ({
   // ##################################################################### //
 
   const isStudent = user.role === 'ST';
-  const isInLesson = useInLessonCheck();
+  const isInLesson = isStudent ? useInLessonCheck() : false;
 
   useEffect(() => {
     if (PAGES) {
@@ -225,6 +225,7 @@ export const FormBlock = ({
             value={isInLesson ? getValue(inputID) : value}
           />
         );
+
       case FORM_TYPES.WRITING_EXERCISE:
       case `${FORM_TYPES.WRITING_EXERCISE}-content`:
         return (
@@ -233,7 +234,7 @@ export const FormBlock = ({
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'
-            } rounded-md`}>
+            } p-4 rounded-2xl bg-component-dark`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
               value={isInLesson ? getValue(inputID) : value}
@@ -251,7 +252,7 @@ export const FormBlock = ({
 
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`border-0 border-gray-700  rounded-md`}>
+          <div className={`border-0 border-gray-700  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
               value={isInLesson ? getValue(inputID) : value}

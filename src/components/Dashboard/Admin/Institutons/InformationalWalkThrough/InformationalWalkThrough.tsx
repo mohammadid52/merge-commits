@@ -587,7 +587,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         try {
           if (instId) {
             const result: any = await API.graphql(
-              graphqlOperation(queries.listStaffs, {
+              graphqlOperation(queries.listStaff, {
                 filter: {
                   or: [
                     {
@@ -601,7 +601,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               redirectToSelectedSection(redirectionUrl, replaceObject);
             }
             return {
-              staff: result.data.listStaffs.items.filter(
+              staff: result.data.listStaff.items.filter(
                 (member: any) => member.staffMember.role === 'TR'
               ),
             };
@@ -737,13 +737,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         try {
           if (instId) {
             let universalSyllabus: any = await API.graphql(
-              graphqlOperation(queries.listUniversalSyllabuss, {
+              graphqlOperation(queries.listUniversalSyllabi, {
                 filter: {
                   institutionID: {eq: instId},
                 },
               })
             );
-            universalSyllabus = universalSyllabus?.data?.listUniversalSyllabuss?.items;
+            universalSyllabus = universalSyllabus?.data?.listUniversalSyllabi?.items;
             if (redirectionUrl) {
               if (universalSyllabus?.length) {
                 redirectToSelectedSection(redirectionUrl, {
@@ -919,12 +919,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 lessonID: {eq: lesson.id},
               })),
             };
-            const result: any = await API.graphql(
-              graphqlOperation(customQueries.listLessonRubricss, {
-                filter,
-                limit: 1,
-              })
-            );
+            // const result: any = await API.graphql(
+            //   graphqlOperation(customQueries.listLessonRubricss, {
+            //     filter,
+            //     limit: 1,
+            //   })
+            // );
             if (universalLessonsList.length) {
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
@@ -934,7 +934,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
             }
             return {
-              lessonRubrics: result?.data?.listLessonRubricss?.items,
+              // lessonRubrics: result?.data?.listLessonRubricss?.items,
               universalLessons: universalLessonsList,
             };
           }

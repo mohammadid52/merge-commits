@@ -31,12 +31,20 @@ const useLessonControls = () => {
     }
   };
 
+  const getPageID = (locationIndex: string, lessonPlan: any) => {
+    if (lessonPlan) {
+      return lessonPlan[parseInt(locationIndex)]?.id;
+    }
+  };
+
   // ~~~~~~~~~~~~ SHARING STATUS ~~~~~~~~~~~ //
 
   const viewedStudent = lessonState?.studentViewing;
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
   const resetViewAndShare = async () => {
+    console.log('resetViewAndShare');
+
     if (viewedStudent !== '' || sharedStudent !== '') {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -63,6 +71,9 @@ const useLessonControls = () => {
   return {
     handleRoomUpdate: handleRoomUpdate,
     resetViewAndShare: resetViewAndShare,
+    viewedStudent,
+    sharedStudent,
+    getPageID,
   };
 };
 

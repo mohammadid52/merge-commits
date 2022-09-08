@@ -4,7 +4,7 @@ import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {getLocalStorageData} from '../utilities/localStorage';
-import {partInput} from 'API';
+import {PartInput} from 'API';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
@@ -43,9 +43,13 @@ const useStudentTimer = () => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [savePending, setSavePending] = useState<boolean>(false);
 
+  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
+  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 4000;
+  const STANDARD_INTERVAL = 1500;
+  const SURVEY_INTERVAL = 100;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -63,16 +67,29 @@ const useStudentTimer = () => {
           }, VIEWED_INTERVAL)
         );
       } else {
-        setactivityTimeout(
-          setTimeout(() => {
-            lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
-            console.log(
-              '%c standard save: ',
-              'background: #BEFAB5; color: #1E156F',
-              'saved'
-            );
-          }, STANDARD_INTERVAL)
-        );
+        if (isSurvey) {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, SURVEY_INTERVAL)
+          );
+        } else {
+          setactivityTimeout(
+            setTimeout(() => {
+              lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
+              console.log(
+                '%c standard save: ',
+                'background: #BEFAB5; color: #1E156F',
+                'saved'
+              );
+            }, STANDARD_INTERVAL)
+          );
+        }
       }
     }
   }, [lessonState.studentData]);
@@ -82,9 +99,6 @@ const useStudentTimer = () => {
   // ##################################################################### //
 
   const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
-
-  // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   useEffect(() => {
     if (currentSaveCount < lessonState.saveCount) {
@@ -166,9 +180,15 @@ const useStudentTimer = () => {
       lessonState?.studentData.length > 0 &&
       lessonState?.studentData
     ) {
+      const surveyData = lessonState?.studentData.map((pageData: any) => {
+        return {
+          domID: pageData.domID,
+          input: pageData.input,
+        };
+      });
       let data = {
         id: lessonState?.universalStudentDataID[0]?.id,
-        surveyData: lessonState?.studentData,
+        surveyData,
         roomID: getRoomData.id,
       };
 

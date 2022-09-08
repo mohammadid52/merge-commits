@@ -39,7 +39,9 @@ export interface ULBSelectionProps {
     inputObj?: any,
     addBlockAtPosition?: number,
     classString?: string,
-    customPageContentId?: string
+    customPageContentId?: string,
+    pageContentIdx?: number,
+    partContentIdx?: number
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -107,7 +109,9 @@ export interface IContentTypeComponentProps {
     inputValue: any,
     addBlockAtPosition?: number,
     classString?: string,
-    customPageContentId?: string
+    customPageContentId?: string,
+    pageContentIdx?: number,
+    partContentIdx?: number
   ) => any;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
 

@@ -9,6 +9,7 @@ import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
 import {
+  UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData,
 } from '../../../interfaces/UniversalLessonInterfaces';
@@ -47,13 +48,17 @@ export interface ITabViewProps extends ITabParentProps {
   handleEditUpdate?: (e: any) => void;
   updateJournalContent?: (html: string, targetType: string, idx?: number) => void;
   createTemplate?: any;
-  currentContentObj?: UniversalJournalData;
-  content?: UniversalJournalData[];
+  currentContentObj?: UniversalJournalData | UniversalClassData;
+  content?: UniversalJournalData[] | UniversalClassData[];
   allStudentData?: UniversalLessonStudentData[];
   setAllStudentData?: any;
   allExerciseData?: any[];
   allUniversalJournalData?: UniversalJournalData[];
+  allUniversalClassData?: UniversalClassData[];
+  classNotebook?: any;
+  setClassNotebook?: any;
   setAllUniversalJournalData?: any;
+  setAllUniversalClassData?: any;
 }
 
 const TabView = ({
@@ -74,6 +79,10 @@ const TabView = ({
   allExerciseData,
   allUniversalJournalData,
   setAllUniversalJournalData,
+  classNotebook,
+  setClassNotebook,
+  allUniversalClassData,
+  setAllUniversalClassData,
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -107,10 +116,30 @@ const TabView = ({
         )
       : [];
 
+  const filteredClassContent =
+    allUniversalClassData?.length > 0
+      ? allUniversalClassData.reduce(
+          (acc: UniversalClassData[], data: UniversalClassData) => {
+            if (subSection === 'work') {
+              return [...acc, data];
+            } else if (
+              subSection === ' Note' &&
+              data.type === 'Class Note' &&
+              data.roomID === sectionRoomID
+            ) {
+              return [...acc, data];
+            } else {
+              return acc;
+            }
+          },
+          []
+        )
+      : [];
+
   const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
-      if (subSection !== 'Work') {
-        return filteredJournalContent;
+      if (subSection == 'class Work') {
+        return filteredClassContent;
       } else {
         return allExerciseData;
       }
@@ -133,10 +162,13 @@ const TabView = ({
       createTemplate={createTemplate}
       currentContentObj={currentContentObj}
       content={pickClassContent()}
+      classNotebook={classNotebook}
       allUniversalJournalData={allUniversalJournalData}
       setAllUniversalJournalData={setAllUniversalJournalData}
       allStudentData={allStudentData}
       setAllStudentData={setAllStudentData}
+      allUniversalClassData={allUniversalClassData}
+      setAllUniversalClassData={setAllUniversalClassData}
     />
   );
   // ~~~~~~~~~~~~~~~~~ TABS ~~~~~~~~~~~~~~~~ //

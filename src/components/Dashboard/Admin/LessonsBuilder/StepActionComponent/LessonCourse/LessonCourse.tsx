@@ -65,6 +65,7 @@ const LessonCourse = ({
   const [units, setUnits] = useState<any>([]);
   const [unitInput, setUnitInput] = useState<any>({});
   const [assignedUnits, setAssignedUnits] = useState<any>([]);
+
   const [deleting, setDeleting] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
@@ -99,7 +100,7 @@ const LessonCourse = ({
       let selectedSyllabus: any = [];
       addedSyllabus.map((item) => {
         selectedSyllabus.push({
-          ...result.data?.listUniversalSyllabuss.items.find(
+          ...result.data?.listUniversalSyllabi.items.find(
             (unit: any) => item?.syllabusID === unit?.id
           ),
           id: item?.id,
@@ -108,12 +109,37 @@ const LessonCourse = ({
       });
       const addedSyllabusIds = addedSyllabus.map((item) => item.syllabusID);
       setUnits(
-        result.data?.listUniversalSyllabuss.items.filter(
+        result.data?.listUniversalSyllabi.items.filter(
           (unit: any) => !addedSyllabusIds.includes(unit?.id)
         )
       );
-      setAssignedUnits(selectedSyllabus);
-      setAllUnits(result.data?.listUniversalSyllabuss.items);
+
+      const updatedList = selectedSyllabus
+        ?.filter((item: any) => item.lessons.items.length > 0)
+
+        .map((item: any) => {
+          return {
+            ...item,
+            lessons: {
+              ...(item.lessons || {}),
+              items: item.lessons?.items
+                .map((lesson: any) => {
+                  if (lesson?.lesson?.id) {
+                    const idx = item?.universalLessonsSeq?.indexOf(lesson?.id);
+
+                    return {
+                      ...lesson,
+                      index: idx,
+                    };
+                  }
+                })
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+            },
+          };
+        });
+
+      setAssignedUnits(updatedList);
+      setAllUnits(result.data?.listUniversalSyllabi.items);
       setAssignedUnitsLoading(false);
     } catch (error) {
       setAssignedUnitsLoading(false);

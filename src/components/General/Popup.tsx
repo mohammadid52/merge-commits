@@ -15,6 +15,7 @@ export interface WritingAlertProps {
   button1Color?: string;
   button2?: string;
   button2Color?: string;
+  id?: string;
   svg?: string;
   theme?: 'dark' | 'light';
   fill?: 'screen' | 'section';
@@ -39,6 +40,7 @@ const PosAlert = (props: WritingAlertProps) => {
     theme,
     fill,
     disableButton,
+    id,
   } = props;
   const {visible, setVisible, ref} = useOutsideAlerter(false);
 
@@ -176,6 +178,7 @@ const PosAlert = (props: WritingAlertProps) => {
   return (
     <>
       <div
+        id={id}
         className={`${!alert ? 'hidden' : 'display'} ${
           fill === 'screen' ? 'fixed' : ''
         } z-100 w-full h-full flex justify-center items-center bg-black bg-opacity-50`}>

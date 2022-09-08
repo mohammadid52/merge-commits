@@ -214,29 +214,28 @@ const GeneralInformation = (props: GeneralInformationProps) => {
 
   const fetchRubricsList = async () => {
     try {
-      const [results, topics]: any = await Promise.all([
-        await API.graphql(
-          graphqlOperation(customQueries.listLessonRubricss, {
-            filter: {
-              lessonID: {eq: lessonId},
-            },
-          })
-        ),
-        await API.graphql(graphqlOperation(customQueries.listTopics)),
-      ]);
-
-      const topicsList = topics.data?.listTopics?.items;
-      const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
-        return {
-          id: item.id,
-          rubricID: item.rubricID,
-          measurement: item?.rubric?.name,
-          topic:
-            topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
-          curriculumId: item?.rubric?.curriculumID,
-        };
-      });
-      setLessonMeasurements([...lessonRubrics]);
+      // const [results, topics]: any = await Promise.all([
+      //   await API.graphql(
+      //     graphqlOperation(customQueries.listLessonRubricss, {
+      //       filter: {
+      //         lessonID: {eq: lessonId},
+      //       },
+      //     })
+      //   ),
+      //   await API.graphql(graphqlOperation(customQueries.listTopics)),
+      // ]);
+      // const topicsList = topics.data?.listTopics?.items;
+      // const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
+      //   return {
+      //     id: item.id,
+      //     rubricID: item.rubricID,
+      //     measurement: item?.rubric?.name,
+      //     topic:
+      //       topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
+      //     curriculumId: item?.rubric?.curriculumID,
+      //   };
+      // });
+      // setLessonMeasurements([...lessonRubrics]);
     } catch {
       setValidation({
         name: '',

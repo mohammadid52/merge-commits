@@ -1,34 +1,68 @@
 import useStudentDataValue from '@customHooks/studentDataValue';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import WritingExerciseEditor from './WritingExerciseEditor';
+import {EditorState, Modifier} from 'draft-js';
+import WritingBlock from './WritingBlock';
+import {isEmpty} from 'lodash';
 
 interface EditingBlockProps {
   id?: string;
   setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
-  poemWriting?: string;
-  fields?: {poemHtml: string; poemText: string};
+  inputID?: string;
+  value?: string;
+  options?: any;
 }
 
-const EditingBlock = ({id, poemWriting, fields, setFields}: EditingBlockProps) => {
+const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
+  const initialState = () => EditorState.createEmpty();
+  const [editorState, setEditorState] = useState(initialState);
+
+  const sendTextToEditor = (text: string, cb?: any) => {
+    setEditorState(insertText(text, editorState));
+    if (cb) {
+      cb();
+    }
+  };
+
   const {setDataValue} = useStudentDataValue();
 
-  const onChange = (e: any) => {
-    setDataValue(id, [e.target.value]);
-    setFields({...fields, poemText: e.target.value});
+  const onChangeCallback = (html: string, text: string) => {
+    setDataValue(inputID, [html]);
+  };
+
+  // useEffect(() => {
+  //   if (!isEmpty(value)) {
+  //     sendTextToEditor(value);
+  //   }
+  // }, []);
+
+  const insertText = (text: string, editorValue: any) => {
+    const currentContent = editorValue.getCurrentContent();
+    const currentSelection = editorValue.getSelection();
+
+    const newContent = Modifier.replaceText(currentContent, currentSelection, text);
+
+    const newEditorState = EditorState.push(editorValue, newContent, 'insert-characters');
+    return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <div className={`w-full h-full rounded-xl text-black`}>
-        <textarea
-          id={id}
-          className={`editingBlock w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
-          name="story"
-          onChange={onChange}
-          value={poemWriting}
-          rows={3}
-          cols={250}
-        />
+    <div className="relative flex flex-col justify-between items-center ">
+      <div className="relative">
+        {options ? (
+          <WritingBlock
+            id={inputID}
+            sendTextToEditor={sendTextToEditor}
+            linestarters={options}
+          />
+        ) : null}
       </div>
+      <WritingExerciseEditor
+        initialValue={value}
+        onChangeCallback={onChangeCallback}
+        editorState={editorState}
+        setEditorState={setEditorState}
+      />
     </div>
   );
 };

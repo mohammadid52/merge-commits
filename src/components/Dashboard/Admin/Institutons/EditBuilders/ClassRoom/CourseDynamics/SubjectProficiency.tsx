@@ -11,7 +11,7 @@ import Loader from '../../../../../../Atoms/Loader';
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
-import { GlobalContext } from '@contexts/GlobalContext';
+import {GlobalContext} from '@contexts/GlobalContext';
 
 interface ISubjectProficiencyProps {
   roomData: any;
@@ -54,7 +54,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
           },
         })
       );
-      setClassRoomGroups(list?.data?.listClassroomGroupss.items);
+      setClassRoomGroups(list?.data?.listClassroomGroups.items);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -131,7 +131,9 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
 
   const redirectToUserPage = (studentId: string) => {
     history.push(
-      isSuperAdmin ? `/dashboard/manage-institutions/users/${studentId}` : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/users/${studentId}`
+        : `/dashboard/manage-institutions/institution/${roomData.institutionID}/users/${studentId}`
     );
   };
 

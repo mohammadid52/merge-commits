@@ -31,6 +31,24 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const match = useRouteMatch();
   const {roomId}: any = useParams();
 
+  const StatusList = [
+    {
+      id: 1,
+      name: 'ACTIVE',
+      value: 'ACTIVE',
+    },
+    {
+      id: 2,
+      name: 'INACTIVE',
+      value: 'INACTIVE',
+    },
+    {
+      id: 3,
+      name: 'TRAINING',
+      value: 'TRAINING',
+    },
+  ];
+
   const initialData = {
     id: '',
     name: '',
@@ -40,6 +58,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     classRoom: {id: '', name: '', value: ''},
     curricular: {id: '', name: '', value: ''},
     maxPersons: '',
+    status: '',
     conferenceCallLink: '',
     location: '',
   };
@@ -60,6 +79,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [selectedCoTeachers, setSelectedCoTeachers] = useState<
     {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
+  const [AllInstitutions, setAllInstitutions] = useState([]);
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -76,6 +96,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
   useEffect(() => {
     setIsMounted(true);
+    listInstitutions(undefined, []);
   }, []);
 
   const onModalSave = () => {
@@ -88,6 +109,34 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...warnModal,
       show: !warnModal.show,
     });
+  };
+
+  const listInstitutions = async (nextToken: string, outArray: any[]): Promise<any> => {
+    let combined;
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listInstitutions, {
+          nextToken: nextToken,
+        })
+      );
+      let returnedData = result.data.listInstitutions?.items;
+      let NextToken = result.data.listInstitutions?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await listInstitutions(NextToken, combined);
+      }
+
+      setAllInstitutions(combined);
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listInstitutions ~ error',
+        error
+      );
+    }
   };
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -148,6 +197,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     removeErrorMsg();
   };
 
+  const selectStatus = (val: string) => {
+    setRoomData({
+      ...roomData,
+      status: val,
+    });
+    setUnsavedChanges(true);
+
+    removeErrorMsg();
+  };
+
   const removeErrorMsg = () => {
     if (messages.show) {
       setMessages({
@@ -189,11 +248,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
       // if (!isMounted) {
       //   return;
       // }
@@ -293,14 +352,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurriculums, {
+        graphqlOperation(queries.listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
       // if (!isMounted) {
       //   return;
       // }
-      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
+      const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
       const curricularList = sortedList.map((item: any, i: any) => ({
@@ -512,7 +571,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         if (roomData.id) {
           const input = {
             id: roomData.id,
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             classID: roomData.classRoom.id,
             teacherAuthID: teachersList.find(
               (item: any) => item.id === roomData.teacher.id
@@ -522,6 +581,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: roomData.maxPersons,
+            status: roomData.status || 'ACTIVE',
             location: roomData.location,
             conferenceCallLink: roomData.conferenceCallLink,
           };
@@ -546,7 +606,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           // );
         } else {
           const input = {
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             activeSyllabus: roomData.curricular.id
               ? await getFirstSyllabus(roomData.curricular.id)
               : '',
@@ -559,6 +619,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: 0,
+            status: roomData.status || 'ACTIVE',
           };
 
           const newRoom: any = await API.graphql(
@@ -567,7 +628,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const roomId = newRoom.data.createRoom.id;
           const classInput = {
             name: roomData.name,
-            institutionID: instId,
+            institutionID: roomData.institute.id,
             roomId,
           };
           const newClass: any = await API.graphql(
@@ -678,6 +739,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
+          console.log('called from ClassRoomForm.tsx');
+
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
@@ -732,6 +795,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             // ***** UNCOMMENT THIS ******
             // coTeachers: savedData.coTeachers,
             maxPersons: savedData.maxPersons,
+            status: savedData.status,
             location: savedData.location,
             conferenceCallLink: savedData.conferenceCallLink,
           });
@@ -791,11 +855,23 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     curricular,
     classRoom,
     maxPersons,
-    // institute,
+    institute,
     teacher,
+    status,
     conferenceCallLink,
     location: roomLocation,
   } = roomData;
+
+  const selectInstitute = (institute: any) => {
+    setRoomData({
+      ...roomData,
+      institute: {
+        id: institute.id,
+        name: institute.name,
+        value: institute.name,
+      },
+    });
+  };
 
   return (
     <div className="">
@@ -810,6 +886,19 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               {RoomEDITdict[userLanguage].HEADING}
             </div>
             <div className="grid grid-cols-2">
+              <div className="px-3 py-4">
+                <Selector
+                  selectedItem={institute.value}
+                  placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
+                  list={AllInstitutions}
+                  isRequired
+                  onChange={(value, name, id) => {
+                    let institute = {value, name, id};
+                    selectInstitute(institute);
+                  }}
+                />
+              </div>
               <div className="px-3 py-4">
                 <FormInput
                   value={name}
@@ -832,19 +921,23 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   onChange={selectCurriculum}
                 />
               </div>
+              <div className="px-3 py-4">
+                <Selector
+                  selectedItem={status}
+                  placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['STATUS_LABEL']}
+                  labelTextClass={'text-xs'}
+                  list={StatusList}
+                  isRequired
+                  onChange={selectStatus}
+                />
+              </div>
             </div>
             {/*
              **
              * Hide institution drop down since all the things are tied to the
              * Institute, will add this later if need to add builders separately.
              */}
-            {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Institute  <span className="text-red-500"> *</span>
-              </label>
-              <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div> */}
-
             <div>
               <div className="grid grid-cols-2">
                 <div className="px-3 py-4">

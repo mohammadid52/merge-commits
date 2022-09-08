@@ -146,8 +146,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                               <div className={`${paddingForHeader(content.type)}`}>
                                 <div
                                   className={`${
-                                    content.type === FORM_TYPES.JUMBOTRON ||
-                                    content.type.includes('writing-exercise')
+                                    content.type === FORM_TYPES.JUMBOTRON
                                       ? 'px-4 pt-4'
                                       : content.type === 'header' ||
                                         content.type === 'image' ||

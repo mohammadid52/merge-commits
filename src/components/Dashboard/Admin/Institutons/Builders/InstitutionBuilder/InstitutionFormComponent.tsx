@@ -18,7 +18,7 @@ import Selector from '@atoms/Form/Selector';
 import Loader from '@atoms/Loader';
 import DroppableMedia from '@molecules/DroppableMedia';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import { getImageFromS3 } from '@utilities/services';
+import {getImageFromS3} from '@utilities/services';
 
 const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
@@ -222,15 +222,14 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             ...payload,
             id: instituteData.id,
           };
-          const result:any = await API.graphql(
+          const result: any = await API.graphql(
             graphqlOperation(customMutations.updateInstitution, {input: payload})
           );
-          postMutation(result.data?.updateInstitution)
+          postMutation(result.data?.updateInstitution);
         } else {
           const newInstitute: any = await API.graphql(
             graphqlOperation(customMutations.createInstitution, {input: payload})
           );
-          postMutation(newInstitute.data?.createInstitution)
         }
         setSaving(false);
         setServerMessage({
@@ -291,56 +290,58 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       {/* Body */}
       <div className="h-9/10 flex flex-col md:flex-row">
         {/* Profile section */}
-        {!id && <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-          {imageUrl ? (
-            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-              {!imageLoading ? (
-                <label className="cursor-pointer flex justify-center">
-                  <DroppableMedia
-                    mediaRef={mediaRef}
-                    setImage={(img: any, file: any) => {
-                      setUpImage(img);
-                      setFileObj(file);
-                    }}
-                    toggleCropper={toggleCropper}>
-                    <img
-                      onClick={handleImage}
-                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                      src={imageUrl}
-                    />
-                  </DroppableMedia>
-                </label>
-              ) : (
-                <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                  <Loader />
-                </div>
-              )}
-            </button>
-          ) : (
-            <DroppableMedia
-              mediaRef={mediaRef}
-              setImage={(img: any, file: any) => {
-                setUpImage(img);
-                setFileObj(file);
-              }}
-              toggleCropper={toggleCropper}>
-              <label
-                onClick={handleImage}
-                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+        {!id && (
+          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+            {imageUrl ? (
+              <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 {!imageLoading ? (
-                  <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                    <FaPlus />
-                  </IconContext.Provider>
+                  <label className="cursor-pointer flex justify-center">
+                    <DroppableMedia
+                      mediaRef={mediaRef}
+                      setImage={(img: any, file: any) => {
+                        setUpImage(img);
+                        setFileObj(file);
+                      }}
+                      toggleCropper={toggleCropper}>
+                      <img
+                        onClick={handleImage}
+                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                        src={imageUrl}
+                      />
+                    </DroppableMedia>
+                  </label>
                 ) : (
-                  <Loader />
+                  <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+                    <Loader />
+                  </div>
                 )}
-              </label>
-            </DroppableMedia>
-          )}
-          <p className="text-gray-600 my-4">
-            {InstitutionBuilderDict[userLanguage]['INFOA']}
-          </p>
-        </div>}
+              </button>
+            ) : (
+              <DroppableMedia
+                mediaRef={mediaRef}
+                setImage={(img: any, file: any) => {
+                  setUpImage(img);
+                  setFileObj(file);
+                }}
+                toggleCropper={toggleCropper}>
+                <label
+                  onClick={handleImage}
+                  className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                  {!imageLoading ? (
+                    <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
+                      <FaPlus />
+                    </IconContext.Provider>
+                  ) : (
+                    <Loader />
+                  )}
+                </label>
+              </DroppableMedia>
+            )}
+            <p className="text-gray-600 my-4">
+              {InstitutionBuilderDict[userLanguage]['INFOA']}
+            </p>
+          </div>
+        )}
 
         <div className={`h-full w-full pt-2`}>
           {/* FORM submit tag */}

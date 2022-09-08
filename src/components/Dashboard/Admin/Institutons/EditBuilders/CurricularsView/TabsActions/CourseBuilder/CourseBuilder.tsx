@@ -96,7 +96,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           ),
         ]);
         const savedData = curriculumResult.data.getCurriculum;
-        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnitss?.items]
+        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnits?.items]
           .map((t: any) => {
             let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
             return {...t, index};
@@ -186,8 +186,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }
   };
-  console.log(match.url,'sfksdjfks');
-  
+  console.log(match.url, 'sfksdjfks');
 
   return (
     <div className="w-full h-full">

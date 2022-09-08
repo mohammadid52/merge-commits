@@ -6,7 +6,7 @@ type StatusProps = {
   status: any;
 };
 
-const UserStatus = ({ status }: StatusProps) => {
+const UserStatus = ({status}: StatusProps) => {
   switch (status) {
     case 'ACTIVE':
       return (
@@ -18,6 +18,12 @@ const UserStatus = ({ status }: StatusProps) => {
       return (
         <span className="w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded bg-gray-200 text-gray-600 px-2">
           INACTIVE
+        </span>
+      );
+    case 'TRAINING':
+      return (
+        <span className="w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded bg-gray-400 text-gray-700 px-2">
+          TRAINING
         </span>
       );
     case 'SUSPENDED':

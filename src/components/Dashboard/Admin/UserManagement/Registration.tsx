@@ -83,6 +83,7 @@ const Registration = ({
   const history = useHistory();
   const params = useQuery(location.search);
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
+  console.log('🚀 ~ file: Registration.tsx ~ line 86 ~ newUserInputs', newUserInputs);
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
   const [instClasses, setInstClasses] = useState([]);
@@ -172,7 +173,7 @@ const Registration = ({
         })
       );
       setGroups(
-        list?.data?.listClassroomGroupss.items?.map((item: any) => ({
+        list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
           id: item.id,
         }))
@@ -258,6 +259,7 @@ const Registration = ({
           phone: '00',
           birthdate: '10-10-2020',
           grade: '1',
+          class: {id: '', name: '', roomId: ''},
           role: '',
           externalId: '3',
         };
@@ -408,7 +410,7 @@ const Registration = ({
     let classList = classes.map((cl: any) => {
       return {code: cl.id, name: cl.name, roomId: cl.roomId};
     });
-    setInstClasses(classList);
+    // setInstClasses(classList);
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
@@ -417,12 +419,53 @@ const Registration = ({
     });
   };
 
-  const handleClassChange = (item: {name: string; code: string; roomId: string}) => {
+  useEffect(() => {
+    listAllRooms(undefined, []);
+  }, []);
+
+  const listAllRooms = async (nextToken: string, outArray: any[]): Promise<any> => {
+    let combined;
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listRooms, {
+          nextToken: nextToken,
+        })
+      );
+      let returnedData = result.data.listRooms?.items;
+      let NextToken = result.data.listRooms?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      if (NextToken) {
+        combined = await listAllRooms(NextToken, combined);
+      }
+      setInstClasses(combined);
+
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllClasses ~ error',
+        error
+      );
+    }
+  };
+
+  const handleClassChange = (item: {
+    name: string;
+    code: string;
+    roomId: string;
+    classID: string;
+    id: string;
+  }) => {
     getClassRoomGroups(item.roomId);
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        class: {id: item.code, name: item.name, roomId: item.roomId},
+        class: {
+          id: item.classID,
+          name: item.name,
+          roomId: item.id,
+        },
       };
     });
   };
@@ -604,6 +647,7 @@ const Registration = ({
                                 userInfo={`${newUserInputs.class.name}`}
                                 label="Class"
                                 id="class"
+                                isRequired
                                 items={instClasses}
                                 value={`${newUserInputs.class.id}`}
                               />

@@ -24,6 +24,8 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   pages?: UniversalLessonPage[];
   canContinue?: boolean;
   handleForward?: () => void;
+  getLessonCompletedValue?: () => any;
+  createJournalData?: () => any;
 }
 
 export interface ISideMenuProps {

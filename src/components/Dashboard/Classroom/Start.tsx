@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {tableCleanupUrl} from '@utilities/urls';
+import axios from 'axios';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
@@ -12,8 +13,6 @@ import {awsFormatDate, dateString} from '../../../utilities/time';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import {Lesson} from './Classroom';
-import axios from 'axios';
-import Loader from '@components/Atoms/Loader';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -29,6 +28,7 @@ interface StartProps {
   preview?: boolean;
   activeRoomInfo?: any;
   isUsed?: boolean;
+  pageNumber?: number;
 }
 
 const Start: React.FC<StartProps> = ({
@@ -48,9 +48,13 @@ const Start: React.FC<StartProps> = ({
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
+
   const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
+  const lessonState = gContext.lessonState;
+
+  const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
@@ -62,6 +66,7 @@ const Start: React.FC<StartProps> = ({
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(0);
   const [warnModal, setWarnModal] = useState({
     show: false,
     activeLessonsId: [],
@@ -82,6 +87,9 @@ const Start: React.FC<StartProps> = ({
     }
   }, [state.roomData.syllabus]);
 
+  // useEffect(() => {
+  //   getLessonCurrentPage(lessonKey, user.email, user.authId);
+  // }, []);
   // const mutateToggleEnableDisable = async () => {
   //   const mutatedLessonData = {
   //     id: lessonKey,
@@ -110,6 +118,33 @@ const Start: React.FC<StartProps> = ({
   //     payload: {property: 'lessons', data: arrayWithToggledLesson},
   //   });
   // };
+
+  const getLessonCurrentPage = async (
+    lessonId: string,
+    userEmail: string,
+    userAuthId: string
+  ) => {
+    try {
+      console.log('I am running...');
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          lessonID: lessonId,
+          studentEmail: userEmail,
+          studentAuthId: userAuthId,
+        })
+      );
+
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: currentPage,
+      });
+
+      setPageNumber(currentPage);
+      return;
+    } catch (error) {}
+  };
 
   // ~~~~~~~~~~~~~~ ATTENDANCE ~~~~~~~~~~~~~ //
 
@@ -197,13 +232,26 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
+  const goBackUrl = `/lesson-control/${lessonKey}`;
+
+  const checkIfCompletedBeforeOpen = () => {
+    return (
+      activeRoomInfo?.completedLessons?.findIndex(
+        (item: {lessonID?: string | null; time?: string | null}) =>
+          item.lessonID === lessonProps.lessonID
+      ) > -1
+    );
+  };
+
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
       try {
         if (!attendanceRecorded) {
           await recordAttendance(lessonProps);
         }
-        history.push(`/lesson/${lessonKey}/0`);
+        await getLessonCurrentPage(lessonKey, user.email, user.authId);
+        history.push(`/lesson/${lessonKey}/${pageNumber}`);
+        // history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);
       }
@@ -228,9 +276,10 @@ const Start: React.FC<StartProps> = ({
         } else {
           await setSyllabusLessonHistory(syllabusProps?.id, [lessonProps.id]);
         }
-        history.push(`${`/lesson-control/${lessonKey}`}`);
+        history.push(goBackUrl);
       } else {
-        toggleLessonSwitchAlert();
+        // toggleLessonSwitchAlert();
+        discardChanges();
       }
       // }
     }
@@ -242,7 +291,7 @@ const Start: React.FC<StartProps> = ({
         input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
       })
     );
-    history.push(`${`/lesson-control/${lessonKey}`}`);
+    history.push(goBackUrl);
   };
 
   const toggleLessonSwitchAlert = () => {
@@ -265,7 +314,9 @@ const Start: React.FC<StartProps> = ({
         show: true,
       }));
     } else {
-      handleMarkAsCompleteClick(lessonIds);
+      if (!checkIfCompletedBeforeOpen()) {
+        handleMarkAsCompleteClick(lessonIds);
+      }
     }
   };
 
@@ -302,7 +353,6 @@ const Start: React.FC<StartProps> = ({
       console.error('handleMarkAsCompleteClick() - ', e);
       setIsLoading(false);
     } finally {
-      history.push(`${`/lesson-control/${lessonKey}`}`);
       discardChanges();
     }
   };
@@ -363,7 +413,9 @@ const Start: React.FC<StartProps> = ({
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED']
             : isCompleted
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['CLOSED']
-            : classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
+            : isTeacher && !isCompleted && !isActive
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY']
+            : classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED'];
         default:
           return type.toUpperCase();
       }
@@ -391,15 +443,27 @@ const Start: React.FC<StartProps> = ({
     });
   };
 
+  const buttonText = `${firstPart()} ${secondPart()}`;
+
+  const updateBtnText = () => {
+    switch (buttonText) {
+      case 'SURVEY OPEN':
+        return 'GO TO SURVEY';
+      case 'START LESSON':
+        return 'GO TO LESSON';
+
+      default:
+        return buttonText;
+    }
+  };
+
   return (
     <div>
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
-          loading
-            ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
-            : `${firstPart()} ${secondPart()}`
+          loading ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT : updateBtnText()
         }
         disabled={
           loading ||

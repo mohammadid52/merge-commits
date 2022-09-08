@@ -4,12 +4,10 @@ import SelectorWithAvatar from '@components/Atoms/Form/SelectorWithAvatar';
 import RichTextEditor from '@components/Atoms/RichTextEditor';
 import Media from '@components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
 import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import * as customQueries from '@customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
-
 import * as queries from '@graphql/queries';
 import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
 import {getImageFromS3Static} from '@utilities/services';
@@ -128,7 +126,7 @@ const Spotlight = ({
     );
     const data = [
       ...response?.data?.listRooms?.items,
-      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeacherss?.items?.map((item: any) => ({
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
         ...item,
         ...item.room,
         teacher: item.room?.teacher,
@@ -194,11 +192,11 @@ const Spotlight = ({
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaffs, {
+        graphqlOperation(queries.listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
-      const listStaffs = list.data.listStaffs.items;
+      const listStaffs = list.data.listStaff.items;
 
       if (listStaffs?.length === 0) {
       } else {

@@ -267,7 +267,7 @@ const AllEmotions = () => {
     data &&
     data.length > 0 && (
       <div
-        className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray ${themePlaceholderColor}`}>
+        className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl bg-component-dark border-0 border-gray-700  ${themePlaceholderColor}`}>
         {isLoading ? (
           <div className="flex items-center justify-center h-32">
             <Loader color="#fff" />
