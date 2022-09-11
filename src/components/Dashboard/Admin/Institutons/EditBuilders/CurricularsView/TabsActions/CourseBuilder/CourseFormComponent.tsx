@@ -433,7 +433,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
                 </DroppableMedia>
               </label>
             </button>
-            <p className="text-gray-600 my-4">Click to add curricular image--</p>
+            <p className="text-gray-600 my-4">Click to add curricular image</p>
           </div>
           <div className="h-9/10 md:flex-row">
             <div className="px-3 py-4">
