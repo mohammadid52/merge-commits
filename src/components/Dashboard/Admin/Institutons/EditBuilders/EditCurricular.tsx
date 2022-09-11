@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoImage} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -480,6 +480,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

@@ -1,5 +1,5 @@
 import ULBFileUploader from '@components/Atoms/Form/FileUploader';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import FormInput from '@components/Atoms/Form/FormInput';
 import MultipleSelector from '@components/Atoms/Form/MultipleSelector';
 import Selector from '@components/Atoms/Form/Selector';
@@ -56,6 +56,7 @@ const UploadLessonPlanModal = ({
     return new Promise((resolve, reject) => {
       Storage.put(`ULB/${lessonId}/lesson_plan_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

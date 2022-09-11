@@ -4,7 +4,7 @@ import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import * as mutations from '../../../../graphql/mutations';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -308,6 +308,7 @@ const FeedbacksUploads = ({
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
+        acl: 'public-read',
         progressCallback: ({loaded, total}: any) => {
           console.log((loaded * 100) / total);
         },

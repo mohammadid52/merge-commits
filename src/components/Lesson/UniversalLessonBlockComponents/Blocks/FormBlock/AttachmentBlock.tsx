@@ -1,10 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import Buttons from '@components/Atoms/Buttons';
-import RequiredMark from '@components/Atoms/RequiredMark';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
-import useStudentDataValue from '@customHooks/studentDataValue';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import {removeExtension} from '@utilities/functions';
 import {getImageFromS3Static} from '@utilities/services';
@@ -13,7 +12,6 @@ import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {AiOutlineEyeInvisible} from 'react-icons/ai';
 import {BiImageAdd} from 'react-icons/bi';
 import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../../assets';
@@ -325,6 +323,7 @@ const AttachmentBlock = ({
     return new Promise((resolve, reject) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

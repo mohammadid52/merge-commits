@@ -1,8 +1,8 @@
+import {Storage} from '@aws-amplify/storage';
 import Buttons from '@components/Atoms/Buttons';
 import {downloadBlob} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {GlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
-import Storage from '@aws-amplify/storage';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {getAsset} from 'assets';
 import React, {useContext, useState} from 'react';

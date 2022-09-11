@@ -186,7 +186,6 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return <CheckpointList curricularId={courseId} institutionId={instId} />;
     }
   };
-  console.log(match.url, 'sfksdjfks');
 
   return (
     <div className="w-full h-full">

@@ -911,7 +911,7 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
       DOWNLOAD_CSV: 'Download CSV',
       UPLOAD_CSV: 'Upload CSV',
-      ANALYTICS_DASHBOARD: 'Analytics Dashboard',
+      UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
