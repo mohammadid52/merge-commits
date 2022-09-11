@@ -1,18 +1,17 @@
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 import {Transition} from '@headlessui/react';
+import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {removeExtension} from '@utilities/functions';
+import {getImageFromS3Static} from '@utilities/services';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {getAsset} from 'assets';
 import {findIndex, map, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {removeExtension} from '@utilities/functions';
-import {getImageFromS3Static} from '@utilities/services';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import Buttons from '../../../../Atoms/Buttons';
 import {UPLOAD_KEYS} from '../../../constants';
 import {FORM_TYPES} from '../common/constants';
@@ -370,6 +369,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

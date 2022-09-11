@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -112,6 +112,7 @@ const Profile = (props: ProfilePageProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`profile_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

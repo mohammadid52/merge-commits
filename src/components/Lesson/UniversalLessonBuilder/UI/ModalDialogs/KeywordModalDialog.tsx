@@ -1,22 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 
-import FormInput from '../../../../Atoms/Form/FormInput';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import {FaTrashAlt} from 'react-icons/fa';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Storage from '@aws-amplify/storage';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
-import {nanoid} from 'nanoid';
-import RemoveInput from '../common/RemoveInput';
-import {remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {FaTrashAlt} from 'react-icons/fa';
+import Buttons from '../../../../Atoms/Buttons';
+import FormInput from '../../../../Atoms/Form/FormInput';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;

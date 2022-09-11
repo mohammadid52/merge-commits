@@ -1,8 +1,7 @@
 import Buttons from '@atoms/Buttons';
 import ULBFileUploader from '@atoms/Form/FileUploader';
 import FormInput from '@atoms/Form/FormInput';
-import Storage from '@aws-amplify/storage';
-import {ComponentPropsToStylePropsMapKeys} from '@aws-amplify/ui-react';
+import {Storage} from '@aws-amplify/storage';
 import Label from '@components/Atoms/Form/Label';
 import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import DummyContent from '@components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
@@ -247,6 +246,7 @@ const ImageFormComponent = ({
     return new Promise((resolve, reject) => {
       Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

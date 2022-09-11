@@ -1,7 +1,10 @@
-import Storage from '@aws-amplify/storage';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import FeedbacksUploads from '@components/Dashboard/Anthology/UploadsTab/FeedbacksUploads';
 import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
 import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
+import * as mutations from '@graphql/mutations';
 import {sortBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
@@ -10,12 +13,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
 import * as queries from '../../../../graphql/queries';
 import {dateFromServer} from '../../../../utilities/time';
-import Buttons from '../../../Atoms/Buttons';
-import ContentCard from '../../../Atoms/ContentCard';
-import FeedbacksUploads from '@components/Dashboard/Anthology/UploadsTab/FeedbacksUploads';
 import {IUploadCardProps} from '../UploadsTab';
-import {UPLOAD_KEYS} from '@components/Lesson/constants';
-import * as mutations from '@graphql/mutations';
 
 const UploadCard = ({
   idx,

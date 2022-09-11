@@ -1,4 +1,8 @@
-import Storage from '@aws-amplify/storage';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import Buttons from '@components/Atoms/Buttons';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
 import {removeExtension} from '@utilities/functions';
 import {getImageFromS3Static} from '@utilities/services';
@@ -7,15 +11,9 @@ import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import {useRouteMatch} from 'react-router';
 import {getAsset} from '../../../../assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {UPLOAD_KEYS} from '../../../Lesson/constants';
-import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
-import Buttons from '@components/Atoms/Buttons';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from '../../../../graphql/mutations';
+import {UPLOAD_KEYS} from '../../../Lesson/constants';
 
 // ##################################################################### //
 // ############################ POPUP MODAL ############################ //
@@ -316,6 +314,7 @@ const UploadAttachment = ({
     return new Promise((resolve, reject) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
