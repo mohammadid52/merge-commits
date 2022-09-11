@@ -37,6 +37,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -53,6 +54,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -115,6 +117,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -125,6 +128,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -211,6 +215,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -227,6 +232,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -289,6 +295,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -299,6 +306,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -377,6 +385,7 @@ export const onChangeStudentData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -393,6 +402,7 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -567,6 +577,7 @@ export const onChangeRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -583,6 +594,7 @@ export const onChangeRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -704,8 +716,8 @@ export const onChangeRoom = /* GraphQL */ `
   }
 `;
 export const onCreatePerson = /* GraphQL */ `
-  subscription OnCreatePerson {
-    onCreatePerson {
+  subscription OnCreatePerson($filter: ModelSubscriptionPersonFilterInput) {
+    onCreatePerson(filter: $filter) {
       id
       authId
       status
@@ -721,6 +733,7 @@ export const onCreatePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -759,6 +772,7 @@ export const onCreatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -766,8 +780,8 @@ export const onCreatePerson = /* GraphQL */ `
   }
 `;
 export const onUpdatePerson = /* GraphQL */ `
-  subscription OnUpdatePerson {
-    onUpdatePerson {
+  subscription OnUpdatePerson($filter: ModelSubscriptionPersonFilterInput) {
+    onUpdatePerson(filter: $filter) {
       id
       authId
       status
@@ -783,6 +797,7 @@ export const onUpdatePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -821,6 +836,7 @@ export const onUpdatePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -828,8 +844,8 @@ export const onUpdatePerson = /* GraphQL */ `
   }
 `;
 export const onDeletePerson = /* GraphQL */ `
-  subscription OnDeletePerson {
-    onDeletePerson {
+  subscription OnDeletePerson($filter: ModelSubscriptionPersonFilterInput) {
+    onDeletePerson(filter: $filter) {
       id
       authId
       status
@@ -845,6 +861,7 @@ export const onDeletePerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -883,6 +900,7 @@ export const onDeletePerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -890,8 +908,10 @@ export const onDeletePerson = /* GraphQL */ `
   }
 `;
 export const onCreatePersonLessonsData = /* GraphQL */ `
-  subscription OnCreatePersonLessonsData {
-    onCreatePersonLessonsData {
+  subscription OnCreatePersonLessonsData(
+    $filter: ModelSubscriptionPersonLessonsDataFilterInput
+  ) {
+    onCreatePersonLessonsData(filter: $filter) {
       id
       studentAuthID
       studentEmail
@@ -905,8 +925,10 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
   }
 `;
 export const onUpdatePersonLessonsData = /* GraphQL */ `
-  subscription OnUpdatePersonLessonsData {
-    onUpdatePersonLessonsData {
+  subscription OnUpdatePersonLessonsData(
+    $filter: ModelSubscriptionPersonLessonsDataFilterInput
+  ) {
+    onUpdatePersonLessonsData(filter: $filter) {
       id
       studentAuthID
       studentEmail
@@ -920,8 +942,10 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
   }
 `;
 export const onDeletePersonLessonsData = /* GraphQL */ `
-  subscription OnDeletePersonLessonsData {
-    onDeletePersonLessonsData {
+  subscription OnDeletePersonLessonsData(
+    $filter: ModelSubscriptionPersonLessonsDataFilterInput
+  ) {
+    onDeletePersonLessonsData(filter: $filter) {
       id
       studentAuthID
       studentEmail
@@ -935,8 +959,10 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
   }
 `;
 export const onCreateInstitution = /* GraphQL */ `
-  subscription OnCreateInstitution {
-    onCreateInstitution {
+  subscription OnCreateInstitution(
+    $filter: ModelSubscriptionInstitutionFilterInput
+  ) {
+    onCreateInstitution(filter: $filter) {
       id
       name
       type
@@ -1059,8 +1085,10 @@ export const onCreateInstitution = /* GraphQL */ `
   }
 `;
 export const onUpdateInstitution = /* GraphQL */ `
-  subscription OnUpdateInstitution {
-    onUpdateInstitution {
+  subscription OnUpdateInstitution(
+    $filter: ModelSubscriptionInstitutionFilterInput
+  ) {
+    onUpdateInstitution(filter: $filter) {
       id
       name
       type
@@ -1183,8 +1211,10 @@ export const onUpdateInstitution = /* GraphQL */ `
   }
 `;
 export const onDeleteInstitution = /* GraphQL */ `
-  subscription OnDeleteInstitution {
-    onDeleteInstitution {
+  subscription OnDeleteInstitution(
+    $filter: ModelSubscriptionInstitutionFilterInput
+  ) {
+    onDeleteInstitution(filter: $filter) {
       id
       name
       type
@@ -1307,8 +1337,10 @@ export const onDeleteInstitution = /* GraphQL */ `
   }
 `;
 export const onCreateServiceProvider = /* GraphQL */ `
-  subscription OnCreateServiceProvider {
-    onCreateServiceProvider {
+  subscription OnCreateServiceProvider(
+    $filter: ModelSubscriptionServiceProviderFilterInput
+  ) {
+    onCreateServiceProvider(filter: $filter) {
       id
       partnerID
       providerID
@@ -1356,8 +1388,10 @@ export const onCreateServiceProvider = /* GraphQL */ `
   }
 `;
 export const onUpdateServiceProvider = /* GraphQL */ `
-  subscription OnUpdateServiceProvider {
-    onUpdateServiceProvider {
+  subscription OnUpdateServiceProvider(
+    $filter: ModelSubscriptionServiceProviderFilterInput
+  ) {
+    onUpdateServiceProvider(filter: $filter) {
       id
       partnerID
       providerID
@@ -1405,8 +1439,10 @@ export const onUpdateServiceProvider = /* GraphQL */ `
   }
 `;
 export const onDeleteServiceProvider = /* GraphQL */ `
-  subscription OnDeleteServiceProvider {
-    onDeleteServiceProvider {
+  subscription OnDeleteServiceProvider(
+    $filter: ModelSubscriptionServiceProviderFilterInput
+  ) {
+    onDeleteServiceProvider(filter: $filter) {
       id
       partnerID
       providerID
@@ -1454,8 +1490,8 @@ export const onDeleteServiceProvider = /* GraphQL */ `
   }
 `;
 export const onCreateStaff = /* GraphQL */ `
-  subscription OnCreateStaff {
-    onCreateStaff {
+  subscription OnCreateStaff($filter: ModelSubscriptionStaffFilterInput) {
+    onCreateStaff(filter: $filter) {
       id
       institutionID
       staffAuthID
@@ -1478,6 +1514,7 @@ export const onCreateStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1494,6 +1531,7 @@ export const onCreateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1541,8 +1579,8 @@ export const onCreateStaff = /* GraphQL */ `
   }
 `;
 export const onUpdateStaff = /* GraphQL */ `
-  subscription OnUpdateStaff {
-    onUpdateStaff {
+  subscription OnUpdateStaff($filter: ModelSubscriptionStaffFilterInput) {
+    onUpdateStaff(filter: $filter) {
       id
       institutionID
       staffAuthID
@@ -1565,6 +1603,7 @@ export const onUpdateStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1581,6 +1620,7 @@ export const onUpdateStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1628,8 +1668,8 @@ export const onUpdateStaff = /* GraphQL */ `
   }
 `;
 export const onDeleteStaff = /* GraphQL */ `
-  subscription OnDeleteStaff {
-    onDeleteStaff {
+  subscription OnDeleteStaff($filter: ModelSubscriptionStaffFilterInput) {
+    onDeleteStaff(filter: $filter) {
       id
       institutionID
       staffAuthID
@@ -1652,6 +1692,7 @@ export const onDeleteStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1668,6 +1709,7 @@ export const onDeleteStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1715,8 +1757,8 @@ export const onDeleteStaff = /* GraphQL */ `
   }
 `;
 export const onCreateRoom = /* GraphQL */ `
-  subscription OnCreateRoom {
-    onCreateRoom {
+  subscription OnCreateRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onCreateRoom(filter: $filter) {
       id
       institutionID
       classID
@@ -1801,6 +1843,7 @@ export const onCreateRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1817,6 +1860,7 @@ export const onCreateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1938,8 +1982,8 @@ export const onCreateRoom = /* GraphQL */ `
   }
 `;
 export const onUpdateRoom = /* GraphQL */ `
-  subscription OnUpdateRoom {
-    onUpdateRoom {
+  subscription OnUpdateRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onUpdateRoom(filter: $filter) {
       id
       institutionID
       classID
@@ -2024,6 +2068,7 @@ export const onUpdateRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2040,6 +2085,7 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2161,8 +2207,8 @@ export const onUpdateRoom = /* GraphQL */ `
   }
 `;
 export const onDeleteRoom = /* GraphQL */ `
-  subscription OnDeleteRoom {
-    onDeleteRoom {
+  subscription OnDeleteRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onDeleteRoom(filter: $filter) {
       id
       institutionID
       classID
@@ -2247,6 +2293,7 @@ export const onDeleteRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2263,6 +2310,7 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2383,9 +2431,68 @@ export const onDeleteRoom = /* GraphQL */ `
     }
   }
 `;
+export const onCreateArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnCreateArchiveSurveyDataSQL(
+    $filter: ModelSubscriptionArchiveSurveyDataSQLFilterInput
+  ) {
+    onCreateArchiveSurveyDataSQL(filter: $filter) {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnUpdateArchiveSurveyDataSQL(
+    $filter: ModelSubscriptionArchiveSurveyDataSQLFilterInput
+  ) {
+    onUpdateArchiveSurveyDataSQL(filter: $filter) {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArchiveSurveyDataSQL = /* GraphQL */ `
+  subscription OnDeleteArchiveSurveyDataSQL(
+    $filter: ModelSubscriptionArchiveSurveyDataSQLFilterInput
+  ) {
+    onDeleteArchiveSurveyDataSQL(filter: $filter) {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateClassroomGroupStudents = /* GraphQL */ `
-  subscription OnCreateClassroomGroupStudents {
-    onCreateClassroomGroupStudents {
+  subscription OnCreateClassroomGroupStudents(
+    $filter: ModelSubscriptionClassroomGroupStudentsFilterInput
+  ) {
+    onCreateClassroomGroupStudents(filter: $filter) {
       id
       classRoomGroupID
       classRoomGroup {
@@ -2443,6 +2550,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2453,6 +2561,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2482,6 +2591,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2498,6 +2608,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2510,8 +2621,10 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
   }
 `;
 export const onUpdateClassroomGroupStudents = /* GraphQL */ `
-  subscription OnUpdateClassroomGroupStudents {
-    onUpdateClassroomGroupStudents {
+  subscription OnUpdateClassroomGroupStudents(
+    $filter: ModelSubscriptionClassroomGroupStudentsFilterInput
+  ) {
+    onUpdateClassroomGroupStudents(filter: $filter) {
       id
       classRoomGroupID
       classRoomGroup {
@@ -2569,6 +2682,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2579,6 +2693,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2608,6 +2723,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2624,6 +2740,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2636,8 +2753,10 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
   }
 `;
 export const onDeleteClassroomGroupStudents = /* GraphQL */ `
-  subscription OnDeleteClassroomGroupStudents {
-    onDeleteClassroomGroupStudents {
+  subscription OnDeleteClassroomGroupStudents(
+    $filter: ModelSubscriptionClassroomGroupStudentsFilterInput
+  ) {
+    onDeleteClassroomGroupStudents(filter: $filter) {
       id
       classRoomGroupID
       classRoomGroup {
@@ -2695,6 +2814,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2705,6 +2825,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2734,6 +2855,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2750,6 +2872,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2762,8 +2885,10 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
   }
 `;
 export const onCreateClassroomGroups = /* GraphQL */ `
-  subscription OnCreateClassroomGroups {
-    onCreateClassroomGroups {
+  subscription OnCreateClassroomGroups(
+    $filter: ModelSubscriptionClassroomGroupsFilterInput
+  ) {
+    onCreateClassroomGroups(filter: $filter) {
       id
       classRoomID
       classRoom {
@@ -2824,6 +2949,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2834,6 +2960,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2900,6 +3027,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2916,6 +3044,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2940,8 +3069,10 @@ export const onCreateClassroomGroups = /* GraphQL */ `
   }
 `;
 export const onUpdateClassroomGroups = /* GraphQL */ `
-  subscription OnUpdateClassroomGroups {
-    onUpdateClassroomGroups {
+  subscription OnUpdateClassroomGroups(
+    $filter: ModelSubscriptionClassroomGroupsFilterInput
+  ) {
+    onUpdateClassroomGroups(filter: $filter) {
       id
       classRoomID
       classRoom {
@@ -3002,6 +3133,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3012,6 +3144,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3078,6 +3211,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3094,6 +3228,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3118,8 +3253,10 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
   }
 `;
 export const onDeleteClassroomGroups = /* GraphQL */ `
-  subscription OnDeleteClassroomGroups {
-    onDeleteClassroomGroups {
+  subscription OnDeleteClassroomGroups(
+    $filter: ModelSubscriptionClassroomGroupsFilterInput
+  ) {
+    onDeleteClassroomGroups(filter: $filter) {
       id
       classRoomID
       classRoom {
@@ -3180,6 +3317,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3190,6 +3328,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3256,6 +3395,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3272,6 +3412,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3296,8 +3437,10 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
   }
 `;
 export const onCreateRoomCoTeachers = /* GraphQL */ `
-  subscription OnCreateRoomCoTeachers {
-    onCreateRoomCoTeachers {
+  subscription OnCreateRoomCoTeachers(
+    $filter: ModelSubscriptionRoomCoTeachersFilterInput
+  ) {
+    onCreateRoomCoTeachers(filter: $filter) {
       id
       roomID
       teacherID
@@ -3361,6 +3504,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3371,6 +3515,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3433,6 +3578,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3449,6 +3595,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3459,8 +3606,10 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
   }
 `;
 export const onUpdateRoomCoTeachers = /* GraphQL */ `
-  subscription OnUpdateRoomCoTeachers {
-    onUpdateRoomCoTeachers {
+  subscription OnUpdateRoomCoTeachers(
+    $filter: ModelSubscriptionRoomCoTeachersFilterInput
+  ) {
+    onUpdateRoomCoTeachers(filter: $filter) {
       id
       roomID
       teacherID
@@ -3524,6 +3673,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3534,6 +3684,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3596,6 +3747,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3612,6 +3764,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3622,8 +3775,10 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
   }
 `;
 export const onDeleteRoomCoTeachers = /* GraphQL */ `
-  subscription OnDeleteRoomCoTeachers {
-    onDeleteRoomCoTeachers {
+  subscription OnDeleteRoomCoTeachers(
+    $filter: ModelSubscriptionRoomCoTeachersFilterInput
+  ) {
+    onDeleteRoomCoTeachers(filter: $filter) {
       id
       roomID
       teacherID
@@ -3687,6 +3842,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3697,6 +3853,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3759,6 +3916,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3775,6 +3933,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3785,8 +3944,8 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
   }
 `;
 export const onCreateClass = /* GraphQL */ `
-  subscription OnCreateClass {
-    onCreateClass {
+  subscription OnCreateClass($filter: ModelSubscriptionClassFilterInput) {
+    onCreateClass(filter: $filter) {
       id
       institutionID
       type
@@ -3887,6 +4046,7 @@ export const onCreateClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3897,6 +4057,7 @@ export const onCreateClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3963,8 +4124,8 @@ export const onCreateClass = /* GraphQL */ `
   }
 `;
 export const onUpdateClass = /* GraphQL */ `
-  subscription OnUpdateClass {
-    onUpdateClass {
+  subscription OnUpdateClass($filter: ModelSubscriptionClassFilterInput) {
+    onUpdateClass(filter: $filter) {
       id
       institutionID
       type
@@ -4065,6 +4226,7 @@ export const onUpdateClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -4075,6 +4237,7 @@ export const onUpdateClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4141,8 +4304,8 @@ export const onUpdateClass = /* GraphQL */ `
   }
 `;
 export const onDeleteClass = /* GraphQL */ `
-  subscription OnDeleteClass {
-    onDeleteClass {
+  subscription OnDeleteClass($filter: ModelSubscriptionClassFilterInput) {
+    onDeleteClass(filter: $filter) {
       id
       institutionID
       type
@@ -4243,6 +4406,7 @@ export const onDeleteClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -4253,6 +4417,7 @@ export const onDeleteClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4319,8 +4484,10 @@ export const onDeleteClass = /* GraphQL */ `
   }
 `;
 export const onCreateClassStudent = /* GraphQL */ `
-  subscription OnCreateClassStudent {
-    onCreateClassStudent {
+  subscription OnCreateClassStudent(
+    $filter: ModelSubscriptionClassStudentFilterInput
+  ) {
+    onCreateClassStudent(filter: $filter) {
       id
       classID
       studentID
@@ -4407,6 +4574,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4423,6 +4591,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -4433,8 +4602,10 @@ export const onCreateClassStudent = /* GraphQL */ `
   }
 `;
 export const onUpdateClassStudent = /* GraphQL */ `
-  subscription OnUpdateClassStudent {
-    onUpdateClassStudent {
+  subscription OnUpdateClassStudent(
+    $filter: ModelSubscriptionClassStudentFilterInput
+  ) {
+    onUpdateClassStudent(filter: $filter) {
       id
       classID
       studentID
@@ -4521,6 +4692,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4537,6 +4709,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -4547,8 +4720,10 @@ export const onUpdateClassStudent = /* GraphQL */ `
   }
 `;
 export const onDeleteClassStudent = /* GraphQL */ `
-  subscription OnDeleteClassStudent {
-    onDeleteClassStudent {
+  subscription OnDeleteClassStudent(
+    $filter: ModelSubscriptionClassStudentFilterInput
+  ) {
+    onDeleteClassStudent(filter: $filter) {
       id
       classID
       studentID
@@ -4635,6 +4810,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -4651,6 +4827,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -4661,8 +4838,10 @@ export const onDeleteClassStudent = /* GraphQL */ `
   }
 `;
 export const onCreateCurriculum = /* GraphQL */ `
-  subscription OnCreateCurriculum {
-    onCreateCurriculum {
+  subscription OnCreateCurriculum(
+    $filter: ModelSubscriptionCurriculumFilterInput
+  ) {
+    onCreateCurriculum(filter: $filter) {
       id
       institutionID
       name
@@ -4739,8 +4918,10 @@ export const onCreateCurriculum = /* GraphQL */ `
   }
 `;
 export const onUpdateCurriculum = /* GraphQL */ `
-  subscription OnUpdateCurriculum {
-    onUpdateCurriculum {
+  subscription OnUpdateCurriculum(
+    $filter: ModelSubscriptionCurriculumFilterInput
+  ) {
+    onUpdateCurriculum(filter: $filter) {
       id
       institutionID
       name
@@ -4817,8 +4998,10 @@ export const onUpdateCurriculum = /* GraphQL */ `
   }
 `;
 export const onDeleteCurriculum = /* GraphQL */ `
-  subscription OnDeleteCurriculum {
-    onDeleteCurriculum {
+  subscription OnDeleteCurriculum(
+    $filter: ModelSubscriptionCurriculumFilterInput
+  ) {
+    onDeleteCurriculum(filter: $filter) {
       id
       institutionID
       name
@@ -4895,8 +5078,8 @@ export const onDeleteCurriculum = /* GraphQL */ `
   }
 `;
 export const onCreateTopic = /* GraphQL */ `
-  subscription OnCreateTopic {
-    onCreateTopic {
+  subscription OnCreateTopic($filter: ModelSubscriptionTopicFilterInput) {
+    onCreateTopic(filter: $filter) {
       id
       curriculumID
       learningObjectiveID
@@ -4961,8 +5144,8 @@ export const onCreateTopic = /* GraphQL */ `
   }
 `;
 export const onUpdateTopic = /* GraphQL */ `
-  subscription OnUpdateTopic {
-    onUpdateTopic {
+  subscription OnUpdateTopic($filter: ModelSubscriptionTopicFilterInput) {
+    onUpdateTopic(filter: $filter) {
       id
       curriculumID
       learningObjectiveID
@@ -5027,8 +5210,8 @@ export const onUpdateTopic = /* GraphQL */ `
   }
 `;
 export const onDeleteTopic = /* GraphQL */ `
-  subscription OnDeleteTopic {
-    onDeleteTopic {
+  subscription OnDeleteTopic($filter: ModelSubscriptionTopicFilterInput) {
+    onDeleteTopic(filter: $filter) {
       id
       curriculumID
       learningObjectiveID
@@ -5093,8 +5276,10 @@ export const onDeleteTopic = /* GraphQL */ `
   }
 `;
 export const onCreateCSequences = /* GraphQL */ `
-  subscription OnCreateCSequences {
-    onCreateCSequences {
+  subscription OnCreateCSequences(
+    $filter: ModelSubscriptionCSequencesFilterInput
+  ) {
+    onCreateCSequences(filter: $filter) {
       id
       sequence
       createdAt
@@ -5103,8 +5288,10 @@ export const onCreateCSequences = /* GraphQL */ `
   }
 `;
 export const onUpdateCSequences = /* GraphQL */ `
-  subscription OnUpdateCSequences {
-    onUpdateCSequences {
+  subscription OnUpdateCSequences(
+    $filter: ModelSubscriptionCSequencesFilterInput
+  ) {
+    onUpdateCSequences(filter: $filter) {
       id
       sequence
       createdAt
@@ -5113,8 +5300,10 @@ export const onUpdateCSequences = /* GraphQL */ `
   }
 `;
 export const onDeleteCSequences = /* GraphQL */ `
-  subscription OnDeleteCSequences {
-    onDeleteCSequences {
+  subscription OnDeleteCSequences(
+    $filter: ModelSubscriptionCSequencesFilterInput
+  ) {
+    onDeleteCSequences(filter: $filter) {
       id
       sequence
       createdAt
@@ -5123,8 +5312,10 @@ export const onDeleteCSequences = /* GraphQL */ `
   }
 `;
 export const onCreateLearningObjective = /* GraphQL */ `
-  subscription OnCreateLearningObjective {
-    onCreateLearningObjective {
+  subscription OnCreateLearningObjective(
+    $filter: ModelSubscriptionLearningObjectiveFilterInput
+  ) {
+    onCreateLearningObjective(filter: $filter) {
       id
       name
       description
@@ -5135,8 +5326,10 @@ export const onCreateLearningObjective = /* GraphQL */ `
   }
 `;
 export const onUpdateLearningObjective = /* GraphQL */ `
-  subscription OnUpdateLearningObjective {
-    onUpdateLearningObjective {
+  subscription OnUpdateLearningObjective(
+    $filter: ModelSubscriptionLearningObjectiveFilterInput
+  ) {
+    onUpdateLearningObjective(filter: $filter) {
       id
       name
       description
@@ -5147,8 +5340,10 @@ export const onUpdateLearningObjective = /* GraphQL */ `
   }
 `;
 export const onDeleteLearningObjective = /* GraphQL */ `
-  subscription OnDeleteLearningObjective {
-    onDeleteLearningObjective {
+  subscription OnDeleteLearningObjective(
+    $filter: ModelSubscriptionLearningObjectiveFilterInput
+  ) {
+    onDeleteLearningObjective(filter: $filter) {
       id
       name
       description
@@ -5159,8 +5354,8 @@ export const onDeleteLearningObjective = /* GraphQL */ `
   }
 `;
 export const onCreateRubric = /* GraphQL */ `
-  subscription OnCreateRubric {
-    onCreateRubric {
+  subscription OnCreateRubric($filter: ModelSubscriptionRubricFilterInput) {
+    onCreateRubric(filter: $filter) {
       id
       name
       criteria
@@ -5209,8 +5404,8 @@ export const onCreateRubric = /* GraphQL */ `
   }
 `;
 export const onUpdateRubric = /* GraphQL */ `
-  subscription OnUpdateRubric {
-    onUpdateRubric {
+  subscription OnUpdateRubric($filter: ModelSubscriptionRubricFilterInput) {
+    onUpdateRubric(filter: $filter) {
       id
       name
       criteria
@@ -5259,8 +5454,8 @@ export const onUpdateRubric = /* GraphQL */ `
   }
 `;
 export const onDeleteRubric = /* GraphQL */ `
-  subscription OnDeleteRubric {
-    onDeleteRubric {
+  subscription OnDeleteRubric($filter: ModelSubscriptionRubricFilterInput) {
+    onDeleteRubric(filter: $filter) {
       id
       name
       criteria
@@ -5309,8 +5504,10 @@ export const onDeleteRubric = /* GraphQL */ `
   }
 `;
 export const onCreateRoomCurriculum = /* GraphQL */ `
-  subscription OnCreateRoomCurriculum {
-    onCreateRoomCurriculum {
+  subscription OnCreateRoomCurriculum(
+    $filter: ModelSubscriptionRoomCurriculumFilterInput
+  ) {
+    onCreateRoomCurriculum(filter: $filter) {
       id
       roomID
       curriculumID
@@ -5361,8 +5558,10 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
   }
 `;
 export const onUpdateRoomCurriculum = /* GraphQL */ `
-  subscription OnUpdateRoomCurriculum {
-    onUpdateRoomCurriculum {
+  subscription OnUpdateRoomCurriculum(
+    $filter: ModelSubscriptionRoomCurriculumFilterInput
+  ) {
+    onUpdateRoomCurriculum(filter: $filter) {
       id
       roomID
       curriculumID
@@ -5413,8 +5612,10 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
   }
 `;
 export const onDeleteRoomCurriculum = /* GraphQL */ `
-  subscription OnDeleteRoomCurriculum {
-    onDeleteRoomCurriculum {
+  subscription OnDeleteRoomCurriculum(
+    $filter: ModelSubscriptionRoomCurriculumFilterInput
+  ) {
+    onDeleteRoomCurriculum(filter: $filter) {
       id
       roomID
       curriculumID
@@ -5465,8 +5666,10 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
   }
 `;
 export const onCreateCheckpoint = /* GraphQL */ `
-  subscription OnCreateCheckpoint {
-    onCreateCheckpoint {
+  subscription OnCreateCheckpoint(
+    $filter: ModelSubscriptionCheckpointFilterInput
+  ) {
+    onCreateCheckpoint(filter: $filter) {
       id
       label
       title
@@ -5499,8 +5702,10 @@ export const onCreateCheckpoint = /* GraphQL */ `
   }
 `;
 export const onUpdateCheckpoint = /* GraphQL */ `
-  subscription OnUpdateCheckpoint {
-    onUpdateCheckpoint {
+  subscription OnUpdateCheckpoint(
+    $filter: ModelSubscriptionCheckpointFilterInput
+  ) {
+    onUpdateCheckpoint(filter: $filter) {
       id
       label
       title
@@ -5533,8 +5738,10 @@ export const onUpdateCheckpoint = /* GraphQL */ `
   }
 `;
 export const onDeleteCheckpoint = /* GraphQL */ `
-  subscription OnDeleteCheckpoint {
-    onDeleteCheckpoint {
+  subscription OnDeleteCheckpoint(
+    $filter: ModelSubscriptionCheckpointFilterInput
+  ) {
+    onDeleteCheckpoint(filter: $filter) {
       id
       label
       title
@@ -5567,8 +5774,10 @@ export const onDeleteCheckpoint = /* GraphQL */ `
   }
 `;
 export const onCreateCommonCheckpoint = /* GraphQL */ `
-  subscription OnCreateCommonCheckpoint {
-    onCreateCommonCheckpoint {
+  subscription OnCreateCommonCheckpoint(
+    $filter: ModelSubscriptionCommonCheckpointFilterInput
+  ) {
+    onCreateCommonCheckpoint(filter: $filter) {
       id
       type
       typeID
@@ -5642,8 +5851,10 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
   }
 `;
 export const onUpdateCommonCheckpoint = /* GraphQL */ `
-  subscription OnUpdateCommonCheckpoint {
-    onUpdateCommonCheckpoint {
+  subscription OnUpdateCommonCheckpoint(
+    $filter: ModelSubscriptionCommonCheckpointFilterInput
+  ) {
+    onUpdateCommonCheckpoint(filter: $filter) {
       id
       type
       typeID
@@ -5717,8 +5928,10 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
   }
 `;
 export const onDeleteCommonCheckpoint = /* GraphQL */ `
-  subscription OnDeleteCommonCheckpoint {
-    onDeleteCommonCheckpoint {
+  subscription OnDeleteCommonCheckpoint(
+    $filter: ModelSubscriptionCommonCheckpointFilterInput
+  ) {
+    onDeleteCommonCheckpoint(filter: $filter) {
       id
       type
       typeID
@@ -5792,8 +6005,10 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
   }
 `;
 export const onCreateCheckpointQuestions = /* GraphQL */ `
-  subscription OnCreateCheckpointQuestions {
-    onCreateCheckpointQuestions {
+  subscription OnCreateCheckpointQuestions(
+    $filter: ModelSubscriptionCheckpointQuestionsFilterInput
+  ) {
+    onCreateCheckpointQuestions(filter: $filter) {
       id
       checkpointID
       questionID
@@ -5845,8 +6060,10 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
   }
 `;
 export const onUpdateCheckpointQuestions = /* GraphQL */ `
-  subscription OnUpdateCheckpointQuestions {
-    onUpdateCheckpointQuestions {
+  subscription OnUpdateCheckpointQuestions(
+    $filter: ModelSubscriptionCheckpointQuestionsFilterInput
+  ) {
+    onUpdateCheckpointQuestions(filter: $filter) {
       id
       checkpointID
       questionID
@@ -5898,8 +6115,10 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
   }
 `;
 export const onDeleteCheckpointQuestions = /* GraphQL */ `
-  subscription OnDeleteCheckpointQuestions {
-    onDeleteCheckpointQuestions {
+  subscription OnDeleteCheckpointQuestions(
+    $filter: ModelSubscriptionCheckpointQuestionsFilterInput
+  ) {
+    onDeleteCheckpointQuestions(filter: $filter) {
       id
       checkpointID
       questionID
@@ -5951,8 +6170,8 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
   }
 `;
 export const onCreateQuestion = /* GraphQL */ `
-  subscription OnCreateQuestion {
-    onCreateQuestion {
+  subscription OnCreateQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+    onCreateQuestion(filter: $filter) {
       id
       label
       type
@@ -5974,8 +6193,8 @@ export const onCreateQuestion = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestion = /* GraphQL */ `
-  subscription OnUpdateQuestion {
-    onUpdateQuestion {
+  subscription OnUpdateQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+    onUpdateQuestion(filter: $filter) {
       id
       label
       type
@@ -5997,8 +6216,8 @@ export const onUpdateQuestion = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestion = /* GraphQL */ `
-  subscription OnDeleteQuestion {
-    onDeleteQuestion {
+  subscription OnDeleteQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+    onDeleteQuestion(filter: $filter) {
       id
       label
       type
@@ -6020,8 +6239,10 @@ export const onDeleteQuestion = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionSource = /* GraphQL */ `
-  subscription OnCreateQuestionSource {
-    onCreateQuestionSource {
+  subscription OnCreateQuestionSource(
+    $filter: ModelSubscriptionQuestionSourceFilterInput
+  ) {
+    onCreateQuestionSource(filter: $filter) {
       id
       name
       createdAt
@@ -6030,8 +6251,10 @@ export const onCreateQuestionSource = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionSource = /* GraphQL */ `
-  subscription OnUpdateQuestionSource {
-    onUpdateQuestionSource {
+  subscription OnUpdateQuestionSource(
+    $filter: ModelSubscriptionQuestionSourceFilterInput
+  ) {
+    onUpdateQuestionSource(filter: $filter) {
       id
       name
       createdAt
@@ -6040,8 +6263,10 @@ export const onUpdateQuestionSource = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionSource = /* GraphQL */ `
-  subscription OnDeleteQuestionSource {
-    onDeleteQuestionSource {
+  subscription OnDeleteQuestionSource(
+    $filter: ModelSubscriptionQuestionSourceFilterInput
+  ) {
+    onDeleteQuestionSource(filter: $filter) {
       id
       name
       createdAt
@@ -6050,8 +6275,10 @@ export const onDeleteQuestionSource = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionType = /* GraphQL */ `
-  subscription OnCreateQuestionType {
-    onCreateQuestionType {
+  subscription OnCreateQuestionType(
+    $filter: ModelSubscriptionQuestionTypeFilterInput
+  ) {
+    onCreateQuestionType(filter: $filter) {
       id
       name
       createdAt
@@ -6060,8 +6287,10 @@ export const onCreateQuestionType = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionType = /* GraphQL */ `
-  subscription OnUpdateQuestionType {
-    onUpdateQuestionType {
+  subscription OnUpdateQuestionType(
+    $filter: ModelSubscriptionQuestionTypeFilterInput
+  ) {
+    onUpdateQuestionType(filter: $filter) {
       id
       name
       createdAt
@@ -6070,8 +6299,10 @@ export const onUpdateQuestionType = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionType = /* GraphQL */ `
-  subscription OnDeleteQuestionType {
-    onDeleteQuestionType {
+  subscription OnDeleteQuestionType(
+    $filter: ModelSubscriptionQuestionTypeFilterInput
+  ) {
+    onDeleteQuestionType(filter: $filter) {
       id
       name
       createdAt
@@ -6080,8 +6311,8 @@ export const onDeleteQuestionType = /* GraphQL */ `
   }
 `;
 export const onCreateRoomMsgs = /* GraphQL */ `
-  subscription OnCreateRoomMsgs {
-    onCreateRoomMsgs {
+  subscription OnCreateRoomMsgs($filter: ModelSubscriptionRoomMsgsFilterInput) {
+    onCreateRoomMsgs(filter: $filter) {
       id
       roomID
       senderAuthID
@@ -6104,6 +6335,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6120,6 +6352,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6129,8 +6362,8 @@ export const onCreateRoomMsgs = /* GraphQL */ `
   }
 `;
 export const onUpdateRoomMsgs = /* GraphQL */ `
-  subscription OnUpdateRoomMsgs {
-    onUpdateRoomMsgs {
+  subscription OnUpdateRoomMsgs($filter: ModelSubscriptionRoomMsgsFilterInput) {
+    onUpdateRoomMsgs(filter: $filter) {
       id
       roomID
       senderAuthID
@@ -6153,6 +6386,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6169,6 +6403,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6178,8 +6413,8 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
   }
 `;
 export const onDeleteRoomMsgs = /* GraphQL */ `
-  subscription OnDeleteRoomMsgs {
-    onDeleteRoomMsgs {
+  subscription OnDeleteRoomMsgs($filter: ModelSubscriptionRoomMsgsFilterInput) {
+    onDeleteRoomMsgs(filter: $filter) {
       id
       roomID
       senderAuthID
@@ -6202,6 +6437,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6218,6 +6454,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6227,8 +6464,10 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
   }
 `;
 export const onCreateAnthologyComment = /* GraphQL */ `
-  subscription OnCreateAnthologyComment {
-    onCreateAnthologyComment {
+  subscription OnCreateAnthologyComment(
+    $filter: ModelSubscriptionAnthologyCommentFilterInput
+  ) {
+    onCreateAnthologyComment(filter: $filter) {
       id
       text
       email
@@ -6249,6 +6488,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6265,6 +6505,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6282,8 +6523,10 @@ export const onCreateAnthologyComment = /* GraphQL */ `
   }
 `;
 export const onUpdateAnthologyComment = /* GraphQL */ `
-  subscription OnUpdateAnthologyComment {
-    onUpdateAnthologyComment {
+  subscription OnUpdateAnthologyComment(
+    $filter: ModelSubscriptionAnthologyCommentFilterInput
+  ) {
+    onUpdateAnthologyComment(filter: $filter) {
       id
       text
       email
@@ -6304,6 +6547,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6320,6 +6564,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6337,8 +6582,10 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
   }
 `;
 export const onDeleteAnthologyComment = /* GraphQL */ `
-  subscription OnDeleteAnthologyComment {
-    onDeleteAnthologyComment {
+  subscription OnDeleteAnthologyComment(
+    $filter: ModelSubscriptionAnthologyCommentFilterInput
+  ) {
+    onDeleteAnthologyComment(filter: $filter) {
       id
       text
       email
@@ -6359,6 +6606,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6375,6 +6623,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6392,8 +6641,10 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionData = /* GraphQL */ `
-  subscription OnCreateQuestionData {
-    onCreateQuestionData {
+  subscription OnCreateQuestionData(
+    $filter: ModelSubscriptionQuestionDataFilterInput
+  ) {
+    onCreateQuestionData(filter: $filter) {
       id
       syllabusLessonID
       checkpointID
@@ -6415,6 +6666,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6431,6 +6683,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6450,8 +6703,10 @@ export const onCreateQuestionData = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionData = /* GraphQL */ `
-  subscription OnUpdateQuestionData {
-    onUpdateQuestionData {
+  subscription OnUpdateQuestionData(
+    $filter: ModelSubscriptionQuestionDataFilterInput
+  ) {
+    onUpdateQuestionData(filter: $filter) {
       id
       syllabusLessonID
       checkpointID
@@ -6473,6 +6728,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6489,6 +6745,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6508,8 +6765,10 @@ export const onUpdateQuestionData = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionData = /* GraphQL */ `
-  subscription OnDeleteQuestionData {
-    onDeleteQuestionData {
+  subscription OnDeleteQuestionData(
+    $filter: ModelSubscriptionQuestionDataFilterInput
+  ) {
+    onDeleteQuestionData(filter: $filter) {
       id
       syllabusLessonID
       checkpointID
@@ -6531,6 +6790,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6547,6 +6807,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6566,8 +6827,10 @@ export const onDeleteQuestionData = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionDataStudentData = /* GraphQL */ `
-  subscription OnCreateQuestionDataStudentData {
-    onCreateQuestionDataStudentData {
+  subscription OnCreateQuestionDataStudentData(
+    $filter: ModelSubscriptionQuestionDataStudentDataFilterInput
+  ) {
+    onCreateQuestionDataStudentData(filter: $filter) {
       id
       studentDataID
       studentData {
@@ -6595,6 +6858,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6605,6 +6869,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6652,6 +6917,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6662,6 +6928,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6684,8 +6951,10 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionDataStudentData = /* GraphQL */ `
-  subscription OnUpdateQuestionDataStudentData {
-    onUpdateQuestionDataStudentData {
+  subscription OnUpdateQuestionDataStudentData(
+    $filter: ModelSubscriptionQuestionDataStudentDataFilterInput
+  ) {
+    onUpdateQuestionDataStudentData(filter: $filter) {
       id
       studentDataID
       studentData {
@@ -6713,6 +6982,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6723,6 +6993,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6770,6 +7041,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6780,6 +7052,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6802,8 +7075,10 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionDataStudentData = /* GraphQL */ `
-  subscription OnDeleteQuestionDataStudentData {
-    onDeleteQuestionDataStudentData {
+  subscription OnDeleteQuestionDataStudentData(
+    $filter: ModelSubscriptionQuestionDataStudentDataFilterInput
+  ) {
+    onDeleteQuestionDataStudentData(filter: $filter) {
       id
       studentDataID
       studentData {
@@ -6831,6 +7106,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6841,6 +7117,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6888,6 +7165,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6898,6 +7176,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6920,8 +7199,10 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
   }
 `;
 export const onCreatePersonLocation = /* GraphQL */ `
-  subscription OnCreatePersonLocation {
-    onCreatePersonLocation {
+  subscription OnCreatePersonLocation(
+    $filter: ModelSubscriptionPersonLocationFilterInput
+  ) {
+    onCreatePersonLocation(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -6946,6 +7227,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6962,6 +7244,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7024,6 +7307,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7034,6 +7318,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7086,8 +7371,10 @@ export const onCreatePersonLocation = /* GraphQL */ `
   }
 `;
 export const onUpdatePersonLocation = /* GraphQL */ `
-  subscription OnUpdatePersonLocation {
-    onUpdatePersonLocation {
+  subscription OnUpdatePersonLocation(
+    $filter: ModelSubscriptionPersonLocationFilterInput
+  ) {
+    onUpdatePersonLocation(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -7112,6 +7399,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7128,6 +7416,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7190,6 +7479,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7200,6 +7490,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7252,8 +7543,10 @@ export const onUpdatePersonLocation = /* GraphQL */ `
   }
 `;
 export const onDeletePersonLocation = /* GraphQL */ `
-  subscription OnDeletePersonLocation {
-    onDeletePersonLocation {
+  subscription OnDeletePersonLocation(
+    $filter: ModelSubscriptionPersonLocationFilterInput
+  ) {
+    onDeletePersonLocation(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -7278,6 +7571,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7294,6 +7588,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7356,6 +7651,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7366,6 +7662,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7418,8 +7715,10 @@ export const onDeletePersonLocation = /* GraphQL */ `
   }
 `;
 export const onCreateAttendance = /* GraphQL */ `
-  subscription OnCreateAttendance {
-    onCreateAttendance {
+  subscription OnCreateAttendance(
+    $filter: ModelSubscriptionAttendanceFilterInput
+  ) {
+    onCreateAttendance(filter: $filter) {
       id
       studentID
       curriculumID
@@ -7655,6 +7954,7 @@ export const onCreateAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7665,6 +7965,7 @@ export const onCreateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7717,8 +8018,10 @@ export const onCreateAttendance = /* GraphQL */ `
   }
 `;
 export const onUpdateAttendance = /* GraphQL */ `
-  subscription OnUpdateAttendance {
-    onUpdateAttendance {
+  subscription OnUpdateAttendance(
+    $filter: ModelSubscriptionAttendanceFilterInput
+  ) {
+    onUpdateAttendance(filter: $filter) {
       id
       studentID
       curriculumID
@@ -7954,6 +8257,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7964,6 +8268,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -8016,8 +8321,10 @@ export const onUpdateAttendance = /* GraphQL */ `
   }
 `;
 export const onDeleteAttendance = /* GraphQL */ `
-  subscription OnDeleteAttendance {
-    onDeleteAttendance {
+  subscription OnDeleteAttendance(
+    $filter: ModelSubscriptionAttendanceFilterInput
+  ) {
+    onDeleteAttendance(filter: $filter) {
       id
       studentID
       curriculumID
@@ -8253,6 +8560,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -8263,6 +8571,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -8315,8 +8624,10 @@ export const onDeleteAttendance = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalLesson = /* GraphQL */ `
-  subscription OnCreateUniversalLesson {
-    onCreateUniversalLesson {
+  subscription OnCreateUniversalLesson(
+    $filter: ModelSubscriptionUniversalLessonFilterInput
+  ) {
+    onCreateUniversalLesson(filter: $filter) {
       id
       type
       label
@@ -8437,8 +8748,10 @@ export const onCreateUniversalLesson = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalLesson = /* GraphQL */ `
-  subscription OnUpdateUniversalLesson {
-    onUpdateUniversalLesson {
+  subscription OnUpdateUniversalLesson(
+    $filter: ModelSubscriptionUniversalLessonFilterInput
+  ) {
+    onUpdateUniversalLesson(filter: $filter) {
       id
       type
       label
@@ -8559,8 +8872,10 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalLesson = /* GraphQL */ `
-  subscription OnDeleteUniversalLesson {
-    onDeleteUniversalLesson {
+  subscription OnDeleteUniversalLesson(
+    $filter: ModelSubscriptionUniversalLessonFilterInput
+  ) {
+    onDeleteUniversalLesson(filter: $filter) {
       id
       type
       label
@@ -8681,8 +8996,10 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalLessonStudentData = /* GraphQL */ `
-  subscription OnCreateUniversalLessonStudentData {
-    onCreateUniversalLessonStudentData {
+  subscription OnCreateUniversalLessonStudentData(
+    $filter: ModelSubscriptionUniversalLessonStudentDataFilterInput
+  ) {
+    onCreateUniversalLessonStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8720,8 +9037,10 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
-  subscription OnUpdateUniversalLessonStudentData {
-    onUpdateUniversalLessonStudentData {
+  subscription OnUpdateUniversalLessonStudentData(
+    $filter: ModelSubscriptionUniversalLessonStudentDataFilterInput
+  ) {
+    onUpdateUniversalLessonStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8759,8 +9078,10 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
-  subscription OnDeleteUniversalLessonStudentData {
-    onDeleteUniversalLessonStudentData {
+  subscription OnDeleteUniversalLessonStudentData(
+    $filter: ModelSubscriptionUniversalLessonStudentDataFilterInput
+  ) {
+    onDeleteUniversalLessonStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8798,8 +9119,10 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
-  subscription OnCreateUniversalLessonWritingExcercises {
-    onCreateUniversalLessonWritingExcercises {
+  subscription OnCreateUniversalLessonWritingExcercises(
+    $filter: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput
+  ) {
+    onCreateUniversalLessonWritingExcercises(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8837,8 +9160,10 @@ export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
-  subscription OnUpdateUniversalLessonWritingExcercises {
-    onUpdateUniversalLessonWritingExcercises {
+  subscription OnUpdateUniversalLessonWritingExcercises(
+    $filter: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput
+  ) {
+    onUpdateUniversalLessonWritingExcercises(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8876,8 +9201,10 @@ export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
-  subscription OnDeleteUniversalLessonWritingExcercises {
-    onDeleteUniversalLessonWritingExcercises {
+  subscription OnDeleteUniversalLessonWritingExcercises(
+    $filter: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput
+  ) {
+    onDeleteUniversalLessonWritingExcercises(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8915,8 +9242,10 @@ export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalArchiveData = /* GraphQL */ `
-  subscription OnCreateUniversalArchiveData {
-    onCreateUniversalArchiveData {
+  subscription OnCreateUniversalArchiveData(
+    $filter: ModelSubscriptionUniversalArchiveDataFilterInput
+  ) {
+    onCreateUniversalArchiveData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8954,8 +9283,10 @@ export const onCreateUniversalArchiveData = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalArchiveData = /* GraphQL */ `
-  subscription OnUpdateUniversalArchiveData {
-    onUpdateUniversalArchiveData {
+  subscription OnUpdateUniversalArchiveData(
+    $filter: ModelSubscriptionUniversalArchiveDataFilterInput
+  ) {
+    onUpdateUniversalArchiveData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -8993,8 +9324,10 @@ export const onUpdateUniversalArchiveData = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalArchiveData = /* GraphQL */ `
-  subscription OnDeleteUniversalArchiveData {
-    onDeleteUniversalArchiveData {
+  subscription OnDeleteUniversalArchiveData(
+    $filter: ModelSubscriptionUniversalArchiveDataFilterInput
+  ) {
+    onDeleteUniversalArchiveData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -9032,8 +9365,10 @@ export const onDeleteUniversalArchiveData = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalSurveyStudentData = /* GraphQL */ `
-  subscription OnCreateUniversalSurveyStudentData {
-    onCreateUniversalSurveyStudentData {
+  subscription OnCreateUniversalSurveyStudentData(
+    $filter: ModelSubscriptionUniversalSurveyStudentDataFilterInput
+  ) {
+    onCreateUniversalSurveyStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -9059,8 +9394,10 @@ export const onCreateUniversalSurveyStudentData = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalSurveyStudentData = /* GraphQL */ `
-  subscription OnUpdateUniversalSurveyStudentData {
-    onUpdateUniversalSurveyStudentData {
+  subscription OnUpdateUniversalSurveyStudentData(
+    $filter: ModelSubscriptionUniversalSurveyStudentDataFilterInput
+  ) {
+    onUpdateUniversalSurveyStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -9086,8 +9423,10 @@ export const onUpdateUniversalSurveyStudentData = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalSurveyStudentData = /* GraphQL */ `
-  subscription OnDeleteUniversalSurveyStudentData {
-    onDeleteUniversalSurveyStudentData {
+  subscription OnDeleteUniversalSurveyStudentData(
+    $filter: ModelSubscriptionUniversalSurveyStudentDataFilterInput
+  ) {
+    onDeleteUniversalSurveyStudentData(filter: $filter) {
       id
       syllabusLessonID
       lessonID
@@ -9113,8 +9452,10 @@ export const onDeleteUniversalSurveyStudentData = /* GraphQL */ `
   }
 `;
 export const onCreateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
-  subscription OnCreateTemporaryUniversalUploadSurveyData {
-    onCreateTemporaryUniversalUploadSurveyData {
+  subscription OnCreateTemporaryUniversalUploadSurveyData(
+    $filter: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput
+  ) {
+    onCreateTemporaryUniversalUploadSurveyData(filter: $filter) {
       id
       updatedUserId
       universalSurveyId
@@ -9153,8 +9494,10 @@ export const onCreateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
   }
 `;
 export const onUpdateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
-  subscription OnUpdateTemporaryUniversalUploadSurveyData {
-    onUpdateTemporaryUniversalUploadSurveyData {
+  subscription OnUpdateTemporaryUniversalUploadSurveyData(
+    $filter: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput
+  ) {
+    onUpdateTemporaryUniversalUploadSurveyData(filter: $filter) {
       id
       updatedUserId
       universalSurveyId
@@ -9193,8 +9536,10 @@ export const onUpdateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
   }
 `;
 export const onDeleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
-  subscription OnDeleteTemporaryUniversalUploadSurveyData {
-    onDeleteTemporaryUniversalUploadSurveyData {
+  subscription OnDeleteTemporaryUniversalUploadSurveyData(
+    $filter: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput
+  ) {
+    onDeleteTemporaryUniversalUploadSurveyData(filter: $filter) {
       id
       updatedUserId
       universalSurveyId
@@ -9233,8 +9578,10 @@ export const onDeleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
   }
 `;
 export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
-  subscription OnCreateTemporaryDemographicsUploadData {
-    onCreateTemporaryDemographicsUploadData {
+  subscription OnCreateTemporaryDemographicsUploadData(
+    $filter: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput
+  ) {
+    onCreateTemporaryDemographicsUploadData(filter: $filter) {
       id
       updatedUserId
       questionDataID
@@ -9260,6 +9607,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9270,6 +9618,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9298,8 +9647,10 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
   }
 `;
 export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
-  subscription OnUpdateTemporaryDemographicsUploadData {
-    onUpdateTemporaryDemographicsUploadData {
+  subscription OnUpdateTemporaryDemographicsUploadData(
+    $filter: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput
+  ) {
+    onUpdateTemporaryDemographicsUploadData(filter: $filter) {
       id
       updatedUserId
       questionDataID
@@ -9325,6 +9676,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9335,6 +9687,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9363,8 +9716,10 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
   }
 `;
 export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
-  subscription OnDeleteTemporaryDemographicsUploadData {
-    onDeleteTemporaryDemographicsUploadData {
+  subscription OnDeleteTemporaryDemographicsUploadData(
+    $filter: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput
+  ) {
+    onDeleteTemporaryDemographicsUploadData(filter: $filter) {
       id
       updatedUserId
       questionDataID
@@ -9390,6 +9745,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -9400,6 +9756,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -9428,8 +9785,10 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
   }
 `;
 export const onCreateUploadLogs = /* GraphQL */ `
-  subscription OnCreateUploadLogs {
-    onCreateUploadLogs {
+  subscription OnCreateUploadLogs(
+    $filter: ModelSubscriptionUploadLogsFilterInput
+  ) {
+    onCreateUploadLogs(filter: $filter) {
       id
       User_id
       TemporaryUniversalUploadSurveyDataID
@@ -9500,8 +9859,10 @@ export const onCreateUploadLogs = /* GraphQL */ `
   }
 `;
 export const onUpdateUploadLogs = /* GraphQL */ `
-  subscription OnUpdateUploadLogs {
-    onUpdateUploadLogs {
+  subscription OnUpdateUploadLogs(
+    $filter: ModelSubscriptionUploadLogsFilterInput
+  ) {
+    onUpdateUploadLogs(filter: $filter) {
       id
       User_id
       TemporaryUniversalUploadSurveyDataID
@@ -9572,8 +9933,10 @@ export const onUpdateUploadLogs = /* GraphQL */ `
   }
 `;
 export const onDeleteUploadLogs = /* GraphQL */ `
-  subscription OnDeleteUploadLogs {
-    onDeleteUploadLogs {
+  subscription OnDeleteUploadLogs(
+    $filter: ModelSubscriptionUploadLogsFilterInput
+  ) {
+    onDeleteUploadLogs(filter: $filter) {
       id
       User_id
       TemporaryUniversalUploadSurveyDataID
@@ -9644,8 +10007,10 @@ export const onDeleteUploadLogs = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalJournalData = /* GraphQL */ `
-  subscription OnCreateUniversalJournalData {
-    onCreateUniversalJournalData {
+  subscription OnCreateUniversalJournalData(
+    $filter: ModelSubscriptionUniversalJournalDataFilterInput
+  ) {
+    onCreateUniversalJournalData(filter: $filter) {
       id
       studentID
       studentAuthID
@@ -9668,8 +10033,10 @@ export const onCreateUniversalJournalData = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalJournalData = /* GraphQL */ `
-  subscription OnUpdateUniversalJournalData {
-    onUpdateUniversalJournalData {
+  subscription OnUpdateUniversalJournalData(
+    $filter: ModelSubscriptionUniversalJournalDataFilterInput
+  ) {
+    onUpdateUniversalJournalData(filter: $filter) {
       id
       studentID
       studentAuthID
@@ -9692,8 +10059,10 @@ export const onUpdateUniversalJournalData = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalJournalData = /* GraphQL */ `
-  subscription OnDeleteUniversalJournalData {
-    onDeleteUniversalJournalData {
+  subscription OnDeleteUniversalJournalData(
+    $filter: ModelSubscriptionUniversalJournalDataFilterInput
+  ) {
+    onDeleteUniversalJournalData(filter: $filter) {
       id
       studentID
       studentAuthID
@@ -9716,8 +10085,10 @@ export const onDeleteUniversalJournalData = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalSyllabus = /* GraphQL */ `
-  subscription OnCreateUniversalSyllabus {
-    onCreateUniversalSyllabus {
+  subscription OnCreateUniversalSyllabus(
+    $filter: ModelSubscriptionUniversalSyllabusFilterInput
+  ) {
+    onCreateUniversalSyllabus(filter: $filter) {
       id
       name
       type
@@ -9794,8 +10165,10 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalSyllabus = /* GraphQL */ `
-  subscription OnUpdateUniversalSyllabus {
-    onUpdateUniversalSyllabus {
+  subscription OnUpdateUniversalSyllabus(
+    $filter: ModelSubscriptionUniversalSyllabusFilterInput
+  ) {
+    onUpdateUniversalSyllabus(filter: $filter) {
       id
       name
       type
@@ -9872,8 +10245,10 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalSyllabus = /* GraphQL */ `
-  subscription OnDeleteUniversalSyllabus {
-    onDeleteUniversalSyllabus {
+  subscription OnDeleteUniversalSyllabus(
+    $filter: ModelSubscriptionUniversalSyllabusFilterInput
+  ) {
+    onDeleteUniversalSyllabus(filter: $filter) {
       id
       name
       type
@@ -9950,8 +10325,10 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
   }
 `;
 export const onCreateCurriculumUnits = /* GraphQL */ `
-  subscription OnCreateCurriculumUnits {
-    onCreateCurriculumUnits {
+  subscription OnCreateCurriculumUnits(
+    $filter: ModelSubscriptionCurriculumUnitsFilterInput
+  ) {
+    onCreateCurriculumUnits(filter: $filter) {
       id
       unitId
       unit {
@@ -10002,8 +10379,10 @@ export const onCreateCurriculumUnits = /* GraphQL */ `
   }
 `;
 export const onUpdateCurriculumUnits = /* GraphQL */ `
-  subscription OnUpdateCurriculumUnits {
-    onUpdateCurriculumUnits {
+  subscription OnUpdateCurriculumUnits(
+    $filter: ModelSubscriptionCurriculumUnitsFilterInput
+  ) {
+    onUpdateCurriculumUnits(filter: $filter) {
       id
       unitId
       unit {
@@ -10054,8 +10433,10 @@ export const onUpdateCurriculumUnits = /* GraphQL */ `
   }
 `;
 export const onDeleteCurriculumUnits = /* GraphQL */ `
-  subscription OnDeleteCurriculumUnits {
-    onDeleteCurriculumUnits {
+  subscription OnDeleteCurriculumUnits(
+    $filter: ModelSubscriptionCurriculumUnitsFilterInput
+  ) {
+    onDeleteCurriculumUnits(filter: $filter) {
       id
       unitId
       unit {
@@ -10106,8 +10487,10 @@ export const onDeleteCurriculumUnits = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
-  subscription OnCreateUniversalSyllabusLesson {
-    onCreateUniversalSyllabusLesson {
+  subscription OnCreateUniversalSyllabusLesson(
+    $filter: ModelSubscriptionUniversalSyllabusLessonFilterInput
+  ) {
+    onCreateUniversalSyllabusLesson(filter: $filter) {
       id
       syllabusID
       lessonID
@@ -10240,8 +10623,10 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
-  subscription OnUpdateUniversalSyllabusLesson {
-    onUpdateUniversalSyllabusLesson {
+  subscription OnUpdateUniversalSyllabusLesson(
+    $filter: ModelSubscriptionUniversalSyllabusLessonFilterInput
+  ) {
+    onUpdateUniversalSyllabusLesson(filter: $filter) {
       id
       syllabusID
       lessonID
@@ -10374,8 +10759,10 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
-  subscription OnDeleteUniversalSyllabusLesson {
-    onDeleteUniversalSyllabusLesson {
+  subscription OnDeleteUniversalSyllabusLesson(
+    $filter: ModelSubscriptionUniversalSyllabusLessonFilterInput
+  ) {
+    onDeleteUniversalSyllabusLesson(filter: $filter) {
       id
       syllabusID
       lessonID
@@ -10508,8 +10895,10 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
   }
 `;
 export const onCreateUniversalLessonFeedback = /* GraphQL */ `
-  subscription OnCreateUniversalLessonFeedback {
-    onCreateUniversalLessonFeedback {
+  subscription OnCreateUniversalLessonFeedback(
+    $filter: ModelSubscriptionUniversalLessonFeedbackFilterInput
+  ) {
+    onCreateUniversalLessonFeedback(filter: $filter) {
       id
       syllabusLessonID
       liked
@@ -10585,8 +10974,10 @@ export const onCreateUniversalLessonFeedback = /* GraphQL */ `
   }
 `;
 export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
-  subscription OnUpdateUniversalLessonFeedback {
-    onUpdateUniversalLessonFeedback {
+  subscription OnUpdateUniversalLessonFeedback(
+    $filter: ModelSubscriptionUniversalLessonFeedbackFilterInput
+  ) {
+    onUpdateUniversalLessonFeedback(filter: $filter) {
       id
       syllabusLessonID
       liked
@@ -10662,8 +11053,10 @@ export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
   }
 `;
 export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
-  subscription OnDeleteUniversalLessonFeedback {
-    onDeleteUniversalLessonFeedback {
+  subscription OnDeleteUniversalLessonFeedback(
+    $filter: ModelSubscriptionUniversalLessonFeedbackFilterInput
+  ) {
+    onDeleteUniversalLessonFeedback(filter: $filter) {
       id
       syllabusLessonID
       liked
@@ -10739,8 +11132,10 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
   }
 `;
 export const onCreateStudentConnections = /* GraphQL */ `
-  subscription OnCreateStudentConnections {
-    onCreateStudentConnections {
+  subscription OnCreateStudentConnections(
+    $filter: ModelSubscriptionStudentConnectionsFilterInput
+  ) {
+    onCreateStudentConnections(filter: $filter) {
       fromEmail
       fromAuthID
       toEmail
@@ -10762,6 +11157,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10778,6 +11174,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10798,6 +11195,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10814,6 +11212,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10825,8 +11224,10 @@ export const onCreateStudentConnections = /* GraphQL */ `
   }
 `;
 export const onUpdateStudentConnections = /* GraphQL */ `
-  subscription OnUpdateStudentConnections {
-    onUpdateStudentConnections {
+  subscription OnUpdateStudentConnections(
+    $filter: ModelSubscriptionStudentConnectionsFilterInput
+  ) {
+    onUpdateStudentConnections(filter: $filter) {
       fromEmail
       fromAuthID
       toEmail
@@ -10848,6 +11249,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10864,6 +11266,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10884,6 +11287,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10900,6 +11304,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10911,8 +11316,10 @@ export const onUpdateStudentConnections = /* GraphQL */ `
   }
 `;
 export const onDeleteStudentConnections = /* GraphQL */ `
-  subscription OnDeleteStudentConnections {
-    onDeleteStudentConnections {
+  subscription OnDeleteStudentConnections(
+    $filter: ModelSubscriptionStudentConnectionsFilterInput
+  ) {
+    onDeleteStudentConnections(filter: $filter) {
       fromEmail
       fromAuthID
       toEmail
@@ -10934,6 +11341,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10950,6 +11358,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10970,6 +11379,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -10986,6 +11396,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -10997,8 +11408,10 @@ export const onDeleteStudentConnections = /* GraphQL */ `
   }
 `;
 export const onCreatePersonSentiments = /* GraphQL */ `
-  subscription OnCreatePersonSentiments {
-    onCreatePersonSentiments {
+  subscription OnCreatePersonSentiments(
+    $filter: ModelSubscriptionPersonSentimentsFilterInput
+  ) {
+    onCreatePersonSentiments(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11017,6 +11430,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11033,6 +11447,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11047,8 +11462,10 @@ export const onCreatePersonSentiments = /* GraphQL */ `
   }
 `;
 export const onUpdatePersonSentiments = /* GraphQL */ `
-  subscription OnUpdatePersonSentiments {
-    onUpdatePersonSentiments {
+  subscription OnUpdatePersonSentiments(
+    $filter: ModelSubscriptionPersonSentimentsFilterInput
+  ) {
+    onUpdatePersonSentiments(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11067,6 +11484,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11083,6 +11501,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11097,8 +11516,10 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
   }
 `;
 export const onDeletePersonSentiments = /* GraphQL */ `
-  subscription OnDeletePersonSentiments {
-    onDeletePersonSentiments {
+  subscription OnDeletePersonSentiments(
+    $filter: ModelSubscriptionPersonSentimentsFilterInput
+  ) {
+    onDeletePersonSentiments(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11117,6 +11538,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11133,6 +11555,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11147,8 +11570,10 @@ export const onDeletePersonSentiments = /* GraphQL */ `
   }
 `;
 export const onCreateSentiments = /* GraphQL */ `
-  subscription OnCreateSentiments {
-    onCreateSentiments {
+  subscription OnCreateSentiments(
+    $filter: ModelSubscriptionSentimentsFilterInput
+  ) {
+    onCreateSentiments(filter: $filter) {
       id
       sentimentName
       sentimentType
@@ -11158,8 +11583,10 @@ export const onCreateSentiments = /* GraphQL */ `
   }
 `;
 export const onUpdateSentiments = /* GraphQL */ `
-  subscription OnUpdateSentiments {
-    onUpdateSentiments {
+  subscription OnUpdateSentiments(
+    $filter: ModelSubscriptionSentimentsFilterInput
+  ) {
+    onUpdateSentiments(filter: $filter) {
       id
       sentimentName
       sentimentType
@@ -11169,8 +11596,10 @@ export const onUpdateSentiments = /* GraphQL */ `
   }
 `;
 export const onDeleteSentiments = /* GraphQL */ `
-  subscription OnDeleteSentiments {
-    onDeleteSentiments {
+  subscription OnDeleteSentiments(
+    $filter: ModelSubscriptionSentimentsFilterInput
+  ) {
+    onDeleteSentiments(filter: $filter) {
       id
       sentimentName
       sentimentType
@@ -11180,8 +11609,10 @@ export const onDeleteSentiments = /* GraphQL */ `
   }
 `;
 export const onCreateSentimentTracker = /* GraphQL */ `
-  subscription OnCreateSentimentTracker {
-    onCreateSentimentTracker {
+  subscription OnCreateSentimentTracker(
+    $filter: ModelSubscriptionSentimentTrackerFilterInput
+  ) {
+    onCreateSentimentTracker(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11200,6 +11631,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11216,6 +11648,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11287,6 +11720,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11297,6 +11731,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11419,8 +11854,10 @@ export const onCreateSentimentTracker = /* GraphQL */ `
   }
 `;
 export const onUpdateSentimentTracker = /* GraphQL */ `
-  subscription OnUpdateSentimentTracker {
-    onUpdateSentimentTracker {
+  subscription OnUpdateSentimentTracker(
+    $filter: ModelSubscriptionSentimentTrackerFilterInput
+  ) {
+    onUpdateSentimentTracker(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11439,6 +11876,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11455,6 +11893,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11526,6 +11965,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11536,6 +11976,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11658,8 +12099,10 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
   }
 `;
 export const onDeleteSentimentTracker = /* GraphQL */ `
-  subscription OnDeleteSentimentTracker {
-    onDeleteSentimentTracker {
+  subscription OnDeleteSentimentTracker(
+    $filter: ModelSubscriptionSentimentTrackerFilterInput
+  ) {
+    onDeleteSentimentTracker(filter: $filter) {
       personAuthID
       personEmail
       person {
@@ -11678,6 +12121,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11694,6 +12138,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -11765,6 +12210,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -11775,6 +12221,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -11897,8 +12344,10 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
   }
 `;
 export const onCreateFeelingTracker = /* GraphQL */ `
-  subscription OnCreateFeelingTracker {
-    onCreateFeelingTracker {
+  subscription OnCreateFeelingTracker(
+    $filter: ModelSubscriptionFeelingTrackerFilterInput
+  ) {
+    onCreateFeelingTracker(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -11918,6 +12367,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -11934,6 +12384,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12005,6 +12456,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12015,6 +12467,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12072,8 +12525,10 @@ export const onCreateFeelingTracker = /* GraphQL */ `
   }
 `;
 export const onUpdateFeelingTracker = /* GraphQL */ `
-  subscription OnUpdateFeelingTracker {
-    onUpdateFeelingTracker {
+  subscription OnUpdateFeelingTracker(
+    $filter: ModelSubscriptionFeelingTrackerFilterInput
+  ) {
+    onUpdateFeelingTracker(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -12093,6 +12548,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12109,6 +12565,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12180,6 +12637,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12190,6 +12648,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12247,8 +12706,10 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
   }
 `;
 export const onDeleteFeelingTracker = /* GraphQL */ `
-  subscription OnDeleteFeelingTracker {
-    onDeleteFeelingTracker {
+  subscription OnDeleteFeelingTracker(
+    $filter: ModelSubscriptionFeelingTrackerFilterInput
+  ) {
+    onDeleteFeelingTracker(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -12268,6 +12729,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12284,6 +12746,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12355,6 +12818,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12365,6 +12829,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12422,8 +12887,10 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
   }
 `;
 export const onCreateFeelingsArchive = /* GraphQL */ `
-  subscription OnCreateFeelingsArchive {
-    onCreateFeelingsArchive {
+  subscription OnCreateFeelingsArchive(
+    $filter: ModelSubscriptionFeelingsArchiveFilterInput
+  ) {
+    onCreateFeelingsArchive(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -12443,6 +12910,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12459,6 +12927,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12533,6 +13002,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12543,6 +13013,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12686,8 +13157,10 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
   }
 `;
 export const onUpdateFeelingsArchive = /* GraphQL */ `
-  subscription OnUpdateFeelingsArchive {
-    onUpdateFeelingsArchive {
+  subscription OnUpdateFeelingsArchive(
+    $filter: ModelSubscriptionFeelingsArchiveFilterInput
+  ) {
+    onUpdateFeelingsArchive(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -12707,6 +13180,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12723,6 +13197,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -12797,6 +13272,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -12807,6 +13283,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -12950,8 +13427,10 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
   }
 `;
 export const onDeleteFeelingsArchive = /* GraphQL */ `
-  subscription OnDeleteFeelingsArchive {
-    onDeleteFeelingsArchive {
+  subscription OnDeleteFeelingsArchive(
+    $filter: ModelSubscriptionFeelingsArchiveFilterInput
+  ) {
+    onDeleteFeelingsArchive(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -12971,6 +13450,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -12987,6 +13467,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13061,6 +13542,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -13071,6 +13553,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -13214,8 +13697,10 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
   }
 `;
 export const onCreatePersonFiles = /* GraphQL */ `
-  subscription OnCreatePersonFiles {
-    onCreatePersonFiles {
+  subscription OnCreatePersonFiles(
+    $filter: ModelSubscriptionPersonFilesFilterInput
+  ) {
+    onCreatePersonFiles(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -13238,8 +13723,10 @@ export const onCreatePersonFiles = /* GraphQL */ `
   }
 `;
 export const onUpdatePersonFiles = /* GraphQL */ `
-  subscription OnUpdatePersonFiles {
-    onUpdatePersonFiles {
+  subscription OnUpdatePersonFiles(
+    $filter: ModelSubscriptionPersonFilesFilterInput
+  ) {
+    onUpdatePersonFiles(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -13262,8 +13749,10 @@ export const onUpdatePersonFiles = /* GraphQL */ `
   }
 `;
 export const onDeletePersonFiles = /* GraphQL */ `
-  subscription OnDeletePersonFiles {
-    onDeletePersonFiles {
+  subscription OnDeletePersonFiles(
+    $filter: ModelSubscriptionPersonFilesFilterInput
+  ) {
+    onDeletePersonFiles(filter: $filter) {
       id
       personAuthID
       personEmail
@@ -13286,8 +13775,10 @@ export const onDeletePersonFiles = /* GraphQL */ `
   }
 `;
 export const onCreateCommunity = /* GraphQL */ `
-  subscription OnCreateCommunity {
-    onCreateCommunity {
+  subscription OnCreateCommunity(
+    $filter: ModelSubscriptionCommunityFilterInput
+  ) {
+    onCreateCommunity(filter: $filter) {
       id
       institutionID
       institution {
@@ -13357,6 +13848,7 @@ export const onCreateCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13373,6 +13865,7 @@ export const onCreateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13399,8 +13892,10 @@ export const onCreateCommunity = /* GraphQL */ `
   }
 `;
 export const onUpdateCommunity = /* GraphQL */ `
-  subscription OnUpdateCommunity {
-    onUpdateCommunity {
+  subscription OnUpdateCommunity(
+    $filter: ModelSubscriptionCommunityFilterInput
+  ) {
+    onUpdateCommunity(filter: $filter) {
       id
       institutionID
       institution {
@@ -13470,6 +13965,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13486,6 +13982,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13512,8 +14009,10 @@ export const onUpdateCommunity = /* GraphQL */ `
   }
 `;
 export const onDeleteCommunity = /* GraphQL */ `
-  subscription OnDeleteCommunity {
-    onDeleteCommunity {
+  subscription OnDeleteCommunity(
+    $filter: ModelSubscriptionCommunityFilterInput
+  ) {
+    onDeleteCommunity(filter: $filter) {
       id
       institutionID
       institution {
@@ -13583,6 +14082,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13599,6 +14099,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13625,8 +14126,10 @@ export const onDeleteCommunity = /* GraphQL */ `
   }
 `;
 export const onCreateGameChanger = /* GraphQL */ `
-  subscription OnCreateGameChanger {
-    onCreateGameChanger {
+  subscription OnCreateGameChanger(
+    $filter: ModelSubscriptionGameChangerFilterInput
+  ) {
+    onCreateGameChanger(filter: $filter) {
       id
       gameChangerName
       title
@@ -13640,8 +14143,10 @@ export const onCreateGameChanger = /* GraphQL */ `
   }
 `;
 export const onUpdateGameChanger = /* GraphQL */ `
-  subscription OnUpdateGameChanger {
-    onUpdateGameChanger {
+  subscription OnUpdateGameChanger(
+    $filter: ModelSubscriptionGameChangerFilterInput
+  ) {
+    onUpdateGameChanger(filter: $filter) {
       id
       gameChangerName
       title
@@ -13655,8 +14160,10 @@ export const onUpdateGameChanger = /* GraphQL */ `
   }
 `;
 export const onDeleteGameChanger = /* GraphQL */ `
-  subscription OnDeleteGameChanger {
-    onDeleteGameChanger {
+  subscription OnDeleteGameChanger(
+    $filter: ModelSubscriptionGameChangerFilterInput
+  ) {
+    onDeleteGameChanger(filter: $filter) {
       id
       gameChangerName
       title
@@ -13670,8 +14177,10 @@ export const onDeleteGameChanger = /* GraphQL */ `
   }
 `;
 export const onCreateGameChangerLog = /* GraphQL */ `
-  subscription OnCreateGameChangerLog {
-    onCreateGameChangerLog {
+  subscription OnCreateGameChangerLog(
+    $filter: ModelSubscriptionGameChangerLogFilterInput
+  ) {
+    onCreateGameChangerLog(filter: $filter) {
       id
       gameChangerID
       gameChanger {
@@ -13703,6 +14212,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13719,6 +14229,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13731,8 +14242,10 @@ export const onCreateGameChangerLog = /* GraphQL */ `
   }
 `;
 export const onUpdateGameChangerLog = /* GraphQL */ `
-  subscription OnUpdateGameChangerLog {
-    onUpdateGameChangerLog {
+  subscription OnUpdateGameChangerLog(
+    $filter: ModelSubscriptionGameChangerLogFilterInput
+  ) {
+    onUpdateGameChangerLog(filter: $filter) {
       id
       gameChangerID
       gameChanger {
@@ -13764,6 +14277,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13780,6 +14294,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13792,8 +14307,10 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
   }
 `;
 export const onDeleteGameChangerLog = /* GraphQL */ `
-  subscription OnDeleteGameChangerLog {
-    onDeleteGameChangerLog {
+  subscription OnDeleteGameChangerLog(
+    $filter: ModelSubscriptionGameChangerLogFilterInput
+  ) {
+    onDeleteGameChangerLog(filter: $filter) {
       id
       gameChangerID
       gameChanger {
@@ -13825,6 +14342,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -13841,6 +14359,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -13853,8 +14372,10 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
   }
 `;
 export const onCreateCommunityChat = /* GraphQL */ `
-  subscription OnCreateCommunityChat {
-    onCreateCommunityChat {
+  subscription OnCreateCommunityChat(
+    $filter: ModelSubscriptionCommunityChatFilterInput
+  ) {
+    onCreateCommunityChat(filter: $filter) {
       id
       communityId
       personAuthID
@@ -13867,8 +14388,10 @@ export const onCreateCommunityChat = /* GraphQL */ `
   }
 `;
 export const onUpdateCommunityChat = /* GraphQL */ `
-  subscription OnUpdateCommunityChat {
-    onUpdateCommunityChat {
+  subscription OnUpdateCommunityChat(
+    $filter: ModelSubscriptionCommunityChatFilterInput
+  ) {
+    onUpdateCommunityChat(filter: $filter) {
       id
       communityId
       personAuthID
@@ -13881,8 +14404,10 @@ export const onUpdateCommunityChat = /* GraphQL */ `
   }
 `;
 export const onDeleteCommunityChat = /* GraphQL */ `
-  subscription OnDeleteCommunityChat {
-    onDeleteCommunityChat {
+  subscription OnDeleteCommunityChat(
+    $filter: ModelSubscriptionCommunityChatFilterInput
+  ) {
+    onDeleteCommunityChat(filter: $filter) {
       id
       communityId
       personAuthID

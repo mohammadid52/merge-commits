@@ -1,23 +1,23 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
+import {HiEmojiHappy} from 'react-icons/hi';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import Storage from '@aws-amplify/storage';
-import * as mutations from '../../../../graphql/mutations';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+import * as mutations from '../../../../graphql/mutations';
 import {getImageFromS3} from '../../../../utilities/services';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
+import Modal from '../../../Atoms/Modal';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import Feedback from '../../Admin/UserManagement/Feedback';
-import Modal from '../../../Atoms/Modal';
-import {getAsset} from '../../../../assets';
-import {HiEmojiHappy} from 'react-icons/hi';
-import EmojiPicker from 'emoji-picker-react';
 
 const Feedbacks = ({
   showComments,
@@ -358,6 +358,7 @@ const Feedbacks = ({
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
+        acl: 'public-read',
         progressCallback: ({loaded, total}: any) => {
           console.log((loaded * 100) / total);
         },

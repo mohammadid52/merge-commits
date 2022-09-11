@@ -13,6 +13,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
 import Papa from 'papaparse';
 import * as customQueries from '../../../customGraphql/customQueries';
+import Label from '@components/Atoms/Form/Label';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -70,6 +71,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       const FileUpload = await Storage.put(imageFileName, imageFile, {
         contentType: imageFileType,
         contentEncoding: 'base64',
+        acl: 'public-read',
         completeCallback: (event: any) => {
           console.log(`Successfully uploaded ${event.key}`);
         },
@@ -757,31 +759,40 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
       </div>
-      <input
-        id="csvFile"
-        type="file"
-        accept=".csv,.xlsx,.xls"
-        ref={csvInputRef}
-        onChange={handleUpload}
-      />
-      <br />
-      <Selector
-        btnClass={!file && 'cursor-not-allowed'}
-        disabled={!file}
-        loading={loading}
-        selectedItem={selectedReason ? selectedReason.name : ''}
-        placeholder="Select Reason"
-        list={reasonDropdown}
-        onChange={(value, name, id) => onReasonSelected(id, name, value)}
-      />
+      <div className="flex justify-between">
+        <input
+          id="csvFile"
+          type="file"
+          className="w-3/10 block sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm"
+          accept=".csv,.xlsx,.xls"
+          ref={csvInputRef}
+          onChange={handleUpload}
+        />
+        <div className="w-3/10">
+          <Selector
+            btnClass={!file && 'cursor-not-allowed'}
+            disabled={!file}
+            placement="left"
+            loading={loading}
+            selectedItem={selectedReason ? selectedReason.name : ''}
+            placeholder={CsvDict[userLanguage]['SELECT_REASON']}
+            list={reasonDropdown}
+            onChange={(value, name, id) => onReasonSelected(id, name, value)}
+          />
+        </div>
+      </div>
       <br />
       {selectedReason.value === 'paper-survey' && (
         <>
-          <label htmlFor="imgFile">Upload Multipe Survey Images</label>
+          <Label
+            className="mt-3"
+            label={CsvDict[userLanguage]['UPLOAD_MULTIPLE_SURVEY_IMAGES']}
+            isRequired={true}
+          />
           <input
             id="imgFile"
             multiple
-            className="mt-2"
+            className="w-3/10 mt-2 block sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm"
             type="file"
             disabled={!file}
             accept="image/*"
@@ -803,12 +814,17 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           )}
         </>
       )}
-      <br />
+      {/* <br /> */}
+      <Label
+        className="mt-4"
+        label={CsvDict[userLanguage]['DESCRIBE_REASON']}
+        isRequired={true}
+      />
       <textarea
-        className={`w-full h-32 border-2 border-gray-300 rounded-lg ${
+        className={`w-full mt-2 h-32 border-2 border-gray-300 rounded-lg ${
           (!file || loading || !selectedReason.value) && `cursor-not-allowed`
         }`}
-        placeholder={'Reason'}
+        placeholder={CsvDict[userLanguage]['REASON']}
         rows={10}
         cols={50}
         value={reason}

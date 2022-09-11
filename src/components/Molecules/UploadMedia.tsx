@@ -1,4 +1,4 @@
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import File from '@components/Atoms/File';
 import Label from '@components/Atoms/Form/Label';
 import {Transition} from '@headlessui/react';
@@ -52,6 +52,7 @@ const UploadMedia = ({
     return new Promise((resolve, reject) => {
       Storage.put(`${uploadKey}${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

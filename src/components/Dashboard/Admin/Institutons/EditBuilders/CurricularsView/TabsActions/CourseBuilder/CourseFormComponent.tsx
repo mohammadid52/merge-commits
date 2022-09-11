@@ -1,23 +1,23 @@
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import MultipleSelector from '@atoms/Form/MultipleSelector';
+import Selector from '@atoms/Form/Selector';
+import TextArea from '@atoms/Form/TextArea';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {Storage} from '@aws-amplify/storage';
+import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import {GlobalContext} from '@contexts/GlobalContext';
 import * as customMutations from '@customGraphql/customMutations';
 import * as customQueries from '@customGraphql/customQueries';
 import useDictionary from '@customHooks/dictionary';
 import * as mutation from '@graphql/mutations';
 import * as queries from '@graphql/queries';
-import {languageList} from '@utilities/staticData';
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import MultipleSelector from '@atoms/Form/MultipleSelector';
-import Selector from '@atoms/Form/Selector';
-import TextArea from '@atoms/Form/TextArea';
 import DroppableMedia from '@molecules/DroppableMedia';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import {getImageFromS3} from '@utilities/services';
+import {languageList} from '@utilities/staticData';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoImage} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
 interface CourseBuilderProps {
   courseId: string;
@@ -48,10 +48,9 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     },
   };
   const history = useHistory();
-  const location = useLocation();
+
   const match = useRouteMatch();
 
-  const [institutionList, setInstitutionList] = useState(null);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curricularData, setCurricularData] = useState<ICourseForm>(initialData);
@@ -74,10 +73,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     message: '',
     isError: false,
   });
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
-  const params = useQuery();
+
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
@@ -326,6 +322,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

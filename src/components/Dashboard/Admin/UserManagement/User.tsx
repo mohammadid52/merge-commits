@@ -1,12 +1,12 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
+import Selector from '@components/Atoms/Form/Selector';
 import Anthology from '@components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import ReactHtmlParser from 'react-html-parser';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsArrowLeft, BsCameraVideoFill} from 'react-icons/bs';
 import {FaEdit} from 'react-icons/fa';
@@ -47,8 +47,6 @@ import Feedback from './Feedback';
 import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '@components/Atoms/Form/Selector';
 export interface UserInfo {
   authId: string;
   courses?: string;
@@ -398,6 +396,7 @@ const User = (props: IUserProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`user_profile_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {
@@ -810,6 +809,7 @@ const User = (props: IUserProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
+        acl: 'public-read',
         progressCallback: ({loaded, total}: any) => {
           console.log((loaded * 100) / total);
         },
@@ -1583,19 +1583,21 @@ const User = (props: IUserProps) => {
                         user.institution ? user.institution : ''
                       }`}</p>
                     </div>
-                    <div className="sm:col-span-3 p-2 mt-18">
-                      <Selector
-                        selectedItem={statusDate(user.inactiveStatusDate)}
-                        onChange={() => {}}
-                        disabled
-                        arrowHidden={true}
-                        placeholder={'Status'}
-                        label={'Status Date'}
-                        labelTextClass={'text-sm text-justify'}
-                        btnClass={'cursor-not-allowed'}
-                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                      />
-                    </div>
+                    {user.inactiveStatusDate && (
+                      <div className="sm:col-span-3 p-2 mt-18">
+                        <Selector
+                          selectedItem={statusDate(user.inactiveStatusDate)}
+                          onChange={() => {}}
+                          disabled
+                          arrowHidden={true}
+                          placeholder={'Status'}
+                          label={'Status Date'}
+                          labelTextClass={'text-sm text-justify'}
+                          btnClass={'cursor-not-allowed'}
+                          additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
+                        />
+                      </div>
+                    )}
                   </div>
                   <Switch>
                     <Route

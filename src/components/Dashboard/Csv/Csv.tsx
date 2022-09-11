@@ -12,8 +12,9 @@ import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
 import {orderBy, uniqBy} from 'lodash';
-import {PDFDownloadLink, PDFViewer} from '@react-pdf/renderer';
+import {PDFDownloadLink} from '@react-pdf/renderer';
 import SurveyPDF from './SurveyPDF';
+import Loader from '@atoms/Loader';
 
 interface ICsvProps {
   institutionId?: string;
@@ -1047,9 +1048,24 @@ const Csv = ({institutionId}: ICsvProps) => {
           <Table />
         ) : (
           <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            {csvGettingReady
-              ? 'Populating Data'
-              : 'Select filters options to populate data'}
+            {csvGettingReady ? (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <Loader color="rgba(107, 114, 128, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Populating data please wait...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Select filters options to populate data
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

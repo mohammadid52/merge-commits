@@ -1,16 +1,16 @@
+import FormInput from '@atoms/Form/FormInput';
+import {Storage} from '@aws-amplify/storage';
 import Label from '@components/Atoms/Form/Label';
+import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
 import File from '@components/Community/File';
+import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
-import React, {useCallback, useRef, useState} from 'react';
-import {useDropzone} from 'react-dropzone';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import Storage from '@aws-amplify/storage';
 import {nanoid} from 'nanoid';
-import {Transition} from '@headlessui/react';
-import FormInput from '@atoms/Form/FormInput';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import React, {useCallback, useRef, useState} from 'react';
+import {useDropzone} from 'react-dropzone';
 
 interface MediaProps {
   file: IFile;
@@ -54,6 +54,7 @@ const Media = ({
     return new Promise((resolve, reject) => {
       Storage.put(`${COMMUNITY_UPLOAD_KEY}${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;

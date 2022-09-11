@@ -1,11 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
+import {Storage} from '@aws-amplify/storage';
+import React, {useContext, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
-import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import useDictionary from '../../../../customHooks/dictionary';
@@ -160,6 +159,7 @@ const InstitutionAdd = () => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

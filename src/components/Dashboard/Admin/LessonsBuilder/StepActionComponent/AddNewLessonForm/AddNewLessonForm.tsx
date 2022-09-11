@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
@@ -217,6 +217,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`${fileName}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result: any) => {
