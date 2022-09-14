@@ -1,13 +1,11 @@
-import React, {useContext, useEffect} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import React, {useContext} from 'react';
 import ProgressBar from './ProgressBar/ProgressBar';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
-import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {IconContext} from 'react-icons';
-import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
+import {AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 
 const LessonTopMenu = ({
   overlay,

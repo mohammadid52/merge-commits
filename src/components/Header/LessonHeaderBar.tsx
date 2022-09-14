@@ -69,19 +69,21 @@ const LessonHeaderBar = ({
     }
   };
 
+  let timer: any;
   useEffect(() => {
-    setTimeout(() => {
-      getLessonCompletedValue().then((value: any) => {
-        if (value.lessonProgress === value.totalPages) {
-          setLeaveAfterCompletion(true);
-        } else {
-          setLeaveAfterCompletion(false);
-        }
-      });
+    timer = setTimeout(() => {
+      getLessonCompletedValue &&
+        getLessonCompletedValue().then((value: any) => {
+          if (value.lessonProgress === value.totalPages) {
+            setLeaveAfterCompletion(true);
+          } else {
+            setLeaveAfterCompletion(false);
+          }
+        });
     }, 1300);
 
     return () => {
-      clearTimeout();
+      clearTimeout(timer);
     };
   }, [lessonState.currentPage]);
 

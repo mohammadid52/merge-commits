@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import Loader from '@components/Atoms/Loader';
 import Tooltip from '@components/Atoms/Tooltip';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
@@ -102,6 +102,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

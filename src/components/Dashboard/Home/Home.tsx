@@ -34,6 +34,7 @@ export interface ModifiedListProps {
 
 const Home = (props: ClassroomControlProps) => {
   const {homeData, classList, handleRoomSelection, isTeacher} = props;
+
   const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');

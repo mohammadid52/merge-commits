@@ -3,7 +3,6 @@ import {Transition} from '@headlessui/react';
 import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import map from 'lodash/map';
 import React, {useState} from 'react';
-import ReactHtmlParser from 'react-html-parser';
 import {AiFillCheckCircle} from 'react-icons/ai';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';

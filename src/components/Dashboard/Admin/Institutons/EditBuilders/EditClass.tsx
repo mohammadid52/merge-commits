@@ -245,7 +245,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       graphqlOperation(customQueries.listPersons, {
         filter: {
           role: {eq: 'ST'},
-          status: {eq: 'ACTIVE'},
           or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}],
         },
       })

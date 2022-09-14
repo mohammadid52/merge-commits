@@ -1,5 +1,5 @@
 // import AWS from 'aws-sdk';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import awsconfig from '../aws-exports';
 
 // ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //

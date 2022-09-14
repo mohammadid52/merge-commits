@@ -114,7 +114,7 @@ const Today: React.FC<LessonProps> = ({
                     />
                   </div>
                 );
-              } else return <div />;
+              } else return <div key={`todayLesson_${key}_wrapper`} />;
             })}
           </Fragment>
         ))
