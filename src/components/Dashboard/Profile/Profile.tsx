@@ -279,6 +279,7 @@ const Profile = (props: ProfilePageProps) => {
       );
 
       const userData: any = results.data.getPerson;
+      console.log('🚀 ~ file: Profile.tsx ~ line 283 ~ getUser ~ userData', userData);
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 

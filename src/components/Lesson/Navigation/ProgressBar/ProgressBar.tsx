@@ -1,15 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import StageIcon from './StageIcon';
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-import {AiOutlineHome} from 'react-icons/ai';
 import {GlobalContext} from '@contexts/GlobalContext';
+import useLessonControls from '@customHooks/lessonControls';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getLocalStorageData} from '@utilities/localStorage';
+import React, {useContext, useEffect} from 'react';
+import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';
-import useLessonControls from '@customHooks/lessonControls';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
@@ -41,6 +38,7 @@ const ProgressBar = ({
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');
+  console.log('🚀 ~ file: ProgressBar.tsx ~ line 41 ~ getRoomData', getRoomData);
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
@@ -133,12 +131,12 @@ const ProgressBar = ({
   const lessonId = router.params.lessonID || '999';
 
   const isClosedLocalStorage =
-    getRoomData.completedLessons.findIndex(
+    getRoomData?.completedLessons?.findIndex(
       (item: {lessonID?: string | null; time?: string | null}) =>
         item.lessonID === lessonId
     ) > -1;
 
-  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
+  const isClosed = lessonState?.displayData[0]?.studentAuthID === 'closed';
 
   const {resetViewAndShare} = useLessonControls();
   const reset = async () => {

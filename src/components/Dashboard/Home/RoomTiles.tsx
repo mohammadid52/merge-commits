@@ -153,7 +153,7 @@ const RoomTiles = (props: {
                             <div className="ml-3 w-auto">
                               <p className="text-xs 2xl:text-sm font-medium text-gray-900">
                                 <a className="hover:underline">
-                                {(preferredName || firstName) + ' ' + lastName}
+                                  {(preferredName || firstName) + ' ' + lastName}
                                 </a>
                               </p>
                               <p
