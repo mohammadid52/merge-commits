@@ -155,6 +155,7 @@ const Dashboard = (props: DashboardProps) => {
       const user: any = await API.graphql(
         graphqlOperation(queries.getPerson, queryObj.valueObj)
       );
+
       setUser(user.data.getPerson);
     } catch (error) {
       if (!userEmail && !userAuthId) {
@@ -203,6 +204,7 @@ const Dashboard = (props: DashboardProps) => {
   // Fetching results
   const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
   const [homeData, setHomeData] = useState<{class: any}[]>();
+
   const [classList, setClassList] = useState<any[]>();
   const [curriculumIds, setCurriculumIds] = useState<string>('');
   const [curriculumObj, setCurriculumObj] = useState<any>({});

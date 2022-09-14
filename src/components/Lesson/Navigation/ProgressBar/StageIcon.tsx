@@ -1,11 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
-import usePrevious from '../../../../customHooks/previousProps';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IconContext} from 'react-icons';
-import {RiLiveLine} from 'react-icons/ri';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import usePrevious from '../../../../customHooks/previousProps';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface StageIconProps extends UniversalLessonPage {
   pageNr?: number;
