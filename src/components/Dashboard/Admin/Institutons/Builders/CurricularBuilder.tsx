@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useLocation} from 'react-router-dom';
@@ -329,6 +329,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {

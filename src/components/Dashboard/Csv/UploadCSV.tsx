@@ -71,6 +71,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       const FileUpload = await Storage.put(imageFileName, imageFile, {
         contentType: imageFileType,
         contentEncoding: 'base64',
+        acl: 'public-read',
         completeCallback: (event: any) => {
           console.log(`Successfully uploaded ${event.key}`);
         },
