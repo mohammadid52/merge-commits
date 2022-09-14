@@ -1,31 +1,26 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import {PartInput} from 'API';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
+import {v4 as uuidV4} from 'uuid';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
 import {
   PagePart,
   PartContent,
   PartContentSub,
-  StudentExerciseData,
   StudentPageInput,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {PartInput} from 'API';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import {v4 as uuidV4} from 'uuid';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
