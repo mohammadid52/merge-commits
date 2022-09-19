@@ -14323,3 +14323,63 @@ export const deleteCommunityChat = /* GraphQL */ `
     }
   }
 `;
+export const createCypressTesting = /* GraphQL */ `
+  mutation CreateCypressTesting(
+    $input: CreateCypressTestingInput!
+    $condition: ModelCypressTestingConditionInput
+  ) {
+    createCypressTesting(input: $input, condition: $condition) {
+      id
+      testID
+      testName
+      testSteps
+      testData
+      testExpResults
+      testActResults
+      passVerification
+      lastRunDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCypressTesting = /* GraphQL */ `
+  mutation UpdateCypressTesting(
+    $input: UpdateCypressTestingInput!
+    $condition: ModelCypressTestingConditionInput
+  ) {
+    updateCypressTesting(input: $input, condition: $condition) {
+      id
+      testID
+      testName
+      testSteps
+      testData
+      testExpResults
+      testActResults
+      passVerification
+      lastRunDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCypressTesting = /* GraphQL */ `
+  mutation DeleteCypressTesting(
+    $input: DeleteCypressTestingInput!
+    $condition: ModelCypressTestingConditionInput
+  ) {
+    deleteCypressTesting(input: $input, condition: $condition) {
+      id
+      testID
+      testName
+      testSteps
+      testData
+      testExpResults
+      testActResults
+      passVerification
+      lastRunDate
+      createdAt
+      updatedAt
+    }
+  }
+`;

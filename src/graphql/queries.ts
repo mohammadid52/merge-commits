@@ -7300,6 +7300,55 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
+export const getCypressTesting = /* GraphQL */ `
+  query GetCypressTesting($id: ID!) {
+    getCypressTesting(id: $id) {
+      id
+      testID
+      testName
+      testSteps
+      testData
+      testExpResults
+      testActResults
+      passVerification
+      lastRunDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCypressTestings = /* GraphQL */ `
+  query ListCypressTestings(
+    $id: ID
+    $filter: ModelCypressTestingFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCypressTestings(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        testID
+        testName
+        testSteps
+        testData
+        testExpResults
+        testActResults
+        passVerification
+        lastRunDate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
