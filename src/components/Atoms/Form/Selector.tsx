@@ -1,10 +1,10 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
+import {ExclamationCircleIcon} from '@heroicons/react/outline';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
-import {ExclamationCircleIcon} from '@heroicons/react/outline';
-import Tooltip from '@atoms/Tooltip';
+import Label from './Label';
 
 interface SelectorProps {
   list?: {id: number; name: string | number}[];
@@ -52,20 +52,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const currentRef: any = useRef(null);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [showTooltip, setShowTooltip] = useState(false);
+
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
     onChange(str, name, id);
     window.removeEventListener('click', handleOutsideClick, false);
   };
-
-  const onFocus = () => {
-    if (!showList) {
-      setShowList(true);
-    }
-  };
-
-  const defaultValueTooltip = `Spring Woods High School- Period 4`;
 
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
@@ -92,15 +84,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     }
   }
 
+  const isSelected = (name: string) => name && selectedItem === name;
+
   return (
-    <div className={`relative ${additionalClass}`} ref={currentRef}>
-      {label && (
-        <label
-          className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
-          {label}
-          <span className="text-red-500"> {isRequired ? '*' : null}</span>
-        </label>
-      )}
+    <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
+      <Label label={label} isRequired={isRequired} />
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}
@@ -174,27 +162,25 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map((item: {name: string; id: any; value: string}, key: number) => (
-                <Tooltip
-                  additionalClass="dropdown-tooltip-text"
-                  show={showTooltip}
+                <li
                   key={key}
-                  text={item.name}
-                  placement={placement}>
-                  <li
-                    key={key}
-                    onClick={() => updateSelectedItem(item.value, item.name, item.id)}
-                    id={item.id}
-                    tabIndex={-1}
-                    role="option"
-                    className={`hover:${
-                      theme.backGroundLight[themeColor]
-                    } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
-                      themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                    }-600 focus:border-transparent`}>
-                    <span
-                      className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
-                        theme.textColor[themeColor]
-                      } relative w-auto flex items-center`}>
+                  onClick={() => updateSelectedItem(item.value, item.name, item.id)}
+                  id={item.id}
+                  tabIndex={-1}
+                  role="option"
+                  className={`flex cursor-pointer select-none relative py-2 pl-8 pr-4 ${
+                    isSelected(item.name)
+                      ? 'iconoclast:bg-main text-white'
+                      : 'hover:bg-indigo-100 hover:text-indigo-400'
+                  }`}>
+                  <span
+                    className={`${
+                      isSelected(item.name) ? 'pl-1' : 'pl-4'
+                    } block truncate`}>
+                    {item.name}
+                  </span>
+                  {isSelected(item.name) && (
+                    <span className={`text-white relative w-auto flex items-center`}>
                       <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path
                           fillRule="evenodd"
@@ -203,18 +189,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                         />
                       </svg>
                     </span>
-                    <span
-                      className={`${
-                        selectedItem === item.name
-                          ? 'font-semibold pl-1'
-                          : 'font-normal pl-4'
-                      } block truncate`}
-                      onMouseEnter={() => setShowTooltip(true)}
-                      onMouseLeave={() => setShowTooltip(false)}>
-                      {item.name}
-                    </span>
-                  </li>
-                </Tooltip>
+                  )}
+                </li>
               ))
             ) : (
               <li className="flex justify-center relative py-2 px-4">
