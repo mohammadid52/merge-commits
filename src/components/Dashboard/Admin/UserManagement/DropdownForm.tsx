@@ -1,4 +1,6 @@
 import Label from '@components/Atoms/Form/Label';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getAsset} from 'assets';
 import React, {useEffect, useRef, useState} from 'react';
 
 interface DropdownProps {
@@ -86,6 +88,8 @@ const DropdownForm = (props: DropdownProps) => {
   };
 
   const isSelected = (name: string) => OPTIONS === name;
+  const {theme, clientKey} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <div ref={componentRef} className="space-y-1">
@@ -98,7 +102,9 @@ const DropdownForm = (props: DropdownProps) => {
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
-            className="flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+            className={`flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-${
+              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+            }-600 focus:border-transparent transition ease-in-out duration-150 sm:text-sm sm:leading-5`}>
             <span className="block truncate">{OPTIONS}</span>
             <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <svg

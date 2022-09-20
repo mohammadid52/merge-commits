@@ -680,18 +680,6 @@ const Registration = ({
 
                           <div className="sm:col-span-3 p-2">
                             <div>
-                              <Label label="Choose Pace" />
-                              <CheckBox
-                                label="Self Paced"
-                                className="group:hover:bg-gray-500"
-                                value={newUserInputs.isSelfPaced}
-                                onChange={(e) => handleChangeSelfPaced(e.target.checked)}
-                                name="self-paced"
-                              />
-                            </div>
-                          </div>
-                          <div className="sm:col-span-3 p-2">
-                            <div>
                               <Label label="Status" />
                               <Selector
                                 selectedItem={newUserInputs?.status?.name}
@@ -703,7 +691,20 @@ const Registration = ({
                             </div>
                           </div>
 
-                          {Boolean(groups?.length) ? (
+                          <div className="sm:col-span-3 p-2">
+                            <div>
+                              <Label label="Choose Pace" />
+                              <CheckBox
+                                label="Self Paced"
+                                className="group:hover:bg-gray-500"
+                                value={newUserInputs.isSelfPaced}
+                                onChange={(e) => handleChangeSelfPaced(e.target.checked)}
+                                name="self-paced"
+                              />
+                            </div>
+                          </div>
+
+                          {/* {Boolean(groups?.length) ? (
                             <div className="sm:col-span-3 p-2">
                               <Selector
                                 label={'Group'}
@@ -724,7 +725,7 @@ const Registration = ({
                                 loading={groupLoading}
                               />
                             </div>
-                          ) : null}
+                          ) : null} */}
                         </>
                       )}
                   </div>

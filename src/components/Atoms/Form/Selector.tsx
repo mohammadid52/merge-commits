@@ -1,9 +1,10 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
+import {ExclamationCircleIcon} from '@heroicons/react/outline';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
-import {ExclamationCircleIcon} from '@heroicons/react/outline';
+import Label from './Label';
 
 interface SelectorProps {
   list?: {id: number; name: string | number}[];
@@ -87,14 +88,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
-      {label && (
-        <label
-          id="listbox-label"
-          className={`text-sm block leading-5 font-medium text-gray-700`}>
-          {isRequired && <span className={'text-red-500'}>* </span>}
-          {label}
-        </label>
-      )}
+      <Label label={label} isRequired={isRequired} />
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}
