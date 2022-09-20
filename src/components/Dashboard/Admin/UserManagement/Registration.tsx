@@ -481,7 +481,8 @@ const Registration = ({
     classID: string;
     id: string;
   }) => {
-    getClassRoomGroups(item.id);
+    // getClassRoomGroups(item.id);
+    // See reason below in the jsx
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
@@ -704,6 +705,7 @@ const Registration = ({
                             </div>
                           </div>
 
+                          {/* We are not using this because Teachers are getting confused with this. But we might use this in future. */}
                           {/* {Boolean(groups?.length) ? (
                             <div className="sm:col-span-3 p-2">
                               <Selector
