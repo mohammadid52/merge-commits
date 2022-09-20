@@ -25,14 +25,14 @@ const CheckBox = (checkBoxProps: CheckBoxProps) => {
     //   ) : null}
     // </label>
 
-    <div className="relative flex items-start">
-      <div className="flex items-center h-7 my-1">
+    <div className="relative flex items-center">
+      <div className="flex items-center w-auto h-7 my-1">
         <input
           name={name}
           onChange={onChange}
           checked={value ? true : false}
           type="checkbox"
-          className={`${className} cursor-pointer transition-all focus:ring-indigo-500 h-6 w-6 iconoclast:text-main curate:text-main border-gray-400 rounded`}
+          className={`${className} cursor-pointer transition-all focus:ring-indigo-500 h-4 w-4 iconoclast:text-main curate:text-main border-gray-400 rounded`}
         />
       </div>
       {label && (
