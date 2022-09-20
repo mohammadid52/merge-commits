@@ -1062,10 +1062,7 @@ type CypressTesting @model @auth(rules: [{allow: public}]) {
   testSteps: String!
   testData: String!
   testExpResults: String!
-  testActResults: String
-  passVerification: Boolean
-  passVerification: Boolean
-  lastRunDate: AWSDate
+  edgeCases: String
 }
 
 # asdfasdfsd10

@@ -7309,9 +7309,7 @@ export const getCypressTesting = /* GraphQL */ `
       testSteps
       testData
       testExpResults
-      testActResults
-      passVerification
-      lastRunDate
+      edgeCases
       createdAt
       updatedAt
     }
@@ -7339,9 +7337,7 @@ export const listCypressTestings = /* GraphQL */ `
         testSteps
         testData
         testExpResults
-        testActResults
-        passVerification
-        lastRunDate
+        edgeCases
         createdAt
         updatedAt
       }

@@ -14152,9 +14152,7 @@ export const onCreateCypressTesting = /* GraphQL */ `
       testSteps
       testData
       testExpResults
-      testActResults
-      passVerification
-      lastRunDate
+      edgeCases
       createdAt
       updatedAt
     }
@@ -14169,9 +14167,7 @@ export const onUpdateCypressTesting = /* GraphQL */ `
       testSteps
       testData
       testExpResults
-      testActResults
-      passVerification
-      lastRunDate
+      edgeCases
       createdAt
       updatedAt
     }
@@ -14186,9 +14182,7 @@ export const onDeleteCypressTesting = /* GraphQL */ `
       testSteps
       testData
       testExpResults
-      testActResults
-      passVerification
-      lastRunDate
+      edgeCases
       createdAt
       updatedAt
     }
