@@ -1,20 +1,17 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitle from '../../Atoms/SectionTitle';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import TestCasesInfo from './TestCasesInfo';
-import {listCypressTestings} from '@customGraphql/customQueries';
 import {createCypressTesting} from '@graphql/mutations';
+import {listCypressTestings} from '@graphql/queries';
 import TestCasesAdd from './TestCasesAdd';
-import {CreateCypressTestingInput} from 'API';
 
 const TestCases = () => {
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -51,19 +48,21 @@ const TestCases = () => {
   }
   async function createSampleTestCase() {
     try {
-      const input: CreateCypressTestingInput = {
+      // @zuhair - change inputs here
+      const input = {
         testID: '1234',
         testName: 'test1234',
         testData: 'test1234data',
         testExpResults: 'test',
-        testSteps: '1234'
+        testSteps: '1234',
+        testType: 'testType'
       };
+
       const results: any = await API.graphql(
-        graphqlOperation(createCypressTesting, {input})
+        graphqlOperation(createCypressTesting, {input: input})
       );
       console.log({results});
-      //   const userData: any = results.data.getPerson;
-      //   setPerson(personalInfo);
+
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -71,8 +70,7 @@ const TestCases = () => {
   }
 
   useEffect(() => {
-    // getTestCases();
-    createSampleTestCase();
+    getTestCases();
   }, []);
 
   const testCasesBanner1 = getAsset(clientKey, 'dashboardBanner1');
