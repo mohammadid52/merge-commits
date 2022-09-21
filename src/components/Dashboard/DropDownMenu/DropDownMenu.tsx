@@ -109,6 +109,24 @@ const DropDownMenu = ({
                       </div>
                     </div>
                   </Menu.Item>
+                  <Menu.Item key={'profile'}>
+                    <div
+                      onClick={() => history.push('/dashboard/test-cases')}
+                      className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+                      <div className="flex-shrink-0 group block">
+                        <div className="flex items-center">
+                          <IconContext.Provider
+                            value={{
+                              size: '24px',
+                              className: 'w-auto mr-1',
+                            }}>
+                            <FiUser className="cursor-pointer" />
+                          </IconContext.Provider>
+                          <p className="text-sm ml-2 font-medium">Test Cases</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Menu.Item>
                   <Menu.Item key={'logout'}>
                     <SignOutButton updateAuthState={updateAuthState} />
                   </Menu.Item>

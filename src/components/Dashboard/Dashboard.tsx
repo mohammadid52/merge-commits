@@ -32,6 +32,7 @@ const Classroom = lazy(() => import('./Classroom/Classroom'));
 const GameChangers = lazy(() => import('./GameChangers/GameChangers'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
+const TestCases = lazy(() => import('./TestCases/TestCases'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
 
 type userObject = {
@@ -942,6 +943,7 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/profile`}
                 render={() => <Profile updateAuthState={updateAuthState} />}
               />
+              <Route path={`${match.url}/test-cases`} render={() => <TestCases />} />
               <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (
