@@ -6,6 +6,7 @@ import {getImageFromS3Static} from '@utilities/services';
 import {getUserRoleString, initials, stringToHslColor} from '@utilities/strings';
 import React, {Fragment} from 'react';
 import {FiUser} from 'react-icons/fi';
+import {VscChecklist} from 'react-icons/vsc';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
@@ -120,7 +121,7 @@ const DropDownMenu = ({
                               size: '24px',
                               className: 'w-auto mr-1',
                             }}>
-                            <FiUser className="cursor-pointer" />
+                            <VscChecklist className="cursor-pointer" />
                           </IconContext.Provider>
                           <p className="text-sm ml-2 font-medium">Test Cases</p>
                         </div>

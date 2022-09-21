@@ -34,21 +34,21 @@ const TestCases = () => {
 
   // TEST CASES QUERY
 
-  // async function getTestCases() {
-  //   try {
-  //     const results: any = await API.graphql(graphqlOperation(listCypressTestings));
-  //     console.log({results});
-  //     //   const userData: any = results.data.getPerson;
-  //     //   setPerson(personalInfo);
-  //     setStatus('done');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async function getTestCases() {
+    try {
+      const results: any = await API.graphql(graphqlOperation(listCypressTestings));
+      console.log({results});
+      //   const userData: any = results.data.getPerson;
+      //   setPerson(personalInfo);
+      setStatus('done');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  // useEffect(() => {
-  //   getTestCases();
-  // }, []);
+  useEffect(() => {
+    getTestCases();
+  }, []);
 
   const testCasesBanner1 = getAsset(clientKey, 'dashboardBanner1');
 

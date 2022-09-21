@@ -1059,10 +1059,12 @@ type CypressTesting @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   testID: String!
   testName: String!
+  testType: String!
   testSteps: String!
   testData: String!
   testExpResults: String!
   edgeCases: String
+  lastUpdate: AWSDate
 }
 
 # asdfasdfsd12
