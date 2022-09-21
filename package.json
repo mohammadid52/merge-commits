@@ -13,7 +13,10 @@
     "analysis": "webpack --config webpack.analysis.js",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.37.0",
@@ -44,6 +47,8 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-tagsinput": "^3.19.7",
     "@types/rx": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
@@ -51,15 +56,20 @@
     "cache-loader": "^4.1.0",
     "css-loader": "^3.2.0",
     "cypress": "^10.8.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
     "file-loader": "^4.2.0",
     "gsap": "npm:@gsap/business@^3.7.1",
     "html-react-parser": "^1.4.0",
     "html-webpack-plugin": "^4.5.2",
     "htmlparser2": "^7.2.0",
+    "husky": "^8.0.0",
     "json-loader": "^0.5.7",
     "nanoid": "^3.1.22",
     "postcss": "^7.0.35",
-    "prettier": "2.2.1",
+    "prettier": "^2.2.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-file-viewer": "^1.2.1",
     "react-icons": "^4.3.1",
@@ -79,8 +89,7 @@
     "webpack": "^4.46.0",
     "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "^3.3.12",
-    "webpack-merge": "^5.1.4",
-    "husky": "^8.0.0"
+    "webpack-merge": "^5.1.4"
   },
   "dependencies": {
     "@ahooksjs/use-url-state": "^2.5.6",
