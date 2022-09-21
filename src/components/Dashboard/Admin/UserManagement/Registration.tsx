@@ -71,7 +71,7 @@ const initialState: newUserInput = {
   status: {name: 'Active', value: 'ACTIVE'},
   birthdate: '',
   grade: '',
-  role: 'ST',
+  role: '',
   externalId: '',
   message: {show: false, text: '', type: ''},
   institution: {id: '', name: ''},
@@ -163,12 +163,12 @@ const Registration = ({
     });
   };
 
-  const onGroupChange = (_: string, name: string, id: string) => {
-    setNewUserInputs((prevValues) => ({
-      ...prevValues,
-      group: {id, name},
-    }));
-  };
+  // const onGroupChange = (_: string, name: string, id: string) => {
+  //   setNewUserInputs((prevValues) => ({
+  //     ...prevValues,
+  //     group: {id, name},
+  //   }));
+  // };
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
@@ -755,7 +755,7 @@ const Registration = ({
           </div>
         </div>
 
-        <div className="w-1.5/10 ml-auto">
+        <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
           <Buttons
             btnClass="py-2 px-4 text-xs w-full"
             label={RegistrationDict[userLanguage]['button']['submit']}
