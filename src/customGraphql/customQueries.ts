@@ -5494,3 +5494,34 @@ export const listCurriculas = /* GraphQL */ `
     }
   }
 `;
+
+export const listCypressTestings = /* GraphQL */ `
+  query ListCypressTestings(
+    $id: ID
+    $filter: ModelCypressTestingFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCypressTestings(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        testID
+        testName
+        testSteps
+        testData
+        testExpResults
+        edgeCases
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

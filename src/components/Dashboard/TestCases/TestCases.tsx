@@ -11,8 +11,10 @@ import SectionTitle from '../../Atoms/SectionTitle';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 import TestCasesInfo from './TestCasesInfo';
-import {getCypressTesting, listCypressTestings} from '@graphql/queries';
+import {listCypressTestings} from '@customGraphql/customQueries';
+import {createCypressTesting} from '@graphql/mutations';
 import TestCasesAdd from './TestCasesAdd';
+import {CreateCypressTestingInput} from 'API';
 
 const TestCases = () => {
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -28,15 +30,37 @@ const TestCases = () => {
     {
       title: BreadcrumsTitles[userLanguage]['TEST_CASES'],
       url: '/dashboard/test-cases',
-      last: true,
-    },
+      last: true
+    }
   ];
 
   // TEST CASES QUERY
 
   async function getTestCases() {
     try {
-      const results: any = await API.graphql(graphqlOperation(listCypressTestings));
+      const results: any = await API.graphql(
+        graphqlOperation(listCypressTestings, {filter: {}})
+      );
+      console.log({results});
+      //   const userData: any = results.data.getPerson;
+      //   setPerson(personalInfo);
+      setStatus('done');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function createSampleTestCase() {
+    try {
+      const input: CreateCypressTestingInput = {
+        testID: '1234',
+        testName: 'test1234',
+        testData: 'test1234data',
+        testExpResults: 'test',
+        testSteps: '1234'
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(createCypressTesting, {input})
+      );
       console.log({results});
       //   const userData: any = results.data.getPerson;
       //   setPerson(personalInfo);
@@ -47,7 +71,8 @@ const TestCases = () => {
   }
 
   useEffect(() => {
-    getTestCases();
+    // getTestCases();
+    createSampleTestCase();
   }, []);
 
   const testCasesBanner1 = getAsset(clientKey, 'dashboardBanner1');
