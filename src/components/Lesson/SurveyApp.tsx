@@ -28,6 +28,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
+
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
 
@@ -612,9 +613,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage+1)},
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress+1)}
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
         };
 
@@ -629,9 +630,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage+1)},
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress+1)}
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
         };
         await API.graphql(

@@ -43,7 +43,7 @@ const Start: React.FC<StartProps> = ({
   type,
   roomID,
   preview,
-  isUsed,
+  isUsed
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -71,7 +71,7 @@ const Start: React.FC<StartProps> = ({
     show: false,
     activeLessonsId: [],
     lessonID: '',
-    message: 'Do you want to mark these active lessons as completed?',
+    message: 'Do you want to mark these active lessons as completed?'
   });
 
   const isTeacher = user.role === 'FLW' || user.role === 'TR';
@@ -125,20 +125,20 @@ const Start: React.FC<StartProps> = ({
     userAuthId: string
   ) => {
     try {
-      console.log('I am running...');
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
           lessonID: lessonId,
           studentEmail: userEmail,
-          studentAuthId: userAuthId,
+          studentAuthId: userAuthId
         })
       );
 
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
       const currentPage = JSON.parse(pageNumber).currentPage;
+
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: currentPage,
+        payload: currentPage
       });
 
       setPageNumber(currentPage);
@@ -159,14 +159,14 @@ const Start: React.FC<StartProps> = ({
           studentID: {eq: state.user?.id},
           curriculumID: {eq: syllabusData.curriculumId},
           syllabusID: {eq: syllabusData.id},
-          lessonID: {eq: lessonKey},
+          lessonID: {eq: lessonKey}
         };
         if (!isTeacher) {
           filter.date = {eq: awsFormatDate(dateString('-', 'WORLD'))};
         }
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
-            filter,
+            filter
           })
         );
         if (isMounted) {
@@ -192,11 +192,11 @@ const Start: React.FC<StartProps> = ({
         lessonID: lessonKey,
         roomID,
         date: awsFormatDate(dateString('-', 'WORLD')),
-        time: new Date().toTimeString().split(' ')[0],
+        time: new Date().toTimeString().split(' ')[0]
       };
       await API.graphql(
         graphqlOperation(mutations.createAttendance, {
-          input: payload,
+          input: payload
         })
       );
 
@@ -212,7 +212,7 @@ const Start: React.FC<StartProps> = ({
     try {
       await API.graphql(
         graphqlOperation(mutations.updateUniversalLesson, {
-          input: {id: lessonObj.id, isUsed: true},
+          input: {id: lessonObj.id, isUsed: true}
         })
       );
     } catch (e) {
@@ -224,7 +224,7 @@ const Start: React.FC<StartProps> = ({
     try {
       await API.graphql(
         graphqlOperation(mutations.updateUniversalSyllabus, {
-          input: {id: syllabusID, lessonHistory: historyArray},
+          input: {id: syllabusID, lessonHistory: historyArray}
         })
       );
     } catch (e) {
@@ -270,7 +270,7 @@ const Start: React.FC<StartProps> = ({
           if (!syllabusProps?.lessonHistory.includes(lessonProps.id)) {
             await setSyllabusLessonHistory(syllabusProps?.id, [
               ...syllabusProps.lessonHistory,
-              lessonProps.id,
+              lessonProps.id
             ]);
           }
         } else {
@@ -288,7 +288,7 @@ const Start: React.FC<StartProps> = ({
   const discardChanges = async () => {
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
+        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]}
       })
     );
     history.push(goBackUrl);
@@ -311,7 +311,7 @@ const Start: React.FC<StartProps> = ({
           .map((lesson: any) => lesson.title)
           .join(', ')} as completed?`,
         activeLessonsId: lessonIds,
-        show: true,
+        show: true
       }));
     } else {
       if (!checkIfCompletedBeforeOpen()) {
@@ -335,18 +335,18 @@ const Start: React.FC<StartProps> = ({
               ...(state.roomData.completedLessons || []),
               ...payloadLessonIds?.map((lessonID: any) => ({
                 lessonID,
-                time: new Date().toISOString(),
-              })),
+                time: new Date().toISOString()
+              }))
             ],
-            activeLessons: [lessonKey],
-          },
+            activeLessons: [lessonKey]
+          }
         })
       );
       // POST TO LAMBDA
       await axios.post(tableCleanupUrl, {
         lessonID: warnModal.lessonID[0],
         syllabusID: getRoomData.activeSyllabus,
-        roomID: getRoomData.id,
+        roomID: getRoomData.id
       });
       setIsLoading(false);
     } catch (e) {
@@ -439,7 +439,7 @@ const Start: React.FC<StartProps> = ({
       message: '',
       activeLessonsId: [],
       lessonID: '',
-      show: false,
+      show: false
     });
   };
 

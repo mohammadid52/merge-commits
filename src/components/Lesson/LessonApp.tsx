@@ -1050,9 +1050,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage+1)},
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage+1)}
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0
         };
@@ -1068,9 +1068,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           lessonType: lessonState.lessonData?.type,
           //prettier-ignore
           pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage+1)},
+            "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage+1)}
+            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
         };
         await API.graphql(

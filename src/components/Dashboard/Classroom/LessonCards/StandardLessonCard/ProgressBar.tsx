@@ -33,7 +33,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
 
       const totalPages = JSON.parse(pageNumber).totalPages;
 
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1;
 
       const percentCorrect = (lessonProgress * 100) / totalPages;
       setProgressValue(Math.round(percentCorrect));
