@@ -46,7 +46,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     width = 'w-full',
     isClearable = false,
     onClear,
-    placement = 'right',
+    placement = 'right'
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -61,7 +61,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
-    if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
+    if (!stringElement || currentRef?.current?.outerHTML?.indexOf(stringElement) === -1) {
       window.removeEventListener('click', handleOutsideClick, false);
       if (showList) {
         setShowList(false);
@@ -134,7 +134,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 value={{
                   size: '1.2rem',
                   style: {},
-                  className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
                 }}>
                 <FaSpinner />
               </IconContext.Provider>

@@ -113,8 +113,8 @@ export const getFilterORArray = (arr: any, key: string) => {
   let newArray = arr.map((item: any) => {
     return {
       [key]: {
-        eq: item,
-      },
+        eq: item
+      }
     };
   });
   return newArray;
@@ -205,8 +205,8 @@ export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
     let newArray = arr.map((item: any) => {
       return {
         [key]: {
-          eq: item,
-        },
+          eq: item
+        }
       };
     });
     return {or: newArray};
@@ -225,8 +225,8 @@ export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
     let newArray = arr.map((item: any) => {
       return {
         [key]: {
-          ne: item,
-        },
+          ne: item
+        }
       };
     });
     return {and: newArray};
@@ -251,7 +251,7 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 export const getClientKey = () => {
   const url = new URL(window.location.href);
   let hostname = url.hostname;
-  if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
+  if (hostname.indexOf('localhost') >= 0) return 'curate';
   if (hostname.indexOf('lms') >= 0) return 'demo';
   if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
@@ -382,12 +382,12 @@ export const stripStyleFromHTML = (str: string) => {
   }
 };
 
-export const replaceAll = (content:string, replaceObj:any) => {
+export const replaceAll = (content: string, replaceObj: any) => {
   for (const key in replaceObj) {
     if (replaceObj.hasOwnProperty(key)) {
       const val = replaceObj[key];
       content = content.replace(new RegExp(`{${key}}`, 'g'), val);
     }
   }
-  return content
-}
+  return content;
+};
