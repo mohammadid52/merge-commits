@@ -452,7 +452,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     if (!associateInstitute?.length && !institutionList.length) {
       fetchInstListForAdmin();
     }
-  }, [associateInstitute, institutionList]);
+  }, [associateInstitute]);
 
   useEffect(() => {
     const setupActiveSection = async () => {
