@@ -1,4 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import LessonLoading from '@components/Lesson/Loading/LessonLoading';
+import {createCypressTesting} from '@graphql/mutations';
+import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
@@ -17,7 +20,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
   const history = useHistory();
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const {dashboardTestCasesDict} = useDictionary(clientKey);
-  const {status, setStatus} = props;
+  // const {status, setStatus} = props;
   const [test, setTest] = useState<any>({
     id: '',
     name: '',
@@ -25,14 +28,38 @@ const TestCasesAdd = (props: UserInfoProps) => {
     steps: '',
     data: '',
     expResults: '',
-    edgeCases: '',
+    edgeCases: ''
   });
+
+  async function createTestCase() {
+    try {
+      console.log({test});
+      const input = {
+        testID: test.id,
+        testName: test.name,
+        testData: test.data,
+        testExpResults: test.expResults,
+        testSteps: test.steps,
+        testType: test.type
+        // testEdgeCases: test.edgeCases
+      };
+
+      const results: any = await API.graphql(
+        graphqlOperation(createCypressTesting, {input: input})
+      );
+
+      history.push(`/dashboard/test-cases`);
+      console.log({results});
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleChangeType = (type: {name: string; code: string}) => {
     setTest(() => {
       return {
         ...test,
-        type: type.code,
+        type: type.code
       };
     });
   };
@@ -40,17 +67,17 @@ const TestCasesAdd = (props: UserInfoProps) => {
   const TYPE = [
     {
       code: 'realtime',
-      name: 'Realtime',
+      name: 'Realtime'
     },
     {
       code: 'stub',
-      name: 'Stub',
-    },
+      name: 'Stub'
+    }
   ];
 
-  //   if (status !== 'done') {
-  //     return <LessonLoading />;
-  //   }
+  // if (status !== 'done') {
+  //   return <LessonLoading />;
+  // }
 
   // ⬆️ Ends here ⬆️
 
@@ -59,7 +86,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
     setTest(() => {
       return {
         ...test,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -75,7 +102,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                   <>
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testId"
+                        htmlFor="id"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -85,7 +112,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
-                          id="testId"
+                          id="id"
                           onChange={onChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.id}
@@ -95,7 +122,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
 
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testName"
+                        htmlFor="name"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -105,7 +132,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
-                          id="testName"
+                          id="name"
                           onChange={onChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.name}
@@ -115,7 +142,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
 
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testSteps"
+                        htmlFor="steps"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -125,7 +152,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <textarea
-                          id="testSteps"
+                          id="steps"
                           onChange={onChange}
                           className="form-input outline-none border-none block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.steps}
@@ -135,7 +162,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
 
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testData"
+                        htmlFor="data"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -145,7 +172,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <textarea
-                          id="testData"
+                          id="data"
                           onChange={onChange}
                           className="form-input outline-none border-none block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.data}
@@ -156,7 +183,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         handleChangeLanguage={handleChangeType}
-                        userLanguage={'EN'}
+                        userLanguage={'Select Type'}
                         label={
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
                             'TEST_TYPE'
@@ -168,7 +195,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
 
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testExpResults"
+                        htmlFor="expResults"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -178,7 +205,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input
-                          id="testExpResults"
+                          id="expResults"
                           onChange={onChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.expResults}
@@ -188,7 +215,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
 
                     <div className="sm:col-span-3 p-2">
                       <label
-                        htmlFor="testEdgeCases"
+                        htmlFor="edgeCases"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {
                           dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
@@ -198,7 +225,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input
-                          id="testEdgeCases"
+                          id="edgeCases"
                           onChange={onChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={test.edgeCases}
@@ -222,7 +249,7 @@ const TestCasesAdd = (props: UserInfoProps) => {
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
                 label={dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES']['SAVE']}
-                // onClick={saveTestCase}
+                onClick={() => createTestCase()}
                 disabled={false}
               />
             </div>

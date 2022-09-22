@@ -9,9 +9,10 @@ import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitle from '../../Atoms/SectionTitle';
 import TestCasesInfo from './TestCasesInfo';
-import {createCypressTesting} from '@graphql/mutations';
+import {createCypressTesting, deleteCypressTesting} from '@graphql/mutations';
 import {listCypressTestings} from '@graphql/queries';
 import TestCasesAdd from './TestCasesAdd';
+import LessonLoading from '@components/Lesson/Loading/LessonLoading';
 
 const TestCases = () => {
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -21,6 +22,7 @@ const TestCases = () => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const [status, setStatus] = useState('');
+  const [tableData, setTableData] = useState([]);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -38,32 +40,23 @@ const TestCases = () => {
       const results: any = await API.graphql(
         graphqlOperation(listCypressTestings, {filter: {}})
       );
-      console.log({results});
-      //   const userData: any = results.data.getPerson;
-      //   setPerson(personalInfo);
+      const data = results.data.listCypressTestings.items;
+      console.log(data);
+      setTableData(data);
       setStatus('done');
     } catch (error) {
       console.error(error);
     }
   }
-  async function createSampleTestCase() {
+
+  async function deleteTestCase(id: string) {
+    const input = {id};
     try {
-      // @zuhair - change inputs here
-      const input = {
-        testID: '1234',
-        testName: 'test1234',
-        testData: 'test1234data',
-        testExpResults: 'test',
-        testSteps: '1234',
-        testType: 'testType'
-      };
-
       const results: any = await API.graphql(
-        graphqlOperation(createCypressTesting, {input: input})
+        graphqlOperation(deleteCypressTesting, {input: input})
       );
-      console.log({results});
 
-      setStatus('done');
+      getTestCases();
     } catch (error) {
       console.error(error);
     }
@@ -71,13 +64,13 @@ const TestCases = () => {
 
   useEffect(() => {
     getTestCases();
-  }, []);
+  }, [pathName]);
 
   const testCasesBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
-  // if (status !== 'done') {
-  //   return <LessonLoading />;
-  // }
+  if (status !== 'done') {
+    return <LessonLoading />;
+  }
   {
     return (
       <div className="relative">
@@ -116,7 +109,13 @@ const TestCases = () => {
                 <Route
                   exact
                   path={`${match.url}/`}
-                  render={() => <TestCasesInfo status={status} />}
+                  render={() => (
+                    <TestCasesInfo
+                      deleteTestCase={deleteTestCase}
+                      tableData={tableData}
+                      status={status}
+                    />
+                  )}
                 />
                 <Route
                   path={`${match.url}/add`}
