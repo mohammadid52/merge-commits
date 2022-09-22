@@ -1,29 +1,33 @@
+import LessonLoading from '@components/Lesson/Loading/LessonLoading';
 import React, {useState} from 'react';
+import {BiEdit} from 'react-icons/bi';
+import {FaTrashAlt} from 'react-icons/fa';
 interface UserInfoProps {
   status: string;
+  tableData: any;
+  deleteTestCase: (id: string) => void;
 }
 
 const TestCasesInfo = (props: UserInfoProps) => {
-  const {status} = props;
-  const [tableData, setTableData] = useState([]);
+  const {status, tableData, deleteTestCase} = props;
 
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
   const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
 
-  // if (status !== 'done') {
-  //   return <LessonLoading />;
-  // }
+  if (status !== 'done') {
+    return <LessonLoading />;
+  }
 
   {
     return (
       <div className="w-full md:px-4 pt-4">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full overflow-scroll divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
-              <th scope="col" style={{width: '15%'}} className={theadStyles}>
+              {/* <th scope="col" style={{width: '15%'}} className={theadStyles}>
                 Id
-              </th>
+              </th> */}
               <th scope="col" style={{width: '20%'}} className={theadStyles}>
                 test id
               </th>
@@ -48,15 +52,18 @@ const TestCasesInfo = (props: UserInfoProps) => {
               <th scope="col" style={{width: '20%'}} className={theadStyles}>
                 status
               </th>
+              <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                actions
+              </th>
             </tr>
           </thead>
           <tbody>
-            {tableData.map((listItem, idx) => {
+            {tableData.map((listItem: any, idx: number) => {
               return (
                 <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                  <td style={{width: '15%'}} className={tdataStyles}>
+                  {/* <td style={{width: '15%'}} className={tdataStyles}>
                     {listItem.id}
-                  </td>
+                  </td> */}
                   <td style={{width: '20%'}} className={tdataStyles}>
                     {listItem.testID}
                   </td>
@@ -79,7 +86,21 @@ const TestCasesInfo = (props: UserInfoProps) => {
                     {listItem.edgeCases}
                   </td>
                   <td style={{width: '10%'}} className={tdataStyles}>
-                    Success
+                    <p className="bg-green-200 text-green-800 rounded-full py-1 px-2">
+                      Success
+                    </p>
+                  </td>
+                  <td
+                    style={{width: '10%'}}
+                    className={'px-6 py-4 whitespace-nowrap text-xs text-gray-800'}>
+                    <div className="flex w-full">
+                      <BiEdit className="text-blue-500 cursor-pointer" size={22} />
+                      <FaTrashAlt
+                        onClick={() => deleteTestCase(listItem.id)}
+                        className="text-red-500 cursor-pointer"
+                        size={20}
+                      />
+                    </div>
                   </td>
                 </tr>
               );
