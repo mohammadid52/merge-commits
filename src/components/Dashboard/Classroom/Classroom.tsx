@@ -119,7 +119,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     setActiveRoomInfo,
     lessonLoading,
     syllabusLoading,
-    handleRoomSelection,
+    handleRoomSelection
   } = props;
 
   // ##################################################################### //
@@ -250,12 +250,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           const lessonScheduleData = activeSyllabusLessons?.find(
             (lesson: any) => lesson.id === item.id
           );
-          let temp = Math.ceil(count + item?.lesson?.duration);
+          let temp = Math.ceil(count + (item?.lesson?.duration || 1));
+
           const sessionHeading = lessonScheduleData?.startDate
             ? item?.lesson?.duration > 1
               ? [
                   new Date(lessonScheduleData.startDate).toLocaleDateString(),
-                  new Date(lessonScheduleData.estEndDate).toLocaleDateString(),
+                  new Date(lessonScheduleData.estEndDate).toLocaleDateString()
                 ].join(' - ')
               : new Date(lessonScheduleData.startDate).toLocaleDateString()
             : `Session ${
@@ -275,7 +276,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   (total: number, obj: any) => Number(obj.estTime) + total,
                   0
                 ) / 5
-              ) * 5,
+              ) * 5
           };
           return {...item, lesson, session, sessionHeading};
         })
@@ -312,11 +313,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       teacherEmail: activeRoomInfo.teacherEmail,
       name: activeRoomInfo.name,
       maxPersons: activeRoomInfo.maxPersons,
-      activeSyllabus: syllabusID,
+      activeSyllabus: syllabusID
     };
     const input2 = {
       id: syllabusID,
-      isUsed: true,
+      isUsed: true
     };
     const input3 = {
       id: classroomCurriculum.id,
@@ -324,13 +325,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         ? classroomCurriculum.syllabiHistory.includes(syllabusID)
           ? classroomCurriculum.syllabiHistory
           : [...classroomCurriculum.syllabiHistory, syllabusID]
-        : [syllabusID],
+        : [syllabusID]
     };
 
     try {
       const updateRoomMutation: any = await API.graphql(
         graphqlOperation(mutations.updateRoom, {
-          input: input,
+          input: input
         })
       );
       const updateUniversalSyllabusMutation: any = await API.graphql(
@@ -352,8 +353,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
       url: `/dashboard/classroom/${roomId}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const getLessonRating = async (
@@ -366,7 +367,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         graphqlOperation(queries.getPersonLessonsData, {
           lessonID: lessonId,
           studentEmail: userEmail,
-          studentAuthId: userAuthId,
+          studentAuthId: userAuthId
         })
       );
 
@@ -379,7 +380,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         ratingValue,
         currentPage,
         lessonProgress,
-        totalPages,
+        totalPages
       };
     } catch (error) {}
   };
@@ -390,8 +391,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         graphqlOperation(mutations.updatePersonLessonsData, {
           input: {
             lessonID: lessonID,
-            ratings: ratingValue,
-          },
+            ratings: ratingValue
+          }
         })
       );
     } catch (error) {}
@@ -402,19 +403,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const getLessonByType: any = await API.graphql(
         graphqlOperation(queries.lessonsByType, {
           lessonType: type,
-          filter: {lessonID: {eq: lessonID}},
+          filter: {lessonID: {eq: lessonID}}
         })
       );
-      const pageNumber = getLessonByType.data.lessonsByType.items[0].pages;
+
+      const items = getLessonByType.data.lessonsByType.items;
+      const pageNumber = items && items.length > 0 ? items[0].pages : 0;
       const currentPage = JSON.parse(pageNumber).currentPage;
       const totalPages = JSON.parse(pageNumber).totalPages;
       const lessonProgress = JSON.parse(pageNumber).lessonProgress;
       return {
         lessonProgress,
         currentPage,
-        totalPages,
+        totalPages
       };
-    } catch (error) {}
+    } catch (error) {
+      console.error(`lessondID:${lessonID} error @getLessonByType Classroom.tsx `, error);
+    }
   };
 
   return (
