@@ -6,7 +6,7 @@ const teacherEmail = 'demoteacher@zoiq.io';
 const adminEmail = 'demoadmin@zoiq.io';
 const testPass = 'admin123';
 const failPass = 'admin@12';
-const dashboardURL = 'http://localhost:8085/dashboard/home';
+const dashboardURL = 'http://localhost:8085/dashboard';
 const loginURL = 'http://localhost:8085/login';
 const loginErrorMessage = 'The email or password you entered was not correct';
 
