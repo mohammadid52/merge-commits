@@ -25,13 +25,16 @@ const DropDownMenu = ({
   role,
   image,
   theme,
-  updateAuthState,
+  updateAuthState
 }: IDropDownMenu) => {
   const history = useHistory();
 
   if (firstName && lastName && theme) {
     return (
-      <Menu as="div" className="relative inline-block text-left w-auto">
+      <Menu
+        as="div"
+        data-cy="dropdown-button"
+        className="relative inline-block text-left w-auto">
         {({open}) => (
           <>
             <div>
@@ -59,7 +62,7 @@ const DropDownMenu = ({
                               ? stringToHslColor(firstName + ' ' + lastName)
                               : '#272730'
                           }`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3',
+                          textShadow: '0.1rem 0.1rem 2px #423939b3'
                         }}
                         className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
                         {`${initials(firstName, lastName)}`}
@@ -92,7 +95,7 @@ const DropDownMenu = ({
                       </span>
                     </div>
                   </Menu.Item>
-                  <Menu.Item key={'profile'}>
+                  <Menu.Item data-cy="dropdown-item-profile" key={'profile'}>
                     <div
                       onClick={() => history.push('/dashboard/profile')}
                       className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
@@ -101,7 +104,7 @@ const DropDownMenu = ({
                           <IconContext.Provider
                             value={{
                               size: '24px',
-                              className: 'w-auto mr-1',
+                              className: 'w-auto mr-1'
                             }}>
                             <FiUser className="cursor-pointer" />
                           </IconContext.Provider>
@@ -119,7 +122,7 @@ const DropDownMenu = ({
                           <IconContext.Provider
                             value={{
                               size: '24px',
-                              className: 'w-auto mr-1',
+                              className: 'w-auto mr-1'
                             }}>
                             <VscChecklist className="cursor-pointer" />
                           </IconContext.Provider>
