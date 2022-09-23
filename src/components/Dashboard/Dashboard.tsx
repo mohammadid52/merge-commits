@@ -32,6 +32,7 @@ const Classroom = lazy(() => import('./Classroom/Classroom'));
 const GameChangers = lazy(() => import('./GameChangers/GameChangers'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
+const TestCases = lazy(() => import('./TestCases/TestCases'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
 
 type userObject = {
@@ -101,7 +102,7 @@ const Dashboard = (props: DashboardProps) => {
   useEffect(() => {
     if (state.currentPage === 'homepage') {
       dispatch({
-        type: 'RESET_ROOMDATA',
+        type: 'RESET_ROOMDATA'
       });
     }
   }, [state.currentPage]);
@@ -111,7 +112,7 @@ const Dashboard = (props: DashboardProps) => {
   // ##################################################################### //
   const [userData, setUserData] = useState({
     role: '',
-    image: '',
+    image: ''
   });
   const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
   const isOnDemandStudent = stateUser?.onDemand;
@@ -119,7 +120,7 @@ const Dashboard = (props: DashboardProps) => {
   const setUser = (user: userObject) => {
     setUserData({
       role: user.role,
-      image: user?.image,
+      image: user?.image
     });
     let firstName = user.preferredName ? user.preferredName : user.firstName;
     dispatch({
@@ -132,8 +133,8 @@ const Dashboard = (props: DashboardProps) => {
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
         image: user?.image,
-        onDemand: user?.onDemand,
-      },
+        onDemand: user?.onDemand
+      }
     });
 
     setCookie(
@@ -149,7 +150,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'queries.getPerson',
-        valueObj: {email: userEmail, authId: userAuthId},
+        valueObj: {email: userEmail, authId: userAuthId}
       };
 
       const user: any = await API.graphql(
@@ -174,7 +175,7 @@ const Dashboard = (props: DashboardProps) => {
     } else {
       setUserData({
         role: stateUser?.role,
-        image: stateUser?.image,
+        image: stateUser?.image
       });
     }
   }, [stateUser?.role]);
@@ -219,8 +220,8 @@ const Dashboard = (props: DashboardProps) => {
         name: 'customQueries.getDashboardData',
         valueObj: {
           authId: authId,
-          email: email,
-        },
+          email: email
+        }
       };
       const dashboardDataFetch = await API.graphql(
         graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
@@ -245,12 +246,12 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: {teacherAuthID: {eq: teacherAuthID}},
+          filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-          filter: {teacherAuthID: {eq: teacherAuthID}},
+          filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
       const response = await dashboardDataFetch;
@@ -260,9 +261,9 @@ const Dashboard = (props: DashboardProps) => {
           (item: any) => ({
             ...item,
             ...item.room,
-            teacher: item.room?.teacher,
+            teacher: item.room?.teacher
           })
-        ),
+        )
       ];
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
         return {class: {rooms: {items: arrayOfResponseObjects}}};
@@ -299,8 +300,8 @@ const Dashboard = (props: DashboardProps) => {
             {
               name: dataObj?.class?.name,
               room: dataObj?.class?.room,
-              students: dataObj?.class?.students,
-            },
+              students: dataObj?.class?.students
+            }
           ];
         }, [])
       : [];
@@ -329,8 +330,8 @@ const Dashboard = (props: DashboardProps) => {
       type: 'UPDATE_ROOM',
       payload: {
         property: 'rooms',
-        data: studentRoomsList,
-      },
+        data: studentRoomsList
+      }
     });
   }, [classList]);
 
@@ -348,7 +349,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'customQueries.listRooms',
-        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
+        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}}
       };
 
       const classIdFromRoomsFetch: any = await API.graphql(
@@ -356,7 +357,7 @@ const Dashboard = (props: DashboardProps) => {
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-          filter: {teacherAuthID: {eq: teacherAuthID}},
+          filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
       //@ts-ignore
@@ -366,9 +367,9 @@ const Dashboard = (props: DashboardProps) => {
           (item: any) => ({
             ...item,
             ...item.room,
-            teacher: item.room?.teacher,
+            teacher: item.room?.teacher
           })
-        ),
+        )
       ];
 
       setLocalStorageData('room_list', arrayOfResponseObjects);
@@ -377,8 +378,8 @@ const Dashboard = (props: DashboardProps) => {
         type: 'UPDATE_ROOM',
         payload: {
           property: 'rooms',
-          data: arrayOfResponseObjects,
-        },
+          data: arrayOfResponseObjects
+        }
       });
     } catch (e) {
       console.error('Classes Fetch ERR: ', e);
@@ -396,26 +397,25 @@ const Dashboard = (props: DashboardProps) => {
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
   const listRoomCurriculums = async () => {
-    console.log('listRoomCurriculums - ', '');
     // removeLocalStorageData('curriculum_id');
     if (state.roomData.rooms.length > 0) {
       try {
         const queryObj = {
           name: 'customQueries.listRoomCurriculums',
           valueObj: {
-            roomID: {eq: state.activeRoom},
-          },
+            roomID: {eq: state.activeRoom}
+          }
         };
 
         // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
         const roomCurriculumsFetch = await API.graphql(
           graphqlOperation(queries.listRoomCurricula, {
             filter: {
-              roomID: {eq: state.activeRoom},
-            },
+              roomID: {eq: state.activeRoom}
+            }
           })
         );
-        console.log('roomCurriculumsFetch - ', roomCurriculumsFetch);
+
         const response = await roomCurriculumsFetch;
         // @ts-ignore
         const arrayOfResponseObjects = response?.data?.listRoomCurricula?.items;
@@ -555,8 +555,8 @@ const Dashboard = (props: DashboardProps) => {
             : item.estEndDate;
           count = count >= 1 ? 0 : count;
           return item;
-        }),
-      },
+        })
+      }
     }));
   };
 
@@ -565,19 +565,15 @@ const Dashboard = (props: DashboardProps) => {
    ********************/
 
   const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
-    console.log('reorderSyllabus');
     let getSyllabusInSequence =
       sequenceArray && sequenceArray.length > 0
         ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
             return [
               ...acc,
-              syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID),
+              syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
             ];
           }, [])
         : syllabusArray;
-
-    console.log('syllabusArray ', syllabusArray);
-    console.log('getSyllabusInSequence ', getSyllabusInSequence);
 
     let mapSyllabusToSequence =
       sequenceArray && sequenceArray.length > 0
@@ -595,8 +591,8 @@ const Dashboard = (props: DashboardProps) => {
                           return {...t, index};
                         })
                         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-                    : [],
-              },
+                    : []
+              }
             }))
             .map(({unit, ...rest}: any) => rest)
         : getSyllabusInSequence;
@@ -627,8 +623,8 @@ const Dashboard = (props: DashboardProps) => {
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           syllabus: mappedResponseObjects,
-          curriculum: {id: response.id, name: response.name},
-        },
+          curriculum: {id: response.id, name: response.name}
+        }
       });
     } catch (e) {
       console.error('Curriculum ids ERR: ', e);
@@ -692,8 +688,8 @@ const Dashboard = (props: DashboardProps) => {
       type: 'UPDATE_ROOM',
       payload: {
         property: 'lessons',
-        data: [],
-      },
+        data: []
+      }
     });
 
     /**
@@ -704,7 +700,7 @@ const Dashboard = (props: DashboardProps) => {
       setLessonLoading(true);
       const syllabusLessonFetch = await API.graphql(
         graphqlOperation(customQueries.getUniversalSyllabus, {
-          id: syllabusID,
+          id: syllabusID
         })
       );
       //@ts-ignore
@@ -720,8 +716,8 @@ const Dashboard = (props: DashboardProps) => {
         type: 'UPDATE_ROOM_MULTI',
         payload: {
           activeSyllabus: response,
-          lessons: lessons,
-        },
+          lessons: lessons
+        }
       });
     } catch (e) {
       console.error('syllabus lessons: ', e);
@@ -759,7 +755,7 @@ const Dashboard = (props: DashboardProps) => {
       setActiveRoomName(name);
       dispatch({
         type: 'UPDATE_ACTIVEROOM',
-        payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus},
+        payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus}
       });
 
       history.push(`/dashboard/${route}/${id}`);
@@ -942,6 +938,7 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/profile`}
                 render={() => <Profile updateAuthState={updateAuthState} />}
               />
+              <Route path={`${match.url}/test-cases`} render={() => <TestCases />} />
               <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (

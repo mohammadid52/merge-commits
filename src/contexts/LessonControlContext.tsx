@@ -1,5 +1,4 @@
 import React, {useEffect, useReducer, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
 import {lessonControlReducer} from '../reducers/LessonControlReducer';
 import {lessonControlState} from '../state/LessonControlState';
 import {getClientKey} from '../utilities/strings';
@@ -19,12 +18,7 @@ export const LessonControlContextProvider = ({children}: LessonControlProps) => 
   const [state, dispatch] = useReducer(lessonControlReducer, lessonControlState);
   const theme = standardTheme;
 
-  // const location = useLocation();
-  const history = useHistory();
-  const urlParams: any = useParams();
-
   // Subscription for student->teacher interaction
-  let subscription: any;
 
   // Dictionary
   const userLanguage = /*state.user.language ||*/ 'EN'; // TODO: add 'user' property & info to state
@@ -34,17 +28,7 @@ export const LessonControlContextProvider = ({children}: LessonControlProps) => 
   const [lesson, setLesson] = useState<LessonObject>();
   const [updatedLesson, setUpdatedLesson] = useState<any>();
 
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-
-  const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
-  const [checkpointIdList, setCheckpointIdList] = useState<string[]>(['']);
-  const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
   const [checkpointsItems, setCheckpointsItems] = useState<any[]>([]);
-  const [checkpointsSequence, setCheckpointsSequence] = useState<string[]>(['']);
-  const [checkpointsQuestionsSequence, setCheckpointsQuestionsSequence] = useState<
-    {[key: string]: string[]}[]
-  >([]);
-  const [reordered, setReordered] = useState<boolean>(false);
 
   /**
    *
@@ -286,8 +270,8 @@ export const LessonControlContextProvider = ({children}: LessonControlProps) => 
       dispatch({
         type: 'UPDATE_LESSON_DATA',
         payload: {
-          data: updatedLesson,
-        },
+          data: updatedLesson
+        }
       });
     }
   }, [updatedLesson]);
@@ -323,7 +307,7 @@ export const LessonControlContextProvider = ({children}: LessonControlProps) => 
         userLanguage,
         uLang,
         clientKey,
-        checkpointsItems,
+        checkpointsItems
       }}>
       {children}
     </LessonControlContext.Provider>

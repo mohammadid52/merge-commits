@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import Label from '@components/Atoms/Form/Label';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getAsset} from 'assets';
+import React, {useEffect, useRef, useState} from 'react';
 
 interface DropdownProps {
   label: string;
@@ -29,7 +32,7 @@ const DropdownForm = (props: DropdownProps) => {
     noOptionMessage,
   } = props;
 
-  const options = () => {
+  const getOptions = () => {
     if (userInfo === 'ACTIVE') {
       return 'Active';
     } else if (userInfo === 'SUSPENDED') {
@@ -59,7 +62,21 @@ const DropdownForm = (props: DropdownProps) => {
     }
   };
 
-  let [selectedItem, setSelectItem] = useState(options());
+  const componentRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (componentRef.current && !componentRef.current.contains(event.target)) {
+        setShowItems(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
+  const OPTIONS = getOptions();
+
   const [showItems, setShowItems] = useState(false);
 
   let [selectItem, setItem] = useState(userInfo);
@@ -70,16 +87,13 @@ const DropdownForm = (props: DropdownProps) => {
     handleChange(item);
   };
 
+  const isSelected = (name: string) => OPTIONS === name;
+  const {theme, clientKey} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   return (
-    <div className="space-y-1">
-      <label
-        id="listbox-label"
-        className={`${
-          style ? 'text-m' : 'text-sm'
-        } block leading-5 font-medium text-gray-700`}>
-        {isRequired && <span className={`${style ? 'text-red-500' : 'hidden'}`}>* </span>}
-        {label}
-      </label>
+    <div ref={componentRef} className="space-y-1">
+      <Label label={label} isRequired={isRequired} />
       <div className="relative">
         <span className="inline-block w-full rounded-md shadow-sm">
           <button
@@ -88,8 +102,10 @@ const DropdownForm = (props: DropdownProps) => {
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
-            className="flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-            <span className="block truncate">{options()}</span>
+            className={`flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-${
+              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+            }-600 focus:border-transparent transition ease-in-out duration-150 sm:text-sm sm:leading-5`}>
+            <span className="block truncate">{OPTIONS}</span>
             <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <svg
                 className="h-5 w-5 text-gray-400"
@@ -120,25 +136,24 @@ const DropdownForm = (props: DropdownProps) => {
                     onClick={() => selection(item)}
                     id={id}
                     role="option"
-                    className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 pl-8 pr-4`}>
-                    <span
-                      className={`${
-                        options() === item.name ? 'font-semibold' : 'font-normal'
-                      } block truncate"`}>
-                      {item.name}
-                    </span>
-                    <span
-                      className={`${
-                        options() === item.name ? 'display' : 'hidden'
-                      } text-indigo-600 relative justify-end inset-y-0 right-0 flex items-center pr-4`}>
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
+                    className={` flex cursor-pointer select-none relative py-2 pl-8 pr-4 ${
+                      isSelected(item.name)
+                        ? 'iconoclast:bg-main text-white'
+                        : 'hover:bg-indigo-100 hover:text-indigo-400'
+                    }`}>
+                    <span className={`block truncate"`}>{item.name}</span>
+                    {isSelected(item.name) && (
+                      <span
+                        className={`text-white relative justify-end inset-y-0 right-0 flex items-center pr-4`}>
+                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    )}
                   </li>
                 ))
               ) : (

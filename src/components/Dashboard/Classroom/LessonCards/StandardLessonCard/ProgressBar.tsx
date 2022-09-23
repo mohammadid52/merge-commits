@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {LessonsByTypeQueryVariables} from 'API';
+import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
   value: string;
@@ -9,27 +11,66 @@ interface ProgressBarProps {
   getLessonByType?: (type: string, lessonID: string) => any;
 }
 
-const ProgressBar = ({value, max, lessonProps, getLessonByType}: ProgressBarProps) => {
-  const [progressValue, setProgressValue] = useState<any>();
+const ProgressBar = ({lessonProps}: ProgressBarProps) => {
+  const [progressValue, setProgressValue] = useState<any>(0);
+
+  const shouldShowProgress = Boolean(lessonProps.lesson.type);
+
+  const {data, isFetched} = useGraphqlQuery<LessonsByTypeQueryVariables, any>(
+    'lessonsByType',
+    {
+      lessonType: lessonProps.lesson.type,
+      filter: {lessonID: {eq: lessonProps.lesson.id}}
+    },
+    {enabled: shouldShowProgress}
+  );
+
+  const generateLessonProgress = async () => {
+    try {
+      const pageNumber = data && data.length > 0 ? data[0].pages : 0;
+
+      const currentPage = JSON.parse(pageNumber).currentPage;
+
+      const totalPages = JSON.parse(pageNumber).totalPages;
+
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1;
+
+      const percentCorrect = (lessonProgress * 100) / totalPages;
+      setProgressValue(
+        Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100
+      );
+      return {
+        lessonProgress,
+        currentPage,
+        totalPages
+      };
+    } catch (error) {
+      console.error(
+        `lessondID:${lessonProps.lesson.id} error @getLessonByType Classroom.tsx `,
+        error
+      );
+    }
+  };
 
   useEffect(() => {
-    getLessonByType(lessonProps.lesson.type, lessonProps.lesson.id).then((value: any) => {
-      if (value) {
-        const percentCorrect = (value.lessonProgress * 100) / value.totalPages;
-        setProgressValue(Math.round(percentCorrect));
-      }
-    });
-  }, []);
+    if (isFetched && data) {
+      generateLessonProgress();
+    }
+  }, [isFetched]);
+
+  if (!shouldShowProgress) return null;
 
   return (
     <div className="flex justify-end px-4 flex-wrap mb-3">
-      <div className="flex justify-end mb-1">
-        {progressValue > 0 ? progressValue : 0}% complete
+      <div className="flex items-center justify-between my-2">
+        <p className="text-gray-500 text-sm">
+          {progressValue > 0 ? progressValue : 0}% complete
+        </p>
       </div>
-      <div className="progress-bar rounded">
-        <label
-          className="progress-value rounded block"
-          style={{width: `${progressValue}%`}}></label>
+      <div className="w-full h-2 iconoclast:bg-200 curate:bg-200 rounded-full">
+        <div
+          style={{width: `${progressValue}%`}}
+          className="h-full text-center transition-all duration-1000 text-xs text-white iconoclast:bg-600 curate:bg-600 rounded-full"></div>
       </div>
     </div>
   );

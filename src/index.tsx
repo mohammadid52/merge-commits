@@ -1,5 +1,5 @@
 // import Amplify from 'aws-amplify';
-import Amplify from '@aws-amplify/core';
+import {Amplify} from '@aws-amplify/core';
 import React, {useEffect} from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom';
@@ -23,14 +23,14 @@ Amplify.configure({
     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
     region: awsconfig.aws_cognito_region,
     userPoolId: awsconfig.aws_user_pools_id,
-    userPoolWebClientId: awsconfig.aws_user_pools_web_client_id,
+    userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
   },
   Storage: {
     AWSS3: {
       bucket: awsconfig.aws_user_files_s3_bucket,
-      region: awsconfig.aws_user_files_s3_bucket_region,
-    },
-  },
+      region: awsconfig.aws_user_files_s3_bucket_region
+    }
+  }
 });
 
 const Page: React.FC = () => {

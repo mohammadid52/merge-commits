@@ -21,7 +21,7 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
-  getLessonCompletedValue,
+  getLessonCompletedValue
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -60,7 +60,6 @@ const LessonHeaderBar = ({
   };
 
   const handleNotebookSave = () => {
-    console.log('🚀 ~ file: LessonHeaderBar.tsx ~ line 64 ~ handleNotebookSave');
     if (leaveAfterCompletion) {
       createJournalData();
       setTimeout(() => {
@@ -243,7 +242,7 @@ const LessonHeaderBar = ({
         history.push(`${match.url}/${getPresentedPagedIndex}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: getPresentedPagedIndex,
+          payload: getPresentedPagedIndex
         });
       }
     }
@@ -257,7 +256,7 @@ const LessonHeaderBar = ({
         history.push(`${match.url}/${lessonState.currentPage + 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1,
+          payload: lessonState.currentPage + 1
         });
       } else {
         handleRequiredNotification();
@@ -280,14 +279,14 @@ const LessonHeaderBar = ({
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage - 1,
+          payload: lessonState.currentPage - 1
         });
       } else if (!userAtEnd() && lessonState.currentPage > 0) {
         if (isAtEnd) setisAtEnd(false);
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage - 1,
+          payload: lessonState.currentPage - 1
         });
       }
     }

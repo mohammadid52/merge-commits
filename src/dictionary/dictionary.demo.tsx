@@ -46,6 +46,7 @@ const BreadcrumsTitles: any = {
   EN: {
     HOME: 'Home',
     PROFILE: 'PROFILE',
+    TEST_CASES: 'TEST CASES',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
@@ -284,6 +285,25 @@ const dashboardProfileDict: any = {
         NO_CONFIRM_PASS: 'Ingrese su contraseña de confirmación',
         NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden',
       },
+    },
+  },
+};
+
+const dashboardTestCasesDict: any = {
+  EN: {
+    PROFILE: 'Test Cases',
+    TITLE: 'TEST CASES',
+    SUBTITLE: 'This contains test cases information.',
+    EDIT_TEST_CASES: {
+      TEST_ID: 'Test ID',
+      TEST_NAME: 'Test Name',
+      TEST_TYPE: 'Test Type',
+      TEST_STEPS: 'Test Steps',
+      TEST_DATA: 'Test Data',
+      TEST_EXP_RESULTS: 'Test Expected Results',
+      TEST_EDGE_CASES: 'Test Edge Cases',
+      SAVE: 'Save',
+      CANCEL: 'Cancel',
     },
   },
 };
@@ -4104,6 +4124,7 @@ export {
   DashboardDict,
   noticeboardDict,
   dashboardProfileDict,
+  dashboardTestCasesDict,
   staffBuilderDict,
   editClassDict,
   spBuilderDict,

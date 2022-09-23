@@ -10,7 +10,7 @@ const groupBy = (item: any, key: string) =>
   item.reduce(
     (result: any, item: any) => ({
       ...result,
-      [item[key]]: [...(result[item[key]] || []), item],
+      [item[key]]: [...(result[item[key]] || []), item]
     }),
     {}
   );
@@ -23,8 +23,7 @@ const Today: React.FC<LessonProps> = ({
   lessons,
   syllabus,
   handleLessonMutationRating,
-  getLessonRating,
-  getLessonByType,
+  getLessonRating
 }: LessonProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -56,7 +55,7 @@ const Today: React.FC<LessonProps> = ({
         const associatedLessons: any = value;
         temp.push({
           sessionHeading: associatedLessons[0].sessionHeading,
-          lessons: value,
+          lessons: value
         });
       }
       setLessonsBySession(temp);
@@ -86,7 +85,7 @@ const Today: React.FC<LessonProps> = ({
                 <span
                   className="px-2 text-sm text-gray-500 w-auto"
                   style={{
-                    backgroundColor: '#f0f2f5',
+                    backgroundColor: '#f0f2f5'
                   }}>
                   {session.sessionHeading}
                 </span>
@@ -110,7 +109,6 @@ const Today: React.FC<LessonProps> = ({
                       user={state.user}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={getLessonRating}
-                      getLessonByType={getLessonByType}
                     />
                   </div>
                 );

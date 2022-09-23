@@ -1,26 +1,28 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {useHistory} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import axios from 'axios';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
 
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
-import ErrorNote from './ErrorNote';
+import BreadCrums from '@atoms/BreadCrums';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import Selector from '@atoms/Form/Selector';
+import SectionTitle from '@atoms/SectionTitle';
 import DropdownForm from './DropdownForm';
-import Buttons from '../../../Atoms/Buttons';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '../../../Atoms/Form/Selector';
+import ErrorNote from './ErrorNote';
 
 import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {createUserUrl} from '../../../../utilities/urls';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {createUserUrl} from '@utilities/urls';
 
-import * as mutations from '../../../../graphql/mutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../customGraphql/customMutations';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import * as mutations from '@graphql/mutations';
+import NoResultsInput from '@components/Atoms/Form/NoResultsInput';
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import Label from '@components/Atoms/Form/Label';
 
 interface newUserInput {
   key: number;
@@ -33,6 +35,7 @@ interface newUserInput {
   birthdate: string;
   grade: string;
   role: string;
+  status: {name: string; value: string};
   externalId: string;
   group: {
     id: string;
@@ -47,6 +50,7 @@ interface newUserInput {
     id: string;
     name: string;
   };
+  isSelfPaced?: boolean;
   class: {
     id: string;
     name: string;
@@ -54,14 +58,17 @@ interface newUserInput {
   };
 }
 
+const PASSWORD = 'xIconoclast.5x';
+
 const initialState: newUserInput = {
   key: 0,
   authId: '',
   email: '',
-  password: 'xIconoclast.5x',
+  password: PASSWORD,
   firstName: '',
   lastName: '',
   phone: '',
+  status: {name: 'Active', value: 'ACTIVE'},
   birthdate: '',
   grade: '',
   role: '',
@@ -70,6 +77,7 @@ const initialState: newUserInput = {
   institution: {id: '', name: ''},
   class: {id: '', name: '', roomId: ''},
   group: {id: '', name: ''},
+  isSelfPaced: true,
 };
 
 const Registration = ({
@@ -81,12 +89,13 @@ const Registration = ({
 }: any) => {
   const {classId} = classData || {};
   const history = useHistory();
-  const params = useQuery(location.search);
+
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
-  console.log('🚀 ~ file: Registration.tsx ~ line 86 ~ newUserInputs', newUserInputs);
+
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
   const [instClasses, setInstClasses] = useState([]);
+
   const [groups, setGroups] = useState([]);
   const [groupLoading, setGroupLoading] = useState(false);
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
@@ -154,22 +163,27 @@ const Registration = ({
     });
   };
 
-  const onGroupChange = (_: string, name: string, id: string) => {
-    setNewUserInputs((prevValues) => ({
-      ...prevValues,
-      group: {id, name},
-    }));
-  };
+  // const onGroupChange = (_: string, name: string, id: string) => {
+  //   setNewUserInputs((prevValues) => ({
+  //     ...prevValues,
+  //     group: {id, name},
+  //   }));
+  // };
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
       setGroupLoading(true);
+      let filter = {
+        and: [
+          {
+            classRoomID: {eq: roomId},
+          },
+          {groupType: {eq: 'Proficiency'}},
+        ],
+      };
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listClassroomGroupssOptions, {
-          filter: {
-            classRoomID: {eq: roomId},
-            groupType: {eq: 'Proficiency'},
-          },
+          filter: filter,
         })
       );
       setGroups(
@@ -187,7 +201,7 @@ const Registration = ({
   async function registerUser(authId: string) {
     let userData = {
       authId: authId,
-      status: 'ACTIVE',
+      status: newUserInputs.status.value,
       role: newUserInputs.role,
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
@@ -197,6 +211,7 @@ const Registration = ({
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
       language: 'EN',
+      onDemand: !newUserInputs.isSelfPaced,
       addedby: state.user.authId,
     };
 
@@ -210,7 +225,7 @@ const Registration = ({
           institutionID: newUserInputs.institution.id,
           staffAuthID: authId,
           staffEmail: newUserInputs.email,
-          status: 'Active',
+          status: 'ACTIVE',
           statusChangeDate: new Date().toISOString().split('T')[0],
         };
         const staff: any = await API.graphql(
@@ -225,7 +240,7 @@ const Registration = ({
             studentID: person.id,
             studentAuthID: authId,
             studentEmail: newUserInputs.email,
-            status: 'Active',
+            status: newUserInputs.status,
           };
           await API.graphql(
             graphqlOperation(customMutations.createClassStudent, {input})
@@ -400,6 +415,15 @@ const Registration = ({
     });
   };
 
+  const handleChangeSelfPaced = (value: boolean) => {
+    setNewUserInputs(() => {
+      return {
+        ...newUserInputs,
+        isSelfPaced: value,
+      };
+    });
+  };
+
   const handleSubmit = () => {
     validation();
   };
@@ -457,7 +481,8 @@ const Registration = ({
     classID: string;
     id: string;
   }) => {
-    getClassRoomGroups(item.roomId);
+    // getClassRoomGroups(item.id);
+    // See reason below in the jsx
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
@@ -503,6 +528,15 @@ const Registration = ({
     }
   }, [institutionsData, instId]);
 
+  const status = [
+    {id: 1, name: 'Active', value: 'ACTIVE'},
+    {id: 2, name: 'Inactive', value: 'INACTIVE'},
+    {id: 3, name: 'Training', value: 'TRAINING'},
+  ];
+
+  const onStatusChange = (value: string, name: string) => {
+    setNewUserInputs({...newUserInputs, status: {value, name}});
+  };
   return (
     <div
       className={`w-full h-full ${
@@ -555,12 +589,10 @@ const Registration = ({
 
                   <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="firstName"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['firstname']}
-                      </label>
+                      <Label
+                        label={RegistrationDict[userLanguage]['firstname']}
+                        isRequired
+                      />
                       <FormInput
                         id="firstName"
                         name="firstName"
@@ -572,12 +604,10 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="lastName"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['lastname']}
-                      </label>
+                      <Label
+                        label={RegistrationDict[userLanguage]['lastname']}
+                        isRequired
+                      />
                       <FormInput
                         id="lastName"
                         name="lastName"
@@ -589,12 +619,7 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="email"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['email']}
-                      </label>
+                      <Label label={RegistrationDict[userLanguage]['email']} isRequired />
                       <FormInput
                         type="email"
                         id="email"
@@ -653,7 +678,35 @@ const Registration = ({
                               />
                             </div>
                           )}
-                          {Boolean(groups?.length) && (
+
+                          <div className="sm:col-span-3 p-2">
+                            <div>
+                              <Label label="Status" />
+                              <Selector
+                                selectedItem={newUserInputs?.status?.name}
+                                list={status}
+                                placeholder={'Choose Status'}
+                                onChange={onStatusChange}
+                                labelTextClass="text-m"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="sm:col-span-3 p-2">
+                            <div>
+                              <Label label="Choose Pace" />
+                              <CheckBox
+                                label="Self Paced"
+                                className="group:hover:bg-gray-500"
+                                value={newUserInputs.isSelfPaced}
+                                onChange={(e) => handleChangeSelfPaced(e.target.checked)}
+                                name="self-paced"
+                              />
+                            </div>
+                          </div>
+
+                          {/* We are not using this because Teachers are getting confused with this. But we might use this in future. */}
+                          {/* {Boolean(groups?.length) ? (
                             <div className="sm:col-span-3 p-2">
                               <Selector
                                 label={'Group'}
@@ -674,7 +727,7 @@ const Registration = ({
                                 loading={groupLoading}
                               />
                             </div>
-                          )}
+                          ) : null} */}
                         </>
                       )}
                   </div>
@@ -686,7 +739,7 @@ const Registration = ({
               {message.show ? (
                 <div>
                   {newUserInputs.message.type === 'success' ? (
-                    <SuccessNote />
+                    <SuccessNote message="Succesfully registered" />
                   ) : message.type === 'error' ? (
                     <ErrorNote note={message.message} />
                   ) : message.type === 'loading' ? (
@@ -702,7 +755,7 @@ const Registration = ({
           </div>
         </div>
 
-        <div className="w-1.5/10 ml-auto">
+        <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
           <Buttons
             btnClass="py-2 px-4 text-xs w-full"
             label={RegistrationDict[userLanguage]['button']['submit']}

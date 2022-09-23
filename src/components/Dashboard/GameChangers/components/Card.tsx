@@ -4,7 +4,7 @@ import {
   FOUR_SEVEN_EIGHT,
   EMOTIONS,
   SINGING_BOWL,
-  GRATITUDE,
+  GRATITUDE
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import React, {useEffect} from 'react';
 import Button from './Button';
@@ -15,7 +15,7 @@ import {
   ThinkAboutItSvg,
   FSEBreathingSvg,
   EmotionSvg,
-  GratitudeSvg,
+  GratitudeSvg
 } from '@components/Dashboard/GameChangers/svg';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
 
@@ -39,7 +39,7 @@ const getSVG = (type: string) => {
 const Card = ({
   card,
   onClick,
-  selected,
+  selected
 }: {
   card?: {id: number; type: string; title: string; desc: string};
   onClick: (id: number) => void;
@@ -50,7 +50,6 @@ const Card = ({
     if (!inLesson) {
       $('.flickity-button').css('display', 'block');
     }
-    console.log('heyya');
   }, [inLesson]);
 
   return (
@@ -58,7 +57,7 @@ const Card = ({
       className={`carousel-cell box mx-6 z-100 my-12 lg:my-0  cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button xl:max-h-156 xl:min-h-156 max-h-104 min-h-104`}>
       <div
         style={{
-          background: 'rgba(21, 19, 21, .8)',
+          background: 'rgba(21, 19, 21, .8)'
         }}
         className={`h-full inner-card transition-all rounded-xl p-8 lg:py-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
         {getSVG(card.type)}
