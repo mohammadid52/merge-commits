@@ -31,14 +31,13 @@ const ProgressBar = ({
   pages,
   currentPage,
   studentData,
-  requiredInputs,
+  requiredInputs
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');
-  console.log('🚀 ~ file: ProgressBar.tsx ~ line 41 ~ getRoomData', getRoomData);
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
@@ -139,6 +138,7 @@ const ProgressBar = ({
   const isClosed = lessonState?.displayData[0]?.studentAuthID === 'closed';
 
   const {resetViewAndShare} = useLessonControls();
+
   const reset = async () => {
     await resetViewAndShare();
   };

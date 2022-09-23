@@ -276,14 +276,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     {!(address || addressLine2 || city || state || zip) ? '-' : ''}
                   </span>
                 </div>
-                <div className="flex mt-2 items-center">
-                  <span className="w-auto mr-2">
-                    <FiPhone className="w-4 h-4 text-gray-600" />
-                  </span>
-                  <span className="w-auto text-gray-600">
-                    {phone ? formatPhoneNumber(phone) : '-'}
-                  </span>
-                </div>
+                {phone && (
+                  <div className="flex mt-2 items-center">
+                    <span className="w-auto mr-2">
+                      <FiPhone className="w-4 h-4 text-gray-600" />
+                    </span>
+                    <span className="w-auto text-gray-600">
+                      {phone ? formatPhoneNumber(phone) : '-'}
+                    </span>
+                  </div>
+                )}
                 <div className="flex mt-2 items-center">
                   <span className="w-auto mr-2">
                     {isServiceProvider ? (

@@ -34,6 +34,10 @@ amplifytools.xcconfig
 <<<<<<< HEAD
 .secret-*
 
+
+cypress/videos
+cypress/screenshots
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
