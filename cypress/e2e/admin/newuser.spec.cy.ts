@@ -17,6 +17,9 @@ const randomDetails = () => {
   };
 };
 
+const registerUrl =
+  'http://localhost:8085/dashboard/manage-institutions/institution/6539589f-44d2-4749-b0ba-87086b7fe1d8/register-user';
+
 describe('Student flow', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8085');
@@ -31,16 +34,12 @@ describe('Student flow', () => {
     // cy.get('button').find('Institution Manager').click();
     cy.get('button:contains("Institution Manager")').trigger('mouseover');
     cy.get('body:contains("Register New User")').should('exist');
-    cy.visit(
-      'http://localhost:8085/dashboard/manage-institutions/institution/6539589f-44d2-4749-b0ba-87086b7fe1d8/register-user'
-    );
+    cy.visit(registerUrl);
   });
 
   it('should contain all fields', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', url);
-    cy.visit(
-      'http://localhost:8085/dashboard/manage-institutions/institution/6539589f-44d2-4749-b0ba-87086b7fe1d8/register-user'
-    );
+    cy.visit(registerUrl);
     cy.get('label:contains("First Name")').should('exist');
     cy.get('label:contains("Last Name")').should('exist');
     cy.get('label:contains("Email")').should('exist');
@@ -55,9 +54,7 @@ describe('Student flow', () => {
 
   it('should register new user', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', url);
-    cy.visit(
-      'http://localhost:8085/dashboard/manage-institutions/institution/6539589f-44d2-4749-b0ba-87086b7fe1d8/register-user'
-    );
+    cy.visit(registerUrl);
     cy.get('input#firstName').type(randomDetails().firstName);
     cy.get('input#lastName').type(randomDetails().lastName);
     cy.get('input#email').type(randomDetails().email);

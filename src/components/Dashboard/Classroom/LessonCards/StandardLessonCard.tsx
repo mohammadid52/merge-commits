@@ -23,7 +23,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     getLessonRating,
     getLessonByType,
     getImageFromS3 = true,
-    preview = false,
+    preview = false
   } = props;
   const {theme} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
@@ -59,7 +59,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
       <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
         <ProgressBar
-          lessonProps={lessonProps}
+          lessonProps={{
+            ...lessonProps,
+            lesson: {...lessonProps.lesson, type: lessonType}
+          }}
           user={user}
           value=""
           max="100"
