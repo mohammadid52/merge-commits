@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
+import {deleteImageFromS3, uploadImageToS3} from '@graphql/functions';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
@@ -32,7 +32,7 @@ const Feedbacks = ({
   loadingComments,
   idx,
   fileObject,
-  setFileObject,
+  setFileObject
 }: any) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
 
@@ -77,10 +77,10 @@ const Feedbacks = ({
         firstName: state?.user?.preferredName,
         preferredName: state?.user?.firstName,
         lastName: state.user.lastName,
-        role: state.user.role,
+        role: state.user.role
       },
       createdAt: new Date(),
-      id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
+      id: Date.now().toString() // this is just for local state, After refreshing it will be replaced with real ID
     };
     const finalInput =
       attachments && attachments.type
@@ -91,9 +91,9 @@ const Feedbacks = ({
                 url: attachments.url,
                 filename: attachments.filename,
                 size: attachments.size,
-                type: attachments.type,
-              },
-            ],
+                type: attachments.type
+              }
+            ]
           }
         : localObj;
 
@@ -154,7 +154,7 @@ const Feedbacks = ({
         } else {
           return exercise;
         }
-      }),
+      })
     };
 
     const mergedStudentData = allStudentData.map((dataRecord: any) => {
@@ -170,8 +170,8 @@ const Feedbacks = ({
         graphqlOperation(mutations.updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
-            exerciseData: newExerciseFeedback.exerciseData,
-          },
+            exerciseData: newExerciseFeedback.exerciseData
+          }
         })
       );
       setAllStudentData(mergedStudentData);
@@ -198,8 +198,8 @@ const Feedbacks = ({
         graphqlOperation(mutations.updateUniversalJournalData, {
           input: {
             id: item.id,
-            feedbacks: newFeedBackIds,
-          },
+            feedbacks: newFeedBackIds
+          }
         })
       );
       setAllUniversalJournalData(mergedJournalData);
@@ -219,8 +219,8 @@ const Feedbacks = ({
           input: {
             id: commentObj.id,
             text: commentObj.comment,
-            edited: true,
-          },
+            edited: true
+          }
         })
       );
     } catch (error) {
@@ -233,7 +233,7 @@ const Feedbacks = ({
       let input = {
         email: state.user.email,
         authID: state.user.authId,
-        text,
+        text
       };
 
       const finalInput =
@@ -244,8 +244,8 @@ const Feedbacks = ({
                 type: attachments.type,
                 url: attachments.url,
                 filename: attachments.filename,
-                size: attachments.size,
-              },
+                size: attachments.size
+              }
             }
           : input;
       const results: any = await API.graphql(
@@ -306,10 +306,10 @@ const Feedbacks = ({
         url: 'loading',
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
 
-      await uploadAttachment(_fileObject, id, type);
+      await uploadImageToS3(_fileObject, id, type);
 
       const imageUrl: any = await getImageFromS3(id);
 
@@ -317,13 +317,13 @@ const Feedbacks = ({
         url: imageUrl,
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
       pushCommentToLocalState(_comment, {
         url: imageUrl,
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
       setUploadingAttachment(false);
     } else {
@@ -340,7 +340,7 @@ const Feedbacks = ({
     if (commentObject) {
       if (commentObject.attachments && commentObject.attachments.length > 0) {
         const key: string = getKeyForAttachments(commentObject.attachments[0].url);
-        deletImageFromS3(key);
+        deleteImageFromS3(key);
       }
 
       const filteredData: any = feedbackData.filter((data: any) => data.id !== id);
@@ -352,41 +352,6 @@ const Feedbacks = ({
   // ##################################################################### //
   // ########################### FILE UPLOADING ########################## //
   // ##################################################################### //
-
-  const uploadAttachment = async (file: any, id: string, type: string) => {
-    // Upload Attachments
-    return new Promise((resolve, reject) => {
-      Storage.put(id, file, {
-        contentType: type,
-        acl: 'public-read',
-        progressCallback: ({loaded, total}: any) => {
-          console.log((loaded * 100) / total);
-        },
-      })
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const deletImageFromS3 = (key: string) => {
-    // Remove image from bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.remove(key)
-        .then((result: any) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in deleting file from s3', err);
-          reject(err);
-        });
-    });
-  };
 
   // ##################################################################### //
   // ######################### IMAGE MANIPULATION ######################## //
@@ -568,7 +533,7 @@ const Feedbacks = ({
                         className="picker-wrapper absolute bottom-1 left-5">
                         <EmojiPicker
                           groupVisibility={{
-                            recently_used: false,
+                            recently_used: false
                           }}
                           onEmojiClick={(e: any, emoji: any) =>
                             onEmojiSelect(emoji, true)
@@ -753,7 +718,7 @@ const Feedbacks = ({
                       className="picker-wrapper absolute bottom-5 left-5">
                       <EmojiPicker
                         groupVisibility={{
-                          recently_used: false,
+                          recently_used: false
                         }}
                         onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji, false)}
                       />

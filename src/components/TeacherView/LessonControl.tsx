@@ -14,7 +14,7 @@ import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 import {
   StudentPageInput,
-  UniversalLessonStudentData,
+  UniversalLessonStudentData
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -93,15 +93,15 @@ const LessonControl = () => {
       filter: {
         studentAuthID: {eq: lessonState.studentViewing},
         lessonID: {eq: lessonID},
-        syllabusLessonID: {eq: syllabusID},
-      },
+        syllabusLessonID: {eq: syllabusID}
+      }
     };
 
     const studentDataSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
         syllabusLessonID: syllabusID,
-        lessonID: lessonID,
+        lessonID: lessonID
       })
       //@ts-ignore
     ).subscribe({
@@ -109,7 +109,7 @@ const LessonControl = () => {
         const updatedStudentData =
           studentData.value.data.onChangeUniversalLessonStudentData;
         setSubscriptionData(updatedStudentData);
-      },
+      }
     });
 
     return studentDataSubscription;
@@ -124,7 +124,7 @@ const LessonControl = () => {
     const getPageData = subscriptionData.pageData;
     lessonDispatch({
       type: 'LOAD_STUDENT_SUBSCRIPTION_DATA',
-      payload: {stDataIdx: getPageIdx, subData: getPageData},
+      payload: {stDataIdx: getPageIdx, subData: getPageData}
     });
   };
 
@@ -150,7 +150,7 @@ const LessonControl = () => {
             (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
           ),
           lessonPageID: dataObj.lessonPageID,
-          update: false,
+          update: false
         };
         return [...acc, idObj];
       }, [])
@@ -197,7 +197,7 @@ const LessonControl = () => {
         let studentData: any = await API.graphql(
           graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
             ...filterObj,
-            nextToken: nextToken,
+            nextToken: nextToken
           })
         );
         let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
@@ -234,8 +234,8 @@ const LessonControl = () => {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
           syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id},
-        },
+          roomID: {eq: getRoomData.id}
+        }
       };
       // const studentData: any = await API.graphql(
       //   graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
@@ -254,8 +254,8 @@ const LessonControl = () => {
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredData,
-          },
+            filteredStudentData: filteredData
+          }
         });
       } else {
         throw 'No student data records for this lesson...';
@@ -310,7 +310,7 @@ const LessonControl = () => {
       try {
         const updateRoom: any = await API.graphql(
           graphqlOperation(mutations.updateRoom, {
-            input: payload,
+            input: payload
           })
         );
       } catch (e) {
@@ -336,8 +336,8 @@ const LessonControl = () => {
           ...acc,
           {
             id: page.id,
-            label: page.label,
-          },
+            label: page.label
+          }
         ];
       }, []);
       setLocalStorageData('lesson_plan', lessonPlan);
@@ -360,7 +360,7 @@ const LessonControl = () => {
         clearNotification();
         lessonDispatch({
           type: 'SET_INITIAL_STATE',
-          payload: {universalLessonID: lessonID},
+          payload: {universalLessonID: lessonID}
         });
         getSyllabusLesson(lessonID).then((_: void) =>
           console.log('Lesson Mount - ', 'Lesson fetched!')
@@ -400,8 +400,8 @@ const LessonControl = () => {
             type: 'SET_ROOM_SUBSCRIPTION_DATA',
             payload: {
               ClosedPages: getRoomData.ClosedPages,
-              studentViewing: '',
-            },
+              studentViewing: ''
+            }
           });
         }
       }
@@ -428,7 +428,7 @@ const LessonControl = () => {
         } else {
           lessonDispatch({
             type: 'SET_CURRENT_PAGE',
-            payload: lessonState?.currentPage ? lessonState.currentPage : 0,
+            payload: lessonState?.currentPage ? lessonState.currentPage : 0
           });
           history.push(
             `${match.url}/${lessonState?.currentPage ? lessonState.currentPage : 0}`

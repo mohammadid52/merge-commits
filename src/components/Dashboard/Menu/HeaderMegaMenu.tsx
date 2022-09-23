@@ -43,7 +43,7 @@ const HeaderMegaMenu = () => {
           active: location.pathname.indexOf('staff') > -1,
         },
         (user.role === 'SUP' || user.role === 'ADM') && {
-          title: 'User registry',
+          title: 'User Registry',
           key: 'user_registry',
           redirectionUrl: `${baseUrl}/manage-users`,
           active: location.pathname.indexOf('manage-users') > -1,

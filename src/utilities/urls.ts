@@ -7,7 +7,6 @@
 // ~~~~~~~~~~~~~~~~ UATENV ~~~~~~~~~~~~~~~ //
 
 export const getCorrectUrl = (clientKey: string) => {
-  console.log('getCorrectURL - ', clientKey);
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -16,7 +15,7 @@ export const getCorrectUrl = (clientKey: string) => {
         requestResetPassword:
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password',
         tableCleanupUrl:
-          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast',
+          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast'
       };
       break;
     case 'demo':
@@ -25,7 +24,7 @@ export const getCorrectUrl = (clientKey: string) => {
           'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-efprod',
         requestResetPassword:
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-efprod',
-        tableCleanupUrl: '',
+        tableCleanupUrl: ''
       };
       break;
     case 'curate':
@@ -34,7 +33,7 @@ export const getCorrectUrl = (clientKey: string) => {
           'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/demosite-create-user',
         requestResetPassword:
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/demosite-request-reset-password',
-        tableCleanupUrl: '',
+        tableCleanupUrl: ''
       };
       break;
     case 'localhost':
@@ -44,7 +43,7 @@ export const getCorrectUrl = (clientKey: string) => {
         requestResetPassword:
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
         tableCleanupUrl:
-          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson',
+          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson'
       };
   }
 };
@@ -58,7 +57,6 @@ export const getCorrectUrl = (clientKey: string) => {
 import * as awsconfig2 from '../aws-exports';
 
 export const getBackendKey = (input: any) => {
-  console.log('input', input);
   if (input) {
     //@ts-ignore
     let configJson = input['default'];

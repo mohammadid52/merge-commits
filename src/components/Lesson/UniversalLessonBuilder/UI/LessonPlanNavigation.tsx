@@ -10,7 +10,7 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import {useQuery} from '../../../../customHooks/urlParam';
 import {
   UniversalLesson,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '../../../../interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import Tooltip from '../../../Atoms/Tooltip';
@@ -32,7 +32,7 @@ const INITIAL_SETTINGS: SettingsInterface = {darkMode: true, classwork: true};
 const LessonPlanNavigation = ({
   selectedPageID,
   setSelectedPageID,
-  universalLessonDetails,
+  universalLessonDetails
 }: ILessonPlanNavigationProps) => {
   const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
     universalLessonDetails || {};
@@ -41,8 +41,8 @@ const LessonPlanNavigation = ({
     dispatch,
     lessonDispatch,
     state: {
-      user: {isSuperAdmin},
-    },
+      user: {isSuperAdmin}
+    }
   } = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
@@ -142,7 +142,7 @@ const LessonPlanNavigation = ({
     wait(1000).then(async () => {
       const input = {
         id: lessonId,
-        darkMode: !settings.darkMode,
+        darkMode: !settings.darkMode
       };
       await updateLessonPageToDB(input);
     });
@@ -151,7 +151,7 @@ const LessonPlanNavigation = ({
   const handleThemeChange = (val: boolean) => {
     dispatch({
       type: 'UPDATE_LESSON_PAGE_THEME',
-      payload: {theme: val ? 'dark' : 'light'},
+      payload: {theme: val ? 'dark' : 'light'}
     });
   };
 

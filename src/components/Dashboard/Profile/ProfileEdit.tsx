@@ -1,20 +1,18 @@
-import React, {useState, useContext, useEffect, Fragment} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
 
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customMutations from '../../../customGraphql/customMutations';
+import useDictionary from '../../../customHooks/dictionary';
+import {convertArrayIntoObj} from '../../../utilities/strings';
+import Buttons from '../../Atoms/Buttons';
+import FormInput from '../../Atoms/Form/FormInput';
+import MultipleSelector from '../../Atoms/Form/MultipleSelector';
+import Selector from '../../Atoms/Form/Selector';
+import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import DropdownForm from './DropdownForm';
 import {UserInfo} from './Profile';
-import * as customMutations from '../../../customGraphql/customMutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import MultipleSelector from '../../Atoms/Form/MultipleSelector';
-import FormInput from '../../Atoms/Form/FormInput';
-import Selector from '../../Atoms/Form/Selector';
-import Buttons from '../../Atoms/Buttons';
-import {convertArrayIntoObj} from '../../../utilities/strings';
-import {get} from 'lodash';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -401,12 +399,12 @@ const ProfileEdit = (props: UserInfoProps) => {
   // Code for Other Field
   const hasOther = (val: string | string[], other: string) => {
     try {
-      return val ? val.toString().includes(other): false;
+      return val ? val.toString().includes(other) : false;
     } catch (err) {
-      console.log('errrr' , err)
+      console.log('errrr', err);
       return false;
     }
-  }
+  };
 
   const isOther = (val: any) => {
     if (hasOther(val, 'Other')) {
