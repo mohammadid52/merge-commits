@@ -95,7 +95,7 @@ const DropDownMenu = ({
                       </span>
                     </div>
                   </Menu.Item>
-                  <Menu.Item data-cy="dropdown-item-profile" key={'profile'}>
+                  <Menu.Item data-cy="dropdown-item-profile" key={'profile-1'}>
                     <div
                       onClick={() => history.push('/dashboard/profile')}
                       className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
@@ -113,7 +113,7 @@ const DropDownMenu = ({
                       </div>
                     </div>
                   </Menu.Item>
-                  <Menu.Item key={'profile'}>
+                  <Menu.Item key={'profile-2'}>
                     <div
                       onClick={() => history.push('/dashboard/test-cases')}
                       className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
