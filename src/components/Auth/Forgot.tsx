@@ -100,7 +100,7 @@ const Forgot = () => {
 
   return (
     <AuthCard title="Forgot Password">
-      <div className="h-full flex-grow flex flex-col justify-center">
+      <div className="">
         <FormInput
           label="Email"
           className="mb-4"
@@ -115,9 +115,9 @@ const Forgot = () => {
         </div>
       </div>
 
-      <div className="h-3.5/10 flex flex-col justify-center items-center">
+      <div className="">
         <button
-          className={`p-3 mb-4 ${getAsset(
+          className={`p-3 my-4 ${getAsset(
             clientKey,
             'authButtonColor'
           )} text-gray-200 rounded-xl font-semibold`}

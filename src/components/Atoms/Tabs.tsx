@@ -28,7 +28,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
       new KeyboardEvent('keydown', {
         key: 'Escape',
         bubbles: true,
-        cancelable: true,
+        cancelable: true
       })
     );
   };
@@ -116,7 +116,7 @@ const Tabs = ({tabsData, updateTab}: ITabsProps) => {
         <select
           id="tabs"
           name="tabs"
-          className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           // defaultValue={activeTab}
         >
           {tabsData.map((tab: ITabElements, index: number) => (

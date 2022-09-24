@@ -13,8 +13,28 @@ const BottomBar = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
+    lessonType
   } = props;
+
+  const startButtonProps = {
+    preview: preview,
+    roomID: roomID,
+    isTeacher: isTeacher,
+    lessonKey: lessonProps ? lessonProps.lessonID : null,
+    isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
+    open: lessonProps && lessonProps.status === 'Active' ? true : false,
+    isCompleted:
+      activeRoomInfo?.completedLessons?.findIndex(
+        (item: {lessonID?: string | null; time?: string | null}) =>
+          item.lessonID === lessonProps.lessonID
+      ) > -1,
+    accessible: accessible,
+    type: lessonProps.lesson.type,
+    activeRoomInfo: activeRoomInfo,
+    lessonProps: lessonProps?.lesson,
+    syllabusProps: syllabusProps,
+    isUsed: lessonProps?.lesson?.isUsed
+  };
 
   return (
     <div>
@@ -71,50 +91,12 @@ const BottomBar = (props: LessonCardProps) => {
         )}
 
         {/* START */}
-        <div className="flex w-3.3/10 hidden sm:block">
-          <Start
-            preview={preview}
-            roomID={roomID}
-            isTeacher={isTeacher}
-            lessonKey={lessonProps ? lessonProps.lessonID : null}
-            isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
-            open={lessonProps && lessonProps.status === 'Active' ? true : false}
-            isCompleted={
-              activeRoomInfo?.completedLessons?.findIndex(
-                (item: {lessonID?: string | null; time?: string | null}) =>
-                  item.lessonID === lessonProps.lessonID
-              ) > -1
-            }
-            accessible={accessible}
-            type={lessonProps.lesson.type}
-            activeRoomInfo={activeRoomInfo}
-            lessonProps={lessonProps?.lesson}
-            syllabusProps={syllabusProps}
-            isUsed={lessonProps?.lesson?.isUsed}
-          />
+        <div className="w-3.3/10 hidden sm:block">
+          <Start {...startButtonProps} />
         </div>
       </div>
-      <div className="w-full block sm:hidden">
-        <Start
-          preview={preview}
-          roomID={roomID}
-          isTeacher={isTeacher}
-          lessonKey={lessonProps ? lessonProps.lessonID : null}
-          isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
-          open={lessonProps && lessonProps.status === 'Active' ? true : false}
-          isCompleted={
-            activeRoomInfo?.completedLessons?.findIndex(
-              (item: {lessonID?: string | null; time?: string | null}) =>
-                item.lessonID === lessonProps.lessonID
-            ) > -1
-          }
-          accessible={accessible}
-          type={lessonProps.lesson.type}
-          activeRoomInfo={activeRoomInfo}
-          lessonProps={lessonProps?.lesson}
-          syllabusProps={syllabusProps}
-          isUsed={lessonProps?.lesson?.isUsed}
-        />
+      <div className="w-full  block sm:hidden">
+        <Start {...startButtonProps} />
       </div>
     </div>
   );

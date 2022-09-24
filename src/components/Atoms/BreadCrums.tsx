@@ -30,7 +30,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
     <div
       className={`${
         separateGoBackButton ? 'justify-between' : ''
-      } flex flex-row my-0 py-0 mb-4`}>
+      } flex flex-row my-0 py-0`}>
       <div
         className={`w-auto ${
           separateGoBackButton ? 'flex items-center' : ''

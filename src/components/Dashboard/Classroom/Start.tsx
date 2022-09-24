@@ -49,10 +49,8 @@ const Start: React.FC<StartProps> = ({
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
 
-  const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
-  const lessonState = gContext.lessonState;
 
   const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
@@ -476,7 +474,7 @@ const Start: React.FC<StartProps> = ({
         ${studentTeacherButtonTheme()}
         h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out py-2 sm:py-auto`}
+        } transition duration-150 ease-in-out py-3 mt-2 md:mt-0 md:py-2 sm:py-auto`}
       />
       {warnModal.show && (
         <ModalPopUp
