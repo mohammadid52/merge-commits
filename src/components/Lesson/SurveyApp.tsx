@@ -20,6 +20,7 @@ import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
+import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
@@ -699,6 +700,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
               </div>
             </ErrorBoundary>
           )}
+
+          <StudentNavigationForMobile />
 
           {lessonDataLoaded && (
             <Foot
