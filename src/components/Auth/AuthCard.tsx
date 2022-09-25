@@ -51,7 +51,7 @@ const AuthCard = ({children, title, message}: AuthCardProps) => {
             <div>{children}</div>
             {message && (
               <p
-                className={`text-xs text-center ${
+                className={`my-2 text-xs text-center ${
                   message?.type === 'success'
                     ? 'text-green-500'
                     : message?.type === 'error'

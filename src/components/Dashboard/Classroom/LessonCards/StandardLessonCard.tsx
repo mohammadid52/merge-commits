@@ -48,7 +48,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative bg-white shadow rounded-lg flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white shadow rounded-xl flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}

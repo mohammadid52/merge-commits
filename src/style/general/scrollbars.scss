@@ -8,10 +8,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  right: 0;
+  width: 7px;
 }
 
 /* Track */
@@ -21,8 +18,15 @@
 }
 
 /* Handle */
+
+.iconoclast ::-webkit-scrollbar-thumb {
+  background: $iconoclast;
+}
+.curate ::-webkit-scrollbar-thumb {
+  background: $curate;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
   border-radius: 0;
   border: 0 solid #edf2f7;
 }

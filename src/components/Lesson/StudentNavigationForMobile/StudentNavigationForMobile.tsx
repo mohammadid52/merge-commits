@@ -20,7 +20,7 @@ const StudentNavigationForMobile = () => {
   const [showPages, setShowPages] = useState(false);
 
   return (
-    <div className="p-4 fixed bottom-2 flex items-center justify-center">
+    <div className="p-4  sm:hidden fixed bottom-2 flex items-center justify-center">
       <button
         onClick={() => setShowPages(true)}
         className=" w-auto iconoclast:bg-main curate:bg-main p-2 text-white rounded-lg">

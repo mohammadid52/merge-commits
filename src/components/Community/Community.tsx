@@ -224,7 +224,7 @@ const Community = ({}: {role: string}) => {
     return (
       <div
         onClick={() => setShowCardsModal(true)}
-        className="fixed z-100 bottom-5 cursor-pointer flex items-center justify-center right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
+        className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
         <BsCardHeading className="text-white text-lg" />
       </div>
     );
@@ -310,7 +310,7 @@ const Community = ({}: {role: string}) => {
 
   const TitleBar = () => (
     <SectionTitleV3
-      extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
+      extraContainerClass="lg:max-w-192 md:max-w-none max-w-88 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
       title={'Community'}
       fontSize="xl"
       fontStyle="semibold"
@@ -321,7 +321,7 @@ const Community = ({}: {role: string}) => {
           <Selector
             selectedItem={selectedFilterType.name}
             list={filterList}
-            additionalClass="w-56"
+            additionalClass="md:w-56"
             placeholder={'All '}
             onChange={changeFilter}
           />
@@ -383,7 +383,7 @@ const Community = ({}: {role: string}) => {
           <BreadCrums items={breadCrumsList} />
         </div>
       </div>
-      <div>
+      <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 max-w-88">
         <TitleBar />
 
         <CommonList />

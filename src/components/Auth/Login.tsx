@@ -23,6 +23,7 @@ import {createUserUrl} from '../../utilities/urls';
 import AuthCard from './AuthCard';
 import RememberMe from './RememberMe';
 import FormInput from '@components/Atoms/Form/FormInput';
+import Buttons from '@components/Atoms/Buttons';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -339,7 +340,7 @@ const Login = ({updateAuthState}: LoginProps) => {
   }, []);
 
   return (
-    <AuthCard title="Login">
+    <AuthCard message={message} title="Login">
       {!createPassword ? (
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">
@@ -372,29 +373,13 @@ const Login = ({updateAuthState}: LoginProps) => {
               </>
             )}
             <div className="relative flex flex-col justify-center items-center">
-              <button
+              <Buttons
                 disabled={isToggled}
-                className={`p-3 mb-4 ${getAsset(
-                  clientKey,
-                  'authButtonColor'
-                )} text-gray-200 rounded-xl font-semibold`}
-                onKeyPress={handleEnter}
-                onClick={handleSubmit}>
-                {isToggled ? (
-                  <IconContext.Provider
-                    value={{
-                      size: '1.5rem',
-                      color: '#ffffff',
-                      className: 'relative animate-spin'
-                    }}>
-                    <AiOutlineLoading3Quarters />
-                  </IconContext.Provider>
-                ) : showPasswordField ? (
-                  'Login'
-                ) : (
-                  'Enter'
-                )}
-              </button>
+                onClick={handleSubmit}
+                btnClass="w-full py-3"
+                loading={isToggled}
+                label={showPasswordField ? 'Login' : 'Enter'}
+              />
             </div>
           </div>
         </>

@@ -36,7 +36,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     customStyles,
     loading = false,
     loadingText = 'Loading...',
-    insideElement = null,
+    insideElement = null
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -50,7 +50,11 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       ${
         overrideClass
           ? ''
-          : 'font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto'
+          : `${
+              transparent
+                ? 'iconoclast:border-main curate:border-main iconoclast:text-main curate:text-main'
+                : 'iconoclast:bg-main curate:bg-main'
+            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  hover:iconoclast:bg-500 hover:curate:bg-500 uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto`
       }
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 
@@ -66,8 +70,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       {loading ? (
         <Loader withText={loadingText} className="w-auto text-gray-400" />
       ) : (
-        <>
-          {' '}
+        <div className="w-auto flex items-center justify-center">
           {Icon && iconBeforeLabel && (
             <span className="w-auto">
               <IconContext.Provider value={{color: '#ffffff'}}>
@@ -85,7 +88,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
               </IconContext.Provider>
             </span>
           ) : null}
-        </>
+        </div>
       )}
 
       {insideElement}

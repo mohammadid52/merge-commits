@@ -334,7 +334,7 @@ const Profile = (props: ProfilePageProps) => {
                   label="Edit"
                   onClick={() => history.push(`${match.url}/edit`)}
                   Icon={FaEdit}
-                />{' '}
+                />
               </div>
             ) : null}
           </div>

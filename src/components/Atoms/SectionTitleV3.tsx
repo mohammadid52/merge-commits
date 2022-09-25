@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../contexts/GlobalContext';
 
 interface SectionTitleProps {
   title: string;
@@ -22,18 +22,28 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     withButton,
     borderBottom = false,
     fontSize = 'lg',
-    fontStyle = 'semibold',
+    fontStyle = 'semibold'
   } = sectProps;
-  const { theme } = useContext(GlobalContext);
+  const {theme} = useContext(GlobalContext);
 
   return (
     <div
-      className={`${extraContainerClass} ${withButton ? 'flex items-center justify-center' : ''} mx-auto m-auto py-4 ${
-        borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white mb-0' : ''
+      className={`${extraContainerClass} ${
+        withButton ? 'flex md:items-center md:justify-center flex-col md:flex-row' : ''
+      } mx-auto m-auto py-4 ${
+        borderBottom
+          ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white mb-0'
+          : ''
       }`}>
       <div className={``}>
-        <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
-        <p className="text-sm 2xl:text-base text-gray-500">{subtitle}</p>
+        {title && (
+          <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>
+            {title}
+          </h2>
+        )}
+        {subtitle && (
+          <p className="text-sm mt-2 md:mt-0 2xl:text-base text-gray-500">{subtitle}</p>
+        )}
       </div>
       {withButton}
     </div>

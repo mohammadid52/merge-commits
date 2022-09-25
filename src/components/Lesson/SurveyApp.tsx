@@ -584,10 +584,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     }
   };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
-  };
-
   useEffect(() => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
@@ -694,9 +690,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           ) : (
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
-              <div className="mt-4 mb-8 lesson-page-container">
+              <div className="mt-4 mb-8 lesson-page-container ">
                 <CoreUniversalLesson />
-                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
               </div>
             </ErrorBoundary>
           )}
