@@ -21,7 +21,7 @@ const StudentsTiles = (props: {
   const {
     clientKey,
     userLanguage,
-    state: {user},
+    state: {user}
   } = useContext(GlobalContext);
   const {StudentDict} = useDictionary(clientKey);
 
@@ -30,7 +30,7 @@ const StudentsTiles = (props: {
 
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false,
+    isActive: false
   });
 
   const [list, setList] = useState([]);
@@ -44,7 +44,7 @@ const StudentsTiles = (props: {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str,
+      value: str
     });
   };
 
@@ -64,7 +64,7 @@ const StudentsTiles = (props: {
       });
       setSearchInput({
         ...searchInput,
-        isActive: true,
+        isActive: true
       });
       setList(newList);
     } else {
@@ -117,9 +117,7 @@ const StudentsTiles = (props: {
           </div>
         }
       />
-      <ContentCard
-        hasBackground={false}
-        additionalClass="shadow bg-white mb-20 rounded-b-lg">
+      <ContentCard hasBackground={false} additionalClass="shadow bg-white  rounded-b-lg">
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
             {loading ? (
@@ -135,7 +133,7 @@ const StudentsTiles = (props: {
                   list.slice(0, viewMore ? list.length - 1 : 12).map(
                     (
                       {
-                        student,
+                        student
                       }: {
                         student: {
                           image?: string;
