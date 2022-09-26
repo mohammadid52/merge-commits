@@ -787,9 +787,6 @@ const Dashboard = (props: DashboardProps) => {
       />
     );
 
-  const {breakpoint} = useTailwindBreakpoint();
-  console.log('🚀 ~ file: Dashboard.tsx ~ line 791 ~ Dashboard ~ breakpoint', breakpoint);
-
   return (
     <>
       <div id="top-menu" className="w-full bg-white">
