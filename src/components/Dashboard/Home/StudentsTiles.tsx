@@ -106,7 +106,7 @@ const StudentsTiles = (props: {
               </div>
             )}
             {list.length > 12 && (
-              <div className="flex justify-end w-3/10">
+              <div className="flex justify-end">
                 <Buttons
                   label={!viewMore ? 'Show All' : 'Show Few'}
                   onClick={() => setViewMore(!viewMore)}
