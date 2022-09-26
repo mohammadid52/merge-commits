@@ -17,12 +17,12 @@ describe(
   },
   () => {
     it('Successfull login as student', function () {
-      cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+      cy.visit('http://localhost:8085');
 
-      cy.get('input[placeholder="Email"]').type(studentEmail);
+      cy.get('[data-cy="email"]').type(studentEmail);
       cy.get('button').contains('Enter').click();
-      cy.get('p').contains('Log In');
-      cy.get('input[placeholder="Password"]').type(testPass);
+      cy.get('[data-cy="password"]').type(testPass);
+      cy.get('[data-cy="remember"]').click();
       cy.get('button').contains('Login').click();
       cy.url().should('contain', dashboardURL);
     });
@@ -33,12 +33,12 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+        cy.visit('http://localhost:8085');
 
-        cy.get('input[placeholder="Email"]').type(teacherEmail);
+        cy.get('[data-cy="email"]').type(teacherEmail);
         cy.get('button').contains('Enter').click();
-        cy.get('p').contains('Log In');
-        cy.get('input[placeholder="Password"]').type(testPass);
+        cy.get('[data-cy="password"]').type(testPass);
+        cy.get('[data-cy="remember"]').click();
         cy.get('button').contains('Login').click();
         cy.url().should('contain', dashboardURL);
       }
@@ -50,12 +50,12 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+        cy.visit('http://localhost:8085');
 
-        cy.get('input[placeholder="Email"]').type(adminEmail);
+        cy.get('[data-cy="email"]').type(adminEmail);
         cy.get('button').contains('Enter').click();
-        cy.get('p').contains('Log In');
-        cy.get('input[placeholder="Password"]').type(testPass);
+        cy.get('[data-cy="password"]').type(testPass);
+        cy.get('[data-cy="remember"]').click();
         cy.get('button').contains('Login').click();
         cy.url().should('contain', dashboardURL);
       }
@@ -70,11 +70,11 @@ describe(
   },
   () => {
     it('Fail login as student', function () {
-      cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+      cy.visit('http://localhost:8085');
 
-      cy.get('input[placeholder="Email"]').type(studentEmail);
+      cy.get('[data-cy="email"]').type(studentEmail);
       cy.get('button').contains('Enter').click();
-      cy.get('input[placeholder="Password"]').type(failPass);
+      cy.get('[data-cy="password"]').type(failPass);
       cy.get('button').contains('Login').click();
       cy.get('p').should('contain', loginErrorMessage);
     });
@@ -85,11 +85,11 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+        cy.visit('http://localhost:8085');
 
-        cy.get('input[placeholder="Email"]').type(teacherEmail);
+        cy.get('[data-cy="email"]').type(teacherEmail);
         cy.get('button').contains('Enter').click();
-        cy.get('input[placeholder="Password"]').type(failPass);
+        cy.get('[data-cy="password"]').type(failPass);
         cy.get('button').contains('Login').click();
         cy.get('p').should('contain', loginErrorMessage);
       }
@@ -101,11 +101,11 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
+        cy.visit('http://localhost:8085');
 
-        cy.get('input[placeholder="Email"]').type(adminEmail);
+        cy.get('[data-cy="email"]').type(adminEmail);
         cy.get('button').contains('Enter').click();
-        cy.get('input[placeholder="Password"]').type(failPass);
+        cy.get('[data-cy="password"]').type(failPass);
         cy.get('button').contains('Login').click();
         cy.get('p').should('contain', loginErrorMessage);
       }

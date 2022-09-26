@@ -23,9 +23,10 @@ const registerUrl =
 describe('Student flow', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8085');
-    cy.get('input[placeholder="Email"]').type(email);
+    cy.get('[data-cy="email"]').type(email);
     cy.get('button').contains('Enter').click();
-    cy.get('input[placeholder="Password"]').type(pass);
+    cy.get('[data-cy="password"]').type(pass);
+    cy.get('[data-cy="remember"]').click();
     cy.get('button').contains('Login').click();
   });
 

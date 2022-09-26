@@ -345,6 +345,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">
             <FormInput
+              dataCy="email"
               label="Email"
               className="mb-4"
               placeHolder="Enter your email"
@@ -358,6 +359,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             {showPasswordField && (
               <>
                 <FormInput
+                  dataCy="password"
                   label="Password"
                   placeHolder="Enter your password"
                   type="password"
@@ -368,7 +370,11 @@ const Login = ({updateAuthState}: LoginProps) => {
                 />
 
                 <div className="my-4">
-                  <RememberMe isChecked={isChecked} toggleCheckBox={toggleCheckBox} />
+                  <RememberMe
+                    dataCy="remember"
+                    isChecked={isChecked}
+                    toggleCheckBox={toggleCheckBox}
+                  />
                 </div>
               </>
             )}

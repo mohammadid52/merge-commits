@@ -7,6 +7,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {doResize} from '../../../utilities/functions';
 
 interface FormInputProps {
+  dataCy?: string;
   label?: string;
   isRequired?: boolean;
   value?: string;
@@ -54,7 +55,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     min,
     max,
     inputRef,
-    onKeyDown
+    onKeyDown,
+    dataCy
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -96,6 +98,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
       ) : (
         <div className="relative">
           <input
+            data-cy={dataCy}
             disabled={disabled}
             type={type === 'password' ? (passToggle ? 'text' : 'password') : type}
             min={type === 'number' ? min : undefined}

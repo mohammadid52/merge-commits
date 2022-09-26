@@ -2,14 +2,16 @@ import React from 'react';
 
 interface RememberMeProps {
   isChecked?: boolean;
+  dataCy?: string;
   toggleCheckBox?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const RememberMe = ({isChecked, toggleCheckBox}: RememberMeProps) => {
+const RememberMe = ({isChecked, toggleCheckBox, dataCy}: RememberMeProps) => {
   return (
     <div>
       <label className="flex items-center justify-end">
         <input
+          data-cy={dataCy}
           type="checkbox"
           className="form-checkbox w-4 h-4"
           checked={isChecked}
