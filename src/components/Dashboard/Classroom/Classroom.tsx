@@ -454,7 +454,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {Boolean(activeRoomInfo?.activeSyllabus) && (
               <>
                 <SectionTitleV3
-                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
                   title={`${

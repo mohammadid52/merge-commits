@@ -5,6 +5,7 @@ import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/Ga
 import '@components/Dashboard/GameChangers/styles/Flickity.scss';
 import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useNotifications from '@customHooks/notifications';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
 import Csv from 'components/Dashboard/Csv/Csv';
@@ -785,6 +786,9 @@ const Dashboard = (props: DashboardProps) => {
         handleRoomSelection={handleRoomSelection}
       />
     );
+
+  const {breakpoint} = useTailwindBreakpoint();
+  console.log('🚀 ~ file: Dashboard.tsx ~ line 791 ~ Dashboard ~ breakpoint', breakpoint);
 
   return (
     <>
