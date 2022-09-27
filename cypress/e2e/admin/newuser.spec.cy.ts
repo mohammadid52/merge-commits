@@ -24,11 +24,8 @@ describe('Student flow', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8085');
     cy.get('[data-cy="email"]').type(email);
-    cy.get('button')
-      .as('checking_email')
-      .contains('Enter')
-      .click()
-      .wait('checking_email', {timeout: 5000});
+    cy.get('button').contains('Enter').click();
+
     cy.get('[data-cy="password"]').type(pass);
     cy.get('[data-cy="remember"]').click();
     cy.get('button').contains('Login').click();
