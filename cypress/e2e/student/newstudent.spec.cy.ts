@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
-const email = 'demostudent@zoiq.io';
-const pass = 'admin123';
-const url = 'http://localhost:8085/dashboard/home';
+const email = 'jasperprague@yopmail.com';
+const pass = 'panda123';
+const url = 'http://localhost:8085/dashboard';
 
 describe('Student flow', () => {
   beforeEach(() => {

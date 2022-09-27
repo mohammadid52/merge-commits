@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-const email = 'demoadmin@zoiq.io';
-const pass = 'admin123';
+const email = 'michael.russell@zoiq.io';
+const pass = 'panda123';
 const url = 'http://localhost:8085/dashboard';
 
 const uniqueId = Date.now().toString();
@@ -32,7 +32,6 @@ describe('Student flow', () => {
 
   it('should go to register user page', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', url);
-    // cy.get('button').find('Institution Manager').click();
     cy.get('button:contains("Institution Manager")').trigger('mouseover');
     cy.get('body:contains("Register New User")').should('exist');
     cy.visit(registerUrl);
@@ -62,7 +61,7 @@ describe('Student flow', () => {
     cy.get('button:contains("Choose One")').click();
     cy.get('li:contains("Student")').click();
     cy.get('button:contains("Choose One")').click();
-    cy.get('li:contains("Summer Bridge Aldine 3")').click();
+    cy.get('li:contains("Big Bang Classroom Testing")').click();
     cy.get('button:contains("Active")').click();
     cy.get('li:contains("Training")').click();
     cy.get('input[name="self-paced"]').click();

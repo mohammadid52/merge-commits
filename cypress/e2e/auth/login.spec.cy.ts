@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 // test cred
-const studentEmail = 'demostudent@zoiq.io';
-const teacherEmail = 'demoteacher@zoiq.io';
-const adminEmail = 'demoadmin@zoiq.io';
-const testPass = 'admin123';
-const failPass = 'admin@12';
+const studentEmail = 'jasperprague@yopmail.com';
+const teacherEmail = 'testuser2023@yopmail.com';
+const adminEmail = 'michael.russell@zoiq.io';
+const testPass = 'panda123';
+const failPass = 'panda@12';
 const dashboardURL = 'http://localhost:8085/dashboard';
 const loginURL = 'http://localhost:8085/login';
 const loginErrorMessage = 'The email or password you entered was not correct';

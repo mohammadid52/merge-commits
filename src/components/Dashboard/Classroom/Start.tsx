@@ -446,7 +446,7 @@ const Start: React.FC<StartProps> = ({
   };
 
   return (
-    <div>
+    <div data-cy="survey-button">
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}

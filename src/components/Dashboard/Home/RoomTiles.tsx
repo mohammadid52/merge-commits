@@ -68,7 +68,7 @@ const SingleRoomCard = ({
           <p className="text-sm font-medium text-indigo-600">
             <a className="hover:underline">{type}</a>
           </p>
-          <a href="#" className="block mt-2">
+          <a data-cy="classroom-cards" href="#" className="block mt-2">
             <p className="text-base 2xl:text-lg text-gray-900">
               <span className="font-semibold">{name}</span>{' '}
               {/* <span className="text-base 2xl:text-lg text-semibold text-gray-900">

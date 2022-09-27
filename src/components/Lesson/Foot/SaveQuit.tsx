@@ -73,6 +73,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
       <div className={''}>
         <Buttons
+          dataCy="save-lesson"
           label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
           Icon={AiOutlineSave}
           btnClass="w-full"
