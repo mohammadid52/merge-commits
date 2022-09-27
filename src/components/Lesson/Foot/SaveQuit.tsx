@@ -50,7 +50,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   useEffect(() => {
     // console.log('safeToLeave State - ', safeToLeave);
-    if (safeToLeave === true) {
+    if (safeToLeave === true && getRoomData && getRoomData.id) {
       history.push(`/dashboard/classroom/${getRoomData.id}`);
     }
   }, [safeToLeave]);

@@ -25,7 +25,7 @@ import moment, {Moment} from 'moment';
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -98,6 +98,7 @@ const Dashboard = (props: DashboardProps) => {
   const {notifications} = useNotifications('global');
 
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
+
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
   useEffect(() => {
@@ -444,8 +445,10 @@ const Dashboard = (props: DashboardProps) => {
     const getRoomFromState = state.roomData.rooms.find(
       (room: any) => room.id === state.activeRoom
     );
+
     if (getRoomFromState) {
       setLocalStorageData('room_info', getRoomFromState);
+
       setActiveRoomInfo(getRoomFromState);
     }
   }, [state.activeRoom]);
@@ -685,6 +688,8 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
 
   const listSyllabusLessons = async (syllabusID: string) => {
+    console.log('listSyllabusLessons - ', syllabusID);
+
     dispatch({
       type: 'UPDATE_ROOM',
       payload: {

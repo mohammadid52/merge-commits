@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
 
-const email = 'michael.russell@zoiq.io';
-const pass = 'panda123';
-const url = 'http://localhost:8085/dashboard';
+import {loginConfig, urlConfig} from '../config';
 
 const uniqueId = Date.now().toString();
 
@@ -17,30 +15,27 @@ const randomDetails = () => {
   };
 };
 
-const registerUrl =
-  'http://localhost:8085/dashboard/manage-institutions/institution/6539589f-44d2-4749-b0ba-87086b7fe1d8/register-user';
-
 describe('Student flow', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8085');
-    cy.get('[data-cy="email"]').type(email);
+    cy.visit(urlConfig.baseURL);
+    cy.get('[data-cy="email"]').type(loginConfig.admin.username);
     cy.get('button').contains('Enter').click();
 
-    cy.get('[data-cy="password"]').type(pass);
+    cy.get('[data-cy="password"]').type(loginConfig.admin.password);
     cy.get('[data-cy="remember"]').click();
     cy.get('button').contains('Login').click();
   });
 
   it('should go to register user page', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', url);
+    cy.url().should('contain', urlConfig.dashboardURL);
     cy.get('button:contains("Institution Manager")').trigger('mouseover');
     cy.get('body:contains("Register New User")').should('exist');
-    cy.visit(registerUrl);
+    cy.visit(urlConfig.registerURL);
   });
 
   it('should contain all fields', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', url);
-    cy.visit(registerUrl);
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(urlConfig.registerURL);
     cy.get('label:contains("First Name")').should('exist');
     cy.get('label:contains("Last Name")').should('exist');
     cy.get('label:contains("Email")').should('exist');
@@ -54,8 +49,8 @@ describe('Student flow', () => {
   });
 
   it('should register new user', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', url);
-    cy.visit(registerUrl);
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(urlConfig.registerURL);
     cy.get('input#firstName').type(randomDetails().firstName);
     cy.get('input#lastName').type(randomDetails().lastName);
     cy.get('input#email').type(randomDetails().email);

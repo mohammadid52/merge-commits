@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import {urlConfig} from '../config';
+
 // test cred
 const studentEmail = 'jasperprague@yopmail.com';
 const teacherEmail = 'testuser2023@yopmail.com';
@@ -17,7 +19,7 @@ describe(
   },
   () => {
     it('Successfull login as student', function () {
-      cy.visit('http://localhost:8085');
+      cy.visit(urlConfig.baseURL);
 
       cy.get('[data-cy="email"]').type(studentEmail);
       cy.get('button').contains('Enter').click();
@@ -33,7 +35,7 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085');
+        cy.visit(urlConfig.baseURL);
 
         cy.get('[data-cy="email"]').type(teacherEmail);
         cy.get('button').contains('Enter').click();
@@ -50,7 +52,7 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085');
+        cy.visit(urlConfig.baseURL);
 
         cy.get('[data-cy="email"]').type(adminEmail);
         cy.get('button').contains('Enter').click();
@@ -70,7 +72,7 @@ describe(
   },
   () => {
     it('Fail login as student', function () {
-      cy.visit('http://localhost:8085');
+      cy.visit(urlConfig.baseURL);
 
       cy.get('[data-cy="email"]').type(studentEmail);
       cy.get('button').contains('Enter').click();
@@ -85,7 +87,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085');
+        cy.visit(urlConfig.baseURL);
 
         cy.get('[data-cy="email"]').type(teacherEmail);
         cy.get('button').contains('Enter').click();
@@ -101,7 +103,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085');
+        cy.visit(urlConfig.baseURL);
 
         cy.get('[data-cy="email"]').type(adminEmail);
         cy.get('button').contains('Enter').click();

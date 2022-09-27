@@ -1,20 +1,18 @@
 /// <reference types="cypress" />
 
-const email = 'jasperprague@yopmail.com';
-const pass = 'panda123';
-const url = 'http://localhost:8085/dashboard';
+import {loginConfig, urlConfig} from '../config';
 
 describe('Student flow', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8085');
-    cy.get('[data-cy="email"]').type(email);
+    cy.visit(urlConfig.baseURL);
+    cy.get('[data-cy="email"]').type(loginConfig.student.username);
     cy.get('button').contains('Enter').click();
-    cy.get('[data-cy="password"]').type(pass);
+    cy.get('[data-cy="password"]').type(loginConfig.student.password);
     cy.get('button').contains('Login').click();
   });
 
   it('should go to profile', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', url);
+    cy.url().should('contain', urlConfig.dashboardURL);
     cy.get('[data-cy="dropdown-button"]').click();
     cy.get('[data-cy="dropdown-item-profile"]').click();
   });
