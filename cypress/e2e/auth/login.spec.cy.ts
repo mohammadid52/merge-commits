@@ -1,15 +1,8 @@
 /// <reference types="cypress" />
 
-import {urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../config';
 
-// test cred
-const studentEmail = 'jasperprague@yopmail.com';
-const teacherEmail = 'testuser2023@yopmail.com';
-const adminEmail = 'michael.russell@zoiq.io';
-const testPass = 'panda123';
 const failPass = 'panda@12';
-const dashboardURL = 'http://localhost:8085/dashboard';
-const loginURL = 'http://localhost:8085/login';
 const loginErrorMessage = 'The email or password you entered was not correct';
 
 describe(
@@ -19,14 +12,8 @@ describe(
   },
   () => {
     it('Successfull login as student', function () {
-      cy.visit(urlConfig.baseURL);
-
-      cy.get('[data-cy="email"]').type(studentEmail);
-      cy.get('button').contains('Enter').click();
-      cy.get('[data-cy="password"]').type(testPass);
-      cy.get('[data-cy="remember"]').click();
-      cy.get('button').contains('Login').click();
-      cy.url().should('contain', dashboardURL);
+      cy.login(loginConfig.student.username, loginConfig.student.password);
+      cy.url().should('contain', urlConfig.dashboardURL);
     });
 
     it(
@@ -35,14 +22,8 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit(urlConfig.baseURL);
-
-        cy.get('[data-cy="email"]').type(teacherEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('[data-cy="password"]').type(testPass);
-        cy.get('[data-cy="remember"]').click();
-        cy.get('button').contains('Login').click();
-        cy.url().should('contain', dashboardURL);
+        cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
+        cy.url().should('contain', urlConfig.dashboardURL);
       }
     );
 
@@ -52,14 +33,8 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit(urlConfig.baseURL);
-
-        cy.get('[data-cy="email"]').type(adminEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('[data-cy="password"]').type(testPass);
-        cy.get('[data-cy="remember"]').click();
-        cy.get('button').contains('Login').click();
-        cy.url().should('contain', dashboardURL);
+        cy.login(loginConfig.admin.username, loginConfig.admin.password);
+        cy.url().should('contain', urlConfig.dashboardURL);
       }
     );
   }
@@ -72,12 +47,7 @@ describe(
   },
   () => {
     it('Fail login as student', function () {
-      cy.visit(urlConfig.baseURL);
-
-      cy.get('[data-cy="email"]').type(studentEmail);
-      cy.get('button').contains('Enter').click();
-      cy.get('[data-cy="password"]').type(failPass);
-      cy.get('button').contains('Login').click();
+      cy.login(loginConfig.student.username, failPass);
       cy.get('p').should('contain', loginErrorMessage);
     });
 
@@ -87,12 +57,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit(urlConfig.baseURL);
-
-        cy.get('[data-cy="email"]').type(teacherEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('[data-cy="password"]').type(failPass);
-        cy.get('button').contains('Login').click();
+        cy.login(loginConfig.teacher.username, failPass);
         cy.get('p').should('contain', loginErrorMessage);
       }
     );
@@ -103,12 +68,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit(urlConfig.baseURL);
-
-        cy.get('[data-cy="email"]').type(adminEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('[data-cy="password"]').type(failPass);
-        cy.get('button').contains('Login').click();
+        cy.login(loginConfig.admin.username, failPass);
         cy.get('p').should('contain', loginErrorMessage);
       }
     );

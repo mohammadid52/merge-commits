@@ -18,11 +18,11 @@ const randomDetails = () => {
 describe('Student flow', () => {
   beforeEach(() => {
     cy.visit(urlConfig.baseURL);
-    cy.get('[data-cy="email"]').type(loginConfig.admin.username);
+    cy.dataCy('email').type(loginConfig.admin.username);
     cy.get('button').contains('Enter').click();
 
-    cy.get('[data-cy="password"]').type(loginConfig.admin.password);
-    cy.get('[data-cy="remember"]').click();
+    cy.dataCy('password').type(loginConfig.admin.password);
+    cy.dataCy('remember').click();
     cy.get('button').contains('Login').click();
   });
 
