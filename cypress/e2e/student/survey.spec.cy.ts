@@ -3,9 +3,9 @@
 import {ids, loginConfig, urlConfig} from '../config';
 
 const simpleSurveyConfig = {
-  inputs: [
-    'input#ab94f893-c1b6-4330-b595-cd51a4560eeb',
-    'input#fe6b4a36-2ef5-4522-b86e-d7baab2a3272'
+  domIds: [
+    'ab94f893-c1b6-4330-b595-cd51a4560eeb',
+    'fe6b4a36-2ef5-4522-b86e-d7baab2a3272'
   ],
   classroom_url: `${urlConfig.dashboardURL}/classroom/${ids.classroomIDs[0]}`
 };
@@ -31,9 +31,9 @@ describe('Survey should work', () => {
     cy.login(loginConfig.student.username, loginConfig.student.password);
   });
 
-  // it('should go to survey', {defaultCommandTimeout: 20000}, function () {
-  //   loadActiveRoomData();
-  // });
+  it('should go to survey', {defaultCommandTimeout: 20000}, function () {
+    loadActiveRoomData();
+  });
 
   it('should complete simple survey', {defaultCommandTimeout: 20000}, function () {
     loadActiveRoomData();
@@ -41,12 +41,15 @@ describe('Survey should work', () => {
     // // click on quest1 tab
     cy.contains('quest1').click();
     // fill in first input
-    cy.get(simpleSurveyConfig.inputs[0]).clear().type(firstInputData());
+    cy.dataCy(simpleSurveyConfig.domIds[0]).clear().type(firstInputData());
     cy.wait(3000); // wait for data to save
     // click on quest2 tab
     cy.contains('quest2').click();
-    cy.get(simpleSurveyConfig.inputs[1]).clear().type(secondInputData()); // fill in second input
-    cy.wait(3000); // wait for data to save
+    cy.dataCy(simpleSurveyConfig.domIds[1])
+      .clear()
+      .type(secondInputData(), {delay: 100})
+      .wait(3000); // fill in second input
+
     cy.dataCy('save-lesson').click(); // click on save button
   });
 
@@ -54,15 +57,12 @@ describe('Survey should work', () => {
     'Should check if simple survey is saved',
     {defaultCommandTimeout: 20000},
     function () {
-      loadActiveRoomData();
+      loadActiveRoomData(); // go to classroom page to load activeRoomData.. without this survey won't save data
 
-      // cy.get('a > p').should('contain', 'Label 1');
-      // cy.get('h3').should('contain', '17-3-2022 Test Survey');
-      // cy.get('span').should('contain', 'Test explanation paragraph');
-      cy.contains('quest1').click();
-      cy.get(simpleSurveyConfig.inputs[0]).should('have.value', firstInputData());
-      cy.contains('quest2').click();
-      cy.get(simpleSurveyConfig.inputs[1]).should('have.value', secondInputData());
+      cy.contains('quest1').click(); // click on quest1 tab
+      cy.dataCy(simpleSurveyConfig.domIds[0]).should('have.value', firstInputData()); // check if first input has correct value
+      cy.contains('quest2').click(); // click on quest2 tab
+      cy.dataCy(simpleSurveyConfig.domIds[1]).should('have.value', secondInputData()); // check if second input has correct value
     }
   );
 });

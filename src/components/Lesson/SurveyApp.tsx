@@ -18,7 +18,6 @@ import {getLocalStorageData, setLocalStorageData} from '../../utilities/localSto
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
 import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';

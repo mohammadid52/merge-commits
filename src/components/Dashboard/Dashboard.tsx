@@ -688,8 +688,6 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
 
   const listSyllabusLessons = async (syllabusID: string) => {
-    console.log('listSyllabusLessons - ', syllabusID);
-
     dispatch({
       type: 'UPDATE_ROOM',
       payload: {
