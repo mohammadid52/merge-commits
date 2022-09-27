@@ -1,20 +1,19 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-import * as queries from '@graphql/queries';
-import Selector from '../../Atoms/Form/Selector';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
-import {CSVLink} from 'react-csv';
-import DateAndTime from '../DateAndTime/DateAndTime';
-import {getAsset} from '../../../assets';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import useDictionary from '../../../customHooks/dictionary';
-import {orderBy, uniqBy} from 'lodash';
-import {PDFDownloadLink} from '@react-pdf/renderer';
-import SurveyPDF from './SurveyPDF';
 import Loader from '@atoms/Loader';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
+import * as queries from '@graphql/queries';
+import {PDFDownloadLink} from '@react-pdf/renderer';
+import {orderBy, uniqBy} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {CSVLink} from 'react-csv';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customQueries from '../../../customGraphql/customQueries';
+import useDictionary from '../../../customHooks/dictionary';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import Selector from '../../Atoms/Form/Selector';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import DateAndTime from '../DateAndTime/DateAndTime';
+import SurveyPDF from './SurveyPDF';
 
 interface ICsvProps {
   institutionId?: string;
@@ -154,11 +153,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     let instCRs: any = [];
 
     let classrooms: any = await API.graphql(
-      graphqlOperation(customQueries.getInstClassRooms, {
-        id: institutionId
-      })
+      graphqlOperation(customQueries.listRoomsDashboard)
     );
-    classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+    classrooms = classrooms?.data.listRooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
         cr.curricula?.items &&
@@ -836,8 +833,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   }, [isCSVReady]);
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
   const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
@@ -860,8 +855,8 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const [roomList, setRoomList] = useState([]);
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const fetchRoomList = async () => {
     try {
       const list: any = await API.graphql(
@@ -869,6 +864,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       );
 
       const newList = list.data.listRooms.items;
+
       setRoomList(newList);
 
       setLoading(false);
@@ -876,6 +872,16 @@ const Csv = ({institutionId}: ICsvProps) => {
       setLoading(false);
     }
   };
+
+  const {
+    user: {associateInstitute}
+  } = useAuth();
+
+  // useEffect(() => {
+  //   if (institutionId === associateInstitute[0].institution.id) {
+  //     fetchRoomList();
+  //   }
+  // }, [institutionId]);
 
   const Table = () => {
     return (
