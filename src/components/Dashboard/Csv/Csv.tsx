@@ -15,6 +15,7 @@ import Selector from '../../Atoms/Form/Selector';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface ICsvProps {
   institutionId?: string;
@@ -28,6 +29,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const [instClassRooms, setInstClassRooms] = useState([]);
   const [classRoomsList, setClassRoomsList] = useState([]);
+
   const [selectedClassRoom, setSelectedClassRoom] = useState(null);
 
   const [selectedClass, setSelectedClass] = useState(null);
@@ -167,7 +169,11 @@ const Csv = ({institutionId}: ICsvProps) => {
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
       return {
         id: cr.id,
+        institutionName: cr?.institution?.name || '',
+        teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+        courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
         name: cr.name,
+        status: cr?.status,
         value: cr.name,
         class: {...cr.class},
         curriculum
@@ -203,6 +209,10 @@ const Csv = ({institutionId}: ICsvProps) => {
           return {
             id: cr.id,
             name: cr.name,
+            status: cr?.status,
+            institutionName: cr?.institution?.name || '',
+            teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+            courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
             value: cr.name,
             class: {...cr.class},
             curriculum
@@ -855,35 +865,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const [roomList, setRoomList] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const fetchRoomList = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard)
-      );
-
-      const newList = list.data.listRooms.items;
-
-      setRoomList(newList);
-
-      setLoading(false);
-    } catch {
-      setLoading(false);
-    }
-  };
-
-  const {
-    user: {associateInstitute}
-  } = useAuth();
-
-  // useEffect(() => {
-  //   if (institutionId === associateInstitute[0].institution.id) {
-  //     fetchRoomList();
-  //   }
-  // }, [institutionId]);
-
   const Table = () => {
     return (
       <div className="flex flex-col">
@@ -964,6 +945,26 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
 
+  const currentSelectedClassroomData =
+    hoveringItem &&
+    hoveringItem?.name &&
+    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
+
+  const DataValue = ({
+    title,
+    content
+  }: {
+    title: string;
+    content: string | React.ReactNode;
+  }) => {
+    return (
+      <div className="w-auto flex mb-2 flex-col items-start justify-start">
+        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
@@ -1001,12 +1002,46 @@ const Csv = ({institutionId}: ICsvProps) => {
             list={instClassRooms}
             onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
           />
-          <Transition
-            style={{bottom: '1.5rem', right: '-130%', zIndex: 999999}}
-            className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-56 p-4"
-            show={Boolean(hoveringItem && hoveringItem.name)}>
-            {hoveringItem?.name}
-          </Transition>
+          {currentSelectedClassroomData && (
+            <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+              <Transition
+                style={{top: '2rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
+                className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
+                show={Boolean(hoveringItem && hoveringItem.name)}>
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4 min-h-72 min-w-56 max-w-56 w-auto">
+                  <DataValue
+                    title={'Institution Name'}
+                    content={currentSelectedClassroomData?.institutionName}
+                  />
+                  <DataValue
+                    title={'Clasroom Name'}
+                    content={currentSelectedClassroomData?.name}
+                  />
+                  <DataValue
+                    title={'Teacher'}
+                    content={currentSelectedClassroomData.teacherName}
+                  />
+                  <DataValue
+                    title={'Course Name'}
+                    content={currentSelectedClassroomData.courseName}
+                  />
+                  <DataValue
+                    title={'Status'}
+                    content={
+                      <p
+                        className={`${
+                          currentSelectedClassroomData.status === 'ACTIVE'
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        } lowercase`}>
+                        {currentSelectedClassroomData.status}
+                      </p>
+                    }
+                  />
+                </div>
+              </Transition>
+            </ClickAwayListener>
+          )}
         </div>
 
         <Selector
