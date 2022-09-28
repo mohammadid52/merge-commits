@@ -102,8 +102,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     return (
       <>
         <li
-          onMouseEnter={() => setHoveringItem(item)}
-          onMouseLeave={() => setHoveringItem({})}
+          onMouseEnter={() => setHoveringItem && setHoveringItem(item)}
+          onMouseLeave={() => setHoveringItem && setHoveringItem({})}
           onClick={() => updateSelectedItem(item.value, item.name, item.id)}
           id={item.id}
           tabIndex={-1}

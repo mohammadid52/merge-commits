@@ -48,8 +48,8 @@ describe('Simple Survey should work', () => {
     cy.contains(`${simpleSurveyConfig.page[1]}`).click();
     cy.dataCy(simpleSurveyConfig.domIds[1])
       .clear()
-      .type(secondInputData(), {delay: 100})
-      .wait(3000); // fill in second input
+      .type(secondInputData(), {delay: 500})
+      .wait(5000); // fill in second input
 
     cy.dataCy('save-lesson').click(); // click on save button
   });
