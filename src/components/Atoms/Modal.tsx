@@ -40,7 +40,7 @@ const ModalBody = (bodyProps: {
     closeOnBackdrop,
     className = 'modal-body',
     scrollHidden,
-    hidePadding,
+    hidePadding
   } = bodyProps;
 
   return (
@@ -93,7 +93,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     position,
     width,
     maxWidth,
-    className,
+    className
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -128,7 +128,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           }}
           className={`${width ? width : 'w-auto'} ${
             maxWidth ? maxWidth : 'max-w-lg'
-          } relative my-4 mx-auto`}>
+          } relative my-4 mx-auto sm:max-w-132 max-w-80   md:max-w-164`}>
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button

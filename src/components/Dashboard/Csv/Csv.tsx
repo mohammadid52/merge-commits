@@ -1,21 +1,20 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-import * as queries from '@graphql/queries';
-import Selector from '../../Atoms/Form/Selector';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
-import {CSVLink} from 'react-csv';
-import DateAndTime from '../DateAndTime/DateAndTime';
-import {getAsset} from '../../../assets';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import useDictionary from '../../../customHooks/dictionary';
-import {orderBy, uniqBy} from 'lodash';
-import {PDFDownloadLink} from '@react-pdf/renderer';
-import SurveyPDF from './SurveyPDF';
 import Loader from '@atoms/Loader';
 import {Transition} from '@headlessui/react';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
+import * as queries from '@graphql/queries';
+import {PDFDownloadLink} from '@react-pdf/renderer';
+import {orderBy, uniqBy} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {CSVLink} from 'react-csv';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import * as customQueries from '../../../customGraphql/customQueries';
+import useDictionary from '../../../customHooks/dictionary';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import Selector from '../../Atoms/Form/Selector';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import DateAndTime from '../DateAndTime/DateAndTime';
+import SurveyPDF from './SurveyPDF';
 
 interface ICsvProps {
   institutionId?: string;
@@ -155,11 +154,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     let instCRs: any = [];
 
     let classrooms: any = await API.graphql(
-      graphqlOperation(customQueries.getInstClassRooms, {
-        id: institutionId
-      })
+      graphqlOperation(customQueries.listRoomsDashboard)
     );
-    classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
+    classrooms = classrooms?.data.listRooms?.items || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
         cr.curricula?.items &&
@@ -837,8 +834,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   }, [isCSVReady]);
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
   const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
@@ -860,12 +855,41 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const [roomList, setRoomList] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const fetchRoomList = async () => {
+    try {
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsDashboard)
+      );
+
+      const newList = list.data.listRooms.items;
+
+      setRoomList(newList);
+
+      setLoading(false);
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  const {
+    user: {associateInstitute}
+  } = useAuth();
+
+  // useEffect(() => {
+  //   if (institutionId === associateInstitute[0].institution.id) {
+  //     fetchRoomList();
+  //   }
+  // }, [institutionId]);
+
   const Table = () => {
     return (
       <div className="flex flex-col">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
-            <div className="flex flex-1 overflow-scroll shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div className="flex flex-1 shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>

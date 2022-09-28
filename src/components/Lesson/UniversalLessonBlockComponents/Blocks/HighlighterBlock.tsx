@@ -1,18 +1,17 @@
+import Buttons from '@atoms/Buttons';
 import {isEmpty} from '@aws-amplify/core';
-import useStudentDataValue from '@customHooks/studentDataValue';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {getAsset} from 'assets';
 import {GlobalContext} from '@contexts/GlobalContext';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '@customHooks/checkIfInLesson';
+import useStudentDataValue from '@customHooks/studentDataValue';
 import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import Buttons from '@atoms/Buttons';
-import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
-import {findIndex, get} from 'lodash';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {getAsset} from 'assets';
+import {findIndex, get} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
+import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
 
 interface HighlighterBlockProps extends RowWrapperProps {
   id?: string;
@@ -28,7 +27,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const {
     clientKey,
     state: {user, lessonPage: {theme = 'dark'} = {}},
-    lessonState,
+    lessonState
   } = useContext(GlobalContext);
 
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -52,7 +51,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const addToDB = async (list: any) => {
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -133,7 +132,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const features: string[] = ['colorPicker', 'inline'];
 
   return (
-    <div className={` p-4 `}>
+    <div className={` py-4 `}>
       <CustomRichTextEditor
         theme={themeColor}
         features={features}

@@ -5,6 +5,7 @@ import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/Ga
 import '@components/Dashboard/GameChangers/styles/Flickity.scss';
 import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useNotifications from '@customHooks/notifications';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getAsset} from 'assets';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
 import Csv from 'components/Dashboard/Csv/Csv';
@@ -24,7 +25,7 @@ import moment, {Moment} from 'moment';
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
 import DropDownMenu from './DropDownMenu/DropDownMenu';
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -97,6 +98,7 @@ const Dashboard = (props: DashboardProps) => {
   const {notifications} = useNotifications('global');
 
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
+
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
   useEffect(() => {
@@ -443,8 +445,10 @@ const Dashboard = (props: DashboardProps) => {
     const getRoomFromState = state.roomData.rooms.find(
       (room: any) => room.id === state.activeRoom
     );
+
     if (getRoomFromState) {
       setLocalStorageData('room_info', getRoomFromState);
+
       setActiveRoomInfo(getRoomFromState);
     }
   }, [state.activeRoom]);
@@ -809,7 +813,7 @@ const Dashboard = (props: DashboardProps) => {
           />
         </div>
       </div>
-      <div className="relative h-screen flex overflow-hidden container_background">
+      <div className="relative h-screen flex overflow-hidden container_background ">
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 

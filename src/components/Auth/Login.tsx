@@ -1,27 +1,29 @@
-import React, {useContext, useState, useEffect} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Auth from '@aws-amplify/auth';
+import axios from 'axios';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
 import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiOutlineLoading3Quarters,
+  AiOutlineLoading3Quarters
 } from 'react-icons/ai';
-import {useHistory, NavLink} from 'react-router-dom';
-import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
-
-import * as queries from '../../graphql/queries';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customMutations from '../../customGraphql/customMutations';
-import useDictionary from '../../customHooks/dictionary';
-import useDeviceDetect from '../../customHooks/deviceDetect';
-import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
+import {GlobalContext} from '@contexts/GlobalContext';
+import * as customMutations from '../../customGraphql/customMutations';
+import * as customQueries from '../../customGraphql/customQueries';
+import useDeviceDetect from '../../customHooks/deviceDetect';
+import useDictionary from '../../customHooks/dictionary';
+import * as queries from '../../graphql/queries';
 import {createUserUrl} from '../../utilities/urls';
 
-import BrowserAlert from '../General/BrowserAlert';
+import AuthCard from './AuthCard';
+import RememberMe from './RememberMe';
+import FormInput from '@components/Atoms/Form/FormInput';
+import Buttons from '@components/Atoms/Buttons';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -41,11 +43,11 @@ const Login = ({updateAuthState}: LoginProps) => {
   let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
   const [input, setInput] = useState({
     email: '',
-    password: '',
+    password: ''
   });
   const [passToggle, setPassToggle] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -85,7 +87,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
             graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-              filter: {staffAuthID: {eq: user.username}},
+              filter: {staffAuthID: {eq: user.username}}
             })
           );
         }
@@ -103,14 +105,14 @@ const Login = ({updateAuthState}: LoginProps) => {
               instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
-            lessons: userInfo.lessons,
-          },
+            lessons: userInfo.lessons
+          }
         });
         const input = {
           id: userInfo.id,
           authId: user.username,
           email: username,
-          lastLoggedIn: new Date().toISOString(),
+          lastLoggedIn: new Date().toISOString()
         };
         const update: any = await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
@@ -125,7 +127,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         } else if (!username.includes('@')) {
           setMessage({
             ...errMsg,
-            message: 'Your email is not in the expected email address format',
+            message: 'Your email is not in the expected email address format'
           });
         } else if (!password) {
           setMessage({...errMsg, message: 'Please enter your password'});
@@ -144,7 +146,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           setMessage({
             show: false,
             type: '',
-            message: '',
+            message: ''
           });
           toggleLoading(false);
         }
@@ -163,7 +165,7 @@ const Login = ({updateAuthState}: LoginProps) => {
                 show: true,
                 type: 'success',
                 message:
-                  'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
+                  'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
               });
             } catch (err) {
               console.log('Error temporary password could not be reset');
@@ -176,7 +178,7 @@ const Login = ({updateAuthState}: LoginProps) => {
               show: true,
               type: 'success',
               message:
-                'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
+                'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
             });
             // confirm user, set password, and sign in which should ask them to create a new password.
           } catch (err) {
@@ -197,21 +199,21 @@ const Login = ({updateAuthState}: LoginProps) => {
           return {
             show: true,
             type: 'error',
-            message: 'The email you entered was not found',
+            message: 'The email you entered was not found'
           };
         case 'NotAuthorizedException':
           if (!onlyEmail) {
             return {
               show: true,
               type: 'error',
-              message: 'The email or password you entered was not correct',
+              message: 'The email or password you entered was not correct'
             };
           }
         case 'UserNotConfirmedException':
           return {
             show: true,
             type: 'error',
-            message: 'You need to confirm registered email id, Please check your email.',
+            message: 'You need to confirm registered email id, Please check your email.'
           };
         // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
 
@@ -219,7 +221,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           return {
             show: true,
             type: 'error',
-            message: error.message,
+            message: error.message
           };
       }
     });
@@ -231,12 +233,12 @@ const Login = ({updateAuthState}: LoginProps) => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...input,
-          [id]: value,
+          [id]: value
         };
       }
     });
@@ -283,14 +285,14 @@ const Login = ({updateAuthState}: LoginProps) => {
           language: userInfo.language,
           onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
           role: userInfo.role,
-          image: userInfo.image,
-        },
+          image: userInfo.image
+        }
       });
       const input = {
         id: userInfo.id,
         authId: user.username,
         email: username,
-        lastLoggedIn: new Date().toISOString(),
+        lastLoggedIn: new Date().toISOString()
       };
       const update: any = await API.graphql(
         graphqlOperation(customMutations.updatePersonLoginTime, {input})
@@ -304,7 +306,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             return {
               show: true,
               type: 'error',
-              message: error.message,
+              message: error.message
             };
         }
       });
@@ -323,7 +325,7 @@ const Login = ({updateAuthState}: LoginProps) => {
       setInput({
         ...input,
         email: auth.email,
-        password: auth.password,
+        password: auth.password
       });
     }
   };
@@ -338,248 +340,133 @@ const Login = ({updateAuthState}: LoginProps) => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-cover sm:bg-center">
-      <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
-        <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
-          <div className="h-.7/10  w-full rounded-tl-xl"></div>
-          <div className="relative h-9.5/10 flex flex-col items-center p-8">
-            <div
-              className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
-              <p>© Copyright {new Date().getFullYear()}</p>
-              <p>
-                <NavLink
-                  className="underline text-xs hover:text-blue-500"
-                  to="/privacy-policy">
-                  Privacy Policy
-                </NavLink>
-              </p>
-            </div>
-            <div className="h-24 w-56">
-              <img
-                className=""
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt="login_page_logo"
-              />
-            </div>
-            {!createPassword ? (
-              <>
-                <div
-                  className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-                  <p>
-                    {showPasswordField
-                      ? AuthDict[userLanguage].LOGIN
-                      : AuthDict[userLanguage].VERIFY_EMAIL}{' '}
-                  </p>
-                </div>
-                <div className="h-auto flex-grow flex flex-col justify-center">
-                  <div className="w-full mb-2 flex flex-col justify-around items-center">
-                    {message.show ? (
-                      <p
-                        className={`text-xs text-center ${
-                          message.type === 'success'
-                            ? 'text-green-500'
-                            : message.type === 'error'
-                            ? 'text-red-500'
-                            : null
-                        }`}>
-                        {message.message}
-                      </p>
-                    ) : null}
-                  </div>
-                  <div className="input relative w-full mb-4">
-                    <label className="hidden" htmlFor="email">
-                      Email
-                    </label>
-                    <input
-                      className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
-                      placeholder="Email"
-                      type="text"
-                      id="email"
-                      name="email"
-                      value={input.email}
-                      onChange={handleChange}
-                      onKeyDown={handleEnter}
-                    />
-                  </div>
-                  {showPasswordField && (
-                    <>
-                      <div className="input relative w-full">
-                        <div className="absolute w-6 right-0 transform -translate-x-1">
-                          <div
-                            onClick={() => setPassToggle(!passToggle)}
-                            className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
-                            {passToggle ? (
-                              <IconContext.Provider value={{className: 'w-auto '}}>
-                                <AiOutlineEye size={24} />
-                              </IconContext.Provider>
-                            ) : (
-                              <IconContext.Provider value={{className: 'w-auto'}}>
-                                <AiOutlineEyeInvisible size={24} />
-                              </IconContext.Provider>
-                            )}
-                          </div>
-                        </div>
+    <AuthCard message={message} title="Login">
+      {!createPassword ? (
+        <>
+          <div className="h-auto flex-grow flex flex-col justify-center">
+            <FormInput
+              dataCy="email"
+              label="Email"
+              className="mb-4"
+              placeHolder="Enter your email"
+              type="email"
+              value={input.email}
+              id="email"
+              onChange={handleChange}
+              onKeyDown={handleEnter}
+            />
 
-                        <label className="hidden" htmlFor="password">
-                          Password
-                        </label>
-                        <input
-                          className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
-                          placeholder="Password"
-                          type={passToggle ? 'text' : 'password'}
-                          id="password"
-                          name="password"
-                          value={input.password}
-                          onChange={handleChange}
-                          onKeyDown={handleEnter}
-                        />
-                      </div>
-                      <div className="my-3">
-                        <label className="flex items-center justify-end">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox w-5 h-5"
-                            checked={isChecked}
-                            onChange={toggleCheckBox}
-                          />
-                          <span className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>
-                            Remember Me
-                          </span>
-                        </label>
-                      </div>
-                    </>
-                  )}
-                  <div className="relative flex flex-col justify-center items-center">
-                    <button
-                      disabled={isToggled}
-                      className={`p-3 mb-4 ${getAsset(
-                        clientKey,
-                        'authButtonColor'
-                      )} text-gray-200 rounded-xl font-semibold`}
-                      onKeyPress={handleEnter}
-                      onClick={handleSubmit}>
-                      {isToggled ? (
-                        <IconContext.Provider
-                          value={{
-                            size: '1.5rem',
-                            color: '#ffffff',
-                            className: 'relative animate-spin',
-                          }}>
-                          <AiOutlineLoading3Quarters />
-                        </IconContext.Provider>
-                      ) : showPasswordField ? (
-                        'Login'
-                      ) : (
-                        'Enter'
-                      )}
-                    </button>
-                    {/* <NavLink to="/forgot-password">
-                      <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
-                        Request your session leader to reset your password.
-                      </div>
-                    </NavLink> */}
-                    {/* <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
-                      Request your session leader to reset your password.
-                    </div> */}
-                  </div>
-                </div>
-              </>
-            ) : (
+            {showPasswordField && (
               <>
-                <div
-                  className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-                  <p> Create your password </p>
-                </div>
-                <div className="h-3.5/10 flex-grow flex flex-col justify-center">
-                  <div className="w-full mb-2 flex flex-col justify-around items-center">
-                    {message.show ? (
-                      <p
-                        className={`text-xs text-center ${
-                          message.type === 'success'
-                            ? 'text-green-500'
-                            : message.type === 'error'
-                            ? 'text-red-500'
-                            : null
-                        }`}>
-                        {message.message}
-                      </p>
-                    ) : null}
-                  </div>
-                  <div className="input relative w-full mb-4">
-                    <div className="absolute w-6 right-0 transform -translate-x-1">
-                      <div
-                        onClick={() => setPassToggle((prevToggle) => !prevToggle)}
-                        className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
-                        {passToggle ? (
-                          <IconContext.Provider value={{className: 'w-auto '}}>
-                            <AiOutlineEye size={24} />
-                          </IconContext.Provider>
-                        ) : (
-                          <IconContext.Provider value={{className: 'w-auto'}}>
-                            <AiOutlineEyeInvisible size={24} />
-                          </IconContext.Provider>
-                        )}
-                      </div>
-                    </div>
-                    <label className="hidden" htmlFor="password">
-                      Password
-                    </label>
-                    <input
-                      className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
-                      placeholder="Password"
-                      type={passToggle ? 'text' : 'password'}
-                      id="password"
-                      name="password"
-                      value={input.password}
-                      onChange={handleChange}
-                      onKeyDown={handleEnterSetPassword}
-                    />
-                  </div>
-                  <div className="relative h-4.5/10 flex flex-col justify-center items-center">
-                    <button
-                      disabled={isToggled}
-                      className={`p-3 mb-4 ${getAsset(
-                        clientKey,
-                        'authButtonColor'
-                      )} text-gray-200 rounded-xl font-semibold`}
-                      onKeyPress={handleEnterSetPassword}
-                      onClick={handleSetPassword}>
-                      {isToggled ? (
-                        <IconContext.Provider
-                          value={{
-                            size: '1.5rem',
-                            color: '#ffffff',
-                            className: 'relative animate-spin',
-                          }}>
-                          <AiOutlineLoading3Quarters />
-                        </IconContext.Provider>
-                      ) : (
-                        'Set Password'
-                      )}
-                    </button>
-                  </div>
+                <FormInput
+                  dataCy="password"
+                  label="Password"
+                  placeHolder="Enter your password"
+                  type="password"
+                  id="password"
+                  value={input.password}
+                  onChange={handleChange}
+                  onKeyDown={handleEnter}
+                />
+
+                <div className="my-4">
+                  <RememberMe
+                    dataCy="remember"
+                    isChecked={isChecked}
+                    toggleCheckBox={toggleCheckBox}
+                  />
                 </div>
               </>
             )}
+            <div className="relative flex flex-col justify-center items-center">
+              <Buttons
+                disabled={isToggled}
+                onClick={handleSubmit}
+                btnClass="w-full py-3"
+                loading={isToggled}
+                label={showPasswordField ? 'Login' : 'Enter'}
+              />
+            </div>
           </div>
-        </div>
-        <div
-          className={`md:inline-block sm:hidden xs:hidden min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(
-            clientKey,
-            'authBackground'
-          )} bg-cover bg-center`}></div>
-      </div>
-      {openAlertBrowser && (
-        <BrowserAlert
-          alert={openAlertBrowser}
-          closeTab={() => {
-            window.open('', '_parent', '');
-            window.close();
-          }}
-          onContinue={() => setOpenAlertBrowser(false)}
-        />
+        </>
+      ) : (
+        <>
+          <div
+            className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
+            <p> Create your password </p>
+          </div>
+          <div className="h-3.5/10 flex-grow flex flex-col justify-center">
+            <div className="w-full mb-2 flex flex-col justify-around items-center">
+              {message.show ? (
+                <p
+                  className={`text-xs text-center ${
+                    message.type === 'success'
+                      ? 'text-green-500'
+                      : message.type === 'error'
+                      ? 'text-red-500'
+                      : null
+                  }`}>
+                  {message.message}
+                </p>
+              ) : null}
+            </div>
+            <div className="input relative w-full mb-4">
+              <div className="absolute w-6 right-0 transform -translate-x-1">
+                <div
+                  onClick={() => setPassToggle((prevToggle) => !prevToggle)}
+                  className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
+                  {passToggle ? (
+                    <IconContext.Provider value={{className: 'w-auto '}}>
+                      <AiOutlineEye size={24} />
+                    </IconContext.Provider>
+                  ) : (
+                    <IconContext.Provider value={{className: 'w-auto'}}>
+                      <AiOutlineEyeInvisible size={24} />
+                    </IconContext.Provider>
+                  )}
+                </div>
+              </div>
+              <label className="hidden" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                placeholder="Password"
+                type={passToggle ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={input.password}
+                onChange={handleChange}
+                onKeyDown={handleEnterSetPassword}
+              />
+            </div>
+            <div className="relative h-4.5/10 flex flex-col justify-center items-center">
+              <button
+                disabled={isToggled}
+                className={`p-3 mb-4 ${getAsset(
+                  clientKey,
+                  'authButtonColor'
+                )} text-gray-200 rounded-xl font-semibold`}
+                onKeyPress={handleEnterSetPassword}
+                onClick={handleSetPassword}>
+                {isToggled ? (
+                  <IconContext.Provider
+                    value={{
+                      size: '1.5rem',
+                      color: '#ffffff',
+                      className: 'relative animate-spin'
+                    }}>
+                    <AiOutlineLoading3Quarters />
+                  </IconContext.Provider>
+                ) : (
+                  'Set Password'
+                )}
+              </button>
+            </div>
+          </div>
+        </>
       )}
-    </div>
+    </AuthCard>
   );
 };
 

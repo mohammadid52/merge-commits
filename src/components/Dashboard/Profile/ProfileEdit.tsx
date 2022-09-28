@@ -38,8 +38,8 @@ const ProfileEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: e.target.value,
-      },
+        [questionID]: e.target.value
+      }
     });
   };
 
@@ -48,8 +48,8 @@ const ProfileEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: `Other || ${e.target.value}`,
-      },
+        [questionID]: `Other || ${e.target.value}`
+      }
     });
   };
 
@@ -70,8 +70,8 @@ const ProfileEdit = (props: UserInfoProps) => {
           ...checkpointData,
           [checkpointID]: {
             ...checkpointData[checkpointID],
-            [questionID]: [],
-          },
+            [questionID]: []
+          }
         });
       }
       const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
@@ -86,8 +86,8 @@ const ProfileEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList],
-        },
+          [questionID]: [...updatedList]
+        }
       });
     } else {
       setCheckpointData({
@@ -98,10 +98,10 @@ const ProfileEdit = (props: UserInfoProps) => {
             {
               id,
               name,
-              value,
-            },
-          ],
-        },
+              value
+            }
+          ]
+        }
       });
     }
   };
@@ -116,8 +116,8 @@ const ProfileEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: name,
-      },
+        [questionID]: name
+      }
     });
   };
 
@@ -128,7 +128,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       response:
         typeof obj[item] === 'string'
           ? [obj[item]]
-          : [...obj[item].map((op: any) => op.name)],
+          : [...obj[item].map((op: any) => op.name)]
     }));
   };
   const gobackToPreviousStep = () => {
@@ -143,7 +143,7 @@ const ProfileEdit = (props: UserInfoProps) => {
           response: checkpointData[checkpointID][resp.qid],
           otherResponse: checkpointData[checkpointID][resp.qid]
             .toString()
-            .split(' || ')[1],
+            .split(' || ')[1]
         };
       } else {
         return {...resp};
@@ -168,7 +168,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   ) => {
     let responseObject = {
       id: questionDataId,
-      responseObject: questions,
+      responseObject: questions
     };
     updateQuestionData(responseObject, checkpointID);
   };
@@ -190,7 +190,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       checkpointID: checkpointId,
       authID: editUser.authId,
       email: editUser.email,
-      responseObject: questions,
+      responseObject: questions
     };
     createQuestionData(responseObject);
   };
@@ -200,7 +200,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     const checkpId = Object.keys(checkpointData);
     const allCheckpoints = checkpId.map((itemID) => ({
       checkpointId: itemID,
-      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : [],
+      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
       let checkpoints = Promise.all(
@@ -242,7 +242,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
-      email: editUser.email,
+      email: editUser.email
     };
 
     try {
@@ -261,8 +261,8 @@ const ProfileEdit = (props: UserInfoProps) => {
           onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
           role: state.user.role,
           image: state.user.image,
-          onDemand: state.user.onDemand,
-        },
+          onDemand: state.user.onDemand
+        }
       });
       gobackToPreviousStep();
     } catch (error) {
@@ -281,7 +281,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -290,7 +290,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        language: lang.code,
+        language: lang.code
       };
     });
   };
@@ -298,19 +298,19 @@ const ProfileEdit = (props: UserInfoProps) => {
   const Language = [
     {
       code: 'EN',
-      name: 'English',
+      name: 'English'
     },
     {
       code: 'ES',
-      name: 'Spanish',
-    },
+      name: 'Spanish'
+    }
   ];
 
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index,
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
 
     return newArr;
@@ -319,7 +319,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index.toString(),
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -333,7 +333,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         return {
           id: index.toString(),
           name: option,
-          value: option,
+          value: option
         };
       });
 
@@ -370,7 +370,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         [item['qid']]:
           item?.response?.length > 1
             ? [...selectedMultiOptions(item.response)]
-            : item?.response.toString(),
+            : item?.response.toString()
       };
     });
     return convertArrayIntoObj(answerArray);
@@ -379,11 +379,11 @@ const ProfileEdit = (props: UserInfoProps) => {
   useEffect(() => {
     if (questionData?.length > 0) {
       const updatedListArray: any = questionData.map((item: any) => ({
-        [item['checkpointID']]: extractItemFromArray(item.responseObject),
+        [item['checkpointID']]: extractItemFromArray(item.responseObject)
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
       setCheckpointData({
-        ...updatedListObj,
+        ...updatedListObj
       });
     }
   }, [questionData]);
@@ -434,7 +434,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
                   <NavLink
-                    className="text-gray-500 lowercase text-right float-right w-auto"
+                    className="text-gray-500 lowercase text-center mt-2 md:mt-0 md:text-right md:float-right w-auto"
                     to={path}>
                     <p className="font-medium text-sm md:text-base">
                       Click here to edit password
