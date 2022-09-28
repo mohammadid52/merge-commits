@@ -15,6 +15,7 @@ import {orderBy, uniqBy} from 'lodash';
 import {PDFDownloadLink} from '@react-pdf/renderer';
 import SurveyPDF from './SurveyPDF';
 import Loader from '@atoms/Loader';
+import {Transition} from '@headlessui/react';
 
 interface ICsvProps {
   institutionId?: string;
@@ -63,7 +64,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     surveyFirst: '-',
     surveyLast: '-',
     takenSurvey: 0,
-    notTakenSurvey: 0,
+    notTakenSurvey: 0
   });
 
   // methods to clear state data
@@ -117,7 +118,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         return {
           id: inst.id,
           name: inst.name,
-          value: inst.name,
+          value: inst.name
         };
       });
       setInstitutions(institutions);
@@ -131,13 +132,13 @@ const Csv = ({institutionId}: ICsvProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getInstitutionBasicInfo, {
-          id: institutionId,
+          id: institutionId
         })
       );
       setSelectedInst({
         id: institutionId,
         name: result?.data?.getInstitution.name,
-        value: result?.data?.getInstitution.name,
+        value: result?.data?.getInstitution.name
       });
     } catch (error) {}
   };
@@ -155,7 +156,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
     let classrooms: any = await API.graphql(
       graphqlOperation(customQueries.getInstClassRooms, {
-        id: institutionId,
+        id: institutionId
       })
     );
     classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
@@ -172,7 +173,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         name: cr.name,
         value: cr.name,
         class: {...cr.class},
-        curriculum,
+        curriculum
       };
     });
     setClassRoomsList(classrooms);
@@ -192,7 +193,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         // fetch inst classrooms.
         let classrooms: any = await API.graphql(
           graphqlOperation(customQueries.getInstClassRooms, {
-            id: inst.id,
+            id: inst.id
           })
         );
         classrooms = classrooms?.data.getInstitution?.rooms?.items || [];
@@ -207,7 +208,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             name: cr.name,
             value: cr.name,
             class: {...cr.class},
-            curriculum,
+            curriculum
           };
         });
         setClassRoomsList(classrooms);
@@ -250,7 +251,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     try {
       let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
-          filter: {curriculumId: {eq: curriculumId}},
+          filter: {curriculumId: {eq: curriculumId}}
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
@@ -263,7 +264,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       setUnits(units);
       let curriculumData: any = await API.graphql(
         graphqlOperation(customQueries.getCurriculumCheckpointsData, {
-          id: curriculumId,
+          id: curriculumId
         })
       );
       // console.log('curriculumData', curriculumData);
@@ -298,9 +299,9 @@ const Csv = ({institutionId}: ICsvProps) => {
         filter: {
           ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
           syllabusLessonID: {eq: syllabusLessonID},
-          ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email'),
+          ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email')
         },
-        limit: 1000,
+        limit: 1000
       })
     );
     let studentsAnswersDemographicsCheckpointsQuestions =
@@ -317,7 +318,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const fetchStudents = async (classId: string) => {
     let classData: any = await API.graphql(
       graphqlOperation(customQueries.fetchClassStudents, {
-        id: classId,
+        id: classId
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];
@@ -334,7 +335,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     try {
       let syllabusLessons: any = await API.graphql(
         graphqlOperation(customQueries.listSurveys, {
-          id: unitId,
+          id: unitId
         })
       );
       syllabusLessons = syllabusLessons?.data.getUniversalSyllabus?.lessons?.items || [];
@@ -345,12 +346,12 @@ const Csv = ({institutionId}: ICsvProps) => {
           syllabusLessonsData.push({
             syllabusLessonID: les.id,
             lessonID: les.lessonID,
-            lesson: les.lesson,
+            lesson: les.lesson
           });
           surveys.push({
             id: les.lesson.id,
             name: les.lesson.title,
-            value: les.lesson.title,
+            value: les.lesson.title
           });
           return les.lesson;
         }
@@ -380,7 +381,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       setCsvGettingReady(true);
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
@@ -397,8 +398,8 @@ const Csv = ({institutionId}: ICsvProps) => {
                 id: item.questionID,
                 question: item.questionString,
                 type: item.type,
-                options: item.options,
-              },
+                options: item.options
+              }
             });
           });
         });
@@ -459,9 +460,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                                 questionID: partContentSub.id,
                                 type: partContentSub.type,
                                 questionString: partContentSub.label,
-                                options: partContentSub.options,
-                              },
-                            ],
+                                options: partContentSub.options
+                              }
+                            ]
                           };
                         },
                         {pgInput: []}
@@ -470,8 +471,8 @@ const Csv = ({institutionId}: ICsvProps) => {
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -483,9 +484,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                             questionID: partContent.id,
                             type: partContent.type,
                             questionString: partContent.label,
-                            options: partContent.options,
-                          },
-                        ],
+                            options: partContent.options
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
@@ -497,8 +498,8 @@ const Csv = ({institutionId}: ICsvProps) => {
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
@@ -508,7 +509,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           );
 
           return {
-            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
           };
         },
 
@@ -606,8 +607,8 @@ const Csv = ({institutionId}: ICsvProps) => {
         nextToken: nextToken,
         filter: {
           lessonID: {eq: lessonId},
-          ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail'),
-        },
+          ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
+        }
       })
     );
     let studentsAnswersSurveyQuestionsData =
@@ -669,7 +670,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         surveyQuestionOptions[ques.question.id] = ques.question.options;
         return {
           label: `${ques.question.question}-s-${ques.question.id}`,
-          key: `${ques.question.id}`,
+          key: `${ques.question.id}`
         };
       });
       /* Enable this code if demographics questions */
@@ -678,7 +679,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         qids.push(ques.question.id);
         return {
           label: `${ques.question.question}-d-${ques.question.id} (demographic)`,
-          key: `${ques.question.id}`,
+          key: `${ques.question.id}`
         };
       });
 
@@ -697,7 +698,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
         {label: 'DemographicsDataID', key: 'demographicsDataID'},
         ...demographicsQuestionHeaders, // Enable this line for demographics question
-        ...surveyQuestionHeaders,
+        ...surveyQuestionHeaders
       ]);
 
       let data = students.map((stu: any) => {
@@ -805,7 +806,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           last:
             (surveyAnswerDates[0] &&
               new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
-            '-',
+            '-'
         };
       });
       surveyDates = surveyDates.sort(
@@ -821,7 +822,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         surveyLast:
           (surveyDates[0] && new Date(surveyDates[0]).toLocaleString('en-US')) || '-',
         takenSurvey,
-        notTakenSurvey,
+        notTakenSurvey
       });
       setIsCSVDownloadReady(true);
       setCsvGettingReady(false);
@@ -924,11 +925,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     );
   };
 
-  const fieldClass = 'p-3 flex justify-center items-center w-full';
-
   const Card = ({keyItem, value}: any) => {
     return (
-      <div className="flex relative bg-white rounded-lg shadow justify-center items-center h-20 shadow inner_card">
+      <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
         <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
           {keyItem}:
         </p>
@@ -939,6 +938,8 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const isSuperAdmin = state.user.role === 'SUP';
 
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
   return (
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
@@ -946,9 +947,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           <h3 className="text-lg leading-6 text-gray-600 w-auto">
             {CsvDict[userLanguage]['TITLE']}
           </h3>
-          {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
-            <span>{CsvDict[userLanguage]['TITLE']}</span>
-          </div> */}
+
           <div className="w-auto">
             <span className={`mr-0 float-right text-gray-600 text-right`}>
               <DateAndTime />
@@ -956,11 +955,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
       </div>
-      {/* <SectionTitleV3
-        fontSize="2xl"
-        fontStyle="bold"
-        title={CsvDict[userLanguage]['SELECT_FILTERS']}
-      /> */}
+
       <div className="grid grid-cols-4 gap-x-4">
         {isSuperAdmin && (
           <Selector
@@ -972,14 +967,23 @@ const Csv = ({institutionId}: ICsvProps) => {
           />
         )}
 
-        <Selector
-          disabled={!selectedInst?.id}
-          loading={classRoomLoading}
-          selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-          placeholder="select classroom"
-          list={instClassRooms}
-          onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
-        />
+        <div className="w-auto relative">
+          <Selector
+            disabled={!selectedInst?.id}
+            setHoveringItem={setHoveringItem}
+            loading={classRoomLoading}
+            selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+            placeholder="select classroom"
+            list={instClassRooms}
+            onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
+          />
+          <Transition
+            style={{bottom: '1.5rem', right: '-130%', zIndex: 999999}}
+            className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-56 p-4"
+            show={Boolean(hoveringItem && hoveringItem.name)}>
+            {hoveringItem?.name}
+          </Transition>
+        </div>
 
         <Selector
           loading={unitsLoading}
@@ -1005,7 +1009,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
           style={{
             /* stylelint-disable */
-            opacity: isCSVDownloadReady ? 1 : 0.5,
+            opacity: isCSVDownloadReady ? 1 : 0.5
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
@@ -1028,7 +1032,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
           style={{
             /* stylelint-disable */
-            opacity: isCSVDownloadReady ? 1 : 0.5,
+            opacity: isCSVDownloadReady ? 1 : 0.5
           }}
           disabled={!isCSVDownloadReady}>
           {lessonPDFData.length > 0 ? (

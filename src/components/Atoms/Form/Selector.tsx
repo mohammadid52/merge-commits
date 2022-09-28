@@ -1,13 +1,15 @@
+import {Transition} from '@headlessui/react';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import Popover from '../Popover';
 import Label from './Label';
 
 interface SelectorProps {
-  list?: {id: number; name: string | number}[];
+  list?: {id: number; name: string | number; popoverElement?: ReactNode}[];
   selectedItem?: string;
   btnClass?: string;
   additionalClass?: string;
@@ -25,6 +27,7 @@ interface SelectorProps {
   error?: string;
   isClearable?: boolean;
   onClear?: () => void;
+  setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -42,11 +45,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     isRequired = false,
     loading = false,
     noOptionMessage = '',
-    labelTextClass = 'text-xs',
+
     width = 'w-full',
     isClearable = false,
     onClear,
-    placement = 'right'
+
+    setHoveringItem
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -85,6 +89,48 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   }
 
   const isSelected = (name: string) => name && selectedItem === name;
+
+  const SelectorItem = ({
+    item
+  }: {
+    item: {
+      name: string;
+      id: any;
+      value: string;
+    };
+  }) => {
+    return (
+      <>
+        <li
+          onMouseEnter={() => setHoveringItem(item)}
+          onMouseLeave={() => setHoveringItem({})}
+          onClick={() => updateSelectedItem(item.value, item.name, item.id)}
+          id={item.id}
+          tabIndex={-1}
+          role="option"
+          className={`flex cursor-pointer  select-none relative py-2 pl-8 pr-4 ${
+            isSelected(item.name)
+              ? 'iconoclast:bg-main text-white'
+              : 'hover:bg-indigo-100 hover:text-indigo-400'
+          }`}>
+          <span className={`${isSelected(item.name) ? 'pl-1' : 'pl-4'} block truncate`}>
+            {item.name}
+          </span>
+          {isSelected(item.name) && (
+            <span className={`text-white relative w-auto flex items-center`}>
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          )}
+        </li>
+      </>
+    );
+  };
 
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
@@ -161,37 +207,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             aria-activedescendant="listbox-item-3"
             className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
-              list.map((item: {name: string; id: any; value: string}, key: number) => (
-                <li
-                  key={key}
-                  onClick={() => updateSelectedItem(item.value, item.name, item.id)}
-                  id={item.id}
-                  tabIndex={-1}
-                  role="option"
-                  className={`flex cursor-pointer select-none relative py-2 pl-8 pr-4 ${
-                    isSelected(item.name)
-                      ? 'iconoclast:bg-main text-white'
-                      : 'hover:bg-indigo-100 hover:text-indigo-400'
-                  }`}>
-                  <span
-                    className={`${
-                      isSelected(item.name) ? 'pl-1' : 'pl-4'
-                    } block truncate`}>
-                    {item.name}
-                  </span>
-                  {isSelected(item.name) && (
-                    <span className={`text-white relative w-auto flex items-center`}>
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  )}
-                </li>
-              ))
+              list.map(
+                (item: {popoverElement?: any; name: string; id: any; value: string}) => (
+                  <SelectorItem item={item} key={item.id} />
+                )
+              )
             ) : (
               <li className="flex justify-center relative py-2 px-4">
                 <span className="font-normal">{noOptionMessage || 'No Results'}</span>
