@@ -77,7 +77,7 @@ const initialState: newUserInput = {
   institution: {id: '', name: ''},
   class: {id: '', name: '', roomId: ''},
   group: {id: '', name: ''},
-  isSelfPaced: true,
+  isSelfPaced: true
 };
 
 const Registration = ({
@@ -85,7 +85,7 @@ const Registration = ({
   isInInstitute,
   instId,
   isInModalPopup = false,
-  postMutation,
+  postMutation
 }: any) => {
   const {classId} = classData || {};
   const history = useHistory();
@@ -101,24 +101,30 @@ const Registration = ({
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
 
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {RegistrationDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const Roles = [
-    state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
+    state.user.role === 'SUP' && {
+      code: 'SUP',
+      name: RegistrationDict[userLanguage]['roles']['sup']
+    },
     (state.user.role === 'SUP' || state.user.role === 'ADM') && {
       code: 'ADM',
-      name: 'Admin',
+      name: RegistrationDict[userLanguage]['roles']['adm']
     },
-    {code: 'BLD', name: 'Builder'},
-    {code: 'FLW', name: 'Fellow'},
-    {code: 'CRD', name: 'Coordinator'},
-    {code: 'TR', name: 'Teacher'},
+    {code: 'BLD', name: RegistrationDict[userLanguage]['roles']['bld']},
+    {code: 'FLW', name: RegistrationDict[userLanguage]['roles']['flw']},
+    {code: 'CRD', name: RegistrationDict[userLanguage]['roles']['crd']},
+    {code: 'TR', name: RegistrationDict[userLanguage]['roles']['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
-      state.user.role !== 'BLD' && {code: 'ST', name: 'Student'},
+      state.user.role !== 'BLD' && {
+        code: 'ST',
+        name: RegistrationDict[userLanguage]['roles']['st']
+      }
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -126,13 +132,13 @@ const Registration = ({
     {
       title: BreadcrumsTitles[userLanguage]['PeopleManagment'],
       url: '/dashboard/manage-users',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddNewUser'],
       url: `/dashboard/registration`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   useEffect(() => {
@@ -143,8 +149,8 @@ const Registration = ({
         class: {
           id: classId,
           name: classData.name,
-          roomId: classData.roomId,
-        },
+          roomId: classData.roomId
+        }
       }));
       getClassRoomGroups(classData.roomId);
     }
@@ -157,8 +163,8 @@ const Registration = ({
         message: {
           show: true,
           text: text,
-          type: type,
-        },
+          type: type
+        }
       };
     });
   };
@@ -176,20 +182,20 @@ const Registration = ({
       let filter = {
         and: [
           {
-            classRoomID: {eq: roomId},
+            classRoomID: {eq: roomId}
           },
-          {groupType: {eq: 'Proficiency'}},
-        ],
+          {groupType: {eq: 'Proficiency'}}
+        ]
       };
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listClassroomGroupssOptions, {
-          filter: filter,
+          filter: filter
         })
       );
       setGroups(
         list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
-          id: item.id,
+          id: item.id
         }))
       );
       setGroupLoading(false);
@@ -212,7 +218,7 @@ const Registration = ({
       grade: newUserInputs.grade,
       language: 'EN',
       onDemand: !newUserInputs.isSelfPaced,
-      addedby: state.user.authId,
+      addedby: state.user.authId
     };
 
     try {
@@ -226,7 +232,7 @@ const Registration = ({
           staffAuthID: authId,
           staffEmail: newUserInputs.email,
           status: 'ACTIVE',
-          statusChangeDate: new Date().toISOString().split('T')[0],
+          statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
           graphqlOperation(mutations.createStaff, {input: input})
@@ -240,7 +246,7 @@ const Registration = ({
             studentID: person.id,
             studentAuthID: authId,
             studentEmail: newUserInputs.email,
-            status: newUserInputs.status,
+            status: newUserInputs.status
           };
           await API.graphql(
             graphqlOperation(customMutations.createClassStudent, {input})
@@ -251,8 +257,8 @@ const Registration = ({
                 input: {
                   classRoomGroupID: newUserInputs.group.id,
                   studentEmail: newUserInputs.email,
-                  studentAuthId: authId,
-                },
+                  studentAuthId: authId
+                }
               })
             );
           }
@@ -276,7 +282,7 @@ const Registration = ({
           grade: '1',
           class: {id: '', name: '', roomId: ''},
           role: '',
-          externalId: '3',
+          externalId: '3'
         };
       });
     } catch (error) {
@@ -303,19 +309,19 @@ const Registration = ({
             return {
               show: true,
               type: 'success',
-              message: RegistrationDict[userLanguage]['messages']['emailerr'],
+              message: RegistrationDict[userLanguage]['messages']['emailerr']
             };
           case 'UsernameExistsException':
             return {
               show: true,
               type: 'error',
-              message: RegistrationDict[userLanguage]['messages']['existemail'],
+              message: RegistrationDict[userLanguage]['messages']['existemail']
             };
           default:
             return {
               show: true,
               type: 'error',
-              message: er.message,
+              message: er.message
             };
         }
       });
@@ -332,42 +338,42 @@ const Registration = ({
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['firstname'],
+          message: RegistrationDict[userLanguage]['messages']['firstname']
         };
       }
       if (!newUserInputs.lastName) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['lastname'],
+          message: RegistrationDict[userLanguage]['messages']['lastname']
         };
       }
       if (!username) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['email'],
+          message: RegistrationDict[userLanguage]['messages']['email']
         };
       }
       if (!username.includes('@')) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['emailaddress'],
+          message: RegistrationDict[userLanguage]['messages']['emailaddress']
         };
       }
       if (!newUserInputs.role) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['userrol'],
+          message: RegistrationDict[userLanguage]['messages']['userrol']
         };
       }
       if (!newUserInputs.institution.id) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['institution'],
+          message: RegistrationDict[userLanguage]['messages']['institution']
         };
       }
       // if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
@@ -384,7 +390,7 @@ const Registration = ({
       return {
         show: true,
         type: 'loading',
-        message: RegistrationDict[userLanguage]['messages']['loading'],
+        message: RegistrationDict[userLanguage]['messages']['loading']
       };
     });
   };
@@ -395,12 +401,12 @@ const Registration = ({
       if (id === 'email') {
         return {
           ...newUserInputs,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...newUserInputs,
-          [id]: value,
+          [id]: value
         };
       }
     });
@@ -410,7 +416,7 @@ const Registration = ({
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        role: item.code,
+        role: item.code
       };
     });
   };
@@ -419,7 +425,7 @@ const Registration = ({
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        isSelfPaced: value,
+        isSelfPaced: value
       };
     });
   };
@@ -438,7 +444,7 @@ const Registration = ({
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        institution: {id: item.code, name: item.name},
+        institution: {id: item.code, name: item.name}
       };
     });
   };
@@ -452,7 +458,7 @@ const Registration = ({
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, {
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
       let returnedData = result.data.listRooms?.items;
@@ -489,8 +495,8 @@ const Registration = ({
         class: {
           id: item.classID,
           name: item.name,
-          roomId: item.id,
-        },
+          roomId: item.id
+        }
       };
     });
   };
@@ -517,12 +523,12 @@ const Registration = ({
       if (institutionsData.length) {
         handleInstituteChange({
           code: instId,
-          name: '',
+          name: ''
         });
       } else {
         setNewUserInputs((prevInput) => ({
           ...prevInput,
-          institution: {id: instId, name: ''},
+          institution: {id: instId, name: ''}
         }));
       }
     }
@@ -531,7 +537,7 @@ const Registration = ({
   const status = [
     {id: 1, name: 'Active', value: 'ACTIVE'},
     {id: 2, name: 'Inactive', value: 'INACTIVE'},
-    {id: 3, name: 'Training', value: 'TRAINING'},
+    {id: 3, name: 'Training', value: 'TRAINING'}
   ];
 
   const onStatusChange = (value: string, name: string) => {
@@ -634,10 +640,11 @@ const Registration = ({
                     {!classId && (
                       <div className="sm:col-span-3 p-2">
                         <DropdownForm
+                          dataCy="role"
                           style={true}
                           handleChange={handleChangeRole}
                           userInfo={`${newUserInputs.role}`}
-                          label="Role"
+                          label={RegistrationDict[userLanguage]['role']}
                           listClassName="h-28"
                           id="role"
                           isRequired
@@ -667,10 +674,11 @@ const Registration = ({
                           {!classId && (
                             <div className="sm:col-span-3 p-2">
                               <DropdownForm
+                                dataCy="class"
                                 style={true}
                                 handleChange={handleClassChange}
                                 userInfo={`${newUserInputs.class.name}`}
-                                label="Class"
+                                label={RegistrationDict[userLanguage]['class']}
                                 id="class"
                                 isRequired
                                 items={instClasses}
@@ -681,11 +689,13 @@ const Registration = ({
 
                           <div className="sm:col-span-3 p-2">
                             <div>
-                              <Label label="Status" />
+                              <Label label={RegistrationDict[userLanguage]['status']} />
                               <Selector
                                 selectedItem={newUserInputs?.status?.name}
                                 list={status}
-                                placeholder={'Choose Status'}
+                                placeholder={
+                                  RegistrationDict[userLanguage]['statusPlaceholder']
+                                }
                                 onChange={onStatusChange}
                                 labelTextClass="text-m"
                               />
@@ -694,9 +704,12 @@ const Registration = ({
 
                           <div className="sm:col-span-3 p-2">
                             <div>
-                              <Label label="Choose Pace" />
+                              <Label
+                                label={RegistrationDict[userLanguage]['paceLabel']}
+                              />
                               <CheckBox
-                                label="Self Paced"
+                                dataCy="self-paced"
+                                label={RegistrationDict[userLanguage]['paceCheckBox']}
                                 className="group:hover:bg-gray-500"
                                 value={newUserInputs.isSelfPaced}
                                 onChange={(e) => handleChangeSelfPaced(e.target.checked)}

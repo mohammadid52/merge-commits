@@ -37,6 +37,31 @@ describe(
         cy.url().should('contain', urlConfig.dashboardURL);
       }
     );
+
+    it(
+      'Successfull login as self paced student',
+      {
+        defaultCommandTimeout: 20000
+      },
+      function () {
+        cy.login(
+          loginConfig.selfPacedStudent.username,
+          loginConfig.selfPacedStudent.password
+        );
+        cy.url().should('contain', urlConfig.dashboardURL);
+      }
+    );
+
+    it(
+      'Successfull login as builder',
+      {
+        defaultCommandTimeout: 20000
+      },
+      function () {
+        cy.login(loginConfig.builder.username, loginConfig.builder.password);
+        cy.url().should('contain', urlConfig.dashboardURL);
+      }
+    );
   }
 );
 
