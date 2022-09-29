@@ -116,9 +116,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               ? 'iconoclast:bg-main text-white'
               : 'hover:bg-indigo-100 hover:text-indigo-400'
           }`}>
-          <span className={`${isSelected(item.name) ? 'pl-1' : 'pl-4'} block truncate`}>
-            {item.name}
-          </span>
+          <span className={`block truncate`}>{item.name}</span>
           {/* {isSelected(item.name) && (
             <span className={`text-white relative w-auto flex items-center`}>
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

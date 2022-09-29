@@ -21,6 +21,12 @@
   }
 }
 
+.hover-text-white {
+  &:hover {
+    color: white !important;
+  }
+}
+
 /*
   NOTE: This file should be converted into simple css file and
   should integrate tailwind specific styling methods.

@@ -286,20 +286,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
-  // useEffect(() => {
-  //   if (state.roomData.lessons?.length > 0) {
-  //     setLessonGroupCount({
-  //       open: openLessons.length,
-  //       completed: completedLessons.length,
-  //     });
-  //   } else {
-  //     setLessonGroupCount({
-  //       open: 0,
-  //       completed: 0,
-  //     });
-  //   }
-  // }, [state.roomData.lessons]);
-
   // ##################################################################### //
   // ###################### TEACHER SYLLABUS CONTROL ##################### //
   // ##################################################################### //
