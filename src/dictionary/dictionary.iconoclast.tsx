@@ -2742,6 +2742,21 @@ const RegistrationDict: any = {
     email: 'Email',
     emailplaceholder: 'email@email.com',
     GROUP_PLACEHOLDER: 'Select group for student',
+    role: 'Role',
+    roles: {
+      sup: 'Super Admin',
+      adm: 'Admin',
+      bld: 'Builder',
+      flw: 'Fellow',
+      crd: 'Coordinator',
+      tr: 'Teacher',
+      st: 'Student'
+    },
+    class: 'Class',
+    status: 'Status',
+    statusPlaceholder: 'Choose Status',
+    paceLabel: 'Choose Pace',
+    paceCheckBox: 'Self Paced',
     button: {
       submit: 'Submit'
     },

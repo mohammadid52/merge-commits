@@ -1,8 +1,11 @@
-/// <reference types="cypress" />
-
 import {loginConfig, urlConfig} from '../config';
+// import {RegistrationDict} from '../../../src/dictionary/dictionary.demo';
+import {getClientKey, getDictionary} from '../../support/e2e';
 
 const uniqueId = Date.now().toString();
+// @ts-ignore
+const {RegistrationDict} = getDictionary(getClientKey());
+const userLanguage = 'EN';
 
 const randomDetails = () => {
   const firstName = `cypress-${uniqueId}`;
@@ -21,15 +24,15 @@ const dropdownDetail = {
 };
 
 const newUserFields = {
-  firstName: 'First Name',
-  lastName: 'Last Name',
-  email: 'Email',
-  role: 'Role',
-  roleButton: 'Choose One',
-  roleItem: 'Student',
-  class: 'Class',
-  status: 'Status',
-  pace: 'Choose Pace'
+  firstName: RegistrationDict[userLanguage]['firstname'],
+  lastName: RegistrationDict[userLanguage]['lastname'],
+  email: RegistrationDict[userLanguage]['email'],
+  role: RegistrationDict[userLanguage]['role'],
+  // roleButton: 'Choose One',
+  roleItem: RegistrationDict[userLanguage]['roles']['st'],
+  class: RegistrationDict[userLanguage]['class'],
+  status: RegistrationDict[userLanguage]['status'],
+  pace: RegistrationDict[userLanguage]['paceLabel']
 };
 
 const newUserCreateFields = {
@@ -70,27 +73,51 @@ describe('Student flow', () => {
     cy.get(`label:contains(${newUserFields.lastName})`).should('exist');
     cy.get(`label:contains(${newUserFields.email})`).should('exist');
     cy.get(`label:contains(${newUserFields.role})`).should('exist');
-    cy.get(`button:contains(${newUserFields.roleButton})`).click();
-    cy.get(`li:contains(${newUserFields.roleItem})`).click();
-    cy.get(`button:contains(${newUserFields.roleItem})`).should('exist');
+    cy.dataCy('dropdown-role').click();
+    cy.dataCy('dropdown-item-role-5').click();
+    cy.dataCy('dropdown-role').should('contain', `${newUserFields.roleItem}`);
     cy.get(`label:contains(${newUserFields.class})`).should('exist');
     cy.get(`label:contains(${newUserFields.status})`).should('exist');
     cy.get(`label:contains(${newUserFields.pace})`).should('exist');
   });
 
-  it('should register new user', {defaultCommandTimeout: 20000}, function () {
+  it('should register new user student', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(urlConfig.registerURL);
     cy.get(`input#${newUserCreateFields.firstName}`).type(randomDetails().firstName);
     cy.get(`input#${newUserCreateFields.lastName}`).type(randomDetails().lastName);
     cy.get(`input#${newUserCreateFields.email}`).type(randomDetails().email);
-    cy.get(`button:contains(${newUserFields.roleButton})`).click();
-    cy.get(`li:contains(${newUserFields.roleItem})`).click();
-    cy.get(`button:contains(${newUserCreateFields.classButton})`).click();
-    cy.get(`li:contains(${newUserCreateFields.classItem})`).click();
+    cy.dataCy('dropdown-role').click();
+    cy.dataCy('dropdown-item-role-5').click();
+    cy.dataCy('dropdown-class').click();
+    cy.dataCy('dropdown-item-class-0').click();
     cy.get(`button:contains(${newUserCreateFields.statusButton})`).click();
     cy.get(`li:contains(${newUserCreateFields.statusItem})`).click();
     cy.get(`input[name=${newUserCreateFields.paceItem}]`).click();
+    cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
+    cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
+  });
+
+  it('should register new user (builder)', {defaultCommandTimeout: 20000}, function () {
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(urlConfig.registerURL);
+    cy.get(`input#${newUserCreateFields.firstName}`).type(randomDetails().firstName);
+    cy.get(`input#${newUserCreateFields.lastName}`).type(randomDetails().lastName);
+    cy.get(`input#${newUserCreateFields.email}`).type(randomDetails().email);
+    cy.dataCy('dropdown-role').click();
+    cy.dataCy('dropdown-item-role-1').click();
+    cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
+    cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
+  });
+
+  it('should register new user (fellow)', {defaultCommandTimeout: 20000}, function () {
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(urlConfig.registerURL);
+    cy.get(`input#${newUserCreateFields.firstName}`).type(randomDetails().firstName);
+    cy.get(`input#${newUserCreateFields.lastName}`).type(randomDetails().lastName);
+    cy.get(`input#${newUserCreateFields.email}`).type(randomDetails().email);
+    cy.dataCy('dropdown-role').click();
+    cy.dataCy('dropdown-item-role-2').click();
     cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
     cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
   });
