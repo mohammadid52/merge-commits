@@ -695,7 +695,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             </ErrorBoundary>
           )}
 
-          <StudentNavigationForMobile />
+          {/* <StudentNavigationForMobile /> */}
 
           {lessonDataLoaded && (
             <Foot

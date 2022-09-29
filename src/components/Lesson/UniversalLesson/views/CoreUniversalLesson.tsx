@@ -22,7 +22,7 @@ const CoreUniversalLesson = () => {
     <div
       className={`${
         !isInLesson ? 'h-full overflow-hidden overflow-y-scroll' : ''
-      } bg-dark-gray relative  sm:max-w-132 max-w-80   md:max-w-164 mx-auto`}>
+      } bg-dark-gray relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <ErrorBoundary fallback={<h1>Error in the LessonRowComposer</h1>}>
