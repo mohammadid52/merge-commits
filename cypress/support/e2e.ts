@@ -14,7 +14,23 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
+import * as iconoclastDict from '../../src/dictionary/dictionary.iconoclast';
+import * as curateDict from '../../src/dictionary/dictionary.curate';
+import * as demoDict from '../../src/dictionary/dictionary.demo';
+import {getClientKey} from '../../src/utilities/strings';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+const getDictionary = (clientKey: string) => {
+  if (clientKey === 'iconoclast') {
+    return iconoclastDict;
+  } else if (clientKey === 'curate') {
+    return curateDict;
+  } else if (clientKey === 'demo') {
+    return demoDict;
+  }
+};
+
+export {getClientKey, getDictionary};
