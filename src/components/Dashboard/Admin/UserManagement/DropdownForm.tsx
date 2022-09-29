@@ -29,7 +29,7 @@ const DropdownForm = (props: DropdownProps) => {
     id,
     isRequired,
     style,
-    noOptionMessage,
+    noOptionMessage
   } = props;
 
   const getOptions = () => {
@@ -97,6 +97,7 @@ const DropdownForm = (props: DropdownProps) => {
       <div className="relative">
         <span className="inline-block w-full rounded-md shadow-sm">
           <button
+            data-cy={`dropdown-button`}
             onClick={() => setShowItems(!showItems)}
             type="button"
             aria-haspopup="listbox"
@@ -132,6 +133,7 @@ const DropdownForm = (props: DropdownProps) => {
               {items.length ? (
                 items.map((item: {code: string; name: string}, key: number) => (
                   <li
+                    data-cy={`dropdown-item-${key}`}
                     key={key}
                     onClick={() => selection(item)}
                     id={id}
