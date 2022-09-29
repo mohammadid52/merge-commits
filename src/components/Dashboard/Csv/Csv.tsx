@@ -1,21 +1,24 @@
 import Loader from '@atoms/Loader';
-import {Transition} from '@headlessui/react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
+import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
+import {getImageFromS3Static} from '@utilities/services';
 import {orderBy, uniqBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
 import {CSVLink} from 'react-csv';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getFilterORArray
+} from '../../../utilities/strings';
 import Selector from '../../Atoms/Form/Selector';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
-import ClickAwayListener from 'react-click-away-listener';
 
 interface ICsvProps {
   institutionId?: string;
@@ -151,6 +154,21 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   }, [institutionId]);
 
+  const insertExtraData = (cr: any) => {
+    const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+    return {
+      institutionName: cr?.institution?.name || '',
+      teacher: {
+        name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+        image: teacherImage
+      },
+      courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+      status: cr?.status
+    };
+  };
+
+  const [activeUnits, setActiveUnits] = useState([]);
+
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
     let instCRs: any = [];
@@ -158,7 +176,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     let classrooms: any = await API.graphql(
       graphqlOperation(customQueries.listRoomsDashboard)
     );
+
     classrooms = classrooms?.data.listRooms?.items || [];
+
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
         cr.curricula?.items &&
@@ -167,18 +187,18 @@ const Csv = ({institutionId}: ICsvProps) => {
           ? cr.curricula?.items[0].curriculum
           : null;
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+
       return {
         id: cr.id,
-        institutionName: cr?.institution?.name || '',
-        teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
-        courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+
         name: cr.name,
-        status: cr?.status,
         value: cr.name,
         class: {...cr.class},
-        curriculum
+        curriculum,
+        ...insertExtraData(cr)
       };
     });
+
     setClassRoomsList(classrooms);
     setInstClassRooms(instCRs);
     setClassRoomLoading(false);
@@ -209,13 +229,11 @@ const Csv = ({institutionId}: ICsvProps) => {
           return {
             id: cr.id,
             name: cr.name,
-            status: cr?.status,
-            institutionName: cr?.institution?.name || '',
-            teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
-            courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+
             value: cr.name,
             class: {...cr.class},
-            curriculum
+            curriculum,
+            ...insertExtraData(cr)
           };
         });
         setClassRoomsList(classrooms);
@@ -998,7 +1016,10 @@ const Csv = ({institutionId}: ICsvProps) => {
             selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
             placeholder="select classroom"
             list={instClassRooms}
-            onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
+            onChange={(value, name, id) => {
+              setHoveringItem({});
+              onClassRoomSelect(id, name, value);
+            }}
           />
           {currentSelectedClassroomData && (
             <ClickAwayListener onClickAway={() => setHoveringItem({})}>
@@ -1006,7 +1027,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                 style={{top: '2rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
                 className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
                 show={Boolean(hoveringItem && hoveringItem.name)}>
-                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4 min-h-72 min-w-56 max-w-56 w-auto">
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4 min-h-72 min-w-70 max-w-70 w-auto">
                   <DataValue
                     title={'Institution Name'}
                     content={currentSelectedClassroomData?.institutionName}
@@ -1017,7 +1038,19 @@ const Csv = ({institutionId}: ICsvProps) => {
                   />
                   <DataValue
                     title={'Teacher'}
-                    content={currentSelectedClassroomData.teacherName}
+                    content={
+                      <div className="flex items-center justify-center w-auto">
+                        <span className="w-auto">
+                          <img
+                            src={currentSelectedClassroomData.teacher.image}
+                            className="h-6 w-6 rounded-full"
+                          />
+                        </span>
+                        <p className="w-auto ml-2">
+                          {currentSelectedClassroomData.teacher.name}
+                        </p>
+                      </div>
+                    }
                   />
                   <DataValue
                     title={'Course Name'}
@@ -1059,6 +1092,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           list={surveys}
           onChange={(value, name, id) => onSurveySelect(id, name, value)}
         />
+
         <button
           type="button"
           className={`col-end-5 ${

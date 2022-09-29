@@ -1,11 +1,9 @@
-import {Transition} from '@headlessui/react';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import Popover from '../Popover';
 import Label from './Label';
 
 interface SelectorProps {
@@ -38,6 +36,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     additionalClass = '',
     btnClass,
     disabled,
+
     arrowHidden,
     placeholder,
     error = '',
@@ -102,8 +101,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     return (
       <>
         <li
-          onMouseEnter={() => setHoveringItem && setHoveringItem(item)}
-          onMouseLeave={() => setHoveringItem && setHoveringItem({})}
+          onMouseEnter={() => {
+            setHoveringItem && setHoveringItem(item);
+          }}
+          onMouseLeave={() => {
+            setHoveringItem && setHoveringItem({});
+          }}
           onClick={() => updateSelectedItem(item.value, item.name, item.id)}
           id={item.id}
           tabIndex={-1}
@@ -116,7 +119,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           <span className={`${isSelected(item.name) ? 'pl-1' : 'pl-4'} block truncate`}>
             {item.name}
           </span>
-          {isSelected(item.name) && (
+          {/* {isSelected(item.name) && (
             <span className={`text-white relative w-auto flex items-center`}>
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path
@@ -126,7 +129,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 />
               </svg>
             </span>
-          )}
+          )} */}
         </li>
       </>
     );

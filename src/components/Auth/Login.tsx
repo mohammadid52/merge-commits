@@ -1,44 +1,29 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Auth from '@aws-amplify/auth';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-  AiOutlineLoading3Quarters
-} from 'react-icons/ai';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
-import {getAsset} from '../../assets';
-import {GlobalContext} from '@contexts/GlobalContext';
 import * as customMutations from '../../customGraphql/customMutations';
 import * as customQueries from '../../customGraphql/customQueries';
-import useDeviceDetect from '../../customHooks/deviceDetect';
-import useDictionary from '../../customHooks/dictionary';
 import * as queries from '../../graphql/queries';
 import {createUserUrl} from '../../utilities/urls';
 
+import Buttons from '@components/Atoms/Buttons';
+import FormInput from '@components/Atoms/Form/FormInput';
 import AuthCard from './AuthCard';
 import RememberMe from './RememberMe';
-import FormInput from '@components/Atoms/Form/FormInput';
-import Buttons from '@components/Atoms/Buttons';
 
 interface LoginProps {
   updateAuthState: Function;
 }
 
 const Login = ({updateAuthState}: LoginProps) => {
-  const {browser: detectedBrowser} = useDeviceDetect();
-  const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
-    detectedBrowser === 'Safari'
-  );
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
-  const history = useHistory();
-  const {userLanguage, clientKey, dispatch} = useContext(GlobalContext);
-  const {AuthDict} = useDictionary(clientKey);
+
+  const {dispatch} = useGlobalContext();
 
   let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
@@ -49,7 +34,7 @@ const Login = ({updateAuthState}: LoginProps) => {
     email: '',
     password: ''
   });
-  const [passToggle, setPassToggle] = useState(false);
+
   const [isChecked, setIsChecked] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
   const [newUser, setNewUser] = useState(false);
@@ -340,7 +325,7 @@ const Login = ({updateAuthState}: LoginProps) => {
   }, []);
 
   return (
-    <AuthCard message={message} title="Login">
+    <AuthCard message={message} title={createPassword ? 'Create your password' : 'Login'}>
       {!createPassword ? (
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">
@@ -391,77 +376,27 @@ const Login = ({updateAuthState}: LoginProps) => {
         </>
       ) : (
         <>
-          <div
-            className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-            <p> Create your password </p>
-          </div>
-          <div className="h-3.5/10 flex-grow flex flex-col justify-center">
-            <div className="w-full mb-2 flex flex-col justify-around items-center">
-              {message.show ? (
-                <p
-                  className={`text-xs text-center ${
-                    message.type === 'success'
-                      ? 'text-green-500'
-                      : message.type === 'error'
-                      ? 'text-red-500'
-                      : null
-                  }`}>
-                  {message.message}
-                </p>
-              ) : null}
-            </div>
-            <div className="input relative w-full mb-4">
-              <div className="absolute w-6 right-0 transform -translate-x-1">
-                <div
-                  onClick={() => setPassToggle((prevToggle) => !prevToggle)}
-                  className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
-                  {passToggle ? (
-                    <IconContext.Provider value={{className: 'w-auto '}}>
-                      <AiOutlineEye size={24} />
-                    </IconContext.Provider>
-                  ) : (
-                    <IconContext.Provider value={{className: 'w-auto'}}>
-                      <AiOutlineEyeInvisible size={24} />
-                    </IconContext.Provider>
-                  )}
-                </div>
-              </div>
-              <label className="hidden" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
-                placeholder="Password"
-                type={passToggle ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={input.password}
-                onChange={handleChange}
-                onKeyDown={handleEnterSetPassword}
-              />
-            </div>
-            <div className="relative h-4.5/10 flex flex-col justify-center items-center">
-              <button
+          <div className="">
+            <FormInput
+              dataCy="password"
+              label="Password"
+              className="mb-4"
+              placeHolder="Enter new password"
+              type="password"
+              value={input.password}
+              id="password"
+              onChange={handleChange}
+              onKeyDown={handleEnterSetPassword}
+            />
+
+            <div className="relative flex flex-col justify-center items-center">
+              <Buttons
                 disabled={isToggled}
-                className={`p-3 mb-4 ${getAsset(
-                  clientKey,
-                  'authButtonColor'
-                )} text-gray-200 rounded-xl font-semibold`}
-                onKeyPress={handleEnterSetPassword}
-                onClick={handleSetPassword}>
-                {isToggled ? (
-                  <IconContext.Provider
-                    value={{
-                      size: '1.5rem',
-                      color: '#ffffff',
-                      className: 'relative animate-spin'
-                    }}>
-                    <AiOutlineLoading3Quarters />
-                  </IconContext.Provider>
-                ) : (
-                  'Set Password'
-                )}
-              </button>
+                onClick={handleSetPassword}
+                btnClass="w-full py-3"
+                loading={isToggled}
+                label={isToggled ? 'Loading' : 'Set Password'}
+              />
             </div>
           </div>
         </>
