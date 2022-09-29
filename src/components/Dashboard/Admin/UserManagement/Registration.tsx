@@ -640,6 +640,7 @@ const Registration = ({
                     {!classId && (
                       <div className="sm:col-span-3 p-2">
                         <DropdownForm
+                          dataCy="role"
                           style={true}
                           handleChange={handleChangeRole}
                           userInfo={`${newUserInputs.role}`}
@@ -673,6 +674,7 @@ const Registration = ({
                           {!classId && (
                             <div className="sm:col-span-3 p-2">
                               <DropdownForm
+                                dataCy="class"
                                 style={true}
                                 handleChange={handleClassChange}
                                 userInfo={`${newUserInputs.class.name}`}
@@ -706,6 +708,7 @@ const Registration = ({
                                 label={RegistrationDict[userLanguage]['paceLabel']}
                               />
                               <CheckBox
+                                dataCy="self-paced"
                                 label={RegistrationDict[userLanguage]['paceCheckBox']}
                                 className="group:hover:bg-gray-500"
                                 value={newUserInputs.isSelfPaced}

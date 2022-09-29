@@ -1,4 +1,5 @@
 import Loader from '@atoms/Loader';
+import {Transition} from '@headlessui/react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
@@ -14,6 +15,7 @@ import Selector from '../../Atoms/Form/Selector';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface ICsvProps {
   institutionId?: string;
@@ -27,6 +29,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const [instClassRooms, setInstClassRooms] = useState([]);
   const [classRoomsList, setClassRoomsList] = useState([]);
+
   const [selectedClassRoom, setSelectedClassRoom] = useState(null);
 
   const [selectedClass, setSelectedClass] = useState(null);
@@ -166,7 +169,11 @@ const Csv = ({institutionId}: ICsvProps) => {
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
       return {
         id: cr.id,
+        institutionName: cr?.institution?.name || '',
+        teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+        courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
         name: cr.name,
+        status: cr?.status,
         value: cr.name,
         class: {...cr.class},
         curriculum
@@ -202,6 +209,10 @@ const Csv = ({institutionId}: ICsvProps) => {
           return {
             id: cr.id,
             name: cr.name,
+            status: cr?.status,
+            institutionName: cr?.institution?.name || '',
+            teacherName: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+            courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
             value: cr.name,
             class: {...cr.class},
             curriculum
@@ -618,8 +629,6 @@ const Csv = ({institutionId}: ICsvProps) => {
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-    // console.log('combined - - - -', combined);
-
     if (theNextToken) {
       combined = await getStudentsSurveyQuestionsResponse(
         lessonId,
@@ -854,41 +863,12 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const [roomList, setRoomList] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const fetchRoomList = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard)
-      );
-
-      const newList = list.data.listRooms.items;
-
-      setRoomList(newList);
-
-      setLoading(false);
-    } catch {
-      setLoading(false);
-    }
-  };
-
-  const {
-    user: {associateInstitute}
-  } = useAuth();
-
-  // useEffect(() => {
-  //   if (institutionId === associateInstitute[0].institution.id) {
-  //     fetchRoomList();
-  //   }
-  // }, [institutionId]);
-
   const Table = () => {
     return (
       <div className="flex flex-col">
         <div className="overflow-x-auto ">
           <div className="py-2 align-middle inline-block min-w-full ">
-            <div className="flex flex-1 overflow-scroll shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div className="flex flex-1 shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
@@ -948,11 +928,9 @@ const Csv = ({institutionId}: ICsvProps) => {
     );
   };
 
-  const fieldClass = 'p-3 flex justify-center items-center w-full';
-
   const Card = ({keyItem, value}: any) => {
     return (
-      <div className="flex relative bg-white rounded-lg shadow justify-center items-center h-20 shadow inner_card">
+      <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
         <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
           {keyItem}:
         </p>
@@ -963,6 +941,28 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const isSuperAdmin = state.user.role === 'SUP';
 
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const currentSelectedClassroomData =
+    hoveringItem &&
+    hoveringItem?.name &&
+    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
+
+  const DataValue = ({
+    title,
+    content
+  }: {
+    title: string;
+    content: string | React.ReactNode;
+  }) => {
+    return (
+      <div className="w-auto flex mb-2 flex-col items-start justify-start">
+        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
@@ -970,9 +970,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           <h3 className="text-lg leading-6 text-gray-600 w-auto">
             {CsvDict[userLanguage]['TITLE']}
           </h3>
-          {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
-            <span>{CsvDict[userLanguage]['TITLE']}</span>
-          </div> */}
+
           <div className="w-auto">
             <span className={`mr-0 float-right text-gray-600 text-right`}>
               <DateAndTime />
@@ -980,11 +978,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
       </div>
-      {/* <SectionTitleV3
-        fontSize="2xl"
-        fontStyle="bold"
-        title={CsvDict[userLanguage]['SELECT_FILTERS']}
-      /> */}
+
       <div className="grid grid-cols-4 gap-x-4">
         {isSuperAdmin && (
           <Selector
@@ -996,14 +990,57 @@ const Csv = ({institutionId}: ICsvProps) => {
           />
         )}
 
-        <Selector
-          disabled={!selectedInst?.id}
-          loading={classRoomLoading}
-          selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-          placeholder="select classroom"
-          list={instClassRooms}
-          onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
-        />
+        <div className="w-auto relative">
+          <Selector
+            disabled={!selectedInst?.id}
+            setHoveringItem={setHoveringItem}
+            loading={classRoomLoading}
+            selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+            placeholder="select classroom"
+            list={instClassRooms}
+            onChange={(value, name, id) => onClassRoomSelect(id, name, value)}
+          />
+          {currentSelectedClassroomData && (
+            <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+              <Transition
+                style={{top: '2rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
+                className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
+                show={Boolean(hoveringItem && hoveringItem.name)}>
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4 min-h-72 min-w-56 max-w-56 w-auto">
+                  <DataValue
+                    title={'Institution Name'}
+                    content={currentSelectedClassroomData?.institutionName}
+                  />
+                  <DataValue
+                    title={'Clasroom Name'}
+                    content={currentSelectedClassroomData?.name}
+                  />
+                  <DataValue
+                    title={'Teacher'}
+                    content={currentSelectedClassroomData.teacherName}
+                  />
+                  <DataValue
+                    title={'Course Name'}
+                    content={currentSelectedClassroomData.courseName}
+                  />
+                  <DataValue
+                    title={'Status'}
+                    content={
+                      <p
+                        className={`${
+                          currentSelectedClassroomData.status === 'ACTIVE'
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        } lowercase`}>
+                        {currentSelectedClassroomData.status}
+                      </p>
+                    }
+                  />
+                </div>
+              </Transition>
+            </ClickAwayListener>
+          )}
+        </div>
 
         <Selector
           loading={unitsLoading}
