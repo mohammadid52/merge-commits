@@ -6,7 +6,7 @@ const failPass = 'panda@12';
 const loginErrorMessage = 'The email or password you entered was not correct';
 
 describe(
-  'Should Login',
+  'Student logs in',
   {
     defaultCommandTimeout: 20000
   },
