@@ -629,8 +629,6 @@ const Csv = ({institutionId}: ICsvProps) => {
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-    // console.log('combined - - - -', combined);
-
     if (theNextToken) {
       combined = await getStudentsSurveyQuestionsResponse(
         lessonId,
