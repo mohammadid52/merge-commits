@@ -1,5 +1,6 @@
 import Loader from '@atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
 import * as queries from '@graphql/queries';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
@@ -11,10 +12,7 @@ import {CSVLink} from 'react-csv';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  getFilterORArray
-} from '../../../utilities/strings';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import Selector from '../../Atoms/Form/Selector';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
@@ -163,18 +161,51 @@ const Csv = ({institutionId}: ICsvProps) => {
         image: teacherImage
       },
       courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
-      status: cr?.status
+      status: cr?.status,
+      activeSyllabus: cr?.activeSyllabus
     };
   };
 
   const [activeUnits, setActiveUnits] = useState([]);
 
+  const fetchActiveUnits = async (crList: any) => {
+    const arrayOfActiveUnits = crList?.map((_c: {activeSyllabus: string | null}) => {
+      if (_c.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
+    });
+
+    try {
+      let curriculumUnits: any = await API.graphql(
+        graphqlOperation(customQueries.listUnits, {
+          filter: {or: arrayOfActiveUnits}
+        })
+      );
+      let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+
+      units = units.map((syl: any) => {
+        let unitData = syl.unit;
+        return {id: unitData.id, name: unitData.name};
+      });
+
+      setActiveUnits(units);
+    } catch (error) {
+      console.error('error at fetchActiveUnits Csv.tsx', error);
+    }
+  };
+
+  const {authId, isTeacher, isFellow, instId} = useAuth();
+
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
     let instCRs: any = [];
 
+    const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
+    const variablesForBLD_ADM = {filter: {institutionID: {eq: instId}}};
+
     let classrooms: any = await API.graphql(
-      graphqlOperation(customQueries.listRoomsDashboard)
+      graphqlOperation(
+        customQueries.listRoomsDashboard,
+        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+      )
     );
 
     classrooms = classrooms?.data.listRooms?.items || [];
@@ -201,6 +232,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
     setClassRoomsList(classrooms);
     setInstClassRooms(instCRs);
+    fetchActiveUnits(classrooms);
     setClassRoomLoading(false);
   };
 
@@ -297,7 +329,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
       let cCheckpoints: any = [];
-      console.log('curricularCheckpoints', curricularCheckpoints);
+
       curricularCheckpoints.map((cc: any) => {
         cCheckpoints.push(cc.checkpoint.id);
         let questions = cc.checkpoint?.questions?.items || [];
@@ -966,6 +998,10 @@ const Csv = ({institutionId}: ICsvProps) => {
     hoveringItem?.name &&
     classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
 
+  const currentActiveUnit =
+    currentSelectedClassroomData &&
+    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+
   const DataValue = ({
     title,
     content
@@ -1057,17 +1093,8 @@ const Csv = ({institutionId}: ICsvProps) => {
                     content={currentSelectedClassroomData.courseName}
                   />
                   <DataValue
-                    title={'Status'}
-                    content={
-                      <p
-                        className={`${
-                          currentSelectedClassroomData.status === 'ACTIVE'
-                            ? 'text-green-500'
-                            : 'text-yellow-500'
-                        } lowercase`}>
-                        {currentSelectedClassroomData.status}
-                      </p>
-                    }
+                    title={'Active Unit'}
+                    content={currentActiveUnit?.name || 'None'}
                   />
                 </div>
               </Transition>
