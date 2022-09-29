@@ -9,7 +9,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`w-full h-48 md:h-auto sm:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow relative`}
+      className={`w-full h-48 bg-top md:bg-center md:h-auto sm:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow relative`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
@@ -19,18 +19,10 @@ const SideImage = (props: LessonCardProps) => {
               : lessonProps.lesson?.cardImage
             : null
         })`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: 'cover'
       }}>
       {lessonProps?.lesson?.cardCaption && (
         <div className="">
-          {/* <div className="h-1/10 pl-6">
-          <div
-            className="tracking-widest text-center text-2xl md:text-lg text-gray-300"
-            style={{textShadow: '1px 1px black'}}>
-            {lessonProps?.lesson?.cardCaption}
-          </div>
-        </div> */}
           <div className="flex flex-row-reverse ">
             <h2
               className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest absolute bottom-1 px-3 text-gray-200`}

@@ -13,8 +13,28 @@ const BottomBar = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
+    lessonType
   } = props;
+
+  const startButtonProps = {
+    preview: preview,
+    roomID: roomID,
+    isTeacher: isTeacher,
+    lessonKey: lessonProps ? lessonProps.lessonID : null,
+    isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
+    open: lessonProps && lessonProps.status === 'Active' ? true : false,
+    isCompleted:
+      activeRoomInfo?.completedLessons?.findIndex(
+        (item: {lessonID?: string | null; time?: string | null}) =>
+          item.lessonID === lessonProps.lessonID
+      ) > -1,
+    accessible: accessible,
+    type: lessonProps.lesson.type,
+    activeRoomInfo: activeRoomInfo,
+    lessonProps: lessonProps?.lesson,
+    syllabusProps: syllabusProps,
+    isUsed: lessonProps?.lesson?.isUsed
+  };
 
   return (
     <div>
@@ -28,13 +48,13 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div
-            className={`w-auto mx-2 sm:mx-4 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+            className={`w-auto mx-1 sm:mx-4 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
 
         {/* TEACHER */}
-        <div className={`flex justify-center items-center sm:w-5/10 w-3/5 mr-2`}>
+        <div className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}>
           <div className="w-auto text-gray-500">
             {lessonType !== 'survey' && (
               <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
@@ -57,7 +77,7 @@ const BottomBar = (props: LessonCardProps) => {
           {/*
            * SHOW TEACHER NAME
            */}
-          <div className={`w-auto mx-2 sm:mx-4 text-sm sm:text-base text-gray-500`}>
+          <div className={`w-auto mx-1 sm:mx-4 text-sm sm:text-base text-gray-500`}>
             {lessonType !== 'survey' && typeof activeRoomInfo !== 'undefined'
               ? `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
               : null}
@@ -71,50 +91,12 @@ const BottomBar = (props: LessonCardProps) => {
         )}
 
         {/* START */}
-        <div className="flex w-3.3/10 hidden sm:block">
-          <Start
-            preview={preview}
-            roomID={roomID}
-            isTeacher={isTeacher}
-            lessonKey={lessonProps ? lessonProps.lessonID : null}
-            isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
-            open={lessonProps && lessonProps.status === 'Active' ? true : false}
-            isCompleted={
-              activeRoomInfo?.completedLessons?.findIndex(
-                (item: {lessonID?: string | null; time?: string | null}) =>
-                  item.lessonID === lessonProps.lessonID
-              ) > -1
-            }
-            accessible={accessible}
-            type={lessonProps.lesson.type}
-            activeRoomInfo={activeRoomInfo}
-            lessonProps={lessonProps?.lesson}
-            syllabusProps={syllabusProps}
-            isUsed={lessonProps?.lesson?.isUsed}
-          />
+        <div className="w-3.3/10 hidden sm:block">
+          <Start {...startButtonProps} />
         </div>
       </div>
-      <div className="w-full block sm:hidden">
-        <Start
-          preview={preview}
-          roomID={roomID}
-          isTeacher={isTeacher}
-          lessonKey={lessonProps ? lessonProps.lessonID : null}
-          isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
-          open={lessonProps && lessonProps.status === 'Active' ? true : false}
-          isCompleted={
-            activeRoomInfo?.completedLessons?.findIndex(
-              (item: {lessonID?: string | null; time?: string | null}) =>
-                item.lessonID === lessonProps.lessonID
-            ) > -1
-          }
-          accessible={accessible}
-          type={lessonProps.lesson.type}
-          activeRoomInfo={activeRoomInfo}
-          lessonProps={lessonProps?.lesson}
-          syllabusProps={syllabusProps}
-          isUsed={lessonProps?.lesson?.isUsed}
-        />
+      <div className="w-full  block sm:hidden">
+        <Start {...startButtonProps} />
       </div>
     </div>
   );

@@ -1125,7 +1125,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         <div
           className={`${
             breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
-          } relative lesson-body-container`}>
+          } relative lesson-body-container `}>
           {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
               <LessonPageLoader />
@@ -1135,7 +1135,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
                 <CoreUniversalLesson />
-                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
               </div>
             </ErrorBoundary>
           )}

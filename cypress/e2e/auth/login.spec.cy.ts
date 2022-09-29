@@ -1,13 +1,8 @@
 /// <reference types="cypress" />
 
-// test cred
-const studentEmail = 'demostudent@zoiq.io';
-const teacherEmail = 'demoteacher@zoiq.io';
-const adminEmail = 'demoadmin@zoiq.io';
-const testPass = 'admin123';
-const failPass = 'admin@12';
-const dashboardURL = 'http://localhost:8085/dashboard';
-const loginURL = 'http://localhost:8085/login';
+import {loginConfig, urlConfig} from '../config';
+
+const failPass = 'panda@12';
 const loginErrorMessage = 'The email or password you entered was not correct';
 
 describe(
@@ -17,14 +12,8 @@ describe(
   },
   () => {
     it('Successfull login as student', function () {
-      cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-      cy.get('input[placeholder="Email"]').type(studentEmail);
-      cy.get('button').contains('Enter').click();
-      cy.get('p').contains('Log In');
-      cy.get('input[placeholder="Password"]').type(testPass);
-      cy.get('button').contains('Login').click();
-      cy.url().should('contain', dashboardURL);
+      cy.login(loginConfig.student.username, loginConfig.student.password);
+      cy.url().should('contain', urlConfig.dashboardURL);
     });
 
     it(
@@ -33,14 +22,8 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-        cy.get('input[placeholder="Email"]').type(teacherEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('p').contains('Log In');
-        cy.get('input[placeholder="Password"]').type(testPass);
-        cy.get('button').contains('Login').click();
-        cy.url().should('contain', dashboardURL);
+        cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
+        cy.url().should('contain', urlConfig.dashboardURL);
       }
     );
 
@@ -50,14 +33,8 @@ describe(
         defaultCommandTimeout: 20000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-        cy.get('input[placeholder="Email"]').type(adminEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('p').contains('Log In');
-        cy.get('input[placeholder="Password"]').type(testPass);
-        cy.get('button').contains('Login').click();
-        cy.url().should('contain', dashboardURL);
+        cy.login(loginConfig.admin.username, loginConfig.admin.password);
+        cy.url().should('contain', urlConfig.dashboardURL);
       }
     );
   }
@@ -70,12 +47,7 @@ describe(
   },
   () => {
     it('Fail login as student', function () {
-      cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-      cy.get('input[placeholder="Email"]').type(studentEmail);
-      cy.get('button').contains('Enter').click();
-      cy.get('input[placeholder="Password"]').type(failPass);
-      cy.get('button').contains('Login').click();
+      cy.login(loginConfig.student.username, failPass);
       cy.get('p').should('contain', loginErrorMessage);
     });
 
@@ -85,12 +57,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-        cy.get('input[placeholder="Email"]').type(teacherEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('input[placeholder="Password"]').type(failPass);
-        cy.get('button').contains('Login').click();
+        cy.login(loginConfig.teacher.username, failPass);
         cy.get('p').should('contain', loginErrorMessage);
       }
     );
@@ -101,12 +68,7 @@ describe(
         defaultCommandTimeout: 10000
       },
       function () {
-        cy.visit('http://localhost:8085').get('p').contains('Verify Email');
-
-        cy.get('input[placeholder="Email"]').type(adminEmail);
-        cy.get('button').contains('Enter').click();
-        cy.get('input[placeholder="Password"]').type(failPass);
-        cy.get('button').contains('Login').click();
+        cy.login(loginConfig.admin.username, failPass);
         cy.get('p').should('contain', loginErrorMessage);
       }
     );

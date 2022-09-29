@@ -49,10 +49,8 @@ const Start: React.FC<StartProps> = ({
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
 
-  const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
-  const lessonState = gContext.lessonState;
 
   const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
@@ -424,16 +422,6 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const studentTeacherButtonTheme = () => {
-    if (isCompleted && !isOnDemand) {
-      return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
-    } else if (isActive || isOnDemand) {
-      return theme.btn.lessonStart;
-    } else {
-      return theme.btn.iconoclastIndigo;
-    }
-  };
-
   const onCloseModal = () => {
     setWarnModal({
       message: '',
@@ -458,7 +446,7 @@ const Start: React.FC<StartProps> = ({
   };
 
   return (
-    <div>
+    <div data-cy="survey-button">
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}
@@ -471,12 +459,9 @@ const Start: React.FC<StartProps> = ({
           (!open && !isTeacher && !isOnDemand) ||
           (!isActive && !isTeacher && !isOnDemand)
         }
-        overrideClass={true}
-        btnClass={`rounded 
-        ${studentTeacherButtonTheme()}
-        h-full w-full text-xs focus:outline-none ${
+        btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out py-2 sm:py-auto`}
+        } `}
       />
       {warnModal.show && (
         <ModalPopUp

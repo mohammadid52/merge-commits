@@ -19,6 +19,7 @@ interface ButtonProps {
   loading?: boolean;
   loadingText?: string;
   insideElement?: React.ReactNode;
+  dataCy?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
@@ -37,12 +38,14 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     loading = false,
     loadingText = 'Loading...',
     insideElement = null,
+    dataCy
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <button
+      data-cy={dataCy}
       disabled={disabled || loading}
       type={type ? type : 'button'}
       style={customStyles}
@@ -50,7 +53,11 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       ${
         overrideClass
           ? ''
-          : 'font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto'
+          : `${
+              transparent
+                ? 'iconoclast:border-main  curate:border-main iconoclast:text-main curate:text-main hover-text-white'
+                : 'iconoclast:bg-main curate:bg-main'
+            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  hover:iconoclast:bg-500  hover:curate:bg-500 uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto`
       }
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 
@@ -66,8 +73,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
       {loading ? (
         <Loader withText={loadingText} className="w-auto text-gray-400" />
       ) : (
-        <>
-          {' '}
+        <div className="w-auto flex items-center justify-center">
           {Icon && iconBeforeLabel && (
             <span className="w-auto">
               <IconContext.Provider value={{color: '#ffffff'}}>
@@ -85,7 +91,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
               </IconContext.Provider>
             </span>
           ) : null}
-        </>
+        </div>
       )}
 
       {insideElement}

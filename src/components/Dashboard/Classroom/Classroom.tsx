@@ -286,20 +286,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state.roomData.lessons, state.roomData?.syllabus]);
 
-  // useEffect(() => {
-  //   if (state.roomData.lessons?.length > 0) {
-  //     setLessonGroupCount({
-  //       open: openLessons.length,
-  //       completed: completedLessons.length,
-  //     });
-  //   } else {
-  //     setLessonGroupCount({
-  //       open: 0,
-  //       completed: 0,
-  //     });
-  //   }
-  // }, [state.roomData.lessons]);
-
   // ##################################################################### //
   // ###################### TEACHER SYLLABUS CONTROL ##################### //
   // ##################################################################### //
@@ -406,18 +392,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         bannerImg={bannerImg}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
         <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
             <BreadCrums items={breadCrumsList} />
-            {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
-              <span>
-                {!isTeacher
-                  ? activeRoomName !== ''
-                    ? activeRoomName
-                    : classRoomDict[userLanguage]['TITLE']
-                  : null}
-                {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
-              </span>
-            </div> */}
+
             <div>
               <span
                 className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
@@ -430,7 +407,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {isTeacher && (
               <>
                 <SectionTitleV3
-                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
                   title={`${
@@ -464,7 +440,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {Boolean(activeRoomInfo?.activeSyllabus) && (
               <>
                 <SectionTitleV3
-                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
                   title={`${

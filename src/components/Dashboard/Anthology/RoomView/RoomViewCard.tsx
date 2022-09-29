@@ -29,7 +29,7 @@ const RoomViewCard = ({
   curriculumName,
   bannerImage,
   type,
-  name,
+  name
 }: IRoomViewCardProps) => {
   const noneSelected = mainSection === '' && sectionRoomID === '' && sectionTitle === '';
   return (
@@ -43,7 +43,9 @@ const RoomViewCard = ({
       }`}>
       {/* FRONT PAGE */}
       <div
-        className={`relative z-50 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 
+        className={`relative z-50 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250  ${
+          roomID === 'private' ? 'h-56 md:h-auto' : ''
+        }
       ${
         noneSelected
           ? 'shadow-lg scale-90'
@@ -114,7 +116,7 @@ const RoomViewCard = ({
 
       {/* BACK PAGE */}
       <div
-        className={`absolute z-40 top-0 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
+        className={`absolute h-72 md:h-auto z-40 top-0 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
       ${
         noneSelected
           ? 'shadow-lg scale-90'

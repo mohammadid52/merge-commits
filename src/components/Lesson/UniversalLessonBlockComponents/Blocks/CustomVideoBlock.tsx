@@ -66,7 +66,7 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
   }, [videoRef.current]);
 
   return (
-    <div id={id} data-id={dataIdAttribute} className={`px-4 py-5`}>
+    <div id={id} data-id={dataIdAttribute} className={`py-5`}>
       <video
         width={width}
         ref={videoRef}
