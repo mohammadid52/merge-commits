@@ -9,6 +9,7 @@ import {orderBy, uniqBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {CSVLink} from 'react-csv';
+import {BsDownload} from 'react-icons/bs';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
@@ -169,9 +170,11 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [activeUnits, setActiveUnits] = useState([]);
 
   const fetchActiveUnits = async (crList: any) => {
-    const arrayOfActiveUnits = crList?.map((_c: {activeSyllabus: string | null}) => {
-      if (_c.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
-    });
+    const arrayOfActiveUnits = crList
+      ?.filter((_c: {activeSyllabus: any}) => Boolean(_c.activeSyllabus))
+      .map((_c: {activeSyllabus: string | null}) => {
+        if (_c.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
+      });
 
     try {
       let curriculumUnits: any = await API.graphql(
@@ -199,7 +202,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     let instCRs: any = [];
 
     const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
-    const variablesForBLD_ADM = {filter: {institutionID: {eq: instId}}};
+    const variablesForBLD_ADM = {filter: {}};
 
     let classrooms: any = await API.graphql(
       graphqlOperation(
@@ -1060,10 +1063,10 @@ const Csv = ({institutionId}: ICsvProps) => {
           {currentSelectedClassroomData && (
             <ClickAwayListener onClickAway={() => setHoveringItem({})}>
               <Transition
-                style={{top: '2rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
+                style={{top: '0rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
                 className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
                 show={Boolean(hoveringItem && hoveringItem.name)}>
-                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4 min-h-72 min-w-70 max-w-70 w-auto">
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
                   <DataValue
                     title={'Institution Name'}
                     content={currentSelectedClassroomData?.institutionName}
@@ -1071,6 +1074,19 @@ const Csv = ({institutionId}: ICsvProps) => {
                   <DataValue
                     title={'Clasroom Name'}
                     content={currentSelectedClassroomData?.name}
+                  />
+                  <DataValue
+                    title={'Status'}
+                    content={
+                      <p
+                        className={`${
+                          currentSelectedClassroomData.status === 'ACTIVE'
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        } lowercase`}>
+                        {currentSelectedClassroomData.status}
+                      </p>
+                    }
                   />
                   <DataValue
                     title={'Teacher'}
@@ -1120,49 +1136,61 @@ const Csv = ({institutionId}: ICsvProps) => {
           onChange={(value, name, id) => onSurveySelect(id, name, value)}
         />
 
-        <button
-          type="button"
-          className={`col-end-5 ${
-            isSuperAdmin ? 'mt-5' : ''
-          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
-          style={{
-            /* stylelint-disable */
-            opacity: isCSVDownloadReady ? 1 : 0.5
-          }}
-          disabled={!isCSVDownloadReady}>
-          {isCSVDownloadReady ? (
-            <CSVLink
-              data={CSVData}
-              headers={CSVHeaders}
-              filename={`${selectedClassRoom.name}_${
-                selectedSurvey.name
-              }_${getTodayDate()}.csv`}>
-              Download CSV
-            </CSVLink>
-          ) : (
-            'Download CSV'
-          )}
-        </button>
-        <button
-          type="button"
-          className={`col-end-5 mt-1 ${
-            isSuperAdmin ? 'mt-5' : ''
-          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
-          style={{
-            /* stylelint-disable */
-            opacity: isCSVDownloadReady ? 1 : 0.5
-          }}
-          disabled={!isCSVDownloadReady}>
-          {lessonPDFData.length > 0 ? (
-            <PDFDownloadLink
-              document={<SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />}
-              fileName={`${selectedSurvey?.name}.pdf`}>
-              {({loading}) => (loading ? 'Loading document...' : 'Download Survey PDF')}
-            </PDFDownloadLink>
-          ) : (
-            'Download Survey PDF'
-          )}
-        </button>
+        <div className="w-auto md:gap-x-2 relative flex items-center">
+          <button
+            type="button"
+            className={`col-end-5 ${
+              isSuperAdmin ? 'mt-5' : ''
+            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+            style={{
+              /* stylelint-disable */
+              opacity: isCSVDownloadReady ? 1 : 0.5
+            }}
+            disabled={!isCSVDownloadReady}>
+            <span className="w-auto mr-2">
+              <BsDownload />
+            </span>
+            {isCSVDownloadReady ? (
+              <CSVLink
+                data={CSVData}
+                className="w-auto"
+                headers={CSVHeaders}
+                filename={`${selectedClassRoom.name}_${
+                  selectedSurvey.name
+                }_${getTodayDate()}.csv`}>
+                CSV
+              </CSVLink>
+            ) : (
+              'CSV'
+            )}
+          </button>
+          <button
+            type="button"
+            className={`col-end-5 ${
+              isSuperAdmin ? 'mt-5' : ''
+            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+            style={{
+              /* stylelint-disable */
+              opacity: isCSVDownloadReady ? 1 : 0.5
+            }}
+            disabled={!isCSVDownloadReady}>
+            <span className="w-auto mr-2">
+              <BsDownload />
+            </span>
+            {lessonPDFData.length > 0 ? (
+              <PDFDownloadLink
+                className="w-auto"
+                document={
+                  <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
+                }
+                fileName={`${selectedSurvey?.name}.pdf`}>
+                {({loading}) => (loading ? 'Loading' : 'Survey PDF')}
+              </PDFDownloadLink>
+            ) : (
+              'Survey PDF'
+            )}
+          </button>
+        </div>
       </div>
       <div>
         <SectionTitleV3 title={'Survey results'} />

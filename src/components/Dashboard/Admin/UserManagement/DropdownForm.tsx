@@ -14,6 +14,7 @@ interface DropdownProps {
   style: boolean;
   value: string;
   noOptionMessage?: string;
+  dataCy?: string;
 }
 
 // TODO: Need to make this component
@@ -30,6 +31,7 @@ const DropdownForm = (props: DropdownProps) => {
     isRequired,
     style,
     noOptionMessage,
+    dataCy
   } = props;
 
   const getOptions = () => {
@@ -97,6 +99,7 @@ const DropdownForm = (props: DropdownProps) => {
       <div className="relative">
         <span className="inline-block w-full rounded-md shadow-sm">
           <button
+            data-cy={`dropdown-${dataCy}`}
             onClick={() => setShowItems(!showItems)}
             type="button"
             aria-haspopup="listbox"
@@ -132,6 +135,7 @@ const DropdownForm = (props: DropdownProps) => {
               {items.length ? (
                 items.map((item: {code: string; name: string}, key: number) => (
                   <li
+                    data-cy={`dropdown-item-${dataCy}-${key}`}
                     key={key}
                     onClick={() => selection(item)}
                     id={id}
