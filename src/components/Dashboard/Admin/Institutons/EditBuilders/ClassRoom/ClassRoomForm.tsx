@@ -49,6 +49,33 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     }
   ];
 
+  const [units, setUnits] = useState([]);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+
+  const fetchUnits = async () => {
+    try {
+      let curriculumUnits: any = await API.graphql(
+        graphqlOperation(customQueries.listUnits)
+      );
+      let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+
+      units = units.map((syl: any) => {
+        let unitData = syl.unit;
+        return {id: unitData.id, name: unitData.name, value: unitData.name};
+      });
+      // console.log('units', units)
+      setUnits(units);
+
+      setUnitsLoading(false);
+    } catch (err) {
+      console.log('fetch units (syllabus) error', err);
+    }
+  };
+
+  useEffect(() => {
+    // fetchUnits();
+  }, []);
+
   const initialData = {
     id: '',
     name: '',
@@ -925,7 +952,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   onChange={selectCurriculum}
                 />
               </div>
-              {/* <div className="px-3 py-4">
+              <div className="px-3 py-4">
                 <Selector
                   selectedItem={roomData.activeUnit.name}
                   placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
@@ -934,7 +961,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   list={StatusList}
                   onChange={selectStatus}
                 />
-              </div> */}
+              </div>
               <div className="px-3 py-4">
                 <Selector
                   selectedItem={status}
