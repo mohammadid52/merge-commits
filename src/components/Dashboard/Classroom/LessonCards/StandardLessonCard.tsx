@@ -25,6 +25,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     getImageFromS3 = true,
     preview = false
   } = props;
+
   const {theme} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
@@ -61,7 +62,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
         <ProgressBar
           lessonProps={{
             ...lessonProps,
-            lesson: {...lessonProps.lesson, type: lessonType}
+            lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
           }}
           user={user}
           value=""
