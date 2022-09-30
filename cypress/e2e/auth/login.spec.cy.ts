@@ -16,52 +16,52 @@ describe(
       cy.url().should('contain', urlConfig.dashboardURL);
     });
 
-    it(
-      'Successfull login as teacher',
-      {
-        defaultCommandTimeout: 20000
-      },
-      function () {
-        cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
-        cy.url().should('contain', urlConfig.dashboardURL);
-      }
-    );
+    // it(
+    //   'Successfull login as teacher',
+    //   {
+    //     defaultCommandTimeout: 20000
+    //   },
+    //   function () {
+    //     cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
+    //     cy.url().should('contain', urlConfig.dashboardURL);
+    //   }
+    // );
 
-    it(
-      'Successfull login as admin',
-      {
-        defaultCommandTimeout: 20000
-      },
-      function () {
-        cy.login(loginConfig.admin.username, loginConfig.admin.password);
-        cy.url().should('contain', urlConfig.dashboardURL);
-      }
-    );
+    // it(
+    //   'Successfull login as admin',
+    //   {
+    //     defaultCommandTimeout: 20000
+    //   },
+    //   function () {
+    //     cy.login(loginConfig.admin.username, loginConfig.admin.password);
+    //     cy.url().should('contain', urlConfig.dashboardURL);
+    //   }
+    // );
 
-    it(
-      'Successfull login as self paced student',
-      {
-        defaultCommandTimeout: 20000
-      },
-      function () {
-        cy.login(
-          loginConfig.selfPacedStudent.username,
-          loginConfig.selfPacedStudent.password
-        );
-        cy.url().should('contain', urlConfig.dashboardURL);
-      }
-    );
+    // it(
+    //   'Successfull login as self paced student',
+    //   {
+    //     defaultCommandTimeout: 20000
+    //   },
+    //   function () {
+    //     cy.login(
+    //       loginConfig.selfPacedStudent.username,
+    //       loginConfig.selfPacedStudent.password
+    //     );
+    //     cy.url().should('contain', urlConfig.dashboardURL);
+    //   }
+    // );
 
-    it(
-      'Successfull login as builder',
-      {
-        defaultCommandTimeout: 20000
-      },
-      function () {
-        cy.login(loginConfig.builder.username, loginConfig.builder.password);
-        cy.url().should('contain', urlConfig.dashboardURL);
-      }
-    );
+    // it(
+    //   'Successfull login as builder',
+    //   {
+    //     defaultCommandTimeout: 20000
+    //   },
+    //   function () {
+    //     cy.login(loginConfig.builder.username, loginConfig.builder.password);
+    //     cy.url().should('contain', urlConfig.dashboardURL);
+    //   }
+    // );
   }
 );
 
@@ -76,26 +76,26 @@ describe(
       cy.get('p').should('contain', loginErrorMessage);
     });
 
-    it(
-      'Fail login as teacher',
-      {
-        defaultCommandTimeout: 10000
-      },
-      function () {
-        cy.login(loginConfig.teacher.username, failPass);
-        cy.get('p').should('contain', loginErrorMessage);
-      }
-    );
+    // it(
+    //   'Fail login as teacher',
+    //   {
+    //     defaultCommandTimeout: 10000
+    //   },
+    //   function () {
+    //     cy.login(loginConfig.teacher.username, failPass);
+    //     cy.get('p').should('contain', loginErrorMessage);
+    //   }
+    // );
 
-    it(
-      'Fail login as admin',
-      {
-        defaultCommandTimeout: 10000
-      },
-      function () {
-        cy.login(loginConfig.admin.username, failPass);
-        cy.get('p').should('contain', loginErrorMessage);
-      }
-    );
+    // it(
+    //   'Fail login as admin',
+    //   {
+    //     defaultCommandTimeout: 10000
+    //   },
+    //   function () {
+    //     cy.login(loginConfig.admin.username, failPass);
+    //     cy.get('p').should('contain', loginErrorMessage);
+    //   }
+    // );
   }
 );
