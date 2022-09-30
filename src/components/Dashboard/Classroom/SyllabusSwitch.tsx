@@ -3,7 +3,7 @@ import {FaBook} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
 
@@ -17,16 +17,11 @@ const SyllabusSwitch = ({
   currentPage,
   syllabusLoading,
   handleSyllabusActivation,
-  institutionId,
+  institutionId
 }: DashboardProps) => {
   const history = useHistory();
-  const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {state, theme, clientKey, userLanguage} = useGlobalContext();
   const {classRoomDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
-  const getBG = (theme = 'indigo') => {
-    return `text-${theme}-500 hover:bg-${theme}-400`;
-  };
 
   return (
     <>
