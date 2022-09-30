@@ -931,6 +931,7 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
       DOWNLOAD_CSV: 'Download CSV',
       UPLOAD_CSV: 'Upload CSV',
+      UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
@@ -1280,7 +1281,8 @@ const InstitueRomms: any = {
     CLASS_NAME: 'Class Name',
     INSTITUTION_NAME: 'Institution Name',
     TEACHER: 'Teacher',
-    CURRICULUM: 'COurse',
+    CURRICULUM: 'Course',
+    STATUS: 'Status',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'Edit',
@@ -1557,6 +1559,10 @@ const RoomBuilderdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
     CURRICULUM_PLACEHOLDER: 'Select Course',
+    INSTITUTION_LABEL: 'Institution',
+    INSTITUTION_PLACEHOLDER: 'Select Institution',
+    STATUS_LABEL: 'Status',
+    STATUS_PLACEHOLDER: 'Select Status',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     BUTTON: {
@@ -1713,7 +1719,13 @@ const RoomEDITdict: any = {
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
+    ACTIVE_UNIT_LABEL: 'Active Unit',
+    ACTIVE_UNIT_PLACEHOLDER: 'Select Active Unit',
     CURRICULUM_PLACEHOLDER: 'Select Course',
+    STATUS_LABEL: 'Status',
+    STATUS_PLACEHOLDER: 'Select Status',
+    INSTITUTION_LABEL: 'Institution',
+    INSTITUTION_PLACEHOLDER: 'Select Institution',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     CONFERENCE_CALL_LINK_LABEL: 'Conference link',
@@ -1773,6 +1785,8 @@ const RoomEDITdict: any = {
     CO_TEACHER_LABEL: 'TBD',
     CO_TEACHER_PLACEHOLDER: 'TBD',
     CLASS_NAME_LABEL: 'TBD',
+    ACTIVE_UNIT_LABEL: 'TBD',
+    ACTIVE_UNIT_PLACEHOLDER: 'TBD',
     CLASS_NAME_PLACEHOLDER: 'TBD',
     CURRICULUM_LABEL: 'TBD',
     CURRICULUM_PLACEHOLDER: 'TBD',
@@ -2808,6 +2822,8 @@ const UserEditDict: any = {
     lastname: 'Last Name',
     nickname: 'Nickname',
     status: 'Status',
+    inactive_date: 'Inactive or Suspension Date',
+    status_reason: 'Inactive or Suspension Reason',
     role: 'Role',
     button: {
       save: 'Save',
@@ -4011,13 +4027,21 @@ const CsvDict: any = {
     TITLE: 'Research & Analytics',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
-    SELECT_FILTERS: 'Select Filters'
+    SELECT_FILTERS: 'Select Filters',
+    SELECT_REASON: 'Select Reason',
+    REASON: 'Reason....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Upload Multipe Survey Images',
+    DESCRIBE_REASON: 'Describe Reason'
   },
   ES: {
     TITLE: 'Investigar & Analítica',
     SELECT_INST: 'Seleccione instituto',
     SELECT_FILTERS: 'Seleccione Filtros',
-    SELECT_CLASSROOM: 'Seleccione salón de clases'
+    SELECT_CLASSROOM: 'Seleccione salón de clases',
+    SELECT_REASON: 'Seleccionar motivo',
+    REASON: 'Razón....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Cargar imágenes de encuestas múltiples',
+    DESCRIBE_REASON: 'Describa la razón'
   }
 };
 

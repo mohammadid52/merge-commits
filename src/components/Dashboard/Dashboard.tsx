@@ -36,6 +36,42 @@ const Profile = lazy(() => import('./Profile/Profile'));
 const TestCases = lazy(() => import('./TestCases/TestCases'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
 
+export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+  let getSyllabusInSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
+          return [
+            ...acc,
+            syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
+          ];
+        }, [])
+      : syllabusArray;
+
+  let mapSyllabusToSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? getSyllabusInSequence
+          ?.map((syllabus: any) => ({
+            ...syllabus,
+            ...syllabus.unit,
+            lessons: {
+              ...syllabus.unit.lessons,
+              items:
+                syllabus?.unit.lessons?.items?.length > 0
+                  ? syllabus.unit.lessons.items
+                      .map((t: any) => {
+                        let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                        return {...t, index};
+                      })
+                      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                  : []
+            }
+          }))
+          .map(({unit, ...rest}: any) => rest)
+      : getSyllabusInSequence;
+
+  return mapSyllabusToSequence;
+};
+
 type userObject = {
   [key: string]: any;
 };
@@ -567,42 +603,6 @@ const Dashboard = (props: DashboardProps) => {
   /********************
    * 5. LIST SYLLABUS *
    ********************/
-
-  const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
-    let getSyllabusInSequence =
-      sequenceArray && sequenceArray.length > 0
-        ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
-            return [
-              ...acc,
-              syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
-            ];
-          }, [])
-        : syllabusArray;
-
-    let mapSyllabusToSequence =
-      sequenceArray && sequenceArray.length > 0
-        ? getSyllabusInSequence
-            ?.map((syllabus: any) => ({
-              ...syllabus,
-              ...syllabus.unit,
-              lessons: {
-                ...syllabus.unit.lessons,
-                items:
-                  syllabus?.unit.lessons?.items?.length > 0
-                    ? syllabus.unit.lessons.items
-                        .map((t: any) => {
-                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                          return {...t, index};
-                        })
-                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-                    : []
-              }
-            }))
-            .map(({unit, ...rest}: any) => rest)
-        : getSyllabusInSequence;
-
-    return mapSyllabusToSequence;
-  };
 
   const listSyllabus = async () => {
     setSyllabusLoading(true);
