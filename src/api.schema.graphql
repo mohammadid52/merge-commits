@@ -161,6 +161,22 @@ type Room @model @auth(rules: [{allow: public}]) {
   classSentiment: [String]
 }
 
+type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  AuthId: String!
+  Email: String! @primaryKey(sortKeyFields: ["AuthId"])
+  UniversalSurveyStudentID: String
+  QuestionResult: [QuestionResults]!
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type QuestionResults {
+  QuestionId: ID!
+  QuestionLabel: String!
+  QuestionResponse: String!
+}
+
 type StudentSharing {
   isTeacher: Boolean
   studentAuthID: String
@@ -1039,4 +1055,16 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
 
-# asdfasdfsd9
+type CypressTesting @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  testID: String!
+  testName: String!
+  testType: String!
+  testSteps: String!
+  testData: String!
+  testExpResults: String!
+  edgeCases: String
+  lastUpdate: AWSDate
+}
+
+# asdfasdfsd12

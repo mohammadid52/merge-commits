@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   darkMode: 'class',
 
@@ -8,7 +10,7 @@ module.exports = {
       './src/**/*.tsx',
       './src/**/*.ts',
       './src/**/*.js',
-      './src/**/*.jsx',
+      './src/**/*.jsx'
     ],
     safelist: [
       'hover:bg-teal-100',
@@ -17,14 +19,18 @@ module.exports = {
       'hover:bg-blue-100',
       'hover: text-indigo-600',
       'tracking-wider',
-      'whitespace-nowrap',
-    ],
+      'whitespace-nowrap'
+    ]
   },
   corePlugins: {
-    translate: true,
+    translate: true
   },
 
   theme: {
+    screens: {
+      xs: '460px',
+      ...defaultTheme.screens
+    },
     scale: {
       0: '0',
       25: '.25',
@@ -37,7 +43,7 @@ module.exports = {
       110: '1.1',
       125: '1.25',
       150: '1.5',
-      200: '2',
+      200: '2'
     },
     placeholderColor: {
       gray: {
@@ -49,21 +55,21 @@ module.exports = {
         600: '#718096',
         700: '#4a5568',
         800: '#2d3748',
-        900: '#1a202c',
-      },
+        900: '#1a202c'
+      }
     },
     flexGrow: {
       0: 0,
       default: 1,
       1: 1,
       2: 2,
-      3: 3,
+      3: 3
     },
     maxWidth: {
-      256: '64rem',
+      256: '64rem'
     },
     minHeight: {
-      2: '2rem',
+      2: '2rem'
     },
     cursor: {
       auto: 'auto',
@@ -75,7 +81,7 @@ module.exports = {
       'not-allowed': 'not-allowed',
       crosshair: 'crosshair',
       'zoom-in': 'zoom-in',
-      help: 'help',
+      help: 'help'
     },
     textColor: (theme) => theme('colors'),
     fontSize: {
@@ -94,7 +100,7 @@ module.exports = {
       '7xl': '5rem',
       '8xl': '6rem',
       '5.5xl': '3.5rem',
-      '4.5xl': '2.75rem',
+      '4.5xl': '2.75rem'
     },
     zIndex: {
       0: 0,
@@ -109,7 +115,7 @@ module.exports = {
       1000: 1000,
       10000: 10000,
       max: 9999999,
-      auto: 'auto',
+      auto: 'auto'
     },
     opacity: {
       0: '0',
@@ -125,7 +131,7 @@ module.exports = {
       80: '.8',
       85: '.85',
       90: '.9',
-      95: '.95',
+      95: '.95'
     },
     borderWidth: {
       default: '1px',
@@ -136,10 +142,10 @@ module.exports = {
       3: '3px',
       4: '4px',
       6: '6px',
-      8: '8px',
+      8: '8px'
     },
     top: {
-      2.5: '2.5rem',
+      2.5: '2.5rem'
     },
     inset: {
       0: '0rem',
@@ -177,10 +183,10 @@ module.exports = {
       29: '29rem',
       30: '30rem',
       '1/2': '50%',
-      auto: 'auto',
+      auto: 'auto'
     },
     fontFamily: {
-      open: ['Open Sans', 'sans-serif'],
+      open: ['Open Sans', 'sans-serif']
     },
     colors: {
       transparent: 'transparent',
@@ -197,7 +203,7 @@ module.exports = {
         600: '#718096',
         700: '#4a5568',
         800: '#2d3748',
-        900: '#1a202c',
+        900: '#1a202c'
       },
       red: {
         100: '#fff5f5',
@@ -208,7 +214,7 @@ module.exports = {
         600: '#e53e3e',
         700: '#c53030',
         800: '#9b2c2c',
-        900: '#742a2a',
+        900: '#742a2a'
       },
       orange: {
         100: '#fffaf0',
@@ -219,7 +225,7 @@ module.exports = {
         600: '#dd6b20',
         700: '#c05621',
         800: '#9c4221',
-        900: '#7b341e',
+        900: '#7b341e'
       },
       yellow: {
         100: '#fffff0',
@@ -230,7 +236,7 @@ module.exports = {
         600: '#d69e2e',
         700: '#b7791f',
         800: '#975a16',
-        900: '#744210',
+        900: '#744210'
       },
       green: {
         100: '#f0fff4',
@@ -241,7 +247,7 @@ module.exports = {
         600: '#38a169',
         700: '#2f855a',
         800: '#276749',
-        900: '#22543d',
+        900: '#22543d'
       },
       teal: {
         100: '#e6fffa',
@@ -252,7 +258,7 @@ module.exports = {
         600: '#319795',
         700: '#2c7a7b',
         800: '#285e61',
-        900: '#234e52',
+        900: '#234e52'
       },
       blue: {
         100: '#ebf8ff',
@@ -263,7 +269,7 @@ module.exports = {
         600: '#3182ce',
         700: '#2b6cb0',
         800: '#2c5282',
-        900: '#2a4365',
+        900: '#2a4365'
       },
       indigo: {
         100: '#ebf4ff',
@@ -274,7 +280,7 @@ module.exports = {
         600: '#5a67d8',
         700: '#4c51bf',
         800: '#434190',
-        900: '#3c366b',
+        900: '#3c366b'
       },
       purple: {
         100: '#faf5ff',
@@ -285,7 +291,7 @@ module.exports = {
         600: '#805ad5',
         700: '#6b46c1',
         800: '#553c9a',
-        900: '#44337a',
+        900: '#44337a'
       },
       pink: {
         100: '#fff5f7',
@@ -296,7 +302,7 @@ module.exports = {
         600: '#d53f8c',
         700: '#b83280',
         800: '#97266d',
-        900: '#702459',
+        900: '#702459'
       },
       black20: 'rgba(0,0,0,.2)',
       black50: 'rgba(0,0,0,.5)',
@@ -339,19 +345,19 @@ module.exports = {
       'orange-light': '#e4a04f',
       'orange-medium': '#e4714f',
       'pink-light': '#c64575',
-      white20: 'rgba(255,255,255,.2)',
+      white20: 'rgba(255,255,255,.2)'
     },
     extend: {
       transitionProperty: {
         height: 'height',
-        width: 'width',
+        width: 'width'
       },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg': "url('https://selready.s3.us-east-2.amazonaws.com/login-min.jpg')",
+        'demo-bg': "url('https://selready.s3.us-east-2.amazonaws.com/login-min.jpg')"
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -366,10 +372,10 @@ module.exports = {
         80: '0.8',
         90: '0.9',
         95: '0.95',
-        100: '1',
+        100: '1'
       },
       lineHeight: {
-        'extra-tight': '.8',
+        'extra-tight': '.8'
       },
       animation: {
         bounce: 'bounce 1s ease-in-out 1',
@@ -378,82 +384,82 @@ module.exports = {
         fadeIn: 'fadeIn 0.5s ease-in-out',
         spin: 'spin 1s linear infinite',
         activation: 'activation 1s ease-in-out infinite',
-        slideUp: 'slideUp 0.2s linear',
+        slideUp: 'slideUp 0.2s linear'
       },
       keyframes: {
         bounce: {
           '0%': {
             right: '0',
-            opacity: '0',
+            opacity: '0'
           },
           '75%': {
             right: '0',
-            opacity: '0',
+            opacity: '0'
           },
           '90%': {
             right: '-24px',
-            opacity: '0.5',
+            opacity: '0.5'
           },
           '100%': {
             right: '0',
-            opacity: '1',
-          },
+            opacity: '1'
+          }
         },
         jiggle: {
           '0%': {
-            transform: 'rotate(10deg)',
+            transform: 'rotate(10deg)'
           },
           '50%': {
-            transform: 'rotate(-10deg)',
+            transform: 'rotate(-10deg)'
           },
           '100%': {
-            transform: 'rotate(10deg)',
-          },
+            transform: 'rotate(10deg)'
+          }
         },
         ping: {
           '0%': {
             transform: 'scale(1)',
-            opacity: '0.7',
+            opacity: '0.7'
           },
           '75%, 100%': {
             transform: 'scale(2)',
-            opacity: '0',
-          },
+            opacity: '0'
+          }
         },
         fadeIn: {
           '0%': {
-            opacity: '0',
+            opacity: '0'
           },
           '75%, 100%': {
-            opacity: '1',
-          },
+            opacity: '1'
+          }
         },
         spin: {
           '0%': {
-            transform: 'rotate(0deg)',
+            transform: 'rotate(0deg)'
           },
           '100%': {
-            transform: 'rotate(360deg)',
-          },
+            transform: 'rotate(360deg)'
+          }
         },
         activation: {
           '0%': {
             borderBottom: '0px solid #00488AC7',
-            borderTop: '0px solid #00488AC7',
+            borderTop: '0px solid #00488AC7'
           },
           '50%': {
             borderBottom: '4px solid #00488AC7',
-            borderTop: '4px solid #00488AC7',
+            borderTop: '4px solid #00488AC7'
           },
           '100%': {
             borderBottom: '0px solid #00488AC7',
-            borderTop: '0px solid #00488AC7',
-          },
+            borderTop: '0px solid #00488AC7'
+          }
         },
         slideUp: {
           '0%': {transform: 'translateY(-12px)'},
-          '100%': {transform: 'translateY(0px)'},
-        },
+          '100%': {transform: 'translateY(0px)'}
+        }
       },
       width: {
         '1/2': '48%',
@@ -470,7 +476,7 @@ module.exports = {
         '9/10': '90%',
         '19/20': '95%',
         '64rem': '64rem',
-        148: '37rem',
+        148: '37rem'
       },
       spacing: {
         '1px': '1px',
@@ -573,7 +579,7 @@ module.exports = {
         '8.2/10': '82%',
         '8.5/10': '85%',
         '9/10': '90%',
-        '9.5/10': '95%',
+        '9.5/10': '95%'
       },
       minHeight: {
         12: '3rem',
@@ -613,7 +619,7 @@ module.exports = {
         192: '48rem',
         196: '49rem',
         200: '50rem',
-        256: '64rem',
+        256: '64rem'
       },
       minWidth: {
         16: '4rem',
@@ -651,7 +657,7 @@ module.exports = {
         196: '49rem',
         200: '50rem',
         256: '64rem',
-        '80vw': '80vw',
+        '80vw': '80vw'
       },
       maxWidth: {
         48: '12rem',
@@ -688,7 +694,7 @@ module.exports = {
         200: '50rem',
         256: '64rem',
         '7/10': '70%',
-        '9/10': '90%',
+        '9/10': '90%'
       },
       maxHeight: {
         48: '12rem',
@@ -723,10 +729,10 @@ module.exports = {
         192: '48rem',
         196: '49rem',
         200: '50rem',
-        256: '64rem',
+        256: '64rem'
       },
       borderRadius: {
-        xl: '1rem',
+        xl: '1rem'
       },
       boxShadow: {
         1: '0.5px -1.5px 1.5px black',
@@ -745,13 +751,13 @@ module.exports = {
         gray: '0px 0px 10px 4px #e2e8f0',
         grayscale: '0px 0px 10px 4px #fdfdfd',
         'inner-box': 'inset 0 2px 4px 0 #191d25',
-        container: '1px 1px 10px 1px #e0e0e0',
+        container: '1px 1px 10px 1px #e0e0e0'
       },
       translate: {
         100: '25rem',
-        160: '40rem',
-      },
-    },
+        160: '40rem'
+      }
+    }
   },
   variants: {
     animation: ['responsive', 'hover', 'focus'],
@@ -766,10 +772,10 @@ module.exports = {
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
     textColor: ['dark', 'responsive', 'hover', 'focus'],
-    transitionProperty: ['hover', 'focus'],
+    transitionProperty: ['hover', 'focus']
   },
   // for slide over
 
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms')]
   // plugins: [],
 };

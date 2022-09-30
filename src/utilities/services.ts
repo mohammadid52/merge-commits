@@ -1,5 +1,5 @@
 // import AWS from 'aws-sdk';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import awsconfig from '../aws-exports';
 
 // ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //
@@ -9,7 +9,7 @@ const {
   S3Client,
   S3,
   ListObjectsCommand,
-  PutObjectCommand,
+  PutObjectCommand
 } = require('@aws-sdk/client-s3');
 // const {Upload} = require('@aws-sdk/lib-storage');
 
@@ -18,8 +18,8 @@ const s3Client = new S3Client({
   region: awsconfig.aws_cognito_region,
   credentials: fromCognitoIdentityPool({
     client: new CognitoIdentityClient({region: awsconfig.aws_cognito_region}),
-    identityPoolId: awsconfig.aws_cognito_identity_pool_id,
-  }),
+    identityPoolId: awsconfig.aws_cognito_identity_pool_id
+  })
 });
 
 export const _uploadImageToS3 = async (file: any, id: string, type: string) => {
@@ -27,8 +27,8 @@ export const _uploadImageToS3 = async (file: any, id: string, type: string) => {
     region: awsconfig.aws_cognito_region,
     credentials: fromCognitoIdentityPool({
       client: new CognitoIdentityClient({region: awsconfig.aws_cognito_region}),
-      identityPoolId: awsconfig.aws_cognito_identity_pool_id,
-    }),
+      identityPoolId: awsconfig.aws_cognito_identity_pool_id
+    })
   });
 
   // Upload file to s3 bucket
@@ -49,7 +49,7 @@ export const _uploadImageToS3 = async (file: any, id: string, type: string) => {
       Bucket: awsconfig.aws_user_files_s3_bucket,
       Key: `profile_image_${id}`,
       Body: file,
-      ACL: 'public-read',
+      ACL: 'public-read'
     });
     await newS3Client.send(uploadCommand);
   } catch (e) {
@@ -138,7 +138,7 @@ export const getImagesFromS3Folder = async (
         Bucket: awsconfig.aws_user_files_s3_bucket,
         Prefix: `public/${key}/`,
         MaxKeys: limit,
-        StartAfter: startAfter,
+        StartAfter: startAfter
       })
     );
 

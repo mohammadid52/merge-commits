@@ -1,21 +1,21 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {IoIosCheckmarkCircle} from 'react-icons/io';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useHistory} from 'react-router';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BsCircleFill} from 'react-icons/bs';
 import {HiOutlineRefresh} from 'react-icons/hi';
+import {IoIosCheckmarkCircle} from 'react-icons/io';
+import {useHistory} from 'react-router';
 
-import * as queries from '../../../../../graphql/queries';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as queries from '../../../../../graphql/queries';
 
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {ContextMenuProvider} from '../../../../../contexts/TreeContext';
 import {
   getLocalStorageData,
   removeLocalStorageData,
-  setLocalStorageData,
+  setLocalStorageData
 } from '../../../../../utilities/localStorage';
 
 import Selector from '../../../../Atoms/Form/Selector';
@@ -31,7 +31,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const cancelButtonRef = useRef();
   const [alertConfig, setAlertConfig] = useState({
     show: false,
-    message: '',
+    message: ''
   });
   const [loading, setLoading] = useState(
     role === 'ADM' || role === 'SUP' || role === 'BLD'
@@ -42,7 +42,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   );
   const [activeSection, setActiveSection] = useState<any>({
     id: 'inst',
-    title: 'Institution Setup',
+    title: 'Institution Setup'
   });
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -68,14 +68,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             type: 'list',
             children: [],
             id: 'inst_general_info',
-            redirectionUrl: `${baseUrl}/edit`,
+            redirectionUrl: `${baseUrl}/edit`
           },
           {
             title: 'Staff',
             type: 'list',
             children: [],
             id: 'inst_staff',
-            redirectionUrl: `${baseUrl}/staff`,
+            redirectionUrl: `${baseUrl}/staff`
           },
           // {
           //   title: 'Classes',
@@ -107,14 +107,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Add Curriculum Information',
                 type: 'list',
                 id: 'inst_curriculum_general_info',
-                redirectionUrl: `${baseUrl}/course-builder`,
+                redirectionUrl: `${baseUrl}/course-builder`
               },
               {
                 title: 'Create Learning Objectives',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_learning_objectives',
-                redirectionUrl: `${baseUrl}/course-builder/{curriculumId}?step=learning_objectives`,
+                redirectionUrl: `${baseUrl}/course-builder/{curriculumId}?step=learning_objectives`
               },
               {
                 title: 'Create Units',
@@ -124,26 +124,26 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'General Information',
                     type: 'list',
                     id: 'inst_curriculum_units_general_info',
-                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=overview`,
+                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=overview`
                   },
                   {
                     title: 'Lesson Plan Manager',
                     type: 'list',
                     id: 'inst_curriculum_units_lesson_plan_manager',
-                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=lessons`,
-                  },
+                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=lessons`
+                  }
                 ],
                 id: 'inst_curriculum_units',
-                redirectionUrl: `${baseUrl}/units/add`,
+                redirectionUrl: `${baseUrl}/units/add`
               },
               {
                 title: 'Demographics & Information',
                 type: 'list',
                 children: [],
                 id: 'inst_curriculum_demographic_information',
-                redirectionUrl: `${baseUrl}/research-and-analytics`,
-              },
-            ],
+                redirectionUrl: `${baseUrl}/research-and-analytics`
+              }
+            ]
           },
           {
             title: 'Classroom',
@@ -153,27 +153,27 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Class Details',
                 type: 'list',
                 id: 'inst_classroom_class_detail',
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=overview`,
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=overview`
               },
               {
                 title: 'Unit Planner',
                 type: 'list',
                 children: [],
                 id: 'inst_classroom_unit_planner',
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=unit-planner`,
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=unit-planner`
               },
               {
                 title: 'Class Dynamics (Optional)',
                 type: 'list',
                 id: 'inst_classroom_class_dynamics',
                 children: [],
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=class-dynamics`,
-              },
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=class-dynamics`
+              }
             ],
             id: 'inst_classroom',
-            redirectionUrl: `${baseUrl}/room-creation`,
-          },
-        ],
+            redirectionUrl: `${baseUrl}/room-creation`
+          }
+        ]
       },
       (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
         title: `Lesson Builder`,
@@ -185,7 +185,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Create new lesson',
             type: 'list',
             id: 'lesson_builder_list_create_new_lesson',
-            redirectionUrl: `${baseUrl}/lessons/add`,
+            redirectionUrl: `${baseUrl}/lessons/add`
           },
           {
             title: 'Lesson Editor',
@@ -197,7 +197,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 type: 'list',
                 id: 'lesson_builder_overview',
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}`,
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}`
               },
               {
                 title: 'Activities',
@@ -208,16 +208,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'Lesson Planner',
                     type: 'list',
                     id: 'lesson_builder_activities_lesson_planner',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
                   },
                   {
                     title: 'Overlay',
                     type: 'list',
                     id: 'lesson_builder_activities_overlay',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
-                  },
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
+                  }
                 ],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
               },
               {
                 title: 'Lesson Plan Builder',
@@ -228,41 +228,41 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'Blocks & Components',
                     type: 'list',
                     id: 'lesson_builder_plan_block_and_component',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`,
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`
                   },
                   {
                     title: 'Lesson Plan Manager',
                     type: 'list',
                     id: 'lesson_builder_plan_manager',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId={pageId}`,
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId={pageId}`
                   },
                   {
                     title: 'Homework & Challenges (Coming Soon)',
                     type: 'list',
                     id: 'lesson_builder_plan_homework_and_challenges',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}`,
-                  },
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}`
+                  }
                 ],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`,
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`
               },
               {
                 title: 'Courses',
                 type: 'list',
                 id: 'lesson_builder_courses',
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=courses`,
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=courses`
               },
               {
                 title: 'Learning Evidence',
                 type: 'list',
                 id: 'lesson_builder_learning_evidence',
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=learning-evidence`,
-              },
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=learning-evidence`
+              }
             ],
-            redirectionUrl: `${baseUrl}/lessons/add`,
-          },
-        ],
+            redirectionUrl: `${baseUrl}/lessons/add`
+          }
+        ]
       },
       (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
         title: `Service Provider`,
@@ -273,16 +273,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Provide service to another organization',
             type: 'list',
             id: 'service_provider_provide_service',
-            redirectionUrl: `${baseUrl}/edit`,
+            redirectionUrl: `${baseUrl}/edit`
           },
           {
             title: 'Request service from another organization',
             type: 'list',
             id: 'service_provider_request_service',
-            redirectionUrl: `${baseUrl}/edit`,
-          },
+            redirectionUrl: `${baseUrl}/edit`
+          }
         ],
-        redirectionUrl: `${baseUrl}/edit`,
+        redirectionUrl: `${baseUrl}/edit`
       },
       (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
         title: `Research & Analytics`,
@@ -296,7 +296,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         //     redirectionUrl: `${baseUrl}/research-and-analytics`,
         //   },
         // ],
-        redirectionUrl: `${baseUrl}/research-and-analytics`,
+        redirectionUrl: `${baseUrl}/research-and-analytics`
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Dashboard',
@@ -307,16 +307,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Your Classrooms',
             type: 'list',
             id: 'dashboard_classroom',
-            redirectionUrl: `/dashboard/home`,
+            redirectionUrl: `/dashboard/home`
           },
           {
             title: 'Your Students',
             type: 'list',
             id: 'dashboard_student',
-            redirectionUrl: `/dashboard/home`,
-          },
+            redirectionUrl: `/dashboard/home`
+          }
         ],
-        redirectionUrl: `/dashboard/home`,
+        redirectionUrl: `/dashboard/home`
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Classroom',
@@ -327,16 +327,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Lesson Planner',
             type: 'list',
             id: 'classroom_lesson_planner',
-            redirectionUrl: `/dashboard/lesson-planner`,
+            redirectionUrl: `/dashboard/lesson-planner`
           },
           {
             title: 'Live Lesson',
             type: 'list',
             id: 'live_classroom_lesson',
-            redirectionUrl: `/dashboard/home`,
-          },
+            redirectionUrl: `/dashboard/home`
+          }
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Student Profile',
@@ -347,29 +347,29 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Demographics & Information',
             type: 'list',
             id: 'live_classroom_roaster',
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
+            redirectionUrl: `${baseUrl}/research-and-analytics`
           },
           {
             title: 'Attendance',
             type: 'list',
             id: 'live_classroom_lesson_pace_SEtter',
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
+            redirectionUrl: `${baseUrl}/research-and-analytics`
           },
           {
             title: 'Notebooks',
             type: 'list',
             id: 'live_classroom_view_student_page',
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
-          },
+            redirectionUrl: `${baseUrl}/research-and-analytics`
+          }
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
       },
       role === 'ST' && {
         title: 'Dashboard',
         type: 'list',
         id: 'dashboard',
         children: [],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
       },
       role === 'ST' && {
         title: 'Live Classroom',
@@ -380,10 +380,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Survey Download',
             type: 'list',
             id: 'research_and_analytics_survey_download',
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
-          },
+            redirectionUrl: `${baseUrl}/research-and-analytics`
+          }
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
       },
       role === 'ST' && {
         title: 'Notebooks',
@@ -394,7 +394,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             title: 'Class Notebooks',
             type: 'list',
             id: 'class_notebooks',
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
+            redirectionUrl: `${baseUrl}/research-and-analytics`
           },
           {
             title: 'Private Notebooks',
@@ -405,33 +405,33 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 title: 'Sentiment Tracking',
                 type: 'list',
                 id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`,
+                redirectionUrl: `${baseUrl}/research-and-analytics`
               },
               {
                 title: 'Class work',
                 type: 'list',
                 id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`,
+                redirectionUrl: `${baseUrl}/research-and-analytics`
               },
               {
                 title: 'Class notes',
                 type: 'list',
                 id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`,
+                redirectionUrl: `${baseUrl}/research-and-analytics`
               },
               {
                 title: 'Attachments',
                 type: 'list',
                 id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`,
-              },
+                redirectionUrl: `${baseUrl}/research-and-analytics`
+              }
             ],
-            redirectionUrl: `${baseUrl}/research-and-analytics`,
-          },
+            redirectionUrl: `${baseUrl}/research-and-analytics`
+          }
         ],
-        redirectionUrl: `${baseUrl}/staff`,
-      },
-    ].filter(Boolean),
+        redirectionUrl: `${baseUrl}/staff`
+      }
+    ].filter(Boolean)
   };
 
   useEffect(() => {
@@ -444,12 +444,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         associateInstitute.map((item: any) => ({
           ...item,
           name: item.institution.name,
-          id: item.institution.id,
+          id: item.institution.id
         }))
       );
       setInstListLoading(false);
     }
-    if (!associateInstitute?.length) {
+    if (!associateInstitute?.length && !institutionList.length) {
       fetchInstListForAdmin();
     }
   }, [associateInstitute]);
@@ -492,8 +492,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         ...item,
         institution: {
           id: item.id,
-          name: item.name,
-        },
+          name: item.name
+        }
       })) || []
     );
     setInstListLoading(false);
@@ -512,7 +512,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     if (alertConfig.show) {
       setAlertConfig({
         show: false,
-        message: '',
+        message: ''
       });
     }
     let data = {};
@@ -528,14 +528,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       if (role === 'ADM' || role === 'SUP' || role === 'BLD') {
         setAlertConfig({
           show: true,
-          message: 'Please select institution before continuing',
+          message: 'Please select institution before continuing'
         });
       }
       return;
     }
     setActiveSection((prevSection: any) => ({
       ...section,
-      data: {...prevSection.data, ...data},
+      data: {...prevSection.data, ...data}
     }));
   };
 
@@ -556,7 +556,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     redirectionUrl?: string
   ) => {
     let replaceObject: any = {
-      institutionId: selectedInstitution?.institution?.id,
+      institutionId: selectedInstitution?.institution?.id
     };
 
     switch (id) {
@@ -570,7 +570,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.getBasicDetailsOfInstitution, {
-                id: instId,
+                id: instId
               })
             );
             if (redirectionUrl) {
@@ -591,10 +591,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 filter: {
                   or: [
                     {
-                      institutionID: {eq: instId},
-                    },
-                  ],
-                },
+                      institutionID: {eq: instId}
+                    }
+                  ]
+                }
               })
             );
             if (redirectionUrl) {
@@ -603,7 +603,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             return {
               staff: result.data.listStaff.items.filter(
                 (member: any) => member.staffMember.role === 'TR'
-              ),
+              )
             };
           }
           return null;
@@ -626,7 +626,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         setAlertConfig({
           show: true,
           message:
-            'Select whether you want to provide or request a service as an organization in one of the steps provided',
+            'Select whether you want to provide or request a service as an organization in one of the steps provided'
         });
         return;
       }
@@ -688,12 +688,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (curriculums?.length) {
               const filter = {
                 or: curriculums.map((curriculum: any) => ({
-                  curriculumID: {eq: curriculum.id},
-                })),
+                  curriculumID: {eq: curriculum.id}
+                }))
               };
               let learningObjectives: any = await API.graphql(
                 graphqlOperation(queries.listLearningObjectives, {
-                  filter,
+                  filter
                 })
               );
               learningObjectives =
@@ -701,28 +701,28 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               console.log(learningObjectives, 'learningObjectives');
               let topics: any = await API.graphql(
                 graphqlOperation(queries.listTopics, {
-                  filter,
+                  filter
                 })
               );
               topics = topics?.data?.listTopics?.items || [];
               console.log(topics, 'topics');
               let rubrics: any = await API.graphql(
                 graphqlOperation(queries.listRubrics, {
-                  filter,
+                  filter
                 })
               );
               rubrics = rubrics?.data?.listRubrics?.items || [];
               if (redirectionUrl) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  curriculumId: curriculums[0].id,
+                  curriculumId: curriculums[0].id
                 });
               }
               return {
                 curriculum: curriculums,
                 learningObjectives,
                 topics,
-                rubrics,
+                rubrics
               };
             }
             redirectToSelectedSection(`${baseUrl}/course-builder`);
@@ -739,8 +739,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             let universalSyllabus: any = await API.graphql(
               graphqlOperation(queries.listUniversalSyllabi, {
                 filter: {
-                  institutionID: {eq: instId},
-                },
+                  institutionID: {eq: instId}
+                }
               })
             );
             universalSyllabus = universalSyllabus?.data?.listUniversalSyllabi?.items;
@@ -748,7 +748,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               if (universalSyllabus?.length) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  syllabusId: universalSyllabus[0].id,
+                  syllabusId: universalSyllabus[0].id
                 });
               } else {
                 redirectToSelectedSection(`${baseUrl}/course-builder?id={institutionId}`);
@@ -768,7 +768,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.listRoomsBasicDetails, {
-                filter: {institutionID: {eq: instId}},
+                filter: {institutionID: {eq: instId}}
               })
             );
             const rooms = result.data?.listRooms?.items;
@@ -776,7 +776,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               if (rooms.length) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  roomId: rooms[0].id,
+                  roomId: rooms[0].id
                 });
               } else {
                 redirectToSelectedSection(
@@ -803,7 +803,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           if (instId && !universalLessons?.length) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                filter: {institutionID: {eq: instId}},
+                filter: {institutionID: {eq: instId}}
               })
             );
             universalLessons = result.data?.listUniversalLessons?.items;
@@ -817,12 +817,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 if (lessonPlanWithBlock) {
                   replaceObject = {
                     ...replaceObject,
-                    pageId: lessonPlanWithBlock.lessonPlan[0].id,
+                    pageId: lessonPlanWithBlock.lessonPlan[0].id
                   };
                 }
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  lessonId: universalLessons[0].id,
+                  lessonId: universalLessons[0].id
                 });
               } else {
                 redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
@@ -840,12 +840,12 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               if (lessonPlanWithBlock) {
                 replaceObject = {
                   ...replaceObject,
-                  pageId: lessonPlanWithBlock.lessonPlan[0].id,
+                  pageId: lessonPlanWithBlock.lessonPlan[0].id
                 };
               }
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
-                lessonId: universalLessons[0].id,
+                lessonId: universalLessons[0].id
               });
             } else {
               redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
@@ -862,7 +862,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (!universalLessonsList) {
               const result: any = await API.graphql(
                 graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                  filter: {institutionID: {eq: instId}},
+                  filter: {institutionID: {eq: instId}}
                 })
               );
               universalLessonsList = result.data?.listUniversalLessons?.items;
@@ -870,8 +870,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             const list: any = await API.graphql(
               graphqlOperation(customQueries.listCurriculumsForLessons, {
                 filter: {
-                  institutionID: {eq: instId},
-                },
+                  institutionID: {eq: instId}
+                }
               })
             );
             const curriculums = list.data?.listCurriculums?.items;
@@ -891,7 +891,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (universalLessonsList.length) {
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
-                lessonId: universalLessonsList[0].id,
+                lessonId: universalLessonsList[0].id
               });
             } else {
               redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
@@ -909,15 +909,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (!universalLessonsList) {
               const result: any = await API.graphql(
                 graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                  filter: {institutionID: {eq: instId}},
+                  filter: {institutionID: {eq: instId}}
                 })
               );
               universalLessonsList = result.data?.listUniversalLessons?.items;
             }
             const filter = {
               or: universalLessonsList.map((lesson: any) => ({
-                lessonID: {eq: lesson.id},
-              })),
+                lessonID: {eq: lesson.id}
+              }))
             };
             // const result: any = await API.graphql(
             //   graphqlOperation(customQueries.listLessonRubricss, {
@@ -928,14 +928,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (universalLessonsList.length) {
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
-                lessonId: universalLessonsList[0].id,
+                lessonId: universalLessonsList[0].id
               });
             } else {
               redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
             }
             return {
               // lessonRubrics: result?.data?.listLessonRubricss?.items,
-              universalLessons: universalLessonsList,
+              universalLessons: universalLessonsList
             };
           }
         } catch (error) {
@@ -958,7 +958,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     if (alertConfig.show) {
       setAlertConfig({
         show: false,
-        message: '',
+        message: ''
       });
     }
     if (activeSection) {

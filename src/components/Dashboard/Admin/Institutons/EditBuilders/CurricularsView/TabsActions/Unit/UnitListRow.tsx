@@ -25,7 +25,6 @@ const UnitListRow = ({
   redirectToInstitution,
   redirectToLesson,
 }: IUnitListRowProps) => {
-  console.log('🚀 ~ file: UnitListRow.tsx ~ line 28 ~ item', item);
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const userLanguage = gContext.userLanguage;
@@ -62,13 +61,15 @@ const UnitListRow = ({
         } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
         {item.lessons?.items?.map(
           (lesson: {id: string; lesson: {id: string; title: string}}) => {
-            return (
-              <li
-                key={lesson.lesson.id}
-                onClick={() => redirectToLesson(lesson.lesson.id)}>
-                {lesson.lesson.title}
-              </li>
-            );
+            if (lesson) {
+              return (
+                <li
+                  key={lesson.lesson.id}
+                  onClick={() => redirectToLesson(lesson.lesson.id)}>
+                  {lesson.lesson.title}
+                </li>
+              );
+            }
           }
         )}
       </div>

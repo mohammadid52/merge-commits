@@ -1,10 +1,9 @@
 import React, {useContext} from 'react';
-import {NavLink} from 'react-router-dom';
-import {useHistory} from 'react-router';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
-import Buttons from './Buttons';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory} from 'react-router';
+import {getAsset} from '../../assets';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import Buttons from './Buttons';
 
 interface BreadCrumProps {
   items: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -31,7 +30,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
     <div
       className={`${
         separateGoBackButton ? 'justify-between' : ''
-      } flex flex-row my-0 py-0 mb-4`}>
+      } flex flex-row my-0 py-0`}>
       <div
         className={`w-auto ${
           separateGoBackButton ? 'flex items-center' : ''

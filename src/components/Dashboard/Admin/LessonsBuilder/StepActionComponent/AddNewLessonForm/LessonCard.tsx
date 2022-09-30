@@ -1,20 +1,18 @@
 import React, {useContext} from 'react';
 import {IoCamera} from 'react-icons/io5';
+import {v4 as uuidv4} from 'uuid';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import {getLocalStorageData} from '../../../../../../utilities/localStorage';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../Atoms/Form/TextArea';
+import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs2,
-  useTabs,
+  useTabs
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
-import {v4 as uuidv4} from 'uuid';
-import {getLocalStorageData} from '../../../../../../utilities/localStorage';
-import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import DroppableMedia from '../../../../../Molecules/DroppableMedia';
-import {classNames} from '../../../../../Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import SideImage from '../../../../../Dashboard/Classroom/LessonCards/StandardLessonCard/SideImage';
+import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
 
 interface ILessonCard {
   validation: any;
@@ -43,7 +41,7 @@ const LessonCard = ({
   totalEstTime,
   setFileObj,
   lessonType,
-  cardCaption = '',
+  cardCaption = ''
 }: ILessonCard) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {AddNewLessonFormDict} = useDictionary(clientKey);
@@ -51,7 +49,7 @@ const LessonCard = ({
 
   const tabs = [
     {name: 'Setup', current: true},
-    {name: 'Preview', current: false},
+    {name: 'Preview', current: false}
   ];
 
   const previewCard = {
@@ -61,8 +59,8 @@ const LessonCard = ({
       summary: studentSummary,
       cardImage: imagePreviewUrl,
       totalEstTime,
-      cardCaption,
-    },
+      cardCaption
+    }
   };
 
   const imageRef = React.useRef(null);
@@ -104,7 +102,7 @@ const LessonCard = ({
                         /* stylelint-disable */
                         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${imagePreviewUrl})`,
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+                        backgroundPosition: 'center'
                       }}></div>
                   ) : (
                     <div
@@ -117,7 +115,8 @@ const LessonCard = ({
                 {/**
                  *  RIGHT SECTION
                  */}
-                <div className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
+                <div
+                  className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
                   <div className="pr-2 lg:pr-8 pt-5">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
                       {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}

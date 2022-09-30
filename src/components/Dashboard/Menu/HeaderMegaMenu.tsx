@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 import {GlobalContext} from '@contexts/GlobalContext';
@@ -11,7 +11,7 @@ const HeaderMegaMenu = () => {
   const {
     clientKey,
     userLanguage,
-    state: {user},
+    state: {user}
   } = useContext(GlobalContext);
   const {Institute_info, CommunityDict} = useDictionary(clientKey);
 
@@ -34,27 +34,27 @@ const HeaderMegaMenu = () => {
           key: 'general_information',
           redirectionUrl:
             user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
-          active: location.pathname.indexOf(`${baseUrl}/edit`) > -1,
+          active: location.pathname.indexOf(`${baseUrl}/edit`) > -1
         },
         {
           title: Institute_info[userLanguage]['TABS']['STAFF'],
           key: 'staff',
           redirectionUrl: `${baseUrl}/staff`,
-          active: location.pathname.indexOf('staff') > -1,
+          active: location.pathname.indexOf('staff') > -1
         },
         (user.role === 'SUP' || user.role === 'ADM') && {
-          title: 'User registry',
+          title: 'User Registry',
           key: 'user_registry',
           redirectionUrl: `${baseUrl}/manage-users`,
-          active: location.pathname.indexOf('manage-users') > -1,
+          active: location.pathname.indexOf('manage-users') > -1
         },
         (user.role === 'ADM' || user.role === 'FLW' || user.role === 'TR') && {
           title: 'Register New User',
           key: 'register',
           redirectionUrl: `${baseUrl}/register-user`,
-          active: location.pathname.indexOf('register-user') > -1,
-        },
-      ].filter(Boolean),
+          active: location.pathname.indexOf('register-user') > -1
+        }
+      ].filter(Boolean)
     },
     {
       title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
@@ -65,27 +65,27 @@ const HeaderMegaMenu = () => {
           title: Institute_info[userLanguage]['TABS']['COURSES'],
           key: 'course',
           redirectionUrl: `${baseUrl}/courses`,
-          active: location.pathname.indexOf('course') > -1,
+          active: location.pathname.indexOf('course') > -1
         },
         {
           title: Institute_info[userLanguage]['TABS']['UNITS'],
           key: 'unit',
           redirectionUrl: `${baseUrl}/units`,
-          active: location.pathname.indexOf('units') > -1,
+          active: location.pathname.indexOf('units') > -1
         },
         {
           title: Institute_info[userLanguage]['TABS']['LESSONS'],
           key: 'lessons',
           redirectionUrl: `${baseUrl}/lessons`,
-          active: location.pathname.indexOf('lessons') > -1,
+          active: location.pathname.indexOf('lessons') > -1
         },
         {
           title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
           key: 'game-changers',
           redirectionUrl: `/dashboard/game-changers`,
-          active: location.pathname.indexOf('game-changers') > -1,
-        },
-      ],
+          active: location.pathname.indexOf('game-changers') > -1
+        }
+      ]
     },
     user.role !== 'BLD' && {
       title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
@@ -102,21 +102,21 @@ const HeaderMegaMenu = () => {
           title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
           key: 'class_room',
           redirectionUrl: `${baseUrl}/class-rooms`,
-          active: location.pathname.indexOf('room') > -1,
+          active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
           title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
           key: 'roaster',
           redirectionUrl: `${baseUrl}/students`,
-          active: location.pathname.indexOf('room') > -1,
+          active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
           title: Institute_info[userLanguage]['TABS']['LIVE_CLASS_ROOM'],
           key: 'live_classroom',
           redirectionUrl: `/dashboard/home`,
-          active: location.pathname.indexOf('room') > -1,
-        },
-      ].filter(Boolean),
+          active: location.pathname.indexOf('room') > -1
+        }
+      ].filter(Boolean)
     },
     user.role !== 'BLD' && {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
@@ -127,16 +127,16 @@ const HeaderMegaMenu = () => {
           key: 'community_builder',
           redirectionUrl: `/dashboard/community/builder`,
           active: false,
-          title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER'],
+          title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER']
         },
 
         {
           key: 'front_page',
           redirectionUrl: `/dashboard/community/front`,
           active: location.pathname.indexOf('community') > -1,
-          title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE'],
-        },
-      ],
+          title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE']
+        }
+      ]
     },
     {
       title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
@@ -147,23 +147,23 @@ const HeaderMegaMenu = () => {
           key: 'download_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics`,
           active: false,
-          title: Institute_info[userLanguage]['TABS']['DOWNLOAD_CSV'],
+          title: Institute_info[userLanguage]['TABS']['DOWNLOAD_CSV']
         },
 
         {
           key: 'upload_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics/upload-csv`,
           active: location.pathname.indexOf('research-and-analytics') > -1,
-          title: Institute_info[userLanguage]['TABS']['UPLOAD_CSV'],
-        },
+          title: Institute_info[userLanguage]['TABS']['UPLOAD_CSV']
+        }
         // {
         //   key: 'analytics_dashboard',
         //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
         //   active: location.pathname.indexOf('research-and-analytics') > -1,
-        //   title: Institute_info[userLanguage]['TABS']['ANALYTICS_DASHBOARD'],
+        //   title: Institute_info[userLanguage]['TABS']['UPLOAD_TO_ATHENA'],
         // },
-      ],
-    },
+      ]
+    }
   ].filter(Boolean);
 
   // ~~~~~~~~~~~~~ MENU STUDENT ~~~~~~~~~~~~ //
@@ -172,26 +172,26 @@ const HeaderMegaMenu = () => {
       title: Institute_info[userLanguage]['TABS']['HOME'],
       key: 'dashboard',
       redirectionUrl: `${baseUrl}/dashboard/home`,
-      active: location.pathname.indexOf('home') > -1,
+      active: location.pathname.indexOf('home') > -1
     },
     {
       title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
       key: 'game-changers',
       redirectionUrl: `${baseUrl}/dashboard/game-changers`,
-      active: location.pathname.indexOf('game-changers') > -1,
+      active: location.pathname.indexOf('game-changers') > -1
     },
     {
       title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
       key: 'community',
       redirectionUrl: `${baseUrl}/dashboard/community/front`,
-      active: location.pathname.indexOf('community') > -1,
+      active: location.pathname.indexOf('community') > -1
     },
     {
       title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
       key: 'notebook',
       redirectionUrl: `${baseUrl}/dashboard/anthology`,
-      active: location.pathname.indexOf('anthology') > -1,
-    },
+      active: location.pathname.indexOf('anthology') > -1
+    }
   ];
 
   // ~~~~~~~~~~~~~ SWITCH MENUS ~~~~~~~~~~~~ //
@@ -204,7 +204,12 @@ const HeaderMegaMenu = () => {
     }
   };
 
-  const updateTab = ({key, redirectionUrl}: any) => {
+  const [currentTab, setCurrentTab] = useState(
+    headerMenusForStudent?.find((d) => d.active)?.title || headerMenusForStudent[0]?.title
+  );
+
+  const updateTab = ({key, redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
+    setCurrentTab(title);
     if (redirectionUrl) {
       history.push(redirectionUrl);
     }
@@ -212,7 +217,12 @@ const HeaderMegaMenu = () => {
 
   return (
     <div>
-      <Tabs tabsData={getMenuByRole(user?.role)} updateTab={updateTab} tabWithNumbers />
+      <Tabs
+        currentTab={currentTab}
+        tabsData={getMenuByRole(user?.role)}
+        updateTab={updateTab}
+        tabWithNumbers
+      />
     </div>
   );
 };

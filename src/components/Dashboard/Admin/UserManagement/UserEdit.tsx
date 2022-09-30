@@ -1,31 +1,28 @@
-import React, {useContext, useState, Fragment, useEffect, useRef} from 'react';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import moment from 'moment';
+import {AiOutlineCheckCircle} from 'react-icons/ai';
+import {BiImageAdd} from 'react-icons/bi';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as mutations from '../../../../graphql/mutations';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from '../../../../utilities/services';
+import {convertArrayIntoObj} from '../../../../utilities/strings';
+import Buttons from '../../../Atoms/Buttons';
+import FormInput from '../../../Atoms/Form/FormInput';
+import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
+import Selector from '../../../Atoms/Form/Selector';
+import TextArea from '../../../Atoms/Form/TextArea';
+import Loader from '../../../Atoms/Loader';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import Buttons from '../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '../../../Atoms/Form/Selector';
-import {convertArrayIntoObj} from '../../../../utilities/strings';
-import {getAsset} from '../../../../assets';
-import {HiEmojiHappy} from 'react-icons/hi';
-import {BiImageAdd, BiSmile} from 'react-icons/bi';
-import EmojiPicker from 'emoji-picker-react';
-import Storage from '@aws-amplify/storage';
-import Loader from '../../../Atoms/Loader';
-import {AiFillCheckCircle, AiOutlineCheckCircle} from 'react-icons/ai';
-import {getImageFromS3} from '../../../../utilities/services';
-import moment from 'moment';
-import TextArea from '../../../Atoms/Form/TextArea';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -505,6 +502,7 @@ const UserEdit = (props: UserInfoProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
+        acl: 'public-read',
       })
         .then((result) => {
           resolve(result);

@@ -20,6 +20,7 @@ export const getPerson = /* GraphQL */ `
       offBoardSurvey
       phone
       birthdate
+      inactiveStatusDate
       image
       language
       filters
@@ -58,6 +59,7 @@ export const getPerson = /* GraphQL */ `
       }
       spotlightUser
       spotlightDate
+      statusReason
       addedby
       createdAt
       updatedAt
@@ -97,6 +99,7 @@ export const listPeople = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -113,6 +116,7 @@ export const listPeople = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -371,6 +375,7 @@ export const getStaff = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -387,6 +392,7 @@ export const getStaff = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -434,11 +440,7 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -463,6 +465,7 @@ export const listStaff = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -473,6 +476,7 @@ export const listStaff = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -590,6 +594,7 @@ export const getRoom = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -606,6 +611,7 @@ export const getRoom = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -727,11 +733,7 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -791,6 +793,7 @@ export const listRooms = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -801,6 +804,7 @@ export const listRooms = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -844,6 +848,57 @@ export const listRooms = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getArchiveSurveyDataSQL = /* GraphQL */ `
+  query GetArchiveSurveyDataSQL($Email: String!, $AuthId: String!) {
+    getArchiveSurveyDataSQL(Email: $Email, AuthId: $AuthId) {
+      id
+      AuthId
+      Email
+      UniversalSurveyStudentID
+      QuestionResult {
+        QuestionId
+        QuestionLabel
+        QuestionResponse
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listArchiveSurveyDataSQLS = /* GraphQL */ `
+  query ListArchiveSurveyDataSQLS(
+    $Email: String
+    $AuthId: ModelStringKeyConditionInput
+    $filter: ModelArchiveSurveyDataSQLFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listArchiveSurveyDataSQLS(
+      Email: $Email
+      AuthId: $AuthId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        AuthId
+        Email
+        UniversalSurveyStudentID
+        QuestionResult {
+          QuestionId
+          QuestionLabel
+          QuestionResponse
+        }
         createdAt
         updatedAt
       }
@@ -911,6 +966,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -921,6 +977,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -950,6 +1007,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -966,6 +1024,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -983,11 +1042,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classRoomGroupID
@@ -1020,6 +1075,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1030,6 +1086,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1106,6 +1163,7 @@ export const getClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1116,6 +1174,7 @@ export const getClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1182,6 +1241,7 @@ export const getClassroomGroups = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1198,6 +1258,7 @@ export const getClassroomGroups = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1283,6 +1344,7 @@ export const listClassroomGroups = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1293,6 +1355,7 @@ export const listClassroomGroups = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1374,6 +1437,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1384,6 +1448,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1446,6 +1511,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1462,6 +1528,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1532,6 +1599,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1542,6 +1610,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1656,6 +1725,7 @@ export const getClass = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1666,6 +1736,7 @@ export const getClass = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -1732,11 +1803,7 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1894,6 +1961,7 @@ export const getClassStudent = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -1910,6 +1978,7 @@ export const getClassStudent = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -1959,6 +2028,7 @@ export const listClassStudents = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -1969,6 +2039,7 @@ export const listClassStudents = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2690,6 +2761,7 @@ export const getRoomMsgs = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2706,6 +2778,7 @@ export const getRoomMsgs = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2715,11 +2788,7 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs(
-    $filter: ModelRoomMsgsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2744,6 +2813,7 @@ export const listRoomMsgs = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2754,6 +2824,7 @@ export const listRoomMsgs = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2791,6 +2862,7 @@ export const getStudentData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2807,6 +2879,7 @@ export const getStudentData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2889,6 +2962,7 @@ export const listStudentData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -2899,6 +2973,7 @@ export const listStudentData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -2950,6 +3025,7 @@ export const getAnthologyComment = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -2966,6 +3042,7 @@ export const getAnthologyComment = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -2988,11 +3065,7 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         text
@@ -3014,6 +3087,7 @@ export const listAnthologyComments = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3024,6 +3098,7 @@ export const listAnthologyComments = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3066,6 +3141,7 @@ export const getQuestionData = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3082,6 +3158,7 @@ export const getQuestionData = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3129,6 +3206,7 @@ export const listQuestionData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3139,6 +3217,7 @@ export const listQuestionData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3186,6 +3265,7 @@ export const getPersonLocation = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -3202,6 +3282,7 @@ export const getPersonLocation = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -3264,6 +3345,7 @@ export const getPersonLocation = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3274,6 +3356,7 @@ export const getPersonLocation = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3367,6 +3450,7 @@ export const listPersonLocations = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3377,6 +3461,7 @@ export const listPersonLocations = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -3658,6 +3743,7 @@ export const getAttendance = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -3668,6 +3754,7 @@ export const getAttendance = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -4502,6 +4589,7 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -4512,6 +4600,7 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -5135,11 +5224,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID
@@ -5292,11 +5377,7 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusLessonID
@@ -5348,6 +5429,7 @@ export const getStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -5364,6 +5446,7 @@ export const getStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -5384,6 +5467,7 @@ export const getStudentConnections = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -5400,6 +5484,7 @@ export const getStudentConnections = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -5416,11 +5501,7 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         fromEmail
         fromAuthID
@@ -5443,6 +5524,7 @@ export const listStudentConnections = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -5453,6 +5535,7 @@ export const listStudentConnections = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -5473,6 +5556,7 @@ export const listStudentConnections = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -5483,6 +5567,7 @@ export const listStudentConnections = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -5516,6 +5601,7 @@ export const getPersonSentiments = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -5532,6 +5618,7 @@ export const getPersonSentiments = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -5581,6 +5668,7 @@ export const listPersonSentiments = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -5591,6 +5679,7 @@ export const listPersonSentiments = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -5656,6 +5745,7 @@ export const getSentimentTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -5672,6 +5762,7 @@ export const getSentimentTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -5743,6 +5834,7 @@ export const getSentimentTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -5753,6 +5845,7 @@ export const getSentimentTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -5910,6 +6003,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -5920,6 +6014,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6014,6 +6109,7 @@ export const getFeelingTracker = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6030,6 +6126,7 @@ export const getFeelingTracker = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6101,6 +6198,7 @@ export const getFeelingTracker = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6111,6 +6209,7 @@ export const getFeelingTracker = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6204,6 +6303,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6214,6 +6314,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6293,6 +6394,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6309,6 +6411,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6383,6 +6486,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6393,6 +6497,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6570,6 +6675,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6580,6 +6686,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -6803,6 +6910,7 @@ export const getCommunity = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -6819,6 +6927,7 @@ export const getCommunity = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -6911,6 +7020,7 @@ export const listCommunities = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -6921,6 +7031,7 @@ export const listCommunities = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7017,6 +7128,7 @@ export const getGameChangerLog = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7033,6 +7145,7 @@ export const getGameChangerLog = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7091,6 +7204,7 @@ export const listGameChangerLogs = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7101,6 +7215,7 @@ export const listGameChangerLogs = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7149,6 +7264,51 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
+export const getCypressTesting = /* GraphQL */ `
+  query GetCypressTesting($id: ID!) {
+    getCypressTesting(id: $id) {
+      id
+      testID
+      testName
+      testType
+      testSteps
+      testData
+      testExpResults
+      edgeCases
+      lastUpdate
+    }
+  }
+`;
+export const listCypressTestings = /* GraphQL */ `
+  query ListCypressTestings(
+    $id: ID
+    $filter: ModelCypressTestingFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCypressTestings(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        testID
+        testName
+        testType
+        testSteps
+        testData
+        testExpResults
+        edgeCases
+        lastUpdate
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
@@ -7180,6 +7340,7 @@ export const userById = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7196,6 +7357,7 @@ export const userById = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7235,6 +7397,7 @@ export const usersByRole = /* GraphQL */ `
         offBoardSurvey
         phone
         birthdate
+        inactiveStatusDate
         image
         language
         filters
@@ -7251,6 +7414,7 @@ export const usersByRole = /* GraphQL */ `
         }
         spotlightUser
         spotlightDate
+        statusReason
         addedby
         createdAt
         updatedAt
@@ -7329,6 +7493,7 @@ export const messagesByRoomID = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7339,6 +7504,7 @@ export const messagesByRoomID = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt
@@ -7389,6 +7555,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           offBoardSurvey
           phone
           birthdate
+          inactiveStatusDate
           image
           language
           filters
@@ -7399,6 +7566,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           passcode
           spotlightUser
           spotlightDate
+          statusReason
           addedby
           createdAt
           updatedAt

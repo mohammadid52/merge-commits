@@ -3,19 +3,14 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '@interfaces/UniversalLessonInterfaces';
 import {filter} from 'lodash';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {
-  DIVIDER,
-  FORM_TYPES,
-  SPACER,
-} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {DIVIDER, FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
-import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
   const gContext = useGlobalContext();
@@ -53,7 +48,7 @@ const LessonRowComposer = () => {
   }, [activePageData]);
 
   const removeDownloadablesFromlist = useMemo(() => getRemovedDownloadablesFromlist(), [
-    activePageData,
+    activePageData
   ]);
 
   useEffect(() => {
@@ -88,7 +83,7 @@ const LessonRowComposer = () => {
   }, [lessonState.lessonData, PAGES, lessonState.currentPage]);
 
   // this is only for header component
-  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-0 mb-3' : '');
 
   const paddingForDarkBg = (type: any) => {
     switch (type) {

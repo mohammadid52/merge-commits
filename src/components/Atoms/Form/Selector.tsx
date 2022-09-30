@@ -1,13 +1,13 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
+import {ExclamationCircleIcon} from '@heroicons/react/outline';
+import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
-import {ExclamationCircleIcon} from '@heroicons/react/outline';
-import Tooltip from '@atoms/Tooltip';
+import Label from './Label';
 
 interface SelectorProps {
-  list?: {id: number; name: string | number}[];
+  list?: {id: number; name: string | number; popoverElement?: ReactNode}[];
   selectedItem?: string;
   btnClass?: string;
   additionalClass?: string;
@@ -25,6 +25,7 @@ interface SelectorProps {
   error?: string;
   isClearable?: boolean;
   onClear?: () => void;
+  setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -35,6 +36,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     additionalClass = '',
     btnClass,
     disabled,
+
     arrowHidden,
     placeholder,
     error = '',
@@ -42,34 +44,27 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     isRequired = false,
     loading = false,
     noOptionMessage = '',
-    labelTextClass = 'text-xs',
+
     width = 'w-full',
     isClearable = false,
     onClear,
-    placement = 'right',
+
+    setHoveringItem
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [showTooltip, setShowTooltip] = useState(false);
+
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
     onChange(str, name, id);
     window.removeEventListener('click', handleOutsideClick, false);
   };
 
-  const onFocus = () => {
-    if (!showList) {
-      setShowList(true);
-    }
-  };
-
-  const defaultValueTooltip = `Spring Woods High School- Period 4`;
-
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
-    if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
+    if (!stringElement || currentRef?.current?.outerHTML?.indexOf(stringElement) === -1) {
       window.removeEventListener('click', handleOutsideClick, false);
       if (showList) {
         setShowList(false);
@@ -92,15 +87,55 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     }
   }
 
+  const isSelected = (name: string) => name && selectedItem === name;
+
+  const SelectorItem = ({
+    item
+  }: {
+    item: {
+      name: string;
+      id: any;
+      value: string;
+    };
+  }) => {
+    return (
+      <>
+        <li
+          onMouseEnter={() => {
+            setHoveringItem && setHoveringItem(item);
+          }}
+          onMouseLeave={() => {
+            setHoveringItem && setHoveringItem({});
+          }}
+          onClick={() => updateSelectedItem(item.value, item.name, item.id)}
+          id={item.id}
+          tabIndex={-1}
+          role="option"
+          className={`flex cursor-pointer  select-none relative py-2 pl-8 pr-4 ${
+            isSelected(item.name)
+              ? 'iconoclast:bg-main text-white'
+              : 'hover:bg-indigo-100 hover:text-indigo-400'
+          }`}>
+          <span className={`block truncate`}>{item.name}</span>
+          {/* {isSelected(item.name) && (
+            <span className={`text-white relative w-auto flex items-center`}>
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          )} */}
+        </li>
+      </>
+    );
+  };
+
   return (
-    <div className={`relative ${additionalClass}`} ref={currentRef}>
-      {label && (
-        <label
-          className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
-          {label}
-          <span className="text-red-500"> {isRequired ? '*' : null}</span>
-        </label>
-      )}
+    <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
+      <Label label={label} isRequired={isRequired} />
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}
@@ -146,7 +181,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 value={{
                   size: '1.2rem',
                   style: {},
-                  className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                  className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
                 }}>
                 <FaSpinner />
               </IconContext.Provider>
@@ -173,49 +208,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             aria-activedescendant="listbox-item-3"
             className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
-              list.map((item: {name: string; id: any; value: string}, key: number) => (
-                <Tooltip
-                  additionalClass="dropdown-tooltip-text"
-                  show={showTooltip}
-                  key={key}
-                  text={item.name}
-                  placement={placement}>
-                  <li
-                    key={key}
-                    onClick={() => updateSelectedItem(item.value, item.name, item.id)}
-                    id={item.id}
-                    tabIndex={-1}
-                    role="option"
-                    className={`hover:${
-                      theme.backGroundLight[themeColor]
-                    } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
-                      themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                    }-600 focus:border-transparent`}>
-                    <span
-                      className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
-                        theme.textColor[themeColor]
-                      } relative w-auto flex items-center`}>
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      className={`${
-                        selectedItem === item.name
-                          ? 'font-semibold pl-1'
-                          : 'font-normal pl-4'
-                      } block truncate`}
-                      onMouseEnter={() => setShowTooltip(true)}
-                      onMouseLeave={() => setShowTooltip(false)}>
-                      {item.name}
-                    </span>
-                  </li>
-                </Tooltip>
-              ))
+              list.map(
+                (item: {popoverElement?: any; name: string; id: any; value: string}) => (
+                  <SelectorItem item={item} key={item.id} />
+                )
+              )
             ) : (
               <li className="flex justify-center relative py-2 px-4">
                 <span className="font-normal">{noOptionMessage || 'No Results'}</span>

@@ -4,6 +4,7 @@ import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
 import {getLocalStorageData} from '../utilities/localStorage';
+import {filterData} from '../utilities/UploadArchiveData';
 import {PartInput} from 'API';
 
 const useStudentTimer = () => {
@@ -129,7 +130,7 @@ const useStudentTimer = () => {
     const cleanUpProcess = [
       () => lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'}),
       () => clearTimeout(activityTimeout),
-      () => setSavePending(false),
+      () => setSavePending(false)
     ];
     return cleanUpProcess.reduce((truth: boolean, cleanUpFn: any, idx: number) => {
       cleanUpFn();
@@ -152,7 +153,7 @@ const useStudentTimer = () => {
             pageData: lessonState.studentData[currentIdObj.pageIdx],
             hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
             exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
-            roomID: getRoomData.id,
+            roomID: getRoomData.id
           };
 
           try {
@@ -183,20 +184,24 @@ const useStudentTimer = () => {
       const surveyData = lessonState?.studentData.map((pageData: any) => {
         return {
           domID: pageData.domID,
-          input: pageData.input,
+          input: pageData.input
         };
       });
+      console.log(
+        '🚀 ~ file: timer.tsx ~ line 190 ~ surveyData ~ surveyData',
+        surveyData
+      );
       let data = {
         id: lessonState?.universalStudentDataID[0]?.id,
         surveyData,
-        roomID: getRoomData.id,
+        roomID: getRoomData.id
       };
 
       try {
         await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
         );
-
+        // await filterData();
         console.log('updateSurveyData - success');
       } catch (e) {
         console.error('updateSurveyData - ', e);
@@ -212,7 +217,7 @@ const useStudentTimer = () => {
     currentSaveCount,
     clearUpdateCycle,
     updateStudentLessonData,
-    updateSurveyData,
+    updateSurveyData
   };
 };
 

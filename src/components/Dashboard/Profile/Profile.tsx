@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
+import {uploadImageToS3} from '@graphql/functions';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -11,12 +12,11 @@ import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
 import {getImageFromS3} from '../../../utilities/services';
 import {getUniqItems} from '../../../utilities/strings';
-import BreadCrums from '../../Atoms/BreadCrums';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import SectionTitle from '../../Atoms/SectionTitle';
-import HeroBanner from '../../Header/HeroBanner';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import DroppableMedia from '../../Molecules/DroppableMedia';
 import AboutMe from './AboutMe';
 import ChangePasscode from './ChangePasscode';
 import ChangePassword from './ChangePassword';
@@ -24,8 +24,6 @@ import ProfileCropModal from './ProfileCropModal';
 import ProfileEdit from './ProfileEdit';
 import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
-import DroppableMedia from '../../Molecules/DroppableMedia';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
 
 export interface UserInfo {
   authId: string;
@@ -72,8 +70,9 @@ const Profile = (props: ProfilePageProps) => {
     status: '',
     phone: '',
     updatedAt: '',
-    birthdate: null,
+    birthdate: null
   });
+
   const {state, theme, userLanguage, clientKey, dispatch} = useContext(GlobalContext);
   const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
   const match = useRouteMatch();
@@ -81,10 +80,10 @@ const Profile = (props: ProfilePageProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const [status, setStatus] = useState('');
-  const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
+
   const [imageUrl, setImageUrl] = useState('');
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
   const [questionData, setQuestionData] = useState([]);
@@ -94,73 +93,25 @@ const Profile = (props: ProfilePageProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['PROFILE'],
       url: '/dashboard/profile',
-      last: true,
-    },
+      last: true
+    }
   ];
-
-  /**
-   * Profile component structure needs to be reform to reduce unnecessary API calls.
-   *
-   *
-   */
-
-  // TODO:
-  // Set type for file instead of any
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`profile_image_${id}`, file, {
-        contentType: type,
-        ContentEncoding: 'base64',
-      })
-        .then((result) => {
-          resolve(true);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const deletImageFromS3 = (key: string) => {
-    // Remove image from bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.remove(key)
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in deleting file from s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const setImage = (file: any) => {
-    const fileReader = new FileReader();
-    fileReader.onload = function () {
-      setUpImage(fileReader.result);
-    };
-    fileReader.readAsDataURL(file);
-    toggleCropper();
-  };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
-  const [fileObj, setFileObj] = useState({});
+  const [fileObj, setFileObj] = useState<any>({});
 
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image ? image : fileObj, person.id, 'image/jpeg');
-    const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`);
+    const ID = `profile_image_${person.id}`;
+    await uploadImageToS3(image ? image : fileObj, ID, fileObj?.type || 'image/jpeg');
+    const imageUrl: any = await getImageFromS3(ID);
+
     setImageUrl(imageUrl);
-    setPerson({...person, image: `profile_image_${person.id}`});
-    updateImageParam(`profile_image_${person.id}`);
+    setPerson({...person, image: ID});
+    updateImageParam(ID);
     toggleCropper();
     dispatch({
       type: 'SET_USER',
@@ -171,9 +122,9 @@ const Profile = (props: ProfilePageProps) => {
         language: state.user.language,
         onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
         role: state.user.role,
-        image: `profile_image_${person.id}`,
-        onDemand: state.user?.onDemand,
-      },
+        image: ID,
+        onDemand: state.user?.onDemand
+      }
     });
     setImageLoading(false);
   };
@@ -195,7 +146,7 @@ const Profile = (props: ProfilePageProps) => {
       phone: person.phone,
       birthdate: person.birthdate,
       email: person.email,
-      firstName: person.firstName,
+      firstName: person.firstName
     };
     try {
       const update: any = await API.graphql(
@@ -203,52 +154,19 @@ const Profile = (props: ProfilePageProps) => {
       );
       setPerson({
         ...person,
-        ...update.data.updatePerson,
+        ...update.data.updatePerson
       });
     } catch (error) {
       console.error('Error updating image on graphql', error);
     }
   }
 
-  const deletUserProfile = async () => {
-    await deletImageFromS3(`profile_image_${person.id}`);
-    await removeImageUrlFromDb();
-  };
-
-  const removeImageUrlFromDb = async () => {
-    const input = {
-      id: person.id,
-      image: '',
-      authId: person.authId,
-      grade: person.grade,
-      language: person.language,
-      lastName: person.lastName,
-      preferredName: person.preferredName,
-      role: person.role,
-      status: person.status,
-      phone: person.phone,
-      birthdate: person.birthdate,
-      email: person.email,
-      firstName: person.firstName,
-    };
-    try {
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
-      );
-      setPerson({
-        ...person,
-        ...update.data.updatePerson,
-      });
-    } catch (error) {
-      console.error('Error Deleting image on graphql', error);
-    }
-  };
   const getQuestionData = async (checkpointIDs: any[]) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
-          eq: item,
-        },
+          eq: item
+        }
       };
     });
     const filter = {
@@ -257,9 +175,9 @@ const Profile = (props: ProfilePageProps) => {
         {authID: {eq: state.user.authId}},
         {syllabusLessonID: {eq: '999999'}},
         {
-          or: [...checkpointIDFilter],
-        },
-      ],
+          or: [...checkpointIDFilter]
+        }
+      ]
     };
     const results: any = await API.graphql(
       graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
@@ -273,11 +191,12 @@ const Profile = (props: ProfilePageProps) => {
       const results: any = await API.graphql(
         graphqlOperation(customQueries.getPersonData, {
           email: state.user.email,
-          authId: state.user.authId,
+          authId: state.user.authId
         })
       );
 
       const userData: any = results.data.getPerson;
+
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
@@ -336,8 +255,8 @@ const Profile = (props: ProfilePageProps) => {
                     (questionItem: any) => questionItem.question.id === idStr
                   );
                 })
-              : checkpointObj.questions.items,
-          },
+              : checkpointObj.questions.items
+          }
         };
       });
       // console.log('sorted ', sortedCheckpointQ);
@@ -371,14 +290,12 @@ const Profile = (props: ProfilePageProps) => {
   }, [person.image]);
 
   const profileBanner1 = getAsset(clientKey, 'dashboardBanner1');
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const mediaRef = React.useRef(null);
 
   if (status !== 'done') {
     return <LessonLoading />;
-  }
-  {
+  } else {
     return (
       <div className="relative">
         <BreadcrumbsWithBanner
@@ -417,7 +334,7 @@ const Profile = (props: ProfilePageProps) => {
                   label="Edit"
                   onClick={() => history.push(`${match.url}/edit`)}
                   Icon={FaEdit}
-                />{' '}
+                />
               </div>
             ) : null}
           </div>

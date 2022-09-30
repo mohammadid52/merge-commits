@@ -21,7 +21,7 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
-  getLessonCompletedValue,
+  getLessonCompletedValue
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -60,7 +60,6 @@ const LessonHeaderBar = ({
   };
 
   const handleNotebookSave = () => {
-    console.log('🚀 ~ file: LessonHeaderBar.tsx ~ line 64 ~ handleNotebookSave');
     if (leaveAfterCompletion) {
       createJournalData();
       setTimeout(() => {
@@ -69,19 +68,21 @@ const LessonHeaderBar = ({
     }
   };
 
+  let timer: any;
   useEffect(() => {
-    setTimeout(() => {
-      getLessonCompletedValue().then((value: any) => {
-        if (value.lessonProgress === value.totalPages) {
-          setLeaveAfterCompletion(true);
-        } else {
-          setLeaveAfterCompletion(false);
-        }
-      });
+    timer = setTimeout(() => {
+      getLessonCompletedValue &&
+        getLessonCompletedValue().then((value: any) => {
+          if (value.lessonProgress === value.totalPages) {
+            setLeaveAfterCompletion(true);
+          } else {
+            setLeaveAfterCompletion(false);
+          }
+        });
     }, 1300);
 
     return () => {
-      clearTimeout();
+      clearTimeout(timer);
     };
   }, [lessonState.currentPage]);
 
@@ -241,30 +242,34 @@ const LessonHeaderBar = ({
         history.push(`${match.url}/${getPresentedPagedIndex}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: getPresentedPagedIndex,
+          payload: getPresentedPagedIndex
         });
       }
     }
   }, [teacherIsPresenting, presentedPageID]);
 
   // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
-  const handleForward = () => {
-    if (!userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      if (canContinue()) {
-        history.push(`${match.url}/${lessonState.currentPage + 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1,
-        });
-      } else {
-        handleRequiredNotification();
-      }
-    } else if (userAtEnd()) {
-      if (validateRequired(lessonState.currentPage)) {
-        handleLeavePopup();
-      } else {
-        handleRequiredNotification();
+  const handleForward = (forward = true) => {
+    if (!forward) {
+      handleBack();
+    } else {
+      if (!userAtEnd()) {
+        if (isAtEnd) setisAtEnd(false);
+        if (canContinue()) {
+          history.push(`${match.url}/${lessonState.currentPage + 1}`);
+          lessonDispatch({
+            type: 'SET_CURRENT_PAGE',
+            payload: lessonState.currentPage + 1
+          });
+        } else {
+          handleRequiredNotification();
+        }
+      } else if (userAtEnd()) {
+        if (validateRequired(lessonState.currentPage)) {
+          handleLeavePopup();
+        } else {
+          handleRequiredNotification();
+        }
       }
     }
   };
@@ -278,14 +283,14 @@ const LessonHeaderBar = ({
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage - 1,
+          payload: lessonState.currentPage - 1
         });
       } else if (!userAtEnd() && lessonState.currentPage > 0) {
         if (isAtEnd) setisAtEnd(false);
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage - 1,
+          payload: lessonState.currentPage - 1
         });
       }
     }

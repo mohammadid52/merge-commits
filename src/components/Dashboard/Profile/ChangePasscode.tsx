@@ -1,9 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import React, {useContext, useState} from 'react';
-import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {FaKey} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
@@ -19,7 +16,6 @@ interface ChangePasscodeProps {
 }
 
 const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) => {
-  const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const history = useHistory();
@@ -30,12 +26,12 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
   const [input, setInput] = useState({
     oldPassword: '',
     newPasscode: '',
-    match: '',
+    match: ''
   });
 
   async function UpdatePersonPasscode(inputPasscode: string) {
@@ -44,7 +40,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       authId: state.user.authId,
       firstName: state.user.firstName,
       email: state.user.email,
-      passcode: inputPasscode,
+      passcode: inputPasscode
     };
     try {
       const update: any = await API.graphql(
@@ -55,7 +51,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         setMessage({
           show: true,
           type: 'success',
-          message: 'Passcode changed successfully!',
+          message: 'Passcode changed successfully!'
         });
         setTimeout(() => {
           handleForgotPasscode(true);
@@ -83,7 +79,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       } else if (!username.includes('@')) {
         setMessage({
           ...errMsg,
-          message: 'Your email is not in the expected email address format',
+          message: 'Your email is not in the expected email address format'
         });
       } else if (!password) {
         setMessage({...errMsg, message: 'Please enter your password'});
@@ -101,21 +97,21 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           return {
             show: true,
             type: 'error',
-            message: 'The email you entered was not found',
+            message: 'The email you entered was not found'
           };
         case 'NotAuthorizedException':
           if (!onlyEmail) {
             return {
               show: true,
               type: 'error',
-              message: 'The email or password you entered was not correct',
+              message: 'The email or password you entered was not correct'
             };
           }
         case 'UserNotConfirmedException':
           return {
             show: true,
             type: 'error',
-            message: 'You need to confirm registered email id, Please check your email.',
+            message: 'You need to confirm registered email id, Please check your email.'
           };
         // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
 
@@ -123,7 +119,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           return {
             show: true,
             type: 'error',
-            message: error.message,
+            message: error.message
           };
       }
     });
@@ -141,7 +137,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         show: true,
         type: 'error',
         message:
-          dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['ERRORS']['NO_OLD_PASS'],
+          dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['ERRORS']['NO_OLD_PASS']
       });
     } else if (!newPasscode) {
       setLoading(false);
@@ -149,7 +145,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         show: true,
         type: 'error',
         message:
-          dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['ERRORS']['NO_NEW_PASS'],
+          dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['ERRORS']['NO_NEW_PASS']
       });
     } else if (
       !(input.newPasscode.length >= 4) &&
@@ -159,7 +155,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       setMessage({
         show: true,
         type: 'error',
-        message: 'Passcode must be at least 4 alphanumeric characters',
+        message: 'Passcode must be at least 4 alphanumeric characters'
       });
     } else {
       validated = true;
@@ -174,7 +170,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
     setInput((input) => {
       return {
         ...input,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -209,50 +205,24 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           className={`h-full  text-gray-800 ${
             fromWhere !== 'notebook' ? 'px-4 py-5 sm:px-6' : ''
           }`}>
-          <div className="text-center text-sm">
+          <div className="text-center text-gray-600 text-sm">
             {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['INFO']}
           </div>
-          <div className="w-full h-auto flex flex-col justify-between items-center my-4">
+          <div className="w-full gap-4 h-auto flex flex-col justify-between items-center my-4">
             <div
               className={`w-full m-1 ${
                 fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
               }`}>
               <div className="relative">
-                <div className="absolute right-1 w-auto mr-2">
-                  <div
-                    onClick={() => setOldPassToggle(!oldPassToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
-                    {oldPassToggle ? (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEye />
-                      </IconContext.Provider>
-                    ) : (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
-                    )}
-                  </div>
-                </div>
-                <div className="absolute left-1 w-auto mr-2">
-                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
-                      <FaKey />
-                    </IconContext.Provider>
-                  </div>
-                </div>
-                <label className="hidden" htmlFor="oldPassword">
-                  {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['OLD_PASS']}
-                </label>
                 <FormInput
-                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
+                  label={
+                    dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['OLD_PASS']
+                  }
                   placeHolder={
                     dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['OLD_PASS']
                   }
-                  type={oldPassToggle ? 'text' : 'password'}
                   id="oldPassword"
+                  type={'password'}
                   name="password"
                   value={input.oldPassword}
                   onChange={handleChange}
@@ -266,40 +236,14 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
                 fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
               }`}>
               <div className="relative">
-                <div className="absolute right-1 w-auto mr-2">
-                  <div
-                    onClick={() => setPassToggle(!passToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
-                    {passToggle ? (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEye />
-                      </IconContext.Provider>
-                    ) : (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
-                    )}
-                  </div>
-                </div>
-                <div className="w-auto absolute left-1 mr-2">
-                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
-                      <FaKey />
-                    </IconContext.Provider>
-                  </div>
-                </div>
-                <label className="hidden" htmlFor="password">
-                  {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['NEW_PASS']}
-                </label>
                 <FormInput
-                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
+                  label={
+                    dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['NEW_PASS']
+                  }
                   placeHolder={
                     dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['NEW_PASS']
                   }
-                  type={'text'}
+                  type={'password'}
                   id="newPasscode"
                   name="passcode"
                   value={input.newPasscode}
@@ -323,9 +267,8 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         ) : null}
       </div>
 
-      <div className="px-4 pt-4 w-full flex justify-center">
+      <div className="pt-4 w-full flex justify-center flex-col-reverse md:flex-row gap-2">
         <Buttons
-          btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
           label={dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['CANCEL']}
           onClick={
             fromWhere !== 'notebook'
@@ -335,7 +278,6 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           transparent
         />
         <Buttons
-          btnClass="py-2 w-auto px-4 text-xs ml-2"
           label={
             loading
               ? 'Verifying...'

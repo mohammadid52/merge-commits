@@ -1,15 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import StageIcon from './StageIcon';
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-import {AiOutlineHome} from 'react-icons/ai';
 import {GlobalContext} from '@contexts/GlobalContext';
+import useLessonControls from '@customHooks/lessonControls';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getLocalStorageData} from '@utilities/localStorage';
+import React, {useContext, useEffect} from 'react';
+import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';
-import useLessonControls from '@customHooks/lessonControls';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
@@ -34,7 +31,7 @@ const ProgressBar = ({
   pages,
   currentPage,
   studentData,
-  requiredInputs,
+  requiredInputs
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -133,14 +130,15 @@ const ProgressBar = ({
   const lessonId = router.params.lessonID || '999';
 
   const isClosedLocalStorage =
-    getRoomData.completedLessons.findIndex(
+    getRoomData?.completedLessons?.findIndex(
       (item: {lessonID?: string | null; time?: string | null}) =>
         item.lessonID === lessonId
     ) > -1;
 
-  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
+  const isClosed = lessonState?.displayData[0]?.studentAuthID === 'closed';
 
   const {resetViewAndShare} = useLessonControls();
+
   const reset = async () => {
     await resetViewAndShare();
   };

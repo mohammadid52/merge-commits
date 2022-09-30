@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import React from 'react';
 import {FaPlus} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 interface InstructionsPopupProps {
   video: string;

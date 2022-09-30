@@ -43,16 +43,14 @@ const Start: React.FC<StartProps> = ({
   type,
   roomID,
   preview,
-  isUsed,
+  isUsed
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
 
-  const dispatch = gContext.dispatch;
   const user = gContext.state.user;
   const theme = gContext.theme;
-  const lessonState = gContext.lessonState;
 
   const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
@@ -71,7 +69,7 @@ const Start: React.FC<StartProps> = ({
     show: false,
     activeLessonsId: [],
     lessonID: '',
-    message: 'Do you want to mark these active lessons as completed?',
+    message: 'Do you want to mark these active lessons as completed?'
   });
 
   const isTeacher = user.role === 'FLW' || user.role === 'TR';
@@ -125,20 +123,20 @@ const Start: React.FC<StartProps> = ({
     userAuthId: string
   ) => {
     try {
-      console.log('I am running...');
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
           lessonID: lessonId,
           studentEmail: userEmail,
-          studentAuthId: userAuthId,
+          studentAuthId: userAuthId
         })
       );
 
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
       const currentPage = JSON.parse(pageNumber).currentPage;
+
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: currentPage,
+        payload: currentPage
       });
 
       setPageNumber(currentPage);
@@ -159,14 +157,14 @@ const Start: React.FC<StartProps> = ({
           studentID: {eq: state.user?.id},
           curriculumID: {eq: syllabusData.curriculumId},
           syllabusID: {eq: syllabusData.id},
-          lessonID: {eq: lessonKey},
+          lessonID: {eq: lessonKey}
         };
         if (!isTeacher) {
           filter.date = {eq: awsFormatDate(dateString('-', 'WORLD'))};
         }
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
-            filter,
+            filter
           })
         );
         if (isMounted) {
@@ -192,11 +190,11 @@ const Start: React.FC<StartProps> = ({
         lessonID: lessonKey,
         roomID,
         date: awsFormatDate(dateString('-', 'WORLD')),
-        time: new Date().toTimeString().split(' ')[0],
+        time: new Date().toTimeString().split(' ')[0]
       };
       await API.graphql(
         graphqlOperation(mutations.createAttendance, {
-          input: payload,
+          input: payload
         })
       );
 
@@ -212,7 +210,7 @@ const Start: React.FC<StartProps> = ({
     try {
       await API.graphql(
         graphqlOperation(mutations.updateUniversalLesson, {
-          input: {id: lessonObj.id, isUsed: true},
+          input: {id: lessonObj.id, isUsed: true}
         })
       );
     } catch (e) {
@@ -224,7 +222,7 @@ const Start: React.FC<StartProps> = ({
     try {
       await API.graphql(
         graphqlOperation(mutations.updateUniversalSyllabus, {
-          input: {id: syllabusID, lessonHistory: historyArray},
+          input: {id: syllabusID, lessonHistory: historyArray}
         })
       );
     } catch (e) {
@@ -270,7 +268,7 @@ const Start: React.FC<StartProps> = ({
           if (!syllabusProps?.lessonHistory.includes(lessonProps.id)) {
             await setSyllabusLessonHistory(syllabusProps?.id, [
               ...syllabusProps.lessonHistory,
-              lessonProps.id,
+              lessonProps.id
             ]);
           }
         } else {
@@ -288,7 +286,7 @@ const Start: React.FC<StartProps> = ({
   const discardChanges = async () => {
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
+        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]}
       })
     );
     history.push(goBackUrl);
@@ -311,7 +309,7 @@ const Start: React.FC<StartProps> = ({
           .map((lesson: any) => lesson.title)
           .join(', ')} as completed?`,
         activeLessonsId: lessonIds,
-        show: true,
+        show: true
       }));
     } else {
       if (!checkIfCompletedBeforeOpen()) {
@@ -335,18 +333,18 @@ const Start: React.FC<StartProps> = ({
               ...(state.roomData.completedLessons || []),
               ...payloadLessonIds?.map((lessonID: any) => ({
                 lessonID,
-                time: new Date().toISOString(),
-              })),
+                time: new Date().toISOString()
+              }))
             ],
-            activeLessons: [lessonKey],
-          },
+            activeLessons: [lessonKey]
+          }
         })
       );
       // POST TO LAMBDA
       await axios.post(tableCleanupUrl, {
         lessonID: warnModal.lessonID[0],
         syllabusID: getRoomData.activeSyllabus,
-        roomID: getRoomData.id,
+        roomID: getRoomData.id
       });
       setIsLoading(false);
     } catch (e) {
@@ -424,22 +422,12 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const studentTeacherButtonTheme = () => {
-    if (isCompleted && !isOnDemand) {
-      return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
-    } else if (isActive || isOnDemand) {
-      return theme.btn.lessonStart;
-    } else {
-      return theme.btn.iconoclastIndigo;
-    }
-  };
-
   const onCloseModal = () => {
     setWarnModal({
       message: '',
       activeLessonsId: [],
       lessonID: '',
-      show: false,
+      show: false
     });
   };
 
@@ -458,7 +446,7 @@ const Start: React.FC<StartProps> = ({
   };
 
   return (
-    <div>
+    <div data-cy="survey-button">
       <Buttons
         type="submit"
         onClick={!preview ? handleLink : noop}
@@ -471,12 +459,9 @@ const Start: React.FC<StartProps> = ({
           (!open && !isTeacher && !isOnDemand) ||
           (!isActive && !isTeacher && !isOnDemand)
         }
-        overrideClass={true}
-        btnClass={`rounded 
-        ${studentTeacherButtonTheme()}
-        h-full w-full text-xs focus:outline-none ${
+        btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out py-2 sm:py-auto`}
+        } `}
       />
       {warnModal.show && (
         <ModalPopUp

@@ -11,6 +11,8 @@ inspiration
 workspace.xml
 tsconfig.json
 
+src/aws-exports.js
+
 amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -22,8 +24,7 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
-src/aws-exports.js
+
 awsconfiguration.json
 amplifyconfiguration.json
 amplify-build-config.json
@@ -33,6 +34,10 @@ amplifytools.xcconfig
 
 <<<<<<< HEAD
 .secret-*
+
+
+cypress/videos
+cypress/screenshots
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend

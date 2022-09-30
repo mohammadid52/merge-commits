@@ -17,7 +17,7 @@ const ModalHeader = (headerProps: {
     <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
       <div className="flex items-center">
         {title ? (
-          <h3 className="w-auto text-xl font-semibold">{title}</h3>
+          <h3 className="w-auto text-sm md:text-xl font-semibold">{title}</h3>
         ) : customTitle ? (
           customTitle
         ) : null}

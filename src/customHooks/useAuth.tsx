@@ -2,11 +2,24 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {getInitialsFromString, initials, stringToHslColor} from '@utilities/strings';
 import React from 'react';
 
+type Role = 'ST' | 'TR' | 'BLD' | 'ADM' | 'SUP' | 'FLW';
+
+type User = {
+  authId: string;
+  role: Role;
+  email: string;
+  firstName: string;
+  lastName: string;
+  image: string;
+  associateInstitute: any[];
+};
+
 const useAuth = (): {
-  role: any;
+  role: Role;
   isStudent: boolean;
   isTeacher: boolean;
   isBuilder: boolean;
+  isSuperAdmin: boolean;
   isAdmin: boolean;
   isFellow: boolean;
   authId: any;
@@ -20,7 +33,7 @@ const useAuth = (): {
 } => {
   const context = useGlobalContext();
 
-  const user = context.state.user;
+  const user: User = context.state.user;
 
   const {authId, role, email, firstName, lastName, image} = user;
 
@@ -28,13 +41,14 @@ const useAuth = (): {
   const isTeacher = role === 'TR';
   const isBuilder = role === 'BLD';
   const isAdmin = role === 'ADM';
+  const isSuperAdmin = role === 'SUP';
   const isFellow = role === 'FLW';
   const instId = user?.associateInstitute[0]?.institution?.id || '';
 
   const Placeholder = ({
     name,
     size = 'w-10 h-10 md:w-12 md:h-12',
-    textSize = 'text-2xl',
+    textSize = 'text-2xl'
   }: {
     name?: string;
     textSize?: string;
@@ -53,7 +67,7 @@ const useAuth = (): {
             background: `${
               firstName ? stringToHslColor(firstName + ' ' + lastName) : null
             }`,
-            textShadow: '0.2rem 0.2rem 3px #423939b3',
+            textShadow: '0.2rem 0.2rem 3px #423939b3'
           }}>
           {firstName && initials(firstName, lastName)}
         </div>
@@ -74,8 +88,9 @@ const useAuth = (): {
     lastName,
     image,
     instId,
+    isSuperAdmin,
     user,
-    Placeholder,
+    Placeholder
   };
 };
 

@@ -1,7 +1,11 @@
-import Storage from '@aws-amplify/storage';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import FeedbacksUploads from '@components/Dashboard/Anthology/UploadsTab/FeedbacksUploads';
 import FileListItem from '@components/Dashboard/Anthology/UploadsTab/FileListItem';
 import UploadAttachment from '@components/Dashboard/Anthology/UploadsTab/UploadAttachment';
+import {UPLOAD_KEYS} from '@components/Lesson/constants';
+import {deleteImageFromS3} from '@graphql/functions';
+import * as mutations from '@graphql/mutations';
 import {sortBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
@@ -10,12 +14,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
 import * as queries from '../../../../graphql/queries';
 import {dateFromServer} from '../../../../utilities/time';
-import Buttons from '../../../Atoms/Buttons';
-import ContentCard from '../../../Atoms/ContentCard';
-import FeedbacksUploads from '@components/Dashboard/Anthology/UploadsTab/FeedbacksUploads';
 import {IUploadCardProps} from '../UploadsTab';
-import {UPLOAD_KEYS} from '@components/Lesson/constants';
-import * as mutations from '@graphql/mutations';
 
 const UploadCard = ({
   idx,
@@ -28,7 +27,7 @@ const UploadCard = ({
   handleCancel,
   editID,
   personAuthID,
-  personEmail,
+  personEmail
 }: IUploadCardProps) => {
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
@@ -110,7 +109,7 @@ const UploadCard = ({
         files: newFilesArray,
         lessonPageID: contentObj.lessonPageID,
         lessonID: contentObj.lessonID,
-        syllabusLessonID: contentObj.syllabusLessonID,
+        syllabusLessonID: contentObj.syllabusLessonID
       };
 
       console.log('payu;lpoad - ', payload);
@@ -128,22 +127,6 @@ const UploadCard = ({
   // ~~~~~~~~~ S3 STORAGE DELETION ~~~~~~~~~ //
 
   const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user?.id, contentObj.lessonID);
-
-  const deleteImageFromS3 = (key: string) => {
-    // Remove image from bucket
-    return new Promise((resolve, reject) => {
-      Storage.remove(key)
-        .then((result) => {
-          console.log('deleted: ', key);
-          resolve(result);
-        })
-        .catch((err) => {
-          console.error(err.message);
-
-          reject(err);
-        });
-    });
-  };
 
   const deleteImage = async (fileKey: string) => {
     deleteImageFromS3(`${UPLOAD_KEY}${fileKey}`);
@@ -164,16 +147,16 @@ const UploadCard = ({
     const filter: any = feedbacks.map((id: string) => {
       return {
         id: {
-          eq: id,
-        },
+          eq: id
+        }
       };
     });
     try {
       const listCommentData: any = await API.graphql(
         graphqlOperation(queries.listAnthologyComments, {
           filter: {
-            or: [...filter],
-          },
+            or: [...filter]
+          }
         })
       );
       return listCommentData?.data?.listAnthologyComments?.items;

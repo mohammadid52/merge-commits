@@ -1,3 +1,4 @@
+import {Storage} from '@aws-amplify/storage';
 import {Transition} from '@headlessui/react';
 import {forEach, map} from 'lodash';
 import React, {useState} from 'react';
@@ -5,7 +6,6 @@ import ClickAwayListener from 'react-click-away-listener';
 import {BsCheckCircle, BsCloudDownload} from 'react-icons/bs';
 import {IoClose} from 'react-icons/io5';
 import {setTimeout} from 'timers';
-import Storage from '@aws-amplify/storage';
 import {ellipsis} from '../../../../../utilities/functions';
 import {UPLOAD_KEYS} from '../../../constants';
 

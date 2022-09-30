@@ -5,12 +5,13 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {getLocalStorageData} from '../../../utilities/localStorage';
 import ClassroomLoader from './ClassroomLoader';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const groupBy = (item: any, key: string) =>
   item.reduce(
     (result: any, item: any) => ({
       ...result,
-      [item[key]]: [...(result[item[key]] || []), item],
+      [item[key]]: [...(result[item[key]] || []), item]
     }),
     {}
   );
@@ -23,8 +24,7 @@ const Today: React.FC<LessonProps> = ({
   lessons,
   syllabus,
   handleLessonMutationRating,
-  getLessonRating,
-  getLessonByType,
+  getLessonRating
 }: LessonProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -48,20 +48,35 @@ const Today: React.FC<LessonProps> = ({
     }
   }, [lessonLoading]);
 
+  const {breakpoint} = useTailwindBreakpoint();
+
   useEffect(() => {
     if (lessons?.length) {
       const temp: any = [];
       const groupedData = groupBy(lessons, 'session');
+
+      // .filter(
+      //   (_d: any) => _d.lesson.type === 'survey'
+      // );
       for (const [key, value] of Object.entries(groupedData)) {
         const associatedLessons: any = value;
-        temp.push({
-          sessionHeading: associatedLessons[0].sessionHeading,
-          lessons: value,
-        });
+        if (breakpoint === 'sm') {
+          if (associatedLessons[0].lesson.type === 'survey') {
+            temp.push({
+              sessionHeading: associatedLessons[0].sessionHeading,
+              lessons: value
+            });
+          }
+        } else {
+          temp.push({
+            sessionHeading: associatedLessons[0].sessionHeading,
+            lessons: value
+          });
+        }
       }
       setLessonsBySession(temp);
     }
-  }, [lessons]);
+  }, [lessons, breakpoint]);
 
   const emptyStyles = 'flex justify-center items-center w-full h-48';
 
@@ -86,7 +101,7 @@ const Today: React.FC<LessonProps> = ({
                 <span
                   className="px-2 text-sm text-gray-500 w-auto"
                   style={{
-                    backgroundColor: '#f0f2f5',
+                    backgroundColor: '#f0f2f5'
                   }}>
                   {session.sessionHeading}
                 </span>
@@ -110,11 +125,10 @@ const Today: React.FC<LessonProps> = ({
                       user={state.user}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={getLessonRating}
-                      getLessonByType={getLessonByType}
                     />
                   </div>
                 );
-              } else return <div />;
+              } else return <div key={`todayLesson_${key}_wrapper`} />;
             })}
           </Fragment>
         ))

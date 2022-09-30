@@ -52,6 +52,10 @@ https://flickity.metafizzy.co
   background: hsla(0, 0%, 100%, 0.75);
   border: none;
   color: #333;
+
+  @media screen and (max-width: 768px) {
+    display: none !important;
+  }
 }
 
 .flickity-button:hover {

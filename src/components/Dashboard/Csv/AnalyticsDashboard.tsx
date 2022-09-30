@@ -1,170 +1,198 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import Loader from '@atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as queries from '@graphql/queries';
-import Selector from '../../Atoms/Form/Selector';
-import DateAndTime from '../DateAndTime/DateAndTime';
-import useDictionary from '../../../customHooks/dictionary';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
-import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
-import moment from 'moment';
-import PieChartWrapper from './DashboardTreeComponents/AnalyticsPieChart';
-import {RefreshIcon} from '@heroicons/react/outline';
-import _ from 'lodash';
+import useDictionary from '../../../customHooks/dictionary';
+import * as mutations from '../../../graphql/mutations';
+import DateAndTime from '../DateAndTime/DateAndTime';
 
 interface ICsvProps {
   institutionId?: string;
-}
-interface IAllDataProps {
-  allInstitutions: number;
-  allCourseData: number;
-  allStudents: number;
-  allFellows: number;
-  allCoFellows: number;
-  allUniversalLessons: number;
-  allUniversalSurveys: number;
-  allClasses: number;
-  allTakenSurveys?: number;
 }
 
 const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {CsvDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState<boolean>(false);
-  const [AllInstitutions, setAllInstitutions] = useState<any[]>([]);
+  const [surveyQues, setSurveyQues] = useState([]);
+  const [surveyData, setSurveyData] = useState<any[]>([]);
   const [AllStudents, setAllStudents] = useState<any[]>([]);
-  const [AllFellows, setAllFellows] = useState<any[]>([]);
-  const [AllTeachers, setAllTeachers] = useState<any[]>([]);
-
-  const [AllUniversalLessons, setAllUniversalLessons] = useState<any[]>([]);
-  const [AllUniversalSurveys, setAllUniversalSurveys] = useState<any[]>([]);
-  const [AllCourses, setAllCourses] = useState<any[]>([]);
-  const [AllRooms, setAllRooms] = useState<any[]>([]);
-  const [AllData, setAllData] = useState<IAllDataProps>({
-    allInstitutions: 0,
-    allCourseData: 0,
-    allStudents: 0,
-    allFellows: 0,
-    allCoFellows: 0,
-    allUniversalLessons: 0,
-    allUniversalSurveys: 0,
-    allClasses: 0,
-    allTakenSurveys: 0,
-  });
-
-  const [allUniversalSurveyStudentData, setAllUniversalSurveyStudentData] = useState<
-    any[]
-  >([]);
-
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
-  const [selectedInstitute, setSelectedInstitute] = useState<{
-    id: string;
-    name: string;
-    value: string;
-  }>({
-    id: '',
-    name: '',
-    value: '',
-  });
-
-  const [selectedTimelineActivity, setSelectedTimelineActivity] = useState<{
-    id: string;
-    name: string;
-    value: string;
-  }>({
-    id: '',
-    name: '',
-    value: '',
-  });
-
-  const TimeLineActivity = [
-    {
-      id: 1,
-      name: 'All',
-      value: 'all',
-    },
-    {
-      id: 2,
-      name: 'Today',
-      value: 'today',
-    },
-    {
-      id: 3,
-      name: 'This Week',
-      value: 'thisWeek',
-    },
-    {
-      id: 4,
-      name: 'This Month',
-      value: 'thisMonth',
-    },
-    {
-      id: 5,
-      name: 'This Year',
-      value: 'thisYear',
-    },
-  ];
+  const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    getAllDataReadyForChart();
-    listUniversalSurveyData(undefined, []);
+    getAllData();
   }, []);
 
-  const getAllDataReadyForChart = async () => {
-    setLoading(true);
-    const instituteDetails = await listInstitutions(undefined, []);
-    const courseDetails = await listAllCourses(undefined, []);
-    const studentsDetails = await listAllStudentsAndFellow(`ST`, undefined, []);
-    const lessonDetails = await listAllLessons(`lesson`, undefined, []);
-    const surveyDetails = await listAllLessons(`survey`, undefined, []);
-    const {classDetails, fellowDetails, teacherDetails} = await listAllRooms(
-      undefined,
-      []
-    );
-
-    await findActiveandInactiveStudent(
-      instituteDetails,
-      courseDetails,
-      studentsDetails,
-      fellowDetails,
-      teacherDetails,
-      lessonDetails,
-      surveyDetails,
-      classDetails
-    );
-    setLoading(false);
+  // regex match double spaces and replace with single space
+  const removeDoubleSpaces = (str: string) => {
+    return str.replace(/\s{2,}/g, ' ');
   };
 
-  const listInstitutions = async (nextToken: string, outArray: any[]): Promise<any> => {
-    let combined;
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutions, {
-          nextToken: nextToken,
-        })
+  // regex match double quotations and replace with single quotations
+  const removeDoubleQuotes = (str: string) => {
+    return str.replace(/\"/g, "'");
+  };
+
+  const pipeFn = (...fns: any[]) => (arg: any) => fns.reduce((acc, fn) => fn(acc), arg);
+
+  const cleanString = (str: string) => {
+    return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
+  };
+
+  const getQuestionListFromLesson = async (lessonObj: any) => {
+    if (lessonObj?.lessonPlan) {
+      const mappedPages = lessonObj?.lessonPlan.reduce(
+        (
+          inputs: {
+            questionList: any[];
+          },
+          page: any
+        ) => {
+          const pageParts = page.pageContent;
+          const reducedPageInputs = pageParts.reduce(
+            (
+              pageInputsAcc: {
+                pageInputAcc: any[];
+              },
+              pagePart: any
+            ) => {
+              if (pagePart.hasOwnProperty('partContent')) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {
+                      pageInputAcc: any[];
+                    },
+                    partContent: any
+                  ) => {
+                    //  CHECK WHICH INPUT TYPE  //
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+
+                    // -------- IF FORM ------- //
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
+                          return {
+                            ...subPartAcc,
+
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                questionID: partContentSub.id,
+                                type: partContentSub.type,
+                                questionString: partContentSub.label,
+                                options: partContentSub.options
+                              }
+                            ]
+                          };
+                        },
+                        {pgInput: []}
+                      );
+
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput
+                        ]
+                      };
+                    }
+                    // ---- IF OTHER INPUT ---- //
+                    else if (isOtherInput) {
+                      return {
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            questionID: partContent.id,
+                            type: partContent.type,
+                            questionString: partContent.label,
+                            options: partContent.options
+                          }
+                        ]
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  {pageInputAcc: []}
+                );
+
+                return {
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc
+                  ]
+                };
+              } else {
+                return pageInputsAcc;
+              }
+            },
+            {pageInputAcc: []}
+          );
+
+          return {
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
+          };
+        },
+
+        {questionList: []}
       );
-      let returnedData = result.data.listInstitutions?.items;
-      let NextToken = result.data.listInstitutions?.nextToken;
 
-      combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
-        combined = await listInstitutions(NextToken, combined);
-      }
-
-      setAllInstitutions(combined);
-      return combined;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listInstitutions ~ error',
-        error
-      );
+      return mappedPages;
     }
   };
 
-  const listAllStudentsAndFellow = async (
+  const getAllData = async () => {
+    setLoading(true);
+    const surveyList = await getAllSurvey();
+    const studentsDetails = await listAllStudents(`ST`, undefined, []);
+    setAllStudents(studentsDetails);
+
+    let returnedData = surveyList.map(async (survey: any) => {
+      const surveyResponse = await getAllStudentsSurveyQuestionsResponse(
+        survey.id,
+        undefined,
+        []
+      );
+      await listQues(survey.id);
+      return surveyResponse;
+    });
+
+    const allReturnedData = await Promise.all(returnedData);
+    allReturnedData.forEach((surveyData: any) => {
+      return surveyData.forEach((survey: any) => {
+        return setSurveyData((prev: any) => {
+          return [
+            ...prev,
+            {
+              ...survey
+            }
+          ];
+        });
+      });
+    });
+    setLoading(false);
+  };
+  const getAllSurvey = async () => {
+    try {
+      let surveyList: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessons, {
+          filter: {
+            type: {
+              eq: 'survey'
+            }
+          }
+        })
+      );
+      const returnedData = surveyList.data.listUniversalLessons.items;
+      return returnedData;
+    } catch (err) {
+      console.log('getAllSurvey error', err);
+    }
+  };
+
+  const listAllStudents = async (
     peopleType: string,
     nextToken: string,
     outArray: any[]
@@ -174,7 +202,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       const result: any = await API.graphql(
         graphqlOperation(queries.listPeople, {
           filter: {role: {eq: peopleType}},
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
 
@@ -184,11 +212,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        combined = await listAllStudentsAndFellow(peopleType, NextToken, combined);
-      }
-
-      if (peopleType === 'ST') {
-        setAllStudents(combined);
+        combined = await listAllStudents(peopleType, NextToken, combined);
       }
 
       return combined;
@@ -200,661 +224,278 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const listAllCourses = async (nextToken: string, outArray: any[]): Promise<any> => {
+  const listQues = async (lessonId: string) => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculas, {
-          nextToken: nextToken,
+      let universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId
         })
       );
-      let returnedData = result.data.listCurricula?.items;
-      let NextToken = result.data.listCurricula?.nextToken;
-
-      let combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        combined = await listAllCourses(NextToken, combined);
-      }
-
-      setAllCourses(combined);
-      return combined;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllCourses ~ error',
-        error
-      );
-    }
-  };
-
-  const listAllLessons = async (
-    lessonType: string,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined: any[];
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessons, {
-          filter: {type: {eq: lessonType}},
-          nextToken: nextToken,
-        })
-      );
-
-      let returnedData = result.data.listUniversalLessons?.items;
-      let NextToken = result.data.listUniversalLessons?.nextToken;
-
-      combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        combined = await listAllLessons(lessonType, NextToken, combined);
-      }
-      if (lessonType === 'lesson') {
-        setAllUniversalLessons(combined);
-      } else if (lessonType === 'survey') {
-        setAllUniversalSurveys(combined);
-      }
-
-      return combined;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllLessons ~ error',
-        error
-      );
-    }
-  };
-
-  const listAllRooms = async (nextToken: string, outArray: any[]): Promise<any> => {
-    let combined;
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listRooms, {
-          nextToken: nextToken,
-        })
-      );
-      let returnedData = result.data.listRooms?.items;
-      let NextToken = result.data.listRooms?.nextToken;
-
-      combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        combined = await listAllRooms(NextToken, combined);
-      }
-      setAllRooms(combined);
-
-      const fellowList = combined.map((item: any) => {
-        return {
-          id: item.id,
-          teacherEmail: item.teacherEmail,
-          teacherAuthID: item.teacherAuthID,
-          teacherFirstName: item.teacher.firstName,
-          teacherLastName: item.teacher.lastName,
-        };
-      });
-
-      const filteredFellowList = _.uniqBy(fellowList, 'teacherAuthID');
-      setAllTeachers(filteredFellowList);
-
-      const coFellowLists = combined.map((coTeachersList: any) => {
-        const coFellowList = coTeachersList.coTeachers.items.map((coTeacher: any) => {
-          return {
-            id: coTeacher.id,
-            roomID: coTeacher.roomID,
-            teacherEmail: coTeacher.teacherEmail,
-            teacherAuthID: coTeacher.teacherAuthID,
-            teacherFirstName: coTeacher.teacher.firstName,
-            teacherLastName: coTeacher.teacher.lastName,
-          };
-        });
-        return _.uniqBy(coFellowList, 'teacherAuthID');
-      });
-      const filteredCoFellowList = _.uniqBy(coFellowLists.flat(), 'teacherAuthID');
-      setAllFellows(filteredCoFellowList);
-
-      return {
-        classDetails: combined,
-        fellowDetails: filteredCoFellowList,
-        teacherDetails: filteredFellowList,
-      };
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllClasses ~ error',
-        error
-      );
-    }
-  };
-
-  const listUniversalSurveyData = async (
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSurveyStudentData, {
-          nextToken: nextToken,
-        })
-      );
-      let returnedData = result.data.listUniversalSurveyStudentData?.items;
-      let NextToken = result.data.listUniversalSurveyStudentData?.nextToken;
-
-      let combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        combined = await listUniversalSurveyData(NextToken, combined);
-      }
-      setAllUniversalSurveyStudentData(combined);
-      return combined;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 435 ~ allUniversalSurveyData ~ error',
-        error
-      );
-    }
-  };
-
-  const getInstituteName = async (instituteId: string) => {
-    console.log(
-      '🚀 ~ file: AnalyticsDashboard.tsx ~ line 355 ~ getInstituteName ~ instituteId',
-      instituteId
-    );
-    try {
-      const instituteData = AllInstitutions.find(
-        (institute) => institute.id === instituteId
-      );
-      if (instituteData) {
-        const classList = instituteData.rooms.items.length;
-        const courseList = instituteData.curricula.items.length;
-        const studentList = instituteData.classes.items.reduce(
-          (acc: any, curr: any) => acc + curr.students.items.length,
-          0
-        );
-
-        const fellowList = instituteData.rooms.items.map((item: any) => {
-          return {
-            id: item.id,
-            teacherEmail: item.teacherEmail,
-            teacherAuthID: item.teacherAuthID,
-            teacherFirstName: item.teacher.firstName,
-            teacherLastName: item.teacher.lastName,
-          };
-        });
-
-        const filteredFellowList = _.uniqBy(fellowList, 'teacherAuthID');
-
-        const coFellowLists = instituteData.rooms.items.map((coTeachersList: any) => {
-          const coFellowList = coTeachersList.coTeachers.items.map((coTeacher: any) => {
-            return {
-              id: coTeacher.id,
-              roomID: coTeacher.roomID,
-              teacherEmail: coTeacher.teacherEmail,
-              teacherAuthID: coTeacher.teacherAuthID,
-              teacherFirstName: coTeacher.teacher.firstName,
-              teacherLastName: coTeacher.teacher.lastName,
-            };
-          });
-          //store uniqBy value in array
-          return _.uniqBy(coFellowList, 'teacherAuthID');
-        });
-
-        const filteredCoFellowList = _.uniqBy(coFellowLists.flat(), 'teacherAuthID');
-
-        const lessonList = AllUniversalLessons.filter(
-          (lesson: any) =>
-            lesson.institutionID === instituteId && lesson.type === 'lesson'
-        ).length;
-
-        const surveyList = AllUniversalSurveys.filter(
-          (survey: any) =>
-            survey.institutionID === instituteId && survey.type === 'survey'
-        ).length;
-
-        return {
-          classList,
-          courseList,
-          studentList,
-          fellowList: filteredFellowList ? filteredFellowList.length : 0,
-          coFellowLists: filteredCoFellowList ? filteredCoFellowList.length : 0,
-          lessonList: lessonList ? lessonList : 0,
-          surveyList: surveyList ? surveyList : 0,
-        };
-      }
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ getInstituteName ~ error',
-        error
-      );
-    }
-  };
-
-  const findActiveandInactiveStudent = async (
-    instituteDetails: any[],
-    courseDetails: any[],
-    studentsDetails: any[],
-    fellowDetails: any[],
-    teacherDetails: any[],
-    lessonDetails: any[],
-    surveyDetails: any[],
-    classDetails: any[]
-  ) => {
-    try {
-      setAllData({
-        allInstitutions: instituteDetails.length,
-        allCourseData: courseDetails.length,
-        allStudents: studentsDetails.length,
-        allClasses: classDetails.length,
-        allFellows: teacherDetails.length,
-        allCoFellows: fellowDetails.length,
-        allUniversalLessons: lessonDetails.length,
-        allUniversalSurveys: surveyDetails.length,
-      });
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 195 ~ findActiveandInactiveStudent ~ error',
-        error
-      );
-    }
-  };
-
-  const onInstitutionSelected = async (id: any, name: string, value: string) => {
-    setIsChecked(true);
-    let instituteDropdownValue = {id, name, value};
-    setSelectedInstitute(instituteDropdownValue);
-    setSelectedTimelineActivity({
-      id: '',
-      name: '',
-      value: '',
-    });
-
-    const {
-      classList,
-      courseList,
-      studentList,
-      fellowList,
-      coFellowLists,
-      lessonList,
-      surveyList,
-    } = await getInstituteName(id);
-    // const {
-    //   filteredFellowListByProvider,
-    //   courseListByProvider,
-    //   filteredCoFellowListByProviders,
-    // } = await getServiceProviderData(id);
-
-    setAllData({
-      allInstitutions: 1,
-      allCourseData: courseList,
-      allStudents: studentList,
-      allClasses: classList,
-      allFellows: fellowList,
-      allCoFellows: coFellowLists,
-      allUniversalLessons: lessonList as any,
-      allUniversalSurveys: surveyList as any,
-      allTakenSurveys: 0,
-    });
-  };
-
-  const filterUniversalSurveyIDswithData = async (timelineDropdownValue: {
-    id: string;
-    name: string;
-    value: string;
-  }) => {
-    try {
-      let surveyLists: any[];
-      let filterAlluniversalSurveyStudentData: any[];
-      let updatedSurveyList: any[];
-      let duplicateDataIds: any[];
-      let filteredSurveyListIDs: any[];
-      const todayDate = moment().format();
-      const oneDayBefore = moment().subtract(1, 'days').format();
-      const currentWeek = moment().subtract(7, 'days').format();
-      const currentMonth = moment().subtract(30, 'days').format();
-      const currentYear = moment().subtract(365, 'days').format();
-      if (isChecked) {
-        const instituteDetails = AllInstitutions.find(
-          (institute) => institute.id === selectedInstitute.id
-        );
-
-        if (
-          instituteDetails?.serviceProviders?.items?.length > 0 &&
-          AllData.allUniversalSurveys > 0
-        ) {
-          const returnedData = instituteDetails.serviceProviders.items.map(
-            (serviceProvider: any) => {
-              surveyLists = AllUniversalSurveys.filter(
-                (survey: any) =>
-                  survey.institutionID === serviceProvider.providerInstitution.id &&
-                  survey.type === 'survey'
-              );
-
-              filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
-                (survey: any) => {
-                  if (timelineDropdownValue.value === 'all') {
-                    return survey;
-                  } else if (timelineDropdownValue.value === 'today') {
-                    return (
-                      survey.createdAt >= oneDayBefore &&
-                      survey.createdAt <= todayDate &&
-                      surveyLists.find(
-                        (surveyList: any) => surveyList.id === survey.lessonID
-                      )
-                    );
-                  } else if (timelineDropdownValue.value === 'thisWeek') {
-                    return (
-                      survey.createdAt >= currentWeek &&
-                      survey.createdAt <= todayDate &&
-                      surveyLists.find(
-                        (surveyList: any) => surveyList.id === survey.lessonID
-                      )
-                    );
-                  } else if (timelineDropdownValue.value === 'thisMonth') {
-                    return (
-                      survey.createdAt >= currentMonth &&
-                      survey.createdAt <= todayDate &&
-                      surveyLists.find(
-                        (surveyList: any) => surveyList.id === survey.lessonID
-                      )
-                    );
-                  } else if (timelineDropdownValue.value === 'thisYear') {
-                    return (
-                      survey.createdAt >= currentYear &&
-                      survey.createdAt <= todayDate &&
-                      surveyLists.find(
-                        (surveyList: any) => surveyList.id === survey.lessonID
-                      )
-                    );
-                  }
-                }
-              );
-              updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
-                surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-              );
-
-              duplicateDataIds = updatedSurveyList.map((o) => o.id);
-              filteredSurveyListIDs = updatedSurveyList.filter(
-                ({id}, index) => !duplicateDataIds.includes(id, index + 1)
-              );
-              return filteredSurveyListIDs;
-            }
-          );
-          return returnedData[0];
-        } else {
-          surveyLists = AllUniversalSurveys.filter(
-            (survey: any) =>
-              survey.institutionID === selectedInstitute.id && survey.type === 'survey'
-          );
-
-          filterAlluniversalSurveyStudentData = allUniversalSurveyStudentData.filter(
-            (survey: any) => {
-              if (timelineDropdownValue.value === 'all') {
-                return survey;
-              } else if (timelineDropdownValue.value === 'today') {
-                return (
-                  survey.createdAt >= oneDayBefore &&
-                  survey.createdAt <= todayDate &&
-                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-                );
-              } else if (timelineDropdownValue.value === 'thisWeek') {
-                return (
-                  survey.createdAt >= currentWeek &&
-                  survey.createdAt <= todayDate &&
-                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-                );
-              } else if (timelineDropdownValue.value === 'thisMonth') {
-                return (
-                  survey.createdAt >= currentMonth &&
-                  survey.createdAt <= todayDate &&
-                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-                );
-              } else if (timelineDropdownValue.value === 'thisYear') {
-                return (
-                  survey.createdAt >= currentYear &&
-                  survey.createdAt <= todayDate &&
-                  surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-                );
+      let lessonObject = universalLesson.data.getUniversalLesson;
+      let questionsListdata = await getQuestionListFromLesson(lessonObject);
+      let questionList = questionsListdata.questionList;
+      let questions: any = [];
+      if (questionList) {
+        questionList.map((listItem: any) => {
+          listItem.map((item: any) => {
+            questions.push({
+              question: {
+                id: item.questionID,
+                question: item.questionString,
+                type: item.type,
+                options: item.options
               }
-            }
-          );
-          updatedSurveyList = filterAlluniversalSurveyStudentData.map((survey: any) =>
-            surveyLists.find((surveyList: any) => surveyList.id === survey.lessonID)
-          );
-
-          duplicateDataIds = updatedSurveyList.map((o) => o.id);
-          filteredSurveyListIDs = updatedSurveyList.filter(
-            ({id}, index) => !duplicateDataIds.includes(id, index + 1)
-          );
-
-          return filteredSurveyListIDs;
-        }
-      }
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 437 ~ filterUniversalSurveyIDswithData ~ error',
-        error
-      );
-    }
-  };
-
-  const onTimelineActivitySelected = async (id: any, name: string, value: string) => {
-    let timelineDropdownValue = {id, name, value};
-    setSelectedTimelineActivity(timelineDropdownValue);
-    const takenSurvey = await filterUniversalSurveyIDswithData(timelineDropdownValue);
-
-    setAllData({
-      allInstitutions: AllData.allInstitutions,
-      allCourseData: AllData.allCourseData,
-      allStudents: AllData.allStudents,
-      allClasses: AllData.allClasses,
-      allFellows: AllData.allFellows,
-      allCoFellows: AllData.allCoFellows,
-      allUniversalLessons: AllData.allUniversalLessons as any,
-      allUniversalSurveys: AllData.allUniversalSurveys as any,
-      allTakenSurveys: takenSurvey.length,
-    });
-  };
-
-  const getNameandValueofInstitute = () => {
-    try {
-      const instituteData = AllInstitutions.map((institute: any) => {
-        return {
-          name: institute.name,
-          value: 350,
-          key: 'Institute',
-          allData: AllData,
-        };
-      });
-      return instituteData;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 195 ~ getNameandValueofInstitute ~ error',
-        error
-      );
-    }
-  };
-
-  const getCourseCount = () => {
-    return [
-      {
-        name: 'Course',
-        value: AllData.allCourseData === 0 ? 10 : AllData.allCourseData,
-        key: 'Course',
-        allData: AllData,
-      },
-      {
-        name: '',
-        value: AllData.allCourseData === 0 ? 0 : 220,
-        key: 'Inactive_Course',
-      },
-    ];
-  };
-
-  const getTakenSurveyCount = () => {
-    return [
-      {
-        name: 'Taken Survey',
-        value: AllData.allTakenSurveys === 0 ? 5 : AllData.allTakenSurveys,
-        key: 'taken_Survey',
-        allData: AllData,
-      },
-      {
-        name: 'Total Survey',
-        value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
-        key: 'total_Survey',
-        allData: AllData,
-      },
-    ];
-  };
-
-  const getClassesCount = () => {
-    return [
-      {
-        name: 'Classrooms',
-        value: AllData.allClasses === 0 ? 10 : AllData.allClasses,
-        key: `Classes`,
-        allData: AllData,
-      },
-      {
-        name: '',
-        value: AllData.allClasses === 0 ? 0 : 220,
-        key: `Inactive_Classes`,
-      },
-    ];
-  };
-
-  const getUniversalLessonsCount = () => {
-    return [
-      {
-        name: 'Lessons',
-        value: AllData.allUniversalLessons === 0 ? 10 : AllData.allUniversalLessons,
-        key: `Lessons`,
-        allData: AllData,
-      },
-      {
-        name: '',
-        value: AllData.allUniversalLessons === 0 ? 0 : 220,
-        key: `Inactive_Lessons`,
-      },
-    ];
-  };
-
-  const getUniversalSurveysCount = (): any => {
-    return [
-      {
-        name: 'Surveys',
-        value: AllData.allUniversalSurveys === 0 ? 10 : AllData.allUniversalSurveys,
-        key: `Surveys`,
-        allData: AllData,
-      },
-      {
-        name: '',
-        value: AllData.allUniversalSurveys === 0 ? 0 : 220,
-        key: `Inactive_Surveys`,
-      },
-    ];
-  };
-
-  const getServiceProviderData = async (id: string) => {
-    try {
-      const instituteDetails = AllInstitutions.find((institute) => institute.id === id);
-      if (instituteDetails?.serviceProviders?.items?.length > 0) {
-        const returnedData = instituteDetails?.serviceProviders?.items?.map(
-          (provider: any) => {
-            const fellows = AllInstitutions.filter(
-              (institute: any) => institute.id === provider?.providerInstitution?.id
-            );
-
-            const fellowListByProvider = fellows[0].rooms.items.map((item: any) => {
-              return {
-                id: item.id,
-                teacherEmail: item.teacherEmail,
-                teacherAuthID: item.teacherAuthID,
-                teacherFirstName: item.teacher.firstName,
-                teacherLastName: item.teacher.lastName,
-              };
             });
-
-            const filteredFellowListByProvider = _.uniqBy(
-              fellowListByProvider,
-              'teacherAuthID'
-            ).length;
-
-            const coFellowListByProviders = fellows[0].rooms.items.map(
-              (coTeachersList: any) => {
-                const coFellowList = coTeachersList.coTeachers.items.map(
-                  (coTeacher: any) => {
-                    return {
-                      id: coTeacher.id,
-                      roomID: coTeacher.roomID,
-                      teacherEmail: coTeacher.teacherEmail,
-                      teacherAuthID: coTeacher.teacherAuthID,
-                      teacherFirstName: coTeacher.teacher.firstName,
-                      teacherLastName: coTeacher.teacher.lastName,
-                    };
-                  }
-                );
-                //store uniqBy value in array
-                return _.uniqBy(coFellowList, 'teacherAuthID');
-              }
-            );
-
-            const filteredCoFellowListByProviders = _.uniqBy(
-              coFellowListByProviders.flat(),
-              'teacherAuthID'
-            ).length;
-
-            const courseListByProvider = AllCourses.filter(
-              (course: any) => course.institutionID === provider?.providerInstitution?.id
-            ).length;
-
-            return {
-              filteredFellowListByProvider,
-              courseListByProvider,
-              filteredCoFellowListByProviders,
-            };
-          }
-        );
-
-        return returnedData[0];
-      } else {
-        return {
-          filteredFellowListByProvider: 0,
-          courseListByProvider: 0,
-          filteredCoFellowListByProviders: 0,
-        };
+          });
+        });
       }
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 756 ~ getServiceProviderData ~ error',
-        error
-      );
+
+      questions.map((question: any) => {
+        setSurveyQues((prev: any) => {
+          return [...prev, question];
+        });
+      });
+    } catch (err) {
+      console.log('list questions error', err);
     }
   };
 
-  // const toggleCheckBox = async () => {
-  //   // setIsChecked(!isChecked);
-  //   // await getServiceProviderData();
-  // };
+  const getAllStudentsSurveyQuestionsResponse = async (
+    lessonId: string,
+    nextToken?: string,
+    outArray?: any[]
+  ) => {
+    let universalSurveyStudentData: any = await API.graphql(
+      graphqlOperation(queries.listUniversalSurveyStudentData, {
+        nextToken: nextToken,
+        filter: {
+          lessonID: {
+            eq: lessonId
+          }
+        }
+      })
+    );
+    let studentsAnswersSurveyQuestionsData =
+      universalSurveyStudentData.data.listUniversalSurveyStudentData.items;
+    let theNextToken =
+      universalSurveyStudentData.data.listUniversalSurveyStudentData?.nextToken;
 
-  const onResetClick = () => {
-    setSelectedTimelineActivity({
-      id: '',
-      name: '',
-      value: '',
+    /**
+     * combination of last fetch results
+     * && current fetch results
+     */
+    let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
+
+    // console.log('combined - - - -', combined);
+
+    if (theNextToken) {
+      combined = await getAllStudentsSurveyQuestionsResponse(
+        lessonId,
+        theNextToken,
+        combined
+      );
+    }
+    console.log('fetched from universalSurveyData');
+
+    return combined;
+  };
+
+  const getCSVData = async () => {
+    try {
+      let students = AllStudents;
+      let qids: any = [];
+      let takenSurvey = 0;
+      let notTakenSurvey = 0;
+      let surveyDates: any = [];
+      // creating an array of question Ids and creating a object to store all question options.
+      let surveyQuestionOptions: any = {};
+      let surveyQuestionHeaders = surveyQues.map((ques: any) => {
+        qids.push(ques.question.id);
+        surveyQuestionOptions[ques.question.id] = ques.question.options;
+        return {
+          label: `${ques.question.question}-s-${ques.question.id}`,
+          key: `${ques.question.id}`
+        };
+      });
+
+      let Headers = [
+        {label: 'AuthId', key: 'authId'},
+        {label: 'Email', key: 'email'},
+        {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
+        ...surveyQuestionHeaders
+      ];
+
+      let data = students.map((stu: any) => {
+        let surveyAnswerDates: any = [];
+        let studentAnswers: any = {};
+        let hasTakenSurvey = false;
+        let universalSurveyStudentID = '';
+
+        surveyData.map((answerArray: any) => {
+          if (answerArray.studentID === stu.authId) {
+            hasTakenSurvey = true;
+            universalSurveyStudentID = answerArray.id;
+            console.log(
+              '🚀 ~ file: Csv.tsx ~ line 826 ~ surveyData.map ~ universalSurveyStudentID',
+              universalSurveyStudentID
+            );
+            answerArray.surveyData.map((singleAnswer: any) => {
+              if (qids.indexOf(singleAnswer.domID) >= 0) {
+                surveyAnswerDates.push(answerArray.updatedAt);
+                surveyDates.push(answerArray.updatedAt);
+                if (
+                  surveyQuestionOptions[singleAnswer.domID] &&
+                  Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
+                  surveyQuestionOptions[singleAnswer.domID].length
+                ) {
+                  if (
+                    Array.isArray(singleAnswer.input) &&
+                    singleAnswer.input.length &&
+                    singleAnswer.input[0].length
+                  ) {
+                    let selectedOption = surveyQuestionOptions[singleAnswer.domID].filter(
+                      (option: any) => {
+                        return option.id === singleAnswer.input[0];
+                      }
+                    );
+                    if (Array.isArray(selectedOption) && selectedOption.length) {
+                      // cleanup here
+                      studentAnswers[singleAnswer.domID] = cleanString(
+                        selectedOption[0].text
+                      );
+                    } else {
+                      studentAnswers[singleAnswer.domID] = '';
+                    }
+                  } else {
+                    studentAnswers[singleAnswer.domID] = '';
+                  }
+                } else {
+                  // cleanup here
+                  studentAnswers[singleAnswer.domID] =
+                    Array.isArray(singleAnswer.input) && singleAnswer.input.length
+                      ? cleanString(singleAnswer.input[0])
+                      : '';
+                }
+              }
+            });
+          }
+        });
+
+        surveyAnswerDates = surveyAnswerDates.sort(
+          // @ts-ignore
+          (a: any, b: any) => new Date(b) - new Date(a)
+        );
+
+        if (hasTakenSurvey) {
+          takenSurvey++;
+        } else {
+          notTakenSurvey++;
+        }
+
+        return {
+          ...stu,
+          universalSurveyStudentID: universalSurveyStudentID
+            ? universalSurveyStudentID
+            : 'Not-taken-yet',
+          ...studentAnswers,
+          hasTakenSurvey,
+          first:
+            (surveyAnswerDates[surveyAnswerDates.length - 1] &&
+              new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
+                'en-US'
+              )) ||
+            '-',
+          last:
+            (surveyAnswerDates[0] &&
+              new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
+            '-'
+        };
+      });
+      surveyDates = surveyDates.sort(
+        // @ts-ignore
+        (a: any, b: any) => new Date(b) - new Date(a)
+      );
+      return {
+        SurveyHeaders: Headers,
+        SurveyData: data
+      };
+    } catch (err) {
+      console.log('error', err);
+    }
+  };
+
+  const filterData = async () => {
+    const {SurveyHeaders, SurveyData} = await getCSVData();
+    let filteredData = SurveyData.filter((csvD): any => {
+      return SurveyHeaders.find(({key}: any) => {
+        if (csvD[key] === '') {
+          return true;
+        }
+      });
     });
-    setSelectedInstitute({
-      id: '',
-      name: '',
-      value: '',
+    let input: any[] = [];
+    filteredData.map((csvD: any) => {
+      input = [
+        ...input,
+        {
+          AuthId: csvD.authId,
+          Email: csvD.email,
+          UniversalSurveyStudentID: csvD.universalSurveyStudentID,
+          QuestionResult: SurveyHeaders.map((header: any) => {
+            if (csvD[header.key] !== undefined) {
+              return {
+                QuestionId: header.key,
+                QuestionLabel: header.label,
+                QuestionResponse: csvD[header.key]
+              };
+            }
+          }).filter((elem: any) => elem !== undefined)
+        }
+      ];
     });
-    setAllData({
-      allInstitutions: AllInstitutions.length,
-      allCourseData: AllCourses.length,
-      allStudents: AllStudents.length,
-      allClasses: AllRooms.length,
-      allFellows: AllTeachers.length,
-      allCoFellows: AllFellows.length,
-      allUniversalLessons: AllUniversalLessons.length,
-      allUniversalSurveys: AllUniversalSurveys.length,
-      allTakenSurveys: 0,
-    });
+    await CreateOrUpdateData(input);
+  };
+
+  const CreateOrUpdateData = async (input: any[]) => {
+    try {
+      input.map(async (data: any) => {
+        const getData: any = await API.graphql(
+          graphqlOperation(queries.getArchiveSurveyDataSQL, {
+            AuthId: data.AuthId,
+            Email: data.Email
+          })
+        );
+        const ArchiveData = getData.data.getArchiveSurveyDataSQL;
+        if (ArchiveData) {
+          await API.graphql(
+            graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
+              input: {
+                id: ArchiveData.id,
+                ...data
+              }
+            })
+          );
+        } else {
+          await API.graphql(
+            graphqlOperation(mutations.createArchiveSurveyDataSQL, {
+              input: {
+                ...data
+              }
+            })
+          );
+        }
+      });
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    } catch (err) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 532 ~ UploadDataToAthena ~ err',
+        err
+      );
+    }
   };
 
   return (
@@ -874,110 +515,31 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           </div>
         </div>
         <div className="flex gap-4 justify-between items-center">
-          <Selector
-            loading={loading}
-            disabled={loading}
-            selectedItem={selectedInstitute ? selectedInstitute.name : ''}
-            placeholder="select an institution"
-            list={AllInstitutions}
-            additionalClass="w-1/3"
-            onChange={(value, name, id) => onInstitutionSelected(id, name, value)}
-          />
-          {selectedInstitute.id !== '' && (
-            <>
-              {/* <span className="cursor-not-allowed">
-                <input
-                  type="checkbox"
-                  className="form-checkbox w-4 h-4 cursor-not-allowed"
-                  checked={isChecked}
-                  onChange={toggleCheckBox}
-                  id="provider-checkbox"
-                />
-                <label
-                  htmlFor="provider-checkbox"
-                  className={`w-auto ml-2 leading-5 text-xs text-gray-600 cursor-not-allowed`}>
-                  With Service Providers
-                </label>
-              </span> */}
-              <span className="flex flex-wrap cursor-pointer">
-                <RefreshIcon
-                  className="form-checkbox w-4 h-4 ml-2 cursor-pointer text-gray-600"
-                  onClick={onResetClick}
-                />
-                <label
-                  className={`w-auto ml-2 mb-1 leading-4 text-xs text-gray-600 cursor-pointer`}
-                  onClick={onResetClick}>
-                  Reset selectors
-                </label>
-              </span>
-              <Selector
-                loading={loading}
-                disabled={loading}
-                selectedItem={
-                  selectedTimelineActivity ? selectedTimelineActivity.name : ''
-                }
-                placeholder="Activity timeline"
-                list={TimeLineActivity}
-                additionalClass="w-1/3"
-                onChange={(value, name, id) =>
-                  onTimelineActivitySelected(id, name, value)
-                }
-              />
-            </>
-          )}
-        </div>
-        <div className="flex flex-wrap my-4 ">
           {loading ? (
-            <div className="flex flex-col justify-center items-center">
-              <ComponentLoading />
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">
+                  Preparing data please wait....
+                </p>
+              </div>
             </div>
           ) : (
             <>
-              <div className="analytic-wrap gap-4 flex-wrap grid">
-                <div className="analytic-badge">
-                  <h2>{AllData.allInstitutions}</h2> Institutions
+              {success ? (
+                <div>
+                  <h2>Successfully Uploaded!</h2>
                 </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.allCourseData}</h2> Courses
-                </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.allStudents}</h2> Students
-                </div>
-                <div className="analytic-badge">
-                  <h2>
-                    {AllData.allFellows}/{AllData.allCoFellows}
-                  </h2>{' '}
-                  Fellows / Co-Fellows
-                </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.allClasses}</h2> Classes
-                </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.allUniversalLessons}</h2> Lessons
-                </div>
-                <div className="analytic-badge">
-                  <h2>{AllData.allUniversalSurveys}</h2> Surveys
-                </div>
-                {selectedTimelineActivity.id !== '' && (
-                  <div className="analytic-badge">
-                    <h2>
-                      {AllData.allTakenSurveys === 0 ? 0 : AllData.allTakenSurveys}/
-                      {AllData.allUniversalSurveys}
-                    </h2>{' '}
-                    Surveys Taken
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-wrap mx-2">
-                <PieChartWrapper getNameandValuefromData={getNameandValueofInstitute} />
-                <PieChartWrapper getNameandValuefromData={getCourseCount} />
-                <PieChartWrapper getNameandValuefromData={getClassesCount} />
-                <PieChartWrapper getNameandValuefromData={getUniversalLessonsCount} />
-                <PieChartWrapper getNameandValuefromData={getUniversalSurveysCount} />
-                {selectedTimelineActivity.id !== '' && (
-                  <PieChartWrapper getNameandValuefromData={getTakenSurveyCount} />
-                )}
-              </div>
+              ) : (
+                <div></div>
+              )}
+              <button
+                onClick={filterData}
+                type="button"
+                disabled={loading}
+                className={`col-end-5 w-1/3 mt-5  inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}>
+                Export data to Athena
+              </button>
             </>
           )}
         </div>

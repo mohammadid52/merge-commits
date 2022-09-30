@@ -1,26 +1,28 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {useHistory} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import axios from 'axios';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
 
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
-import ErrorNote from './ErrorNote';
+import BreadCrums from '@atoms/BreadCrums';
+import Buttons from '@atoms/Buttons';
+import FormInput from '@atoms/Form/FormInput';
+import Selector from '@atoms/Form/Selector';
+import SectionTitle from '@atoms/SectionTitle';
 import DropdownForm from './DropdownForm';
-import Buttons from '../../../Atoms/Buttons';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '../../../Atoms/Form/Selector';
+import ErrorNote from './ErrorNote';
 
 import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {createUserUrl} from '../../../../utilities/urls';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {createUserUrl} from '@utilities/urls';
 
-import * as mutations from '../../../../graphql/mutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../customGraphql/customMutations';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import * as mutations from '@graphql/mutations';
+import NoResultsInput from '@components/Atoms/Form/NoResultsInput';
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import Label from '@components/Atoms/Form/Label';
 
 interface newUserInput {
   key: number;
@@ -33,6 +35,7 @@ interface newUserInput {
   birthdate: string;
   grade: string;
   role: string;
+  status: {name: string; value: string};
   externalId: string;
   group: {
     id: string;
@@ -47,6 +50,7 @@ interface newUserInput {
     id: string;
     name: string;
   };
+  isSelfPaced?: boolean;
   class: {
     id: string;
     name: string;
@@ -54,14 +58,17 @@ interface newUserInput {
   };
 }
 
+const PASSWORD = 'xIconoclast.5x';
+
 const initialState: newUserInput = {
   key: 0,
   authId: '',
   email: '',
-  password: 'xIconoclast.5x',
+  password: PASSWORD,
   firstName: '',
   lastName: '',
   phone: '',
+  status: {name: 'Active', value: 'ACTIVE'},
   birthdate: '',
   grade: '',
   role: '',
@@ -70,6 +77,7 @@ const initialState: newUserInput = {
   institution: {id: '', name: ''},
   class: {id: '', name: '', roomId: ''},
   group: {id: '', name: ''},
+  isSelfPaced: true
 };
 
 const Registration = ({
@@ -77,39 +85,46 @@ const Registration = ({
   isInInstitute,
   instId,
   isInModalPopup = false,
-  postMutation,
+  postMutation
 }: any) => {
   const {classId} = classData || {};
   const history = useHistory();
-  const params = useQuery(location.search);
+
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState);
-  console.log('🚀 ~ file: Registration.tsx ~ line 86 ~ newUserInputs', newUserInputs);
+
   const [institutions, setInstitutions] = useState([]);
   const [institutionsData, setInstitutionsData] = useState([]);
   const [instClasses, setInstClasses] = useState([]);
+
   const [groups, setGroups] = useState([]);
   const [groupLoading, setGroupLoading] = useState(false);
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
 
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {RegistrationDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const Roles = [
-    state.user.role === 'SUP' && {code: 'SUP', name: 'Super Admin'},
+    state.user.role === 'SUP' && {
+      code: 'SUP',
+      name: RegistrationDict[userLanguage]['roles']['sup']
+    },
     (state.user.role === 'SUP' || state.user.role === 'ADM') && {
       code: 'ADM',
-      name: 'Admin',
+      name: RegistrationDict[userLanguage]['roles']['adm']
     },
-    {code: 'BLD', name: 'Builder'},
-    {code: 'FLW', name: 'Fellow'},
-    {code: 'CRD', name: 'Coordinator'},
-    {code: 'TR', name: 'Teacher'},
+    {code: 'BLD', name: RegistrationDict[userLanguage]['roles']['bld']},
+    {code: 'FLW', name: RegistrationDict[userLanguage]['roles']['flw']},
+    {code: 'CRD', name: RegistrationDict[userLanguage]['roles']['crd']},
+    {code: 'TR', name: RegistrationDict[userLanguage]['roles']['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
-      state.user.role !== 'BLD' && {code: 'ST', name: 'Student'},
+      state.user.role !== 'BLD' && {
+        code: 'ST',
+        name: RegistrationDict[userLanguage]['roles']['st']
+      }
   ].filter(Boolean);
 
   const breadCrumsList = [
@@ -117,13 +132,13 @@ const Registration = ({
     {
       title: BreadcrumsTitles[userLanguage]['PeopleManagment'],
       url: '/dashboard/manage-users',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddNewUser'],
       url: `/dashboard/registration`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   useEffect(() => {
@@ -134,8 +149,8 @@ const Registration = ({
         class: {
           id: classId,
           name: classData.name,
-          roomId: classData.roomId,
-        },
+          roomId: classData.roomId
+        }
       }));
       getClassRoomGroups(classData.roomId);
     }
@@ -148,34 +163,39 @@ const Registration = ({
         message: {
           show: true,
           text: text,
-          type: type,
-        },
+          type: type
+        }
       };
     });
   };
 
-  const onGroupChange = (_: string, name: string, id: string) => {
-    setNewUserInputs((prevValues) => ({
-      ...prevValues,
-      group: {id, name},
-    }));
-  };
+  // const onGroupChange = (_: string, name: string, id: string) => {
+  //   setNewUserInputs((prevValues) => ({
+  //     ...prevValues,
+  //     group: {id, name},
+  //   }));
+  // };
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
       setGroupLoading(true);
+      let filter = {
+        and: [
+          {
+            classRoomID: {eq: roomId}
+          },
+          {groupType: {eq: 'Proficiency'}}
+        ]
+      };
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listClassroomGroupssOptions, {
-          filter: {
-            classRoomID: {eq: roomId},
-            groupType: {eq: 'Proficiency'},
-          },
+          filter: filter
         })
       );
       setGroups(
         list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
-          id: item.id,
+          id: item.id
         }))
       );
       setGroupLoading(false);
@@ -187,7 +207,7 @@ const Registration = ({
   async function registerUser(authId: string) {
     let userData = {
       authId: authId,
-      status: 'ACTIVE',
+      status: newUserInputs.status.value,
       role: newUserInputs.role,
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
@@ -197,7 +217,8 @@ const Registration = ({
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
       language: 'EN',
-      addedby: state.user.authId,
+      onDemand: !newUserInputs.isSelfPaced,
+      addedby: state.user.authId
     };
 
     try {
@@ -210,8 +231,8 @@ const Registration = ({
           institutionID: newUserInputs.institution.id,
           staffAuthID: authId,
           staffEmail: newUserInputs.email,
-          status: 'Active',
-          statusChangeDate: new Date().toISOString().split('T')[0],
+          status: 'ACTIVE',
+          statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
           graphqlOperation(mutations.createStaff, {input: input})
@@ -225,7 +246,7 @@ const Registration = ({
             studentID: person.id,
             studentAuthID: authId,
             studentEmail: newUserInputs.email,
-            status: 'Active',
+            status: newUserInputs.status
           };
           await API.graphql(
             graphqlOperation(customMutations.createClassStudent, {input})
@@ -236,8 +257,8 @@ const Registration = ({
                 input: {
                   classRoomGroupID: newUserInputs.group.id,
                   studentEmail: newUserInputs.email,
-                  studentAuthId: authId,
-                },
+                  studentAuthId: authId
+                }
               })
             );
           }
@@ -261,7 +282,7 @@ const Registration = ({
           grade: '1',
           class: {id: '', name: '', roomId: ''},
           role: '',
-          externalId: '3',
+          externalId: '3'
         };
       });
     } catch (error) {
@@ -288,19 +309,19 @@ const Registration = ({
             return {
               show: true,
               type: 'success',
-              message: RegistrationDict[userLanguage]['messages']['emailerr'],
+              message: RegistrationDict[userLanguage]['messages']['emailerr']
             };
           case 'UsernameExistsException':
             return {
               show: true,
               type: 'error',
-              message: RegistrationDict[userLanguage]['messages']['existemail'],
+              message: RegistrationDict[userLanguage]['messages']['existemail']
             };
           default:
             return {
               show: true,
               type: 'error',
-              message: er.message,
+              message: er.message
             };
         }
       });
@@ -317,42 +338,42 @@ const Registration = ({
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['firstname'],
+          message: RegistrationDict[userLanguage]['messages']['firstname']
         };
       }
       if (!newUserInputs.lastName) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['lastname'],
+          message: RegistrationDict[userLanguage]['messages']['lastname']
         };
       }
       if (!username) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['email'],
+          message: RegistrationDict[userLanguage]['messages']['email']
         };
       }
       if (!username.includes('@')) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['emailaddress'],
+          message: RegistrationDict[userLanguage]['messages']['emailaddress']
         };
       }
       if (!newUserInputs.role) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['userrol'],
+          message: RegistrationDict[userLanguage]['messages']['userrol']
         };
       }
       if (!newUserInputs.institution.id) {
         return {
           show: true,
           type: 'error',
-          message: RegistrationDict[userLanguage]['messages']['institution'],
+          message: RegistrationDict[userLanguage]['messages']['institution']
         };
       }
       // if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
@@ -369,7 +390,7 @@ const Registration = ({
       return {
         show: true,
         type: 'loading',
-        message: RegistrationDict[userLanguage]['messages']['loading'],
+        message: RegistrationDict[userLanguage]['messages']['loading']
       };
     });
   };
@@ -380,12 +401,12 @@ const Registration = ({
       if (id === 'email') {
         return {
           ...newUserInputs,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...newUserInputs,
-          [id]: value,
+          [id]: value
         };
       }
     });
@@ -395,7 +416,16 @@ const Registration = ({
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        role: item.code,
+        role: item.code
+      };
+    });
+  };
+
+  const handleChangeSelfPaced = (value: boolean) => {
+    setNewUserInputs(() => {
+      return {
+        ...newUserInputs,
+        isSelfPaced: value
       };
     });
   };
@@ -414,7 +444,7 @@ const Registration = ({
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        institution: {id: item.code, name: item.name},
+        institution: {id: item.code, name: item.name}
       };
     });
   };
@@ -428,7 +458,7 @@ const Registration = ({
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, {
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
       let returnedData = result.data.listRooms?.items;
@@ -457,15 +487,16 @@ const Registration = ({
     classID: string;
     id: string;
   }) => {
-    getClassRoomGroups(item.roomId);
+    // getClassRoomGroups(item.id);
+    // See reason below in the jsx
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
         class: {
           id: item.classID,
           name: item.name,
-          roomId: item.id,
-        },
+          roomId: item.id
+        }
       };
     });
   };
@@ -492,17 +523,26 @@ const Registration = ({
       if (institutionsData.length) {
         handleInstituteChange({
           code: instId,
-          name: '',
+          name: ''
         });
       } else {
         setNewUserInputs((prevInput) => ({
           ...prevInput,
-          institution: {id: instId, name: ''},
+          institution: {id: instId, name: ''}
         }));
       }
     }
   }, [institutionsData, instId]);
 
+  const status = [
+    {id: 1, name: 'Active', value: 'ACTIVE'},
+    {id: 2, name: 'Inactive', value: 'INACTIVE'},
+    {id: 3, name: 'Training', value: 'TRAINING'}
+  ];
+
+  const onStatusChange = (value: string, name: string) => {
+    setNewUserInputs({...newUserInputs, status: {value, name}});
+  };
   return (
     <div
       className={`w-full h-full ${
@@ -555,12 +595,10 @@ const Registration = ({
 
                   <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="firstName"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['firstname']}
-                      </label>
+                      <Label
+                        label={RegistrationDict[userLanguage]['firstname']}
+                        isRequired
+                      />
                       <FormInput
                         id="firstName"
                         name="firstName"
@@ -572,12 +610,10 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="lastName"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['lastname']}
-                      </label>
+                      <Label
+                        label={RegistrationDict[userLanguage]['lastname']}
+                        isRequired
+                      />
                       <FormInput
                         id="lastName"
                         name="lastName"
@@ -589,12 +625,7 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="email"
-                        className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span>{' '}
-                        {RegistrationDict[userLanguage]['email']}
-                      </label>
+                      <Label label={RegistrationDict[userLanguage]['email']} isRequired />
                       <FormInput
                         type="email"
                         id="email"
@@ -609,10 +640,11 @@ const Registration = ({
                     {!classId && (
                       <div className="sm:col-span-3 p-2">
                         <DropdownForm
+                          dataCy="role"
                           style={true}
                           handleChange={handleChangeRole}
                           userInfo={`${newUserInputs.role}`}
-                          label="Role"
+                          label={RegistrationDict[userLanguage]['role']}
                           listClassName="h-28"
                           id="role"
                           isRequired
@@ -642,10 +674,11 @@ const Registration = ({
                           {!classId && (
                             <div className="sm:col-span-3 p-2">
                               <DropdownForm
+                                dataCy="class"
                                 style={true}
                                 handleChange={handleClassChange}
                                 userInfo={`${newUserInputs.class.name}`}
-                                label="Class"
+                                label={RegistrationDict[userLanguage]['class']}
                                 id="class"
                                 isRequired
                                 items={instClasses}
@@ -653,7 +686,40 @@ const Registration = ({
                               />
                             </div>
                           )}
-                          {Boolean(groups?.length) && (
+
+                          <div className="sm:col-span-3 p-2">
+                            <div>
+                              <Label label={RegistrationDict[userLanguage]['status']} />
+                              <Selector
+                                selectedItem={newUserInputs?.status?.name}
+                                list={status}
+                                placeholder={
+                                  RegistrationDict[userLanguage]['statusPlaceholder']
+                                }
+                                onChange={onStatusChange}
+                                labelTextClass="text-m"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="sm:col-span-3 p-2">
+                            <div>
+                              <Label
+                                label={RegistrationDict[userLanguage]['paceLabel']}
+                              />
+                              <CheckBox
+                                dataCy="self-paced"
+                                label={RegistrationDict[userLanguage]['paceCheckBox']}
+                                className="group:hover:bg-gray-500"
+                                value={newUserInputs.isSelfPaced}
+                                onChange={(e) => handleChangeSelfPaced(e.target.checked)}
+                                name="self-paced"
+                              />
+                            </div>
+                          </div>
+
+                          {/* We are not using this because Teachers are getting confused with this. But we might use this in future. */}
+                          {/* {Boolean(groups?.length) ? (
                             <div className="sm:col-span-3 p-2">
                               <Selector
                                 label={'Group'}
@@ -674,7 +740,7 @@ const Registration = ({
                                 loading={groupLoading}
                               />
                             </div>
-                          )}
+                          ) : null} */}
                         </>
                       )}
                   </div>
@@ -686,7 +752,7 @@ const Registration = ({
               {message.show ? (
                 <div>
                   {newUserInputs.message.type === 'success' ? (
-                    <SuccessNote />
+                    <SuccessNote message="Succesfully registered" />
                   ) : message.type === 'error' ? (
                     <ErrorNote note={message.message} />
                   ) : message.type === 'loading' ? (
@@ -702,7 +768,7 @@ const Registration = ({
           </div>
         </div>
 
-        <div className="w-1.5/10 ml-auto">
+        <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
           <Buttons
             btnClass="py-2 px-4 text-xs w-full"
             label={RegistrationDict[userLanguage]['button']['submit']}

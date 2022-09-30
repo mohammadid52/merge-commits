@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import Loader from '@components/Atoms/Loader';
 import Tooltip from '@components/Atoms/Tooltip';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
@@ -102,6 +102,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {
@@ -275,14 +276,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     {!(address || addressLine2 || city || state || zip) ? '-' : ''}
                   </span>
                 </div>
-                <div className="flex mt-2 items-center">
-                  <span className="w-auto mr-2">
-                    <FiPhone className="w-4 h-4 text-gray-600" />
-                  </span>
-                  <span className="w-auto text-gray-600">
-                    {phone ? formatPhoneNumber(phone) : '-'}
-                  </span>
-                </div>
+                {phone && (
+                  <div className="flex mt-2 items-center">
+                    <span className="w-auto mr-2">
+                      <FiPhone className="w-4 h-4 text-gray-600" />
+                    </span>
+                    <span className="w-auto text-gray-600">
+                      {phone ? formatPhoneNumber(phone) : '-'}
+                    </span>
+                  </div>
+                )}
                 <div className="flex mt-2 items-center">
                   <span className="w-auto mr-2">
                     {isServiceProvider ? (

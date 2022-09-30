@@ -97,7 +97,7 @@ const List = (props: ListProps) => {
           <div
             id={item.id}
             className={`flex justify-center ${theme.textColor[themeColor]}`}>
-            {loading ? 'Resetting' : 'RESET password'}
+            {loading ? 'Resetting' : 'Reset Password'}
           </div>
         </div>
       );

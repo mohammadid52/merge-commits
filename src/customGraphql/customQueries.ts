@@ -1128,6 +1128,7 @@ export const listRoomsDashboard = /* GraphQL */ `
             curriculumID
             curriculum {
               name
+              id
             }
           }
         }

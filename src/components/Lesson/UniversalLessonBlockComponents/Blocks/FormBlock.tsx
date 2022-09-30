@@ -48,11 +48,11 @@ export const FormBlock = ({
   numbered,
   type: formType,
   value,
-  pagePartId,
+  pagePartId
 }: FormBlockProps) => {
   const {
     lessonState,
-    state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
+    state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
   } = useContext(GlobalContext);
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
@@ -110,7 +110,7 @@ export const FormBlock = ({
     value,
     required,
     numbered,
-    index,
+    index
   }: FormControlProps) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
@@ -163,7 +163,7 @@ export const FormBlock = ({
       value,
       required,
       inputID,
-      classString,
+      classString
     };
     switch (type) {
       case FORM_TYPES.TEXT:
@@ -279,7 +279,7 @@ export const FormBlock = ({
       pagePartId: pagePartId,
       partContentId: id,
       id: v.id,
-      value: v.value,
+      value: v.value
     }));
 
     return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;

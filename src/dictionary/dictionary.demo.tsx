@@ -2,12 +2,12 @@
 const AuthDict: any = {
   EN: {
     VERIFY_EMAIL: 'Verify Email',
-    LOGIN: 'Log In',
+    LOGIN: 'Log In'
   },
   ES: {
     VERIFY_EMAIL: 'TBD',
-    LOGIN: 'TBD',
-  },
+    LOGIN: 'TBD'
+  }
 };
 
 // Buttons
@@ -24,7 +24,7 @@ const BUTTONS: any = {
     YES: 'Yes',
     CREATE: 'Create',
 
-    CREATING: 'Creating',
+    CREATING: 'Creating'
   },
   ES: {
     ADD: 'Añadir',
@@ -37,8 +37,8 @@ const BUTTONS: any = {
     PUBLISH: 'TBD',
     YES: 'TBD',
     CREATE: 'TBD',
-    CREATING: 'TBD',
-  },
+    CREATING: 'TBD'
+  }
 };
 
 // Breadcrumbs
@@ -46,6 +46,7 @@ const BreadcrumsTitles: any = {
   EN: {
     HOME: 'Home',
     PROFILE: 'PROFILE',
+    TEST_CASES: 'TEST CASES',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
@@ -88,7 +89,7 @@ const BreadcrumsTitles: any = {
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
     LOADING: 'Loading...',
-    COMMUNTIY: 'S/B Community Builder',
+    COMMUNTIY: 'S/B Community Builder'
   },
   ES: {
     HOME: 'CASA',
@@ -129,8 +130,8 @@ const BreadcrumsTitles: any = {
     LESSONPLANBUILDER: 'TBD',
     LESSON_EDITOR: 'TBD',
     STUDENTS: 'TBD',
-    STUDENTS_NOTEBOOK: 'TBD',
-  },
+    STUDENTS_NOTEBOOK: 'TBD'
+  }
 };
 // Profile Display and edit section
 const dashboardProfileDict: any = {
@@ -152,12 +153,12 @@ const dashboardProfileDict: any = {
       ROLE: 'Role',
       PASSWORD: 'Password',
       PASSCODE: 'Journal Passcode',
-      SUPER_ADMIN: 'Super Admin',
+      SUPER_ADMIN: 'Super Admin'
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
       INSTITUTION: 'Institution',
-      GRADE: 'Grade',
+      GRADE: 'Grade'
     },
     EDIT_PROFILE: {
       TITLE: 'Edit Personal Information',
@@ -168,7 +169,7 @@ const dashboardProfileDict: any = {
       LANGUAGE: 'Language Preference',
       CONTACT: 'Contact Number',
       SAVE: 'Save',
-      CANCEL: 'Cancel',
+      CANCEL: 'Cancel'
     },
     CHANGE_PASSCODE: {
       TITLE: 'Change your Passcode',
@@ -186,8 +187,8 @@ const dashboardProfileDict: any = {
         NO_OLD_PASS: 'Please enter your password',
         NO_NEW_PASS: 'Please enter your new password',
         NO_CONFIRM_PASS: 'Please enter your confirmation password',
-        NOT_MATCH: 'Your new password and confirm password do not match',
-      },
+        NOT_MATCH: 'Your new password and confirm password do not match'
+      }
     },
     CHANGE_PASSWORD: {
       TITLE: 'Change your Password',
@@ -206,9 +207,9 @@ const dashboardProfileDict: any = {
         NO_OLD_PASS: 'Please enter your old password',
         NO_NEW_PASS: 'Please enter your new password',
         NO_CONFIRM_PASS: 'Please enter your confirmation password',
-        NOT_MATCH: 'Your new password and confirm password do not match',
-      },
-    },
+        NOT_MATCH: 'Your new password and confirm password do not match'
+      }
+    }
   },
   ES: {
     PROFILE: 'Perfil',
@@ -228,12 +229,12 @@ const dashboardProfileDict: any = {
       CONTACT: 'número de contacto',
       PASSWORD: 'contraseña',
       PASSCODE: 'Journal Passcode',
-      ROLE: 'Papel',
+      ROLE: 'Papel'
     },
     INSTITUTION_INFO: {
       TITLE: 'Información institucional',
       INSTITUTION: 'Institución',
-      GRADE: 'Grado',
+      GRADE: 'Grado'
     },
     EDIT_PROFILE: {
       TITLE: 'Editar información personal',
@@ -244,7 +245,7 @@ const dashboardProfileDict: any = {
       LANGUAGE: 'preferencia de idioma',
       CONTACT: 'número de contacto',
       SAVE: 'Salvar',
-      CANCEL: 'Cancelar',
+      CANCEL: 'Cancelar'
     },
     CHANGE_PASSCODE: {
       TITLE: 'Change your Passcode',
@@ -262,8 +263,8 @@ const dashboardProfileDict: any = {
         NO_OLD_PASS: 'Please enter your old password',
         NO_NEW_PASS: 'Please enter your new password',
         NO_CONFIRM_PASS: 'Please enter your confirmation password',
-        NOT_MATCH: 'Your new password and confirm password do not match',
-      },
+        NOT_MATCH: 'Your new password and confirm password do not match'
+      }
     },
     CHANGE_PASSWORD: {
       TITLE: 'Cambia tu contraseña',
@@ -282,10 +283,29 @@ const dashboardProfileDict: any = {
         NO_OLD_PASS: 'Ingrese su contraseña anterior',
         NO_NEW_PASS: 'Ingrese su nueva contraseña',
         NO_CONFIRM_PASS: 'Ingrese su contraseña de confirmación',
-        NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden',
-      },
-    },
-  },
+        NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden'
+      }
+    }
+  }
+};
+
+const dashboardTestCasesDict: any = {
+  EN: {
+    PROFILE: 'Test Cases',
+    TITLE: 'TEST CASES',
+    SUBTITLE: 'This contains test cases information.',
+    EDIT_TEST_CASES: {
+      TEST_ID: 'Test ID',
+      TEST_NAME: 'Test Name',
+      TEST_TYPE: 'Test Type',
+      TEST_STEPS: 'Test Steps',
+      TEST_DATA: 'Test Data',
+      TEST_EXP_RESULTS: 'Test Expected Results',
+      TEST_EDGE_CASES: 'Test Edge Cases',
+      SAVE: 'Save',
+      CANCEL: 'Cancel'
+    }
+  }
 };
 
 const anthologyDict: any = {
@@ -297,7 +317,7 @@ const anthologyDict: any = {
       A: 'Journal',
       B: 'Class Work',
       C: 'Class Notes',
-      D: 'Uploads',
+      D: 'Uploads'
     },
     ACTIONS: {
       EDIT: 'Edit',
@@ -307,8 +327,8 @@ const anthologyDict: any = {
       CANCEL: 'Cancel',
       DELETE: 'Delete',
       CONFIRM: 'Confirm',
-      UPLOAD: 'Upload',
-    },
+      UPLOAD: 'Upload'
+    }
   },
   ES: {
     TITLE_CONTAINER: 'T.B.D',
@@ -318,7 +338,7 @@ const anthologyDict: any = {
       A: 'Diario',
       B: 'trabajo en clase',
       C: 'Apuntes de clase',
-      D: 'Uploads',
+      D: 'Uploads'
     },
     ACTIONS: {
       EDIT: 'Editar',
@@ -328,9 +348,9 @@ const anthologyDict: any = {
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
       CONFIRM: 'Confirm',
-      UPLOAD: 'Upload',
-    },
-  },
+      UPLOAD: 'Upload'
+    }
+  }
 };
 
 // People - User management list
@@ -343,9 +363,9 @@ const manageusersDict: any = {
       ROLE: 'Role',
       INST: 'Institution',
       STATUS: 'Status',
-      ACTIONS: 'Actions',
+      ACTIONS: 'Actions'
     },
-    ADD_NEW: 'Add New Person',
+    ADD_NEW: 'Add New Person'
   },
   ES: {
     TITLE: 'GESTIÓN DE USUARIOS',
@@ -355,10 +375,10 @@ const manageusersDict: any = {
       ROLE: 'Papel',
       INST: 'Institución',
       STATUS: 'Estado',
-      ACTIONS: 'Comportamiento',
+      ACTIONS: 'Comportamiento'
     },
-    ADD_NEW: 'Agregar persona',
-  },
+    ADD_NEW: 'Agregar persona'
+  }
 };
 
 // sidebar links
@@ -375,7 +395,7 @@ const sideBarLinksDict: any = {
     NOTICEBOARD: 'Noticeboard',
     NOTEBOOK: 'Notebook',
     DASHBOARD: 'Dashboard',
-    RESEARCHANALYTICS: 'Research & Analytics',
+    RESEARCHANALYTICS: 'Research & Analytics'
   },
   ES: {
     REGISTRATION: 'Registro',
@@ -388,19 +408,19 @@ const sideBarLinksDict: any = {
     UNIVERSAL_LESSON_BUILDER: 'Constructor Universal',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
-    RESEARCHANALYTICS: 'Investigación y Análisis',
-  },
+    RESEARCHANALYTICS: 'Investigación y Análisis'
+  }
 };
 
 const appDict: any = {
   EN: {
     LOG_OUT: 'Log Out',
-    LOADING: 'Give us one second, this section is loading...',
+    LOADING: 'Give us one second, this section is loading...'
   },
   ES: {
     LOG_OUT: 'Cerrar sesión',
-    LOADING: 'esta sección se está cargando...',
-  },
+    LOADING: 'esta sección se está cargando...'
+  }
 };
 
 const staffBuilderDict: any = {
@@ -421,7 +441,7 @@ const staffBuilderDict: any = {
     INFO: 'This institute does not have any staff member. Please add new member.',
     LOADING: 'Loading...',
     STATUS_PLACEHOLDER: 'Select Status',
-    EDIT: 'Edit',
+    EDIT: 'Edit'
   },
   ES: {
     TITLE: 'MIEMBROS DEL PERSONAL',
@@ -438,8 +458,8 @@ const staffBuilderDict: any = {
     INFO: 'TBD',
     LOADING: 'TBD',
     STATUS_PLACEHOLDER: 'TBD',
-    EDIT: 'TBD',
-  },
+    EDIT: 'TBD'
+  }
 };
 
 const spBuilderDict: any = {
@@ -454,7 +474,7 @@ const spBuilderDict: any = {
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO:
-      'This institute does not have any service vendor. Please add new service vendor.',
+      'This institute does not have any service vendor. Please add new service vendor.'
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
@@ -466,8 +486,8 @@ const spBuilderDict: any = {
     ACTION: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
-    INFO: 'TBD',
-  },
+    INFO: 'TBD'
+  }
 };
 
 const editClassDict: any = {
@@ -497,7 +517,7 @@ const editClassDict: any = {
       selectinstitute: 'Please select an institute to add class.',
       classexist: 'This class name is already exist, please add another name.',
       classupdate: 'Class details has been updated.',
-      unableupdate: 'Unable to update class details. Please try again later.',
+      unableupdate: 'Unable to update class details. Please try again later.'
     },
     TABLE: {
       SNO: 'No.',
@@ -505,8 +525,8 @@ const editClassDict: any = {
       GROUP: 'Group',
       STATUS: 'Status',
       DATE: 'Date Added',
-      ACTIONS: 'Actions',
-    },
+      ACTIONS: 'Actions'
+    }
   },
   ES: {
     TITLE: 'EDITAR CLASE',
@@ -534,7 +554,7 @@ const editClassDict: any = {
       selectinstitute: 'TBD',
       classexist: 'TBD',
       classupdate: 'TBD',
-      unableupdate: 'TBD',
+      unableupdate: 'TBD'
     },
     TABLE: {
       SNO: 'No.',
@@ -542,9 +562,9 @@ const editClassDict: any = {
       GROUP: 'TBD',
       STATUS: 'estado',
       DATE: 'TBD',
-      ACTIONS: 'comportamiento',
-    },
-  },
+      ACTIONS: 'comportamiento'
+    }
+  }
 };
 
 const lessonDict: any = {
@@ -552,14 +572,14 @@ const lessonDict: any = {
     CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
-    REFLECTION_QUESTIONS: 'Class Discussion',
+    REFLECTION_QUESTIONS: 'Class Discussion'
   },
   ES: {
     CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
-    REFLECTION_QUESTIONS: 'Class Discussion',
-  },
+    REFLECTION_QUESTIONS: 'Class Discussion'
+  }
 };
 
 const noticeboardDict: any = {
@@ -568,15 +588,15 @@ const noticeboardDict: any = {
       DEFAULT: 'Join Call',
       ZOOM: 'Join Zoom Call',
       MEET: 'Join Meet Call',
-      TEAMS: 'Join Teams Call',
+      TEAMS: 'Join Teams Call'
     },
     DOWNLOAD: 'Download',
     SECTION_TITLE: {
       ROOM_SELECTOR: 'Room Selector',
-      WIDGET_MANAGER: 'Widget Manager',
+      WIDGET_MANAGER: 'Widget Manager'
     },
     ROOMS: {
-      NONE: 'No rooms found',
+      NONE: 'No rooms found'
     },
     FORM: {
       WIDGET_STATUS: 'Widget Status',
@@ -589,7 +609,7 @@ const noticeboardDict: any = {
       PLEASE_ADD_TITLE: 'Please add title',
       TITLE: 'Title',
       TYPE: 'Type',
-      PLEASE_ADD: 'Please add',
+      PLEASE_ADD: 'Please add'
     },
     WIDGET_DESCRIPTION: {
       TEXT:
@@ -599,23 +619,23 @@ const noticeboardDict: any = {
       CALL:
         "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
       FILE:
-        'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.',
-    },
+        'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.'
+    }
   },
   ES: {
     JOIN_CALL: {
       DEFAULT: 'Unirse a la llamada',
       ZOOM: 'Unirse a la llamada Zoom',
       MEET: 'Unirse a la llamada Meet',
-      TEAMS: 'Unirse a la llamada Teams',
+      TEAMS: 'Unirse a la llamada Teams'
     },
     DOWNLOAD: 'Descargar',
     SECTION_TITLE: {
       ROOM_SELECTOR: 'Selector de Habitación',
-      WIDGET_MANAGER: 'Administrador de Widgets',
+      WIDGET_MANAGER: 'Administrador de Widgets'
     },
     ROOMS: {
-      NONE: 'No se encontraron habitaciones',
+      NONE: 'No se encontraron habitaciones'
     },
     FORM: {
       WIDGET_STATUS: 'Estado del Widgeto',
@@ -628,7 +648,7 @@ const noticeboardDict: any = {
       PLEASE_ADD_TITLE: 'Por favor agregue un título',
       TITLE: 'Título',
       TYPE: 'Type',
-      PLEASE_ADD: 'Por favor añadir',
+      PLEASE_ADD: 'Por favor añadir'
     },
     WIDGET_DESCRIPTION: {
       TEXT:
@@ -638,9 +658,9 @@ const noticeboardDict: any = {
       CALL:
         'Este es un widget básico para publicar los enlaces zoom / meet / teams que usará para comunicarse con sus estudiantes.',
       FILE:
-        'Este es un widget básico para compartir sus archivos de drive / onedrive / dropbox para tareas de estudiantes, etc..',
-    },
-  },
+        'Este es un widget básico para compartir sus archivos de drive / onedrive / dropbox para tareas de estudiantes, etc..'
+    }
+  }
 };
 
 const classRoomDict: any = {
@@ -670,11 +690,11 @@ const classRoomDict: any = {
       OPENED: 'OPEN',
       CLOSED: 'CLOSED',
       SURVEY: 'SURVEY',
-      UPCOMING: 'UPCOMING',
+      UPCOMING: 'UPCOMING'
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
-      TAB_TWO: 'Teach Lessons',
+      TAB_TWO: 'Teach Lessons'
     },
     MESSAGES: {
       SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
@@ -682,8 +702,8 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: '⬆ Select a room to see editable widgets...',
-      PLEASE_WAIT: 'Please wait',
-    },
+      PLEASE_WAIT: 'Please wait'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -711,11 +731,11 @@ const classRoomDict: any = {
       OPENED: 'TBD',
       CLOSED: 'TBD',
       SURVEY: 'TBD',
-      UPCOMING: 'TBD',
+      UPCOMING: 'TBD'
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
-      TAB_TWO: 'TBD',
+      TAB_TWO: 'TBD'
     },
     MESSAGES: {
       SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
@@ -723,9 +743,9 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
-      PLEASE_WAIT: 'TBD',
-    },
-  },
+      PLEASE_WAIT: 'TBD'
+    }
+  }
 };
 
 const lessonPlannerDict: any = {
@@ -751,18 +771,18 @@ const lessonPlannerDict: any = {
       COLUMN: {
         ONE: 'Name',
         TWO: 'Current Page',
-        THREE: 'Action',
+        THREE: 'Action'
       },
       STUDENT_SECTION: {
         IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
-        ON_DEMAND: 'On Demand',
-      },
+        ON_DEMAND: 'On Demand'
+      }
     },
     ACCESS_BUTTONS: {
       START: 'Start',
-      COMPLETE: 'Complete',
-    },
+      COMPLETE: 'Complete'
+    }
   },
   ES: {
     INTRO: 'TBD ',
@@ -786,19 +806,19 @@ const lessonPlannerDict: any = {
       COLUMN: {
         ONE: 'TBD',
         TWO: 'TBD',
-        THREE: 'TBD',
+        THREE: 'TBD'
       },
       STUDENT_SECTION: {
         IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
-        ON_DEMAND: 'On Demand',
-      },
+        ON_DEMAND: 'On Demand'
+      }
     },
     ACCESS_BUTTONS: {
       START: 'TBD',
-      COMPLETE: 'TBD',
-    },
-  },
+      COMPLETE: 'TBD'
+    }
+  }
 };
 
 const PreviewFormDict: any = {
@@ -814,13 +834,13 @@ const PreviewFormDict: any = {
       UPDATEERR:
         'Error while updating lesson plans for units, please try again after some time.',
       CONNECTERR: 'This lesson is not connected to any units.',
-      FETCHERR: 'Error while fetching units for this lesson.Please try after some time.',
+      FETCHERR: 'Error while fetching units for this lesson.Please try after some time.'
     },
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
         'Changes will applay to all assigned lesson plans. Do you want to continue?',
-      TITLE: 'Preview Details',
-    },
+      TITLE: 'Preview Details'
+    }
   },
   ES: {
     FETCHING: 'TBD',
@@ -833,13 +853,13 @@ const PreviewFormDict: any = {
       UPDATESUCCESS: 'TBD',
       UPDATEERR: 'TBD',
       CONNECTERR: 'TBD',
-      FETCHERR: 'TBD',
+      FETCHERR: 'TBD'
     },
     PREVIEW_DETAILS: {
       WARN_MESSAGE: 'TBD',
-      TITLE: 'TBD',
-    },
-  },
+      TITLE: 'TBD'
+    }
+  }
 };
 
 const InstitutionDict: any = {
@@ -852,7 +872,7 @@ const InstitutionDict: any = {
       WEBSITE: 'Website',
       CONTACT: 'Contact No.',
       ACTION: 'Actions',
-      NORESULT: 'No Results',
+      NORESULT: 'No Results'
     },
     SHOWPAGE: 'Showing Page',
     OF: 'of',
@@ -860,8 +880,8 @@ const InstitutionDict: any = {
     SORTBY: 'Sort By',
 
     BUTTON: {
-      Add: 'Add New Institution',
-    },
+      Add: 'Add New Institution'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -872,16 +892,16 @@ const InstitutionDict: any = {
       WEBSITE: 'TBD',
       CONTACT: 'TBD',
       ACTION: 'TBD',
-      NORESULT: 'TBD',
+      NORESULT: 'TBD'
     },
     SHOWPAGE: 'TBD',
     OF: 'TBD',
     PAGES: 'TBD',
     SORTBY: 'TBD',
     BUTTON: {
-      Add: 'TBD',
-    },
-  },
+      Add: 'TBD'
+    }
+  }
 };
 
 const Institute_info: any = {
@@ -914,8 +934,8 @@ const Institute_info: any = {
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
-      GAME_CHANGERS: 'Game Changers',
-    },
+      GAME_CHANGERS: 'Game Changers'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -938,9 +958,9 @@ const Institute_info: any = {
       HOME: 'TBD',
       COMMUNITY: 'TBD',
       NOTEBOOK: 'TBD',
-      GAME_CHANGERS: 'TBD',
-    },
-  },
+      GAME_CHANGERS: 'TBD'
+    }
+  }
 };
 
 const InstitutionEditDict: any = {
@@ -961,18 +981,18 @@ const InstitutionEditDict: any = {
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
       SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
-      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider'
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'School',
       AFTERSCHOOL: 'After School',
       DAYCAMP: 'Day Camp',
       SUMMERCAMP: 'Summer Camp',
-      C3: '501C3',
+      C3: '501C3'
     },
     BUTTON: {
       CANCEL: 'Cancel',
-      SAVE: 'Save',
+      SAVE: 'Save'
     },
     messages: {
       namerequired: 'Institute name is required.',
@@ -981,8 +1001,8 @@ const InstitutionEditDict: any = {
       saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
-      imgeerr: 'Unable to update image changes. Please try again later.',
-    },
+      imgeerr: 'Unable to update image changes. Please try again later.'
+    }
   },
   ES: {
     INFO: 'TBD',
@@ -999,18 +1019,18 @@ const InstitutionEditDict: any = {
       STATE_LABEL: 'TBD',
       ZIP_LABEL: 'TBD',
       PHONE_LABEL: 'TBD',
-      SERVICEPROVIDER_LABEL: 'TBD',
+      SERVICEPROVIDER_LABEL: 'TBD'
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'TBD',
       AFTERSCHOOL: 'TBD',
       DAYCAMP: 'TBD',
       SUMMERCAMP: 'TBD',
-      C3: 'TBD',
+      C3: 'TBD'
     },
     BUTTON: {
       CANCEL: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
@@ -1018,9 +1038,9 @@ const InstitutionEditDict: any = {
       unabletoupdate: 'TBD',
       uploaderr: 'TBD',
       deleterr: 'TBD',
-      imgeerr: 'TBD',
-    },
-  },
+      imgeerr: 'TBD'
+    }
+  }
 };
 
 const InstitutionAddDict: any = {
@@ -1044,7 +1064,7 @@ const InstitutionAddDict: any = {
       PHONE_LABEL: 'Phone',
       state: 'Select state',
       SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
-      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider'
     },
     SERVICE_VENDORS: 'Service Vendors',
     INSTITUTION_TYPE: {
@@ -1052,18 +1072,18 @@ const InstitutionAddDict: any = {
       AFTERSCHOOL: 'After School',
       DAYCAMP: 'Day Camp',
       SUMMERCAMP: 'Summer Camp',
-      C3: '501C3',
+      C3: '501C3'
     },
     BUTTON: {
       CANCEL: 'Cancel',
-      SAVE: 'Save',
+      SAVE: 'Save'
     },
     messages: {
       namerequired: 'Institute name is required.',
       saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
-      adderr: 'Unable to add new institute. Please try again later.',
-    },
+      adderr: 'Unable to add new institute. Please try again later.'
+    }
   },
   ES: {
     INFOA: 'TBD',
@@ -1085,25 +1105,25 @@ const InstitutionAddDict: any = {
       ZIP_LABEL: 'TBD',
       PHONE_LABEL: 'TBD',
       state: 'TBD',
-      SERVICEPROVIDER_LABEL: 'TBD',
+      SERVICEPROVIDER_LABEL: 'TBD'
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'TBD',
       AFTERSCHOOL: 'TBD',
       DAYCAMP: 'TBD',
       SUMMERCAMP: 'TBD',
-      C3: 'TBD',
+      C3: 'TBD'
     },
     BUTTON: {
       CANCEL: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
       uploaderr: 'TBD',
-      adderr: 'TBD',
-    },
-  },
+      adderr: 'TBD'
+    }
+  }
 };
 
 const InstitutionBuilderDict: any = {
@@ -1128,7 +1148,7 @@ const InstitutionBuilderDict: any = {
       PHONE_LABEL: 'Phone',
       state: 'Select state',
       SERVICEPROVIDER_LABEL_WITH_NAME: 'is a Service Provider',
-      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider',
+      SERVICEPROVIDER_LABEL_WITHOUT_NAME: 'Service Provider'
     },
     SERVICE_VENDORS: 'Service Vendors',
     INSTITUTION_TYPE: {
@@ -1136,18 +1156,18 @@ const InstitutionBuilderDict: any = {
       AFTERSCHOOL: 'After School',
       DAYCAMP: 'Day Camp',
       SUMMERCAMP: 'Summer Camp',
-      C3: '501C3',
+      C3: '501C3'
     },
     BUTTON: {
       CANCEL: 'Cancel',
-      SAVE: 'Save',
+      SAVE: 'Save'
     },
     messages: {
       namerequired: 'Institute name is required.',
       saveMsg: 'Institution details saved successfully',
       uploaderr: 'Unable to upload image. Please try again later. ',
-      adderr: 'Unable to add new institute. Please try again later.',
-    },
+      adderr: 'Unable to add new institute. Please try again later.'
+    }
   },
   ES: {
     INFOA: 'TBD',
@@ -1169,25 +1189,25 @@ const InstitutionBuilderDict: any = {
       ZIP_LABEL: 'TBD',
       PHONE_LABEL: 'TBD',
       state: 'TBD',
-      SERVICEPROVIDER_LABEL: 'TBD',
+      SERVICEPROVIDER_LABEL: 'TBD'
     },
     INSTITUTION_TYPE: {
       SCHOOL: 'TBD',
       AFTERSCHOOL: 'TBD',
       DAYCAMP: 'TBD',
       SUMMERCAMP: 'TBD',
-      C3: 'TBD',
+      C3: 'TBD'
     },
     BUTTON: {
       CANCEL: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
       uploaderr: 'TBD',
-      adderr: 'TBD',
-    },
-  },
+      adderr: 'TBD'
+    }
+  }
 };
 
 const Institute_class: any = {
@@ -1199,8 +1219,8 @@ const Institute_class: any = {
     EDIT: 'Edit',
     INFO: 'This institute does not have any class. Please create a new class.',
     BUTTON: {
-      ADD: 'New class',
-    },
+      ADD: 'New class'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1210,15 +1230,15 @@ const Institute_class: any = {
     EDIT: 'Editar',
     INFO: 'TBD',
     BUTTON: {
-      ADD: 'TBD',
-    },
-  },
+      ADD: 'TBD'
+    }
+  }
 };
 const InstitueCurriculum: any = {
   EN: {
     TITLE: 'Courses',
     BUTTON: {
-      ADD: 'New Course',
+      ADD: 'New Course'
     },
     NO: 'No.',
     NAME: 'Course Name',
@@ -1230,12 +1250,12 @@ const InstitueCurriculum: any = {
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
     LOADING: 'Loading Courses...',
-    SELECT_INSTITUTION: 'Select Institution',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     TITLE: 'TBD',
     BUTTON: {
-      ADD: 'TBD',
+      ADD: 'TBD'
     },
     NO: 'TBD',
     NAME: 'TBD',
@@ -1248,8 +1268,8 @@ const InstitueCurriculum: any = {
     INFO: 'TBD',
     NO_DELETE: 'TBD',
     LOADING: 'TBD',
-    SELECT_INSTITUTION: 'TBD',
-  },
+    SELECT_INSTITUTION: 'TBD'
+  }
 };
 
 const InstitueRomms: any = {
@@ -1267,14 +1287,14 @@ const InstitueRomms: any = {
     messages: {
       nothaveclass:
         'This institute does not have any classroom. Please create a new classroom.',
-      fetcherr: 'Error while fetching classroom data please Try again later.',
+      fetcherr: 'Error while fetching classroom data please Try again later.'
     },
     BUTTON: {
-      ADD: 'New Classroom',
+      ADD: 'New Classroom'
     },
     LOADING: 'Loading Classrooms...',
     SELECT_STAFF: 'Select Staff',
-    SELECT_INSTITUTION: 'Select Institution',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     TITLE: 'TBD',
@@ -1289,15 +1309,15 @@ const InstitueRomms: any = {
     EDIT: 'Editar',
     messages: {
       nothaveclass: 'TBD',
-      fetcherr: 'TBD',
+      fetcherr: 'TBD'
     },
     BUTTON: {
-      ADD: 'TBD',
+      ADD: 'TBD'
     },
     LOADING: 'Cargando aulas...',
     SELECT_STAFF: 'TBD',
-    SELECT_INSTITUTION: 'TBD',
-  },
+    SELECT_INSTITUTION: 'TBD'
+  }
 };
 
 const classBuilderdict: any = {
@@ -1312,7 +1332,7 @@ const classBuilderdict: any = {
     BUTTON: {
       ADD: 'Add',
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
     MESSAGES: {
       ERROR: {
@@ -1325,17 +1345,17 @@ const classBuilderdict: any = {
         SAVECLASSERROR: 'Unable to save new class. Please try again later.',
         PROCESSINGERROR: 'Error while processing please Try again later.',
         INVALIDPATH:
-          'Invalid path please go back to institution selection page to select your institute.',
+          'Invalid path please go back to institution selection page to select your institute.'
       },
       VALIDATION: {
         NAME: 'Class name is required please enter.',
         INSTITUTE: 'Please select an institute to add class.',
-        CLASSNAME: 'This class name is already exist, please add another name.',
+        CLASSNAME: 'This class name is already exist, please add another name.'
       },
       SUCCESS: {
-        CLASSSAVE: 'New class details has been saved.',
-      },
-    },
+        CLASSSAVE: 'New class details has been saved.'
+      }
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1351,24 +1371,24 @@ const classBuilderdict: any = {
         STUDENTADDERROR: 'TBD',
         SAVECLASSERROR: 'TBD',
         PROCESSINGERROR: 'TBD',
-        INVALIDPATH: 'TBD',
+        INVALIDPATH: 'TBD'
       },
       VALIDATION: {
         NAME: 'TBD',
         INSTITUTE: 'TBD',
-        CLASSNAME: 'TBD',
+        CLASSNAME: 'TBD'
       },
       SUCCESS: {
-        CLASSSAVE: 'TBD',
-      },
+        CLASSSAVE: 'TBD'
+      }
     },
 
     BUTTON: {
       ADD: 'TBD',
       SAVE: 'TBD',
-      SAVING: 'TBD',
-    },
-  },
+      SAVING: 'TBD'
+    }
+  }
 };
 
 const CourseBuilderDict: any = {
@@ -1391,7 +1411,7 @@ const CourseBuilderDict: any = {
       LESSONS: 'Lessons',
       OBJECTIVES: 'Objective',
       UNIT_NAME: 'Unit Name',
-      ACTION: 'Actions',
+      ACTION: 'Actions'
     },
     MESSAGES: {
       ERROR: {
@@ -1402,21 +1422,21 @@ const CourseBuilderDict: any = {
         invalid:
           'Invalid path please go back to institution selection page to select your institute.',
         FETCH_COURSE_ERR: 'Error while fetching course data, please try again later.',
-        FETCH_UNIT_ERR: 'Error while fetching units, please try again later.',
+        FETCH_UNIT_ERR: 'Error while fetching units, please try again later.'
       },
       validation: {
         name: 'Course name is required please enter name.',
         institute: 'Please select an institute to add course.',
-        curricular: 'This course name is already exist, please add another name.',
+        curricular: 'This course name is already exist, please add another name.'
       },
       success: {
-        save: 'New Course has been saved.',
-      },
+        save: 'New Course has been saved.'
+      }
     },
     BUTTON: {
       SAVE: 'Save',
-      SAVING: 'Saving...',
-    },
+      SAVING: 'Saving...'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1435,22 +1455,22 @@ const CourseBuilderDict: any = {
         fetch: 'TBD',
         designerlist: 'TBD',
         process: 'TBD',
-        invalid: 'TBD',
+        invalid: 'TBD'
       },
       validation: {
         name: 'TBD',
         institute: 'TBD',
-        curricular: 'TBD',
+        curricular: 'TBD'
       },
       success: {
-        save: 'TBD',
-      },
+        save: 'TBD'
+      }
     },
     BUTTON: {
       SAVE: 'TBD',
-      SAVING: 'TBD',
-    },
-  },
+      SAVING: 'TBD'
+    }
+  }
 };
 
 const CurricularBuilderdict: any = {
@@ -1472,21 +1492,21 @@ const CurricularBuilderdict: any = {
         designerlist: 'Error while fetching Designers list Please try again later.',
         process: 'Error while processing please Try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your institute.',
+          'Invalid path please go back to institution selection page to select your institute.'
       },
       validation: {
         name: 'Course name is required please enter name.',
         institute: 'Please select an institute to add course.',
-        curricular: 'This course name is already exist, please add another name.',
+        curricular: 'This course name is already exist, please add another name.'
       },
       success: {
-        save: 'New course has been saved.',
-      },
+        save: 'New course has been saved.'
+      }
     },
     BUTTON: {
       SAVE: 'Save',
-      SAVING: 'Saving...',
-    },
+      SAVING: 'Saving...'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1505,22 +1525,22 @@ const CurricularBuilderdict: any = {
         fetch: 'TBD',
         designerlist: 'TBD',
         process: 'TBD',
-        invalid: 'TBD',
+        invalid: 'TBD'
       },
       validation: {
         name: 'TBD',
         institute: 'TBD',
-        curricular: 'TBD',
+        curricular: 'TBD'
       },
       success: {
-        save: 'TBD',
-      },
+        save: 'TBD'
+      }
     },
     BUTTON: {
       SAVE: 'TBD',
-      SAVING: 'TBD',
-    },
-  },
+      SAVING: 'TBD'
+    }
+  }
 };
 const RoomBuilderdict: any = {
   EN: {
@@ -1541,7 +1561,7 @@ const RoomBuilderdict: any = {
     MAXSTUDENT_PLACHOLDER: 'Max students',
     BUTTON: {
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
     messages: {
       error: {
@@ -1556,7 +1576,7 @@ const RoomBuilderdict: any = {
         classroomadd: 'Error while adding Classroom course. Please try again later.',
         ecreateclass: 'Error while creating Classroom. Please try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your institute.',
+          'Invalid path please go back to institution selection page to select your institute.'
       },
       validation: {
         classroomname: 'Classroom name is required please enter name.',
@@ -1565,13 +1585,13 @@ const RoomBuilderdict: any = {
         class: 'Please select a class for the Classroom.',
         maxstudent: 'Please set Max students limit for the Classroom.',
         allowstudent: 'One Classroom can allow max. 30 students.',
-        classroomexist: 'This Classroom name is already exist, please add another name.',
+        classroomexist: 'This Classroom name is already exist, please add another name.'
       },
       success: {
         classroomdetail: 'New Classroom details has been saved.',
-        newclassroom: 'New Classroom details has been saved.',
-      },
-    },
+        newclassroom: 'New Classroom details has been saved.'
+      }
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1589,7 +1609,7 @@ const RoomBuilderdict: any = {
     MAXSTUDENT_PLACHOLDER: 'TBD',
     BUTTON: {
       SAVE: 'TBD',
-      SAVING: 'TBD',
+      SAVING: 'TBD'
     },
     messages: {
       error: {
@@ -1603,7 +1623,7 @@ const RoomBuilderdict: any = {
         process: 'TBD',
         classroomadd: 'TBD',
         ecreateclass: 'TBD',
-        invalid: 'TBD',
+        invalid: 'TBD'
       },
       validation: {
         classroomname: 'TBD',
@@ -1612,14 +1632,14 @@ const RoomBuilderdict: any = {
         class: 'TBD',
         maxstudent: 'TBD',
         allowstudent: 'TBD',
-        classroomexist: 'TBD',
+        classroomexist: 'TBD'
       },
       success: {
         classroomdetail: 'TBD',
-        newclassroom: 'TBD',
-      },
-    },
-  },
+        newclassroom: 'TBD'
+      }
+    }
+  }
 };
 
 const EditCurriculardict: any = {
@@ -1643,12 +1663,12 @@ const EditCurriculardict: any = {
       namerequired: 'Course name is required please enter name.',
       selectinstitute: 'Please select an institute to add course.',
       nameexist: 'This course name is already exist, please add another name.',
-      fetchinger: 'Error while fetching course data,please try again later.',
+      fetchinger: 'Error while fetching course data,please try again later.'
     },
     BUTTON: {
       SAVE: 'Save',
-      CANCEL: 'Cancel',
-    },
+      CANCEL: 'Cancel'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1670,13 +1690,13 @@ const EditCurriculardict: any = {
       namerequired: 'TBD',
       selectinstitute: 'TBD',
       nameexist: 'TBD',
-      fetchinger: 'TBD',
+      fetchinger: 'TBD'
     },
     BUTTON: {
       SAVE: 'TBD',
-      CANCEL: 'TBD',
-    },
-  },
+      CANCEL: 'TBD'
+    }
+  }
 };
 
 const RoomEDITdict: any = {
@@ -1734,13 +1754,13 @@ const RoomEDITdict: any = {
       errupdating: 'Error while updating Classroom course. Please try that later.',
       errprocess: 'Error while processing. Please try again later.',
       errupdatingclass: 'Error while updating Classroom details. Please try again later.',
-      errfetch: 'Error while fetching Classroom data, please try again later.',
+      errfetch: 'Error while fetching Classroom data, please try again later.'
     },
     BUTTON: {
       SAVE: 'Save',
       SAVING: 'Saving...',
-      CANCEL: 'Cancel',
-    },
+      CANCEL: 'Cancel'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1792,14 +1812,14 @@ const RoomEDITdict: any = {
       errupdating: 'TBD',
       errprocess: 'TBD',
       errupdatingclass: 'TBD',
-      errfetch: 'TBD',
+      errfetch: 'TBD'
     },
     BUTTON: {
       SAVE: 'TBD',
       SAVING: 'TBD',
-      CANCEL: 'TBD',
-    },
-  },
+      CANCEL: 'TBD'
+    }
+  }
 };
 
 const RoomDetailsDict: any = {
@@ -1807,23 +1827,23 @@ const RoomDetailsDict: any = {
     COURSE_DETAILS: 'Course Details',
     COURSE_FREQUENCY: 'Course Schedule',
     COURSE_PARTNERS: 'Course Partners',
-    SUBJECT_PROFICIENCY: 'Subject Proficiency',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency'
   },
   ES: {
     COURSE_DETAILS: 'TBD',
     COURSE_FREQUENCY: 'TBD',
     COURSE_PARTNERS: 'TBD',
-    SUBJECT_PROFICIENCY: 'TBD',
-  },
+    SUBJECT_PROFICIENCY: 'TBD'
+  }
 };
 
 const SubjectProficiencyDict: any = {
   EN: {
-    NO_GROUP_MESSAGE: 'No group added',
+    NO_GROUP_MESSAGE: 'No group added'
   },
   ES: {
-    NO_GROUP_MESSAGE: 'TBD',
-  },
+    NO_GROUP_MESSAGE: 'TBD'
+  }
 };
 
 const GroupFormDict: any = {
@@ -1833,17 +1853,17 @@ const GroupFormDict: any = {
       GROUP_NAME: 'Group name',
       ADVISOR: 'Advisor',
       LOCATION: 'Location',
-      STUDENTS: 'Students',
+      STUDENTS: 'Students'
     },
     PLACEHOLDERS: {
       GROUP_NAME: 'Enter Group name',
       ADVISOR: 'Select advisor for group',
-      LOCATION: 'Enter location',
+      LOCATION: 'Enter location'
     },
     MESSAGES: {
       GROUP_NAME: 'Group name is required',
-      GROUP_ADVISOR: 'Group advisor is required',
-    },
+      GROUP_ADVISOR: 'Group advisor is required'
+    }
   },
   ES: {
     HEADING: 'TBD',
@@ -1851,18 +1871,18 @@ const GroupFormDict: any = {
       GROUP_NAME: 'TBD',
       ADVISOR: 'TBD',
       LOCATION: 'TBD',
-      STUDENTS: 'TBD',
+      STUDENTS: 'TBD'
     },
     PLACEHOLDERS: {
       GROUP_NAME: 'TBD',
       ADVISOR: 'TBD',
-      LOCATION: 'TBD',
+      LOCATION: 'TBD'
     },
     MESSAGES: {
       GROUP_NAME: 'TBD',
-      GROUP_ADVISOR: 'TBD',
-    },
-  },
+      GROUP_ADVISOR: 'TBD'
+    }
+  }
 };
 
 const CourseScheduleDict: any = {
@@ -1877,15 +1897,15 @@ const CourseScheduleDict: any = {
       FREQUENCY: 'Frequency',
       CONFERENCE_CALL_LINK: 'Conference call link',
       LOCATION: 'Location',
-      ADDITIONAL_NOTES: 'Notes regarding schedule',
+      ADDITIONAL_NOTES: 'Notes regarding schedule'
     },
     MESSAGES: {
       START_DATE: 'Start date is required',
       END_DATE: 'End date is required',
       START_TIME: 'Start time is required',
       END_TIME: 'End time is required',
-      SUCCESS_MESSAGE: 'Course Schedule updated successfully',
-    },
+      SUCCESS_MESSAGE: 'Course Schedule updated successfully'
+    }
   },
   ES: {
     HEADING: 'Schedule',
@@ -1898,16 +1918,16 @@ const CourseScheduleDict: any = {
       FREQUENCY: 'TBD',
       CONFERENCE_CALL_LINK: 'TBD',
       LOCATION: 'TBD',
-      ADDITIONAL_NOTES: 'TBD',
+      ADDITIONAL_NOTES: 'TBD'
     },
     MESSAGES: {
       START_DATE: 'TBD',
       END_DATE: 'TBD',
       START_TIME: 'TBD',
       END_TIME: 'TBD',
-      SUCCESS_MESSAGE: 'TBD',
-    },
-  },
+      SUCCESS_MESSAGE: 'TBD'
+    }
+  }
 };
 
 const curricularviewdict: any = {
@@ -1924,8 +1944,8 @@ const curricularviewdict: any = {
     TAB: {
       UNIT: 'Units',
       LEARINGOBJECTIVE: 'Learning objectives',
-      INFORMATION: 'Demographics & Information',
-    },
+      INFORMATION: 'Demographics & Information'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1940,9 +1960,9 @@ const curricularviewdict: any = {
     TAB: {
       UNIT: 'TBD',
       LEARINGOBJECTIVE: 'TBD',
-      INFORMATION: 'TBD',
-    },
-  },
+      INFORMATION: 'TBD'
+    }
+  }
 };
 
 const CHECKPOINTSDICT: any = {
@@ -1952,8 +1972,8 @@ const CHECKPOINTSDICT: any = {
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADDEXISTING: 'Add Existing Checkpoint',
-      ADDNEW: 'Add New Checkpoint',
-    },
+      ADDNEW: 'Add New Checkpoint'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -1961,9 +1981,9 @@ const CHECKPOINTSDICT: any = {
     FETCH: 'TBD',
     BUTTON: {
       ADDEXISTING: 'TBD',
-      ADDNEW: 'TBD',
-    },
-  },
+      ADDNEW: 'TBD'
+    }
+  }
 };
 
 const LEARINGOBJECTIVEDICT: any = {
@@ -1973,17 +1993,17 @@ const LEARINGOBJECTIVEDICT: any = {
       'This course does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add Learning Objective',
-    },
+      ADD: 'Add Learning Objective'
+    }
   },
   ES: {
     TITLE: 'TBD',
     INFO: 'TBD',
     FETCH: 'TBD',
     BUTTON: {
-      ADD: 'TBD',
-    },
-  },
+      ADD: 'TBD'
+    }
+  }
 };
 
 const SYLLABUS: any = {
@@ -1995,7 +2015,7 @@ const SYLLABUS: any = {
     EDIT: 'Edit',
     INFO: 'This course does not have any units yet. Please create a new one.',
     FETCH: 'Fetching details...',
-    ADDNEW: 'Add new Unit',
+    ADDNEW: 'Add new Unit'
   },
   ES: {
     TITLE: 'TBD',
@@ -2005,8 +2025,8 @@ const SYLLABUS: any = {
     EDIT: 'Editar',
     INFO: 'TBD',
     FETCH: 'TBD',
-    ADDNEW: 'TBD',
-  },
+    ADDNEW: 'TBD'
+  }
 };
 
 const Measurementdict: any = {
@@ -2017,7 +2037,7 @@ const Measurementdict: any = {
     EDIT: 'Edit',
     INFO: 'This topic does not have any measurement yet. Please create a new one.',
     ADDNEW: 'Add New Measurement',
-    FETCH: 'Fetching measurements list...',
+    FETCH: 'Fetching measurements list...'
   },
   ES: {
     NO: 'TBD',
@@ -2026,8 +2046,8 @@ const Measurementdict: any = {
     EDIT: 'TBD',
     INFO: 'TBD',
     ADDNEW: 'TBD',
-    FETCH: 'TBD',
-  },
+    FETCH: 'TBD'
+  }
 };
 
 const TOPICLISTDICT: any = {
@@ -2037,15 +2057,15 @@ const TOPICLISTDICT: any = {
     INFO: 'This learning objective does not have any topics. Please create a new one.',
     ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
-    FETCH: 'Fetching topics list...',
+    FETCH: 'Fetching topics list...'
   },
   ES: {
     TOPIC: 'TBD',
     EDIT: 'TBD',
     INFO: 'TBD',
     ADDNEW: 'TBD',
-    FETCH: 'TBD',
-  },
+    FETCH: 'TBD'
+  }
 };
 
 const ADDLEARINGOBJDICT: any = {
@@ -2056,7 +2076,7 @@ const ADDLEARINGOBJDICT: any = {
     NAME: 'Learning Objective Name',
     DESC: 'Description',
     SAVE: 'Save',
-    VALIDATION: 'Name is required',
+    VALIDATION: 'Name is required'
   },
   ES: {
     TITLE: 'TBD',
@@ -2065,8 +2085,8 @@ const ADDLEARINGOBJDICT: any = {
     NAME: 'TBD',
     DESC: 'TBD',
     SAVE: 'TBD',
-    VALIDATION: 'TBD',
-  },
+    VALIDATION: 'TBD'
+  }
 };
 
 const addQuestionDict: any = {
@@ -2086,12 +2106,12 @@ const addQuestionDict: any = {
       qtyperequired: 'Question type is required',
       qlabelrequired: 'Question label is required',
       qdetailsave: 'Question details has been saved.',
-      unabletosave: 'Unable to save Question details, Please try again later.',
+      unabletosave: 'Unable to save Question details, Please try again later.'
     },
     Button: {
       save: 'Save',
-      cancel: 'Cancel',
-    },
+      cancel: 'Cancel'
+    }
   },
   ES: {
     heading: 'TBD',
@@ -2109,13 +2129,13 @@ const addQuestionDict: any = {
       qtyperequired: 'TBD',
       qlabelrequired: 'TBD',
       qdetailsave: 'TBD',
-      unabletosave: 'TBD',
+      unabletosave: 'TBD'
     },
     Button: {
       save: 'TBD',
-      cancel: 'TBD',
-    },
-  },
+      cancel: 'TBD'
+    }
+  }
 };
 
 const SelectPreviousQuestionDict: any = {
@@ -2131,8 +2151,8 @@ const SelectPreviousQuestionDict: any = {
     wait: 'Fetching question details please wait...',
     button: {
       save: 'Save',
-      cancel: 'Cancel',
-    },
+      cancel: 'Cancel'
+    }
   },
   ES: {
     heading: 'TBD',
@@ -2146,9 +2166,9 @@ const SelectPreviousQuestionDict: any = {
     wait: 'TBD',
     button: {
       save: 'TBD',
-      cancel: 'TBD',
-    },
-  },
+      cancel: 'TBD'
+    }
+  }
 };
 
 const AddMeasurementDict: any = {
@@ -2167,12 +2187,12 @@ const AddMeasurementDict: any = {
     basic: 'Basic',
     button: {
       save: 'Save',
-      cancel: 'cancel',
+      cancel: 'cancel'
     },
     messages: {
       namerequired: 'Name is required',
-      topicrequired: 'topic is required',
-    },
+      topicrequired: 'topic is required'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2188,13 +2208,13 @@ const AddMeasurementDict: any = {
     basic: 'TBD',
     button: {
       save: 'TBD',
-      cancel: 'TBD',
+      cancel: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
-      topicrequired: 'TBD',
-    },
-  },
+      topicrequired: 'TBD'
+    }
+  }
 };
 
 const AddProfileCheckpointDict: any = {
@@ -2221,15 +2241,15 @@ const AddProfileCheckpointDict: any = {
       newq: 'Create New Question',
       cancel: 'Cancel',
       save: 'Save',
-      saving: 'Saving...',
+      saving: 'Saving...'
     },
     messages: {
       unsave: 'Unable to save Checkpoint details, Please try again later.',
       titlerequired: 'Checkpoint title is required',
       labelrequired: 'Checkpoint label is required',
       minone: 'You need to add minimum one question to create a checkpoint.',
-      noquestion: 'This checkpoint does not have any questions',
-    },
+      noquestion: 'This checkpoint does not have any questions'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2254,16 +2274,16 @@ const AddProfileCheckpointDict: any = {
       newq: 'TBD',
       cancel: 'TBD',
       save: 'TBD',
-      saving: 'TBD',
+      saving: 'TBD'
     },
     messages: {
       unsave: 'TBD',
       titlerequired: 'TBD',
       labelrequired: 'TBD',
       minone: 'TBD',
-      noquestion: 'TBD',
-    },
-  },
+      noquestion: 'TBD'
+    }
+  }
 };
 
 const SyllabusDict: any = {
@@ -2280,14 +2300,14 @@ const SyllabusDict: any = {
       LESSON_NAME: 'Lesson Name',
       MEASUREMENTS: 'Measurements',
       TYPE: 'Type',
-      ACTION: 'Actions',
+      ACTION: 'Actions'
     },
     MESSAGES: {
       wantsave: 'Do you want to save changes before moving forward?',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
-      UPDATE_ERROR: 'Error while updating please try again later.',
-    },
+      UPDATE_ERROR: 'Error while updating please try again later.'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -2302,14 +2322,14 @@ const SyllabusDict: any = {
       LESSON_NAME: 'TBD',
       MEASUREMENTS: 'TBD',
       TYPE: 'TBD',
-      ACTION: 'TBD',
+      ACTION: 'TBD'
     },
     MESSAGES: {
       wantsave: 'TBD',
       fetchlist: 'TBD',
-      fetchdesign: 'TBD',
-    },
-  },
+      fetchdesign: 'TBD'
+    }
+  }
 };
 
 const AddSyllabusDict: any = {
@@ -2333,8 +2353,8 @@ const AddSyllabusDict: any = {
       fetcherr: 'Error while fetching Designers list Please try again later.',
       unitupdate: 'Unit details has been updated.',
       unablesave: 'Unable to save new unit please try again later.',
-      namerequired: 'Unit name is required please enter name.',
-    },
+      namerequired: 'Unit name is required please enter name.'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2358,9 +2378,9 @@ const AddSyllabusDict: any = {
       unitupdate: 'TBD',
       uintsave: 'TBD',
       unablesave: 'TBD',
-      namerequired: 'TBD',
-    },
-  },
+      namerequired: 'TBD'
+    }
+  }
 };
 
 const AddTopicDict: any = {
@@ -2374,12 +2394,12 @@ const AddTopicDict: any = {
     description: 'Description',
     button: {
       cancel: 'Cancel',
-      save: 'Save',
+      save: 'Save'
     },
     messages: {
       namerequired: 'Name is required',
-      objectiverequired: 'learning objective is required',
-    },
+      objectiverequired: 'learning objective is required'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2391,13 +2411,13 @@ const AddTopicDict: any = {
     description: 'TBD',
     button: {
       cancel: 'TBD',
-      save: 'TBD',
+      save: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
-      objectiverequired: 'TBD',
-    },
-  },
+      objectiverequired: 'TBD'
+    }
+  }
 };
 
 const EditLearningObjectiveDict: any = {
@@ -2410,11 +2430,11 @@ const EditLearningObjectiveDict: any = {
     fetching: 'Fetching data...',
     button: {
       cancel: 'Cancel',
-      save: 'Save',
+      save: 'Save'
     },
     messages: {
-      namerequired: 'Name is required',
-    },
+      namerequired: 'Name is required'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2425,12 +2445,12 @@ const EditLearningObjectiveDict: any = {
     fetching: 'TBD',
     button: {
       cancel: 'TBD',
-      save: 'TBD',
+      save: 'TBD'
     },
     messages: {
-      namerequired: 'TBD',
-    },
-  },
+      namerequired: 'TBD'
+    }
+  }
 };
 
 const EditMeasurementDict: any = {
@@ -2449,12 +2469,12 @@ const EditMeasurementDict: any = {
     fetching: 'Fetching data...',
     button: {
       cancel: 'Cancel',
-      save: 'Save',
+      save: 'Save'
     },
     messages: {
       namerequierd: 'Name is required',
-      topicrequired: 'topic is required',
-    },
+      topicrequired: 'topic is required'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2471,13 +2491,13 @@ const EditMeasurementDict: any = {
     fetching: 'TBD',
     button: {
       cancel: 'TBD',
-      save: 'TBD',
+      save: 'TBD'
     },
     messages: {
       namerequierd: 'TBD',
-      topicrequired: 'TBD',
-    },
-  },
+      topicrequired: 'TBD'
+    }
+  }
 };
 
 const EditProfileCheckpointDict: any = {
@@ -2506,8 +2526,8 @@ const EditProfileCheckpointDict: any = {
       title: 'Checkpoint title is required',
       label: 'Checkpoint label is required',
       onequetion: 'You need to add minimum one question to create a checkpoint.',
-      fetcherr: 'Unable to fetch Checkpoint details, Please try again later.',
-    },
+      fetcherr: 'Unable to fetch Checkpoint details, Please try again later.'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2534,9 +2554,9 @@ const EditProfileCheckpointDict: any = {
       title: 'TBD',
       label: 'TBD',
       onequetion: 'TBD',
-      fetcherr: 'TBD',
-    },
-  },
+      fetcherr: 'TBD'
+    }
+  }
 };
 
 const EditSyllabusDict: any = {
@@ -2573,8 +2593,8 @@ const EditSyllabusDict: any = {
       updateerr: 'Error while updating lesson status please try later.',
       fetcher: 'Error while fetching unit data.',
       fetchlist: 'Error while fetching lessons list data.',
-      fetchdesign: 'Error while fetching Designers list Please try again later.',
-    },
+      fetchdesign: 'Error while fetching Designers list Please try again later.'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2609,9 +2629,9 @@ const EditSyllabusDict: any = {
       updateerr: 'TBD',
       fetcher: 'TBD',
       fetchlist: 'TBD',
-      fetchdesign: 'TBD',
-    },
-  },
+      fetchdesign: 'TBD'
+    }
+  }
 };
 
 const EditTopicDict: any = {
@@ -2630,12 +2650,12 @@ const EditTopicDict: any = {
     Basic: 'Basic',
     button: {
       cancel: 'Cancel',
-      save: 'Save',
+      save: 'Save'
     },
     messages: {
       namerequired: 'Name is required',
-      learningobj: 'learning objective is required',
-    },
+      learningobj: 'learning objective is required'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2652,13 +2672,13 @@ const EditTopicDict: any = {
     Basic: 'TBD',
     button: {
       cancel: 'TBD',
-      save: 'TBD',
+      save: 'TBD'
     },
     messages: {
       namerequired: 'TBD',
-      learningobj: 'TBD',
-    },
-  },
+      learningobj: 'TBD'
+    }
+  }
 };
 
 const ProfileCheckpointlookupDict: any = {
@@ -2677,8 +2697,8 @@ const ProfileCheckpointlookupDict: any = {
     button: {
       cancel: 'Cancel',
       save: 'Save',
-      saving: 'Saving...',
-    },
+      saving: 'Saving...'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2695,9 +2715,9 @@ const ProfileCheckpointlookupDict: any = {
     button: {
       cancel: 'TBD',
       save: 'TBD',
-      saving: 'TBD',
-    },
-  },
+      saving: 'TBD'
+    }
+  }
 };
 
 const RegistrationDict: any = {
@@ -2712,8 +2732,23 @@ const RegistrationDict: any = {
     email: 'Email',
     emailplaceholder: 'email@email.com',
     GROUP_PLACEHOLDER: 'Select group for student',
+    role: 'Role',
+    roles: {
+      sup: 'Super Admin',
+      adm: 'Admin',
+      bld: 'Builder',
+      flw: 'Fellow',
+      crd: 'Coordinator',
+      tr: 'Teacher',
+      st: 'Student'
+    },
+    class: 'Class',
+    status: 'Status',
+    statusPlaceholder: 'Choose Status',
+    paceLabel: 'Choose Pace',
+    paceCheckBox: 'Self Paced',
     button: {
-      submit: 'Submit',
+      submit: 'Submit'
     },
     messages: {
       emailerr: "Please make sure the user's email is correct",
@@ -2727,8 +2762,8 @@ const RegistrationDict: any = {
       institution: 'Institution cannot be blank',
       GROUP_NO_OPTION: 'Select class first',
       GROUP_NO_OPTION_AFTER_FETCH: 'No group found',
-      ROLE_NO_OPTION: 'Select role first',
-    },
+      ROLE_NO_OPTION: 'Select role first'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2741,7 +2776,7 @@ const RegistrationDict: any = {
     email: 'TBD',
     emailplaceholder: 'TBD',
     button: {
-      submit: 'TBD',
+      submit: 'TBD'
     },
     messages: {
       emailerr: 'TBD',
@@ -2752,18 +2787,18 @@ const RegistrationDict: any = {
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
-      institution: 'TBD',
-    },
-  },
+      institution: 'TBD'
+    }
+  }
 };
 
 const UserDict: any = {
   EN: {
-    title: 'USER INFORMATION',
+    title: 'USER INFORMATION'
   },
   ES: {
-    title: 'TBD',
-  },
+    title: 'TBD'
+  }
 };
 
 const UserEditDict: any = {
@@ -2776,10 +2811,10 @@ const UserEditDict: any = {
     role: 'Role',
     button: {
       save: 'Save',
-      cancel: 'Cancel',
+      cancel: 'Cancel'
     },
     ondemand: 'Self-Paced',
-    SUPER_ADMIN: 'Super Admin',
+    SUPER_ADMIN: 'Super Admin'
   },
   ES: {
     heading: 'TBD',
@@ -2790,11 +2825,11 @@ const UserEditDict: any = {
     role: 'TBD',
     button: {
       save: 'TBD',
-      cancel: 'TBD',
+      cancel: 'TBD'
     },
     ondemand: 'TBD',
-    SUPER_ADMIN: 'TBD',
-  },
+    SUPER_ADMIN: 'TBD'
+  }
 };
 
 const UserInformationDict: any = {
@@ -2815,8 +2850,8 @@ const UserInformationDict: any = {
     RESETTING_PASSWORD: 'Resetting password',
     MESSAGE: {
       RESET_PASSWORD_SUCCESS: 'Password reset successfully',
-      RESET_PASSWORD_FAILURE: 'Password reset failed',
-    },
+      RESET_PASSWORD_FAILURE: 'Password reset failed'
+    }
   },
   ES: {
     heading: 'TBD',
@@ -2834,9 +2869,9 @@ const UserInformationDict: any = {
     RESETTING_PASSWORD: 'TBD',
     MESSAGE: {
       RESET_PASSWORD_SUCCESS: 'TBD',
-      RESET_PASSWORD_FAILURE: 'TBD',
-    },
-  },
+      RESET_PASSWORD_FAILURE: 'TBD'
+    }
+  }
 };
 
 const UserLookupDict: any = {
@@ -2850,8 +2885,8 @@ const UserLookupDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person',
-    },
+      add: 'Add New Person'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2863,9 +2898,9 @@ const UserLookupDict: any = {
     action: 'TBD',
     noresult: 'TBD',
     button: {
-      add: 'TBD',
-    },
-  },
+      add: 'TBD'
+    }
+  }
 };
 
 const UserLookupWithTokenDict: any = {
@@ -2880,8 +2915,8 @@ const UserLookupWithTokenDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person',
-    },
+      add: 'Add New Person'
+    }
   },
   ES: {
     title: 'TBD',
@@ -2893,9 +2928,9 @@ const UserLookupWithTokenDict: any = {
     action: 'TBD',
     noresult: 'TBD',
     button: {
-      add: 'TBD',
-    },
-  },
+      add: 'TBD'
+    }
+  }
 };
 
 const AddQuestionModalDict: any = {
@@ -2914,8 +2949,8 @@ const AddQuestionModalDict: any = {
     BUTTON: {
       NEXT: 'Next Question',
       CANCEL: 'Cancel',
-      SAVE: 'Save',
-    },
+      SAVE: 'Save'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -2932,19 +2967,19 @@ const AddQuestionModalDict: any = {
     BUTTON: {
       NEXT: 'TBD',
       CANCEL: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     VALIDATION: {
       TITLE: 'Checkpoint title is required',
       LABEL: 'Checkpoint label is required',
       ESTIMATE: 'Checkpoint estimated time is required',
       ENTERVALIDNUMBER: 'Please enter valid number i.e. 30.',
-      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.',
+      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.'
     },
     MESSAGES: {
-      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
-    },
-  },
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.'
+    }
+  }
 };
 
 const EditQuestionModalDict: any = {
@@ -2964,18 +2999,18 @@ const EditQuestionModalDict: any = {
       NEXT: 'Next Question',
       CANCEL: 'Cancel',
       SAVE: 'Save',
-      SAVING: 'Saving',
+      SAVING: 'Saving'
     },
     VALIDATION: {
       TITLE: 'Checkpoint title is required',
       LABEL: 'Checkpoint label is required',
       ESTIMATE: 'Checkpoint estimated time is required',
       ENTERVALIDNUMBER: 'Please enter valid number i.e. 30.',
-      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.',
+      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.'
     },
     MESSAGES: {
-      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
-    },
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.'
+    }
   },
   ES: {
     TITLE: 'TBD',
@@ -2993,19 +3028,19 @@ const EditQuestionModalDict: any = {
       NEXT: 'TBD',
       CANCEL: 'TBD',
       SAVING: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     VALIDATION: {
       TITLE: 'TBD',
       LABEL: 'TBD',
       ESTIMATE: 'TBD',
       ENTERVALIDNUMBER: 'TBD',
-      MINIMUMONE: 'TBD',
+      MINIMUMONE: 'TBD'
     },
     MESSAGES: {
-      UNABLESAVE: 'TBD',
-    },
-  },
+      UNABLESAVE: 'TBD'
+    }
+  }
 };
 
 const AddNewCheckPointDict: any = {
@@ -3032,18 +3067,18 @@ const AddNewCheckPointDict: any = {
       CREATE: 'Create New Question',
       CANCEL: 'Cancel',
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
     MESSAGES: {
-      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.'
     },
     VALIDATION: {
       TITLE: 'Checkpoint title is required',
       LABEL: 'Checkpoint label is required',
       ESTIMATETIME: 'Checkpoint estimated time is required',
       VALIDNUMBER: 'Please enter valid number i.e. 30.',
-      ONEQUESTION: 'You need to add minimum one question to create a checkpoint.',
-    },
+      ONEQUESTION: 'You need to add minimum one question to create a checkpoint.'
+    }
   },
   ES: {
     BUILDER: 'TBD',
@@ -3068,19 +3103,19 @@ const AddNewCheckPointDict: any = {
       CREATE: 'TBD',
       CANCEL: 'TBD',
       SAVE: 'TBD',
-      SAVING: 'TBD',
+      SAVING: 'TBD'
     },
     MESSAGES: {
-      UNABLESAVE: 'TBD',
+      UNABLESAVE: 'TBD'
     },
     VALIDATION: {
       TITLE: 'TBD',
       LABEL: 'TBD',
       ESTIMATETIME: 'TBD',
       VALIDNUMBER: 'TBD',
-      ONEQUESTION: 'TBD',
-    },
-  },
+      ONEQUESTION: 'TBD'
+    }
+  }
 };
 const AddNewQuestionDict: any = {
   EN: {
@@ -3099,17 +3134,17 @@ const AddNewQuestionDict: any = {
     BUTTON: {
       CANCEL: 'Cancel',
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
     VALIDATION: {
       QUESTION: 'Question input is required',
       TYPE: 'Question type is required',
-      LABEL: 'Question label is required',
+      LABEL: 'Question label is required'
     },
     MESSAGES: {
       QUESTIONSAVE: 'Question details has been saved.',
-      UNABLESAVE: 'Unable to save Question details, Please try again later.',
-    },
+      UNABLESAVE: 'Unable to save Question details, Please try again later.'
+    }
   },
   ES: {
     BUILDER: 'TBD',
@@ -3127,18 +3162,18 @@ const AddNewQuestionDict: any = {
     BUTTON: {
       CANCEL: 'TBD',
       SAVE: 'TBD',
-      SAVING: 'TBD',
+      SAVING: 'TBD'
     },
     VALIDATION: {
       QUESTION: 'TBD',
       TYPE: 'TBD',
-      LABEL: 'TBD',
+      LABEL: 'TBD'
     },
     MESSAGES: {
       QUESTIONSAVE: 'TBD',
-      UNABLESAVE: 'TBD',
-    },
-  },
+      UNABLESAVE: 'TBD'
+    }
+  }
 };
 const CheckpointLookupDict: any = {
   EN: {
@@ -3150,8 +3185,8 @@ const CheckpointLookupDict: any = {
     LANGUAGE: 'Language',
     BUTTON: {
       SAVE: 'Save',
-      CANCEL: 'Cancel',
-    },
+      CANCEL: 'Cancel'
+    }
   },
   ES: {
     BUILDER: 'TBD',
@@ -3162,9 +3197,9 @@ const CheckpointLookupDict: any = {
     LANGUAGE: 'TBD',
     BUTTON: {
       SAVE: 'TBD',
-      CANCEL: 'TBD',
-    },
-  },
+      CANCEL: 'TBD'
+    }
+  }
 };
 const CheckpointQueTableDict: any = {
   EN: {
@@ -3177,8 +3212,8 @@ const CheckpointQueTableDict: any = {
 
     BUTTON: {
       EDIT: 'Edit Checkpoint',
-      REMOVE: 'Remove Checkpoint',
-    },
+      REMOVE: 'Remove Checkpoint'
+    }
   },
   ES: {
     NO: 'TBD',
@@ -3190,9 +3225,9 @@ const CheckpointQueTableDict: any = {
 
     BUTTON: {
       EDIT: 'TBD',
-      REMOVE: 'TBD',
-    },
-  },
+      REMOVE: 'TBD'
+    }
+  }
 };
 
 const EditCheckPointDict: any = {
@@ -3219,7 +3254,7 @@ const EditCheckPointDict: any = {
       CREATE: 'Create New Question',
       CANCEL: 'Cancel',
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
 
     VALIDATION: {
@@ -3227,11 +3262,11 @@ const EditCheckPointDict: any = {
       LABEL: 'Checkpoint label is required',
       ESTIMATE: 'Checkpoint estimated time is required',
       ENTERVALIDNUMBER: 'Please enter valid number i.e. 30.',
-      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.',
+      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.'
     },
     MESSAGES: {
-      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
-    },
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.'
+    }
   },
   ES: {
     BUILDER: 'TBD',
@@ -3256,7 +3291,7 @@ const EditCheckPointDict: any = {
       CREATE: 'TBD',
       CANCEL: 'TBD',
       SAVE: 'TBD',
-      SAVING: 'TBD',
+      SAVING: 'TBD'
     },
 
     VALIDATION: {
@@ -3264,12 +3299,12 @@ const EditCheckPointDict: any = {
       LABEL: 'TBD',
       ESTIMATE: 'TBD',
       ENTERVALIDNUMBER: 'TBD',
-      MINIMUMONE: 'TBD',
+      MINIMUMONE: 'TBD'
     },
     MESSAGES: {
-      UNABLESAVE: 'TBD',
-    },
-  },
+      UNABLESAVE: 'TBD'
+    }
+  }
 };
 const EditQuestionDict: any = {
   EN: {
@@ -3288,16 +3323,16 @@ const EditQuestionDict: any = {
     BUTTON: {
       CANCEL: 'Cancel',
       SAVING: 'Saving...',
-      SAVE: 'Save',
+      SAVE: 'Save'
     },
     VALIDATION: {
       INPUT: 'Question input is required',
       TYPE: 'Question type is required',
-      LABEL: 'Question label is required',
+      LABEL: 'Question label is required'
     },
     MESSAGES: {
-      UNABLESAVE: 'Unable to save Question details, Please try again later.',
-    },
+      UNABLESAVE: 'Unable to save Question details, Please try again later.'
+    }
   },
   ES: {
     ASSESSMENTBUILDER: 'TBD',
@@ -3315,17 +3350,17 @@ const EditQuestionDict: any = {
     BUTTON: {
       CANCEL: 'TBD',
       SAVING: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     VALIDATION: {
       INPUT: 'TBD',
       TYPE: 'TBD',
-      LABEL: 'TBD',
+      LABEL: 'TBD'
     },
     MESSAGES: {
-      UNABLESAVE: 'TBD',
-    },
-  },
+      UNABLESAVE: 'TBD'
+    }
+  }
 };
 const QuestionLookupDict: any = {
   EN: {
@@ -3342,8 +3377,8 @@ const QuestionLookupDict: any = {
     FETCHING: 'Fetching question details please wait...',
     BUTTON: {
       CANCEL: 'Cancel',
-      SAVE: 'Save',
-    },
+      SAVE: 'Save'
+    }
   },
   ES: {
     BUILDER: 'TBD',
@@ -3359,9 +3394,9 @@ const QuestionLookupDict: any = {
     FETCHING: 'TBD',
     BUTTON: {
       CANCEL: 'TBD',
-      SAVE: 'TBD',
-    },
-  },
+      SAVE: 'TBD'
+    }
+  }
 };
 const SelectedCheckPointsListDict: any = {
   EN: {
@@ -3369,17 +3404,17 @@ const SelectedCheckPointsListDict: any = {
     ADDCHECKPOINT: 'Please add checkpoints to',
     BUTTON: {
       ADDEXIST: 'Add Existing Checkpoint',
-      CREATE: 'Create New Checkpoint',
-    },
+      CREATE: 'Create New Checkpoint'
+    }
   },
   ES: {
     BUILDER: 'TBD',
     ADDCHECKPOINT: 'TBD',
     BUTTON: {
       ADDEXIST: 'TBD',
-      CREATE: 'TBD',
-    },
-  },
+      CREATE: 'TBD'
+    }
+  }
 };
 const AddNewLessonFormDict: any = {
   EN: {
@@ -3417,7 +3452,7 @@ const AddNewLessonFormDict: any = {
       INSTITUTE: 'Institute is required field.',
       LANGUAGE: 'Language selection is required',
       STUDENT_SUMMARY: 'Student summary is required',
-      IMAGE_CAPTION: 'Image Overlay text is required',
+      IMAGE_CAPTION: 'Image Overlay text is required'
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -3430,11 +3465,11 @@ const AddNewLessonFormDict: any = {
       MEASUREMENTALREADYADDED: 'This measurment is already added.',
       MEASUREMENTADDSUCCESS: 'Lesson measurment list updated successfully.',
       NODESIGNEROPTION: 'Select Institution first',
-      LOADING: 'Loading...',
+      LOADING: 'Loading...'
     },
     NEXT: 'Next',
     SAVE: 'Save',
-    SAVING: 'Saving...',
+    SAVING: 'Saving...'
   },
   ES: {
     TITLE: 'TBD',
@@ -3469,7 +3504,7 @@ const AddNewLessonFormDict: any = {
       INSTITUTE: 'TBD',
       LANGUAGE: 'TBD',
       STUDENT_SUMMARY: 'TBD',
-      IMAGE_CAPTION: 'TBD',
+      IMAGE_CAPTION: 'TBD'
     },
     MESSAGES: {
       REMOVE: 'TBD',
@@ -3477,11 +3512,11 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
-      NODESIGNEROPTION: 'TBD',
+      NODESIGNEROPTION: 'TBD'
     },
     SAVE: 'TBD',
-    SAVING: 'TBD',
-  },
+    SAVING: 'TBD'
+  }
 };
 const AssessmentInstuctionsDict: any = {
   EN: {
@@ -3491,8 +3526,8 @@ const AssessmentInstuctionsDict: any = {
     SAVING: 'Saving...',
     MESSAGES: {
       INSTRUCTIONSAVE: 'Instructions details saved.',
-      UPDATEERR: 'Error while updating instructions, please try again later.',
-    },
+      UPDATEERR: 'Error while updating instructions, please try again later.'
+    }
   },
   ES: {
     INSTRUCTION: 'TBD',
@@ -3501,9 +3536,9 @@ const AssessmentInstuctionsDict: any = {
     SAVING: 'TBD',
     MESSAGES: {
       INSTRUCTIONSAVE: 'TBD',
-      UPDATEERR: 'TBD',
-    },
-  },
+      UPDATEERR: 'TBD'
+    }
+  }
 };
 const GeneralInformationDict: any = {
   EN: {
@@ -3528,7 +3563,7 @@ const GeneralInformationDict: any = {
     BUTTON: {
       ADD: 'Add',
       SAVE: 'Save',
-      SAVING: 'Saving...',
+      SAVING: 'Saving...'
     },
 
     MESSAGES: {
@@ -3539,8 +3574,8 @@ const GeneralInformationDict: any = {
       FETCHERR: 'Unable to fetch measurement details, Please try again later.',
       UPDATESUCCESS: 'Lesson details updated successfully.',
       UPDATEERR: 'Unable to update Lesson details, Please try again later.',
-      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
-    },
+      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.'
+    }
   },
   ES: {
     HEADING: 'TBD',
@@ -3561,7 +3596,7 @@ const GeneralInformationDict: any = {
     BUTTON: {
       ADD: 'TBD',
       SAVE: 'TBD',
-      SAVING: 'TBD',
+      SAVING: 'TBD'
     },
 
     MESSAGES: {
@@ -3572,9 +3607,9 @@ const GeneralInformationDict: any = {
       FETCHERR: 'TBD',
       UPDATESUCCESS: 'TBD',
       UPDATEERR: 'TBD',
-      LESSONNOTHAVE: 'TBD',
-    },
-  },
+      LESSONNOTHAVE: 'TBD'
+    }
+  }
 };
 
 const PreviousQuestionsDict: any = {
@@ -3589,7 +3624,7 @@ const PreviousQuestionsDict: any = {
     WHERARE: 'Where are you from?',
     WHERYOU: 'Where-youre-from',
     TEXTINPUT: 'text Input',
-    ADD: 'Add',
+    ADD: 'Add'
   },
   ES: {
     HEADING: 'TBD',
@@ -3602,8 +3637,8 @@ const PreviousQuestionsDict: any = {
     WHERARE: 'TBD',
     WHERYOU: 'TBD',
     TEXTINPUT: 'TBD',
-    ADD: 'TBD',
-  },
+    ADD: 'TBD'
+  }
 };
 const QuestionBuilderDict: any = {
   EN: {
@@ -3616,7 +3651,7 @@ const QuestionBuilderDict: any = {
     ACTION: 'Action',
     WHERARE: 'Where are you from?',
     WHERYOU: 'Where-youre-from',
-    TEXTINPUT: 'text Input',
+    TEXTINPUT: 'text Input'
   },
   ES: {
     HEADING: 'TBD',
@@ -3628,8 +3663,8 @@ const QuestionBuilderDict: any = {
     ACTION: 'TBD',
     WHERARE: 'TBD',
     WHERYOU: 'TBD',
-    TEXTINPUT: 'TBD',
-  },
+    TEXTINPUT: 'TBD'
+  }
 };
 
 const UnitLookupDict: any = {
@@ -3654,10 +3689,10 @@ const UnitLookupDict: any = {
     MESSAGES: {
       ADDED: 'Session added successfully.',
       ADDERR: 'Error while adding session to module, please try later.',
-      FETCHERR: 'Error while fetching modules Data, Please try again later.',
+      FETCHERR: 'Error while fetching modules Data, Please try again later.'
     },
     NO_DELETE: '(Unit in use)',
-    SELECT_INSTITUTION: 'Select Institution',
+    SELECT_INSTITUTION: 'Select Institution'
   },
   ES: {
     HEADING: 'TBD',
@@ -3677,12 +3712,12 @@ const UnitLookupDict: any = {
     MESSAGES: {
       ADDED: 'TBD',
       ADDERR: 'TBD',
-      FETCHERR: 'TBD',
+      FETCHERR: 'TBD'
     },
     NO_DELETE: '(Unit in use)',
     SELECT_STAFF: 'TBD',
-    SELECT_INSTITUTION: 'TBD',
-  },
+    SELECT_INSTITUTION: 'TBD'
+  }
 };
 
 const LessonBuilderDict: any = {
@@ -3708,7 +3743,7 @@ const LessonBuilderDict: any = {
       SAVE: 'Save',
       ADD_ROW: 'Add Component',
       DELETE: 'Delete',
-      ADD_EVIDENCE: 'Add Evidence',
+      ADD_EVIDENCE: 'Add Evidence'
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
@@ -3721,7 +3756,7 @@ const LessonBuilderDict: any = {
       INTERACTION_TYPE: 'Interaction Type',
       ACTIVITY_INSTRUCTIONS: 'Activity Instructions',
       ACTION: 'Actions',
-      BUTTON: 'Create lesson plan',
+      BUTTON: 'Create lesson plan'
     },
     LESSON_CLASSROOM_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
@@ -3731,7 +3766,7 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
       ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Class Activities',
+      HEADING: 'Class Activities'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
@@ -3740,12 +3775,12 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
       ADD_NEW_ACTIVITY: 'New Homework',
-      HEADING: 'Homework/Challenges',
+      HEADING: 'Homework/Challenges'
     },
     LESSON_COURSES_UNIT_DETAIL_VIEW: {
       INSTITUTION: 'Institution',
       CLASSROOM: 'Classroom',
-      LEAD_INSTRUCTOR: 'Lead Instructor',
+      LEAD_INSTRUCTOR: 'Lead Instructor'
     },
     LEARNING_EVIDENCE_COLUMNS: {
       LEARNING_OBJECTIVE: 'Learning Objective',
@@ -3759,8 +3794,8 @@ const LessonBuilderDict: any = {
         OBJECTIVE: 'Objective',
         TOPICS: 'Topics',
         MEASUREMENTS: 'Measurements',
-        ACTIVITY: 'Activity Page',
-      },
+        ACTIVITY: 'Activity Page'
+      }
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'Description',
@@ -3768,11 +3803,11 @@ const LessonBuilderDict: any = {
       HEADING: 'Create new lesson plan',
       ID: 'Id',
       LABEL: 'Lesson plan label',
-      TITLE: 'Page title',
+      TITLE: 'Page title'
     },
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
-      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue'
     },
     INFORMATION_HEADING: 'General Information',
     NAME: 'Lesson Name',
@@ -3786,7 +3821,7 @@ const LessonBuilderDict: any = {
     PURPOSE: 'Purpose',
     RESOURCES: 'Resources',
     NOTES: 'Notes & Reflection',
-    SUMMARY: 'Student Summary',
+    SUMMARY: 'Student Summary'
   },
   ES: {
     TITLE: 'TBD',
@@ -3797,7 +3832,7 @@ const LessonBuilderDict: any = {
       VIEW: 'TBD',
       PREVIEW: 'TBD',
       ADD_ROW: 'TBD',
-      SAVE: 'TBD',
+      SAVE: 'TBD'
     },
     LESSON_PLAN_COLUMN: {
       ID: 'TBD',
@@ -3809,7 +3844,7 @@ const LessonBuilderDict: any = {
       ACTION: 'TBD',
       ACTIVITY_TYPE: 'TBD',
       INTERACTION_TYPE: 'TBD',
-      ACTIVITY_INSTRUCTIONS: 'TBD',
+      ACTIVITY_INSTRUCTIONS: 'TBD'
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'TBD',
@@ -3817,7 +3852,7 @@ const LessonBuilderDict: any = {
       HEADING: 'TBD',
       ID: 'TBD',
       LABEL: 'TBD',
-      TITLE: 'TBD',
+      TITLE: 'TBD'
     },
     LESSON_CLASSROOM_ACTIVITY_TABLE: {
       ACTIVITIES: 'TBD',
@@ -3826,7 +3861,7 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'TBD',
       ACTION: 'TBD',
       ADD_NEW_ACTIVITY: 'TBD',
-      HEADING: 'TBD',
+      HEADING: 'TBD'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITIES: 'TBD',
@@ -3835,12 +3870,12 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'TBD',
       ACTION: 'TBD',
       ADD_NEW_ACTIVITY: 'TBD',
-      HEADING: 'TBD',
+      HEADING: 'TBD'
     },
     LESSON_COURSES_UNIT_DETAIL_VIEW: {
       INSTITUTION: 'TBD',
       CLASSROOM: 'TBD',
-      LEAD_INSTRUCTOR: 'TBD',
+      LEAD_INSTRUCTOR: 'TBD'
     },
     LEARNING_EVIDENCE_COLUMNS: {
       LEARNING_OBJECTIVE: 'TBD',
@@ -3854,12 +3889,12 @@ const LessonBuilderDict: any = {
         OBJECTIVE: 'TBD',
         TOPICS: 'TBD',
         MEASUREMENTS: 'TBD',
-        ACTIVITY: 'TBD',
-      },
+        ACTIVITY: 'TBD'
+      }
     },
     MESSAGES: {
       UNSAVE: 'TBD',
-      PUBLISH_DISABLED_INFO: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD'
     },
     INFORMATION_HEADING: 'TBD',
     NAME: 'TBD',
@@ -3873,8 +3908,8 @@ const LessonBuilderDict: any = {
     PURPOSE: 'TBD',
     RESOURCES: 'TBD',
     NOTES: 'TBD',
-    SUMMARY: 'TBD',
-  },
+    SUMMARY: 'TBD'
+  }
 };
 
 const LessonEditDict: any = {
@@ -3882,16 +3917,16 @@ const LessonEditDict: any = {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     MESSAGES: {
-      UNSAVE: 'You have unsaved changes, do you still want to continue?',
-    },
+      UNSAVE: 'You have unsaved changes, do you still want to continue?'
+    }
   },
   ES: {
     TITLE: 'TBD',
     SUBTITLE: 'TBD',
     MESSAGES: {
-      UNSAVE: 'TBD',
-    },
-  },
+      UNSAVE: 'TBD'
+    }
+  }
 };
 
 const LessonsListDict: any = {
@@ -3912,9 +3947,9 @@ const LessonsListDict: any = {
     BUTTON: {
       ADD: 'Add New Lesson',
       START_CLONING: 'Start cloning',
-      CLONING: 'cloning',
+      CLONING: 'cloning'
     },
-    NO_DELETE: '(Lesson in use)',
+    NO_DELETE: '(Lesson in use)'
   },
   ES: {
     TITLE: 'TBD',
@@ -3931,44 +3966,44 @@ const LessonsListDict: any = {
     BUTTON: {
       ADD: 'TBD',
       START_CLONING: 'TBD',
-      CLONING: 'TBD',
+      CLONING: 'TBD'
     },
-    NO_DELETE: '(Lesson in use)',
-  },
+    NO_DELETE: '(Lesson in use)'
+  }
 };
 
 const UniversalBuilderDict: any = {
   EN: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'Lesson Pages',
+      LESSON_PAGES: 'Lesson Pages'
     },
     TEMPLATES: {
-      TITLE: 'Lesson Templates',
+      TITLE: 'Lesson Templates'
     },
     FORMS: {
       FILE_UPLOAD_TEXT: "Drag 'n' drop {label} here, or click to select {label}",
       VIDEO_URL_LABEL: 'Video URL',
       VIDEO_SIZE_LABEL: 'Video SIZE',
-      VIDEO_SIZE_PLACEHOLDER: 'Select Video size',
+      VIDEO_SIZE_PLACEHOLDER: 'Select Video size'
     },
     FORMS_ERROR_MSG: {
       IMAGE_REQUIRED: 'Please upload image',
       IMAGE_WIDTH: 'Please enter valid width for image or set it to auto',
       IMAGE_HEIGHT: 'Please enter valid height for image or set it to auto',
       VIDEO_REQUIRED: 'Please enter youtube video url',
-      VIDEO_INVALID: 'Please enter valid youtube video url',
-    },
+      VIDEO_INVALID: 'Please enter valid youtube video url'
+    }
   },
   ES: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'TBD',
+      LESSON_PAGES: 'TBD'
     },
     TEMPLATES: {
-      TITLE: 'TBD',
-    },
-  },
+      TITLE: 'TBD'
+    }
+  }
 };
 
 const CsvDict: any = {
@@ -3976,14 +4011,14 @@ const CsvDict: any = {
     TITLE: 'Research & Analytics',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
-    SELECT_FILTERS: 'Select Filters',
+    SELECT_FILTERS: 'Select Filters'
   },
   ES: {
     TITLE: 'Investigar & Analítica',
     SELECT_INST: 'Seleccione instituto',
     SELECT_FILTERS: 'Seleccione Filtros',
-    SELECT_CLASSROOM: 'Seleccione salón de clases',
-  },
+    SELECT_CLASSROOM: 'Seleccione salón de clases'
+  }
 };
 
 const DashboardDict: any = {
@@ -3993,7 +4028,7 @@ const DashboardDict: any = {
     YOUR_STUDENTS: 'Your Students',
     YOUR_CLASSMATES: 'Your Classmates',
     GREETINGS_TEACHER: 'What do you want to teach today?',
-    GREETINGS_STUDENT: 'What do you want to learn today?',
+    GREETINGS_STUDENT: 'What do you want to learn today?'
   },
   ES: {
     YOUR_TEACHERS: 'TBD',
@@ -4001,30 +4036,30 @@ const DashboardDict: any = {
     YOUR_STUDENTS: 'TBD',
     YOUR_CLASSMATES: 'TBD',
     GREETINGS_TEACHER: 'TBD',
-    GREETINGS_STUDENT: 'TBD',
-  },
+    GREETINGS_STUDENT: 'TBD'
+  }
 };
 
 const LearningEvidenceDict: any = {
   EN: {
-    TITLE: 'Add Measurements to Lesson',
+    TITLE: 'Add Measurements to Lesson'
   },
   ES: {
-    TITLE: 'TBD',
-  },
+    TITLE: 'TBD'
+  }
 };
 
 const CommonlyUsedDict: any = {
   EN: {
     BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
-    NO_SEARCH_RESULT: 'No data found',
+    NO_SEARCH_RESULT: 'No data found'
   },
   ES: {
     BACK: 'TBD',
     BACK_TO_LIST: 'TBD',
-    NO_SEARCH_RESULT: 'TBD',
-  },
+    NO_SEARCH_RESULT: 'TBD'
+  }
 };
 
 const General: any = {
@@ -4037,9 +4072,9 @@ const General: any = {
         BAD: 'bad',
         OKAY: 'okay',
         GOOD: 'good',
-        GREAT: 'great',
-      },
-    },
+        GREAT: 'great'
+      }
+    }
   },
   ES: {
     SENTIMENT: {
@@ -4050,19 +4085,19 @@ const General: any = {
         BAD: 'TBD',
         OKAY: 'TBD',
         GOOD: 'TBD',
-        GREAT: 'TBD',
-      },
-    },
-  },
+        GREAT: 'TBD'
+      }
+    }
+  }
 };
 
 const StudentDict: any = {
   EN: {
-    NO_STUDENT: 'No Student Found',
+    NO_STUDENT: 'No Student Found'
   },
   ES: {
-    NO_STUDENT: 'TBD',
-  },
+    NO_STUDENT: 'TBD'
+  }
 };
 
 const CommunityDict: any = {
@@ -4071,17 +4106,17 @@ const CommunityDict: any = {
     HEADER: 'Here is what is happening today',
     TABS: {
       FRONT_PAGE: 'Front page',
-      COMMUNITY_BUILDER: 'Community Builder',
-    },
+      COMMUNITY_BUILDER: 'Community Builder'
+    }
   },
   ES: {
     TITLE: 'TBD',
     HEADER: 'TBD',
     TABS: {
       FRONT_PAGE: 'TBD',
-      COMMUNITY_BUILDER: 'TBD',
-    },
-  },
+      COMMUNITY_BUILDER: 'TBD'
+    }
+  }
 };
 
 function paginationPage(lang: string, page: number, total: number) {
@@ -4104,6 +4139,7 @@ export {
   DashboardDict,
   noticeboardDict,
   dashboardProfileDict,
+  dashboardTestCasesDict,
   staffBuilderDict,
   editClassDict,
   spBuilderDict,
@@ -4177,5 +4213,5 @@ export {
   EditQuestionModalDict,
   UniversalBuilderDict,
   LearningEvidenceDict,
-  CommonlyUsedDict,
+  CommonlyUsedDict
 };

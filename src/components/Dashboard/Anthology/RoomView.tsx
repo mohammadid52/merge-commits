@@ -27,7 +27,7 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  isTeacher,
+  isTeacher
 }: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
@@ -46,15 +46,15 @@ const RoomView = ({
       const roomsList: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsNotebook, {
           filter: {
-            ...compoundQuery,
-          },
+            ...compoundQuery
+          }
         })
       );
       const responseData = roomsList.data.listRooms.items;
       const curriculumMap = responseData.map(async (roomObj: any) => {
         const curriculumFull: any = await API.graphql(
           graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID,
+            id: roomObj.curricula?.items[0]?.curriculumID
           })
         );
         const curriculumData = curriculumFull.data.getCurriculum;
@@ -69,10 +69,10 @@ const RoomView = ({
                 name: curriculumData?.name,
                 image: curriculumData?.image,
                 summary: curriculumData?.summary,
-                description: curriculumData?.description,
-              },
-            ],
-          },
+                description: curriculumData?.description
+              }
+            ]
+          }
         };
       });
       Promise.all(curriculumMap)
@@ -163,9 +163,9 @@ const RoomView = ({
             // #ts-ignores
             style={{
               transition: 'width 2s',
-              transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
+              transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:grid-cols-5 md:grid-cols-3 lg:max-w-none">
+            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5">
             {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
               ? mappedNotebookRoomCards
               : null}

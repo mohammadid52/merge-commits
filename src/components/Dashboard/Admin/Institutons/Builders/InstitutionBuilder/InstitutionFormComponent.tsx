@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Storage from '@aws-amplify/storage';
+import {Storage} from '@aws-amplify/storage';
 import {FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
@@ -143,6 +143,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
+        acl: 'public-read',
         ContentEncoding: 'base64',
       })
         .then((result) => {
@@ -181,6 +182,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     setImageLoading(true);
     toggleCropper();
     setS3Image(image ? image : fileObj);
+    // @ts-ignore
     const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setImageUrl(imageUrl);
     setInstituteData({

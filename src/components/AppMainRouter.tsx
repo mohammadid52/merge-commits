@@ -74,7 +74,9 @@ const MainRouter: React.FC = () => {
         let userInfo: any = await API.graphql(
           graphqlOperation(queries.getPerson, {email: email, authId: sub})
         );
+
         userInfo = userInfo.data.getPerson;
+
         let instInfo: any = {};
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(

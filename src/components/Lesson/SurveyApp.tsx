@@ -1,31 +1,26 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import {PartInput} from 'API';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {UniversalLessonStudentData} from '../../interfaces/UniversalLessonInterfaces';
+import {v4 as uuidV4} from 'uuid';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
 import * as queries from '../../graphql/queries';
 import {
   PagePart,
   PartContent,
   PartContentSub,
-  StudentExerciseData,
   StudentPageInput,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '../../interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
-import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
+import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {PartInput} from 'API';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import {v4 as uuidV4} from 'uuid';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -33,6 +28,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
+
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
 
@@ -143,9 +139,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
                               ...subPartAcc.pgInput,
                               {
                                 domID: partContentSub.id,
-                                input: [''],
-                              },
-                            ],
+                                input: ['']
+                              }
+                            ]
                           };
                         },
                         {reqId: [], pgInput: []}
@@ -154,12 +150,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
-                          ...formSubInputs.reqId,
+                          ...formSubInputs.reqId
                         ],
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -172,9 +168,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
                           ...partInputAcc.pageInputAcc,
                           {
                             domID: partContent.id,
-                            input: [''],
-                          },
-                        ],
+                            input: ['']
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
@@ -186,12 +182,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
                 return {
                   requiredIdAcc: [
                     ...pageInputsAcc.requiredIdAcc,
-                    ...partInputs.requiredIdAcc,
+                    ...partInputs.requiredIdAcc
                   ],
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
@@ -202,7 +198,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
           return {
             required: [...inputs.required, reducedPageInputs.requiredIdAcc],
-            initialized: [...inputs.initialized, ...reducedPageInputs.pageInputAcc],
+            initialized: [...inputs.initialized, ...reducedPageInputs.pageInputAcc]
           };
         },
 
@@ -215,8 +211,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
           requiredInputs: mappedPages.required,
-          studentData: mappedPages.initialized,
-        },
+          studentData: mappedPages.initialized
+        }
       });
       setStudentDataInitialized(true);
     }
@@ -233,8 +229,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         id: surveyDataRowObj.id,
         pageIdx: 0,
         lessonPageID: '',
-        update: false,
-      },
+        update: false
+      }
     ];
   };
 
@@ -283,12 +279,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened,
+        surveyData: initialDataFlattened
       };
 
       const newSurveyData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalSurveyStudentData, {
-          input,
+          input
         })
       );
 
@@ -319,7 +315,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       let surveyData: any = await API.graphql(
         graphqlOperation(queries.listUniversalSurveyStudentData, {
           ...filterObj,
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
 
@@ -349,8 +345,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           studentAuthID: {eq: user.authId},
           lessonID: {eq: lessonID},
           syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id},
-        },
+          roomID: {eq: getRoomData.id}
+        }
       };
 
       // existing student rows
@@ -373,8 +369,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           lessonDispatch({
             type: 'LOAD_SURVEY_DATA',
             payload: {
-              dataIdReferences: surveyDataId(createNewRecords),
-            },
+              dataIdReferences: surveyDataId(createNewRecords)
+            }
           });
         }
       } else {
@@ -385,8 +381,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           type: 'LOAD_SURVEY_DATA',
           payload: {
             dataIdReferences: surveyDataId(surveyDataRow[0]),
-            surveyData: finalData,
-          },
+            surveyData: finalData
+          }
         });
       }
     } catch (err) {
@@ -436,7 +432,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     syllabusLessonID: '',
     roomID: '',
     currentLocation: '',
-    lessonProgress: '',
+    lessonProgress: ''
   });
 
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
@@ -454,7 +450,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       const pageChangeLocation = {
         ...getLocationData,
         currentLocation: lessonState.currentPage,
-        lessonProgress: lessonState.lessonProgress,
+        lessonProgress: lessonState.lessonProgress
       };
       setPersonLocationObj(pageChangeLocation);
       updatePersonLocation(pageChangeLocation);
@@ -488,7 +484,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       const getUserLocation: any = await API.graphql(
         graphqlOperation(queries.getPersonLocation, {
           personEmail: user.email,
-          personAuthID: user.authId,
+          personAuthID: user.authId
         })
       );
       const response = getUserLocation.data.getPersonLocation;
@@ -511,7 +507,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       lessonID: lessonID,
       roomID: getRoomData.id,
       currentLocation: '0',
-      lessonProgress: '0',
+      lessonProgress: '0'
     };
     try {
       const newUserLocation: any = await API.graphql(
@@ -520,7 +516,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       const response = newUserLocation.data.createPersonLocation;
       const newLocationObj = {
         ...newLocation,
-        id: response.id,
+        id: response.id
       };
       setPersonLocationObj(newLocationObj);
       setLocalStorageData('person_location', newLocationObj);
@@ -542,7 +538,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       syllabusLessonID: updatedLocationObj.syllabusLessonID,
       roomID: updatedLocationObj.roomID,
       currentLocation: updatedLocationObj.currentLocation,
-      lessonProgress: updatedLocationObj.lessonProgress,
+      lessonProgress: updatedLocationObj.lessonProgress
     };
     try {
       await API.graphql(
@@ -560,8 +556,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,
-            personAuthID: inputAuthId,
-          },
+            personAuthID: inputAuthId
+          }
         })
       );
     } catch (e) {
@@ -587,10 +583,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     }
   };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
-  };
-
   useEffect(() => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
@@ -603,10 +595,11 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           filter: {
             lessonID: {eq: lessonID},
             studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email},
-          },
+            studentEmail: {eq: user.email}
+          }
         })
       );
+
       if (!existingLesson.data.listPersonLessonsData.items.length) {
         payload = {
           id: uuidV4(),
@@ -619,7 +612,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
             "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
         };
 
         await API.graphql(
@@ -636,11 +629,11 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length)},
             "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
         };
         await API.graphql(
           graphqlOperation(mutations.updatePersonLessonsData, {
-            input: payload,
+            input: payload
           })
         );
       }
@@ -696,12 +689,13 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           ) : (
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
-              <div className="mt-4 mb-8 lesson-page-container">
+              <div className="mt-4 mb-8 lesson-page-container ">
                 <CoreUniversalLesson />
-                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
               </div>
             </ErrorBoundary>
           )}
+
+          {/* <StudentNavigationForMobile /> */}
 
           {lessonDataLoaded && (
             <Foot

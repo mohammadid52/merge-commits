@@ -8,7 +8,7 @@ import CardsModal from '@components/Community/CardsModal';
 import {
   CardType,
   COMMUNITY_UPLOAD_KEY,
-  NavStateTypes,
+  NavStateTypes
 } from '@components/Community/constants.community';
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import HeroBanner from '@components/Header/HeroBanner';
@@ -24,7 +24,7 @@ import {
   ICheckItOutInput,
   ICommunityCard,
   IEventInput,
-  ISpotlightInput,
+  ISpotlightInput
 } from '@interfaces/Community.interfaces';
 import {deleteImageFromS3} from '@utilities/services';
 import {awsFormatDate, dateString} from '@utilities/time';
@@ -41,6 +41,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
 import useAuth from '@customHooks/useAuth';
 import {ListCommunitiesQuery} from 'API';
+import HeaderTextBar from '@components/Dashboard/HeaderTextBar/HeaderTextBar';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -76,8 +77,8 @@ const Community = ({}: {role: string}) => {
     {
       title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
       url: `/dashboard/`,
-      last: true,
-    },
+      last: true
+    }
   ];
   const payloadForCommunities = {};
 
@@ -88,7 +89,7 @@ const Community = ({}: {role: string}) => {
     onSuccess: (data, cb) => {
       const orderedList = orderBy(data, ['createdAt'], 'desc');
       cb(orderedList);
-    },
+    }
   });
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
@@ -126,7 +127,7 @@ const Community = ({}: {role: string}) => {
     cardDate: awsFormatDate(dateString('-', 'WORLD')),
     cardType: cardType,
     personAuthID,
-    personEmail,
+    personEmail
   });
 
   const createCommunity = useGraphqlMutation('createCommunity', {
@@ -134,7 +135,7 @@ const Community = ({}: {role: string}) => {
     onSuccess: (data) => {
       list.unshift({...data});
       setList([...list]);
-    },
+    }
   });
   const updateCommunity = useGraphqlMutation('updateCommunity', {
     onCancel,
@@ -144,7 +145,7 @@ const Community = ({}: {role: string}) => {
 
       listCopy[cardIdx] = data;
       setList(listCopy);
-    },
+    }
   });
 
   const onSpotlightSubmit = async (
@@ -155,7 +156,7 @@ const Community = ({}: {role: string}) => {
 
     const input = {
       ...spotlightDetails,
-      ...commonInput,
+      ...commonInput
     };
 
     if (isCardEditMode) {
@@ -173,7 +174,7 @@ const Community = ({}: {role: string}) => {
 
     const input = {
       ...announcementDetails,
-      ...commonInput,
+      ...commonInput
     };
 
     if (isCardEditMode) {
@@ -191,7 +192,7 @@ const Community = ({}: {role: string}) => {
 
     const input = {
       ...eventDetails,
-      ...commonInput,
+      ...commonInput
     };
 
     if (isCardEditMode) {
@@ -209,7 +210,7 @@ const Community = ({}: {role: string}) => {
 
     const input = {
       ...checkItOutDetails,
-      ...commonInput,
+      ...commonInput
     };
 
     if (isCardEditMode) {
@@ -223,7 +224,7 @@ const Community = ({}: {role: string}) => {
     return (
       <div
         onClick={() => setShowCardsModal(true)}
-        className="fixed z-100 bottom-5 cursor-pointer flex items-center justify-center right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
+        className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
         <BsCardHeading className="text-white text-lg" />
       </div>
     );
@@ -304,12 +305,12 @@ const Community = ({}: {role: string}) => {
     {id: 1, name: 'Spotlight', value: 'spotlight'},
     {id: 2, name: 'Announcement', value: 'announcement'},
     {id: 3, name: 'Event', value: 'event'},
-    {id: 4, name: 'Check It Out', value: 'check_it_out'},
+    {id: 4, name: 'Check It Out', value: 'check_it_out'}
   ];
 
   const TitleBar = () => (
     <SectionTitleV3
-      extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
+      extraContainerClass="lg:max-w-192 md:max-w-none max-w-88 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
       title={'Community'}
       fontSize="xl"
       fontStyle="semibold"
@@ -320,7 +321,7 @@ const Community = ({}: {role: string}) => {
           <Selector
             selectedItem={selectedFilterType.name}
             list={filterList}
-            additionalClass="w-56"
+            additionalClass="md:w-56"
             placeholder={'All '}
             onChange={changeFilter}
           />
@@ -335,19 +336,15 @@ const Community = ({}: {role: string}) => {
         <div>
           <HeroBanner imgUrl={bannerImg} title={'Community'} />
         </div>
-        <div
-          className={`w-full lg:max-w-192 md:max-w-none 2xl:max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative iconoclast:bg-main curate:bg-main text-white rounded`}>
-          <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
-            Here is what is happening today
-          </h2>
-        </div>
+
+        <HeaderTextBar>Here is what is happening today</HeaderTextBar>
         <TitleBar />
         <CardsModal
           navState={navState}
           editMode={isCardEditMode}
           setNavState={setNavState}
           functions={{
-            onCheckItOutSubmit,
+            onCheckItOutSubmit
           }}
           instId={instId}
           showCardsModal={showCardsModal}
@@ -374,7 +371,7 @@ const Community = ({}: {role: string}) => {
           onSpotlightSubmit,
           onAnnouncementSubmit,
           onEventSubmit,
-          onCheckItOutSubmit,
+          onCheckItOutSubmit
         }}
         instId={instId}
         showCardsModal={showCardsModal}
@@ -386,7 +383,7 @@ const Community = ({}: {role: string}) => {
           <BreadCrums items={breadCrumsList} />
         </div>
       </div>
-      <div>
+      <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 max-w-88">
         <TitleBar />
 
         <CommonList />
