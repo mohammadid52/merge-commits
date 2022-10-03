@@ -10,10 +10,16 @@ WHITE='\033[01;37m'
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
+ branch=$(git symbolic-ref --short HEAD)
+
+
 cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
 git checkout test-master
 git pull origin new-dev
 
 
 echo "Now you are on" ${UNDERLINE}$branch${NONE}
-echo ${RED}"Please make sure the changes are correct before you push to " ${UNDERLINE}$branch "branch"${NONE}
+echo ${RED}"Please make sure the changes are correct before you push to " ${UNDERLINE}$branch ${NONE} "branch"
+echo ${GREEN}"If everything is correct, please run the following command to push to " ${UNDERLINE}$branch ${NONE} "branch"
+
+echo ${WHITE}"npm run push"
