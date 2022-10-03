@@ -1,7 +1,5 @@
 import React from 'react';
 
-type Status = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'HOLD';
-
 type StatusProps = {
   status: any;
 };
