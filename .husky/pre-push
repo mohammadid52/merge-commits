@@ -20,5 +20,6 @@ if [ "$branch" != "stagingdevelopment" ]; then
 
 else 
     npm run cypress:run
+    exit 0
     fi
 
