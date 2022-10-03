@@ -3,4 +3,3 @@
 
 npm run set-dictionary
 echo "Setting dictionary..."
-npm run cypress:run

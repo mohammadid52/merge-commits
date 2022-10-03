@@ -1719,7 +1719,7 @@ const RoomEDITdict: any = {
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
-    ACTIVE_UNIT_LABEL: 'Active Unit',
+    ACTIVE_UNIT_LABEL: 'Active Unit (Classroom Environment)',
     ACTIVE_UNIT_PLACEHOLDER: 'Select Active Unit',
     CURRICULUM_PLACEHOLDER: 'Select Course',
     STATUS_LABEL: 'Status',
