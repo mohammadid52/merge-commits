@@ -3,6 +3,5 @@
 
 echo "Setting dictionary..."
 npm run set-dictionary
-git add ./src/dictionary/dictionary.demo.tsx
-git add ./src/dictionary/dictionary.curate.tsx
+git add .
 git commit -m "Update dictionary"
