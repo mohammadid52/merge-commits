@@ -2,12 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "Setting dictionary..."
-# cd /git/directory
 npm run set-dictionary
-if [[ `git status --porcelain` ]]; then
-    git add .
-    git commit -m "Update from pre-push hook"
-    exit 1
-else
-    exit 1
-fi
