@@ -13,7 +13,7 @@ import {
   EMOTIONS,
   GRATITUDE,
   SINGING_BOWL,
-  THINK_ABOUT_IT,
+  THINK_ABOUT_IT
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
@@ -36,7 +36,7 @@ import SingingBowl from './SingingBowl';
 const SelectedCard = ({
   card,
   onClick,
-  inLesson = false,
+  inLesson = false
 }: {
   card?: {id: number; title: string; desc: string; type: string};
   onClick: (id: number) => void;
@@ -55,7 +55,7 @@ const SelectedCard = ({
     selectedCard,
     countSelected,
     setCountSelected,
-    selectedEmotions,
+    selectedEmotions
   } = useGameChangers();
 
   const breathingHelpingTexts = ['inhale', 'hold', 'exhale', 'hold'];
@@ -70,21 +70,21 @@ const SelectedCard = ({
     tl.to('#knob', {
       x: width,
 
-      ...commonFields,
+      ...commonFields
     })
       .to('#knob', {
         y: height,
 
-        ...commonFields,
+        ...commonFields
       })
       .to('#knob', {
         x: 0,
 
-        ...commonFields,
+        ...commonFields
       })
       .to('#knob', {
         y: 0,
-        ...commonFields,
+        ...commonFields
       });
   };
 
@@ -177,7 +177,7 @@ const SelectedCard = ({
       personAuthID: authId,
       personEmail: email,
       startTime: moment().format('YYYY-MM-DD'),
-      endTime: moment().format('YYYY-MM-DD'),
+      endTime: moment().format('YYYY-MM-DD')
     };
     mutate({input: payload});
     if (!isLoading && !isError) {
@@ -194,7 +194,7 @@ const SelectedCard = ({
       <div
         className={`${inLesson ? 'border-0 border-gray-700' : ''} rounded-2xl box ${
           inLesson ? '' : 'm-8'
-        }  z-100  relative w-auto  2xl:m-0 transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
+        } mt-8 md:mt-0 z-100  relative w-auto  2xl:m-0 transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
         <audio id="finish-sound">
           <source src={successSound} type="audio/mp3" />
         </audio>
@@ -206,10 +206,10 @@ const SelectedCard = ({
         </audio>
         <div
           style={{
-            background: 'rgb(27, 25, 29)',
+            background: 'rgb(27, 25, 29)'
           }}
           className={`h-full  transition-all rounded-2xl  ${
-            selected?.type === EMOTIONS ? '' : 'p-16 px-14'
+            selected?.type === EMOTIONS ? '' : 'p-4 md:p-16 md:px-14 px-8'
           }  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
           <div>
             <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
@@ -264,7 +264,7 @@ const SelectedCard = ({
                       initialIndex: 3,
                       pageDots: false,
                       selectedAttraction: 0.03,
-                      friction: 0.15,
+                      friction: 0.15
                     }}
                     reloadOnUpdate
                     disableImagesLoaded={false}>

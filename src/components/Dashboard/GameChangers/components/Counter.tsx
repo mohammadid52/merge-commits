@@ -9,16 +9,16 @@ const Counter = () => {
     <>
       {/* Show 'Starting...' text if animation is not started */}
       <AnimatedContainer
-        className="w-auto mt-4"
+        className="w-auto md:mt-4"
         show={!isActive && countSelected !== null}>
         {!isActive && countSelected !== null && (
-          <div className={'text-gray-300 font-light text-sm'}>Get ready</div>
+          <div className={'text-gray-300 font-light mb-4 text-sm'}>Get ready</div>
         )}
       </AnimatedContainer>
       {/* Show Counters  */}
-      <AnimatedContainer className="w-auto mt-4" show={isActive}>
+      <AnimatedContainer className="w-auto md:mt-4" show={isActive}>
         {isActive && (
-          <div className={'text-gray-300 font-light text-sm'}>
+          <div className={'text-gray-300 mb-4 font-light text-sm'}>
             {counter} out of {countSelected}
           </div>
         )}

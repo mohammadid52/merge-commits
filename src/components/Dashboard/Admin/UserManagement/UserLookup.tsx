@@ -1,31 +1,30 @@
-import React, {useState, useEffect, useContext, Fragment} from 'react';
-import {useHistory} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {
-  AiOutlineUsergroupAdd,
-  AiOutlineArrowUp,
   AiOutlineArrowDown,
+  AiOutlineArrowUp,
+  AiOutlineUsergroupAdd
 } from 'react-icons/ai';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as queries from '../../../../graphql/queries';
-import * as customQueries from '../../../../customGraphql/customQueries';
 import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import * as queries from '../../../../graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import ListStudents from './ListStudents';
-import List from './List';
-import Pagination from '../../../Atoms/Pagination';
-import Buttons from '../../../Atoms/Buttons';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
+import useDictionary from '../../../../customHooks/dictionary';
 import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
+import Buttons from '../../../Atoms/Buttons';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
-import useDictionary from '../../../../customHooks/dictionary';
+import PageCountSelector from '../../../Atoms/PageCountSelector';
+import Pagination from '../../../Atoms/Pagination';
+import SectionTitle from '../../../Atoms/SectionTitle';
+import List from './List';
 import UserListLoader from './UserListLoader';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 const UserLookup = ({isInInstitute, instituteId}: any) => {
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -41,12 +40,12 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   const {UserLookupDict, paginationPage, BreadcrumsTitles} = useDictionary(clientKey);
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false,
+    isActive: false
   });
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
-    asc: true,
+    asc: true
   });
 
   // Below changes are for fetching entire list on client side.
@@ -60,14 +59,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
       url: '/dashboard/manage-users',
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const sortByList = [
     {id: 1, name: 'Name', value: 'lastName'},
     {id: 2, name: 'Role', value: 'role'},
-    {id: 4, name: 'Status', value: 'status'},
+    {id: 4, name: 'Status', value: 'status'}
   ];
 
   const goNextPage = () => {
@@ -114,7 +113,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       });
       setSearchInput({
         ...searchInput,
-        isActive: true,
+        isActive: true
       });
       setUserList(newList);
     } else {
@@ -125,7 +124,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str,
+      value: str
     });
   };
 
@@ -133,7 +132,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name,
+      name: name
     });
   };
 
@@ -150,7 +149,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc,
+      asc: !sortingType.asc
     });
   };
 
@@ -232,7 +231,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   const fetchAllPerson = async () => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
-        limit: 500,
+        limit: 500
       })
     );
     const users = resp?.data?.listPeople?.items;
@@ -252,7 +251,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         try {
           const dashboardDataFetch: any = await API.graphql(
             graphqlOperation(customQueries.getTeacherLookUp, {
-              filter: {teacherAuthID: {eq: teacherAuthID}},
+              filter: {teacherAuthID: {eq: teacherAuthID}}
             })
           );
 
@@ -281,8 +280,8 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               ...createFilterToFetchSpecificItemsOnly(
                 state.user.associateInstitute.map((item: any) => item.institution.id),
                 'institutionID'
-              ),
-            },
+              )
+            }
           })
         );
         authIds = staff.data?.listStaff.items.map((staff: any) => staff.staffAuthID);
@@ -291,8 +290,8 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       const authIdFilter: any = authIds.map((item: any) => {
         return {
           authId: {
-            eq: item,
-          },
+            eq: item
+          }
         };
       });
 
@@ -303,8 +302,8 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
           users = await API.graphql(
             graphqlOperation(queries.listPeople, {
               filter: {
-                or: [...authIdFilter],
-              },
+                or: [...authIdFilter]
+              }
             })
           );
           response = users?.data?.listPeople?.items;

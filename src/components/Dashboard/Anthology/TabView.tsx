@@ -11,7 +11,7 @@ import Buttons from '../../Atoms/Buttons';
 import {
   UniversalClassData,
   UniversalJournalData,
-  UniversalLessonStudentData,
+  UniversalLessonStudentData
 } from '../../../interfaces/UniversalLessonInterfaces';
 import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
 import EmptyViewWrapper from './EmptyViewWrapper';
@@ -82,7 +82,7 @@ const TabView = ({
   classNotebook,
   setClassNotebook,
   allUniversalClassData,
-  setAllUniversalClassData,
+  setAllUniversalClassData
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -178,13 +178,13 @@ const TabView = ({
       index: 0,
       title: anthologyDict[userLanguage].TABS.B,
       id: 'Work',
-      content: WrittenContent,
+      content: WrittenContent
     },
     {
       index: 1,
       title: anthologyDict[userLanguage].TABS.C,
       id: 'Notes',
-      content: WrittenContent,
+      content: WrittenContent
     },
     {
       index: 2,
@@ -202,8 +202,8 @@ const TabView = ({
           mainSection={mainSection}
           subSection={subSection}
         />
-      ),
-    },
+      )
+    }
   ];
 
   const JOURNAL_TABS = [
@@ -211,14 +211,14 @@ const TabView = ({
       index: 0,
       title: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab />,
+      content: <SentimentTab />
     },
     {
       index: 1,
       title: anthologyDict[userLanguage].TABS.A,
       id: 'Journal',
-      content: WrittenContent,
-    },
+      content: WrittenContent
+    }
   ];
 
   const handleTabSelect = (index: number, tabSubSection: string) => {
@@ -246,7 +246,7 @@ const TabView = ({
           className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
           <IconContext.Provider
             value={{
-              className: `relative`,
+              className: `relative`
             }}>
             <IoIosJournal
               style={{color: stringToHslColor(sectionRoomID)}}
@@ -256,7 +256,7 @@ const TabView = ({
           </IconContext.Provider>
 
           <h2
-            className={`w-auto my-auto text-lg 2xl:text-xl font-semibold leading-6 text-gray-900"`}>
+            className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
             {getTitle()}
           </h2>
         </div>

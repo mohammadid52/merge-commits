@@ -8,11 +8,11 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/public'),
     filename: 'bundle.js',
-    publicPath: '/',
+    publicPath: '/'
   },
   node: {fs: 'empty', child_process: 'empty'},
   optimization: {
-    usedExports: true,
+    usedExports: true
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -50,39 +50,39 @@ module.exports = {
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         </body>
       </html>
-      `,
-    }),
+      `
+    })
   ],
   resolve: {
     plugins: [
       new TsconfigPathsPlugin({
         /* options: see below */
-      }),
+      })
     ],
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
     mainFields: ['browser', 'module', 'main'],
     modules: [
       path.resolve('./src'),
       path.resolve('./frontend'),
-      path.resolve('./node_modules'),
-    ],
+      path.resolve('./node_modules')
+    ]
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: '/node_modules/',
-        loaders: 'ts-loader',
+        loaders: 'ts-loader'
       },
       {
         test: /\.mjs$/,
         include: /node_modules/,
-        type: 'javascript/auto',
+        type: 'javascript/auto'
       },
       {
         test: /\.json$/,
         exclude: /node_modules/,
-        loader: 'json-loader',
+        loader: 'json-loader'
       },
       {
         test: /\.jsx?$/,
@@ -92,9 +92,9 @@ module.exports = {
           presets: ['@babel/preset-env', '@babel/preset-react'],
           plugins: [
             '@babel/plugin-proposal-class-properties',
-            'babel-plugin-transform-async-to-promises',
-          ],
-        },
+            'babel-plugin-transform-async-to-promises'
+          ]
+        }
       },
       {
         test: /\.html$/,
@@ -102,50 +102,50 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]',
-            },
-          },
-        ],
+              name: '[name].[ext]'
+            }
+          }
+        ]
       },
       {
         test: /\.css$/,
         // TODO: Need to recheck.
         use: [
           {
-            loader: 'style-loader',
+            loader: 'style-loader'
           },
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1,
-            },
+              importLoaders: 1
+            }
           },
           {
             loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              plugins: [require('tailwindcss'), require('autoprefixer')],
-            },
-          },
-        ],
+              plugins: [require('tailwindcss'), require('autoprefixer')]
+            }
+          }
+        ]
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
           {
-            loader: 'style-loader',
+            loader: 'style-loader'
           },
           'cache-loader',
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1,
-            },
+              importLoaders: 1
+            }
           },
           {
-            loader: 'sass-loader',
-          },
-        ],
+            loader: 'sass-loader'
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|svg|gif)$/,
@@ -155,11 +155,11 @@ module.exports = {
             options: {
               name: '[path][name].[ext]',
               outputPath: 'media',
-              publicPath: 'media',
-            },
-          },
-        ],
-      },
-    ],
-  },
+              publicPath: 'media'
+            }
+          }
+        ]
+      }
+    ]
+  }
 };

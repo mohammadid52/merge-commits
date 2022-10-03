@@ -37,7 +37,12 @@
     "noImplicitAny": true,
     "jsx": "react"
   },
-  "include": ["./src/**/*", "src/custom.d.ts", "node_modules/cypress", "./cypress/**/*.js"],
+  "include": [
+    "./src/**/*",
+    "src/custom.d.ts",
+    "node_modules/cypress",
+    "./cypress/**/*.js"
+  ],
   "exclude": ["build", "bin", "routes", "public", "node-modules", "src/aws-exports.js"],
   "types": ["cypress", "@testing-library/cypress"]
 }

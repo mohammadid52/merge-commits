@@ -18,8 +18,8 @@ import {getLocalStorageData, setLocalStorageData} from '../../utilities/localSto
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import SaveQuit from './Foot/SaveQuit';
 import LessonPageLoader from './LessonPageLoader';
+import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
@@ -583,10 +583,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     }
   };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
-  };
-
   useEffect(() => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
@@ -693,12 +689,13 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           ) : (
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
-              <div className="mt-4 mb-8 lesson-page-container">
+              <div className="mt-4 mb-8 lesson-page-container ">
                 <CoreUniversalLesson />
-                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
               </div>
             </ErrorBoundary>
           )}
+
+          {/* <StudentNavigationForMobile /> */}
 
           {lessonDataLoaded && (
             <Foot

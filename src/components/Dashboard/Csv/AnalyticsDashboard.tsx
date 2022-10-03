@@ -1,13 +1,12 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import Loader from '@atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as queries from '@graphql/queries';
-import DateAndTime from '../DateAndTime/DateAndTime';
-import useDictionary from '../../../customHooks/dictionary';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
-import _ from 'lodash';
-import Loader from '@atoms/Loader';
+import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
+import DateAndTime from '../DateAndTime/DateAndTime';
 
 interface ICsvProps {
   institutionId?: string;
@@ -84,9 +83,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                                 questionID: partContentSub.id,
                                 type: partContentSub.type,
                                 questionString: partContentSub.label,
-                                options: partContentSub.options,
-                              },
-                            ],
+                                options: partContentSub.options
+                              }
+                            ]
                           };
                         },
                         {pgInput: []}
@@ -95,8 +94,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -108,9 +107,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                             questionID: partContent.id,
                             type: partContent.type,
                             questionString: partContent.label,
-                            options: partContent.options,
-                          },
-                        ],
+                            options: partContent.options
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
@@ -122,8 +121,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
@@ -133,7 +132,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           );
 
           return {
-            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
           };
         },
 
@@ -167,8 +166,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           return [
             ...prev,
             {
-              ...survey,
-            },
+              ...survey
+            }
           ];
         });
       });
@@ -181,9 +180,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         graphqlOperation(queries.listUniversalLessons, {
           filter: {
             type: {
-              eq: 'survey',
-            },
-          },
+              eq: 'survey'
+            }
+          }
         })
       );
       const returnedData = surveyList.data.listUniversalLessons.items;
@@ -203,7 +202,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       const result: any = await API.graphql(
         graphqlOperation(queries.listPeople, {
           filter: {role: {eq: peopleType}},
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
 
@@ -229,7 +228,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     try {
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
@@ -244,8 +243,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 id: item.questionID,
                 question: item.questionString,
                 type: item.type,
-                options: item.options,
-              },
+                options: item.options
+              }
             });
           });
         });
@@ -271,9 +270,9 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         nextToken: nextToken,
         filter: {
           lessonID: {
-            eq: lessonId,
-          },
-        },
+            eq: lessonId
+          }
+        }
       })
     );
     let studentsAnswersSurveyQuestionsData =
@@ -315,7 +314,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         surveyQuestionOptions[ques.question.id] = ques.question.options;
         return {
           label: `${ques.question.question}-s-${ques.question.id}`,
-          key: `${ques.question.id}`,
+          key: `${ques.question.id}`
         };
       });
 
@@ -323,7 +322,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         {label: 'AuthId', key: 'authId'},
         {label: 'Email', key: 'email'},
         {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
-        ...surveyQuestionHeaders,
+        ...surveyQuestionHeaders
       ];
 
       let data = students.map((stu: any) => {
@@ -409,7 +408,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           last:
             (surveyAnswerDates[0] &&
               new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
-            '-',
+            '-'
         };
       });
       surveyDates = surveyDates.sort(
@@ -418,7 +417,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       );
       return {
         SurveyHeaders: Headers,
-        SurveyData: data,
+        SurveyData: data
       };
     } catch (err) {
       console.log('error', err);
@@ -447,11 +446,11 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
               return {
                 QuestionId: header.key,
                 QuestionLabel: header.label,
-                QuestionResponse: csvD[header.key],
+                QuestionResponse: csvD[header.key]
               };
             }
-          }).filter((elem: any) => elem !== undefined),
-        },
+          }).filter((elem: any) => elem !== undefined)
+        }
       ];
     });
     await CreateOrUpdateData(input);
@@ -463,7 +462,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         const getData: any = await API.graphql(
           graphqlOperation(queries.getArchiveSurveyDataSQL, {
             AuthId: data.AuthId,
-            Email: data.Email,
+            Email: data.Email
           })
         );
         const ArchiveData = getData.data.getArchiveSurveyDataSQL;
@@ -472,16 +471,16 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
             graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
               input: {
                 id: ArchiveData.id,
-                ...data,
-              },
+                ...data
+              }
             })
           );
         } else {
           await API.graphql(
             graphqlOperation(mutations.createArchiveSurveyDataSQL, {
               input: {
-                ...data,
-              },
+                ...data
+              }
             })
           );
         }

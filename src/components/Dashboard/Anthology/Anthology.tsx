@@ -1,9 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
+import {GetUniversalLessonWritingExcercisesQuery} from 'API';
+import update from 'lodash/update';
 import {nanoid} from 'nanoid';
+import React, {useContext, useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib';
+import {useHistory} from 'react-router-dom';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
@@ -12,22 +15,20 @@ import usePrevious from '../../../customHooks/previousProps';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
 import {
-  UniversalJournalData,UniversalClassData,
-  UniversalLessonStudentData,
+  UniversalClassData,
+  UniversalJournalData,
+  UniversalLessonStudentData
 } from '../../../interfaces/UniversalLessonInterfaces';
 import Buttons from '../../Atoms/Buttons';
 import FormInput from '../../Atoms/Form/FormInput';
 import Modal from '../../Atoms/Modal';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import HeroBanner from '../../Header/HeroBanner';
+import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
+import ChangePasscode from '../Profile/ChangePasscode';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import RoomView from './RoomView';
 import TabView from './TabView';
-import {useHistory} from 'react-router-dom';
-import {userInfo} from 'os';
-import update from 'lodash/update';
-import ChangePasscode from '../Profile/ChangePasscode';
-import { GetUniversalLessonWritingExcercisesQuery } from 'API';
 
 // ~~~~~~~~~~~~~~ INTERFACES ~~~~~~~~~~~~~ //
 
@@ -50,7 +51,7 @@ const Anthology = ({
   studentAuthID,
   studentEmail,
   studentName,
-  isTeacher,
+  isTeacher
 }: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
@@ -91,13 +92,15 @@ const Anthology = ({
   const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
   const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
   const [classNotebook, setClassNotebook] = useState<any[]>([]);
-  const [exerciseData,setExerciseData]=useState<GetUniversalLessonWritingExcercisesQuery[]>([])
+  const [exerciseData, setExerciseData] = useState<
+    GetUniversalLessonWritingExcercisesQuery[]
+  >([]);
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
     UniversalJournalData[]
   >([]);
   const [allUniversalClassData, setAllUniversalClassData] = useState<
-  UniversalClassData[]
->([]);
+    UniversalClassData[]
+  >([]);
 
   // ##################################################################### //
   // ##################### CRUD STUDENT EXERCISE DATA #################### //
@@ -114,8 +117,8 @@ const Anthology = ({
       const listFilter = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          hasExerciseData: {eq: true},
-        },
+          hasExerciseData: {eq: true}
+        }
       };
 
       const studentData: any = await API.graphql(
@@ -149,11 +152,11 @@ const Anthology = ({
               entryData: exercise.entryData.map((entry: any) => {
                 return {
                   ...entry,
-                  type: entry.domID.includes('title') ? 'header' : 'content',
+                  type: entry.domID.includes('title') ? 'header' : 'content'
                 };
               }),
               recordID: val.id,
-              updatedAt: val?.updatedAt,
+              updatedAt: val?.updatedAt
             };
           });
           return [...acc, ...adaptedExerciseEntries];
@@ -178,7 +181,7 @@ const Anthology = ({
         } else {
           return exercise;
         }
-      }),
+      })
     };
 
     const mergedStudentData = allStudentData.map((dataRecord: any) => {
@@ -194,8 +197,8 @@ const Anthology = ({
         graphqlOperation(mutations.updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
-            exerciseData: newExerciseData.exerciseData,
-          },
+            exerciseData: newExerciseData.exerciseData
+          }
         })
       );
       setAllStudentData(mergedStudentData);
@@ -223,14 +226,14 @@ const Anthology = ({
       {
         domID: `title_${nanoid(4)}`,
         type: 'header',
-        input: 'Default Title',
+        input: 'Default Title'
       },
       {
         domID: `note_${nanoid(4)}`,
         type: 'content',
-        input: '<p>Enter notes here...</p>',
-      },
-    ],
+        input: '<p>Enter notes here...</p>'
+      }
+    ]
   });
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
@@ -245,14 +248,14 @@ const Anthology = ({
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId},
-        },
+          studentAuthID: {eq: studentAuthId}
+        }
       };
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'},
-        },
+          shared: {eq: 'true'}
+        }
       };
 
       const journalEntryData: any = await API.graphql(
@@ -284,7 +287,7 @@ const Anthology = ({
       studentAuthID: journalEntryData.studentAuthID,
       studentEmail: journalEntryData.studentEmail,
       type: journalEntryData.type,
-      entryData: journalEntryData.entryData,
+      entryData: journalEntryData.entryData
     };
     // console.log('create input - ', input);
     try {
@@ -314,7 +317,7 @@ const Anthology = ({
         studentID: journalEntryData.studentID,
         studentAuthID: journalEntryData.studentAuthID,
         studentEmail: journalEntryData.studentEmail,
-        entryData: journalEntryData.entryData,
+        entryData: journalEntryData.entryData
       };
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
@@ -342,7 +345,7 @@ const Anthology = ({
     try {
       const deleteJournalData: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalJournalData, {
-          input: {id: viewEditMode.dataID},
+          input: {id: viewEditMode.dataID}
         })
       );
       setAllUniversalJournalData(deletedJournalData);
@@ -367,7 +370,7 @@ const Anthology = ({
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
       recordID: selectExisting?.recordID,
-      updatedAt: selectExisting?.updatedAt,
+      updatedAt: selectExisting?.updatedAt
     });
   };
 
@@ -384,7 +387,7 @@ const Anthology = ({
           } else {
             return entryObj;
           }
-        }),
+        })
       };
       // console.log('input - ', html);
       setJournalEntryData(updatedNotesData);
@@ -398,7 +401,7 @@ const Anthology = ({
     mode: '',
     dataID: '',
     option: 0,
-    recordID: '',
+    recordID: ''
   });
 
   const handleEditToggle = (
@@ -411,7 +414,7 @@ const Anthology = ({
       mode: editMode,
       dataID: dataID,
       option: option || 0,
-      recordID: recordID || '',
+      recordID: recordID || ''
     });
   };
 
@@ -428,14 +431,14 @@ const Anthology = ({
         {
           domID: `title_${nanoid(4)}`,
           type: 'header',
-          input: 'Default Title',
+          input: 'Default Title'
         },
         {
           domID: `note_${nanoid(4)}`,
           type: 'content',
-          input: '<p>Enter notes here...</p>',
-        },
-      ],
+          input: '<p>Enter notes here...</p>'
+        }
+      ]
     });
   };
 
@@ -520,9 +523,9 @@ const Anthology = ({
         graphqlOperation(queries.listUniversalArchiveData, {
           filter: {
             studentID: {
-              eq: state.user.authId,
-            },
-          },
+              eq: state.user.authId
+            }
+          }
         })
       );
       setClassNotebook(archiveData.data.listUniversalArchiveData.items);
@@ -534,27 +537,27 @@ const Anthology = ({
     }
   };
 
-
-
   const getUniversalLessonWritingExercises = async () => {
     try {
       const allUniversalClassData: any = await API.graphql(
         graphqlOperation(queries.listUniversalLessonWritingExcercises, {
           filter: {
             studentID: {
-              eq: state.user.authId,
-            },
-          },
+              eq: state.user.authId
+            }
+          }
         })
       );
-      setAllUniversalClassData(allUniversalClassData.data.listUniversalLessonWritingExcercises.items);
-    }catch (error) {
+      setAllUniversalClassData(
+        allUniversalClassData.data.listUniversalLessonWritingExcercises.items
+      );
+    } catch (error) {
       console.log(
         '🚀 ~ file: Anthology.tsx ~ line 548 ~ getUniversalLessonWritingExcercises ~ error',
         error
       );
     }
-  }
+  };
 
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
@@ -567,7 +570,12 @@ const Anthology = ({
 
   const [roomCardIds, setRoomCardIds] = useState<string[]>([]);
   useEffect(() => {
-    const mergeAll = [...allStudentData, ...allUniversalJournalData, ...classNotebook ,...allUniversalClassData];
+    const mergeAll = [
+      ...allStudentData,
+      ...allUniversalJournalData,
+      ...classNotebook,
+      ...allUniversalClassData
+    ];
     if (mergeAll.length > 0) {
       const uniqueIds = mergeAll.reduce((acc: string[], mixedObj: any) => {
         if (mixedObj.hasOwnProperty('roomID')) {
@@ -585,7 +593,7 @@ const Anthology = ({
       }
     } else {
     }
-  }, [allStudentData, allUniversalJournalData, classNotebook ,allUniversalClassData]);
+  }, [allStudentData, allUniversalJournalData, classNotebook, allUniversalClassData]);
 
   // ~~~~~~ PRIVATE ROOM VERIFICATION ~~~~~~ //
 
@@ -601,7 +609,7 @@ const Anthology = ({
       const personPasscode: any = await API.graphql(
         graphqlOperation(customQueries.getPersonPasscode, {
           email: state?.user?.email,
-          authId: state?.user?.authId,
+          authId: state?.user?.authId
         })
       );
       const unset = personPasscode?.data?.getPerson?.passcode === null;
@@ -685,14 +693,7 @@ const Anthology = ({
         </div>
       )}
       <div className="px-10">
-        {!isTeacher && (
-          <div
-            className={`w-full mx-auto flex flex-col justify-between items-center z-10 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-            <h2 className={`text-base text-center font-semibold`}>
-              All your work in place
-            </h2>
-          </div>
-        )}
+        {!isTeacher && <HeaderTextBar>All your work in place</HeaderTextBar>}
 
         {showPasscodeEntry && (
           <div className={'z-100 flex justify-center items-center'}>
@@ -707,9 +708,9 @@ const Anthology = ({
               showFooter={false}
               scrollHidden={true}
               closeAction={() => setShowPasscodeEntry(false)}>
-              <div className="w-128 flex justify-center">
+              <div className=" flex justify-center">
                 {!forgotPrompt ? (
-                  <div className={`w-8/12`}>
+                  <div>
                     <FormInput
                       value={passcodeInput}
                       type={'password'}
@@ -730,7 +731,7 @@ const Anthology = ({
                     )}
                     <Buttons
                       label={'Submit'}
-                      btnClass="w-full px-6 py-4 my-2"
+                      btnClass="w-full mt-2"
                       onClick={handlePrivateSectionAccess}
                     />
                     <p
@@ -750,7 +751,7 @@ const Anthology = ({
           </div>
         )}
 
-        <div className="mx-auto max-w-256">
+        <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256">
           <div className="my-8">
             <SectionTitleV3
               title={
@@ -772,7 +773,7 @@ const Anthology = ({
                   value={{
                     size: '1.2rem',
                     style: {},
-                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
                   }}>
                   <FaSpinner />
                 </IconContext.Provider>

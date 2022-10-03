@@ -249,23 +249,27 @@ const LessonHeaderBar = ({
   }, [teacherIsPresenting, presentedPageID]);
 
   // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
-  const handleForward = () => {
-    if (!userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      if (canContinue()) {
-        history.push(`${match.url}/${lessonState.currentPage + 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1
-        });
-      } else {
-        handleRequiredNotification();
-      }
-    } else if (userAtEnd()) {
-      if (validateRequired(lessonState.currentPage)) {
-        handleLeavePopup();
-      } else {
-        handleRequiredNotification();
+  const handleForward = (forward = true) => {
+    if (!forward) {
+      handleBack();
+    } else {
+      if (!userAtEnd()) {
+        if (isAtEnd) setisAtEnd(false);
+        if (canContinue()) {
+          history.push(`${match.url}/${lessonState.currentPage + 1}`);
+          lessonDispatch({
+            type: 'SET_CURRENT_PAGE',
+            payload: lessonState.currentPage + 1
+          });
+        } else {
+          handleRequiredNotification();
+        }
+      } else if (userAtEnd()) {
+        if (validateRequired(lessonState.currentPage)) {
+          handleLeavePopup();
+        } else {
+          handleRequiredNotification();
+        }
       }
     }
   };

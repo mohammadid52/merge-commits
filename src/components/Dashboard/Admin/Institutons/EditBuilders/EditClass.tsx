@@ -1,33 +1,33 @@
-import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {useHistory} from 'react-router-dom';
-import {HiPencil} from 'react-icons/hi';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useEffect, useState} from 'react';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
+import {HiPencil} from 'react-icons/hi';
+import {useHistory} from 'react-router-dom';
 
 import AddButton from '@atoms/Buttons/AddButton';
 import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from '@atoms/Form/SearchSelectorWithAvatar';
 import Loader from '@atoms/Loader';
 
+import {getImageFromS3} from '@utilities/services';
 import {
-  stringToHslColor,
+  createFilterToFetchAllItemsExcept,
   getInitialsFromString,
   initials,
-  createFilterToFetchAllItemsExcept,
-} from '../../../../../utilities/strings';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {groupOptions} from '../../../../../utilities/staticData';
-import {getAsset} from '../../../../../assets';
+  stringToHslColor
+} from '@utilities/strings';
+import {getAsset} from 'assets';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as mutations from '../../../../../graphql/mutations';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import Modal from '@components/Atoms/Modal';
-import User from '@components/Dashboard/Admin/UserManagement/User';
 import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import User from '@components/Dashboard/Admin/UserManagement/User';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import * as customMutations from '@customGraphql/customMutations';
+import * as customQueries from '@customGraphql/customQueries';
+import useDictionary from '@customHooks/dictionary';
+import useAuth from '@customHooks/useAuth';
+import * as mutations from '@graphql/mutations';
+import ModalPopUp from '@molecules/ModalPopUp';
 
 interface EditClassProps {
   instId: string;
@@ -44,7 +44,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     name: '',
     value: '',
     avatar: '',
-    group: {id: '', name: ''},
+    group: {id: '', name: ''}
   };
 
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -67,56 +67,31 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [previousName, setPreviousName] = useState('');
   const [warnModal, setWarnModal] = useState({
     show: false,
     profile: false,
     profileId: '',
     goBack: false,
-    message: 'Do you want to save changes before moving forward?',
+    message: 'Do you want to save changes before moving forward?'
   });
   const [warnModal2, setWarnModal2] = useState({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const {
     clientKey,
     userLanguage,
     state: {user},
-    theme,
-  } = useContext(GlobalContext);
-  const isSuperAdmin = user.role === 'SUP';
-  const isAdmin = user.role === 'ADM';
-  const isBuilder = user.role === 'BLD';
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {editClassDict, RegistrationDict, UserDict} = useDictionary('curate');
-  const dictionary = editClassDict[userLanguage];
+    theme
+  } = useGlobalContext();
 
-  // const breadCrumsList = [
-  //   {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-  //   {
-  //     title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-  //     url: '/dashboard/manage-institutions',
-  //     last: false,
-  //   },
-  //   {
-  //     title: classData?.institute?.name || 'loading...',
-  //     goBack: true,
-  //     last: false,
-  //   },
-  //   {
-  //     title: BreadcrumsTitles[userLanguage]['CLASSES'],
-  //     url: `/dashboard/manage-institutions/institution/${classData.institute?.id}/class`,
-  //     last: false,
-  //   },
-  //   {
-  //     title: classData?.name,
-  //     url: `${match.url}?id=${classId}`,
-  //     last: true,
-  //   },
-  // ];
+  const {isAdmin, isBuilder, isSuperAdmin} = useAuth();
+
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {editClassDict, RegistrationDict, UserDict} = useDictionary();
+  const dictionary = editClassDict[userLanguage];
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(
@@ -136,7 +111,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
           ...filter,
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
 
@@ -163,31 +138,13 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       const classFilter = {
         filter: {
           classID: {
-            eq: classId,
-          },
-        },
+            eq: classId
+          }
+        }
       };
 
-      // const result: any = await API.graphql(
-      //   graphqlOperation(customQueries.listClassStudentsForRoom, {
-      //     filter: {classID: {eq: classId}},
-      //   })
-      // );
       const result = await getAllClassStudentByClassId(classFilter, undefined, []);
-      // const result: any = await API.graphql(
-      //   graphqlOperation(customQueries.getClassDetails, {id: classId})
-      // );
-      // const classData = result.data.getClass;
-      // setClassData({
-      //   ...classData,
-      //   id: classData.id,
-      //   name: classData.name,
-      //   institute: {
-      //     id: classData.institution.id,
-      //     name: classData.institution.name,
-      //     value: classData.institution.name,
-      //   },
-      // });
+
       const selectedStudentsIds: any = [];
       const selectedStudents = result?.map((stu: any) => {
         selectedStudentsIds.push(stu.student.id);
@@ -201,18 +158,19 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             ...stu.student,
             email: stu.studentEmail,
             name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
-            avatar: stu.student.image ? getImageFromS3(stu.student.image) : '',
-          },
+            avatar: stu.student.image ? getImageFromS3(stu.student.image) : ''
+          }
         };
       });
+
       let students: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
           filter: {
             role: {eq: 'ST'},
             status: {eq: 'ACTIVE'},
-            ...createFilterToFetchAllItemsExcept(selectedStudentsIds, 'id'),
+            ...createFilterToFetchAllItemsExcept(selectedStudentsIds, 'id')
           },
-          limit: 500,
+          limit: 500
         })
       );
       students = students.data.listPeople.items;
@@ -223,7 +181,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         avatar: item.image ? getImageFromS3(item.image) : '',
         status: item.status || 'Inactive',
         email: item.email || '',
-        authId: item.authId || '',
+        authId: item.authId || ''
       }));
       await getClassRoomGroups(roomData.id);
       setClassStudents(selectedStudents);
@@ -235,7 +193,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setMessages({
         show: true,
         message: dictionary.messages.errorfetch,
-        isError: true,
+        isError: true
       });
     }
   };
@@ -245,8 +203,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       graphqlOperation(customQueries.listPersons, {
         filter: {
           role: {eq: 'ST'},
-          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}],
-        },
+          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
+        }
       })
     );
     const students = result.data.listPeople.items;
@@ -257,7 +215,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       avatar: item.image ? getImageFromS3(item.image) : '',
       status: item.status || 'Inactive',
       email: item.email || '',
-      authId: item.authId || '',
+      authId: item.authId || ''
     }));
     setFilteredStudents(sortStudents(mappedStudents));
     setSearching(false);
@@ -275,14 +233,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         graphqlOperation(customQueries.listClassroomGroupssOptions, {
           filter: {
             classRoomID: {eq: roomId},
-            groupType: {eq: 'Proficiency'},
-          },
+            groupType: {eq: 'Proficiency'}
+          }
         })
       );
       setGroups(
         list?.data?.listClassroomGroups.items?.map((item: any) => ({
           name: item.groupName,
-          id: item.id,
+          id: item.id
         }))
       );
     } catch (error) {}
@@ -292,29 +250,18 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setFilteredStudents([]);
   };
 
-  // const onNameChange = (e: any) => {
-  //   setClassData({
-  //     ...classData,
-  //     name: e.target.value,
-  //   });
-  //   setUnsavedChanges(true);
-  //   if (messages.show) {
-  //     setMessages({show: false, message: '', isError: false});
-  //   }
-  // };
-
   const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
       id: id,
       name: name,
       value: str,
       avatar: avatar,
-      group: {id: '', name: ''},
+      group: {id: '', name: ''}
     });
     if (addMessage.message) {
       setAddMessage({
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -338,7 +285,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         studentID: id,
         studentAuthID: selected.authId,
         studentEmail: selected.email,
-        status: 'Active',
+        status: 'Active'
       };
       let newStudent: any = await API.graphql(
         graphqlOperation(customMutations.createClassStudent, {input: input})
@@ -350,8 +297,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             input: {
               classRoomGroupID: newMember.group?.id,
               studentEmail: selected.email,
-              studentAuthId: selected.authId,
-            },
+              studentAuthId: selected.authId
+            }
           })
         );
       }
@@ -362,76 +309,30 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           createAt: newStudent.createdAt,
           group: newStudent.group,
           status: newStudent.status,
-          student: {...selected},
-        },
+          student: {...selected}
+        }
       ]);
       setStudents((prevStudents) =>
         prevStudents.filter((student) => student.id !== newMember.id)
       );
-      // setTimeout(() => {
-      //   fetchClassData(classId);
-      // }, 5000);
+
       setAdding(false);
       setAddMessage({
         message: 'Student added successfully',
-        isError: false,
+        isError: false
       });
       setTimeout(() => {
         setAddMessage({
           message: '',
-          isError: false,
+          isError: false
         });
       }, 2000);
     } catch (err) {
       console.log('saveClassStudent', err);
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
-        isError: true,
+        isError: true
       });
-    }
-  };
-
-  // const onClassStudentStatusChange = async (
-  //   val: string,
-  //   name: string,
-  //   id: string,
-  //   studentId: string
-  // ) => {
-  //   setUpdateStatus(true);
-  //   await API.graphql(
-  //     graphqlOperation(customMutations.updateClassStudent, {
-  //       input: {id: studentId, status: val},
-  //     })
-  //   );
-  //   const updatedSudents = classStudents.map((stu) => {
-  //     if (stu.id === studentId) {
-  //       stu.status = val;
-  //     }
-  //     return stu;
-  //   });
-  //   setClassStudents(updatedSudents);
-  //   setStatusEdit('');
-  //   setUpdateStatus(false);
-  // };
-
-  const onGroupEdit = async (studentId: string, group: string) => {
-    setUpdating(true);
-    try {
-      await API.graphql(
-        graphqlOperation(customMutations.updateClassStudent, {
-          input: {id: studentId, group},
-        })
-      );
-      setClassStudents((prevStudent) =>
-        prevStudent.map((student) =>
-          student.id === studentId ? {...student, group} : student
-        )
-      );
-      setStudentIdToEdit('');
-      setUpdating(false);
-    } catch (error) {
-      console.log(error, 'errorerror');
-      setUpdating(false);
     }
   };
 
@@ -440,7 +341,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setDeleting(true);
       await API.graphql(
         graphqlOperation(customMutations.deleteClassStudent, {
-          input: {id},
+          input: {id}
         })
       );
       const deletedStudentData = classStudents.find((item) => item.id === id);
@@ -459,8 +360,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             : '',
           status: deletedStudentData.status || 'Inactive',
           email: deletedStudentData.student?.email || '',
-          authId: deletedStudentData.studentAuthID || '',
-        },
+          authId: deletedStudentData.studentAuthID || ''
+        }
       ]);
       setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
       closeDeleteModal();
@@ -469,85 +370,30 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setWarnModal2({
       show: true,
       message: `Are you sure you want to remove this student from class?`,
-      action: onDrop,
+      action: onDrop
     });
   };
 
   useEffect(() => {
     if (classId) fetchClassData(classId);
-    // else history.push('/dashboard/manage-institutions');
-    // try {
-    //   console.log('Here.......')
-    //   const input = { classStudents: [{
-    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
-    //     status: "Active",
-    //     studentAuthID: "e02c63b2-6dca-4d37-a9ea-006e53c04769",
-    //     studentEmail: "aman+1@sublimedatasys.com",
-    //     studentID: "b3fe0840-6a1e-4d72-b34e-f2c585804fa3"
-    //   },
-    //   {
-    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
-    //     status: "Active",
-    //     studentAuthID: "78c518a8-0413-409c-b613-cb087446abe7",
-    //     studentEmail: "brandi@zoiq.io",
-    //     studentID: "8ed85558-389a-4203-8a0e-fb061e519dac",
-    //   }] };
-    //   API.graphql(graphqlOperation(mutations.batchAddClassStudent, input));
-    // } catch (err) {
-    //   console.log('ERRRRROR', err);
-    // }
   }, [classId]);
-
-  // const checkUniqClassName = async () => {
-  //   try {
-  //     const list: any = await API.graphql(
-  //       graphqlOperation(queries.listClasss, {
-  //         filter: {
-  //           institutionID: {eq: classData.institute.id},
-  //           name: {eq: classData.name},
-  //         },
-  //       })
-  //     );
-  //     return list.data.listClasss.items.length === 0 ? true : false;
-  //   } catch {
-  //     setMessages({
-  //       show: true,
-  //       message: dictionary.messages.processerror,
-  //       isError: true,
-  //     });
-  //   }
-  // };
 
   const validateForm = async () => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
         message: dictionary.messages.classrequired,
-        isError: true,
+        isError: true
       });
       return false;
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
         message: dictionary.messages.selectinstitute,
-        isError: true,
+        isError: true
       });
       return false;
-    }
-    //  else if (classData.name.trim() !== '' && previousName !== classData.name) {
-    //   const isUniq = await checkUniqClassName();
-    //   if (!isUniq) {
-    //     setMessages({
-    //       show: true,
-    //       message: dictionary.messages.classexist,
-    //       isError: true,
-    //     });
-    //     return false;
-    //   } else {
-    //     return true;
-    //   }
-    // }
-    else {
+    } else {
       return true;
     }
   };
@@ -560,7 +406,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         const input = {
           id: classData.id,
           name: classData.name,
-          institutionID: classData.institute.id,
+          institutionID: classData.institute.id
         };
         const newClass: any = await API.graphql(
           graphqlOperation(mutations.updateClass, {input: input})
@@ -569,14 +415,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         setMessages({
           show: true,
           message: dictionary.messages.classupdate,
-          isError: false,
+          isError: false
         });
         setSaving(false);
       } catch {
         setMessages({
           show: true,
           message: dictionary.messages.unableupdate,
-          isError: true,
+          isError: true
         });
         setSaving(false);
       }
@@ -586,20 +432,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const postMutation = () => {
     setShowRegistrationForm(false);
     fetchClassData(classId);
-  };
-
-  const movetoStudentProfile = (profileID: string) => {
-    if (unsavedChanges) {
-      setWarnModal({
-        show: true,
-        profile: true,
-        profileId: profileID,
-        goBack: false,
-        message: 'Do you want to save changes before leaving the page?',
-      });
-    } else {
-      gotoProfileInfo(profileID);
-    }
   };
 
   const DiscardChanges = () => {
@@ -620,35 +452,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const onGroupChange = (_: string, name: string, id: string) => {
-    setNewMember((prevValues) => ({
-      ...prevValues,
-      group: {
-        name,
-        id,
-      },
-    }));
-  };
-
   const closeDeleteModal = () => {
     setWarnModal2({...warnModal2, show: false});
   };
 
   return (
     <div className="">
-      {/* <BreadCrums items={breadCrumsList} /> */}
-
-      {/* <div className="flex justify-between">
-        <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            btnClass=""
-            label="Go Back"
-            onClick={goBack}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {roomData.name}
@@ -664,38 +473,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         </div>
       ) : (
         <div className="px-4 mt-4">
-          <div className="w-8/10 2xl:w-6/10 px-2 m-auto mb-4">
-            {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {dictionary.heading}
-          </h3> */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <div className="col-span-4">
-                <FormInput
-                  value={classData.name}
-                  id="className"
-                  onChange={onNameChange}
-                  name="className"
-                  label={dictionary.NAME_INPUT_LABEL}
-                  isRequired
-                />
-              </div>
-              <Buttons
-                btnClass="mx-2 lg:ml-5 lg:mr-10 py-1 mt-auto"
-                label={
-                  saving
-                    ? ButtonDict[userLanguage]['SAVING']
-                    : ButtonDict[userLanguage]['SAVE']
-                }
-                onClick={saveClassDetails}
-                transparent={!unsavedChanges}
-                disabled={!unsavedChanges || saving}
-              />
-            </div> */}
-          </div>
-
-          <div className="flex flex-col items-center justify-center w-9/10 2xl:w-6/10 m-auto px-2 mb-4">
+          <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              <div className="col-span-2">
+              <div className="col-span-1 md:col-span-2 lg:col-span-4">
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                   Add students to class
                 </label>
@@ -716,22 +496,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   />
                 </div>
               </div>
-              {/* {groups?.length && (
-                <div className="col-span-2">
-                  <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                    {dictionary.GROUP}
-                  </label>
-                  <div className="flex items-center justify-between">
-                    <Selector
-                      selectedItem={newMember?.group?.name}
-                      list={groups}
-                      placeholder={dictionary.GROUP_PLACEHOLDER}
-                      onChange={onGroupChange}
-                      disabled={!newMember?.id}
-                    />
-                  </div>
-                </div>
-              )} */}
+
               <AddButton
                 className="mx-2 2xl:ml-5 2xl:mr-10 py-1 px-5 mt-auto"
                 label={dictionary.ADD_STUDENT_BUTTON}
@@ -749,7 +514,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             <Fragment>
               {classStudents.length ? (
                 <Fragment>
-                  <div className="mt-8 w-full lg:w-9/10 m-auto px-2">
+                  <div className="mt-8 w-full  m-auto px-2">
                     <div className="flex justify-between w-full items-center px-4 2xl:px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
                       <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                         {dictionary.TABLE.SNO}
@@ -757,7 +522,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                       <div className="flex w-5/10 items-center px-4 py-2">
                         {dictionary.TABLE.NAME}
                       </div>
-                      {/* <div className="w-2/10 px-3">{dictionary.TABLE.GROUP}</div> */}
+                      <div className="w-3/10 px-3">{dictionary.TABLE.STATUS}</div>
                       <div className="w-3/10 px-3">{dictionary.TABLE.DATE}</div>
                       <div className="w-1/10 px-3 flex justify-center">
                         {dictionary.TABLE.ACTIONS}
@@ -765,7 +530,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     </div>
                   </div>
 
-                  <div className="mb-4 w-full lg:w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
+                  <div className="mb-4 w-full  m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => {
                       return (
                         <div
@@ -781,9 +546,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                             onClick={() => {
                               user.role !== 'BLD' && setStudentProfileID(item.student.id);
                               user.role !== 'BLD' && setUserModalFormOpen(true);
-                              // user.role !== 'BLD'
-                              //   ? movetoStudentProfile(item.student.id)
-                              //   : null
                             }}>
                             <div className="flex-shrink-0 h-10 w-10 flex items-center">
                               {item.student.avatar ? (
@@ -800,7 +562,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                                         ' ' +
                                         getInitialsFromString(item.student.name)[1]
                                     )}`,
-                                    textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                    textShadow: '0.1rem 0.1rem 2px #423939b3'
                                   }}>
                                   {item.student.name
                                     ? initials(
@@ -812,7 +574,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                               )}
                             </div>
                             <div className="ml-4">
-                              {/* {item.student.name} */}
                               <div
                                 className={`${
                                   user.role !== 'BLD' ? 'hover:text-gray-600' : ''
@@ -824,25 +585,18 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                               </div>
                             </div>
                           </div>
-                          {/* {studentIdToEdit === item.id ? (
-                          <div className="w-2/10 mr-6 px-3">
-                            <Selector
-                              selectedItem={item.group?.name}
-                              list={groups}
-                              placeholder={dictionary.GROUP_PLACEHOLDER}
-                              onChange={(_: string, name: string) =>
-                                onGroupEdit(item.id, name)
-                              }
-                            />
+
+                          <div className="w-3/10">
+                            <span
+                              className={`w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded  px-2 ${
+                                item?.student?.onDemand
+                                  ? 'bg-yellow-200 text-yellow-600'
+                                  : 'bg-blue-200 text-blue-600'
+                              }`}>
+                              {item?.student?.onDemand ? 'Self Paced' : 'Classroom'}
+                            </span>
                           </div>
-                        ) : (
-                          <div
-                            className="w-2/10 px-3"
-                            onClick={() => setStudentIdToEdit(item.id)}>
-                            {'-'}
-                          </div>
-                        )} */}
-                          <div className="w-3/10 px-3 text-gray-900">
+                          <div className="w-3/10 px-3 text-gray-600 text-sm">
                             {item.createAt
                               ? new Date(item.createAt).toLocaleDateString()
                               : '--'}

@@ -4,6 +4,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineSave} from 'react-icons/ai';
 import {getLocalStorageData} from '../../../utilities/localStorage';
+import Buttons from '@components/Atoms/Buttons';
 
 interface SaveQuitProps {
   id?: string;
@@ -49,7 +50,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   useEffect(() => {
     // console.log('safeToLeave State - ', safeToLeave);
-    if (safeToLeave === true) {
+    if (safeToLeave === true && getRoomData && getRoomData.id) {
       history.push(`/dashboard/classroom/${getRoomData.id}`);
     }
   }, [safeToLeave]);
@@ -70,17 +71,13 @@ const SaveQuit = (props: SaveQuitProps) => {
         </div>
       ) : null} */}
 
-      <div className={'w-full items-center justify-center flex py-4'}>
-        <button
-          type="submit"
-          className={`py-1 min-w-48 w-auto px-4 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded my-4`}
-          onClick={handleManualSave}>
-          <IconContext.Provider
-            value={{className: 'w-auto mr-2', style: {cursor: 'pointer'}}}>
-            <AiOutlineSave size={24} />
-          </IconContext.Provider>
-          <span>{waiting ? 'Saving your data...' : 'Save and Go to Classroom'}</span>
-        </button>
+      <div className={''}>
+        <Buttons
+          dataCy="save-lesson"
+          label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
+          Icon={AiOutlineSave}
+          btnClass="w-full"
+          onClick={handleManualSave}></Buttons>
       </div>
     </>
   );

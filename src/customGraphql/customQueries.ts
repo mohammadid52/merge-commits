@@ -1,3 +1,36 @@
+export const getUnitsOnly = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+
+      universalSyllabus {
+        items {
+          id
+          unitId
+          unit {
+            id
+            name
+            institutionID
+            universalLessonsSeq
+            isUsed
+            status
+            createdAt
+            updatedAt
+          }
+          curriculumId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
+
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const getDashboardData = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
@@ -807,6 +840,7 @@ export const listClassStudentsForRoom = /* GraphQL */ `
           type
           firstName
           preferredName
+          onDemand
           lastName
           image
         }
@@ -1128,6 +1162,7 @@ export const listRoomsDashboard = /* GraphQL */ `
             curriculumID
             curriculum {
               name
+              id
             }
           }
         }

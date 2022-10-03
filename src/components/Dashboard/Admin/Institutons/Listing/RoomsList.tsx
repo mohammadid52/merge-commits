@@ -23,10 +23,10 @@ const RoomsList = (props: RoomListProps) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute},
+      user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute}
     },
     theme,
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const match = useRouteMatch();
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -45,7 +45,7 @@ const RoomsList = (props: RoomListProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: InstitueRomms[userLanguage]['messages']['nothaveclass'],
-    isError: false,
+    isError: false
   });
   const createNewRoom = () => {
     history.push(
@@ -78,7 +78,7 @@ const RoomsList = (props: RoomListProps) => {
             id: staffAuthID,
             name: [staffMember?.firstName, staffMember?.lastName]
               .filter(Boolean)
-              .join(' '),
+              .join(' ')
           }))
           .sort((a: any, b: any) =>
             a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
@@ -108,19 +108,9 @@ const RoomsList = (props: RoomListProps) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsDashboard)
       );
-      // const list: any = await API.graphql(
-      //   graphqlOperation(
-      //     customQueries.listRoomsDashboard,
-      //     !isSuperAdmin || !isAdmin || !isBuilder
-      //       ? {
-      //           filter: {
-      //             institutionID: {eq: instId},
-      //           },
-      //         }
-      //       : {}
-      //   )
-      // );
+
       const newList = list.data.listRooms.items;
+
       setRoomList(newList);
       setAllRooms(newList);
       setLoading(false);
@@ -128,7 +118,7 @@ const RoomsList = (props: RoomListProps) => {
       setMessages({
         show: true,
         message: InstitueRomms[userLanguage]['messages']['fetcherr'],
-        isError: true,
+        isError: true
       });
       setLoading(false);
     }

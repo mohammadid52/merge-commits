@@ -13,6 +13,7 @@ interface ITabsProps {
   tabsData: ITabElements[];
   tabWithNumbers?: boolean;
   updateTab: (tab: any) => void;
+  currentTab?: string;
 }
 
 const DropDownMenu = ({index, menu, onClick}: any) => {
@@ -28,7 +29,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
       new KeyboardEvent('keydown', {
         key: 'Escape',
         bubbles: true,
-        cancelable: true,
+        cancelable: true
       })
     );
   };
@@ -105,7 +106,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
   );
 };
 
-const Tabs = ({tabsData, updateTab}: ITabsProps) => {
+const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   return (
     <div className="w-full bg-white rounded-lg p-2">
@@ -116,11 +117,15 @@ const Tabs = ({tabsData, updateTab}: ITabsProps) => {
         <select
           id="tabs"
           name="tabs"
-          className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-          // defaultValue={activeTab}
-        >
+          value={currentTab}
+          onChange={(e) => {
+            const tab = tabsData.find((_d) => _d.title === e.target.value);
+            updateTab(tab);
+          }}
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+          defaultValue={currentTab}>
           {tabsData.map((tab: ITabElements, index: number) => (
-            <option className="transition-all" key={index}>
+            <option value={tab.title} className="transition-all" key={index}>
               {tab.title}
             </option>
           ))}

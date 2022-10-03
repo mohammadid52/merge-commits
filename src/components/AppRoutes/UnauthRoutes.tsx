@@ -18,9 +18,9 @@ const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
       <PublicRoute path="/login" restricted={true}>
         <Login updateAuthState={updateAuthState} />
       </PublicRoute>
-      <PublicRoute path="/register" restricted={true}>
+      {/* <PublicRoute path="/register" restricted={true}>
         <Registration />
-      </PublicRoute>
+      </PublicRoute> */}
       <PublicRoute path="/confirm-code" restricted={true}>
         <ConfirmCode />
       </PublicRoute>
@@ -36,7 +36,7 @@ const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
           <Redirect
             to={{
               pathname: '/confirm-code',
-              state: {from: location},
+              state: {from: location}
             }}
           />
         )}
@@ -47,7 +47,7 @@ const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
           <Redirect
             to={{
               pathname: '/confirm-code',
-              state: {from: location},
+              state: {from: location}
             }}
           />
         )}
@@ -58,7 +58,7 @@ const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
           <Redirect
             to={{
               pathname: '/confirm-code',
-              state: {from: location},
+              state: {from: location}
             }}
           />
         )}
@@ -70,7 +70,7 @@ const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
           <Redirect
             to={{
               pathname: '/login',
-              state: {from: location},
+              state: {from: location}
             }}
           />
         )}

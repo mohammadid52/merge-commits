@@ -13,7 +13,7 @@ import {
   FSEBreathingHowTo,
   sqaureBreathingInfoText,
   sqaureBreathingHowTo,
-  FSEInfoText,
+  FSEInfoText
 } from '@components/Dashboard/GameChangers/__contstants';
 import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
 import Counter from '@components/Dashboard/GameChangers/components/Counter';
@@ -23,7 +23,7 @@ const GameChangers = () => {
     selectedCard,
     setSelectedCard,
     initialIndex,
-    setInitialIndex,
+    setInitialIndex
   } = useGameChangers();
 
   const howToList =
@@ -59,21 +59,19 @@ const GameChangers = () => {
   }, []);
 
   return (
-    <div className="bg-black h-screen w-screen overflow-y-hidden">
+    <div className="bg-black h-screen w-screen overflow-y-auto">
       {/* Info tab */}
       <InfoTab howToList={howToList} infoText={infoText} />
       {/* Info tab ends >----< */}
 
-      <div className="h-full w-full flex flex-col items-center justify-center">
+      <div className=" w-full flex flex-col items-center justify-center sm:mt-12 lg:mt-0">
         <AnimatedContainer
           duration={duration}
           animationType={'opacity'}
           show={selectedCard === null}
-          className={`${
-            selectedCard === null ? 'h-full w-auto flex items-center ' : ''
-          } `}>
+          className={`${selectedCard === null ? ' w-auto flex items-center ' : ''} `}>
           {selectedCard === null && (
-            <h1 className="text-white mb-12  w-auto text-xl tracking-wide font-normal">
+            <h1 className="text-white mt-12 mb-6  w-auto text-xl tracking-wide font-normal">
               <span className="font-semibold w-auto">Select</span> Game Changer
             </h1>
           )}
@@ -91,7 +89,7 @@ const GameChangers = () => {
                 initialIndex: initialIndex,
                 pageDots: false,
                 selectedAttraction: 0.03,
-                friction: 0.15,
+                friction: 0.15
               }}
               disableImagesLoaded={false}>
               {cardsList.map((card) => (
@@ -108,7 +106,7 @@ const GameChangers = () => {
         <AnimatedContainer
           duration={duration}
           animationType={animation}
-          className="h-full flex items-center justify-center flex-col"
+          className="md:h-full flex items-center justify-start   md:justify-center flex-col"
           show={selectedCard !== null}>
           {selectedCard !== null && (
             <SelectedCard

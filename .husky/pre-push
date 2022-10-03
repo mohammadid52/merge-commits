@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run cypress:run
+echo "Setting dictionary..."
+npm run set-dictionary

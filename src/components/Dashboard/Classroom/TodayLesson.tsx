@@ -5,6 +5,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {getLocalStorageData} from '../../../utilities/localStorage';
 import ClassroomLoader from './ClassroomLoader';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 
 const groupBy = (item: any, key: string) =>
   item.reduce(
@@ -47,20 +48,35 @@ const Today: React.FC<LessonProps> = ({
     }
   }, [lessonLoading]);
 
+  const {breakpoint} = useTailwindBreakpoint();
+
   useEffect(() => {
     if (lessons?.length) {
       const temp: any = [];
       const groupedData = groupBy(lessons, 'session');
+
+      // .filter(
+      //   (_d: any) => _d.lesson.type === 'survey'
+      // );
       for (const [key, value] of Object.entries(groupedData)) {
         const associatedLessons: any = value;
-        temp.push({
-          sessionHeading: associatedLessons[0].sessionHeading,
-          lessons: value
-        });
+        if (breakpoint === 'sm') {
+          if (associatedLessons[0].lesson.type === 'survey') {
+            temp.push({
+              sessionHeading: associatedLessons[0].sessionHeading,
+              lessons: value
+            });
+          }
+        } else {
+          temp.push({
+            sessionHeading: associatedLessons[0].sessionHeading,
+            lessons: value
+          });
+        }
       }
       setLessonsBySession(temp);
     }
-  }, [lessons]);
+  }, [lessons, breakpoint]);
 
   const emptyStyles = 'flex justify-center items-center w-full h-48';
 

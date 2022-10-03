@@ -9,6 +9,7 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import HeroBanner from '../../Header/HeroBanner';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import {ClassroomControlProps} from '../Dashboard';
+import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
@@ -116,7 +117,7 @@ const Home = (props: ClassroomControlProps) => {
       getTeacherList.map(async (teacherObj: any, idx: number) => {
         return {
           ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
         };
       })
     );
@@ -126,7 +127,7 @@ const Home = (props: ClassroomControlProps) => {
       getCoTeacherList().map(async (teacherObj: any, idx: number) => {
         return {
           ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
         };
       })
     );
@@ -159,8 +160,8 @@ const Home = (props: ClassroomControlProps) => {
           ...studentObj?.student,
           image: await (studentObj?.student?.image
             ? getImageURL(studentObj?.student?.image)
-            : null),
-        },
+            : null)
+        }
       };
     })
   );
@@ -188,7 +189,7 @@ const Home = (props: ClassroomControlProps) => {
                 roomName: item?.name,
                 bannerImage: image,
                 teacherProfileImg,
-                roomIndex: idx,
+                roomIndex: idx
               };
 
               modifiedClassList.push(modifiedItem);
@@ -225,21 +226,18 @@ const Home = (props: ClassroomControlProps) => {
           </div>
           {/* Header */}
           {user && (
-            <div
-              className={`w-full lg:max-w-192 md:max-w-none 2xl:max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-              <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
-                Welcome,{' '}
-                <span className="font-semibold">
-                  {user.preferredName ? user.preferredName : user.firstName}
-                </span>
-                .{' '}
-                {
-                  DashboardDict[userLanguage][
-                    isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
-                  ]
-                }
-              </h2>
-            </div>
+            <HeaderTextBar>
+              Welcome,{' '}
+              <span className="font-semibold">
+                {user.preferredName ? user.preferredName : user.firstName}
+              </span>
+              .{' '}
+              {
+                DashboardDict[userLanguage][
+                  isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
+                ]
+              }
+            </HeaderTextBar>
           )}
 
           {/* Classroom Section */}

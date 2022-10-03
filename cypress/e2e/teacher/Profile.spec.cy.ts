@@ -1,21 +1,15 @@
 /// <reference types="cypress" />
 
-const email = 'demoteacher@zoiq.io';
-const pass = 'admin123';
-const url = 'http://localhost:8085/dashboard/home';
+import {loginConfig, urlConfig} from '../config';
 
 describe('Should work profile page', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8085');
-    cy.get('input[placeholder="Email"]').type(email);
-    cy.get('button').contains('Enter').click();
-    cy.get('input[placeholder="Password"]').type(pass);
-    cy.get('button').contains('Login').click();
+    cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
   });
 
   it('should go to profile page', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', url);
-    cy.get('[data-cy="dropdown-button"]').click();
-    cy.get('[data-cy="dropdown-item-profile"]').click();
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.dataCy('dropdown-button').click();
+    cy.dataCy('dropdown-item-profile').click();
   });
 });

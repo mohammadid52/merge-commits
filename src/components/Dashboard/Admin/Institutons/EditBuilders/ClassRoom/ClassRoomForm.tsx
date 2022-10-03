@@ -1,53 +1,99 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customQueries from '@customGraphql/customQueries';
 import * as customMutations from '@customGraphql/customMutations';
-import * as queries from '@graphql/queries';
+import * as customQueries from '@customGraphql/customQueries';
 import * as mutation from '@graphql/mutations';
+import * as queries from '@graphql/queries';
 
-import PageWrapper from '@atoms/PageWrapper';
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
+import MultipleSelector from '@atoms/Form/MultipleSelector';
 import Selector from '@atoms/Form/Selector';
 import SelectorWithAvatar from '@atoms/Form/SelectorWithAvatar';
-import MultipleSelector from '@atoms/Form/MultipleSelector';
+import PageWrapper from '@atoms/PageWrapper';
 import ModalPopUp from '@molecules/ModalPopUp';
 
-import {getFilterORArray} from '@utilities/strings';
-import {GlobalContext} from '@contexts/GlobalContext';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
+import {getFilterORArray} from '@utilities/strings';
 
 interface ClassRoomFormProps {
   instId: string;
 }
 
 const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
-  const [isMounted, setIsMounted] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
   const {roomId}: any = useParams();
+  const {userLanguage, state} = useGlobalContext();
 
   const StatusList = [
     {
       id: 1,
       name: 'ACTIVE',
-      value: 'ACTIVE',
+      value: 'ACTIVE'
     },
     {
       id: 2,
       name: 'INACTIVE',
-      value: 'INACTIVE',
+      value: 'INACTIVE'
     },
     {
       id: 3,
       name: 'TRAINING',
-      value: 'TRAINING',
-    },
+      value: 'TRAINING'
+    }
   ];
+
+  const [units, setUnits] = useState([]);
+
+  const [unitsLoading, setUnitsLoading] = useState(false);
+
+  const fetchUnits = async (curriculaId: string) => {
+    try {
+      let getCurriculum: any = await API.graphql(
+        graphqlOperation(customQueries.getUnitsOnly, {
+          id: curriculaId
+        })
+      );
+      let response = await getCurriculum?.data?.getCurriculum;
+
+      let syllabi = response?.universalSyllabus?.items || [];
+      let units = syllabi.map((item: any) => {
+        return {
+          id: item?.unit?.id,
+          name: item?.unit?.name,
+          value: item?.unit?.id
+        };
+      });
+
+      setUnits(units);
+      if (units && units.length > 0) {
+        const activeUnit = units.find(
+          (unit: any) => unit.id === roomData?.activeSyllabus
+        );
+        if (activeUnit) {
+          setRoomData({
+            ...roomData,
+            activeUnit: {id: activeUnit.id, name: activeUnit.name}
+          });
+        } else {
+          setRoomData({
+            ...roomData,
+            activeUnit: {id: '', name: ''}
+          });
+        }
+      }
+
+      setUnitsLoading(false);
+    } catch (err) {
+      console.error('fetch units (syllabus) error', err);
+    }
+  };
 
   const initialData = {
     id: '',
@@ -61,8 +107,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     status: '',
     conferenceCallLink: '',
     location: '',
+    activeUnit: {
+      id: '',
+      name: ''
+    },
+    activeSyllabus: ''
   };
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData);
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -72,7 +122,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
   const [originalTeacher, setOriginalTeacher] = useState([]);
   const [coTeachersList, setCoTeachersList] = useState(teachersList);
@@ -91,13 +141,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   useEffect(() => {
-    setIsMounted(true);
     listInstitutions(undefined, []);
   }, []);
+
+  useEffect(() => {
+    if (roomData?.curricular?.id) {
+      fetchUnits(roomData?.curricular?.id);
+    }
+  }, [roomData?.curricular?.id]);
 
   const onModalSave = () => {
     toggleModal();
@@ -107,7 +162,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
   };
 
@@ -116,7 +171,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutions, {
-          nextToken: nextToken,
+          nextToken: nextToken
         })
       );
       let returnedData = result.data.listInstitutions?.items;
@@ -132,7 +187,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       setAllInstitutions(combined);
       return combined;
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listInstitutions ~ error',
         error
       );
@@ -145,8 +200,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       teacher: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
 
     const filteredDefaultTeacher: object[] = teachersList.filter(
@@ -176,7 +231,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const editInputField = (e: any) => {
     setRoomData({
       ...roomData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
 
@@ -189,9 +244,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       curricular: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
+
     setUnsavedChanges(true);
 
     removeErrorMsg();
@@ -200,7 +256,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const selectStatus = (val: string) => {
     setRoomData({
       ...roomData,
-      status: val,
+      status: val
     });
     setUnsavedChanges(true);
 
@@ -212,7 +268,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -221,26 +277,26 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       if (instId) {
         const list: any = await API.graphql(
-          graphqlOperation(customQueries.getInstitution, {
-            id: instId,
+          graphqlOperation(customQueries.GetInstitutionDetails, {
+            id: instId
           })
         );
         setRoomData((prevData) => ({
           ...prevData,
           institute: {
             ...prevData.institute,
-            name: list.data.getInstitution?.name,
-          },
+            name: list.data.getInstitution?.name
+          }
         }));
         const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
         return serviceProviders;
       }
     } catch (err) {
-      console.log(err, 'err inside catch');
+      console.error(err, 'err inside catch');
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -249,7 +305,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaff, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listStaffs = list.data.listStaff.items;
@@ -260,7 +316,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['addstaffirst'],
-          isError: true,
+          isError: true
         });
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) =>
@@ -283,7 +339,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           }`,
           email: item.staffMember?.email ? item.staffMember?.email : '',
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
-          image: item.staffMember?.image,
+          image: item.staffMember?.image
         }));
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
@@ -296,11 +352,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         setCoTeachersList(filteredArray.filter((item: any) => item.id !== teacher.id));
       }
     } catch (err) {
-      console.log(err, 'err inside catch');
+      console.error(err, 'err inside catch');
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -340,7 +396,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   //       }));
   //       setClassList(classList);
   //     }
-  //   } catch (err){console.log(err,'err inside catch')
+  //   error catch (err){console.log(err,'err inside catch')
   //     setMessages({
   //       show: true,
   //       message: RoomEDITdict[userLanguage]['messages']['unableclass'],
@@ -353,7 +409,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurricula, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       // if (!isMounted) {
@@ -365,15 +421,15 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       const curricularList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`,
+        value: `${item.name ? item.name : ''}`
       }));
       setCurricularList(curricularList);
     } catch (err) {
-      console.log(err, 'err inside catch');
+      console.error(err, 'err inside catch');
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -384,17 +440,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         graphqlOperation(queries.listRooms, {
           filter: {
             institutionID: {eq: roomData.institute.id},
-            name: {eq: roomData.name},
-          },
+            name: {eq: roomData.name}
+          }
         })
       );
       return list.data.listRooms.items.length === 0 ? true : false;
     } catch (err) {
-      console.log(err, 'err inside catch');
+      console.error(err, 'err inside catch');
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -404,28 +460,28 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['classroomrequired'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectinstitute'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (!roomData.curricular.id) {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectCurriculum'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectteacher'],
-        isError: true,
+        isError: true
       });
       return false;
     }
@@ -460,7 +516,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['alreadyexist'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -477,7 +533,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         const curricularInput = {
           id: id,
           roomID: roomId,
-          curriculumID: currId,
+          curriculumID: currId
         };
 
         const addCurricular: any = await API.graphql(
@@ -487,15 +543,15 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-          isError: false,
+          isError: false
         });
       } catch (err) {
-        console.log(err, 'err inside catch');
+        console.error(err, 'err inside catch');
         setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdating'],
-          isError: true,
+          isError: true
         });
       }
     } else {
@@ -503,7 +559,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errprocess'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -513,7 +569,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       try {
         const curricularInput = {
           roomID: roomId,
-          curriculumID: currId,
+          curriculumID: currId
         };
 
         const addCurricular: any = await API.graphql(
@@ -523,16 +579,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           show: true,
           message:
             RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
-          isError: false,
+          isError: false
         });
         setRoomData(initialData);
         setLoading(false);
       } catch (err) {
-        console.log(err, 'err inside catch');
+        console.error(err, 'err inside catch');
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -540,7 +596,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
-        isError: true,
+        isError: true
       });
       setLoading(false);
     }
@@ -549,7 +605,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (curriculumID) {
       const syllabusCSequenceFetch: any = await API.graphql(
         graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
-          id: `${curriculumID}`,
+          id: `${curriculumID}`
         })
       );
 
@@ -571,6 +627,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         if (roomData.id) {
           const input = {
             id: roomData.id,
+            activeSyllabus: roomData?.activeUnit?.id,
             institutionID: roomData.institute.id,
             classID: roomData.classRoom.id,
             teacherAuthID: teachersList.find(
@@ -583,7 +640,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             maxPersons: roomData.maxPersons,
             status: roomData.status || 'ACTIVE',
             location: roomData.location,
-            conferenceCallLink: roomData.conferenceCallLink,
+            conferenceCallLink: roomData.conferenceCallLink
           };
           const newRoom: any = await API.graphql(
             graphqlOperation(mutation.updateRoom, {input: input})
@@ -599,7 +656,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           setMessages({
             show: true,
             message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-            isError: false,
+            isError: false
           });
           // history.push(
           //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
@@ -619,7 +676,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: 0,
-            status: roomData.status || 'ACTIVE',
+            status: roomData.status || 'ACTIVE'
           };
 
           const newRoom: any = await API.graphql(
@@ -629,7 +686,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const classInput = {
             name: roomData.name,
             institutionID: roomData.institute.id,
-            roomId,
+            roomId
           };
           const newClass: any = await API.graphql(
             graphqlOperation(customMutations.createClass, {input: classInput})
@@ -638,8 +695,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             graphqlOperation(mutation.updateRoom, {
               input: {
                 id: roomId,
-                classID: newClass.data.createClass.id,
-              },
+                classID: newClass.data.createClass.id
+              }
             })
           );
           if (roomData.curricular.id) {
@@ -650,7 +707,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               show: true,
               message:
                 RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
-              isError: false,
+              isError: false
             });
             setRoomData(initialData);
             setSelectedCoTeachers([]);
@@ -661,12 +718,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           );
         }
       } catch (err) {
-        console.log(err, 'err inside catch');
+        console.error(err, 'err inside catch');
         setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -691,7 +748,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           roomID,
           teacherID: d.id,
           teacherEmail: d.email,
-          teacherAuthID: d.authId,
+          teacherAuthID: d.authId
         };
         newItems.push(input);
       }
@@ -711,7 +768,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       await Promise.all(
         deletedItems.map(async (id) => {
           const input = {
-            id: id,
+            id: id
           };
           await API.graphql(
             graphqlOperation(mutation.deleteRoomCoTeachers, {input: input})
@@ -729,8 +786,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       curricular: {
         id: selectedCurr?.id,
         name: selectedCurr?.name,
-        value: selectedCurr?.value,
-      },
+        value: selectedCurr?.value
+      }
     });
   };
 
@@ -739,12 +796,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          console.log('called from ClassRoomForm.tsx');
-
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
+
           const savedData = result.data.getRoom;
+
           const curricularId = savedData.curricula.items[0]?.curriculumID;
 
           const coTeachers = savedData.coTeachers?.items;
@@ -752,7 +809,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             coTeachers?.map((d: any) => {
               return {
                 rowId: d.id,
-                id: d.teacherID,
+                id: d.teacherID
               };
             })
           );
@@ -764,7 +821,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 email: d.teacherEmail,
                 name: `${d.teacher.firstName} ${d.teacher.lastName}`,
                 value: `${d.teacher.firstName} ${d.teacher.lastName}`,
-                rowId: d.id,
+                rowId: d.id
               };
             })
           );
@@ -773,10 +830,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ...roomData,
             id: savedData.id,
             name: savedData.name,
+            activeSyllabus: savedData?.activeSyllabus,
+
             institute: {
               id: savedData.institution?.id,
               name: savedData.institution?.name,
-              value: savedData.institution?.name,
+              value: savedData.institution?.name
             },
             teacher: {
               id: savedData.teacher?.id,
@@ -785,28 +844,28 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               }`,
               value: `${savedData.teacher?.firstName || ''} ${
                 savedData.teacher?.lastName || ''
-              }`,
+              }`
             },
             classRoom: {
               id: savedData.class?.id,
               name: savedData.class?.name,
-              value: savedData.class?.name,
+              value: savedData.class?.name
             },
             // ***** UNCOMMENT THIS ******
             // coTeachers: savedData.coTeachers,
             maxPersons: savedData.maxPersons,
             status: savedData.status,
             location: savedData.location,
-            conferenceCallLink: savedData.conferenceCallLink,
+            conferenceCallLink: savedData.conferenceCallLink
           });
           setPrevName(savedData.name);
           setSelectedCurrID(curricularId);
         } catch (err) {
-          console.log(err, 'err inside catch');
+          console.error(err, 'err inside catch');
           setMessages({
             show: true,
             message: RoomEDITdict[userLanguage]['messages']['errfetch'],
-            isError: true,
+            isError: true
           });
         }
       } else {
@@ -818,8 +877,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         institute: {
           id: params.get('id'),
           name: '',
-          value: '',
-        },
+          value: ''
+        }
       });
     }
   };
@@ -859,7 +918,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     teacher,
     status,
     conferenceCallLink,
-    location: roomLocation,
+    location: roomLocation
   } = roomData;
 
   const selectInstitute = (institute: any) => {
@@ -868,8 +927,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       institute: {
         id: institute.id,
         name: institute.name,
-        value: institute.name,
-      },
+        value: institute.name
+      }
+    });
+  };
+
+  const onSelectActiveUnit = (unit: {id: string; name: string}) => {
+    setRoomData({
+      ...roomData,
+      activeUnit: {
+        id: unit.id,
+        name: unit.name
+      }
     });
   };
 
@@ -919,6 +988,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <Selector
+                  selectedItem={roomData.activeUnit.name}
+                  placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
+                  label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
+                  labelTextClass={'text-xs'}
+                  list={units}
+                  loading={unitsLoading}
+                  onChange={(value, name, id) => onSelectActiveUnit({id, name})}
                 />
               </div>
               <div className="px-3 py-4">

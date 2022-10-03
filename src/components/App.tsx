@@ -8,6 +8,9 @@ import {PageBuilderProvider} from '@contexts/PageBuilderContext';
 import Notification from '@atoms/Notification';
 import NotificationContextProvider from '@contexts/NotificationContext';
 
+// This is the main component that wraps all other components
+// It is the entry point for the application
+
 const App: React.FC = () => {
   return (
     <CookiesProvider>

@@ -13,6 +13,7 @@ import {ClassroomControlProps} from '../Dashboard';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
+import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 
 export interface ModifiedListProps {
   id: any;
@@ -129,7 +130,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       getTeacherList.map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null),
+          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
         };
       })
     );
@@ -142,7 +143,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       getCoTeacherList().map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null),
+          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
         };
       })
     );
@@ -159,8 +160,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             ...studentObj?.student,
             image: await (studentObj?.student?.image
               ? getImageURL(studentObj?.student?.image)
-              : null),
-          },
+              : null)
+          }
         };
       })
     );
@@ -188,7 +189,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             roomName: _item?.name,
             bannerImage: image,
             teacherProfileImg,
-            roomIndex: index,
+            roomIndex: index
           };
 
           // if (!uniqIds.includes(curriculum?.id)) {
@@ -235,8 +236,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           </div>
           {/* Header */}
           {user && (
-            <div
-              className={`w-full lg:max-w-192 md:max-w-none 2xl:max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+            <HeaderTextBar>
               <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
@@ -251,7 +251,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                   <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
                 </span>
               </div>
-            </div>
+            </HeaderTextBar>
           )}
           <div className="px-5">
             {/* Classroom Section */}
