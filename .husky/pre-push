@@ -3,4 +3,22 @@
 
 npm run set-dictionary
 echo "Setting dictionary..."
-npm run cypress:run
+
+branch=$(git symbolic-ref --short HEAD)
+
+if [ "$branch" != "stagingdevelopment" ]; then
+  echo "Do you want to run cypress test on this branch? (y/N) " 
+  read run_test
+
+  if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then
+    echo "Running cypress test..."
+    npm run cypress:run
+  else 
+      echo "Skipping cypress test..."
+      fi
+  
+
+else 
+    npm run cypress:run
+    fi
+
