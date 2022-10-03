@@ -50,13 +50,7 @@ const newUserCreateFields = {
 
 describe('Student flow', () => {
   beforeEach(() => {
-    cy.visit(urlConfig.baseURL);
-    cy.dataCy('email').type(loginConfig.admin.username);
-    cy.get('button').contains('Enter').click();
-
-    cy.dataCy('password').type(loginConfig.admin.password);
-    cy.dataCy('remember').click();
-    cy.get('button').contains('Login').click();
+    cy.login(loginConfig.admin.username, loginConfig.admin.password);
   });
 
   it('should go to register user page', {defaultCommandTimeout: 20000}, function () {
@@ -92,7 +86,7 @@ describe('Student flow', () => {
       .should('have.value', randomDetails().lastName);
     cy.get(`input#${newUserCreateFields.email}`)
       .type(randomDetails().email)
-      .should('eq', randomDetails().email);
+      .should('have.value', randomDetails().email);
     cy.dataCy('dropdown-role').click();
     cy.dataCy('dropdown-item-role-5').click();
     cy.dataCy('dropdown-role').should('contain', `${newUserFields.roleItem}`);
