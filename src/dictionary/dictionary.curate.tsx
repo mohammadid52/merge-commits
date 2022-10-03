@@ -41,19 +41,6 @@ const BUTTONS: any = {
   }
 };
 
-const CommonlyUsedDict: any = {
-  EN: {
-    BACK: 'Back',
-    BACK_TO_LIST: 'Back to list',
-    NO_SEARCH_RESULT: 'No data found'
-  },
-  ES: {
-    BACK: 'TBD',
-    BACK_TO_LIST: 'TBD',
-    NO_SEARCH_RESULT: 'TBD'
-  }
-};
-
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
@@ -944,6 +931,7 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
       DOWNLOAD_CSV: 'Download CSV',
       UPLOAD_CSV: 'Upload CSV',
+      UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
@@ -1249,7 +1237,7 @@ const Institute_class: any = {
 };
 const InstitueCurriculum: any = {
   EN: {
-    TITLE: 'INSTITUTE COURSE',
+    TITLE: 'Courses',
     BUTTON: {
       ADD: 'New Course'
     },
@@ -1275,6 +1263,7 @@ const InstitueCurriculum: any = {
     INSTITUTION_NAME: 'TBD',
     COURSE_TYPE: 'TBD',
     UNITS: 'TBD',
+    LESSONS: 'TBD',
     ACTION: 'TBD',
     VIEW: 'TBD',
     INFO: 'TBD',
@@ -1292,7 +1281,8 @@ const InstitueRomms: any = {
     CLASS_NAME: 'Class Name',
     INSTITUTION_NAME: 'Institution Name',
     TEACHER: 'Teacher',
-    CURRICULUM: 'COurse',
+    CURRICULUM: 'Course',
+    STATUS: 'Status',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'Edit',
@@ -1729,11 +1719,13 @@ const RoomEDITdict: any = {
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Course',
+    ACTIVE_UNIT_LABEL: 'Active Unit',
+    ACTIVE_UNIT_PLACEHOLDER: 'Select Active Unit',
     CURRICULUM_PLACEHOLDER: 'Select Course',
-    INSTITUTION_LABEL: 'Institution',
-    INSTITUTION_PLACEHOLDER: 'Select Institution',
     STATUS_LABEL: 'Status',
     STATUS_PLACEHOLDER: 'Select Status',
+    INSTITUTION_LABEL: 'Institution',
+    INSTITUTION_PLACEHOLDER: 'Select Institution',
     MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     CONFERENCE_CALL_LINK_LABEL: 'Conference link',
@@ -1793,6 +1785,8 @@ const RoomEDITdict: any = {
     CO_TEACHER_LABEL: 'TBD',
     CO_TEACHER_PLACEHOLDER: 'TBD',
     CLASS_NAME_LABEL: 'TBD',
+    ACTIVE_UNIT_LABEL: 'TBD',
+    ACTIVE_UNIT_PLACEHOLDER: 'TBD',
     CLASS_NAME_PLACEHOLDER: 'TBD',
     CURRICULUM_LABEL: 'TBD',
     CURRICULUM_PLACEHOLDER: 'TBD',
@@ -2194,6 +2188,7 @@ const SelectPreviousQuestionDict: any = {
 const AddMeasurementDict: any = {
   EN: {
     title: 'Add Measurement',
+
     subtitle: 'Add new measurement to course.',
     heading: 'Measurement Information',
     mlabel: 'Measurement Name',
@@ -2752,6 +2747,15 @@ const RegistrationDict: any = {
     emailplaceholder: 'email@email.com',
     GROUP_PLACEHOLDER: 'Select group for student',
     role: 'Role',
+    roles: {
+      sup: 'Super Admin',
+      adm: 'Admin',
+      bld: 'Builder',
+      flw: 'Fellow',
+      crd: 'Coordinator',
+      tr: 'Teacher',
+      st: 'Student'
+    },
     class: 'Class',
     status: 'Status',
     statusPlaceholder: 'Choose Status',
@@ -2818,6 +2822,8 @@ const UserEditDict: any = {
     lastname: 'Last Name',
     nickname: 'Nickname',
     status: 'Status',
+    inactive_date: 'Inactive or Suspension Date',
+    status_reason: 'Inactive or Suspension Reason',
     role: 'Role',
     button: {
       save: 'Save',
@@ -2851,15 +2857,6 @@ const UserInformationDict: any = {
     fullname: 'Full Name',
     nickname: 'Nickname',
     role: 'Role',
-    roles: {
-      sup: 'Super Admin',
-      adm: 'Admin',
-      bld: 'Builder',
-      flw: 'Fellow',
-      crd: 'Coordinator',
-      tr: 'Teacher',
-      st: 'Student'
-    },
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
@@ -3718,10 +3715,8 @@ const UnitLookupDict: any = {
     NOTE: 'TBD',
     NO: 'TBD',
     CURRICULUMNAME: 'TBD',
-    NAME: 'TBD',
     INSTITUTION_NAME: 'TBD',
     UNITNAME: 'TBD',
-    LESSONS: 'Lessons',
     STATUS: 'TBD',
     ACTION: 'TBD',
     NOTADDED: 'TBD',
@@ -3736,6 +3731,7 @@ const UnitLookupDict: any = {
       FETCHERR: 'TBD'
     },
     NO_DELETE: '(Unit in use)',
+    SELECT_STAFF: 'TBD',
     SELECT_INSTITUTION: 'TBD'
   }
 };
@@ -3744,6 +3740,17 @@ const LessonBuilderDict: any = {
   EN: {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
+    OVEVIEW_TITLE: 'Overview',
+    OVERVIEW_DESCRIPTION: 'Capture core details of your lesson',
+    ACTIVITY_TITLE: 'Activities',
+    ACTIVITY_DESCRIPTION: 'Create class and home work here',
+    ACTIVITY_TOOLTIP: 'Add overview details in step 1 to continue',
+    UNIT_MANAGER_TITLE: 'Unit Manager',
+    UNIT_MANAGER_DESCRIPTION: 'Assign lessons to units',
+    UNIT_MANAGER_TOOLTIP: 'Create lesson activities in step 2 to continue',
+    LEARNING_EVIDENCE_TITLE: 'Select measurements applied to lesson',
+    LEARNING_EVIDENCE_DESCRIPTION: 'Link measurements to lesson',
+    LEARNING_EVIDENCE_TOOLTIP: 'Assign your lesson to courses in step 3 to continue',
     BUTTON: {
       ADD_PLAN: 'Add new page',
       EDIT: 'Edit',
@@ -3966,6 +3973,7 @@ const LessonsListDict: any = {
     SORTBY: 'TBD',
     NO: 'TBD',
     LESSONTITLE: 'TBD',
+    INSTITUTION_NAME: 'TBD',
     TARGET_AUDIENCE: 'TBD',
     TYPE: 'TBD',
     LANGUAGE: 'TBD',
@@ -4019,13 +4027,21 @@ const CsvDict: any = {
     TITLE: 'Research & Analytics',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
-    SELECT_FILTERS: 'Select Filters'
+    SELECT_FILTERS: 'Select Filters',
+    SELECT_REASON: 'Select Reason',
+    REASON: 'Reason....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Upload Multipe Survey Images',
+    DESCRIBE_REASON: 'Describe Reason'
   },
   ES: {
     TITLE: 'Investigar & Analítica',
     SELECT_INST: 'Seleccione instituto',
     SELECT_FILTERS: 'Seleccione Filtros',
-    SELECT_CLASSROOM: 'Seleccione salón de clases'
+    SELECT_CLASSROOM: 'Seleccione salón de clases',
+    SELECT_REASON: 'Seleccionar motivo',
+    REASON: 'Razón....',
+    UPLOAD_MULTIPLE_SURVEY_IMAGES: 'Cargar imágenes de encuestas múltiples',
+    DESCRIBE_REASON: 'Describa la razón'
   }
 };
 
@@ -4050,10 +4066,23 @@ const DashboardDict: any = {
 
 const LearningEvidenceDict: any = {
   EN: {
-    TITLE: 'Learning Evidence'
+    TITLE: 'Add Measurements to Lesson'
   },
   ES: {
     TITLE: 'TBD'
+  }
+};
+
+const CommonlyUsedDict: any = {
+  EN: {
+    BACK: 'Back',
+    BACK_TO_LIST: 'Back to list',
+    NO_SEARCH_RESULT: 'No data found'
+  },
+  ES: {
+    BACK: 'TBD',
+    BACK_TO_LIST: 'TBD',
+    NO_SEARCH_RESULT: 'TBD'
   }
 };
 

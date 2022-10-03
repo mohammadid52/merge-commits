@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx",
+    "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx && cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.curate.tsx",
     "build": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.prod.js",
     "build:dev": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.dev.js ",
     "build:prod": "NODE_ENV=production webpack --config webpack.prod.js ",
@@ -16,7 +16,9 @@
     "prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "push:ia": "sh ./scripts/push-ia.sh",
+    "push:pc": "sh ./scripts/push-pc.sh"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.37.0",

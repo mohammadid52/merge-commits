@@ -71,15 +71,17 @@ const DashboardContainer = ({
                     <span className="font-semibold">{'Classroom Lessons'}</span>
                   )}
                 </h2>
-                <div className="w-auto">
-                  <span
-                    className="w-auto cursor-pointer"
-                    onClick={() => setOpenWalkThroughModal(true)}>
-                    <BsFillInfoCircleFill
-                      className={`h-4 w-4 md:w-5 md:h-5 text-white`}
-                    />
-                  </span>
-                </div>
+                {isTeacher && (
+                  <div className="w-auto">
+                    <span
+                      className="w-auto cursor-pointer"
+                      onClick={() => setOpenWalkThroughModal(true)}>
+                      <BsFillInfoCircleFill
+                        className={`h-4 w-4 md:w-5 md:h-5 text-white`}
+                      />
+                    </span>
+                  </div>
+                )}
               </div>
             </HeaderTextBar>
           ) : (
