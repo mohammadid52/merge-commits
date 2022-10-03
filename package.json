@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "push": "sh ./scripts/push.sh",
     "push:ia": "sh ./scripts/push-ia.sh",
     "push:pc": "sh ./scripts/push-pc.sh"
   },
