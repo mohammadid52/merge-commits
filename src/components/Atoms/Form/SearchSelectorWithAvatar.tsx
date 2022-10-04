@@ -6,7 +6,7 @@ import {getImageFromS3} from '../../../utilities/services';
 import {
   initials,
   getInitialsFromString,
-  stringToHslColor,
+  stringToHslColor
 } from '../../../utilities/strings';
 
 interface selectorProps {
@@ -157,7 +157,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           {showList ? (
             <input
               autoFocus
-              className="p-0 border-none"
+              className="p-0 border-none focus:border-transparent focus:outline-none"
               onChange={handleSearchChange}
               id={`searchForStudent`}
               type={`text`}
@@ -209,10 +209,13 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                     onClick={onCreate}
                     role="option"
                     className={`flex cursor-pointer select-none relative py-2 px-4 ${theme.textColor[themeColor]}`}>
-                    <div className={`w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center`}>
+                    <div
+                      className={`w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center`}>
                       <IoIosAdd className="w-auto" />
                     </div>
-                    <span className={`pl-4 block truncate`}>{creatableLabel || 'Add new'}</span>
+                    <span className={`pl-4 block truncate`}>
+                      {creatableLabel || 'Add new'}
+                    </span>
                   </li>
                 )}
                 {teacherList.length ? (
@@ -244,7 +247,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                                   ' ' +
                                   getInitialsFromString(item.name)[1]
                               )}`,
-                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                              textShadow: '0.1rem 0.1rem 2px #423939b3'
                             }}>
                             {item.name
                               ? initials(

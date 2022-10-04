@@ -14,7 +14,7 @@ UNDERLINE='\033[4m'
 
 
 cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
-git checkout test-master
+git checkout master
 git pull origin new-dev
 
 
