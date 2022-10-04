@@ -43,6 +43,7 @@ const RoomViewCard = ({
       }`}>
       {/* FRONT PAGE */}
       <div
+        data-cy="room-view-card"
         className={`relative z-50 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250  ${
           roomID === 'private' ? 'h-56 md:h-auto' : ''
         }

@@ -51,7 +51,8 @@ describe('Survey should work', () => {
     cy.wait(3000); // wait for data to save
     // go to third page
     cy.contains(surveyConfig.page[2]).click();
-    cy.get('input[type=radio]').first().check();
+    // check first radio button
+    cy.get('input[type=radio]').first().check({force: true});
     // type in input field
     cy.get('textarea').clear().type(secondInputData());
     cy.wait(3000); // wait for data to save
