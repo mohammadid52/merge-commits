@@ -523,7 +523,7 @@ const editClassDict: any = {
       SNO: 'No.',
       NAME: 'Participant Name',
       GROUP: 'Group',
-      STATUS: 'Status',
+      STATUS: 'Location Status',
       DATE: 'Date Added',
       ACTIONS: 'Actions'
     }

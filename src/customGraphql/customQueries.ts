@@ -840,6 +840,7 @@ export const listClassStudentsForRoom = /* GraphQL */ `
           type
           firstName
           preferredName
+          onDemand
           lastName
           image
         }
