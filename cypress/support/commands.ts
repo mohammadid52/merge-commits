@@ -8,7 +8,7 @@ declare global {
       /**
        *  cy.login('test@email.com', 'testPassword')
        */
-      login(email: string, pw: string): Chainable<Element>;
+      login(email: string, pw: string, customURL?: string): Chainable<Element>;
       /**
        *  cy.dataCy('greeting')
        */
@@ -24,8 +24,8 @@ Cypress.Commands.add('dataCy', (value) => {
   return cy.get(`[data-cy=${value}]`);
 });
 
-Cypress.Commands.add('login', (email, pw) => {
-  cy.visit(urlConfig.baseURL);
+Cypress.Commands.add('login', (email, pw, customURL = urlConfig.baseURL) => {
+  cy.visit(customURL);
   cy.dataCy('email').type(email);
   cy.get('button').contains('Enter').click();
   cy.dataCy('password').type(pw);
