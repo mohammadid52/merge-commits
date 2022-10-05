@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineSave} from 'react-icons/ai';
-import {getLocalStorageData} from '../../../utilities/localStorage';
 import Buttons from '@components/Atoms/Buttons';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineSave} from 'react-icons/ai';
+import {useHistory} from 'react-router-dom';
+import {GlobalContext} from '@contexts/GlobalContext';
+import {getLocalStorageData} from '@utilities/localStorage';
 
 interface SaveQuitProps {
   id?: string;
@@ -57,20 +56,6 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   return (
     <>
-      {/* {alert ? (
-        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`}>
-          <Popup
-            alert={visible}
-            setAlert={setVisible}
-            header="You have completed a lesson!"
-            button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
-            svg="smile"
-            handleButton1={handleManualSave}
-            fill="screen"
-          />
-        </div>
-      ) : null} */}
-
       <div className={''}>
         <Buttons
           dataCy="save-lesson"

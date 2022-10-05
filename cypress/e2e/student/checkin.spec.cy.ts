@@ -24,7 +24,8 @@ describe('Student Check In', () => {
     cy.get(`button:contains(${notebookLink})`).click();
 
     cy.wait(3000);
-    cy.dataCy('private').click();
+    cy.closeCheckInModal();
+    cy.dataCy('room-view-card').first().click();
     cy.dataCy('notebook-passcode-input').clear().type(notebookPasscode);
     cy.dataCy('notebook-passcode-submit').click();
   });

@@ -78,6 +78,7 @@ describe('Student flow', () => {
   it('should fill up fields (student)', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(urlConfig.registerURL);
+    cy.wait(3000);
     cy.get(`input#${newUserCreateFields.firstName}`)
       .type(randomDetails().firstName)
       .should('have.value', randomDetails().firstName);
