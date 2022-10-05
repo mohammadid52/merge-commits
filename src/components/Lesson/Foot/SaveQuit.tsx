@@ -1,9 +1,10 @@
 import Buttons from '@components/Atoms/Buttons';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useStudentTimer from '@customHooks/timer';
+import {getLocalStorageData} from '@utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {AiOutlineSave} from 'react-icons/ai';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {getLocalStorageData} from '@utilities/localStorage';
 
 interface SaveQuitProps {
   id?: string;
@@ -25,11 +26,14 @@ const SaveQuit = (props: SaveQuitProps) => {
   const [waiting, setWaiting] = useState<boolean>(null);
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
+  const {updateSurveyData} = useStudentTimer();
+
   const handleManualSave = () => {
     if (lessonState.updated) {
       setWaiting(true);
       setSafeToLeave(false);
     } else {
+      updateSurveyData();
       setWaiting(false);
       setSafeToLeave(true);
     }
