@@ -23,6 +23,7 @@ const loadActiveRoomData = () => {
   cy.url().should('contain', urlConfig.dashboardURL);
   // go to classroom page to load activeRoomData.. without this survey won't save data
   cy.get('h2').should('contain', 'Your Classrooms');
+  cy.closeCheckInModal();
   cy.dataCy('classroom-cards').first().click();
   cy.dataCy('survey-button').first().click(); // <== here check if the button label is "GO TO SURVEY"
 };
@@ -51,7 +52,8 @@ describe('Survey should work', () => {
     cy.wait(3000); // wait for data to save
     // go to third page
     cy.contains(surveyConfig.page[2]).click();
-    cy.get('input[type=radio]').first().check();
+    // check first radio button
+    cy.get('input[type=radio]').first().check({force: true});
     // type in input field
     cy.get('textarea').clear().type(secondInputData());
     cy.wait(3000); // wait for data to save
