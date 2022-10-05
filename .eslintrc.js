@@ -10,6 +10,8 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
 
+  
+
   overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -17,5 +19,9 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', '@typescript-eslint'],
-  rules: {},
+  rules: [{     "prettier/prettier": ["error", { "endOfLine": "auto" }]   },
+
+  
+
+ 
 };
