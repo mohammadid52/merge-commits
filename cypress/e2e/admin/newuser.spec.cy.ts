@@ -1,5 +1,4 @@
-// This test is to ensure that all required fields are on the registration form and the cognito connection is active.
-
+// This test is to ensure that all required fields are on the registration form and the cognito connection is active. 
 
 
 import {loginConfig, urlConfig} from '../config';
@@ -14,7 +13,7 @@ const userLanguage = 'EN';
 const randomDetails = () => {
   const firstName = `cypress-${uniqueId}`;
   const lastName = ` test`;
-  const email = michael.russell@zoiq.io;
+  const email = `${firstName}@yopmail.com`;
   return {
     firstName,
     lastName,
@@ -33,7 +32,7 @@ const newUserFields = {
   email: RegistrationDict[userLanguage]['email'],
   role: RegistrationDict[userLanguage]['role'],
   // roleButton: 'Choose One',
-  roleItem: RegistrationDict[userLanguage]['roles']['Admin'],
+  roleItem: RegistrationDict[userLanguage]['roles']['st'],
   class: RegistrationDict[userLanguage]['class'],
   status: RegistrationDict[userLanguage]['status'],
   pace: RegistrationDict[userLanguage]['paceLabel']
@@ -52,19 +51,19 @@ const newUserCreateFields = {
   successMessage: 'Succesfully registered'
 };
 
-describe('New User Registration', () => {
+describe('Student flow', () => {
   beforeEach(() => {
     cy.login(loginConfig.admin.username, loginConfig.admin.password);
   });
 
-  it('open register new user page', {defaultCommandTimeout: 20000}, function () {
+  it('should go to register user page', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.get(`button:contains(${dropdownDetail.title})`).trigger('mouseover');
     cy.get(`body:contains(${dropdownDetail.item})`).should('exist');
     cy.visit(urlConfig.registerURL);
   });
 
-  it('verify form contains all fields', {defaultCommandTimeout: 20000}, function () {
+  it('should contain all fields', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(urlConfig.registerURL);
     cy.get(`label:contains(${newUserFields.firstName})`).should('exist');
@@ -79,8 +78,7 @@ describe('New User Registration', () => {
     cy.get(`label:contains(${newUserFields.pace})`).should('exist');
   });
 
-  //  This will ensure app is connected to Cognito
-  it('add existing user email', {defaultCommandTimeout: 20000}, () => {
+  it('should fill up fields (student)', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(urlConfig.registerURL);
     cy.wait(3000);
@@ -91,11 +89,16 @@ describe('New User Registration', () => {
       .type(randomDetails().lastName)
       .should('have.value', randomDetails().lastName);
     cy.get(`input#${newUserCreateFields.email}`)
-      .type(mike.email)
-      .should('have.value', mike.email);
+      .type(randomDetails().email)
+      .should('have.value', randomDetails().email);
     cy.dataCy('dropdown-role').click();
     cy.dataCy('dropdown-item-role-5').click();
     cy.dataCy('dropdown-role').should('contain', `${newUserFields.roleItem}`);
+    cy.dataCy('dropdown-class').click();
+    cy.dataCy('dropdown-item-class-0').click();
+    cy.get(`button:contains(${newUserCreateFields.statusButton})`).click();
+    cy.get(`li:contains(${newUserCreateFields.statusItem})`).click();
+    cy.get(`input[name=${newUserCreateFields.paceItem}]`).click();
     // cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
     // cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
   });
@@ -124,3 +127,7 @@ describe('New User Registration', () => {
   //   cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
   // });
 });
+
+
+// This test is to ensure that all required fields are on the registration form and the cognito connection is active.
+
