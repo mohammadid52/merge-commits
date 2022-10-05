@@ -49,16 +49,14 @@ describe('Survey should work', () => {
     cy.get('input[type=checkbox]').first().check();
     // type in input field
     cy.get('textarea').clear().type(firstInputData());
-    cy.wait(3000); // wait for data to save
     // go to third page
     cy.contains(surveyConfig.page[2]).click();
     // check first radio button
     cy.get('input[type=radio]').first().check({force: true});
     // type in input field
     cy.get('textarea').clear().type(secondInputData());
-    cy.wait(3000); // wait for data to save
 
-    cy.dataCy('save-lesson').click(); // click on save button
+    cy.saveSurvey(); // click on save button
   });
 
   it('Should check if survey is saved', {defaultCommandTimeout: 20000}, function () {

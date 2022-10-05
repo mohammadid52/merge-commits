@@ -13,9 +13,9 @@ UNDERLINE='\033[4m'
  branch=$(git symbolic-ref --short HEAD)
 
 
-cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
 git checkout master
 git pull origin new-dev
+cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
 
 
 echo "Now you are on" ${UNDERLINE}$branch${NONE}
