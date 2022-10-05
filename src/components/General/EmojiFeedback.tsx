@@ -208,6 +208,7 @@ const EmojiFeedback = () => {
       <Modal
         scrollHidden
         intenseOpacity
+        modalCloseId="sentiment-modal-close"
         outerCloseBtn
         closeAction={() => setShowSentimentModal(false)}
         closeOnBackdrop={false}

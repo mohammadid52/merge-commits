@@ -22,7 +22,9 @@ describe('Student Check In', () => {
       }
     });
     cy.get(`button:contains(${notebookLink})`).click();
-    cy.dataCy('room-view-card').first().click();
+
+    cy.wait(3000);
+    cy.dataCy('private').click();
     cy.dataCy('notebook-passcode-input').clear().type(notebookPasscode);
     cy.dataCy('notebook-passcode-submit').click();
   });
