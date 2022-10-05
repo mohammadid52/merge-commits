@@ -14,6 +14,7 @@ declare global {
        */
       dataCy(value: string): Chainable<Element>;
       closeCheckInModal(): Chainable<Element>;
+      saveSurvey(): Chainable<Element>;
     }
   }
 }
@@ -30,6 +31,11 @@ Cypress.Commands.add('login', (email, pw) => {
   cy.dataCy('password').type(pw);
   cy.get('button').contains('Login').click();
 });
+
 Cypress.Commands.add('closeCheckInModal', () => {
   cy.dataCy('sentiment-modal-close').click();
+});
+
+Cypress.Commands.add('saveSurvey', () => {
+  cy.dataCy('save-lesson').click();
 });
