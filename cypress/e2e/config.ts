@@ -26,9 +26,10 @@ export const loginConfig = {
     username: 'cypressbuilder@zoiq.io',
     password: 'admin123'
   },
-  adminLive: {
+
+  mike: {
     username: 'michael.russell@zoiq.io',
-    password: 'admin1234'
+    password: 'admin123'
   }
 };
 
