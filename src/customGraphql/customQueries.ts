@@ -4013,21 +4013,7 @@ export const listQuestionDatas = /* GraphQL */ `
           response
           otherResponse
         }
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
+
         createdAt
         updatedAt
       }
