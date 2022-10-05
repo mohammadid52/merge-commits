@@ -31,11 +31,7 @@ const newUserFields = {
   lastName: RegistrationDict[userLanguage]['lastname'],
   email: RegistrationDict[userLanguage]['email'],
   role: RegistrationDict[userLanguage]['role'],
-  // roleButton: 'Choose One',
   roleItem: RegistrationDict[userLanguage]['roles']['adm'],
-//   class: RegistrationDict[userLanguage]['class'],
-//   status: RegistrationDict[userLanguage]['status'],
-//   pace: RegistrationDict[userLanguage]['paceLabel']
 };
 
 const newUserCreateFields = {
