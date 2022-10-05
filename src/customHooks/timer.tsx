@@ -1,14 +1,12 @@
-import {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
-import {GlobalContext} from '../contexts/GlobalContext';
-import {getLocalStorageData} from '../utilities/localStorage';
-import {filterData} from '../utilities/UploadArchiveData';
-import {PartInput} from 'API';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import * as mutations from '@graphql/mutations';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {useEffect, useState} from 'react';
 
 const useStudentTimer = () => {
-  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {state, lessonState, lessonDispatch} = useGlobalContext();
 
   const getRoomData = getLocalStorageData('room_info');
 
@@ -187,10 +185,7 @@ const useStudentTimer = () => {
           input: pageData.input
         };
       });
-      console.log(
-        '🚀 ~ file: timer.tsx ~ line 190 ~ surveyData ~ surveyData',
-        surveyData
-      );
+
       let data = {
         id: lessonState?.universalStudentDataID[0]?.id,
         surveyData,

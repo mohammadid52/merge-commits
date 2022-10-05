@@ -712,6 +712,7 @@ const Anthology = ({
                 {!forgotPrompt ? (
                   <div>
                     <FormInput
+                      dataCy="notebook-passcode-input"
                       value={passcodeInput}
                       type={'password'}
                       onChange={(e) => {
@@ -730,6 +731,7 @@ const Anthology = ({
                       </p>
                     )}
                     <Buttons
+                      dataCy="notebook-passcode-submit"
                       label={'Submit'}
                       btnClass="w-full mt-2"
                       onClick={handlePrivateSectionAccess}

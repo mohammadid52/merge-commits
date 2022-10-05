@@ -4,25 +4,24 @@ import React, {useContext, useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 
-import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import BreadCrums from '@atoms/BreadCrums';
 import Buttons from '@atoms/Buttons';
 import FormInput from '@atoms/Form/FormInput';
 import Selector from '@atoms/Form/Selector';
 import SectionTitle from '@atoms/SectionTitle';
+import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import DropdownForm from './DropdownForm';
 import ErrorNote from './ErrorNote';
 
-import useDictionary from '@customHooks/dictionary';
 import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 import {createUserUrl} from '@utilities/urls';
 
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import Label from '@components/Atoms/Form/Label';
 import * as customMutations from '@customGraphql/customMutations';
 import * as customQueries from '@customGraphql/customQueries';
 import * as mutations from '@graphql/mutations';
-import NoResultsInput from '@components/Atoms/Form/NoResultsInput';
-import CheckBox from '@components/Atoms/Form/CheckBox';
-import Label from '@components/Atoms/Form/Label';
 
 interface newUserInput {
   key: number;
@@ -301,7 +300,7 @@ const Registration = ({
       });
       registerUser(user.Username);
     } catch (error) {
-      console.log('error signing up:', error);
+      console.error('error signing up:', error);
       setMessage(() => {
         const er = error.response.data;
         switch (er.code) {
@@ -435,12 +434,6 @@ const Registration = ({
   };
 
   const handleInstituteChange = (item: {name: string; code: string}) => {
-    const selectedInst = institutionsData.filter((inst) => inst.id === item.code)[0];
-    let classes = selectedInst.classes.items;
-    let classList = classes.map((cl: any) => {
-      return {code: cl.id, name: cl.name, roomId: cl.roomId};
-    });
-    // setInstClasses(classList);
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
@@ -473,7 +466,7 @@ const Registration = ({
 
       return combined;
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllClasses ~ error',
         error
       );

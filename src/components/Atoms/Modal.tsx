@@ -24,6 +24,7 @@ interface ModalProps {
   position?: 'absolute' | 'relative' | 'fixed';
   width?: string;
   className?: string;
+  modalCloseId?: string;
   maxWidth?: string;
 }
 
@@ -77,6 +78,7 @@ const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) =
 const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {
     showHeader,
+    modalCloseId,
     title,
     showHeaderBorder,
     showFooter,
@@ -132,6 +134,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button
+                data-cy={modalCloseId}
                 className={`ml-auto w-auto ${theme.outlineNone}`}
                 onClick={closeAction}>
                 <span className="w-8 h-8 ml-4 flex cursor-pointer  items-center justify-center rounded transition-all duration-150">

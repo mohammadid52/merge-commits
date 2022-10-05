@@ -1,12 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from '@customGraphql/customQueries';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
-import React, {useContext, useEffect, useState, useMemo, useCallback, memo} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import usePrevious from '../../../customHooks/previousProps';
+import React, {useEffect, useState} from 'react';
 import {getImageFromS3} from '../../../utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
-import * as queries from '../../../graphql/queries';
 
 interface IRoomViewProps {
   roomIdList: string[];
@@ -29,8 +26,6 @@ const RoomView = ({
   handleSectionSelect,
   isTeacher
 }: IRoomViewProps) => {
-  const {state} = useContext(GlobalContext);
-
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
   // ##################################################################### //
@@ -92,19 +87,6 @@ const RoomView = ({
   useEffect(() => {
     if (roomIdList.length > 0) {
       getMultipleRooms(roomIdList);
-      // if (state.roomData.rooms.length > 0) {
-      //   const reducedRooms = roomIdList.reduce((acc: any[], roomID: string) => {
-      //     const searchForRoom = state.roomData.rooms.find(
-      //       (roomObj: any) => roomObj.id === roomID
-      //     );
-      //     if (searchForRoom) {
-      //       return [...acc, searchForRoom];
-      //     } else {
-      //       return acc;
-      //     }
-      //   }, []);
-      //   setFilteredRooms(reducedRooms);
-      // }
     }
   }, [roomIdList]);
 
