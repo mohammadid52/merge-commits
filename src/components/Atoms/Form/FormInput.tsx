@@ -73,6 +73,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
       {textarea ? (
         <textarea
+          data-cy={dataCy}
           rows={rows}
           cols={cols}
           id={id}
@@ -89,7 +90,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           name={name}
           ref={inputRef}
           onKeyDown={(e) => {
-            onKeyDown();
+            onKeyDown && onKeyDown();
             doResize(e.target);
           }}
           onChange={onChange}

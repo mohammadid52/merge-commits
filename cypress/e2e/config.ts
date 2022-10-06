@@ -30,6 +30,18 @@ export const loginConfig = {
   mike: {
     username: 'michael.russell@zoiq.io',
     password: 'admin123'
+  },
+
+  production: {
+    student1: {
+      username: 'marleyhk@gmail.com', // username: marleyhk@gmail.com
+      password: 'Havikoro99' // password: Havikoro99
+    },
+
+    student2: {
+      username: 'angela@iconoclasttraining.com',
+      password: 'admin123'
+    }
   }
 };
 
@@ -42,6 +54,7 @@ export const urlConfig = {
   simpleSurveURL: `${baseURL}/lesson/${surveyIDs[0]}/0`,
   complexSurveURL: `${baseURL}/lesson/${surveyIDs[1]}/0`,
   notebookURL: `${baseURL}/dashboard/anthology`,
-  iconoclastURL,
-  projectCurateURL
+  IAProductionUrl: 'https://iconoclast.selready.com/login',
+  PCProductionUrl: 'https://projectcurate.zoiq.io/login',
+  IADashboardUrl: 'https://iconoclast.selready.com/dashboard'
 };
