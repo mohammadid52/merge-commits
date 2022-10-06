@@ -13,17 +13,17 @@ commit (){
 # run switch case
 case $branch in
     "new-dev")
-          echo "Changing environment to Iconoclast production"
+          echo "Changing environment to Iconoclast production because you are in new-dev branch"
           cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
           commit
         ;;
     "master")
-          echo "Changing environment to Iconoclast production"
+          echo "Changing environment to Iconoclast production because you are in master branch"
           cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
           commit
         ;;
     "master-curate")
-          echo "Changing environment to Project Curate production"
+          echo "Changing environment to Project Curate production because you are in master-curate branch"
           cp ./src/config/aws-exports.pc.js ./src/aws-exports.js
           commit
         ;;
