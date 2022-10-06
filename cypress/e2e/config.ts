@@ -1,4 +1,6 @@
 const baseURL = 'http://localhost:8085';
+const iconoclastURL = 'https://iconoclast.selready.com';
+const projectCurateURL = 'https://projectcurate.zoiq.io';
 const institutionID = '6539589f-44d2-4749-b0ba-87086b7fe1d8';
 const surveyIDs = ['6a27e851-7863-4b45-b04a-09d35ef0af6a'];
 const classroomIDs = ['3936fdc3-d36d-43db-b43e-75efa30ea8cc'];
@@ -39,5 +41,7 @@ export const urlConfig = {
   registerURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/register-user`,
   simpleSurveURL: `${baseURL}/lesson/${surveyIDs[0]}/0`,
   complexSurveURL: `${baseURL}/lesson/${surveyIDs[1]}/0`,
-  notebookURL: `${baseURL}/dashboard/anthology`
+  notebookURL: `${baseURL}/dashboard/anthology`,
+  iconoclastURL,
+  projectCurateURL
 };

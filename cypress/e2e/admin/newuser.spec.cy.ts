@@ -1,7 +1,5 @@
 // This test is to ensure that all required fields are on the registration form and the cognito connection is active.
 
-
-
 import {loginConfig, urlConfig} from '../config';
 // import {RegistrationDict} from '../../../src/dictionary/dictionary.demo';
 import {getClientKey, getDictionary} from '../../support/e2e';
@@ -14,7 +12,7 @@ const userLanguage = 'EN';
 const randomDetails = () => {
   const firstName = `cypress-${uniqueId}`;
   const lastName = ` test`;
-  const email = michael.russell@zoiq.io;
+  const email = 'michael.russell@zoiq.io';
   return {
     firstName,
     lastName,
@@ -91,8 +89,8 @@ describe('New User Registration', () => {
       .type(randomDetails().lastName)
       .should('have.value', randomDetails().lastName);
     cy.get(`input#${newUserCreateFields.email}`)
-      .type(mike.email)
-      .should('have.value', mike.email);
+      .type(loginConfig.mike.username)
+      .should('have.value', loginConfig.mike.password);
     cy.dataCy('dropdown-role').click();
     cy.dataCy('dropdown-item-role-5').click();
     cy.dataCy('dropdown-role').should('contain', `${newUserFields.roleItem}`);

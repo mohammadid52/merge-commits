@@ -237,9 +237,6 @@ const LessonControl = () => {
           roomID: {eq: getRoomData.id}
         }
       };
-      // const studentData: any = await API.graphql(
-      //   graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
-      // );
 
       // existing student rows
       const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);

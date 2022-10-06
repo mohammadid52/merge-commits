@@ -530,7 +530,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     </div>
                   </div>
 
-                  <div className="mb-4 w-full  m-auto pl-2 max-h-88 overflow-y-scroll">
+                  <div className="mb-4 w-full m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => {
                       return (
                         <div
@@ -684,7 +684,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   <User
                     instituteId={instId}
                     userId={studentProfileID}
-                    insideModalPopUp={true}
+                    insideModalPopUp={false}
                   />
                 </Modal>
               )}

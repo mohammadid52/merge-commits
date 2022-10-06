@@ -172,7 +172,7 @@ const Start: React.FC<StartProps> = ({
         }
       }
     } catch (error) {
-      console.log(error, 'inside catch');
+      console.error(error, 'inside catch');
     }
   };
 

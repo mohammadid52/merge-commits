@@ -4,6 +4,7 @@ import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {v4 as uuidV4} from 'uuid';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
@@ -23,11 +24,9 @@ import {getLocalStorageData, setLocalStorageData} from '../../utilities/localSto
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {v4 as uuidV4} from 'uuid';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -172,7 +171,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       if (
         !isOnDemand &&
         lessonState.lessonData.lessonPlan &&
-        lessonState.lessonData.lessonPlan.length > 0
+        lessonState.lessonData.lessonPlan?.length > 0
       ) {
         getRoomSetup(getRoomData.id);
         subscription = subscribeToRoom();
@@ -400,10 +399,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // -------- MERGING ------- //
   const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
-    const differenceData = studentDataArray.reduce(
+    const differenceData = studentDataArray?.reduce(
       //@ts-ignore
       (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
-        const notYetSavedData = initStudentDataArray[pageIdx].reduce(
+        const notYetSavedData = initStudentDataArray[pageIdx]?.reduce(
           (diffPageData: any[], initPageData: any) => {
             const foundInLoaded = loadedInput.find(
               (inputObj: any) => inputObj.domID === initPageData.domID
@@ -723,9 +722,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
-      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+      const studentDataRows = studentData.data.listUniversalLessonStudentData.items || [];
 
-      if (studentDataRows.length > 0) {
+      if (studentDataRows?.length > 0) {
         lessonDispatch({
           type: 'LOAD_STUDENT_SHARE_DATA',
           payload: [...studentDataRows[0].pageData]
@@ -751,7 +750,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     ) {
       getSharedStudentData(sharedAuthID, sharedPageID);
     } else {
-      if (lessonState.sharedData && lessonState.sharedData.length > 0) {
+      if (lessonState.sharedData && lessonState?.sharedData?.length > 0) {
         clearShareData();
       }
     }
@@ -943,10 +942,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
-  };
-
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
     const listFilter = {
       filter: {
@@ -1041,7 +1036,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           }
         })
       );
-      if (!existingLesson.data.listPersonLessonsData.items.length) {
+
+      if (!existingLesson.data.listPersonLessonsData?.items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -1066,12 +1062,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           studentEmail: user.email,
           lessonID: lessonID,
           lessonType: lessonState.lessonData?.type,
-          //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+            "totalPages":${JSON.stringify(
+              lessonState.lessonData?.lessonPlan?.length - 1
+            )},
             "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
+            }`
+            .replace(/(\s\s+|[\t\n])/g, ' ')
+            .trim()
         };
         await API.graphql(
           graphqlOperation(mutations.updatePersonLessonsData, {
@@ -1080,7 +1079,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         );
       }
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: Start.tsx ~ line 215 ~ handleLessonMutateData ~ error',
         error
       );
