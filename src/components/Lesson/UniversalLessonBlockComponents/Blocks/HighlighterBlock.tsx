@@ -103,8 +103,11 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
   useEffect(() => {
     if (!isEmpty(value)) {
-      setEditorState(value[0].value);
-      setStaticText(value[0].value);
+      setTimeout(() => {
+        setDataValue(id, [value[0].value]);
+        setEditorState(value[0].value);
+        setStaticText(value[0].value);
+      }, 300);
     }
   }, [value]);
 
@@ -119,14 +122,16 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
   useEffect(() => {
-    if (isInLesson && !isStudent) {
-      const incomingStudentVal = getDataValue(id)[0];
-      if (incomingStudentVal !== '') {
-        setEditorState(incomingStudentVal);
-      } else {
-        setEditorState(value[0].value);
+    setTimeout(() => {
+      if (isInLesson && !isStudent) {
+        const incomingStudentVal = getDataValue(id)[0];
+        if (incomingStudentVal !== '') {
+          setEditorState(incomingStudentVal);
+        } else {
+          setEditorState(value[0].value);
+        }
       }
-    }
+    }, 300);
   }, [lessonState.studentData]);
 
   const features: string[] = ['colorPicker', 'inline'];
@@ -147,8 +152,12 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
     const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
     const value = pageContent.partContent[partContentIdx].value[0].value;
+    setDataValue(id, [value]);
+
     return value;
   };
+
+  const initialValue = isInLesson && isStudent ? getDataValue(id)[0] : editorState;
 
   return (
     <div className={` py-4 `}>
@@ -160,7 +169,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         rounded
         customStyle
         dark={theme === 'dark'}
-        initialValue={isInLesson && isStudent ? getDataValue(id)[0] : editorState}
+        initialValue={initialValue}
         onChange={
           isInLesson && isStudent
             ? (html) => setDataValue(id, [html])
