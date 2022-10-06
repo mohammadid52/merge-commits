@@ -73,6 +73,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
       {textarea ? (
         <textarea
+          data-cy={dataCy}
           rows={rows}
           cols={cols}
           id={id}

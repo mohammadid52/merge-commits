@@ -39,5 +39,7 @@ export const urlConfig = {
   registerURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/register-user`,
   simpleSurveURL: `${baseURL}/lesson/${surveyIDs[0]}/0`,
   complexSurveURL: `${baseURL}/lesson/${surveyIDs[1]}/0`,
-  notebookURL: `${baseURL}/dashboard/anthology`
+  notebookURL: `${baseURL}/dashboard/anthology`,
+  IAProductionUrl: 'https://iconoclast.selready.com/login',
+  PCProductionUrl: 'https://projectcurate.zoiq.io//login'
 };
