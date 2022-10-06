@@ -34,7 +34,7 @@ const iconoclast_assets: any = {
   dashboardBanner1:
     'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
   dashboardBanner2:
-    'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80',
+    'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80'
 };
 
 const curate_assets: any = {
@@ -73,7 +73,7 @@ const curate_assets: any = {
   dashboardBanner1:
     'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80',
   dashboardBanner2:
-    'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80'
 };
 
 const demo_assets: any = {
@@ -102,7 +102,7 @@ const demo_assets: any = {
   dashboardBanner1:
     'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80',
   dashboardBanner2:
-    'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80'
 };
 
 export const general: any = {
@@ -113,11 +113,11 @@ export const general: any = {
       'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
     good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
     great:
-      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif',
+      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif'
   },
   file: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/file.png',
   fileImg: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/imgFile.png',
-  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif',
+  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif'
 };
 
 export const textEdit: any = {
@@ -129,6 +129,7 @@ export const textEdit: any = {
   remove: 'https://zoiqclients.s3.amazonaws.com/TextEditor/trash.png',
   colorPick: 'https://zoiqclients.s3.amazonaws.com/TextEditor/colorpick.png',
   reset: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/public/reset.png',
+  previous: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/public/previous.png'
 };
 
 // main logo (dashboard above sidebar)

@@ -131,10 +131,30 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const features: string[] = ['colorPicker', 'inline'];
 
+  const fetchTeacherValue = () => {
+    const currentPage: UniversalLessonPage = get(
+      lessonState.lessonData,
+      `lessonPlan[${lessonState.currentPage}]`,
+      null
+    );
+
+    const pageContentIdx = findIndex(
+      currentPage?.pageContent,
+      (d: any) => d.id === pagePartId
+    );
+
+    const pageContent = currentPage.pageContent[pageContentIdx];
+
+    const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
+    const value = pageContent.partContent[partContentIdx].value[0].value;
+    return value;
+  };
+
   return (
     <div className={` py-4 `}>
       <CustomRichTextEditor
         theme={themeColor}
+        fetchTeacherValue={fetchTeacherValue}
         features={features}
         withStyles
         rounded
