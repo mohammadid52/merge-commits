@@ -4,7 +4,7 @@ import {loginConfig, urlConfig} from '../config';
 
 describe('Production Logins', () => {
   it('Login to production version of IA', () => {
-    cy.visit(urlConfig.PCProductionUrl); // go to production website of IA
+    cy.visit(urlConfig.IAProductionUrl); // go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.mike.username); // enter email as mike
     cy.get('button').contains('Enter').click(); // click on button
     cy.get('[data-cy="password"]').type(loginConfig.mike.password); // enter password
