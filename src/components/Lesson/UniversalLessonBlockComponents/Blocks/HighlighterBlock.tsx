@@ -157,7 +157,8 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     return value;
   };
 
-  const initialValue = isInLesson && isStudent ? getDataValue(id)[0] : editorState;
+  const initialValue =
+    isInLesson && isStudent ? editorState || getDataValue(id)[0] : editorState;
 
   return (
     <div className={` py-4 `}>
@@ -165,6 +166,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         theme={themeColor}
         fetchTeacherValue={fetchTeacherValue}
         features={features}
+        id={id}
         withStyles
         rounded
         customStyle

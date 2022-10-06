@@ -59,6 +59,7 @@ interface RichTextEditorProps {
   customStyle?: boolean;
   inlineOptions?: string[];
   features?: string[];
+  id?: string;
 
   /**
    * Don't use this if the content is serious
@@ -72,6 +73,7 @@ const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
 const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
+    id,
     initialValue,
 
     fullWHOverride,
@@ -248,13 +250,13 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     if (!clearButtonLoaded) {
       if ($('.rdw-editor-toolbar').find('#highlight-input-btns').length === 0) {
         const elem = `
-       <div id="highlight-input-btns" class="flex items-center clear-editor-text-btn">
+       <div id="highlight-input-btns"  class="flex items-center clear-editor-text-btn">
        <div id="highlight-reset-btn"  title="Reset text" class=" rdw-option-wrapper iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
        <img src=${textEdit.previous} alt="">
        </div>
-       <div  id="highlight-hard-reset-btn" title="Hard Reset"  class="${
-         fetchTeacherValue === undefined ? 'hidden' : 'rdw-option-wrapper'
-       }  iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
+       <div  id="highlight-hard-reset-btn-${id}" data-inputId=${id} title="Hard Reset"  class="${
+          fetchTeacherValue === undefined ? 'hidden' : 'rdw-option-wrapper'
+        }  iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
      <img src=${textEdit.reset} alt="">
        </div>
        </div>`;
@@ -280,7 +282,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   }, [changesArr]);
 
   useEffect(() => {
-    $('#highlight-hard-reset-btn').on('click', () => {
+    $(`#highlight-hard-reset-btn-${id}`).on('click', () => {
       fetchTeacherValue && onInit(fetchTeacherValue());
     });
   }, []);
