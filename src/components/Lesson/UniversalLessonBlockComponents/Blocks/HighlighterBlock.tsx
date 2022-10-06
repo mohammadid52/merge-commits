@@ -100,14 +100,22 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const [staticText, setStaticText] = useState('');
 
+  const [loading, setLoading] = useState(true);
+  console.log(
+    '🚀 ~ file: HighlighterBlock.tsx ~ line 104 ~ HighlighterBlock ~ loading',
+    loading
+  );
+
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
   useEffect(() => {
     if (!isEmpty(value)) {
+      setLoading(true);
       setTimeout(() => {
         setDataValue(id, [value[0].value]);
         setEditorState(value[0].value);
         setStaticText(value[0].value);
       }, 300);
+      setLoading(false);
     }
   }, [value]);
 
@@ -115,7 +123,9 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   useEffect(() => {
     if (editorState !== '') {
       if (getDataValue(id)[0] === '' && isStudent) {
+        setLoading(true);
         setDataValue(id, [editorState]);
+        setLoading(false);
       }
     }
   }, [editorState]);
@@ -124,12 +134,14 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   useEffect(() => {
     setTimeout(() => {
       if (isInLesson && !isStudent) {
+        setLoading(true);
         const incomingStudentVal = getDataValue(id)[0];
         if (incomingStudentVal !== '') {
           setEditorState(incomingStudentVal);
         } else {
           setEditorState(value[0].value);
         }
+        setLoading(false);
       }
     }, 300);
   }, [lessonState.studentData]);
@@ -160,24 +172,32 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const initialValue =
     isInLesson && isStudent ? editorState || getDataValue(id)[0] : editorState;
 
+  useEffect(() => {
+    if (initialValue) {
+      setDataValue(id, [initialValue]);
+    }
+  }, [initialValue]);
+
   return (
     <div className={` py-4 `}>
-      <CustomRichTextEditor
-        theme={themeColor}
-        fetchTeacherValue={fetchTeacherValue}
-        features={features}
-        id={id}
-        withStyles
-        rounded
-        customStyle
-        dark={theme === 'dark'}
-        initialValue={initialValue}
-        onChange={
-          isInLesson && isStudent
-            ? (html) => setDataValue(id, [html])
-            : (html) => setStaticText(html)
-        }
-      />
+      {!loading ? (
+        <CustomRichTextEditor
+          theme={themeColor}
+          fetchTeacherValue={fetchTeacherValue}
+          features={features}
+          id={id}
+          withStyles
+          rounded
+          customStyle
+          dark={theme === 'dark'}
+          initialValue={initialValue}
+          onChange={
+            isInLesson && isStudent
+              ? (html) => setDataValue(id, [html])
+              : (html) => setStaticText(html)
+          }
+        />
+      ) : null}
       {!isInLesson && !previewMode && (
         <div className="w-auto flex items-center justify-end mt-4">
           <Buttons
