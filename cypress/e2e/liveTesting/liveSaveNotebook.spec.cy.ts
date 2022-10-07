@@ -35,6 +35,7 @@ describe('Production Save Notebooks Check', () => {
     cy.get('[data-cy="password"]').type(loginConfig.production.student1.password); // enter password
     cy.get('button').contains('Login').click(); // click on login button
 
+    cy.wait(10000); // wait for user to login
     cy.url().should('contain', urlConfig.IADashboardUrl);
     cy.get('body').then((body) => {
       if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
@@ -53,7 +54,7 @@ describe('Production Save Notebooks Check', () => {
     cy.get(`h1:contains(${lessonTitle})`).should('exist');
     cy.visit(lessonConfig.lesson_url);
     cy.contains(`${lessonConfig.page[0]}`).click({force: true}); // go to Create page
-    cy.wait(10000); // wait for 10s
+    cy.wait(20000); // wait for 10s
     cy.get('input').first().clear().type(inputText); // type in the input
     cy.get('select').select(2); // select second example poem
     cy.get('.DraftEditor-root').first().should('not.have.text', '');
