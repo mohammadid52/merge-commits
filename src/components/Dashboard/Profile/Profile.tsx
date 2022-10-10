@@ -330,6 +330,7 @@ const Profile = (props: ProfilePageProps) => {
             {currentPath !== 'edit' && currentPath !== 'password' ? (
               <div className="flex justify-end py-2 2xl:py-4 mb-2 2xl:mb-4 w-full md:w-3/5 lg:w-5/10">
                 <Buttons
+                  dataCy="edit-profile-button"
                   btnClass="ml-6"
                   label="Edit"
                   onClick={() => history.push(`${match.url}/edit`)}
@@ -357,6 +358,7 @@ const Profile = (props: ProfilePageProps) => {
                               mediaRef={mediaRef}>
                               {imageUrl ? (
                                 <img
+                                  data-cy="profile-image"
                                   className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                   src={imageUrl}
                                 />
