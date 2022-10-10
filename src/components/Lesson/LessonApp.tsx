@@ -2,10 +2,10 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import '@components/Dashboard/GameChangers/styles/Flickity.scss';
 import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext, useGlobalContext} from '../../contexts/GlobalContext';
+import {useGlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -560,7 +560,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       combined = [...outArray, ...studentDataRows];
 
       if (theNextToken) {
-        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        // combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
 
       lessonDispatch({type: 'LESSON_LOADED', payload: true});
@@ -654,28 +654,32 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             }
           });
         } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-          const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-          const filteredData = filterStudentData(
-            existStudentDataIdArray,
-            currentStudentData
-          );
-          const finalData = mergedStudentData(
-            filteredData.pageData,
-            lessonState.studentData
-          );
-          const concatExerciseData = mergedExerciseData(
-            filteredData.exerciseData,
-            lessonState.exerciseData
-          );
-          // console.log('merged data', finalData);
-          lessonDispatch({
-            type: 'LOAD_STUDENT_DATA',
-            payload: {
-              dataIdReferences: existStudentDataIdArray,
-              filteredStudentData: finalData,
-              filteredExerciseData: concatExerciseData
-            }
-          });
+          try {
+            const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+            const filteredData = filterStudentData(
+              existStudentDataIdArray,
+              currentStudentData
+            );
+            const finalData = mergedStudentData(
+              filteredData.pageData,
+              lessonState.studentData
+            );
+            const concatExerciseData = mergedExerciseData(
+              filteredData.exerciseData,
+              lessonState.exerciseData
+            );
+            // console.log('merged data', finalData);
+            lessonDispatch({
+              type: 'LOAD_STUDENT_DATA',
+              payload: {
+                dataIdReferences: existStudentDataIdArray,
+                filteredStudentData: finalData,
+                filteredExerciseData: concatExerciseData
+              }
+            });
+          } catch (error) {
+            console.error('Something wrong when loading student data', error);
+          }
         }
       }
     } catch (err) {
@@ -1038,7 +1042,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         })
       );
 
-      if (!existingLesson.data.listPersonLessonsData?.items?.length) {
+      if (!existingLesson?.data?.listPersonLessonsData?.items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
