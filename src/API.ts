@@ -875,6 +875,55 @@ export type DeletePersonLessonsDataInput = {
   lessonID: string,
 };
 
+export type CreatePersonLessonsData2Input = {
+  id?: string | null,
+  studentAuthID: string,
+  studentEmail: string,
+  lessonID: string,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+};
+
+export type ModelPersonLessonsData2ConditionInput = {
+  studentAuthID?: ModelStringInput | null,
+  studentEmail?: ModelStringInput | null,
+  lessonID?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  pages?: ModelStringInput | null,
+  ratings?: ModelIntInput | null,
+  and?: Array< ModelPersonLessonsData2ConditionInput | null > | null,
+  or?: Array< ModelPersonLessonsData2ConditionInput | null > | null,
+  not?: ModelPersonLessonsData2ConditionInput | null,
+};
+
+export type PersonLessonsData2 = {
+  __typename: "PersonLessonsData2",
+  id: string,
+  studentAuthID: string,
+  studentEmail: string,
+  lessonID: string,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdatePersonLessonsData2Input = {
+  id: string,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  lessonID?: string | null,
+  lessonType?: string | null,
+  pages?: string | null,
+  ratings?: number | null,
+};
+
+export type DeletePersonLessonsData2Input = {
+  id: string,
+};
+
 export type CreateInstitutionInput = {
   id?: string | null,
   name: string,
@@ -3834,19 +3883,23 @@ export type CreateCypressTestingInput = {
   id?: string | null,
   testID: string,
   testName: string,
+  testType: string,
   testSteps: string,
   testData: string,
   testExpResults: string,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
 };
 
 export type ModelCypressTestingConditionInput = {
   testID?: ModelStringInput | null,
   testName?: ModelStringInput | null,
+  testType?: ModelStringInput | null,
   testSteps?: ModelStringInput | null,
   testData?: ModelStringInput | null,
   testExpResults?: ModelStringInput | null,
   edgeCases?: ModelStringInput | null,
+  lastUpdate?: ModelStringInput | null,
   and?: Array< ModelCypressTestingConditionInput | null > | null,
   or?: Array< ModelCypressTestingConditionInput | null > | null,
   not?: ModelCypressTestingConditionInput | null,
@@ -3857,10 +3910,12 @@ export type CypressTesting = {
   id: string,
   testID: string,
   testName: string,
+  testType: string,
   testSteps: string,
   testData: string,
   testExpResults: string,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -3869,10 +3924,12 @@ export type UpdateCypressTestingInput = {
   id: string,
   testID?: string | null,
   testName?: string | null,
+  testType?: string | null,
   testSteps?: string | null,
   testData?: string | null,
   testExpResults?: string | null,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
 };
 
 export type DeleteCypressTestingInput = {
@@ -3946,6 +4003,25 @@ export type ModelPersonLessonsDataFilterInput = {
   and?: Array< ModelPersonLessonsDataFilterInput | null > | null,
   or?: Array< ModelPersonLessonsDataFilterInput | null > | null,
   not?: ModelPersonLessonsDataFilterInput | null,
+};
+
+export type ModelPersonLessonsData2FilterInput = {
+  id?: ModelIDInput | null,
+  studentAuthID?: ModelStringInput | null,
+  studentEmail?: ModelStringInput | null,
+  lessonID?: ModelStringInput | null,
+  lessonType?: ModelStringInput | null,
+  pages?: ModelStringInput | null,
+  ratings?: ModelIntInput | null,
+  and?: Array< ModelPersonLessonsData2FilterInput | null > | null,
+  or?: Array< ModelPersonLessonsData2FilterInput | null > | null,
+  not?: ModelPersonLessonsData2FilterInput | null,
+};
+
+export type ModelPersonLessonsData2Connection = {
+  __typename: "ModelPersonLessonsData2Connection",
+  items:  Array<PersonLessonsData2 | null >,
+  nextToken?: string | null,
 };
 
 export type ModelInstitutionFilterInput = {
@@ -4889,10 +4965,12 @@ export type ModelCypressTestingFilterInput = {
   id?: ModelIDInput | null,
   testID?: ModelStringInput | null,
   testName?: ModelStringInput | null,
+  testType?: ModelStringInput | null,
   testSteps?: ModelStringInput | null,
   testData?: ModelStringInput | null,
   testExpResults?: ModelStringInput | null,
   edgeCases?: ModelStringInput | null,
+  lastUpdate?: ModelStringInput | null,
   and?: Array< ModelCypressTestingFilterInput | null > | null,
   or?: Array< ModelCypressTestingFilterInput | null > | null,
   not?: ModelCypressTestingFilterInput | null,
@@ -5298,6 +5376,66 @@ export type DeletePersonLessonsDataMutationVariables = {
 export type DeletePersonLessonsDataMutation = {
   deletePersonLessonsData?:  {
     __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreatePersonLessonsData2MutationVariables = {
+  input: CreatePersonLessonsData2Input,
+  condition?: ModelPersonLessonsData2ConditionInput | null,
+};
+
+export type CreatePersonLessonsData2Mutation = {
+  createPersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdatePersonLessonsData2MutationVariables = {
+  input: UpdatePersonLessonsData2Input,
+  condition?: ModelPersonLessonsData2ConditionInput | null,
+};
+
+export type UpdatePersonLessonsData2Mutation = {
+  updatePersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeletePersonLessonsData2MutationVariables = {
+  input: DeletePersonLessonsData2Input,
+  condition?: ModelPersonLessonsData2ConditionInput | null,
+};
+
+export type DeletePersonLessonsData2Mutation = {
+  deletePersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
     id: string,
     studentAuthID: string,
     studentEmail: string,
@@ -20627,10 +20765,12 @@ export type CreateCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20647,10 +20787,12 @@ export type UpdateCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20667,10 +20809,12 @@ export type DeleteCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20838,6 +20982,52 @@ export type ListPersonLessonsDataQuery = {
     __typename: "ModelPersonLessonsDataConnection",
     items:  Array< {
       __typename: "PersonLessonsData",
+      id: string,
+      studentAuthID: string,
+      studentEmail: string,
+      lessonID: string,
+      lessonType?: string | null,
+      pages?: string | null,
+      ratings?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetPersonLessonsData2QueryVariables = {
+  id: string,
+};
+
+export type GetPersonLessonsData2Query = {
+  getPersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListPersonLessonsData2sQueryVariables = {
+  id?: string | null,
+  filter?: ModelPersonLessonsData2FilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListPersonLessonsData2sQuery = {
+  listPersonLessonsData2s?:  {
+    __typename: "ModelPersonLessonsData2Connection",
+    items:  Array< {
+      __typename: "PersonLessonsData2",
       id: string,
       studentAuthID: string,
       studentEmail: string,
@@ -28582,10 +28772,12 @@ export type GetCypressTestingQuery = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -28607,10 +28799,12 @@ export type ListCypressTestingsQuery = {
       id: string,
       testID: string,
       testName: string,
+      testType: string,
       testSteps: string,
       testData: string,
       testExpResults: string,
       edgeCases?: string | null,
+      lastUpdate?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -28743,6 +28937,33 @@ export type LessonsByTypeQuery = {
     __typename: "ModelPersonLessonsDataConnection",
     items:  Array< {
       __typename: "PersonLessonsData",
+      id: string,
+      studentAuthID: string,
+      studentEmail: string,
+      lessonID: string,
+      lessonType?: string | null,
+      pages?: string | null,
+      ratings?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type LessonsByType2QueryVariables = {
+  lessonType: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPersonLessonsData2FilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type LessonsByType2Query = {
+  lessonsByType2?:  {
+    __typename: "ModelPersonLessonsData2Connection",
+    items:  Array< {
+      __typename: "PersonLessonsData2",
       id: string,
       studentAuthID: string,
       studentEmail: string,
@@ -30059,6 +30280,51 @@ export type OnUpdatePersonLessonsDataSubscription = {
 export type OnDeletePersonLessonsDataSubscription = {
   onDeletePersonLessonsData?:  {
     __typename: "PersonLessonsData",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreatePersonLessonsData2Subscription = {
+  onCreatePersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdatePersonLessonsData2Subscription = {
+  onUpdatePersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
+    id: string,
+    studentAuthID: string,
+    studentEmail: string,
+    lessonID: string,
+    lessonType?: string | null,
+    pages?: string | null,
+    ratings?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeletePersonLessonsData2Subscription = {
+  onDeletePersonLessonsData2?:  {
+    __typename: "PersonLessonsData2",
     id: string,
     studentAuthID: string,
     studentEmail: string,
@@ -44309,10 +44575,12 @@ export type OnCreateCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44324,10 +44592,12 @@ export type OnUpdateCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44339,10 +44609,12 @@ export type OnDeleteCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

@@ -952,6 +952,51 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePersonLessonsData2 = /* GraphQL */ `
+  subscription OnCreatePersonLessonsData2 {
+    onCreatePersonLessonsData2 {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePersonLessonsData2 = /* GraphQL */ `
+  subscription OnUpdatePersonLessonsData2 {
+    onUpdatePersonLessonsData2 {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePersonLessonsData2 = /* GraphQL */ `
+  subscription OnDeletePersonLessonsData2 {
+    onDeletePersonLessonsData2 {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateInstitution = /* GraphQL */ `
   subscription OnCreateInstitution {
     onCreateInstitution {
@@ -14149,10 +14194,12 @@ export const onCreateCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }
@@ -14164,10 +14211,12 @@ export const onUpdateCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }
@@ -14179,10 +14228,12 @@ export const onDeleteCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }
