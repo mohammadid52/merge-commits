@@ -5,7 +5,7 @@ import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '../../contexts/GlobalContext';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as mutations from '../../graphql/mutations';
@@ -31,7 +31,7 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const displayData = gContext.lessonState.displayData;
@@ -560,9 +560,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       combined = [...outArray, ...studentDataRows];
 
       if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
         combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
+
+      lessonDispatch({type: 'LESSON_LOADED', payload: true});
       // console.log('no more - ', combined);
       setLessonDataLoaded(true);
       return combined;

@@ -101,10 +101,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const [staticText, setStaticText] = useState('');
 
   const [loading, setLoading] = useState(true);
-  console.log(
-    '🚀 ~ file: HighlighterBlock.tsx ~ line 104 ~ HighlighterBlock ~ loading',
-    loading
-  );
 
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
   useEffect(() => {

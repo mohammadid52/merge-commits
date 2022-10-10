@@ -23,6 +23,7 @@ const LESSON_REDUCER_TYPES = {
   LOAD_STUDENT_SHARE_DATA: 'LOAD_STUDENT_SHARE_DATA',
   UPDATE_PERSON_LOCATION: 'UPDATE_PERSON_LOCATION',
   UNLOAD_STUDENT_DATA: 'UNLOAD_STUDENT_DATA',
+  LESSON_LOADED: 'LESSON_LOADED',
   UNLOAD_STUDENT_SHARE_DATA: 'UNLOAD_STUDENT_SHARE_DATA',
   SET_UPDATE_STATUS: 'SET_UPDATE_STATUS',
   UPDATE_STUDENT_DATA: 'UPDATE_STUDENT_DATA',
@@ -349,6 +350,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         sharedData: []
+      };
+    case LESSON_REDUCER_TYPES.LESSON_LOADED:
+      return {
+        ...state,
+        loaded: action.payload
       };
     case LESSON_REDUCER_TYPES.UPDATE_STUDENT_DATA:
       console.log('UPDATE_STUDENT_DATA');
