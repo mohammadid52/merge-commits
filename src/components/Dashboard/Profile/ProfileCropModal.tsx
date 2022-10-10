@@ -28,7 +28,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
     imageClassName,
     cardLayout = false,
     saveCroppedImage,
-    closeAction,
+    closeAction
   } = props;
   const initial = customCropProps
     ? {...customCropProps}
@@ -105,7 +105,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
                       /* stylelint-disable */
                       backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${upImg})`,
                       backgroundSize: 'cover',
-                      backgroundPosition: 'center',
+                      backgroundPosition: 'center'
                     }}></div>
 
                   {/**
@@ -161,6 +161,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
         />
 
         <Buttons
+          dataCy="save-profile-image"
           label={showCropper ? 'Save cropped image' : BUTTONS[userLanguage].SAVE}
           onClick={showCropper ? saveCroped : () => saveCroppedImage(undefined)}
           btnClass=""

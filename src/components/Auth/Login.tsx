@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Auth from '@aws-amplify/auth';
+import {Auth} from '@aws-amplify/auth';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
@@ -64,46 +64,50 @@ const Login = ({updateAuthState}: LoginProps) => {
           'accessToken',
           user.signInUserSession.accessToken.jwtToken
         );
-        let userInfo: any = await API.graphql(
-          graphqlOperation(queries.getPerson, {email: username, authId: user.username})
-        );
-        userInfo = userInfo.data.getPerson;
-        let instInfo: any = {};
-        if (userInfo.role !== 'ST') {
-          instInfo = await API.graphql(
-            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-              filter: {staffAuthID: {eq: user.username}}
-            })
+        if (user) {
+          let userInfo: any = await API.graphql(
+            graphqlOperation(queries.getPerson, {email: username, authId: user.username})
           );
-        }
-        dispatch({
-          type: 'SET_USER',
-          payload: {
-            id: userInfo.id,
-            firstName: userInfo.preferredName || userInfo.firstName,
-            lastName: userInfo.lastName,
-            language: userInfo.language,
-            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-            role: userInfo.role,
-            image: userInfo.image,
-            associateInstitute:
-              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-              [],
-            onDemand: userInfo?.onDemand,
-            lessons: userInfo.lessons
+          userInfo = userInfo.data.getPerson;
+          let instInfo: any = {};
+          if (userInfo.role !== 'ST') {
+            instInfo = await API.graphql(
+              graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+                filter: {staffAuthID: {eq: user.username}}
+              })
+            );
           }
-        });
-        const input = {
-          id: userInfo.id,
-          authId: user.username,
-          email: username,
-          lastLoggedIn: new Date().toISOString()
-        };
-        const update: any = await API.graphql(
-          graphqlOperation(customMutations.updatePersonLoginTime, {input})
-        );
 
-        updateAuthState(true);
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: userInfo.id,
+              firstName: userInfo.preferredName || userInfo.firstName,
+              lastName: userInfo.lastName,
+              language: userInfo.language,
+              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+              role: userInfo.role,
+              image: userInfo.image,
+              associateInstitute:
+                instInfo?.data?.listStaff?.items.filter(
+                  (item: any) => item.institution
+                ) || [],
+              onDemand: userInfo?.onDemand,
+              lessons: userInfo.lessons
+            }
+          });
+          const input = {
+            id: userInfo.id,
+            authId: user.username,
+            email: username,
+            lastLoggedIn: new Date().toISOString()
+          };
+          const update: any = await API.graphql(
+            graphqlOperation(customMutations.updatePersonLoginTime, {input})
+          );
+
+          updateAuthState(true);
+        }
       } catch (error) {
         console.log('error', error);
         const errMsg = {show: true, type: 'error'};

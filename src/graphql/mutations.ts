@@ -373,6 +373,60 @@ export const deletePersonLessonsData = /* GraphQL */ `
     }
   }
 `;
+export const createPersonLessonsData2 = /* GraphQL */ `
+  mutation CreatePersonLessonsData2(
+    $input: CreatePersonLessonsData2Input!
+    $condition: ModelPersonLessonsData2ConditionInput
+  ) {
+    createPersonLessonsData2(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePersonLessonsData2 = /* GraphQL */ `
+  mutation UpdatePersonLessonsData2(
+    $input: UpdatePersonLessonsData2Input!
+    $condition: ModelPersonLessonsData2ConditionInput
+  ) {
+    updatePersonLessonsData2(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePersonLessonsData2 = /* GraphQL */ `
+  mutation DeletePersonLessonsData2(
+    $input: DeletePersonLessonsData2Input!
+    $condition: ModelPersonLessonsData2ConditionInput
+  ) {
+    deletePersonLessonsData2(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInstitution = /* GraphQL */ `
   mutation CreateInstitution(
     $input: CreateInstitutionInput!
@@ -911,7 +965,10 @@ export const deleteServiceProvider = /* GraphQL */ `
   }
 `;
 export const createStaff = /* GraphQL */ `
-  mutation CreateStaff($input: CreateStaffInput!, $condition: ModelStaffConditionInput) {
+  mutation CreateStaff(
+    $input: CreateStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
     createStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1000,7 +1057,10 @@ export const createStaff = /* GraphQL */ `
   }
 `;
 export const updateStaff = /* GraphQL */ `
-  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
+  mutation UpdateStaff(
+    $input: UpdateStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
     updateStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1089,7 +1149,10 @@ export const updateStaff = /* GraphQL */ `
   }
 `;
 export const deleteStaff = /* GraphQL */ `
-  mutation DeleteStaff($input: DeleteStaffInput!, $condition: ModelStaffConditionInput) {
+  mutation DeleteStaff(
+    $input: DeleteStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
     deleteStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1178,7 +1241,10 @@ export const deleteStaff = /* GraphQL */ `
   }
 `;
 export const createRoom = /* GraphQL */ `
-  mutation CreateRoom($input: CreateRoomInput!, $condition: ModelRoomConditionInput) {
+  mutation CreateRoom(
+    $input: CreateRoomInput!
+    $condition: ModelRoomConditionInput
+  ) {
     createRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1403,7 +1469,10 @@ export const createRoom = /* GraphQL */ `
   }
 `;
 export const updateRoom = /* GraphQL */ `
-  mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
+  mutation UpdateRoom(
+    $input: UpdateRoomInput!
+    $condition: ModelRoomConditionInput
+  ) {
     updateRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1516,6 +1585,7 @@ export const updateRoom = /* GraphQL */ `
         institutionID
         type
         name
+        roomId
         institution {
           id
           name
@@ -1627,7 +1697,10 @@ export const updateRoom = /* GraphQL */ `
   }
 `;
 export const deleteRoom = /* GraphQL */ `
-  mutation DeleteRoom($input: DeleteRoomInput!, $condition: ModelRoomConditionInput) {
+  mutation DeleteRoom(
+    $input: DeleteRoomInput!
+    $condition: ModelRoomConditionInput
+  ) {
     deleteRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -3376,7 +3449,10 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
   }
 `;
 export const createClass = /* GraphQL */ `
-  mutation CreateClass($input: CreateClassInput!, $condition: ModelClassConditionInput) {
+  mutation CreateClass(
+    $input: CreateClassInput!
+    $condition: ModelClassConditionInput
+  ) {
     createClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -3556,7 +3632,10 @@ export const createClass = /* GraphQL */ `
   }
 `;
 export const updateClass = /* GraphQL */ `
-  mutation UpdateClass($input: UpdateClassInput!, $condition: ModelClassConditionInput) {
+  mutation UpdateClass(
+    $input: UpdateClassInput!
+    $condition: ModelClassConditionInput
+  ) {
     updateClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -3736,7 +3815,10 @@ export const updateClass = /* GraphQL */ `
   }
 `;
 export const deleteClass = /* GraphQL */ `
-  mutation DeleteClass($input: DeleteClassInput!, $condition: ModelClassConditionInput) {
+  mutation DeleteClass(
+    $input: DeleteClassInput!
+    $condition: ModelClassConditionInput
+  ) {
     deleteClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -4516,7 +4598,10 @@ export const deleteCurriculum = /* GraphQL */ `
   }
 `;
 export const createTopic = /* GraphQL */ `
-  mutation CreateTopic($input: CreateTopicInput!, $condition: ModelTopicConditionInput) {
+  mutation CreateTopic(
+    $input: CreateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
     createTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -4582,7 +4667,10 @@ export const createTopic = /* GraphQL */ `
   }
 `;
 export const updateTopic = /* GraphQL */ `
-  mutation UpdateTopic($input: UpdateTopicInput!, $condition: ModelTopicConditionInput) {
+  mutation UpdateTopic(
+    $input: UpdateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
     updateTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -4648,7 +4736,10 @@ export const updateTopic = /* GraphQL */ `
   }
 `;
 export const deleteTopic = /* GraphQL */ `
-  mutation DeleteTopic($input: DeleteTopicInput!, $condition: ModelTopicConditionInput) {
+  mutation DeleteTopic(
+    $input: DeleteTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
     deleteTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -8897,7 +8988,10 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: CreateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    createUniversalLessonWritingExcercises(input: $input, condition: $condition) {
+    createUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
       id
       syllabusLessonID
       lessonID
@@ -8939,7 +9033,10 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: UpdateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    updateUniversalLessonWritingExcercises(input: $input, condition: $condition) {
+    updateUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
       id
       syllabusLessonID
       lessonID
@@ -8981,7 +9078,10 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: DeleteUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    deleteUniversalLessonWritingExcercises(input: $input, condition: $condition) {
+    deleteUniversalLessonWritingExcercises(
+      input: $input
+      condition: $condition
+    ) {
       id
       syllabusLessonID
       lessonID
@@ -9239,7 +9339,10 @@ export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: CreateTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    createTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+    createTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       universalSurveyId
@@ -9282,7 +9385,10 @@ export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: UpdateTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    updateTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+    updateTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       universalSurveyId
@@ -9325,7 +9431,10 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: DeleteTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    deleteTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
+    deleteTemporaryUniversalUploadSurveyData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       universalSurveyId
@@ -9368,7 +9477,10 @@ export const createTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: CreateTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    createTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+    createTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       questionDataID
@@ -9438,7 +9550,10 @@ export const updateTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: UpdateTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    updateTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+    updateTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       questionDataID
@@ -9508,7 +9623,10 @@ export const deleteTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: DeleteTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    deleteTemporaryDemographicsUploadData(input: $input, condition: $condition) {
+    deleteTemporaryDemographicsUploadData(
+      input: $input
+      condition: $condition
+    ) {
       id
       updatedUserId
       questionDataID
@@ -14268,10 +14386,14 @@ export const createCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -14284,10 +14406,14 @@ export const updateCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -14300,10 +14426,14 @@ export const deleteCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
+      createdAt
+      updatedAt
     }
   }
 `;

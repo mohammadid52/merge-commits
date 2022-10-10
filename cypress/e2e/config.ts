@@ -41,6 +41,11 @@ export const loginConfig = {
     student2: {
       username: 'angela@iconoclasttraining.com',
       password: 'admin123'
+    },
+
+    student3: {
+      username: 'demostudent2@zoiq.io',
+      password: 'admin123'
     }
   }
 };
