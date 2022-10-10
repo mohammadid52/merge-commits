@@ -1,15 +1,14 @@
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {ListAnthologyCommentsQuery, ListAnthologyCommentsQueryVariables} from 'API';
 import {sortBy} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import * as queries from '../../../../graphql/queries';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import React, {useEffect, useState} from 'react';
+import {getAsset} from '../../../../assets';
+import {useGlobalContext} from '../../../../contexts/GlobalContext';
 import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../Atoms/Buttons';
 import ContentCard from '../../../Atoms/ContentCard';
-import Loader from '../../../Atoms/Loader';
-import {getAsset} from '../../../../assets';
-import Feedbacks from './Feedbacks';
 import Toggle from './../AnthologyContentNote/Toggle';
+import Feedbacks from './Feedbacks';
 
 const SingleNote = ({
   idx,
@@ -25,58 +24,55 @@ const SingleNote = ({
   allStudentData,
   setAllStudentData,
   allUniversalJournalData,
-  setAllUniversalJournalData,
+  setAllUniversalJournalData
 }: any) => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   // ##################################################################### //
-  // ########################### FEEDBACK LOGIC ########################## //
+  // ########################### FEEDBACK-LOGIC ########################## //
   // ##################################################################### //
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(false);
+
   const [fileObject, setFileObject] = useState({});
 
-  const listComments = async (feedbacks: string[] = []) => {
-    const filter: any = feedbacks.map((id: string) => {
-      return {
-        id: {
-          eq: id,
-        },
-      };
-    });
+  const filter: any = contentObj?.feedbacks?.map((id: string) => {
+    return {
+      id: {
+        eq: id
+      }
+    };
+  });
+
+  const {data: listCommentData, refetch, isLoading, isFetched} = useGraphqlQuery<
+    ListAnthologyCommentsQueryVariables,
+    ListAnthologyCommentsQuery['listAnthologyComments']['items']
+  >(
+    'listAnthologyComments',
+    {
+      filter: {
+        or: [...filter]
+      }
+    },
+    {enabled: showComments}
+  ); // why enabled:false? because we don't want to run this query on page load, we want to run it when the user clicks on the feedback button. So we'll run it with filter on click
+
+  const sortComments = () => {
     try {
-      const listCommentData: any = await API.graphql(
-        graphqlOperation(queries.listAnthologyComments, {
-          filter: {
-            or: [...filter],
-          },
-        })
-      );
-      return listCommentData?.data?.listAnthologyComments?.items;
+      if (isFetched && !isLoading && listCommentData) {
+        setFeedbackData(sortBy(listCommentData, ['createdAt']));
+      }
     } catch (error) {
       console.error('error @listComments: ', error);
     }
   };
 
-  const getFeedBackData = async () => {
-    if (contentObj.feedbacks && contentObj.feedbacks.length > 0) {
-      setLoadingComments(true);
-      try {
-        const feedbacksData: any = await listComments(contentObj.feedbacks);
-        setFeedbackData(sortBy(feedbacksData, ['createdAt']));
-      } catch (error) {
-        console.error('error @getFeedBackData: ', error.message);
-      } finally {
-        setLoadingComments(false);
-      }
-    }
-  };
-
   useEffect(() => {
-    getFeedBackData();
-  }, []);
+    if (showComments && listCommentData && listCommentData.length > 0) {
+      sortComments();
+    }
+  }, [showComments, isLoading, isFetched, contentObj.feedbacks, listCommentData]);
 
   // ##################################################################### //
   // ########################### TOGGLE SHARING ########################## //
@@ -199,18 +195,17 @@ const SingleNote = ({
                */}
               {subSection === 'Work' || contentObj?.shared ? (
                 <div
-                  onClick={() => setShowComments(!showComments)}
-                  className={`${
-                    feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
-                  } ${
-                    loadingComments ? 'flex items-center justify-between' : ''
+                  onClick={() => {
+                    !showComments && refetch();
+                    setShowComments(!showComments);
+                  }}
+                  className={`iconoclast:bg-main curate:bg-main ${
+                    isLoading ? 'flex items-center justify-between' : ''
                   }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
                   <p>
-                    {loadingComments
+                    {isLoading
                       ? 'Loading Comments . . .'
-                      : feedbackData.length > 0
-                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                      : 'Leave Feedback'}
+                      : `${showComments ? 'Hide' : 'Show'} Feedback`}
                   </p>
                   {/* {!loadingComments && (
                     <span className="w-auto ml-4 w-auto">
@@ -222,7 +217,7 @@ const SingleNote = ({
             </div>
           )}
 
-          {showComments && (
+          {!isLoading && isFetched && showComments && (
             <div className="border-t-0 border-gray-200 mt-4">
               <Feedbacks
                 key={contentObj.id}
@@ -233,7 +228,7 @@ const SingleNote = ({
                 setAllStudentData={setAllStudentData}
                 subSection={subSection}
                 feedbackData={feedbackData}
-                loadingComments={loadingComments}
+                loadingComments={isLoading}
                 showComments={showComments}
                 setShowComments={setShowComments}
                 fileObject={fileObject}

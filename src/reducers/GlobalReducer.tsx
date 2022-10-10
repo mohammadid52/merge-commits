@@ -109,16 +109,16 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         ...state,
         sidebar: {
           ...state.sidebar,
-          [action.payload.section]: action.payload.data,
-        },
+          [action.payload.section]: action.payload.data
+        }
       };
     case 'UPDATE_ROOM':
       return {
         ...state,
         roomData: {
           ...state.roomData,
-          [action.payload.property]: action.payload.data,
-        },
+          [action.payload.property]: action.payload.data
+        }
       };
     case 'UPDATE_ROOM_MULTI':
       return {
@@ -136,8 +136,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
             : state.roomData.lessons,
           syllabus: action.payload.syllabus
             ? action.payload.syllabus
-            : state.roomData.syllabus,
-        },
+            : state.roomData.syllabus
+        }
       };
     case 'RESET_ROOMDATA':
       console.log('RESET_ROOMDATA');
@@ -151,13 +151,13 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           activeSyllabus: '',
           curriculum: {},
           syllabus: [],
-          lessons: [],
-        },
+          lessons: []
+        }
       };
     case 'UPDATE_CURRENTPAGE':
       return {
         ...state,
-        currentPage: action.payload.data,
+        currentPage: action.payload.data
       };
     case 'UPDATE_ACTIVEROOM':
       return {
@@ -166,16 +166,16 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         activeSyllabus: action.payload.syllabusID,
         roomData: {
           ...state.roomData,
-          syllabus: [],
-        },
+          syllabus: []
+        }
       };
     case 'TOGGLE_LESSON':
       return {
         ...state,
         roomData: {
           ...state.roomData,
-          [action.payload.property]: action.payload.data,
-        },
+          [action.payload.property]: action.payload.data
+        }
       };
     case 'UPDATE_LESSON_PAGE_THEME':
       return {
@@ -187,8 +187,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           themeBackgroundColor:
             action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
           themeSecBackgroundColor:
-            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700',
-        },
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700'
+        }
       };
     case 'SET_USER':
       return {
@@ -213,8 +213,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lastLoggedOut: action.payload.lastLoggedOut,
           associateInstitute: action.payload.associateInstitute,
           onDemand: action.payload?.onDemand,
-          lessons: action.payload?.lessons,
-        },
+          lessons: action.payload?.lessons
+        }
       };
     case 'LOG_IN':
       return {
@@ -224,16 +224,17 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         user: {
           ...state.user,
           email: action.payload.email,
-          authId: action.payload.authId,
-        },
+          authId: action.payload.authId
+        }
       };
     case 'LESSON_PAYLOAD':
       return {
         ...state,
         lessonsPayload: {
-          lessonsData: action.payload.lessonsData,
-        },
+          lessonsData: action.payload.lessonsData
+        }
       };
+
     case 'PREV_LOG_IN':
       return {
         ...state,
@@ -242,8 +243,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         user: {
           ...state.user,
           email: action.payload.email,
-          authId: action.payload.authId,
-        },
+          authId: action.payload.authId
+        }
       };
     case 'CLEANUP':
       return globalState;

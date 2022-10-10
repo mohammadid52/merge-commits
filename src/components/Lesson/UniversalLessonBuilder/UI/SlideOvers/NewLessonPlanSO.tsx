@@ -30,7 +30,7 @@ const VideoUploadComponent = ({
   closeAction,
   file,
   setFile,
-  setFields,
+  setFields
 }: {
   customRef: any;
   closeAction: () => void;
@@ -67,7 +67,7 @@ const VideoUploadComponent = ({
 
 const InputTag = ({
   tags,
-  setTags,
+  setTags
 }: {
   tags: string[];
   // setTags: React.Dispatch<React.SetStateAction<string[]>>;
@@ -171,14 +171,14 @@ const INITIAL_STATE: FieldsInterface = {
   tags: [],
   estTime: '1 min',
   classwork: true,
-  videoLink: '',
+  videoLink: ''
 };
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
   empty: '',
   title: '',
   label: '',
-  videoLink: '',
+  videoLink: ''
 };
 
 const Block = ({children}: {children: React.ReactNode}) => {
@@ -194,14 +194,14 @@ const NewLessonPlanSO = ({
   open,
   setOpen,
   pageDetails,
-  dark,
+  dark
 }: NewLessonPlanSOInterface) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -217,7 +217,7 @@ const NewLessonPlanSO = ({
     setSelectedPageID,
     newLessonPlanShow,
     setNewLessonPlanShow,
-    setUniversalLessonDetails,
+    setUniversalLessonDetails
   } = useULBContext();
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -233,7 +233,7 @@ const NewLessonPlanSO = ({
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         classwork: true,
-        videoLink: pageDetails?.videoLink || '',
+        videoLink: pageDetails?.videoLink || ''
       });
     } else {
       setFields(INITIAL_STATE);
@@ -256,7 +256,7 @@ const NewLessonPlanSO = ({
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      [id]: value,
+      [id]: value
     }));
   };
 
@@ -266,7 +266,7 @@ const NewLessonPlanSO = ({
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      [id]: value,
+      [id]: value
     }));
     const isValidUrl = REGEX.Youtube.test(value);
     if (isValidUrl) {
@@ -281,7 +281,7 @@ const NewLessonPlanSO = ({
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      estTime: name,
+      estTime: name
     }));
   };
 
@@ -309,7 +309,7 @@ const NewLessonPlanSO = ({
     setFields({
       ...fields,
       [fieldHtml]: html,
-      [field]: text,
+      [field]: text
     });
   };
 
@@ -422,7 +422,7 @@ const NewLessonPlanSO = ({
             tags: fields.tags,
             videoLink: uploadedVideoLink || fields.videoLink,
             interactionType: fields.interactionType || [],
-            activityType: classwork ? 'classwork' : 'homework',
+            activityType: classwork ? 'classwork' : 'homework'
           };
 
           update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
@@ -433,7 +433,7 @@ const NewLessonPlanSO = ({
 
           const input = {
             id: lessonId,
-            lessonPlan: [...universalLessonDetails.lessonPlan],
+            lessonPlan: [...universalLessonDetails.lessonPlan]
           };
 
           await updateLessonPageToDB(input);
@@ -456,14 +456,14 @@ const NewLessonPlanSO = ({
                 pageContent: [],
                 videoLink: uploadedVideoLink || fields.videoLink,
                 disabled: false,
-                open: true,
-              },
-            ],
+                open: true
+              }
+            ]
           };
 
           const res: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {
-              input,
+              input
             })
           );
 
@@ -501,7 +501,7 @@ const NewLessonPlanSO = ({
     classwork,
 
     interactionType,
-    estTime,
+    estTime
   } = fields;
 
   const Checkbox = ({title, label, id}: {title: string; label: string; id: string}) => {
@@ -579,7 +579,7 @@ const NewLessonPlanSO = ({
           instructionsHtml: pageDetails.description,
           estTime: `${pageDetails.estTime} min`,
           interactionType: pageDetails.interactionType || [],
-          classwork: true,
+          classwork: true
         });
         setErrors({...errors});
       }

@@ -35,7 +35,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
     allUniversalJournalData,
     setAllUniversalJournalData,
     allUniversalClassData,
-    setAllUniversalClassData,
+    setAllUniversalClassData
   } = props;
   console.log(
     '🚀 ~ file: WrittenContentTab.tsx ~ line 40 ~ WrittenContentTab ~ allUniversalClassData',
@@ -72,7 +72,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -103,7 +103,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                       key={note.domID}
                       className="font-normal "
                       dangerouslySetInnerHTML={{
-                        __html: note?.input ? note.input : 'No content...',
+                        __html: note?.input ? note.input : 'No content...'
                       }}
                     />
                   ))}
@@ -114,7 +114,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   dangerouslySetInnerHTML={{
                     __html: organized.content?.input
                       ? organized.content.input
-                      : 'No content...',
+                      : 'No content...'
                   }}
                 />
               ) : (
@@ -140,7 +140,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -202,7 +202,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -305,7 +305,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   value={{
                     size: '1.2rem',
                     style: {},
-                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
                   }}>
                   <FaSpinner />
                 </IconContext.Provider>
