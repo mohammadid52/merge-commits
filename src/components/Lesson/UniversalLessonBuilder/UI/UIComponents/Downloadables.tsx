@@ -1,4 +1,5 @@
 import {Storage} from '@aws-amplify/storage';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {Transition} from '@headlessui/react';
 import {forEach, map} from 'lodash';
 import React, {useState} from 'react';
@@ -41,7 +42,7 @@ async function download(fileKey: string, filename: string, cb: any) {
 const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string}}) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   return (
-    <div className="col-span-1 flex items-center justify-between text-sm break-all dark:text-gray-400 font-medium">
+    <div className="col-span-1 flex-col md:flex-row  flex items-start md:items-center justify-between text-sm break-all dark:text-gray-400 font-medium">
       <p title={file.fileName} className="w-auto text-gray-500">
         {ellipsis(file.fileName, 50)}
       </p>
@@ -51,7 +52,7 @@ const Download = ({file}: {file: {id: string; fileKey: string; fileName?: string
         </span>
       ) : (
         <span
-          className="inline-flex w-auto border-2 items-center px-2 py-0.5 text-xs font-medium border-gray-500 ml-2 rounded-full hover:bg-gray-600 cursor-pointer transition-all text-gray-500 hover:text-gray-800 hover:border-gray-800"
+          className="inline-flex w-auto items-center px-2 py-0.5 text-xs font-medium hover:iconoclast:bg-500 hover:curate:bg-500 md:ml-2 rounded-full  cursor-pointer transition-all  iconoclast:bg-main curate:bg-main mt-2 md:mt-0 "
           onClick={() => {
             download(file.fileKey, file.fileName, () => setIsDownloaded(true));
           }}>
@@ -84,6 +85,8 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
 
   const allFiles = mapDownloadablesFilesTogether();
 
+  const {breakpoint} = useTailwindBreakpoint();
+
   return (
     <div className="flex items-center justify-center ">
       <ClickAwayListener onClickAway={() => setShowDownloadMenu(false)}>
@@ -106,9 +109,9 @@ const Downloadables = ({showDownloadMenu, setShowDownloadMenu, downloadables}: a
             leaveFrom="opacity-100"
             title=""
             leaveTo="opacity-0"
-            style={{bottom: '1.5rem'}}
+            style={{bottom: '1.5rem', right: breakpoint === 'md' ? '-85px' : undefined}}
             onClick={(e: any) => e.stopPropagation()}
-            className="w-auto bg-white dark:bg-gray-800 dark:border-gray-700 cursor-default select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
+            className="w-auto bg-white dark:bg-gray-800 dark:border-gray-700 cursor-default select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-56 sm:min-w-96 md:min-w-140 p-4"
             show={showDownloadMenu}>
             <div className="flex items-center pb-2 justify-between">
               <h3 className="text-lg  dark:text-white leading-6 font-medium text-gray-900">

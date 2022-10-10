@@ -1059,7 +1059,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          graphqlOperation(mutations.createPersonLessonsData, {
+            input: payload
+          })
         );
       } else {
         payload = {
