@@ -126,8 +126,8 @@ export const listPeople = /* GraphQL */ `
   }
 `;
 export const getPersonLessonsData = /* GraphQL */ `
-  query GetPersonLessonsData($lessonID: String!) {
-    getPersonLessonsData(lessonID: $lessonID) {
+  query GetPersonLessonsData($id: ID!) {
+    getPersonLessonsData(id: $id) {
       id
       studentAuthID
       studentEmail
@@ -142,58 +142,13 @@ export const getPersonLessonsData = /* GraphQL */ `
 `;
 export const listPersonLessonsData = /* GraphQL */ `
   query ListPersonLessonsData(
-    $lessonID: String
+    $id: ID
     $filter: ModelPersonLessonsDataFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
     listPersonLessonsData(
-      lessonID: $lessonID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        studentAuthID
-        studentEmail
-        lessonID
-        lessonType
-        pages
-        ratings
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getPersonLessonsData2 = /* GraphQL */ `
-  query GetPersonLessonsData2($id: ID!) {
-    getPersonLessonsData2(id: $id) {
-      id
-      studentAuthID
-      studentEmail
-      lessonID
-      lessonType
-      pages
-      ratings
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPersonLessonsData2s = /* GraphQL */ `
-  query ListPersonLessonsData2s(
-    $id: ID
-    $filter: ModelPersonLessonsData2FilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listPersonLessonsData2s(
       id: $id
       filter: $filter
       limit: $limit
@@ -7517,36 +7472,6 @@ export const lessonsByType = /* GraphQL */ `
     $nextToken: String
   ) {
     lessonsByType(
-      lessonType: $lessonType
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        studentAuthID
-        studentEmail
-        lessonID
-        lessonType
-        pages
-        ratings
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const lessonsByType2 = /* GraphQL */ `
-  query LessonsByType2(
-    $lessonType: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelPersonLessonsData2FilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    lessonsByType2(
       lessonType: $lessonType
       sortDirection: $sortDirection
       filter: $filter
