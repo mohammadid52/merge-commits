@@ -373,60 +373,6 @@ export const deletePersonLessonsData = /* GraphQL */ `
     }
   }
 `;
-export const createPersonLessonsData2 = /* GraphQL */ `
-  mutation CreatePersonLessonsData2(
-    $input: CreatePersonLessonsData2Input!
-    $condition: ModelPersonLessonsData2ConditionInput
-  ) {
-    createPersonLessonsData2(input: $input, condition: $condition) {
-      id
-      studentAuthID
-      studentEmail
-      lessonID
-      lessonType
-      pages
-      ratings
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePersonLessonsData2 = /* GraphQL */ `
-  mutation UpdatePersonLessonsData2(
-    $input: UpdatePersonLessonsData2Input!
-    $condition: ModelPersonLessonsData2ConditionInput
-  ) {
-    updatePersonLessonsData2(input: $input, condition: $condition) {
-      id
-      studentAuthID
-      studentEmail
-      lessonID
-      lessonType
-      pages
-      ratings
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePersonLessonsData2 = /* GraphQL */ `
-  mutation DeletePersonLessonsData2(
-    $input: DeletePersonLessonsData2Input!
-    $condition: ModelPersonLessonsData2ConditionInput
-  ) {
-    deletePersonLessonsData2(input: $input, condition: $condition) {
-      id
-      studentAuthID
-      studentEmail
-      lessonID
-      lessonType
-      pages
-      ratings
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createInstitution = /* GraphQL */ `
   mutation CreateInstitution(
     $input: CreateInstitutionInput!
