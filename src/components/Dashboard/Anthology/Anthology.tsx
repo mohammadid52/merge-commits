@@ -6,9 +6,8 @@ import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib';
-import {useHistory} from 'react-router-dom';
 import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
 import usePrevious from '../../../customHooks/previousProps';
@@ -55,7 +54,7 @@ const Anthology = ({
 }: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
   const dispatch = gContext.dispatch;
   const userLanguage = gContext.userLanguage;
@@ -65,7 +64,6 @@ const Anthology = ({
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
-  const history = useHistory();
 
   // ##################################################################### //
   // ########################### INITIALIZATION ########################## //
@@ -92,9 +90,7 @@ const Anthology = ({
   const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
   const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
   const [classNotebook, setClassNotebook] = useState<any[]>([]);
-  const [exerciseData, setExerciseData] = useState<
-    GetUniversalLessonWritingExcercisesQuery[]
-  >([]);
+
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
     UniversalJournalData[]
   >([]);

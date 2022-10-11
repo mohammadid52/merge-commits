@@ -69,7 +69,7 @@ const RoomViewCard = ({
 
           <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
             {/* START- LABEL WRAPPER */}
-            <div className="absolute flex items-center  h-full w-full max-w-48 px-2 z-50 ">
+            <div className="absolute flex items-end md:items-center  h-full w-full mb-4 md:mb-0 md:max-w-48 px-2 z-50 ">
               {/* OVERLAY LABEL */}
               <div className="border-2 border-white">
                 <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-90 flex-1 border-0 border-gray-900 p-2">
