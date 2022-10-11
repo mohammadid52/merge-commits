@@ -39,3 +39,19 @@ Cypress.Commands.add('closeCheckInModal', () => {
 Cypress.Commands.add('saveSurvey', () => {
   cy.dataCy('save-lesson').click();
 });
+
+Cypress.Commands.add(
+  'controlledInputChange',
+  {prevSubject: 'element'},
+  (input, value) => {
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    ).set;
+    const changeInputValue = (inputToChange) => (newValue) => {
+      nativeInputValueSetter.call(inputToChange[0], newValue);
+      inputToChange[0].dispatchEvent(new Event('change', {newValue, bubbles: true}));
+    };
+    return cy.get(input).then((input) => changeInputValue(input)(value));
+  }
+);
