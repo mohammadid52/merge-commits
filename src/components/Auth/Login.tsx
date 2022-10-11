@@ -109,7 +109,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           updateAuthState(true);
         }
       } catch (error) {
-        console.log('error', error);
+        console.error('error', error);
         const errMsg = {show: true, type: 'error'};
         if (!username) {
           setMessage({...errMsg, message: 'Please enter your email'});
@@ -140,7 +140,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           toggleLoading(false);
         }
       } catch (error) {
-        console.log('error', error);
+        console.error('error', error);
         if (error.code === 'NotAuthorizedException') {
           if (error.message === 'Incorrect username or password.') {
             setShowPasswordField(true);
@@ -157,7 +157,7 @@ const Login = ({updateAuthState}: LoginProps) => {
                   'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
               });
             } catch (err) {
-              console.log('Error temporary password could not be reset');
+              console.error('Error temporary password could not be reset');
             }
           }
         } else if (error.code === 'UserNotConfirmedException') {
@@ -171,7 +171,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             });
             // confirm user, set password, and sign in which should ask them to create a new password.
           } catch (err) {
-            console.log('Error in resetting unconfirmed user.');
+            console.error('Error in resetting unconfirmed user.');
           }
         } else {
           manageSignInError(error, true);
