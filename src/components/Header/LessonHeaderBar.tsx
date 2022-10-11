@@ -17,6 +17,7 @@ import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 const LessonHeaderBar = ({
   overlay,
   setOverlay,
+
   isAtEnd,
   setisAtEnd,
   createJournalData,
@@ -73,7 +74,7 @@ const LessonHeaderBar = ({
     timer = setTimeout(() => {
       getLessonCompletedValue &&
         getLessonCompletedValue().then((value: any) => {
-          if (value.lessonProgress === value.totalPages) {
+          if (value?.lessonProgress === value?.totalPages) {
             setLeaveAfterCompletion(true);
           } else {
             setLeaveAfterCompletion(false);
@@ -187,7 +188,7 @@ const LessonHeaderBar = ({
             return input;
           }
         });
-        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+
         if (areAnyEmpty.length > 0) {
           return false;
         } else {
@@ -205,8 +206,7 @@ const LessonHeaderBar = ({
     if (PAGES) {
       return (
         validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage < PAGES.length - 1 &&
-        PAGES[lessonState.currentPage + 1]?.open !== false
+        lessonState.currentPage <= PAGES.length - 1
       );
     } else {
       return false;

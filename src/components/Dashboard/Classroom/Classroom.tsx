@@ -7,6 +7,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
+import {v4 as uuidV4} from 'uuid';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -375,6 +376,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       await API.graphql(
         graphqlOperation(mutations.updatePersonLessonsData, {
           input: {
+            id: uuidV4(),
             lessonID: lessonID,
             ratings: ratingValue
           }

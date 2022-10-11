@@ -267,8 +267,6 @@ const Anthology = ({
       const journalEntryDataRows = journalEntryData.data.listUniversalJournalData.items;
 
       if (journalEntryDataRows?.length > 0) {
-        console.log('anthology - universalJournalDatas exist ', journalEntryDataRows);
-
         setAllUniversalJournalData(journalEntryDataRows);
       } else {
         console.log('anthology - NO universalJournalDatas');
