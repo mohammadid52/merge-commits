@@ -32,15 +32,15 @@ describe('Survey should work', () => {
     cy.login(loginConfig.student.username, loginConfig.student.password);
   });
 
-  it('should go to survey', {defaultCommandTimeout: 20000}, function () {
-    loadActiveRoomData();
-  });
+  // it('should go to survey', {defaultCommandTimeout: 20000}, function () {
+  //   loadActiveRoomData();
+  // });
 
   it('should complete survey', {defaultCommandTimeout: 20000}, function () {
     loadActiveRoomData();
 
     cy.contains(`${surveyConfig.page[0]}`).click(); // Go to first page
-    cy.get('input[type=range]').invoke('val', 4).trigger('change'); // Select from range slider
+    cy.get('input[type=range]').controlledInputChange('4'); // Select from range slider
     cy.contains(surveyConfig.page[1]).click(); // Go to second page
     cy.get('input[type=checkbox]').first().check(); // Check the first checkbox
     cy.get('textarea').clear().type(firstInputData()); // Type in input field
