@@ -32,18 +32,20 @@ const Lesson = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
-      const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
-        return [
-          ...acc,
-          {
-            id: page.id,
-            label: page.label,
-          },
-        ];
-      }, []);
-      setLocalStorageData('lesson_plan', lessonPlan);
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
-      setLoaded(true);
+      if (response) {
+        const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
+          return [
+            ...acc,
+            {
+              id: page.id,
+              label: page.label
+            }
+          ];
+        }, []);
+        setLocalStorageData('lesson_plan', lessonPlan);
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+        setLoaded(true);
+      }
     } catch (e) {
       setLoaded(false);
       console.error('error getting lesson - ', lessonID, ' ', e);
@@ -55,7 +57,7 @@ const Lesson = () => {
     if (lessonID) {
       lessonDispatch({
         type: 'SET_INITIAL_STATE',
-        payload: {universalLessonID: lessonID},
+        payload: {universalLessonID: lessonID}
       });
       getSyllabusLesson(lessonID).then((_: void) => {
         //
