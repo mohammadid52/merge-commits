@@ -574,21 +574,25 @@ const Feedbacks = ({
               </div>
             </div>
           ) : feedbackData && feedbackData.length > 0 ? (
-            feedbackData.map((feedback: any, key: number) => (
-              <Feedback
-                key={`feedback_${key}`}
-                setAttModal={setAttModal}
-                deleteModal={deleteModal}
-                uploadingAttachment={uploadingAttachment}
-                role={state.user.role}
-                fileObject={fileObject}
-                authId={state.user.authId}
-                setDeleteModal={setDeleteModal}
-                feedback={feedback}
-                setEditModal={setEditModal}
-                setEditCommentInput={setEditCommentInput}
-              />
-            ))
+            feedbackData.map((feedback: any, key: number) => {
+              if (feedback) {
+                return (
+                  <Feedback
+                    key={`feedback_${key}`}
+                    setAttModal={setAttModal}
+                    deleteModal={deleteModal}
+                    uploadingAttachment={uploadingAttachment}
+                    role={state.user.role}
+                    fileObject={fileObject}
+                    authId={state.user.authId}
+                    setDeleteModal={setDeleteModal}
+                    feedback={feedback}
+                    setEditModal={setEditModal}
+                    setEditCommentInput={setEditCommentInput}
+                  />
+                );
+              }
+            })
           ) : (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">

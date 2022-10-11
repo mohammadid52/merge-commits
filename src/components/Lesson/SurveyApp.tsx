@@ -620,6 +620,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       } else {
         payload = {
+          id: uuidV4(),
+
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,

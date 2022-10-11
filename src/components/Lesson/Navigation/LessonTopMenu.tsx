@@ -1,26 +1,24 @@
-import React, {ReactNode, useContext} from 'react';
+import React, {ReactNode} from 'react';
 import ProgressBar from './ProgressBar/ProgressBar';
 
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {IconContext} from 'react-icons';
 import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {useGlobalContext} from '../../../contexts/GlobalContext';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 
 const LessonTopMenu = ({
-  overlay,
   setOverlay,
   handlePopup,
-  isAtEnd,
-  setisAtEnd,
+
   handleRequiredNotification,
   pages,
   canContinue,
   handleForward
 }: LessonHeaderBarProps) => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
+
   const theme = gContext.theme;
 
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
@@ -56,25 +54,6 @@ const LessonTopMenu = ({
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
             {/* BACK BUTTON */}
-
-            {/* {(breakpoint === 'xs' || breakpoint === 'sm') && (
-              <div
-                className={`my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                  lessonState.currentPage > 0
-                    ? 'cursor-pointer bg-dark-red'
-                    : 'cursor-default bg-darker-gray'
-                } }`}
-                onClick={handleBack}>
-                <IconContext.Provider
-                  value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`,
-                  }}>
-                  <AiOutlineArrowLeft />
-                </IconContext.Provider>
-              </div>
-            )} */}
 
             {(breakpoint === 'xs' || breakpoint === 'sm') && (
               <div

@@ -844,13 +844,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
+  const getPersonLessonsDataId = (): string =>
+    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+
   const getLessonCurrentPage = async () => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthID: user.authId
+          id: getPersonLessonsDataId()
+          // lessonID: lessonID,
+          // studentEmail: user.email,
+          // studentAuthID: user.authId
         })
       );
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -1013,9 +1017,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthId: user.authId
+          id: getPersonLessonsDataId()
+          // lessonID: lessonID,
+          // studentEmail: user.email,
+          // studentAuthId: user.authId
         })
       );
 
@@ -1028,6 +1033,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       };
     } catch (error) {}
   };
+
+  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
 
   const handleLessonMutateData = async () => {
     try {
@@ -1042,7 +1049,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         })
       );
 
-      if (!existingLesson?.data?.listPersonLessonsData?.items?.length) {
+      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+
+      if (!items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -1064,7 +1073,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           })
         );
       } else {
+        setListPersonLessonsData(items);
         payload = {
+          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,
@@ -1121,7 +1132,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
-            getLessonCompletedValue={getLessonCompletedValue}
+            getLessonCompletedValue={
+              listPersonLessonsData.length > 0 && getLessonCompletedValue
+            }
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
