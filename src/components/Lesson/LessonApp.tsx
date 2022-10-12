@@ -1039,15 +1039,30 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const handleLessonMutateData = async () => {
     try {
       let payload;
-      const existingLesson: any = await API.graphql(
-        graphqlOperation(queries.listPersonLessonsData, {
-          filter: {
-            lessonID: {eq: lessonID},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
+      let existingLesson: any;
+
+      const personLessonData = lessonState?.misc?.personLessonData;
+
+      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+        existingLesson = personLessonData?.data;
+      } else {
+        existingLesson = await API.graphql(
+          graphqlOperation(queries.listPersonLessonsData, {
+            filter: {
+              lessonID: {eq: lessonID},
+              studentAuthID: {eq: user.authId},
+              studentEmail: {eq: user.email}
+            }
+          })
+        );
+        lessonDispatch({
+          type: 'SET_PERSON_LESSON_DATA',
+          payload: {
+            lessonID: lessonID,
+            data: existingLesson?.data?.listPersonLessonsData?.items || []
           }
-        })
-      );
+        });
+      }
 
       const items = existingLesson?.data?.listPersonLessonsData?.items || [];
 

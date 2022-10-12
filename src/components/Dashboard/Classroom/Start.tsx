@@ -247,8 +247,8 @@ const Start: React.FC<StartProps> = ({
         if (!attendanceRecorded) {
           await recordAttendance(lessonProps);
         }
-        await getLessonCurrentPage(lessonKey, user.email, user.authId);
-        history.push(`/lesson/${lessonKey}/${pageNumber}`);
+        // await getLessonCurrentPage(lessonKey, user.email, user.authId);
+        history.push(`/lesson/${lessonKey}/${lessonProps?.currentPage}`);
         // history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);

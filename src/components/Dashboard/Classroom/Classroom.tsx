@@ -2,12 +2,12 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import {v4 as uuidV4} from 'uuid';
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import * as mutations from '../../../graphql/mutations';
 import * as queries from '../../../graphql/queries';
+import {v4 as uuidV4} from 'uuid';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
@@ -15,6 +15,7 @@ import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
+import useAuth from '@customHooks/useAuth';
 
 interface Artist {
   id: string;
@@ -172,6 +173,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // });
   const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
+
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
   // ##################################################################### //
@@ -247,6 +249,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     if (temp?.length && syllabusList?.length && activeSyllabusLessons?.length) {
       setLessonData(
         temp?.map((item: any) => {
+          const currentLessonItem = listPersonData.find(
+            (_d) => _d.lessonID === item.lessonID
+          )?.pages;
+
+          const currentPage = currentLessonItem
+            ? JSON.parse(currentLessonItem)?.currentPage
+            : 0;
+
           const lessonScheduleData = activeSyllabusLessons?.find(
             (lesson: any) => lesson.id === item.id
           );
@@ -270,6 +280,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           const session = Math.ceil(count);
           const lesson = {
             ...item?.lesson,
+            currentPage,
+
             totalEstTime:
               Math.ceil(
                 item?.lesson?.lessonPlan?.reduce(
@@ -343,47 +355,83 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   ];
 
+  const [listPersonData, setListPersonData] = useState([]);
+
+  const {authId, email} = useAuth();
+  const [fetchingPersonData, setFetchingPersonData] = useState(true);
+
+  const fetchLessonPersonData = async () => {
+    try {
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(queries.listPersonLessonsData, {
+          filter: {
+            studentAuthID: {eq: authId},
+            studentEmail: {eq: email}
+          }
+        })
+      );
+      setListPersonData(lessonPersonData.data.listPersonLessonsData.items);
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setFetchingPersonData(false);
+    }
+  };
+
   const getLessonRating = async (
     lessonId: string,
     userEmail: string,
     userAuthId: string
   ) => {
-    try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonId,
-          studentEmail: userEmail,
-          studentAuthId: userAuthId
-        })
-      );
+    if (!fetchingPersonData) {
+      try {
+        const id = listPersonData?.find((item: any) => item.lessonID === lessonId)?.id;
+        if (id) {
+          const getLessonRatingDetails: any = await API.graphql(
+            graphqlOperation(queries.getPersonLessonsData, {
+              id: id || ''
+            })
+          );
 
-      const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const currentPage = JSON.parse(pageNumber).currentPage;
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-      const totalPages = JSON.parse(pageNumber).totalPages;
-      return {
-        ratingValue,
-        currentPage,
-        lessonProgress,
-        totalPages
-      };
-    } catch (error) {}
+          const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
+          const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+          const currentPage = JSON.parse(pageNumber).currentPage;
+          const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+          const totalPages = JSON.parse(pageNumber).totalPages;
+          return {
+            ratingValue,
+            currentPage,
+            lessonProgress,
+            totalPages
+          };
+        }
+      } catch (error) {}
+    }
   };
 
   const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {
-    try {
-      await API.graphql(
-        graphqlOperation(mutations.updatePersonLessonsData, {
-          input: {
-            id: uuidV4(),
-            lessonID: lessonID,
-            ratings: ratingValue
-          }
-        })
-      );
-    } catch (error) {}
+    if (!fetchingPersonData) {
+      const id = listPersonData?.find((item: any) => item.lessonID === lessonID)?.id;
+
+      try {
+        await API.graphql(
+          graphqlOperation(mutations.updatePersonLessonsData, {
+            input: {
+              id,
+              lessonID: lessonID,
+              ratings: ratingValue
+            }
+          })
+        );
+      } catch (error) {}
+    }
   };
+
+  useEffect(() => {
+    if (listPersonData.length === 0) {
+      fetchLessonPersonData();
+    }
+  }, []);
 
   return (
     <>
@@ -468,7 +516,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                       lessons={lessonData}
                       syllabus={syllabusData}
                       handleLessonMutationRating={handleLessonMutationRating}
-                      getLessonRating={getLessonRating}
+                      getLessonRating={
+                        listPersonData && listPersonData.length > 0 && getLessonRating
+                      }
                     />
                   </div>
                 </div>
