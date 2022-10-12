@@ -11,6 +11,9 @@ const surveyConfig = {
   classroom_url: `${urlConfig.dashboardURL}/classroom/${ids.classroomIDs[0]}`
 };
 
+const randomNumber = () => Math.floor(Math.random() * (10 - 0)) + 0;
+const sliderValue = randomNumber();
+
 const firstInputData = () => {
   return `cypress-${new Date().getDate()}`;
 };
@@ -20,7 +23,11 @@ const secondInputData = () => {
 };
 
 const loadActiveRoomData = () => {
+  cy.wait(10000);
   cy.url().should('contain', urlConfig.dashboardURL);
+  // cy.get('body').then((body) => {
+  //   expect(localStorage.getItem('room_info'))?.to.not.equal(null);
+  // });
   // go to classroom page to load activeRoomData.. without this survey won't save data
   cy.get('h2').should('contain', 'Your Classrooms');
   cy.dataCy('classroom-cards').first().click();
@@ -32,15 +39,15 @@ describe('Survey should work', () => {
     cy.login(loginConfig.student.username, loginConfig.student.password);
   });
 
-  it('should go to survey', {defaultCommandTimeout: 20000}, function () {
-    loadActiveRoomData();
-  });
+  // it('should go to survey', {defaultCommandTimeout: 20000}, function () {
+  //   loadActiveRoomData();
+  // });
 
   it('should complete survey', {defaultCommandTimeout: 20000}, function () {
     loadActiveRoomData();
 
     cy.contains(`${surveyConfig.page[0]}`).click(); // Go to first page
-    cy.get('input[type=range]').controlledInputChange('4'); // Select from range slider
+    cy.get('input[type=range]').controlledInputChange(sliderValue); // Select from range slider
     cy.contains(surveyConfig.page[1]).click(); // Go to second page
     cy.get('input[type=checkbox]').first().check(); // Check the first checkbox
     cy.get('textarea').clear().type(firstInputData()); // Type in input field
@@ -53,7 +60,7 @@ describe('Survey should work', () => {
   it('Should check if survey is saved', {defaultCommandTimeout: 20000}, function () {
     loadActiveRoomData(); // Go to classroom page to load activeRoomData.. without this survey won't save data
     cy.contains(`${surveyConfig.page[0]}`).click(); // Go to first page
-    cy.get('input[type=range]').should('have.value', 4); // Check range slider
+    cy.get('input[type=range]').should('have.value', sliderValue); // Check range slider
     cy.contains(surveyConfig.page[1]).click(); // Go to second page
     cy.get('input[type=checkbox]').first().should('be.checked'); // go to second page
     cy.get('textarea').should('have.value', firstInputData()); // type in input field
