@@ -11,7 +11,7 @@ const surveyConfig = {
   classroom_url: `${urlConfig.dashboardURL}/classroom/${ids.classroomIDs[0]}`
 };
 
-const randomNumber = () => Math.floor(Math.random() * (10 - 0)) + 0;
+const randomNumber = () => Math.floor(Math.random() * (10 - 1)) + 1;
 const sliderValue = randomNumber();
 
 const firstInputData = () => {
