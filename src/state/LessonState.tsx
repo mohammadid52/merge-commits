@@ -27,6 +27,12 @@ export interface lessonStateType {
   subscribeFunc?: any;
   studentViewing?: string;
   isLastPage?: boolean;
+  misc?: {
+    personLessonData?: {
+      lessonID: string;
+      data: any[];
+    };
+  };
 }
 
 export const lessonState: lessonStateType = {
@@ -52,5 +58,11 @@ export const lessonState: lessonStateType = {
   firstSave: true,
   subscription: {},
   subscribeFunc: () => {},
-  studentViewing: ''
+  studentViewing: '',
+  misc: {
+    personLessonData: {
+      lessonID: '',
+      data: []
+    }
+  }
 };

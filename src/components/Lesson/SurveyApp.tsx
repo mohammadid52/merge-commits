@@ -590,17 +590,33 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   const handleSurveyMutateData = async () => {
     try {
       let payload;
-      const existingLesson: any = await API.graphql(
-        graphqlOperation(queries.listPersonLessonsData, {
-          filter: {
-            lessonID: {eq: lessonID},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
-          }
-        })
-      );
+      let existingLesson: any;
 
-      if (!existingLesson.data.listPersonLessonsData.items.length) {
+      const personLessonData = lessonState?.misc?.personLessonData;
+      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+        existingLesson = personLessonData?.data;
+      } else {
+        existingLesson = await API.graphql(
+          graphqlOperation(queries.listPersonLessonsData, {
+            filter: {
+              lessonID: {eq: lessonID},
+              studentAuthID: {eq: user.authId},
+              studentEmail: {eq: user.email}
+            }
+          })
+        );
+        lessonDispatch({
+          type: 'SET_PERSON_LESSON_DATA',
+          payload: {
+            lessonID: lessonID,
+            data: existingLesson?.data?.listPersonLessonsData?.items || []
+          }
+        });
+      }
+
+      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+
+      if (!items.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -620,7 +636,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       } else {
         payload = {
-          id: uuidV4(),
+          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
 
           studentAuthID: user.authId,
           studentEmail: user.email,
