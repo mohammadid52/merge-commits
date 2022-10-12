@@ -1,13 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {GetUniversalLessonWritingExcercisesQuery} from 'API';
+import * as customMutations from '@customGraphql/customMutations';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
+import {v4 as uuidV4} from 'uuid';
 import {IconContext} from 'react-icons/lib';
 import {getAsset} from '../../../assets';
-import {GlobalContext, useGlobalContext} from '../../../contexts/GlobalContext';
+import {useGlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import useDictionary from '../../../customHooks/dictionary';
 import usePrevious from '../../../customHooks/previousProps';
@@ -277,10 +278,11 @@ const Anthology = ({
 
   const createJournalData = async () => {
     const input = {
+      id: uuidV4(),
       studentID: journalEntryData.studentID,
       studentAuthID: journalEntryData.studentAuthID,
       studentEmail: journalEntryData.studentEmail,
-      type: journalEntryData.type,
+      type: journalEntryData.type || 'journal-entry',
       entryData: journalEntryData.entryData
     };
     // console.log('create input - ', input);
@@ -305,6 +307,11 @@ const Anthology = ({
       }
     });
 
+    // here we are getting error because of bad data.
+    // let's add some edge cases to handle this.
+    // updateUniversalJournalData mutation is giving error. because its origin data is missing.
+    // so if we are getting that error. let's create a new data object
+
     try {
       const input = {
         id: journalEntryData.id,
@@ -313,9 +320,17 @@ const Anthology = ({
         studentEmail: journalEntryData.studentEmail,
         entryData: journalEntryData.entryData
       };
-      const updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
-      );
+      try {
+        const res: any = await API.graphql(
+          graphqlOperation(customMutations.updateUniversalJournalData, {
+            input
+          })
+        );
+      } catch (error) {
+        // if we are getting null. it means that data is missing. so we need to create a new data object
+        const newJournalData = await createJournalData();
+      }
+
       setAllUniversalJournalData(mergedJournalData);
     } catch (e) {
       console.error('error updating journal data - ', e);
@@ -524,7 +539,7 @@ const Anthology = ({
       );
       setClassNotebook(archiveData.data.listUniversalArchiveData.items);
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: Anthology.tsx ~ line 527 ~ getUniversalArchiveData ~ error',
         error
       );
