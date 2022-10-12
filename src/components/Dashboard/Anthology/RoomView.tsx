@@ -147,7 +147,7 @@ const RoomView = ({
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5">
+            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
               ? mappedNotebookRoomCards
               : null}

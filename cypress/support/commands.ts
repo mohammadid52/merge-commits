@@ -15,7 +15,7 @@ declare global {
       dataCy(value: string): Chainable<Element>;
       closeCheckInModal(): Chainable<Element>;
       saveSurvey(): Chainable<Element>;
-      controlledInputChange(): Chainable<Element>;
+      controlledInputChange(value: string): Chainable<Element>;
     }
   }
 }
@@ -43,14 +43,17 @@ Cypress.Commands.add('saveSurvey', () => {
 
 Cypress.Commands.add(
   'controlledInputChange',
+  // @ts-ignore
   {prevSubject: 'element'},
-  (input, value) => {
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
+  (input: any, value) => {
+    // @ts-ignore
+    const nativeInputValueSetter: any = Object.getOwnPropertyDescriptor(
+      window?.HTMLInputElement?.prototype,
       'value'
     ).set;
     const changeInputValue = (inputToChange) => (newValue) => {
       nativeInputValueSetter.call(inputToChange[0], newValue);
+      // @ts-ignore
       inputToChange[0].dispatchEvent(new Event('change', {newValue, bubbles: true}));
     };
     return cy.get(input).then((input) => changeInputValue(input)(value));
