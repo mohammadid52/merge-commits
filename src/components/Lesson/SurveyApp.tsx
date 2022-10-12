@@ -599,8 +599,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           }
         })
       );
+      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
 
-      if (!existingLesson.data.listPersonLessonsData.items.length) {
+      if (!items.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -620,7 +621,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       } else {
         payload = {
-          id: uuidV4(),
+          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
 
           studentAuthID: user.authId,
           studentEmail: user.email,
