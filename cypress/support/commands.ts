@@ -15,6 +15,7 @@ declare global {
       dataCy(value: string): Chainable<Element>;
       closeCheckInModal(): Chainable<Element>;
       saveSurvey(): Chainable<Element>;
+      controlledInputChange(): Chainable<Element>;
     }
   }
 }

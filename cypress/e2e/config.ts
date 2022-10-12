@@ -40,7 +40,7 @@ export const loginConfig = {
 
     student2: {
       username: 'angela@iconoclasttraining.com',
-      password: 'admin123'
+      password: '2021Cla$$'
     },
 
     student3: {

@@ -393,6 +393,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         )}
         <div className="flex justify-end mb-4">
           <SearchInput
+            dataCy="user-loookup-search"
             value={searchInput.value}
             onChange={setSearch}
             onKeyDown={searchUserFromList}

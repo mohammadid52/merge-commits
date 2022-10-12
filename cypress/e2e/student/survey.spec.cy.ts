@@ -32,9 +32,9 @@ describe('Survey should work', () => {
     cy.login(loginConfig.student.username, loginConfig.student.password);
   });
 
-  // it('should go to survey', {defaultCommandTimeout: 20000}, function () {
-  //   loadActiveRoomData();
-  // });
+  it('should go to survey', {defaultCommandTimeout: 20000}, function () {
+    loadActiveRoomData();
+  });
 
   it('should complete survey', {defaultCommandTimeout: 20000}, function () {
     loadActiveRoomData();

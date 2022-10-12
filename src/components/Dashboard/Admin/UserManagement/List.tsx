@@ -24,7 +24,7 @@ const List = (props: ListProps) => {
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
-    message: '',
+    message: ''
   });
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS} = useDictionary(clientKey);
@@ -47,12 +47,12 @@ const List = (props: ListProps) => {
       await axios.post(requestResetPassword, {email: user.email});
       setResetPasswordServerResponse({
         show: true,
-        message: 'Password was reset',
+        message: 'Password was reset'
       });
     } catch (err) {
       setResetPasswordServerResponse({
         show: true,
-        message: 'Error in resetting password',
+        message: 'Error in resetting password'
       });
     } finally {
       setLoading(false);
@@ -108,7 +108,7 @@ const List = (props: ListProps) => {
   const onAlertClose = () => {
     setResetPasswordServerResponse({
       show: false,
-      message: '',
+      message: ''
     });
   };
 
@@ -130,7 +130,7 @@ const List = (props: ListProps) => {
                     background: `${stringToHslColor(
                       item.firstName + ' ' + item.lastName
                     )}`,
-                    textShadow: '0.1rem 0.1rem 2px #423939b3',
+                    textShadow: '0.1rem 0.1rem 2px #423939b3'
                   }}>
                   {initials(
                     item.preferredName ? item.preferredName : item.firstName,
@@ -141,6 +141,9 @@ const List = (props: ListProps) => {
             </div>
             <div className="ml-2">
               <div
+                data-cy={`${item.lastName}, ${
+                  item.preferredName ? item.preferredName : item.firstName
+                }`}
                 id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={handleLink}>
