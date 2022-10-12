@@ -47,7 +47,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 1500;
+  const STANDARD_INTERVAL = 3000;
   const SURVEY_INTERVAL = 100;
 
   useEffect(() => {
@@ -194,11 +194,14 @@ const useStudentTimer = () => {
 
       try {
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
+          graphqlOperation(mutations?.updateUniversalSurveyStudentData, {input: data})
         );
         // await filterData();
         console.log('updateSurveyData - success');
       } catch (e) {
+        await API.graphql(
+          graphqlOperation(mutations?.createUniversalSurveyStudentData, {input: data})
+        );
         console.error('updateSurveyData - ', e);
       } finally {
         return Promise.resolve();
