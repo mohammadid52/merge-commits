@@ -136,6 +136,7 @@ const Anthology = ({
     const allExerciseEntryData = allStudentData.reduce(
       (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
         if (val.roomID === roomID) {
+          console.log(val.roomID, roomID);
           const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
             return {
               id: exercise.id,
@@ -555,7 +556,7 @@ const Anthology = ({
         })
       );
       setAllUniversalClassData(
-        allUniversalClassData.data.listUniversalLessonWritingExcercises.items
+        allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items || []
       );
     } catch (error) {
       console.error(

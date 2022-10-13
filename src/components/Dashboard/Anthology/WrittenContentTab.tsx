@@ -333,41 +333,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
         })
       ) : (
         <>
-          {subSection === 'Work' && allUniversalClassData.length > 0 ? (
-            <div className="work">
-              {allUniversalClassData.map((first: any) =>
-                first.pageData.map((three: any) => {
-                  return (
-                    <div
-                      dangerouslySetInnerHTML={{__html: three.input || '<p></p>'}}></div>
-                  );
-                })
-              )}
-            </div>
-          ) : (
-            subSection === 'Notes' &&
-            classNotebook.length > 0 && (
-              <div className="note">
-                {classNotebook.map((element: any) =>
-                  element.pageData.map((second: any) => {
-                    return (
-                      <div dangerouslySetInnerHTML={{__html: second.input || '<p></p>'}}>
-                        {/* {second.input ? ReactHtmlParser(second.input) : '<p></p>'} */}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )
-          )}
-
-          {allUniversalClassData.length === 0 && classNotebook.length === 0 && (
-            <div className="p-12 flex flex-center items-center">
-              <p className="text-center text-lg text-gray-500">
-                No content for {subSection} section
-              </p>
-            </div>
-          )}
+          <div className="p-12 flex flex-center items-center">
+            <p className="text-center text-lg text-gray-500">
+              {subSection === 'Work'
+                ? 'No writing exercises are in your notebook for your course yet.'
+                : `No content for ${subSection} section`}
+            </p>
+          </div>
         </>
       )}
     </>
