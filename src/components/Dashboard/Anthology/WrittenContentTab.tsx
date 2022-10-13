@@ -1,10 +1,10 @@
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import React, {useContext} from 'react';
+import React from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import {getAsset} from '../../../assets';
-import {GlobalContext, useGlobalContext} from '../../../contexts/GlobalContext';
+import {useGlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
@@ -15,7 +15,6 @@ import RichTextEditor from '../../Atoms/RichTextEditor';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
 import SingleNote from './WrittenContentTab/SingleNote';
-import ReactHtmlParser from 'react-html-parser';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {

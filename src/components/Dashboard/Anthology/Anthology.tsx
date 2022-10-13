@@ -95,6 +95,7 @@ const Anthology = ({
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
     UniversalJournalData[]
   >([]);
+
   const [allUniversalClassData, setAllUniversalClassData] = useState<
     UniversalClassData[]
   >([]);
@@ -163,6 +164,7 @@ const Anthology = ({
       },
       []
     );
+
     setAllExerciseData(allExerciseEntryData);
   };
 
