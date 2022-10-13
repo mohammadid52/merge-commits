@@ -290,10 +290,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
       )}
       {content.length > 0 ? (
         content.map((contentObj: UniversalJournalData, idx: number) => {
-          console.log(
-            '🚀 ~ file: WrittenContentTab.tsx ~ line 294 ~ content.map ~ contentObj',
-            contentObj
-          );
           return (
             <EmptyViewWrapper
               key={`emptyview_${idx}`}
