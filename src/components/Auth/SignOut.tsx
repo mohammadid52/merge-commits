@@ -6,7 +6,7 @@ import {Auth} from '@aws-amplify/auth';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from '../../customGraphql/customMutations';
 import {FiLogOut} from 'react-icons/all';
-import { removeLocalStorageData } from '../../utilities/localStorage';
+import {removeLocalStorageData} from '../../utilities/localStorage';
 
 interface SignOutButtonProps {
   updateAuthState: Function;
@@ -23,7 +23,7 @@ const SignOutButton = (props: SignOutButtonProps) => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString(),
+        lastLoggedOut: new Date().toISOString()
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
@@ -46,6 +46,7 @@ const SignOutButton = (props: SignOutButtonProps) => {
     <>
       {state.isAuthenticated ? (
         <div
+          data-cy="logout-button"
           onClick={handleSignOut}
           className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
           <div className="flex-shrink-0 group block">
@@ -53,7 +54,7 @@ const SignOutButton = (props: SignOutButtonProps) => {
               <IconContext.Provider
                 value={{
                   size: '24px',
-                  className: 'w-auto mr-1',
+                  className: 'w-auto mr-1'
                 }}>
                 <FiLogOut className="cursor-pointer" />
               </IconContext.Provider>

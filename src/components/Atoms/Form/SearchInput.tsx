@@ -11,6 +11,7 @@ interface SearchProps {
   closeAction?: () => void;
   style?: string;
   liveSearch?: boolean;
+  dataCy?: string;
 }
 
 const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
@@ -21,6 +22,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
     onKeyDown,
     closeAction,
     style,
+    dataCy
   } = searchProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -60,6 +62,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         </IconContext.Provider>
       </span>
       <input
+        data-cy={dataCy}
         placeholder={liveSearch ? 'Type atleaset 3 characters...' : 'Search...'}
         id="searchInput"
         value={value ? value : ''}

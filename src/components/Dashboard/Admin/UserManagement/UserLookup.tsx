@@ -393,6 +393,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         )}
         <div className="flex justify-end mb-4">
           <SearchInput
+            dataCy="user-loookup-search"
             value={searchInput.value}
             onChange={setSearch}
             onKeyDown={searchUserFromList}
@@ -444,6 +445,11 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UserLookupDict[userLanguage]['name']}</span>
+                </div>
+                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span className="w-auto">
+                    {UserLookupDict[userLanguage]['location']}
+                  </span>
                 </div>
                 <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>

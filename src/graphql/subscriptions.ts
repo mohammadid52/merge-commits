@@ -14149,10 +14149,12 @@ export const onCreateCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }
@@ -14164,10 +14166,12 @@ export const onUpdateCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }
@@ -14179,10 +14183,12 @@ export const onDeleteCypressTesting = /* GraphQL */ `
       id
       testID
       testName
+      testType
       testSteps
       testData
       testExpResults
       edgeCases
+      lastUpdate
       createdAt
       updatedAt
     }

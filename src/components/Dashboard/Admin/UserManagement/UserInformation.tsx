@@ -30,14 +30,14 @@ const UserInformation = ({
   checkpoints,
   questionData,
   tab,
-  setTab,
+  setTab
 }: UserInfoProps) => {
   const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
   const {UserInformationDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
-    message: '',
+    message: ''
   });
 
   let created = () => {
@@ -72,7 +72,7 @@ const UserInformation = ({
   const themeColor = getAsset(clientKey, 'themeClassName');
   const getColor = (condition: boolean) => ({
     borderColor: condition ? `${theme.iconColor[themeColor]}` : 'transparent',
-    color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280',
+    color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280'
   });
 
   const resetPassword = async () => {
@@ -81,14 +81,14 @@ const UserInformation = ({
       await axios.post(requestResetPassword, {email: user.email});
       setResetPasswordServerResponse({
         show: true,
-        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_SUCCESS'],
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_SUCCESS']
       });
       setLoading(false);
     } catch (err) {
       console.log('error', err);
       setResetPasswordServerResponse({
         show: true,
-        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_FAILURE'],
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_FAILURE']
       });
       setLoading(false);
     }
@@ -96,7 +96,7 @@ const UserInformation = ({
   const onAlertClose = () => {
     setResetPasswordServerResponse({
       show: false,
-      message: '',
+      message: ''
     });
   };
 
@@ -149,7 +149,7 @@ const UserInformation = ({
                           'group-hover:text-gray-500',
                           'ml-2 h-5 w-5'
                         ),
-                        color: getColor(tab === 'private').color,
+                        color: getColor(tab === 'private').color
                       }}>
                       <IoLockClosed />
                     </IconContext.Provider>
@@ -219,6 +219,7 @@ const UserInformation = ({
                 </div>
                 <div className="sm:col-span-1 p-2 flex items-centers">
                   <Buttons
+                    dataCy="reset-password-button"
                     label={
                       loading
                         ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']

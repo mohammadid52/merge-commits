@@ -1,18 +1,14 @@
 import React, {Fragment, useContext} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaEdit} from 'react-icons/fa';
-import {NavLink, useRouteMatch} from 'react-router-dom';
 import {RiLock2Fill} from 'react-icons/ri';
-import {BsLockFill} from 'react-icons/bs';
+import {NavLink, useRouteMatch} from 'react-router-dom';
 
-import Dropdown from './Dropdown';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {UserInfo} from './Profile';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import ToolTip from '../../General/ToolTip/ToolTip';
 import useDictionary from '../../../customHooks/dictionary';
 import {getUserRoleString} from '../../../utilities/strings';
 import Tooltip from '../../Atoms/Tooltip';
+import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import {UserInfo} from './Profile';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -97,6 +93,14 @@ const ProfileInfo = (props: UserInfoProps) => {
                   {`${user.preferredName ? user.preferredName : '--'}`}
                 </dd>
               </div>
+              <div className="sm:col-span-1 p-2">
+                <dt className="text-sm leading-5 font-medium text-gray-500">
+                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['NICKNAME']}
+                </dt>
+                <dd className="mt-1 text-sm leading-5 text-gray-900">
+                  {`${user.preferredName ? user.preferredName : '--'}`}
+                </dd>
+              </div>
 
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
@@ -138,7 +142,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                           value={{
                             className: 'w-auto',
                             size: '1rem',
-                            color: 'rgba(160, 174, 192, 1)',
+                            color: 'rgba(160, 174, 192, 1)'
                           }}>
                           <RiLock2Fill />
                         </IconContext.Provider>
@@ -167,7 +171,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                           value={{
                             className: 'w-auto',
                             size: '1rem',
-                            color: 'rgba(160, 174, 192, 1)',
+                            color: 'rgba(160, 174, 192, 1)'
                           }}>
                           <RiLock2Fill />
                         </IconContext.Provider>

@@ -841,6 +841,7 @@ export type CreatePersonLessonsDataInput = {
 export type ModelPersonLessonsDataConditionInput = {
   studentAuthID?: ModelStringInput | null,
   studentEmail?: ModelStringInput | null,
+  lessonID?: ModelStringInput | null,
   lessonType?: ModelStringInput | null,
   pages?: ModelStringInput | null,
   ratings?: ModelIntInput | null,
@@ -862,17 +863,17 @@ export type ModelIntInput = {
 };
 
 export type UpdatePersonLessonsDataInput = {
-  id?: string | null,
+  id: string,
   studentAuthID?: string | null,
   studentEmail?: string | null,
-  lessonID: string,
+  lessonID?: string | null,
   lessonType?: string | null,
   pages?: string | null,
   ratings?: number | null,
 };
 
 export type DeletePersonLessonsDataInput = {
-  lessonID: string,
+  id: string,
 };
 
 export type CreateInstitutionInput = {
@@ -3834,19 +3835,23 @@ export type CreateCypressTestingInput = {
   id?: string | null,
   testID: string,
   testName: string,
+  testType: string,
   testSteps: string,
   testData: string,
   testExpResults: string,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
 };
 
 export type ModelCypressTestingConditionInput = {
   testID?: ModelStringInput | null,
   testName?: ModelStringInput | null,
+  testType?: ModelStringInput | null,
   testSteps?: ModelStringInput | null,
   testData?: ModelStringInput | null,
   testExpResults?: ModelStringInput | null,
   edgeCases?: ModelStringInput | null,
+  lastUpdate?: ModelStringInput | null,
   and?: Array< ModelCypressTestingConditionInput | null > | null,
   or?: Array< ModelCypressTestingConditionInput | null > | null,
   not?: ModelCypressTestingConditionInput | null,
@@ -3857,10 +3862,12 @@ export type CypressTesting = {
   id: string,
   testID: string,
   testName: string,
+  testType: string,
   testSteps: string,
   testData: string,
   testExpResults: string,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -3869,10 +3876,12 @@ export type UpdateCypressTestingInput = {
   id: string,
   testID?: string | null,
   testName?: string | null,
+  testType?: string | null,
   testSteps?: string | null,
   testData?: string | null,
   testExpResults?: string | null,
   edgeCases?: string | null,
+  lastUpdate?: string | null,
 };
 
 export type DeleteCypressTestingInput = {
@@ -4889,10 +4898,12 @@ export type ModelCypressTestingFilterInput = {
   id?: ModelIDInput | null,
   testID?: ModelStringInput | null,
   testName?: ModelStringInput | null,
+  testType?: ModelStringInput | null,
   testSteps?: ModelStringInput | null,
   testData?: ModelStringInput | null,
   testExpResults?: ModelStringInput | null,
   edgeCases?: ModelStringInput | null,
+  lastUpdate?: ModelStringInput | null,
   and?: Array< ModelCypressTestingFilterInput | null > | null,
   or?: Array< ModelCypressTestingFilterInput | null > | null,
   not?: ModelCypressTestingFilterInput | null,
@@ -20627,10 +20638,12 @@ export type CreateCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20647,10 +20660,12 @@ export type UpdateCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20667,10 +20682,12 @@ export type DeleteCypressTestingMutation = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20807,7 +20824,7 @@ export type ListPeopleQuery = {
 };
 
 export type GetPersonLessonsDataQueryVariables = {
-  lessonID: string,
+  id: string,
 };
 
 export type GetPersonLessonsDataQuery = {
@@ -20826,7 +20843,7 @@ export type GetPersonLessonsDataQuery = {
 };
 
 export type ListPersonLessonsDataQueryVariables = {
-  lessonID?: string | null,
+  id?: string | null,
   filter?: ModelPersonLessonsDataFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
@@ -28582,10 +28599,12 @@ export type GetCypressTestingQuery = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -28607,10 +28626,12 @@ export type ListCypressTestingsQuery = {
       id: string,
       testID: string,
       testName: string,
+      testType: string,
       testSteps: string,
       testData: string,
       testExpResults: string,
       edgeCases?: string | null,
+      lastUpdate?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -44309,10 +44330,12 @@ export type OnCreateCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44324,10 +44347,12 @@ export type OnUpdateCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -44339,10 +44364,12 @@ export type OnDeleteCypressTestingSubscription = {
     id: string,
     testID: string,
     testName: string,
+    testType: string,
     testSteps: string,
     testData: string,
     testExpResults: string,
     edgeCases?: string | null,
+    lastUpdate?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

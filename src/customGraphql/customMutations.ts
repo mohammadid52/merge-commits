@@ -76,6 +76,34 @@ export const updateUniversalLesson = /* GraphQL */ `
   }
 `;
 
+export const updateUniversalJournalData = /* GraphQL */ `
+  mutation UpdateUniversalJournalData(
+    $input: UpdateUniversalJournalDataInput!
+    $condition: ModelUniversalJournalDataConditionInput
+  ) {
+    updateUniversalJournalData(input: $input, condition: $condition) {
+      id
+      studentID
+      studentAuthID
+      studentEmail
+      type
+      entryData {
+        domID
+        type
+        input
+      }
+      feedbacks
+      shared
+      lessonID
+      syllabusLessonID
+      lessonType
+      roomID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updatePerson = /* GraphQL */ `
   mutation UpdatePerson(
     $input: UpdatePersonInput!

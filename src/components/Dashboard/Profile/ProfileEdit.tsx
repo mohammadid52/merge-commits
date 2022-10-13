@@ -434,6 +434,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
                   <NavLink
+                    data-cy="edit-password-link"
                     className="text-gray-500 lowercase text-center mt-2 md:mt-0 md:text-right md:float-right w-auto"
                     to={path}>
                     <p className="font-medium text-sm md:text-base">

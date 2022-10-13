@@ -41,7 +41,7 @@ const useGraphqlQuery = <VariablesType, ReturnType>(
   isError?: boolean;
   error?: string;
   setData?: React.Dispatch<React.SetStateAction<ReturnType>>;
-  refetch?: () => Promise<any>;
+  refetch?: (variables?: VariablesType) => Promise<any>;
 } => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -55,12 +55,18 @@ const useGraphqlQuery = <VariablesType, ReturnType>(
 
   const action = custom ? customQueries : queries;
 
-  const fetch = async (nextToken?: string, loopArray?: any[]) => {
+  const fetch = async (
+    nextToken?: string,
+    loopArray?: any[],
+    _variables?: VariablesType
+  ) => {
     try {
+      const _v = _variables || variables;
+
       setIsLoading(true);
       const res: any = await API.graphql(
         // @ts-ignore
-        graphqlOperation(action[queryName], {...variables, nextToken: nextToken})
+        graphqlOperation(action[queryName], {..._v, nextToken: nextToken})
       );
       const data = res.data[queryName].items;
       const theNextToken = res.data[queryName]?.nextToken;
@@ -77,6 +83,7 @@ const useGraphqlQuery = <VariablesType, ReturnType>(
           if (onSuccess && typeof onSuccess === 'function') {
             onSuccess(outputData, (updatedData) => setData(updatedData));
           }
+
           return outputData;
         }
       }
@@ -91,7 +98,7 @@ const useGraphqlQuery = <VariablesType, ReturnType>(
     }
   };
 
-  const refetch = () => fetch();
+  const refetch = (variables: VariablesType) => fetch(null, [], variables);
 
   useEffect(() => {
     if (!isFetched && enabled) {

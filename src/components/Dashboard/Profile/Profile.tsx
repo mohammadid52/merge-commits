@@ -303,22 +303,7 @@ const Profile = (props: ProfilePageProps) => {
           bannerImage={profileBanner1}
           title={'Profile'}
         />
-        {/* Hero Section */}
-        {/* <div>
-          <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
-        </div> */}
-        {/* Header */}
-        {/* {person && (
-          <div
-            className={`${theme.section} relative -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
-            <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
-              <span className="font-semibold">
-                {person.preferredName ? person.preferredName : person.firstName}
-              </span>
-              , update your avatar, personal information & profile questions here.
-            </h2>
-          </div>
-        )} */}
+
         <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           <div className="flex justify-between flex-col md:flex-row mt-5">
@@ -330,6 +315,7 @@ const Profile = (props: ProfilePageProps) => {
             {currentPath !== 'edit' && currentPath !== 'password' ? (
               <div className="flex justify-end py-2 2xl:py-4 mb-2 2xl:mb-4 w-full md:w-3/5 lg:w-5/10">
                 <Buttons
+                  dataCy="edit-profile-button"
                   btnClass="ml-6"
                   label="Edit"
                   onClick={() => history.push(`${match.url}/edit`)}
@@ -357,6 +343,7 @@ const Profile = (props: ProfilePageProps) => {
                               mediaRef={mediaRef}>
                               {imageUrl ? (
                                 <img
+                                  data-cy="profile-image"
                                   className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                                   src={imageUrl}
                                 />
@@ -412,50 +399,6 @@ const Profile = (props: ProfilePageProps) => {
                 {/* TODO : Need to convert this into tabs instead of buttons. 
                     Currently we have only single tab so hiding this.
                 */}
-
-                {/* <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
-                  <div onClick={() => setSelect('Profile')} className={` ${select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                    <NavLink to={`${match.url}`}>
-                      My Profile
-                    </NavLink>
-                  </div>
-
-                  <div onClick={() => setSelect('AboutMe')} className={` ${select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                    <NavLink to={`${match.url}/about`}>
-                      About Me
-                    </NavLink>
-                  </div>
-
-                  <div onClick={() => setSelect('Vault')} className={` ${select === 'Vault' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                    <NavLink to={`${match.url}/vault`}>
-                      Vault
-                    </NavLink>
-                  </div>
-
-                </div> */}
-
-                {/* <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
-                  <NavLink to={`/dashboard`}>
-                    <button type="submit" className="inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
-                      Go Back
-                      <span className="w-8 pl-3 h-4 flex items-center">
-                        <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-                          <IoArrowUndoCircleOutline />
-                        </IconContext.Provider>
-                      </span>
-                      <ToolTip
-                        position='bottom'
-                        header=''
-                        display='none'
-                        content='Return to Classroom'
-                        id={'goBack'}
-                        cursor
-                        width='w-24 px-1 flex justify-center items-center'
-                        fontSize='text-xs'
-                      />
-                    </button>
-                  </NavLink>
-                </div> */}
 
                 <Switch>
                   <Route

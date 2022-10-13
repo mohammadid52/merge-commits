@@ -28,7 +28,7 @@ const EditBackstory = ({
   setShow,
   studentSentiments,
   data,
-  setStudentSentiments,
+  setStudentSentiments
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,7 +55,7 @@ const EditBackstory = ({
         personEmail: data.personEmail,
         date: data.date,
         time: data.time,
-        backstory,
+        backstory
       };
       await API.graphql(
         graphqlOperation(customMutations.updatePersonSentiments, {input: payload})
@@ -85,6 +85,7 @@ const EditBackstory = ({
         showFooter={false}>
         <div className="min-w-96 max-w-132 min-h-32">
           <FormInput
+            dataCy="backstory-input"
             rows={3}
             showCharacterUsage
             className={'mb-2'}
@@ -96,6 +97,7 @@ const EditBackstory = ({
           />
           <div className="flex items-center justify-end mt-4">
             <Buttons
+              dataCy="backstory-button"
               disabled={saving}
               btnClass="py-1 px-8 text-xs ml-2"
               label={
@@ -141,7 +143,7 @@ const SentimentTab = () => {
         personAuthID: authId,
         limit: 8,
         sortDirection: 'DESC',
-        nextToken: nextToken || null,
+        nextToken: nextToken || null
       };
 
       const res: any = await API.graphql(
@@ -155,7 +157,7 @@ const SentimentTab = () => {
         backstory: record.backstory,
         date: record.date,
         time: record.time,
-        responseText: record.responseText,
+        responseText: record.responseText
       }));
       if (fetchNewRecords) {
         setStudentSentiments(temp);
@@ -317,7 +319,7 @@ const SentimentTab = () => {
                                   personAuthID: sentiment.personAuthID,
                                   personEmail: sentiment.personEmail,
                                   date: sentiment.date,
-                                  time: sentiment.time,
+                                  time: sentiment.time
                                 });
                               }}
                               className={`cursor-pointer iconoclast:curate-600 hover:curate:text-900 iconoclast:text-600 hover:iconoclast:text-900 `}>
@@ -346,6 +348,7 @@ const SentimentTab = () => {
           role="list">
           {studentSentiments.map((sentiment, sentimentIdx) => (
             <li
+              data-cy="sentiment-emoji"
               title={getEmojiName(sentiment?.responseText)}
               key={sentimentIdx}
               onClick={(e) => {
@@ -358,7 +361,7 @@ const SentimentTab = () => {
                   personAuthID: sentiment.personAuthID,
                   personEmail: sentiment.personEmail,
                   date: sentiment.date,
-                  time: sentiment.time,
+                  time: sentiment.time
                 });
               }}
               className="col-span-1 flex flex-col text-center items-center justify-center">

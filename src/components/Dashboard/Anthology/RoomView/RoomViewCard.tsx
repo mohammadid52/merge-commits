@@ -44,9 +44,7 @@ const RoomViewCard = ({
       {/* FRONT PAGE */}
       <div
         data-cy="room-view-card"
-        className={`relative z-50 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250  ${
-          roomID === 'private' ? 'h-56' : ''
-        }
+        className={`relative z-50 md:h-56 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 sm:h-full
       ${
         noneSelected
           ? 'shadow-lg scale-90'
@@ -64,12 +62,12 @@ const RoomViewCard = ({
         <div
           data-cy={roomID}
           onClick={() => handleSectionSelect(type, roomID, curriculumName)}
-          className={`flex flex-col rounded-r-lg cursor-pointer md:h-50 lg:h-60 md:w-32 lg:w-40 overflow-hidden`}>
+          className={`flex flex-col rounded-r-lg cursor-pointer md:h-56 lg:h-60 md:w-32 lg:w-40 overflow-hidden`}>
           {/* START - IMAGE AND LABEL */}
 
           <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
             {/* START- LABEL WRAPPER */}
-            <div className="absolute flex items-center  h-full w-full max-w-48 px-2 z-50 ">
+            <div className="absolute flex items-end md:items-center  h-full w-full mb-4 md:mb-0 md:max-w-48 px-2 z-50 ">
               {/* OVERLAY LABEL */}
               <div className="border-2 border-white">
                 <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-90 flex-1 border-0 border-gray-900 p-2">
@@ -118,7 +116,7 @@ const RoomViewCard = ({
 
       {/* BACK PAGE */}
       <div
-        className={`absolute h-72 md:h-auto z-40 top-0 md:h-50 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
+        className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
       ${
         noneSelected
           ? 'shadow-lg scale-90'

@@ -42,8 +42,7 @@ const Start: React.FC<StartProps> = ({
   accessible,
   type,
   roomID,
-  preview,
-  isUsed
+  preview
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -84,38 +83,6 @@ const Start: React.FC<StartProps> = ({
       fetchAttendance();
     }
   }, [state.roomData.syllabus]);
-
-  // useEffect(() => {
-  //   getLessonCurrentPage(lessonKey, user.email, user.authId);
-  // }, []);
-  // const mutateToggleEnableDisable = async () => {
-  //   const mutatedLessonData = {
-  //     id: lessonKey,
-  //     status: open ? 'Inactive' : 'Active',
-  //   };
-  //   await API.graphql(
-  //     graphqlOperation(customMutations.updateSyllabusLesson, {
-  //       input: mutatedLessonData,
-  //     })
-  //   );
-  // };
-
-  // const toggleEnableDisable = async () => {
-  //   const arrayWithToggledLesson = state.roomData.lessons.map(
-  //     (lesson: Lesson, i: number) => {
-  //       if (lesson.id === lessonKey) {
-  //         return {...lesson, status: lesson.status === 'Active' ? 'Inactive' : 'Active'};
-  //       } else {
-  //         return lesson;
-  //       }
-  //     }
-  //   );
-  //   await mutateToggleEnableDisable();
-  //   dispatch({
-  //     type: 'TOGGLE_LESSON',
-  //     payload: {property: 'lessons', data: arrayWithToggledLesson},
-  //   });
-  // };
 
   const getLessonCurrentPage = async (
     lessonId: string,
@@ -247,8 +214,8 @@ const Start: React.FC<StartProps> = ({
         if (!attendanceRecorded) {
           await recordAttendance(lessonProps);
         }
-        await getLessonCurrentPage(lessonKey, user.email, user.authId);
-        history.push(`/lesson/${lessonKey}/${pageNumber}`);
+        // await getLessonCurrentPage(lessonKey, user.email, user.authId);
+        history.push(`/lesson/${lessonKey}/${lessonProps?.currentPage}`);
         // history.push(`/lesson/${lessonKey}/0`);
       } catch (error) {
         setLoading(false);
@@ -276,7 +243,6 @@ const Start: React.FC<StartProps> = ({
         }
         history.push(goBackUrl);
       } else {
-        // toggleLessonSwitchAlert();
         discardChanges();
       }
       // }

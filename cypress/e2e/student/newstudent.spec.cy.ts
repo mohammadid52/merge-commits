@@ -8,8 +8,8 @@ describe('Student flow', () => {
   });
 
   it('should go to profile', {defaultCommandTimeout: 20000}, function () {
-    cy.url().should('contain', urlConfig.dashboardURL);
-    cy.dataCy('dropdown-button').click();
-    cy.dataCy('dropdown-item-profile').click();
+    cy.url().should('contain', urlConfig.dashboardURL); // Check if it is on dashboard page
+    cy.dataCy('dropdown-button').click(); // Click on profile dropdown
+    cy.dataCy('dropdown-item-profile').click(); // Click on edit profile dropdown button
   });
 });

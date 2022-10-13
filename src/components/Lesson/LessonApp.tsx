@@ -2,14 +2,14 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import '@components/Dashboard/GameChangers/styles/Flickity.scss';
 import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+import * as customSubscriptions from '@customGraphql/customSubscriptions';
+import * as mutations from '@graphql/mutations';
+import * as queries from '@graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -19,8 +19,8 @@ import {
   UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+} from '@interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
@@ -31,7 +31,7 @@ import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const displayData = gContext.lessonState.displayData;
@@ -560,9 +560,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       combined = [...outArray, ...studentDataRows];
 
       if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
-        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        // combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
+
+      lessonDispatch({type: 'LESSON_LOADED', payload: true});
       // console.log('no more - ', combined);
       setLessonDataLoaded(true);
       return combined;
@@ -653,28 +654,32 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             }
           });
         } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-          const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-          const filteredData = filterStudentData(
-            existStudentDataIdArray,
-            currentStudentData
-          );
-          const finalData = mergedStudentData(
-            filteredData.pageData,
-            lessonState.studentData
-          );
-          const concatExerciseData = mergedExerciseData(
-            filteredData.exerciseData,
-            lessonState.exerciseData
-          );
-          // console.log('merged data', finalData);
-          lessonDispatch({
-            type: 'LOAD_STUDENT_DATA',
-            payload: {
-              dataIdReferences: existStudentDataIdArray,
-              filteredStudentData: finalData,
-              filteredExerciseData: concatExerciseData
-            }
-          });
+          try {
+            const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+            const filteredData = filterStudentData(
+              existStudentDataIdArray,
+              currentStudentData
+            );
+            const finalData = mergedStudentData(
+              filteredData.pageData,
+              lessonState.studentData
+            );
+            const concatExerciseData = mergedExerciseData(
+              filteredData.exerciseData,
+              lessonState.exerciseData
+            );
+            // console.log('merged data', finalData);
+            lessonDispatch({
+              type: 'LOAD_STUDENT_DATA',
+              payload: {
+                dataIdReferences: existStudentDataIdArray,
+                filteredStudentData: finalData,
+                filteredExerciseData: concatExerciseData
+              }
+            });
+          } catch (error) {
+            console.error('Something wrong when loading student data', error);
+          }
         }
       }
     } catch (err) {
@@ -839,13 +844,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
+  const getPersonLessonsDataId = (): string =>
+    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+
   const getLessonCurrentPage = async () => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthID: user.authId
+          id: getPersonLessonsDataId()
+          // lessonID: lessonID,
+          // studentEmail: user.email,
+          // studentAuthID: user.authId
         })
       );
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -1008,9 +1017,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthId: user.authId
+          id: getPersonLessonsDataId(),
+          filter: {
+            lessonID: {eq: lessonID},
+            studentEmail: {eq: user.email},
+            studentAuthId: {eq: user.authId}
+          }
         })
       );
 
@@ -1024,20 +1036,39 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     } catch (error) {}
   };
 
+  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
+
   const handleLessonMutateData = async () => {
     try {
       let payload;
-      const existingLesson: any = await API.graphql(
-        graphqlOperation(queries.listPersonLessonsData, {
-          filter: {
-            lessonID: {eq: lessonID},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
-          }
-        })
-      );
+      let existingLesson: any;
 
-      if (!existingLesson.data.listPersonLessonsData?.items?.length) {
+      const personLessonData = lessonState?.misc?.personLessonData;
+
+      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+        existingLesson = {data: {listPersonLessonsData: {items: personLessonData?.data}}};
+      } else {
+        existingLesson = await API.graphql(
+          graphqlOperation(queries.listPersonLessonsData, {
+            filter: {
+              lessonID: {eq: lessonID},
+              studentAuthID: {eq: user.authId},
+              studentEmail: {eq: user.email}
+            }
+          })
+        );
+        lessonDispatch({
+          type: 'SET_PERSON_LESSON_DATA',
+          payload: {
+            lessonID: lessonID,
+            data: existingLesson?.data?.listPersonLessonsData?.items || []
+          }
+        });
+      }
+
+      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+
+      if (!items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -1054,10 +1085,14 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          graphqlOperation(mutations.createPersonLessonsData, {
+            input: payload
+          })
         );
       } else {
+        setListPersonLessonsData(items);
         payload = {
+          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,
@@ -1114,7 +1149,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
-            getLessonCompletedValue={getLessonCompletedValue}
+            getLessonCompletedValue={
+              listPersonLessonsData.length > 0 && getLessonCompletedValue
+            }
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

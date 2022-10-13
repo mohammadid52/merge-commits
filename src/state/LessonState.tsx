@@ -1,6 +1,6 @@
 import {
   StudentExerciseData,
-  StudentPageInput,
+  StudentPageInput
 } from '../interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
@@ -27,6 +27,12 @@ export interface lessonStateType {
   subscribeFunc?: any;
   studentViewing?: string;
   isLastPage?: boolean;
+  misc?: {
+    personLessonData?: {
+      lessonID: string;
+      data: any[];
+    };
+  };
 }
 
 export const lessonState: lessonStateType = {
@@ -53,4 +59,10 @@ export const lessonState: lessonStateType = {
   subscription: {},
   subscribeFunc: () => {},
   studentViewing: '',
+  misc: {
+    personLessonData: {
+      lessonID: '',
+      data: []
+    }
+  }
 };

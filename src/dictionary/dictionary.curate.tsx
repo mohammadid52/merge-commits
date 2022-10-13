@@ -2897,6 +2897,7 @@ const UserLookupDict: any = {
     sortby: 'Sort By',
     name: 'Name',
     role: 'Role',
+    location: 'location',
     status: 'Status',
     action: 'Actions',
     noresult: 'No Results',
@@ -2912,6 +2913,7 @@ const UserLookupDict: any = {
     role: 'TBD',
     status: 'TBD',
     action: 'TBD',
+    location: 'location',
     noresult: 'TBD',
     button: {
       add: 'TBD'
