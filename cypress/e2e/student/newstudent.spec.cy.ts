@@ -63,7 +63,11 @@ describe('Check Student Ondemand', () => {
     cy.url().should('contain', urlConfig.dashboardURL); // Check if it is on dashboard page
     cy.visit(registryUrl); // go to user registry page
     cy.wait(10000); // Wait
-    userLookup('YES');
+    cy.dataCy('user-loookup-search').clear().type(`${userName}{enter}`); // search for user
+    cy.wait(3000); // wait for page to load
+    cy.visit(userUrl); // go to user page
+    cy.wait(10000); // Wait
+    // userLookup('YES');
     cy.dataCy('edit-user-button').click(); // Click on edit user button
     cy.dataCy('dropdown-ondemand').click(); // Click on ondemand dropdown
     cy.dataCy('dropdown-item-ondemand-0').click(); // Click on yes dropdown item
@@ -81,7 +85,11 @@ describe('Check Student Ondemand', () => {
     cy.url().should('contain', urlConfig.dashboardURL); // Check if it is on dashboard page
     cy.visit(registryUrl); // go to user registry page
     cy.wait(10000); // Wait
-    userLookup('NO');
+    cy.dataCy('user-loookup-search').clear().type(`${userName}{enter}`); // search for user
+    cy.wait(3000); // wait for page to load
+    cy.visit(userUrl); // go to user page
+    cy.wait(10000); // Wait
+    // userLookup('NO');
     cy.dataCy('edit-user-button').click(); // Click on edit user button
     cy.dataCy('dropdown-ondemand').click(); // Click on ondemand dropdown
     cy.dataCy('dropdown-item-ondemand-1').click(); // Click on yes dropdown item
