@@ -100,11 +100,18 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const [staticText, setStaticText] = useState('');
 
+  const [loading, setLoading] = useState(true);
+
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
   useEffect(() => {
     if (!isEmpty(value)) {
-      setEditorState(value[0].value);
-      setStaticText(value[0].value);
+      setLoading(true);
+      setTimeout(() => {
+        setDataValue(id, [value[0].value]);
+        setEditorState(value[0].value);
+        setStaticText(value[0].value);
+      }, 300);
+      setLoading(false);
     }
   }, [value]);
 
@@ -112,41 +119,81 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   useEffect(() => {
     if (editorState !== '') {
       if (getDataValue(id)[0] === '' && isStudent) {
+        setLoading(true);
         setDataValue(id, [editorState]);
+        setLoading(false);
       }
     }
   }, [editorState]);
 
   //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
   useEffect(() => {
-    if (isInLesson && !isStudent) {
-      const incomingStudentVal = getDataValue(id)[0];
-      if (incomingStudentVal !== '') {
-        setEditorState(incomingStudentVal);
-      } else {
-        setEditorState(value[0].value);
+    setTimeout(() => {
+      if (isInLesson && !isStudent) {
+        setLoading(true);
+        const incomingStudentVal = getDataValue(id)[0];
+        if (incomingStudentVal !== '') {
+          setEditorState(incomingStudentVal);
+        } else {
+          setEditorState(value[0].value);
+        }
+        setLoading(false);
       }
-    }
+    }, 300);
   }, [lessonState.studentData]);
 
   const features: string[] = ['colorPicker', 'inline'];
 
+  const fetchTeacherValue = () => {
+    const currentPage: UniversalLessonPage = get(
+      lessonState.lessonData,
+      `lessonPlan[${lessonState.currentPage}]`,
+      null
+    );
+
+    const pageContentIdx = findIndex(
+      currentPage?.pageContent,
+      (d: any) => d.id === pagePartId
+    );
+
+    const pageContent = currentPage.pageContent[pageContentIdx];
+
+    const partContentIdx = findIndex(pageContent?.partContent, (d) => d.id === id);
+    const value = pageContent.partContent[partContentIdx].value[0].value;
+    setDataValue(id, [value]);
+
+    return value;
+  };
+
+  const initialValue =
+    isInLesson && isStudent ? editorState || getDataValue(id)[0] : editorState;
+
+  useEffect(() => {
+    if (initialValue) {
+      setDataValue(id, [initialValue]);
+    }
+  }, [initialValue]);
+
   return (
     <div className={` py-4 `}>
-      <CustomRichTextEditor
-        theme={themeColor}
-        features={features}
-        withStyles
-        rounded
-        customStyle
-        dark={theme === 'dark'}
-        initialValue={isInLesson && isStudent ? getDataValue(id)[0] : editorState}
-        onChange={
-          isInLesson && isStudent
-            ? (html) => setDataValue(id, [html])
-            : (html) => setStaticText(html)
-        }
-      />
+      {!loading ? (
+        <CustomRichTextEditor
+          theme={themeColor}
+          fetchTeacherValue={fetchTeacherValue}
+          features={features}
+          id={id}
+          withStyles
+          rounded
+          customStyle
+          dark={theme === 'dark'}
+          initialValue={initialValue}
+          onChange={
+            isInLesson && isStudent
+              ? (html) => setDataValue(id, [html])
+              : (html) => setStaticText(html)
+          }
+        />
+      ) : null}
       {!isInLesson && !previewMode && (
         <div className="w-auto flex items-center justify-end mt-4">
           <Buttons

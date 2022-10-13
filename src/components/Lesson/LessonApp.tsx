@@ -2,13 +2,14 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import '@components/Dashboard/GameChangers/styles/Flickity.scss';
 import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
 import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {v4 as uuidV4} from 'uuid';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import * as customQueries from '@customGraphql/customQueries';
+import * as customSubscriptions from '@customGraphql/customSubscriptions';
+import * as mutations from '@graphql/mutations';
+import * as queries from '@graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -18,21 +19,19 @@ import {
   UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+} from '@interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import SaveQuit from './Foot/SaveQuit';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {v4 as uuidV4} from 'uuid';
 
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const displayData = gContext.lessonState.displayData;
@@ -172,7 +171,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       if (
         !isOnDemand &&
         lessonState.lessonData.lessonPlan &&
-        lessonState.lessonData.lessonPlan.length > 0
+        lessonState.lessonData.lessonPlan?.length > 0
       ) {
         getRoomSetup(getRoomData.id);
         subscription = subscribeToRoom();
@@ -400,10 +399,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   // -------- MERGING ------- //
   const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
-    const differenceData = studentDataArray.reduce(
+    const differenceData = studentDataArray?.reduce(
       //@ts-ignore
       (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
-        const notYetSavedData = initStudentDataArray[pageIdx].reduce(
+        const notYetSavedData = initStudentDataArray[pageIdx]?.reduce(
           (diffPageData: any[], initPageData: any) => {
             const foundInLoaded = loadedInput.find(
               (inputObj: any) => inputObj.domID === initPageData.domID
@@ -561,9 +560,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       combined = [...outArray, ...studentDataRows];
 
       if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
-        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        // combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
+
+      lessonDispatch({type: 'LESSON_LOADED', payload: true});
       // console.log('no more - ', combined);
       setLessonDataLoaded(true);
       return combined;
@@ -654,28 +654,32 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             }
           });
         } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
-          const existStudentDataIdArray = studentDataIdArray(currentStudentData);
-          const filteredData = filterStudentData(
-            existStudentDataIdArray,
-            currentStudentData
-          );
-          const finalData = mergedStudentData(
-            filteredData.pageData,
-            lessonState.studentData
-          );
-          const concatExerciseData = mergedExerciseData(
-            filteredData.exerciseData,
-            lessonState.exerciseData
-          );
-          // console.log('merged data', finalData);
-          lessonDispatch({
-            type: 'LOAD_STUDENT_DATA',
-            payload: {
-              dataIdReferences: existStudentDataIdArray,
-              filteredStudentData: finalData,
-              filteredExerciseData: concatExerciseData
-            }
-          });
+          try {
+            const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+            const filteredData = filterStudentData(
+              existStudentDataIdArray,
+              currentStudentData
+            );
+            const finalData = mergedStudentData(
+              filteredData.pageData,
+              lessonState.studentData
+            );
+            const concatExerciseData = mergedExerciseData(
+              filteredData.exerciseData,
+              lessonState.exerciseData
+            );
+            // console.log('merged data', finalData);
+            lessonDispatch({
+              type: 'LOAD_STUDENT_DATA',
+              payload: {
+                dataIdReferences: existStudentDataIdArray,
+                filteredStudentData: finalData,
+                filteredExerciseData: concatExerciseData
+              }
+            });
+          } catch (error) {
+            console.error('Something wrong when loading student data', error);
+          }
         }
       }
     } catch (err) {
@@ -723,9 +727,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
-      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+      const studentDataRows = studentData.data.listUniversalLessonStudentData.items || [];
 
-      if (studentDataRows.length > 0) {
+      if (studentDataRows?.length > 0) {
         lessonDispatch({
           type: 'LOAD_STUDENT_SHARE_DATA',
           payload: [...studentDataRows[0].pageData]
@@ -751,7 +755,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     ) {
       getSharedStudentData(sharedAuthID, sharedPageID);
     } else {
-      if (lessonState.sharedData && lessonState.sharedData.length > 0) {
+      if (lessonState.sharedData && lessonState?.sharedData?.length > 0) {
         clearShareData();
       }
     }
@@ -840,13 +844,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
+  const getPersonLessonsDataId = (): string =>
+    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+
   const getLessonCurrentPage = async () => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthID: user.authId
+          id: getPersonLessonsDataId()
+          // lessonID: lessonID,
+          // studentEmail: user.email,
+          // studentAuthID: user.authId
         })
       );
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -943,10 +951,6 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     }
   };
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
-  };
-
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
     const listFilter = {
       filter: {
@@ -1013,9 +1017,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonID,
-          studentEmail: user.email,
-          studentAuthId: user.authId
+          id: getPersonLessonsDataId(),
+          filter: {
+            lessonID: {eq: lessonID},
+            studentEmail: {eq: user.email},
+            studentAuthId: {eq: user.authId}
+          }
         })
       );
 
@@ -1029,19 +1036,39 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     } catch (error) {}
   };
 
+  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
+
   const handleLessonMutateData = async () => {
     try {
       let payload;
-      const existingLesson: any = await API.graphql(
-        graphqlOperation(queries.listPersonLessonsData, {
-          filter: {
-            lessonID: {eq: lessonID},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
+      let existingLesson: any;
+
+      const personLessonData = lessonState?.misc?.personLessonData;
+
+      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+        existingLesson = {data: {listPersonLessonsData: {items: personLessonData?.data}}};
+      } else {
+        existingLesson = await API.graphql(
+          graphqlOperation(queries.listPersonLessonsData, {
+            filter: {
+              lessonID: {eq: lessonID},
+              studentAuthID: {eq: user.authId},
+              studentEmail: {eq: user.email}
+            }
+          })
+        );
+        lessonDispatch({
+          type: 'SET_PERSON_LESSON_DATA',
+          payload: {
+            lessonID: lessonID,
+            data: existingLesson?.data?.listPersonLessonsData?.items || []
           }
-        })
-      );
-      if (!existingLesson.data.listPersonLessonsData.items.length) {
+        });
+      }
+
+      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+
+      if (!items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
@@ -1058,20 +1085,27 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          graphqlOperation(mutations.createPersonLessonsData, {
+            input: payload
+          })
         );
       } else {
+        setListPersonLessonsData(items);
         payload = {
+          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
           studentAuthID: user.authId,
           studentEmail: user.email,
           lessonID: lessonID,
           lessonType: lessonState.lessonData?.type,
-          //prettier-ignore
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+            "totalPages":${JSON.stringify(
+              lessonState.lessonData?.lessonPlan?.length - 1
+            )},
             "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim()
+            }`
+            .replace(/(\s\s+|[\t\n])/g, ' ')
+            .trim()
         };
         await API.graphql(
           graphqlOperation(mutations.updatePersonLessonsData, {
@@ -1080,7 +1114,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         );
       }
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: Start.tsx ~ line 215 ~ handleLessonMutateData ~ error',
         error
       );
@@ -1115,7 +1149,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
-            getLessonCompletedValue={getLessonCompletedValue}
+            getLessonCompletedValue={
+              listPersonLessonsData.length > 0 && getLessonCompletedValue
+            }
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

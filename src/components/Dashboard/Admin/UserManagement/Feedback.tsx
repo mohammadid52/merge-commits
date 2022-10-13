@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {AiOutlineEdit} from 'react-icons/ai';
 import {BsFillTrashFill} from 'react-icons/bs';
 import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from '../../../../contexts/GlobalContext';
 
 import {getImageFromS3Static} from '../../../../utilities/services';
 import {initials, stringToHslColor} from '../../../../utilities/strings';
@@ -72,6 +72,15 @@ interface FeedbackProps {
   fileObject: {type: string};
 }
 
+const deletedUserInfo: FeedbackProps['feedback']['person'] = {
+  image: '',
+  firstName: 'Deleted',
+  lastName: 'User',
+  preferredName: 'Deleted',
+  role: 'none',
+  authId: ''
+};
+
 const Feedback = ({
   feedback,
   setAttModal,
@@ -82,11 +91,13 @@ const Feedback = ({
   setEditCommentInput,
   setEditModal,
   role,
-  fileObject,
+  fileObject
 }: FeedbackProps) => {
   const {person} = feedback;
-  const {firstName, lastName, preferredName} = person;
-  const {clientKey} = useContext(GlobalContext);
+
+  const user = person || deletedUserInfo;
+
+  const {clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const getColorBG = (theme = 'indigo') => {
@@ -98,7 +109,7 @@ const Feedback = ({
     setEditModal((prevState: any) => ({
       show: !prevState.show,
       id: feedback.id,
-      content: feedback.text,
+      content: feedback.text
     }));
   };
 
@@ -107,10 +118,10 @@ const Feedback = ({
       key={feedback.id}
       className="relative comment-main flex items-center justify-between px-6 w-auto py-3 my-2">
       <div className="text-sm text-gray-900 flex items-start">
-        {person.image ? (
+        {user.image ? (
           <img
             className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
-            src={getImageFromS3Static(person.image)}
+            src={getImageFromS3Static(user.image)}
             alt=""
           />
         ) : (
@@ -121,28 +132,35 @@ const Feedback = ({
               style={{
                 /* stylelint-disable */
                 background: `${stringToHslColor(
-                  preferredName ? preferredName : firstName + ' ' + lastName
+                  user.preferredName
+                    ? user.preferredName
+                    : user.firstName + ' ' + user.lastName
                 )}`,
-                textShadow: '0.2rem 0.2rem 3px #423939b3',
+                textShadow: '0.2rem 0.2rem 3px #423939b3'
               }}>
-              {initials(preferredName ? preferredName : firstName, lastName)}
+              {initials(
+                user.preferredName ? user.preferredName : user.firstName,
+                user.lastName
+              )}
             </div>
           </div>
         )}
         <div className="ml-2 w-auto">
           <h5 className="font-semibold hover:text-underline">
-            {(preferredName ? preferredName : firstName) + ' ' + lastName}
+            {(user.preferredName ? user.preferredName : user.firstName) +
+              ' ' +
+              user.lastName}
 
             <span className="text-xs text-gray-600 font-normal ml-2">
               {getFormattedDate(feedback.createdAt)}
             </span>
             <p
               className={`${
-                person.role === role
+                user.role === role
                   ? 'bg-green-100 text-green-800'
                   : 'bg-gray-100 text-gray-800'
               } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
-              {getRole(person.role)}
+              {getRole(user.role)}
             </p>
             {feedback.edited && (
               <span className="text-gray-600 font-light text-xs ml-2">(edited)</span>
@@ -179,7 +197,7 @@ const Feedback = ({
           {/* ------------------------- Attachments Section End -------------------------------- */}
         </div>
       </div>
-      {feedback.person.authId === authId && !uploadingAttachment && (
+      {user.authId === authId && !uploadingAttachment && (
         <div className="flex items-center justify-center w-auto">
           {feedback.text && (
             <div

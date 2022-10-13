@@ -59,11 +59,13 @@ interface RichTextEditorProps {
   customStyle?: boolean;
   inlineOptions?: string[];
   features?: string[];
+  id?: string;
 
   /**
    * Don't use this if the content is serious
    */
   withStyles?: boolean;
+  fetchTeacherValue?: () => string;
 }
 
 const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
@@ -71,6 +73,7 @@ const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
 const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
+    id,
     initialValue,
 
     fullWHOverride,
@@ -82,6 +85,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     theme,
     placeholder = '',
     inlineOptions = DEFAULT_INLINE_OPTIONS,
+    fetchTeacherValue
   } = props;
 
   const initialState: any = EditorState.createEmpty();
@@ -112,7 +116,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     'link',
     'emoji',
     'remove',
-    'history',
+    'history'
   ];
 
   const onEditorStateChange = (editorState: any) => {
@@ -244,13 +248,22 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   useEffect(() => {
     // rdw-editor-toolbar
     if (!clearButtonLoaded) {
-      const elem = `<div title="Reset text" class="clear-editor-text-btn rdw-option-wrapper iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
-    <img src=${textEdit.reset} alt="">
-    </div>`;
+      if ($('.rdw-editor-toolbar').find('#highlight-input-btns').length === 0) {
+        const elem = `
+       <div id="highlight-input-btns"  class="flex items-center clear-editor-text-btn">
+       <div id="highlight-reset-btn"  title="Reset text" class=" rdw-option-wrapper iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
+       <img src=${textEdit.previous} alt="">
+       </div>
+       <div  id="highlight-hard-reset-btn-${id}" data-inputId=${id} title="Hard Reset"  class="${
+          fetchTeacherValue === undefined ? 'hidden' : 'rdw-option-wrapper'
+        }  iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
+     <img src=${textEdit.reset} alt="">
+       </div>
+       </div>`;
+        $('.rdw-editor-toolbar').append(elem);
 
-      $('.rdw-editor-toolbar').append(elem);
-
-      setClearButtonLoaded(true);
+        setClearButtonLoaded(true);
+      }
     }
   }, []);
 
@@ -263,10 +276,16 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   }, [ctrlZPressed]);
 
   useEffect(() => {
-    $('.clear-editor-text-btn').on('click', () => {
+    $('#highlight-reset-btn').on('click', () => {
       resetHandler();
     });
   }, [changesArr]);
+
+  useEffect(() => {
+    $(`#highlight-hard-reset-btn-${id}`).on('click', () => {
+      fetchTeacherValue && onInit(fetchTeacherValue());
+    });
+  }, []);
 
   return (
     <>
@@ -286,29 +305,29 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
             className: `toolItemClassName`,
             bold: {
               icon: textEdit.bold,
-              className: 'toolbarCustomIcon',
+              className: 'toolbarCustomIcon'
             },
             italic: {
               icon: textEdit.italic,
-              className: 'toolbarCustomIcon',
+              className: 'toolbarCustomIcon'
             },
             underline: {
               icon: textEdit.underline,
-              className: 'toolbarCustomIcon',
+              className: 'toolbarCustomIcon'
             },
             superscript: {
               icon: textEdit.superscript,
-              className: 'toolbarCustomIcon',
+              className: 'toolbarCustomIcon'
             },
             subscript: {
               icon: textEdit.subscript,
-              className: 'toolbarCustomIcon',
-            },
+              className: 'toolbarCustomIcon'
+            }
           },
 
           remove: {
             icon: textEdit.remove,
-            className: 'toolbarCustomIcon',
+            className: 'toolbarCustomIcon'
           },
           list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
           textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
@@ -321,15 +340,15 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
               'Impact',
               'Courier',
               'Times New Roman',
-              'Helvetica',
+              'Helvetica'
             ],
-            className: 'plainText dropdownBlockClassName toolbarCustomIcon',
+            className: 'plainText dropdownBlockClassName toolbarCustomIcon'
           },
           blockType: {
-            className: 'plainText dropdownBlockClassName toolbarCustomIcon',
+            className: 'plainText dropdownBlockClassName toolbarCustomIcon'
           },
           fontSize: {
-            className: 'plainText dropdownClassName toolbarCustomIcon',
+            className: 'plainText dropdownClassName toolbarCustomIcon'
           },
           colorPicker: {
             icon: textEdit.colorPick,
@@ -337,8 +356,8 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           ${theme}
           ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
           toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-            colors: ['#DC2626', '#34D399'],
-          },
+            colors: ['#DC2626', '#34D399']
+          }
         }}
       />
     </>

@@ -194,11 +194,14 @@ const useStudentTimer = () => {
 
       try {
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalSurveyStudentData, {input: data})
+          graphqlOperation(mutations?.updateUniversalSurveyStudentData, {input: data})
         );
         // await filterData();
         console.log('updateSurveyData - success');
       } catch (e) {
+        await API.graphql(
+          graphqlOperation(mutations?.createUniversalSurveyStudentData, {input: data})
+        );
         console.error('updateSurveyData - ', e);
       } finally {
         return Promise.resolve();

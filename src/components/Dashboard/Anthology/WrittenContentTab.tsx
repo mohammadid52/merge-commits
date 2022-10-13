@@ -1,10 +1,10 @@
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import React, {useContext} from 'react';
+import React from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {useGlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
@@ -15,7 +15,6 @@ import RichTextEditor from '../../Atoms/RichTextEditor';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
 import SingleNote from './WrittenContentTab/SingleNote';
-import ReactHtmlParser from 'react-html-parser';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {
@@ -35,13 +34,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
     allUniversalJournalData,
     setAllUniversalJournalData,
     allUniversalClassData,
-    setAllUniversalClassData,
+    setAllUniversalClassData
   } = props;
-  console.log(
-    '🚀 ~ file: WrittenContentTab.tsx ~ line 40 ~ WrittenContentTab ~ allUniversalClassData',
-    allUniversalClassData
-  );
-  const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
+
+  const {theme, userLanguage, clientKey} = useGlobalContext();
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -72,7 +68,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -103,7 +99,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                       key={note.domID}
                       className="font-normal "
                       dangerouslySetInnerHTML={{
-                        __html: note?.input ? note.input : 'No content...',
+                        __html: note?.input ? note.input : 'No content...'
                       }}
                     />
                   ))}
@@ -114,7 +110,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   dangerouslySetInnerHTML={{
                     __html: organized.content?.input
                       ? organized.content.input
-                      : 'No content...',
+                      : 'No content...'
                   }}
                 />
               ) : (
@@ -140,7 +136,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -202,7 +198,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
       },
       {
         header: {type: '', domID: '', input: ''},
-        content: {type: '', domID: '', input: ''},
+        content: {type: '', domID: '', input: ''}
       }
     );
 
@@ -262,7 +258,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
       </>
     );
   };
-  console.log(classNotebook);
 
   return (
     <>
@@ -305,7 +300,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   value={{
                     size: '1.2rem',
                     style: {},
-                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
                   }}>
                   <FaSpinner />
                 </IconContext.Provider>
@@ -362,39 +357,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
               </div>
             )
           )}
-          {/* 
-Where I’m from we live life in summer,
-We speak in family tongues about family through neighbors eyes
-Our dialects change through ever changing Barrios, Cuadras, y Casa ajenas
-Where I’m from la Lechuza, El Diablo, La Llorona all become curfews and
-there is no talks of American birds and bees
-Reputations follow like 14 year old backpacks
-on our 14 year old soldiers
-Where I’m from education is a thought as crazy as equality
-Tree branches are signs of disciplinary actions
-“Moms are Mami’s” “Tia’s are Titi’s”
-“Grandpa’s are Popo’s”
-“Fathers have always been gone,
-OYEME!
-Where I’m from Music is our narrator
-moving us like revolution once did
-Young developing flowers shaking and stepping to beats they don’t understand yet
-Perversion is an uncle not allowed near the kids, but always welcomed home
-Where I’m from the dinner table is time of conferences
-of who needs to go get a job?
-Who needs to go get some water?
-Or who just needs to go?!
-“Sana, sana culita de rana” is our doctor
-Where I’m from children carry sun like descriptive terms
-Neck dirt necklaces tell you when it’s time to go in along with,
-“OYE YA METE TE”!
-Where I’m from everyone is Christian and has a Catholic neighbor
-Love is what is allowed or how good young couples are at sneaking around
-Babies make babies and keep family close and machetes even closer
-Where I’m from my grandmother is beautiful
-Aunts and uncles are extended family and
-Everyone has the right to spank your butt, POM TOMA!
-Where I’m from, it’s yellow, green, and gold and it’s beautiful. */}
 
           {allUniversalClassData.length === 0 && classNotebook.length === 0 && (
             <div className="p-12 flex flex-center items-center">

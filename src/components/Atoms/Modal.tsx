@@ -130,7 +130,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           }}
           className={`${width ? width : 'w-auto'} ${
             maxWidth ? maxWidth : 'max-w-lg'
-          } relative my-4 mx-auto sm:max-w-132 max-w-80   md:max-w-164`}>
+          } relative my-4 mx-auto sm:max-w-132 max-w-80   md:max-w-164 lg:max-w-256`}>
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button

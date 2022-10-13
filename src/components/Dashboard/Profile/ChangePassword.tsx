@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { Auth } from '@aws-amplify/auth';
-import { FaKey } from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useHistory, NavLink } from 'react-router-dom';
+import React, {useContext, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {Auth} from '@aws-amplify/auth';
+import {FaKey} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {useHistory, NavLink} from 'react-router-dom';
 
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
 import ModalPopUp from '../../Molecules/ModalPopUp';
@@ -21,37 +21,37 @@ interface ChangePasswordProps {
 }
 
 const ChangePassword = (props: ChangePasswordProps) => {
-  const { updateAuthState } = props;
+  const {updateAuthState} = props;
   const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [passMatchToggle, setPassMatchToggle] = useState(false);
   const [cookies, , removeCookie] = useCookies();
   const history = useHistory();
 
-  const { userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
-  const { dashboardProfileDict } = useDictionary(clientKey);
+  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
+  const {dashboardProfileDict} = useDictionary(clientKey);
   const dictionary = dashboardProfileDict[userLanguage];
 
   const [warningModal, setWarningModal] = useState({
     show: false,
-    message: dictionary['CHANGE_PASSWORD']['WARN_MSG'],
+    message: dictionary['CHANGE_PASSWORD']['WARN_MSG']
   });
 
-  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
   const [input, setInput] = useState({
     oldPassword: '',
     newPassword: '',
-    match: '',
+    match: ''
   });
 
   const toggleModal = () => {
     setWarningModal({
       ...warningModal,
-      show: !warningModal.show,
+      show: !warningModal.show
     });
   };
   const gotoPasswordReset = async () => {
@@ -60,9 +60,9 @@ const ChangePassword = (props: ChangePasswordProps) => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString(),
+        lastLoggedOut: new Date().toISOString()
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
       history.push('/forgot-password');
@@ -87,27 +87,27 @@ const ChangePassword = (props: ChangePasswordProps) => {
               show: true,
               type: 'error',
               message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
             };
           case 'NotAuthorizedException':
             return {
               show: true,
               type: 'error',
-              message: 'Your old password is incorrect',
+              message: 'Your old password is incorrect'
             };
           case 'LimitExceededException':
             return {
               show: true,
               type: 'error',
               message:
-                'The amount of attempts to change your password has been exceeded, please try again after some time',
+                'The amount of attempts to change your password has been exceeded, please try again after some time'
             };
           default:
             return {
               show: true,
               type: 'error',
               message:
-                'Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers',
+                'Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers'
             };
         }
       });
@@ -124,28 +124,28 @@ const ChangePassword = (props: ChangePasswordProps) => {
         return {
           show: true,
           type: 'error',
-          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_OLD_PASS'],
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_OLD_PASS']
         };
       }
       if (!newPassword) {
         return {
           show: true,
           type: 'error',
-          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_NEW_PASS'],
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_NEW_PASS']
         };
       }
       if (!input.match) {
         return {
           show: true,
           type: 'error',
-          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_CONFIRM_PASS'],
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_CONFIRM_PASS']
         };
       }
       if (input.newPassword !== input.match) {
         return {
           show: true,
           type: 'error',
-          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NOT_MATCH'],
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NOT_MATCH']
         };
       }
       validated = true;
@@ -155,17 +155,17 @@ const ChangePassword = (props: ChangePasswordProps) => {
       return {
         show: false,
         type: 'success',
-        message: 'success',
+        message: 'success'
       };
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       return {
         ...input,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -202,12 +202,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -216,7 +216,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="absolute left-1 w-auto mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -225,6 +225,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                   {dictionary['CHANGE_PASSWORD']['OLD_PASS']}
                 </label>
                 <FormInput
+                  dataCy="old-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
                   placeHolder={dictionary['CHANGE_PASSWORD']['OLD_PASS']}
                   type={oldPassToggle ? 'text' : 'password'}
@@ -245,12 +246,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -259,7 +260,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="w-auto absolute left-1 mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -268,6 +269,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                   {dictionary['CHANGE_PASSWORD']['NEW_PASS']}
                 </label>
                 <FormInput
+                  dataCy="new-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
                   placeHolder={dictionary['CHANGE_PASSWORD']['NEW_PASS']}
                   type={passToggle ? 'text' : 'password'}
@@ -287,12 +289,12 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider
-                        value={{ size: '1rem', style: { width: 'auto' } }}>
+                        value={{size: '1rem', style: {width: 'auto'}}}>
                         <AiOutlineEyeInvisible />
                       </IconContext.Provider>
                     )}
@@ -301,7 +303,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 <div className="w-auto absolute left-1">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
                     <IconContext.Provider
-                      value={{ size: '0.8rem', style: { width: 'auto' } }}>
+                      value={{size: '0.8rem', style: {width: 'auto'}}}>
                       <FaKey />
                     </IconContext.Provider>
                   </div>
@@ -310,6 +312,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                   {dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
                 </label>
                 <FormInput
+                  dataCy="match-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
                   placeHolder={dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
                   type={passMatchToggle ? 'text' : 'password'}
@@ -353,6 +356,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
           transparent
         />
         <Buttons
+          dataCy="change-password-save-button"
           btnClass="py-2 w-auto px-4 text-xs ml-2"
           label={dictionary['CHANGE_PASSWORD']['SAVE']}
           onClick={handleSubmit}

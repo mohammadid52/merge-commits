@@ -1,16 +1,14 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import * as customSubscriptions from '../customGraphql/customSubscriptions';
-import * as customMutations from '../customGraphql/customMutations';
-import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
+import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
-import {Auth} from '@aws-amplify/auth';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {standardTheme} from './GlobalContext';
-import {getClientKey} from '../utilities/strings';
-import {lessonStateOLD} from '../state/LessonStateOLD';
+import {Auth} from '@aws-amplify/auth';
 import {lessonReducerOLD} from '../reducers/LessonReducerOLD';
+import {lessonStateOLD} from '../state/LessonStateOLD';
+import {getClientKey} from '../utilities/strings';
+import {standardTheme} from './GlobalContext';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -53,26 +51,26 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     {
       id: 0,
       name: 'message',
-      tooltipText: 'Message',
+      tooltipText: 'Message'
     },
 
     {
       id: 1,
       name: 'instructions',
-      tooltipText: 'Instruction',
+      tooltipText: 'Instruction'
     },
 
     {
       id: 2,
       name: 'checkpoints',
-      tooltipText: 'Checkpoints',
+      tooltipText: 'Checkpoints'
     },
 
     {
       id: 3,
       name: 'closing',
-      tooltipText: 'Closing',
-    },
+      tooltipText: 'Closing'
+    }
   ];
 
   const initialPage = pageList[0];
@@ -111,7 +109,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         let userInfo: any = await API.graphql(
           graphqlOperation(customQueries.getPersonLocation, {
             personEmail: email,
-            personAuthID: sub,
+            personAuthID: sub
           })
         );
         userInfo = userInfo.data.getPersonLocation;
@@ -130,136 +128,6 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     loadPersonData();
   }, []);
 
-  // async function createPersonLocation() {
-  //   const newLocation = {
-  //     personAuthID: state.studentAuthID,
-  //     personEmail: state.studentUsername,
-  //     syllabusLessonID: state.syllabusLessonID,
-  //     roomID: '0',
-  //     currentLocation: state.currentPage,
-  //     lessonProgress: state.lessonProgress,
-  //   };
-  //   try {
-  //     const newPersonLocationMutation: any = await API.graphql(
-  //       graphqlOperation(mutations.createPersonLocation, {input: newLocation})
-  //     );
-  //   } catch (e) {
-  //     console.error('create PersonLocation : ', e);
-  //   } finally {
-  //     setRecentOp('created');
-  //   }
-  // }
-
-  // async function updatePersonLocation() {
-  //   const updatedLocation = {
-  //     id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
-  //     personAuthID: state.studentAuthID,
-  //     personEmail: state.studentUsername,
-  //     syllabusLessonID: state.syllabusLessonID,
-  //     roomID: '0',
-  //     currentLocation: state.currentPage,
-  //     lessonProgress: state.lessonProgress,
-  //   };
-  //   try {
-  //     if (recentOp === 'created') {
-  //       await loadPersonData();
-  //     }
-  //     // console.log('updated', personLocationObj);
-  //     const newPersonLocationMutation: any = await API.graphql(
-  //       graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
-  //     );
-  //     setPersonLocationObj(updatedLocation);
-  //     // console.log('updated person location...');
-  //   } catch (e) {
-  //     console.error('update PersonLocation : ', e);
-  //   } finally {
-  //     setRecentOp('updated');
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (loaded && state.syllabusLessonID && state.studentAuthID) {
-  //     if (recentOp === 'created' || recentOp === 'updated') {
-  //       if (personLocationObj && personLocationObj.currentLocation) {
-  //         updatePersonLocation();
-  //       }
-  //     }
-  //     if (recentOp === '') {
-  //       createPersonLocation();
-  //     }
-  //   }
-  //   return () => setLoaded(false);
-  // }, [loaded, state.syllsabusLessonID, state.studentAuthID]);
-
-  // useEffect(() => {
-  //   if (recentOp !== '') {
-  //     updatePersonLocation();
-  //   }
-  //   return () => setRecentOp('');
-  // }, [state.currentPage]);
-
-  //  END OF LOCATION TRACKING SCRIPT
-
-  /**
-   * GET or CREATE STUDENT DATA
-   */
-  async function getOrCreateStudentData() {
-    const {lessonID} = urlParams;
-    let studentID: string;
-    let studentAuthID: string;
-
-    await Auth.currentAuthenticatedUser().then((user) => {
-      // console.log(user);
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
-    });
-
-    try {
-      const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-          filter: {syllabusLessonID: {eq: lessonID}, studentID: {eq: studentID}},
-        })
-      );
-
-      if (!studentData.data.listUniversalLessonStudentData) {
-        const newStudentData: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalLessonStudentData, {
-            input: {
-              lessonProgress: '0',
-              currentLocation: '0',
-              status: 'ACTIVE',
-              syllabusLessonID: lessonID,
-              studentID: studentID,
-              studentAuthID: studentAuthID,
-            },
-          })
-        );
-        dispatch({
-          type: 'SET_STUDENT_INFO',
-          payload: {
-            studentDataID: newStudentData.data.createUniversalLessonStudentData.id,
-            studentUsername:
-              newStudentData.data.createUniversalLessonStudentData.studentID,
-            studentAuthID:
-              newStudentData.data.createUniversalLessonStudentData.studentAuthID,
-          },
-        });
-        return setData(newStudentData.data.createStudentData);
-      }
-      dispatch({
-        type: 'SET_STUDENT_INFO',
-        payload: {
-          studentDataID: studentData.data.getUniversalLessonStudentData.id,
-          studentUsername: studentData.data.getUniversalLessonStudentData.studentID,
-          studentAuthID: studentData.data.getUniversalLessonStudentData.studentAuthID,
-        },
-      });
-      return setData(studentData.data.getUniversalLessonStudentData);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   function setInitialComponentState(data: any) {
     let initialComponentState: any = {};
     let initialComponentStateSecondary: any = {notes: ''};
@@ -268,7 +136,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     });
     dispatch({
       type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
-      payload: {...initialComponentState, ...initialComponentStateSecondary},
+      payload: {...initialComponentState, ...initialComponentStateSecondary}
     });
   }
 
@@ -326,8 +194,8 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
           ),
           displayData: lesson.displayData,
           word_bank: [''],
-          subscribeFunc: subscribeToSyllabusLesson,
-        },
+          subscribeFunc: subscribeToSyllabusLesson
+        }
       });
     }
   }, [lesson]);
@@ -352,14 +220,14 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
           const sLessonDataData = sLessonData.data.getUniversalLesson;
           setSubscriptionData(sLessonDataData);
         });
-      },
+      }
     });
 
     dispatch({
       type: 'SET_SUBSCRIPTION',
       payload: {
-        subscription: syllabusLessonSubscription,
-      },
+        subscription: syllabusLessonSubscription
+      }
     });
 
     return syllabusLessonSubscription;
@@ -379,10 +247,10 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
           ...subscriptionData.displayData,
           breakdownComponent:
             // @ts-ignore
-            state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
+            state.pages[subscriptionData.displayData.breakdownComponent]?.stage
         },
-        viewing: subscriptionData.viewing,
-      },
+        viewing: subscriptionData.viewing
+      }
     });
   };
 
@@ -409,7 +277,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         subscribeToSyllabusLesson,
         userLanguage,
         uLang,
-        clientKey,
+        clientKey
       }}>
       {children}
     </LessonContext.Provider>

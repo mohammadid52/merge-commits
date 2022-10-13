@@ -1,4 +1,6 @@
 const baseURL = 'http://localhost:8085';
+const iconoclastURL = 'https://iconoclast.selready.com';
+const projectCurateURL = 'https://projectcurate.zoiq.io';
 const institutionID = '6539589f-44d2-4749-b0ba-87086b7fe1d8';
 const surveyIDs = ['6a27e851-7863-4b45-b04a-09d35ef0af6a'];
 const classroomIDs = ['3936fdc3-d36d-43db-b43e-75efa30ea8cc'];
@@ -28,6 +30,23 @@ export const loginConfig = {
   mike: {
     username: 'michael.russell@zoiq.io',
     password: 'admin123'
+  },
+
+  production: {
+    student1: {
+      username: 'marleyhk@gmail.com', // username: marleyhk@gmail.com
+      password: 'Havikoro99' // password: Havikoro99
+    },
+
+    student2: {
+      username: 'angela@iconoclasttraining.com',
+      password: '2021Cla$$'
+    },
+
+    student3: {
+      username: 'demostudent2@zoiq.io',
+      password: 'admin123'
+    }
   }
 };
 
@@ -39,5 +58,8 @@ export const urlConfig = {
   registerURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/register-user`,
   simpleSurveURL: `${baseURL}/lesson/${surveyIDs[0]}/0`,
   complexSurveURL: `${baseURL}/lesson/${surveyIDs[1]}/0`,
-  notebookURL: `${baseURL}/dashboard/anthology`
+  notebookURL: `${baseURL}/dashboard/anthology`,
+  IAProductionUrl: 'https://iconoclast.selready.com/login',
+  PCProductionUrl: 'https://projectcurate.zoiq.io/login',
+  IADashboardUrl: 'https://iconoclast.selready.com/dashboard'
 };

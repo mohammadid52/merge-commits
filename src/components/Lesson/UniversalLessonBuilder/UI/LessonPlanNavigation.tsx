@@ -8,10 +8,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext, useGlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {useQuery} from '../../../../customHooks/urlParam';
-import {
-  UniversalLesson,
-  UniversalLessonPage
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import Tooltip from '../../../Atoms/Tooltip';
 import {EMOTIONS, GAME_CHANGERS} from './common/constants';

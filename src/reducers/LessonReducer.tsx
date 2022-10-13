@@ -1,12 +1,10 @@
-import {update} from 'lodash';
 import {
   StudentExerciseData,
   StudentPageInput,
   UniversalLesson,
-  UniversalLessonPage,
-  UniversalLessonStudentData
+  UniversalLessonPage
 } from '../interfaces/UniversalLessonInterfaces';
-import {lessonStateType, lessonState as initialLessonState} from '../state/LessonState';
+import {lessonState as initialLessonState} from '../state/LessonState';
 
 const LESSON_REDUCER_TYPES = {
   TEST: 'TEST',
@@ -23,6 +21,7 @@ const LESSON_REDUCER_TYPES = {
   LOAD_STUDENT_SHARE_DATA: 'LOAD_STUDENT_SHARE_DATA',
   UPDATE_PERSON_LOCATION: 'UPDATE_PERSON_LOCATION',
   UNLOAD_STUDENT_DATA: 'UNLOAD_STUDENT_DATA',
+  LESSON_LOADED: 'LESSON_LOADED',
   UNLOAD_STUDENT_SHARE_DATA: 'UNLOAD_STUDENT_SHARE_DATA',
   SET_UPDATE_STATUS: 'SET_UPDATE_STATUS',
   UPDATE_STUDENT_DATA: 'UPDATE_STUDENT_DATA',
@@ -36,7 +35,8 @@ const LESSON_REDUCER_TYPES = {
   SET_LAST_PAGE: 'SET_LAST_PAGE',
   CLEANUP: 'CLEANUP',
   ADD_NEW_INPUT: 'ADD_NEW_INPUT',
-  SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD'
+  SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
+  SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA'
 };
 
 export type LessonActions =
@@ -350,6 +350,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         sharedData: []
       };
+    case LESSON_REDUCER_TYPES.LESSON_LOADED:
+      return {
+        ...state,
+        loaded: action.payload
+      };
     case LESSON_REDUCER_TYPES.UPDATE_STUDENT_DATA:
       console.log('UPDATE_STUDENT_DATA');
       const pageIdx = action.payload.pageIdx;
@@ -488,6 +493,14 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         lessonPayload: action.payload
+      };
+    case LESSON_REDUCER_TYPES.SET_PERSON_LESSON_DATA:
+      return {
+        ...state,
+        misc: {
+          ...state.misc,
+          personLessonData: action.payload
+        }
       };
     default:
       return state;

@@ -1100,12 +1100,14 @@
   position: absolute;
   right: 4px;
 
-  &:active img {
-    transform: rotate(-45deg);
-  }
-  img {
-    transition: all 0.15s ease-in-out;
-    transform: rotate(0deg);
+  > div {
+    &:active img {
+      transform: rotate(-45deg);
+    }
+    img {
+      transition: all 0.15s ease-in-out;
+      transform: rotate(0deg);
+    }
   }
 }
 

@@ -66,12 +66,15 @@ type Person @model @auth(rules: [{allow: public}]) {
   addedby: String
 }
 
+
+
+
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
-  id: ID!
+  id: ID!@primaryKey
   studentAuthID: String! @index(name: "byStudentAuthID")
   studentEmail: String!
-  lessonID: String! @primaryKey
-  lessonType: String @index(name: "byLessonType", queryField: "lessonsByType")
+  lessonID: String! 
+  lessonType: String @index(name: "byLessonType", queryField: "lessonsByType2")
   pages: AWSJSON
   ratings: Int @default(value: "0")
 }

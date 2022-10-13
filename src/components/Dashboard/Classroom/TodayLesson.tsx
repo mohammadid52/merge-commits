@@ -114,7 +114,7 @@ const Today: React.FC<LessonProps> = ({
                     id={`todayLesson_${key}_wrapper`}
                     key={`todayLesson_${key}_wrapper`}>
                     <StandardLessonCard
-                      roomID={getRoomData.id}
+                      roomID={getRoomData?.id}
                       isTeacher={isTeacher}
                       keyProps={`todayLesson_${key}`}
                       activeRoomInfo={activeRoomInfo}

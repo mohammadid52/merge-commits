@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Auth from '@aws-amplify/auth';
+import {Auth} from '@aws-amplify/auth';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
@@ -64,48 +64,52 @@ const Login = ({updateAuthState}: LoginProps) => {
           'accessToken',
           user.signInUserSession.accessToken.jwtToken
         );
-        let userInfo: any = await API.graphql(
-          graphqlOperation(queries.getPerson, {email: username, authId: user.username})
-        );
-        userInfo = userInfo.data.getPerson;
-        let instInfo: any = {};
-        if (userInfo.role !== 'ST') {
-          instInfo = await API.graphql(
-            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-              filter: {staffAuthID: {eq: user.username}}
-            })
+        if (user) {
+          let userInfo: any = await API.graphql(
+            graphqlOperation(queries.getPerson, {email: username, authId: user.username})
           );
-        }
-        dispatch({
-          type: 'SET_USER',
-          payload: {
-            id: userInfo.id,
-            firstName: userInfo.preferredName || userInfo.firstName,
-            lastName: userInfo.lastName,
-            language: userInfo.language,
-            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-            role: userInfo.role,
-            image: userInfo.image,
-            associateInstitute:
-              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-              [],
-            onDemand: userInfo?.onDemand,
-            lessons: userInfo.lessons
+          userInfo = userInfo.data.getPerson;
+          let instInfo: any = {};
+          if (userInfo.role !== 'ST') {
+            instInfo = await API.graphql(
+              graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+                filter: {staffAuthID: {eq: user.username}}
+              })
+            );
           }
-        });
-        const input = {
-          id: userInfo.id,
-          authId: user.username,
-          email: username,
-          lastLoggedIn: new Date().toISOString()
-        };
-        const update: any = await API.graphql(
-          graphqlOperation(customMutations.updatePersonLoginTime, {input})
-        );
 
-        updateAuthState(true);
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: userInfo.id,
+              firstName: userInfo.preferredName || userInfo.firstName,
+              lastName: userInfo.lastName,
+              language: userInfo.language,
+              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+              role: userInfo.role,
+              image: userInfo.image,
+              associateInstitute:
+                instInfo?.data?.listStaff?.items.filter(
+                  (item: any) => item.institution
+                ) || [],
+              onDemand: userInfo?.onDemand,
+              lessons: userInfo.lessons
+            }
+          });
+          const input = {
+            id: userInfo.id,
+            authId: user.username,
+            email: username,
+            lastLoggedIn: new Date().toISOString()
+          };
+          const update: any = await API.graphql(
+            graphqlOperation(customMutations.updatePersonLoginTime, {input})
+          );
+
+          updateAuthState(true);
+        }
       } catch (error) {
-        console.log('error', error);
+        console.error('error', error);
         const errMsg = {show: true, type: 'error'};
         if (!username) {
           setMessage({...errMsg, message: 'Please enter your email'});
@@ -136,7 +140,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           toggleLoading(false);
         }
       } catch (error) {
-        console.log('error', error);
+        console.error('error', error);
         if (error.code === 'NotAuthorizedException') {
           if (error.message === 'Incorrect username or password.') {
             setShowPasswordField(true);
@@ -153,7 +157,7 @@ const Login = ({updateAuthState}: LoginProps) => {
                   'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
               });
             } catch (err) {
-              console.log('Error temporary password could not be reset');
+              console.error('Error temporary password could not be reset');
             }
           }
         } else if (error.code === 'UserNotConfirmedException') {
@@ -167,7 +171,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             });
             // confirm user, set password, and sign in which should ask them to create a new password.
           } catch (err) {
-            console.log('Error in resetting unconfirmed user.');
+            console.error('Error in resetting unconfirmed user.');
           }
         } else {
           manageSignInError(error, true);
@@ -391,6 +395,7 @@ const Login = ({updateAuthState}: LoginProps) => {
 
             <div className="relative flex flex-col justify-center items-center">
               <Buttons
+                dataCy="set-password"
                 disabled={isToggled}
                 onClick={handleSetPassword}
                 btnClass="w-full py-3"

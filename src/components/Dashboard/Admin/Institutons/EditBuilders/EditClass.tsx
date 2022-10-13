@@ -28,6 +28,7 @@ import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import * as mutations from '@graphql/mutations';
 import ModalPopUp from '@molecules/ModalPopUp';
+import LocationBadge from './LocationBadge';
 
 interface EditClassProps {
   instId: string;
@@ -530,7 +531,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     </div>
                   </div>
 
-                  <div className="mb-4 w-full  m-auto pl-2 max-h-88 overflow-y-scroll">
+                  <div className="mb-4 w-full m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => {
                       return (
                         <div
@@ -587,14 +588,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                           </div>
 
                           <div className="w-3/10">
-                            <span
-                              className={`w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded  px-2 ${
-                                item?.student?.onDemand
-                                  ? 'bg-yellow-200 text-yellow-600'
-                                  : 'bg-blue-200 text-blue-600'
-                              }`}>
-                              {item?.student?.onDemand ? 'Self Paced' : 'Classroom'}
-                            </span>
+                            <LocationBadge onDemand={item?.student?.onDemand} />
                           </div>
                           <div className="w-3/10 px-3 text-gray-600 text-sm">
                             {item.createAt
@@ -684,7 +678,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   <User
                     instituteId={instId}
                     userId={studentProfileID}
-                    insideModalPopUp={true}
+                    insideModalPopUp={false}
                   />
                 </Modal>
               )}
