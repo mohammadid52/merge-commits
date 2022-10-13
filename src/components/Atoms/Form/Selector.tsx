@@ -201,7 +201,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         </button>
       </span>
       {showList && (
-        <div className="z-50 relative mt-1 w-full rounded-md bg-white shadow-lg">
+        <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
           <ul
             role="listbox"
             aria-labelledby="listbox-label"
