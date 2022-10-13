@@ -2,7 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "Setting dictionary..."
-cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx && cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.curate.tsx
-
-git add .
-git commit -m "dictionary updated"
+npm run set-dictionary
