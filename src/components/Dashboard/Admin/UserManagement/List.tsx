@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import UserLocation from './UserLocation';
 import {getImageFromS3} from '../../../../utilities/services';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -18,6 +19,7 @@ interface ListProps {
 
 const List = (props: ListProps) => {
   const {item} = props;
+
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState('');
@@ -156,6 +158,11 @@ const List = (props: ListProps) => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+          <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
+            <UserLocation role={item.role} onDemand={item?.onDemand} />
+          </span>
         </div>
         <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">

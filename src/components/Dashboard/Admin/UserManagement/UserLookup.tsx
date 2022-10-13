@@ -447,6 +447,11 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                   <span>{UserLookupDict[userLanguage]['name']}</span>
                 </div>
                 <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span className="w-auto">
+                    {UserLookupDict[userLanguage]['location']}
+                  </span>
+                </div>
+                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
                 </div>
                 <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
