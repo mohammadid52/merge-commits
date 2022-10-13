@@ -69,7 +69,7 @@ const SingleNote = ({
   };
 
   useEffect(() => {
-    if (showComments && listCommentData && listCommentData.length > 0) {
+    if (showComments && listCommentData && listCommentData?.length > 0) {
       sortComments();
     }
   }, [showComments, isLoading, isFetched, contentObj.feedbacks, listCommentData]);
@@ -102,7 +102,7 @@ const SingleNote = ({
   };
 
   useEffect(() => {
-    if (shareToggleQueue.length > 0) {
+    if (shareToggleQueue?.length > 0) {
       updateJournalShare(shareToggleQueue);
     }
   }, [shareToggleQueue]);
