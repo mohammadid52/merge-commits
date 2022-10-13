@@ -1,5 +1,5 @@
-import React, {memo} from 'react';
-import {IoImage, IoKeyOutline} from 'react-icons/io5';
+import React from 'react';
+import {IoKeyOutline} from 'react-icons/io5';
 import {stringToHslColor} from '../../../../utilities/strings';
 
 interface IRoomViewCardProps {
@@ -25,7 +25,6 @@ const RoomViewCard = ({
   mainSection,
   sectionRoomID,
   sectionTitle,
-  roomName,
   curriculumName,
   bannerImage,
   type,

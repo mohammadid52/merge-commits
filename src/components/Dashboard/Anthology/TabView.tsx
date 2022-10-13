@@ -80,7 +80,6 @@ const TabView = ({
   allUniversalJournalData,
   setAllUniversalJournalData,
   classNotebook,
-  setClassNotebook,
   allUniversalClassData,
   setAllUniversalClassData
 }: ITabViewProps) => {

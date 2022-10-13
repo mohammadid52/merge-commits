@@ -1,6 +1,6 @@
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import React from 'react';
+import React, {Suspense} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import {getAsset} from '../../../assets';
@@ -20,7 +20,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
   const {
     viewEditMode,
     handleEditToggle,
-    handleEditUpdate,
     updateJournalContent,
     onCancel,
     mainSection,
@@ -288,8 +287,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
           </div>
         </ContentCard>
       )}
-      {content.length > 0 ? (
-        content.map((contentObj: UniversalJournalData, idx: number) => {
+      {content?.length > 0 ? (
+        content?.map((contentObj: UniversalJournalData, idx: number) => {
           return (
             <EmptyViewWrapper
               key={`emptyview_${idx}`}
@@ -305,26 +304,30 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   <FaSpinner />
                 </IconContext.Provider>
               }>
-              <SingleNote
-                idx={idx}
-                mainSection={mainSection}
-                subSection={subSection}
-                onCancel={onCancel}
-                viewModeView={viewModeView}
-                editModeView={editModeView}
-                viewEditMode={viewEditMode}
-                handleEditToggle={handleEditToggle}
-                contentLen={content.length}
-                contentObj={
-                  currentContentObj.id === contentObj.id ? currentContentObj : contentObj
-                }
-                allUniversalJournalData={allUniversalJournalData}
-                setAllUniversalJournalData={setAllUniversalJournalData}
-                allUniversalClassData={allUniversalClassData}
-                setAllUniversalClassData={setAllUniversalClassData}
-                allStudentData={allStudentData}
-                setAllStudentData={setAllStudentData}
-              />
+              <Suspense fallback={<p>note error</p>}>
+                <SingleNote
+                  idx={idx}
+                  mainSection={mainSection}
+                  subSection={subSection}
+                  onCancel={onCancel}
+                  viewModeView={viewModeView}
+                  editModeView={editModeView}
+                  viewEditMode={viewEditMode}
+                  handleEditToggle={handleEditToggle}
+                  contentLen={content.length}
+                  contentObj={
+                    currentContentObj.id === contentObj.id
+                      ? currentContentObj
+                      : contentObj
+                  }
+                  allUniversalJournalData={allUniversalJournalData}
+                  setAllUniversalJournalData={setAllUniversalJournalData}
+                  allUniversalClassData={allUniversalClassData}
+                  setAllUniversalClassData={setAllUniversalClassData}
+                  allStudentData={allStudentData}
+                  setAllStudentData={setAllStudentData}
+                />
+              </Suspense>
             </EmptyViewWrapper>
           );
         })
