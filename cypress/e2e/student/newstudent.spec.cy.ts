@@ -34,13 +34,13 @@ const checkForStudent = (ondemand: string) => {
     cy.get('h3')
       .invoke('text')
       .then((text) => {
-        expect(text).equal('Self-Paced');
+        expect(text).includes('Self-Paced');
       });
   } else {
     cy.get('h3')
       .invoke('text')
       .then((text) => {
-        expect(text).not.eq('Self-Paced');
+        expect(text).not.includes('Self-Paced');
       }); // check if self paced is visible
   }
 };
