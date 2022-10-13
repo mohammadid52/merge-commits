@@ -20,7 +20,7 @@ import {
   useHistory,
   useLocation,
   useParams,
-  useRouteMatch,
+  useRouteMatch
 } from 'react-router-dom';
 import {getAsset} from '../../../../assets';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -96,12 +96,14 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
+  shouldNavigate?: boolean;
   userId?: string;
   insideModalPopUp?: boolean;
+  onSuccessCallback?: () => void;
 }
 
 const User = (props: IUserProps) => {
-  const {insideModalPopUp} = props;
+  const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -122,7 +124,7 @@ const User = (props: IUserProps) => {
   const tabs = [
     {name: 'User Information', current: true},
     {name: 'Coursework & Attendance', current: false},
-    {name: 'Notebook', current: false},
+    {name: 'Notebook', current: false}
   ];
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
@@ -160,7 +162,7 @@ const User = (props: IUserProps) => {
     updatedAt: '',
     birthdate: null,
     onDemand: false,
-    rooms: [],
+    rooms: []
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -201,8 +203,8 @@ const User = (props: IUserProps) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
-          eq: item,
-        },
+          eq: item
+        }
       };
     });
     const filter = {
@@ -211,9 +213,9 @@ const User = (props: IUserProps) => {
         {authID: {eq: user.authId}},
         {syllabusLessonID: {eq: '999999'}},
         {
-          or: [...checkpointIDFilter],
-        },
-      ],
+          or: [...checkpointIDFilter]
+        }
+      ]
     };
     const results: any = await API.graphql(
       graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
@@ -240,7 +242,6 @@ const User = (props: IUserProps) => {
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
-      console.log('studentClasses - ', studentClasses);
 
       const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
         if (item?.room) {
@@ -318,8 +319,8 @@ const User = (props: IUserProps) => {
                   } else {
                     return acc;
                   }
-                }, []),
-              },
+                }, [])
+              }
             };
           } else {
             return checkpoint;
@@ -341,8 +342,8 @@ const User = (props: IUserProps) => {
                   } else {
                     return acc;
                   }
-                }, []),
-              },
+                }, [])
+              }
             };
           } else {
             return checkpoint;
@@ -397,7 +398,7 @@ const User = (props: IUserProps) => {
       Storage.put(`user_profile_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           resolve(true);
@@ -434,7 +435,7 @@ const User = (props: IUserProps) => {
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
-      language: user.language,
+      language: user.language
     };
 
     try {
@@ -442,7 +443,7 @@ const User = (props: IUserProps) => {
         graphqlOperation(customMutations.updatePerson, {input: input})
       );
       setUser({
-        ...user,
+        ...user
       });
     } catch (error) {
       console.error('Error updating image on graphql', error);
@@ -464,7 +465,7 @@ const User = (props: IUserProps) => {
     try {
       const studentDataFetch: any = await API.graphql(
         graphqlOperation(queries.listStudentData, {
-          filter: {studentAuthID: {eq: user.authId}},
+          filter: {studentAuthID: {eq: user.authId}}
         })
       );
       const response = await studentDataFetch;
@@ -482,7 +483,7 @@ const User = (props: IUserProps) => {
                   studentID: contentObj.studentID,
                   studentAuthID: contentObj.studentAuthID,
                   studentDataID: contentObj.id,
-                  updatedAt: contentObj.updatedAt,
+                  updatedAt: contentObj.updatedAt
                 };
               }
             );
@@ -672,7 +673,7 @@ const User = (props: IUserProps) => {
       let input = {
         email: state.user.email,
         authID: state.user.authId,
-        text,
+        text
       };
 
       const finalInput =
@@ -683,8 +684,8 @@ const User = (props: IUserProps) => {
                 type: attachments.type,
                 url: attachments.url,
                 filename: attachments.filename,
-                size: attachments.size,
-              },
+                size: attachments.size
+              }
             }
           : input;
       const results: any = await API.graphql(
@@ -705,7 +706,7 @@ const User = (props: IUserProps) => {
         subTitle: item.subTitle,
         description: item.description,
         content: item.content,
-        feedbacks: newFeedbacks,
+        feedbacks: newFeedbacks
       };
 
       const studentDataUpdate: any = await API.graphql(
@@ -716,8 +717,8 @@ const User = (props: IUserProps) => {
             syllabusLessonID: item.syllabusLessonID,
             studentID: item.studentID,
             studentAuthID: item.studentAuthID,
-            anthologyContent: removeHelperProperties,
-          },
+            anthologyContent: removeHelperProperties
+          }
         })
       );
       const feedbackData: any = results.data.updateStudentData;
@@ -742,7 +743,7 @@ const User = (props: IUserProps) => {
         subTitle: item.subTitle,
         description: item.description,
         content: item.content,
-        feedbacks: newFeedbacks.filter((feedbackId: string) => feedbackId !== id),
+        feedbacks: newFeedbacks.filter((feedbackId: string) => feedbackId !== id)
       };
 
       const studentDataUpdate: any = await API.graphql(
@@ -753,8 +754,8 @@ const User = (props: IUserProps) => {
             syllabusLessonID: item.syllabusLessonID,
             studentID: item.studentID,
             studentAuthID: item.studentAuthID,
-            anthologyContent: removeHelperProperties,
-          },
+            anthologyContent: removeHelperProperties
+          }
         })
       );
     } catch (error) {}
@@ -772,16 +773,16 @@ const User = (props: IUserProps) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
         id: {
-          eq: id,
-        },
+          eq: id
+        }
       };
     });
     try {
       const listCommentData: any = await API.graphql(
         graphqlOperation(queries.listAnthologyComments, {
           filter: {
-            or: [...filter],
-          },
+            or: [...filter]
+          }
         })
       );
       return listCommentData?.data?.listAnthologyComments?.items;
@@ -812,7 +813,7 @@ const User = (props: IUserProps) => {
         acl: 'public-read',
         progressCallback: ({loaded, total}: any) => {
           console.log((loaded * 100) / total);
-        },
+        }
       })
         .then((result) => {
           resolve(result);
@@ -850,7 +851,7 @@ const User = (props: IUserProps) => {
   const subSectionKey: any = {
     Journal: ['journal'],
     Work: ['poem', 'story'],
-    Notes: ['notes'],
+    Notes: ['notes']
   };
   const getSection = (key: string) => {
     let journal = subSectionKey.Journal.includes(key);
@@ -881,8 +882,8 @@ const User = (props: IUserProps) => {
           input: {
             id: commentObj.id,
             text: commentObj.comment,
-            edited: true,
-          },
+            edited: true
+          }
         })
       );
     } catch (error) {
@@ -1010,10 +1011,10 @@ const User = (props: IUserProps) => {
           firstName: state?.user?.preferredName,
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
-          role: state.user.role,
+          role: state.user.role
         },
         createdAt: new Date(),
-        id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
+        id: Date.now().toString() // this is just for local state, After refreshing it will be replaced with real ID
       };
       const finalInput =
         attachments && attachments.type
@@ -1024,9 +1025,9 @@ const User = (props: IUserProps) => {
                   url: attachments.url,
                   filename: attachments.filename,
                   size: attachments.size,
-                  type: attachments.type,
-                },
-              ],
+                  type: attachments.type
+                }
+              ]
             }
           : localObj;
 
@@ -1047,7 +1048,7 @@ const User = (props: IUserProps) => {
           url: 'loading',
           type,
           filename: _fileObject.name,
-          size: _fileObject.size,
+          size: _fileObject.size
         });
 
         await uploadAttachment(_fileObject, id, type);
@@ -1058,13 +1059,13 @@ const User = (props: IUserProps) => {
           url: imageUrl,
           type,
           filename: _fileObject.name,
-          size: _fileObject.size,
+          size: _fileObject.size
         });
         pushCommentToLocalState(_comment, {
           url: imageUrl,
           type,
           filename: _fileObject.name,
-          size: _fileObject.size,
+          size: _fileObject.size
         });
         setUploadingAttachment(false);
       } else {
@@ -1196,7 +1197,7 @@ const User = (props: IUserProps) => {
                           className="picker-wrapper absolute bottom-1 left-5">
                           <EmojiPicker
                             groupVisibility={{
-                              recently_used: false,
+                              recently_used: false
                             }}
                             onEmojiClick={(e: any, emoji: any) =>
                               onEmojiSelect(emoji, true)
@@ -1372,7 +1373,7 @@ const User = (props: IUserProps) => {
                         className="picker-wrapper absolute bottom-5 left-5">
                         <EmojiPicker
                           groupVisibility={{
-                            recently_used: false,
+                            recently_used: false
                           }}
                           onEmojiClick={(e: any, emoji: any) =>
                             onEmojiSelect(emoji, false)
@@ -1558,7 +1559,7 @@ const User = (props: IUserProps) => {
                                         ? user.preferredName
                                         : user.firstName + ' ' + user.lastName
                                     )}`,
-                                    textShadow: '0.2rem 0.2rem 3px #423939b3',
+                                    textShadow: '0.2rem 0.2rem 3px #423939b3'
                                   }}>
                                   {initials(
                                     user.preferredName
@@ -1608,7 +1609,9 @@ const User = (props: IUserProps) => {
                           instituteId={props.instituteId}
                           tab={tab}
                           setTab={setTab}
+                          onSuccessCallback={onSuccessCallback}
                           user={user}
+                          shouldNavigate={shouldNavigate}
                           status={status}
                           setStatus={setStatus}
                           getUserById={getUserProfile}

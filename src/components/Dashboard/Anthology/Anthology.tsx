@@ -108,9 +108,6 @@ const Anthology = ({
   const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
 
   const getStudentData = async () => {
-    // const user = await Auth.currentAuthenticatedUser();
-    // const studentAuthId = user.username;
-
     try {
       const listFilter = {
         filter: {
