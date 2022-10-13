@@ -1,4 +1,5 @@
 import React from 'react';
+import LocationBadge from '../Institutons/EditBuilders/LocationBadge';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 
@@ -9,7 +10,7 @@ type UserLocationProps = {
 
 const UserLocation = ({role, onDemand}: UserLocationProps) => {
   if (role === 'ST') {
-    return <div>{onDemand ? 'Self Paced' : 'Classroom'}</div>;
+    return <LocationBadge onDemand={onDemand} />;
   } else {
     return <div>Staff</div>;
   }
