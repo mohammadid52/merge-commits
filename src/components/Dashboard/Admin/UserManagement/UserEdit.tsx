@@ -53,7 +53,7 @@ const UserEdit = (props: UserInfoProps) => {
     setTab,
     setStatus,
     checkpoints,
-    questionData,
+    questionData
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
@@ -119,17 +119,17 @@ const UserEdit = (props: UserInfoProps) => {
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
       ...(editUser.status === 'INACTIVE' && {
-        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD'),
+        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD')
       }),
       role: editUser.role,
       ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
-        statusReason: editUser.statusReason,
+        statusReason: editUser.statusReason
       }),
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
       email: editUser.email,
-      onDemand: editUser.onDemand,
+      onDemand: editUser.onDemand
     };
 
     try {
@@ -154,7 +154,7 @@ const UserEdit = (props: UserInfoProps) => {
       [item['qid']]:
         item?.response?.length > 1
           ? [...selectedMultiOptions(item.response)]
-          : item?.response?.join(''),
+          : item?.response?.join('')
     }));
     return convertArrayIntoObj(answerArray);
   };
@@ -162,11 +162,11 @@ const UserEdit = (props: UserInfoProps) => {
   useEffect(() => {
     if (questionData?.length > 0) {
       const updatedListArray: any = questionData.map((item: any) => ({
-        [item['checkpointID']]: extractItemFromArray(item.responseObject),
+        [item['checkpointID']]: extractItemFromArray(item.responseObject)
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
       setCheckpointData({
-        ...updatedListObj,
+        ...updatedListObj
       });
     }
   }, [questionData]);
@@ -182,7 +182,7 @@ const UserEdit = (props: UserInfoProps) => {
             response: checkpointData[checkpointID][resp.qid],
             otherResponse: checkpointData[checkpointID][resp.qid]
               .toString()
-              .split(' || ')[1],
+              .split(' || ')[1]
           };
         } else {
           return {...resp};
@@ -209,7 +209,7 @@ const UserEdit = (props: UserInfoProps) => {
   ) => {
     let responseObject = {
       id: questionDataId,
-      responseObject: questions,
+      responseObject: questions
     };
     updateQuestionData(responseObject, checkpointID);
   };
@@ -232,7 +232,7 @@ const UserEdit = (props: UserInfoProps) => {
       response:
         typeof obj[item] === 'string'
           ? [obj[item]]
-          : [...obj[item].map((op: any) => op.name)],
+          : [...obj[item].map((op: any) => op.name)]
     }));
   };
 
@@ -242,7 +242,7 @@ const UserEdit = (props: UserInfoProps) => {
       checkpointID: checkpointId,
       authID: editUser.authId,
       email: editUser.email,
-      responseObject: questions,
+      responseObject: questions
     };
     createQuestionData(responseObject);
   };
@@ -251,7 +251,7 @@ const UserEdit = (props: UserInfoProps) => {
     const checkpId = Object.keys(checkpointData);
     const allCheckpoints = checkpId.map((itemID) => ({
       checkpointId: itemID,
-      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : [],
+      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
       let checkpoints = Promise.all(
@@ -296,7 +296,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -306,8 +306,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: e.target.value,
-      },
+        [questionID]: e.target.value
+      }
     });
   };
 
@@ -316,8 +316,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: `Other || ${e.target.value}`,
-      },
+        [questionID]: `Other || ${e.target.value}`
+      }
     });
   };
 
@@ -338,8 +338,8 @@ const UserEdit = (props: UserInfoProps) => {
           ...checkpointData,
           [checkpointID]: {
             ...checkpointData[checkpointID],
-            [questionID]: [],
-          },
+            [questionID]: []
+          }
         });
       }
       const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
@@ -354,8 +354,8 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList],
-        },
+          [questionID]: [...updatedList]
+        }
       });
     } else {
       setCheckpointData({
@@ -366,10 +366,10 @@ const UserEdit = (props: UserInfoProps) => {
             {
               id,
               name,
-              value,
-            },
-          ],
-        },
+              value
+            }
+          ]
+        }
       });
     }
   };
@@ -385,8 +385,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: name,
-      },
+        [questionID]: name
+      }
     });
   };
 
@@ -394,7 +394,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code,
+        status: item.code
       };
     });
   };
@@ -403,7 +403,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        role: item.code,
+        role: item.code
       };
     });
   };
@@ -412,7 +412,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        onDemand: item.code,
+        onDemand: item.code
       };
     });
   };
@@ -420,20 +420,20 @@ const UserEdit = (props: UserInfoProps) => {
   const Status = [
     {
       code: 'ACTIVE',
-      name: 'Active',
+      name: 'Active'
     },
     {
       code: 'SUSPENDED',
-      name: 'Suspended',
+      name: 'Suspended'
     },
     {
       code: 'INACTIVE',
-      name: 'Inactive',
+      name: 'Inactive'
     },
     {
       code: 'TRAINING',
-      name: 'Training',
-    },
+      name: 'Training'
+    }
     // {
     //   code: 'HOLD',
     //   name: 'Hold',
@@ -443,46 +443,46 @@ const UserEdit = (props: UserInfoProps) => {
   const Role = [
     state.user.role === 'SUP' && {
       code: 'SUP',
-      name: 'Super Admin',
+      name: 'Super Admin'
     },
     {
       code: 'ADM',
-      name: 'Admin',
+      name: 'Admin'
     },
     {
       code: 'BLD',
-      name: 'Builder',
+      name: 'Builder'
     },
     {
       code: 'FLW',
-      name: 'Fellow',
+      name: 'Fellow'
     },
     {
       code: 'CRD',
-      name: 'Coordinator',
+      name: 'Coordinator'
     },
     {
       code: 'TR',
-      name: 'Teacher',
-    },
+      name: 'Teacher'
+    }
   ].filter(Boolean);
 
   const OnDemand = [
     {
       code: false,
-      name: 'No',
+      name: 'No'
     },
     {
       code: true,
-      name: 'Yes',
-    },
+      name: 'Yes'
+    }
   ];
 
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index,
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -490,7 +490,7 @@ const UserEdit = (props: UserInfoProps) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index.toString(),
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -502,7 +502,7 @@ const UserEdit = (props: UserInfoProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(id, file, {
         contentType: type,
-        acl: 'public-read',
+        acl: 'public-read'
       })
         .then((result) => {
           resolve(result);
@@ -536,8 +536,8 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [qId]: `${url}`,
-        },
+          [qId]: `${url}`
+        }
       });
     };
 
@@ -620,7 +620,7 @@ const UserEdit = (props: UserInfoProps) => {
       const newArr: any = options?.map((option: any, index: number) => ({
         id: index.toString(),
         name: option,
-        value: option,
+        value: option
       }));
       return [...newArr];
     } else {
@@ -684,8 +684,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: responseWithEmoji,
-      },
+        [questionID]: responseWithEmoji
+      }
     });
 
     setShowEmoji({show: false, cId: '', qId: ''});
@@ -699,7 +699,7 @@ const UserEdit = (props: UserInfoProps) => {
       setEditUser(() => {
         return {
           ...editUser,
-          inactiveStatusDate: e.target.value,
+          inactiveStatusDate: e.target.value
         };
       });
     }
@@ -710,7 +710,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        statusReason: e.target.value,
+        statusReason: e.target.value
       };
     });
   };
@@ -763,7 +763,7 @@ const UserEdit = (props: UserInfoProps) => {
                           : 'text-gray-400 group-hover:text-gray-500'
                       }
                       ml-2 h-5 w-5
-                    `,
+                    `
                   }}>
                   <IoLockClosed />
                 </IconContext.Provider>
@@ -837,6 +837,7 @@ const UserEdit = (props: UserInfoProps) => {
                 {superEdit && (
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
+                      dataCy="ondemand"
                       value=""
                       style={false}
                       handleChange={handleChangeOnDemand}
@@ -1090,6 +1091,7 @@ const UserEdit = (props: UserInfoProps) => {
             transparent
           />
           <Buttons
+            dataCy="edit-user-save-button"
             disabled={updating}
             btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
             label={
