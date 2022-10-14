@@ -44,7 +44,7 @@ const InnerNote = React.memo(
     idx,
     updateText,
     size,
-    preview = false,
+    preview = false
   }: any) => {
     let angle = useMemo(() => randomNumber(-3, 3), []);
 
@@ -57,6 +57,7 @@ const InnerNote = React.memo(
           size
         )}  group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>
         <textarea
+          data-cy={`input-note-${note.id}`}
           style={{fontSize: `${genFontSize(size)}px`}}
           id={`note-${note.id}`}
           onChange={
@@ -69,10 +70,16 @@ const InnerNote = React.memo(
         />
         {custom && isInLesson && isStudent && (
           <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
-            <button className="w-auto" onClick={() => onEditBtnClick(note.id)}>
+            <button
+              data-cy="edit-note-button"
+              className="w-auto"
+              onClick={() => onEditBtnClick(note.id)}>
               <AiOutlineEdit className="text-base text-white" />
             </button>
-            <button onClick={() => onDeleteBtnClick(note.id)} className="w-auto">
+            <button
+              data-cy="delete-sticky-note-button"
+              onClick={() => onDeleteBtnClick(note.id)}
+              className="w-auto">
               <BiTrashAlt className="text-lg text-white" />
             </button>
           </span>
@@ -105,7 +112,7 @@ const Note = ({
   updateText,
   uninitialized,
   preview,
-  custom = false,
+  custom = false
 }: INoteBlock) => {
   const isStudent = true;
   const isInLesson = useInLessonCheck();

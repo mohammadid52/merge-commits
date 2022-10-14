@@ -33,7 +33,9 @@ const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
   };
 
   useEffect(() => {
-    getMinimumLessonInfo();
+    if (lessonID) {
+      getMinimumLessonInfo();
+    }
   }, [lessonID]);
 
   return (

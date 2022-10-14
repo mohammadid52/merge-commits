@@ -47,7 +47,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 3000;
+  const STANDARD_INTERVAL = 1500;
   const SURVEY_INTERVAL = 100;
 
   useEffect(() => {

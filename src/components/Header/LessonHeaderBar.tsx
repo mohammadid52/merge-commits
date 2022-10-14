@@ -62,6 +62,7 @@ const LessonHeaderBar = ({
 
   const handleNotebookSave = () => {
     if (leaveAfterCompletion) {
+      console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData();
       setTimeout(() => {
         history.push(`/dashboard/classroom/${getRoomData.id}`);
