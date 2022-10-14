@@ -74,15 +74,23 @@ const Anthology = ({
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
 
+  const [subSection, setSubSection] = useState<string>('none');
+  const [loading, setLoading] = useState(false);
+
+  const initialDataFetch = async () => {
+    setLoading(true);
+    await listUniversalJournalData();
+    await getStudentData();
+    await getUniversalArchiveData();
+    await getUniversalLessonWritingExercises();
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const initialDataFetch = async () => {
-      await listUniversalJournalData();
-      await getStudentData();
-      await getUniversalArchiveData();
-      await getUniversalLessonWritingExercises();
-    };
-    initialDataFetch();
-  }, []);
+    if (subSection === 'none') {
+      initialDataFetch();
+    }
+  }, [subSection]);
 
   // ##################################################################### //
   // ############################ MAIN STORAGE ########################### //
@@ -136,7 +144,6 @@ const Anthology = ({
     const allExerciseEntryData = allStudentData.reduce(
       (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
         if (val.roomID === roomID) {
-          console.log(val.roomID, roomID);
           const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
             return {
               id: exercise.id,
@@ -495,7 +502,6 @@ const Anthology = ({
   const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
   const [sectionTitle, setSectionTitle] = useState<string>('');
-  const [subSection, setSubSection] = useState<string>('checkIn');
   const [tab, setTab] = useState<number>(0);
 
   const previousRoom = usePrevious(sectionRoomID);
@@ -611,29 +617,19 @@ const Anthology = ({
   const previousForgot = usePrevious(forgotPrompt);
 
   const handlePrivateSectionAccess = async () => {
-    try {
-      setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
-      const personPasscode: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonPasscode, {
-          email: state?.user?.email,
-          authId: state?.user?.authId
-        })
-      );
-      const unset = personPasscode?.data?.getPerson?.passcode === null;
-      const verified = personPasscode?.data?.getPerson?.passcode === passcodeInput;
+    if (showPasscodeEntry) {
+      try {
+        setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
+        const personPasscode: any = await API.graphql(
+          graphqlOperation(customQueries.getPersonPasscode, {
+            email: state?.user?.email,
+            authId: state?.user?.authId
+          })
+        );
+        const unset = personPasscode?.data?.getPerson?.passcode === null;
+        const verified = personPasscode?.data?.getPerson?.passcode === passcodeInput;
 
-      if (verified) {
-        setMainSection('Private');
-        setSectionRoomID('private');
-        setSectionTitle(`Private Notebook`);
-        setSubSection('Journal');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage({message: '', textClass: ''});
-      } else if (unset) {
-        setAccessMessage({message: 'Please set a passcode!', textClass: 'text-blue-500'});
-        setTimeout(() => {
+        if (verified) {
           setMainSection('Private');
           setSectionRoomID('private');
           setSectionTitle(`Private Notebook`);
@@ -642,12 +638,33 @@ const Anthology = ({
           setShowPasscodeEntry(false);
           setPasscodeInput('');
           setAccessMessage({message: '', textClass: ''});
-        }, 1000);
-      } else {
-        setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+        } else if (unset) {
+          setAccessMessage({
+            message: 'Please set a passcode!',
+            textClass: 'text-blue-500'
+          });
+          setTimeout(() => {
+            setMainSection('Private');
+            setSectionRoomID('private');
+            setSectionTitle(`Private Notebook`);
+            setSubSection('Journal');
+            setTab(0);
+            setShowPasscodeEntry(false);
+            setPasscodeInput('');
+            setAccessMessage({message: '', textClass: ''});
+          }, 1000);
+        } else {
+          setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+        }
+      } catch (e) {
+        console.error('handlePrivateSectionAccess - ', e);
       }
-    } catch (e) {
-      console.error('handlePrivateSectionAccess - ', e);
+    }
+    {
+      setAccessMessage({
+        message: 'Passcode field cannot be empty',
+        textClass: 'text-red-500'
+      });
     }
   };
 
@@ -776,7 +793,7 @@ const Anthology = ({
             />
             <EmptyViewWrapper
               wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-              revealContents={notebookLoaded}
+              revealContents={true}
               fallbackContents={
                 <IconContext.Provider
                   value={{
@@ -800,7 +817,7 @@ const Anthology = ({
 
           <EmptyViewWrapper
             wrapperClass={`min-h-24 py-4 overflow-hidden mb-4`}
-            revealContents={sectionRoomID !== ''}
+            revealContents={sectionRoomID !== 'none' || !loading}
             fallbackContents={
               <p className="text-center text-lg text-gray-500">
                 Please select a notebook above to view your data

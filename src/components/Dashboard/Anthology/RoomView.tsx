@@ -1,7 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import * as customQueries from '@customGraphql/customQueries';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import React, {useEffect, useState} from 'react';
 import {getImageFromS3} from '../../../utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
@@ -20,12 +19,10 @@ interface IRoomViewProps {
 }
 
 const RoomView = ({
-  roomIdList,
   mainSection,
   sectionRoomID,
   sectionTitle,
-  handleSectionSelect,
-  isTeacher
+  handleSectionSelect
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -37,42 +34,8 @@ const RoomView = ({
 
   const {state} = useGlobalContext();
 
-  //   activeSyllabus
-  // :
-  // "a89bf03a-782a-4abc-8576-bbf431c9b221"
-  // classID
-  // :
-  // "6ed9e646-12d2-451e-939d-2253b68fda91"
-  // curricula
-  // :
-  // {items: Array(1), nextToken: null}
-  // id
-  // :
-  // "3936fdc3-d36d-43db-b43e-75efa30ea8cc"
-  // institutionID
-  // :
-  // "f3aef681-6fff-4795-8fde-67cb159bd275"
-  // name
-  // :
-  // "Big Bang Classroom Testing"
-  // teacherAuthID
-  // :
-  // "6bdaf460-4119-45f6-9124-acae86e94ab7"
-  // teacherEmail
-  // :
-  // "testuser2023@yopmail.com"
-
-  const getMultipleRooms = async (idList: string[]) => {
-    const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
-
+  const getMultipleRooms = async () => {
     try {
-      // const roomsList: any = await API.graphql(
-      //   graphqlOperation(customQueries.listRoomsNotebook, {
-      //     filter: {
-      //       ...compoundQuery
-      //     }
-      //   })
-      // );
       const responseData = state?.roomData?.rooms || [];
 
       const curriculumMap = responseData.map(async (roomObj: any) => {
@@ -114,10 +77,15 @@ const RoomView = ({
   };
 
   useEffect(() => {
-    if (roomIdList.length > 0) {
-      getMultipleRooms(roomIdList);
+    if (
+      state &&
+      state.roomData &&
+      state?.roomData?.rooms &&
+      state?.roomData?.rooms.length > 0
+    ) {
+      getMultipleRooms();
     }
-  }, [roomIdList]);
+  }, [state?.roomData?.rooms]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);

@@ -239,47 +239,50 @@ const TabView = ({
 
   return (
     <>
-      <div
-        className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
-        <div
-          className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
-          <IconContext.Provider
-            value={{
-              className: `relative`
-            }}>
-            <IoIosJournal
-              style={{color: stringToHslColor(sectionRoomID)}}
-              className="absolute my-auto mr-2 w-auto h-auto fill-current"
-              size={24}
+      {subSection !== 'none' && (
+        <>
+          <div
+            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
+            <div
+              className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              <IconContext.Provider
+                value={{
+                  className: `relative`
+                }}>
+                <IoIosJournal
+                  style={{color: stringToHslColor(sectionRoomID)}}
+                  className="absolute my-auto mr-2 w-auto h-auto fill-current"
+                  size={24}
+                />
+              </IconContext.Provider>
+
+              <h2
+                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                {getTitle()}
+              </h2>
+            </div>
+            {subSection === 'Journal' && tab === 1 && (
+              <Buttons
+                Icon={FaEdit}
+                customStyles={{width: '14rem'}}
+                label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                onClick={() => handleEditToggle('create', '')}
+                type="button"
+              />
+            )}
+          </div>
+          <div
+            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
+            <AnthologyUnderlinedTabs
+              hideTooltip
+              activeTab={tab}
+              mainSection={mainSection}
+              tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
+              handleTabSelect={handleTabSelect}
             />
-          </IconContext.Provider>
-
-          <h2
-            className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
-            {getTitle()}
-          </h2>
-        </div>
-        {subSection === 'Journal' && tab === 1 && (
-          <Buttons
-            Icon={FaEdit}
-            customStyles={{width: '14rem'}}
-            label={anthologyDict[userLanguage].ACTIONS.CREATE}
-            onClick={() => handleEditToggle('create', '')}
-            type="button"
-          />
-        )}
-      </div>
-
-      <div
-        className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
-        <AnthologyUnderlinedTabs
-          hideTooltip
-          activeTab={tab}
-          mainSection={mainSection}
-          tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
-          handleTabSelect={handleTabSelect}
-        />
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
