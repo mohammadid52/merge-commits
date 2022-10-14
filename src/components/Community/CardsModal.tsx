@@ -6,7 +6,7 @@ import Spotlight from '@components/Community/Cards/Spotlight';
 import {
   communityContent,
   communityTypes,
-  NavStateTypes,
+  NavStateTypes
 } from '@components/Community/constants.community';
 import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import useAuth from '@customHooks/useAuth';
@@ -16,7 +16,7 @@ import {
   IAnnouncementInput,
   ICheckItOutInput,
   IEventInput,
-  ICommunityCard,
+  ICommunityCard
 } from '@interfaces/Community.interfaces';
 import {setState} from '@interfaces/index';
 import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
@@ -48,7 +48,7 @@ const getModalHeader = (navState: NavStateTypes) => {
 
 const Item = ({
   content,
-  setNavState,
+  setNavState
 }: {
   content: any;
   setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
@@ -99,7 +99,7 @@ const CardsModal = ({
   navState,
   setNavState,
   editMode = false,
-  cardDetails = null,
+  cardDetails = null
 }: {
   showCardsModal: boolean;
 
@@ -138,7 +138,7 @@ const CardsModal = ({
   const commonProps = {
     onCancel,
     editMode,
-    cardDetails,
+    cardDetails
   };
 
   return (
@@ -149,7 +149,7 @@ const CardsModal = ({
           closeAction={onCancel}
           showFooter={false}
           title={getModalHeader(navState)}>
-          <div className="2xl:min-w-256 max-w-screen 2xl:max-w-256">
+          <div className="">
             {/* Showing all items in this block */}
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (
