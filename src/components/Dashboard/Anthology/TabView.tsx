@@ -179,12 +179,12 @@ const TabView = ({
       id: 'Work',
       content: WrittenContent
     },
-    {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.C,
-      id: 'Notes',
-      content: WrittenContent
-    },
+    // {
+    //   index: 1,
+    //   title: anthologyDict[userLanguage].TABS.C,
+    //   id: 'Notes',
+    //   content: WrittenContent
+    // },
     {
       index: 2,
       title: anthologyDict[userLanguage].TABS.D,

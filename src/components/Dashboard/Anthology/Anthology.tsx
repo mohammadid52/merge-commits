@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Auth} from '@aws-amplify/auth';
 import * as customMutations from '@customGraphql/customMutations';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
-import {v4 as uuidV4} from 'uuid';
 import {IconContext} from 'react-icons/lib';
+import {v4 as uuidV4} from 'uuid';
 import {getAsset} from '../../../assets';
 import {useGlobalContext} from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
@@ -108,6 +107,11 @@ const Anthology = ({
     UniversalClassData[]
   >([]);
 
+  console.log(
+    '🚀 ~ file: Anthology.tsx ~ line 108 ~ allUniversalClassData',
+    allUniversalClassData
+  );
+
   // ##################################################################### //
   // ##################### CRUD STUDENT EXERCISE DATA #################### //
   // ##################################################################### //
@@ -141,35 +145,31 @@ const Anthology = ({
   };
 
   const reduceRoomExerciseData = (roomID: string) => {
-    const allExerciseEntryData = allStudentData.reduce(
-      (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
-        if (val.roomID === roomID) {
-          const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
-            return {
-              id: exercise.id,
-              studentID: val.studentID,
-              studentAuthID: val.studentAuthID,
-              studentEmail: val.studentEmail,
-              feedbacks: exercise.feedbacks || [],
-              shared: exercise?.shared || false,
-              entryData: exercise.entryData.map((entry: any) => {
-                return {
-                  ...entry,
-                  type: entry.domID.includes('title') ? 'header' : 'content'
-                };
-              }),
-              recordID: val.id,
-              updatedAt: val?.updatedAt
-            };
-          });
-          return [...acc, ...adaptedExerciseEntries];
-        } else {
-          return acc;
-        }
-      },
-      []
-    );
-
+    const allExerciseEntryData = allUniversalClassData.reduce((acc: any[], val: any) => {
+      if (val.roomID === roomID) {
+        const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
+          return {
+            id: exercise.id,
+            studentID: val.studentID,
+            studentAuthID: val.studentAuthID,
+            studentEmail: val.studentEmail,
+            feedbacks: exercise.feedbacks || [],
+            shared: exercise?.shared || false,
+            entryData: exercise.entryData.map((entry: any) => {
+              return {
+                ...entry,
+                type: entry.domID.includes('title') ? 'header' : 'content'
+              };
+            }),
+            recordID: val.id,
+            updatedAt: val?.updatedAt
+          };
+        });
+        return [...acc, ...adaptedExerciseEntries];
+      } else {
+        return acc;
+      }
+    }, []);
     setAllExerciseData(allExerciseEntryData);
   };
 
@@ -501,6 +501,7 @@ const Anthology = ({
   const [switchReady, setSwitchReady] = useState<boolean>(true);
   const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
+
   const [sectionTitle, setSectionTitle] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
 
@@ -525,10 +526,10 @@ const Anthology = ({
 
   useEffect(() => {
     // TODO: adding entrydata type with an additional map is bad coding...
-    if (allStudentData?.length > 0 && sectionRoomID !== '') {
+    if (allUniversalClassData?.length > 0 && sectionRoomID !== '') {
       reduceRoomExerciseData(sectionRoomID);
     }
-  }, [allStudentData, sectionRoomID]);
+  }, [allUniversalClassData, sectionRoomID]);
 
   const getUniversalArchiveData = async () => {
     try {
@@ -553,7 +554,7 @@ const Anthology = ({
   const getUniversalLessonWritingExercises = async () => {
     try {
       const allUniversalClassData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonWritingExcercises, {
+        graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
           filter: {
             studentID: {
               eq: state.user.authId

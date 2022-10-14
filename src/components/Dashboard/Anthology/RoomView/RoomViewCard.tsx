@@ -85,17 +85,14 @@ const RoomViewCard = ({
             </div>
 
             {/* BANNER IMAGE */}
-            {roomID !== 'private' && bannerImage ? (
+            {roomID !== 'private' ? (
               <img
                 className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-                src={bannerImage}
-                alt="banner_notebook_cover"
-              />
-            ) : roomID !== 'private' && !bannerImage ? (
-              <img
-                className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-                src={`https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg`}
-                alt="default_notebook_cover"
+                src={
+                  bannerImage ||
+                  'https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg'
+                }
+                alt={bannerImage ? 'notebook cover' : 'default notebook cover'}
               />
             ) : (
               roomID === 'private' && (
