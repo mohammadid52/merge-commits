@@ -684,6 +684,7 @@ const UserEdit = (props: UserInfoProps) => {
                 {superEdit && (
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
+                      dataCy="ondemand"
                       value=""
                       style={false}
                       handleChange={handleChangeOnDemand}
@@ -937,6 +938,7 @@ const UserEdit = (props: UserInfoProps) => {
             transparent
           />
           <Buttons
+            dataCy="edit-user-save-button"
             disabled={updating}
             btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
             label={

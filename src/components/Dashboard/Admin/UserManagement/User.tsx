@@ -1488,6 +1488,7 @@ const User = (props: IUserProps) => {
             <div className="flex justify-end w-auto">
               {currentPath !== 'edit' && onUserInformationTab && (
                 <Buttons
+                  dataCy="edit-user-button"
                   btnClass="mr-4 px-6"
                   label="Edit"
                   onClick={() => {

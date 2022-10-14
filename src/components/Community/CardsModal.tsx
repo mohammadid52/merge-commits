@@ -57,6 +57,7 @@ const Item = ({
   const isCommunity = pathname.includes('community');
   return (
     <div
+      data-cy={content.type}
       onClick={() => setNavState(content.type)}
       className={`relative  form-button rounded-lg border-0 border-gray-300  bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground}  transition-all focus-within:ring-2`}>
       <>
