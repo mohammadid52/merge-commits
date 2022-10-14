@@ -386,8 +386,8 @@ const Spotlight = ({
             transparent
           />
           <Buttons
-            data-cy="save-spotlight-button"
             btnClass="py-1 px-8 text-xs ml-2"
+            dataCy="save-spotlight-button"
             label={'Save'}
             loading={isLoading}
             // disabled={
