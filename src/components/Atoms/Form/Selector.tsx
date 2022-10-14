@@ -206,7 +206,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
+            className="rounded-md relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map(
                 (item: {popoverElement?: any; name: string; id: any; value: string}) => (

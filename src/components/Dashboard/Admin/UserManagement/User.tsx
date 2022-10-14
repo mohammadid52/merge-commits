@@ -96,12 +96,14 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
+  shouldNavigate?: boolean;
   userId?: string;
   insideModalPopUp?: boolean;
+  onSuccessCallback?: () => void;
 }
 
 const User = (props: IUserProps) => {
-  const {insideModalPopUp} = props;
+  const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -240,7 +242,6 @@ const User = (props: IUserProps) => {
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
-      console.log('studentClasses - ', studentClasses);
 
       const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
         if (item?.room) {
@@ -1609,7 +1610,9 @@ const User = (props: IUserProps) => {
                           instituteId={props.instituteId}
                           tab={tab}
                           setTab={setTab}
+                          onSuccessCallback={onSuccessCallback}
                           user={user}
+                          shouldNavigate={shouldNavigate}
                           status={status}
                           setStatus={setStatus}
                           getUserById={getUserProfile}

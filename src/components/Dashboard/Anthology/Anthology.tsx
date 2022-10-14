@@ -108,9 +108,6 @@ const Anthology = ({
   const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
 
   const getStudentData = async () => {
-    // const user = await Auth.currentAuthenticatedUser();
-    // const studentAuthId = user.username;
-
     try {
       const listFilter = {
         filter: {
@@ -139,6 +136,7 @@ const Anthology = ({
     const allExerciseEntryData = allStudentData.reduce(
       (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
         if (val.roomID === roomID) {
+          console.log(val.roomID, roomID);
           const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
             return {
               id: exercise.id,
@@ -241,13 +239,10 @@ const Anthology = ({
   );
 
   const listUniversalJournalData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-
     try {
       const listFilter = {
         filter: {
-          studentAuthID: {eq: studentAuthId}
+          studentAuthID: {eq: studentAuthID}
         }
       };
       const listFilterIfTeacher = {
@@ -263,7 +258,8 @@ const Anthology = ({
           isTeacher ? listFilterIfTeacher : listFilter
         )
       );
-      const journalEntryDataRows = journalEntryData.data.listUniversalJournalData.items;
+      const journalEntryDataRows =
+        journalEntryData?.data?.listUniversalJournalData?.items || [];
 
       if (journalEntryDataRows?.length > 0) {
         setAllUniversalJournalData(journalEntryDataRows);
@@ -523,7 +519,7 @@ const Anthology = ({
 
   useEffect(() => {
     // TODO: adding entrydata type with an additional map is bad coding...
-    if (allStudentData.length > 0 && sectionRoomID !== '') {
+    if (allStudentData?.length > 0 && sectionRoomID !== '') {
       reduceRoomExerciseData(sectionRoomID);
     }
   }, [allStudentData, sectionRoomID]);
@@ -560,10 +556,10 @@ const Anthology = ({
         })
       );
       setAllUniversalClassData(
-        allUniversalClassData.data.listUniversalLessonWritingExcercises.items
+        allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items || []
       );
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: Anthology.tsx ~ line 548 ~ getUniversalLessonWritingExcercises ~ error',
         error
       );
@@ -587,7 +583,7 @@ const Anthology = ({
       ...classNotebook,
       ...allUniversalClassData
     ];
-    if (mergeAll.length > 0) {
+    if (mergeAll?.length > 0) {
       const uniqueIds = mergeAll.reduce((acc: string[], mixedObj: any) => {
         if (mixedObj.hasOwnProperty('roomID')) {
           if (acc.indexOf(mixedObj.roomID) === -1) {
@@ -599,7 +595,7 @@ const Anthology = ({
           return acc;
         }
       }, []);
-      if (uniqueIds.length > 0) {
+      if (uniqueIds?.length > 0) {
         setRoomCardIds(uniqueIds);
       }
     } else {
