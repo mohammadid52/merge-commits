@@ -223,6 +223,7 @@ const Community = ({}: {role: string}) => {
   const FAB = () => {
     return (
       <div
+        data-cy="open-builder-button"
         onClick={() => setShowCardsModal(true)}
         className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
         <BsCardHeading className="text-white text-lg" />
